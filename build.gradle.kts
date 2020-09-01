@@ -7,6 +7,7 @@ plugins {
     kotlin("plugin.spring") version "1.3.72"
     kotlin("plugin.jpa") version "1.3.72"
     id("org.jlleitschuh.gradle.ktlint") version "9.3.0"
+    id("com.vaadin") version "0.8.0"
 }
 
 group = "io.github.woowacourse"
