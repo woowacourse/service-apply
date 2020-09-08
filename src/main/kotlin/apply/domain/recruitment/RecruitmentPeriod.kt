@@ -12,7 +12,7 @@ data class RecruitmentPeriod(
     @Column(nullable = false)
     val endDateTime: LocalDateTime
 ) {
-    val isAfterEndDateTime: Boolean
+    val isOver: Boolean
         get() = LocalDateTime.now() > endDateTime
 
     init {

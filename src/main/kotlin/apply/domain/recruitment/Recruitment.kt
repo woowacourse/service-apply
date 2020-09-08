@@ -32,7 +32,7 @@ class Recruitment(
         get() = period.endDateTime
 
     val status: RecruitmentStatus
-        get() = RecruitmentStatus.of(isAfterEndDateTime = period.isAfterEndDateTime, canRecruit = canRecruit)
+        get() = RecruitmentStatus.of(isPeriodOver = period.isOver, canRecruit = canRecruit)
 
     constructor(title: String, startDateTime: LocalDateTime, endDateTime: LocalDateTime) : this(
         title,
