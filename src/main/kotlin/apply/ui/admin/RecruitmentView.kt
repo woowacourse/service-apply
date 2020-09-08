@@ -77,7 +77,7 @@ class RecruitmentView(private val recruitmentService: RecruitmentService) : Vert
         )
     }
 
-    private fun createButtonsWhenUnrecruitable(recruitment: Recruitment): HorizontalLayout {
+    private fun createButtonsWhenUnrecruitable(recruitment: Recruitment): Component {
         return HorizontalLayout(
             createSuccessButtonWithDialog(
                 "모집 시작",
