@@ -1,17 +1,13 @@
 package apply.domain.recruitment
 
-import java.time.LocalDateTime
+enum class RecruitmentStatus(val title: String, private val condition: (Boolean, Boolean) -> Boolean) {
+    RECRUITABLE("모집 종료", { isAfterEndDateTime, canRecruit -> !isAfterEndDateTime && canRecruit }),
+    UNRECRUITABLE("모집 가능", { isAfterEndDateTime, canRecruit -> !isAfterEndDateTime && !canRecruit }),
+    ENDED("모집 불가능", { isAfterEndDateTime, _ -> isAfterEndDateTime });
 
-enum class RecruitmentStatus {
-    RECRUITABLE,
-    UNRECRUITABLE,
-    ENDED,
-}
-
-fun RecruitmentStatus(canRecruit: Boolean, period: RecruitmentPeriod): RecruitmentStatus {
-    return when {
-        !canRecruit -> RecruitmentStatus.UNRECRUITABLE
-        period.isIn(LocalDateTime.now()) -> RecruitmentStatus.RECRUITABLE
-        else -> RecruitmentStatus.ENDED
+    companion object {
+        fun of(isAfterEndDateTime: Boolean, canRecruit: Boolean): RecruitmentStatus {
+            return values().first { it.condition(isAfterEndDateTime, canRecruit) }
+        }
     }
 }
