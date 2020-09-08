@@ -32,7 +32,7 @@ class SelectionsView(private val recruitmentService: RecruitmentService) : Verti
 
     private fun createButton(recruitment: Recruitment): Component {
         val button = Button(recruitment.title)
-        button.addClickListener { UI.getCurrent().navigate("admin/selections/" + recruitment.id) }
+        button.addClickListener { UI.getCurrent().navigate(SelectionView::class.java, recruitment.id) }
         return HorizontalLayout(button).apply {
             setSizeFull()
             justifyContentMode = FlexComponent.JustifyContentMode.CENTER
