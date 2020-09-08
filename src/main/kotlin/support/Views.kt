@@ -97,7 +97,7 @@ fun <T : Any> Grid<T>.addSortableDateTimeColumn(
     labelText: String,
     valueProvider: (T) -> LocalDateTime
 ): Grid.Column<T> {
-    return addColumn(LocalDateTimeRenderer(valueProvider, "yyyy-MM-dd hh:mm:ss")).apply {
+    return addColumn(LocalDateTimeRenderer(valueProvider, "yyyy-MM-dd HH:mm:ss")).apply {
         addSortableHeader(labelText)
         setComparator(compareBy(valueProvider))
     }
