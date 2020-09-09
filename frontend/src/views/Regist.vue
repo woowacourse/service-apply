@@ -16,6 +16,7 @@
         type="text"
         label="이름"
         placeholder="이름을 입력해 주세요."
+        :rules="[v => !!v || '필수 정보입니다.']"
         required
       />
       <TextField
@@ -24,6 +25,7 @@
         type="text"
         label="전화번호"
         placeholder="연락 가능한 전화번호를 입력해 주세요."
+        :rules="[v => !!v || '필수 정보입니다.']"
         required
       />
       <TextField
@@ -32,6 +34,7 @@
         type="email"
         label="이메일"
         placeholder="이메일 주소를 입력해 주세요."
+        :rules="[v => !!v || '필수 정보입니다.']"
         required
       />
       <TextField
@@ -40,6 +43,7 @@
         type="password"
         label="비밀번호"
         placeholder="비밀번호를 입력해 주세요."
+        :rules="[v => !!v || '필수 정보입니다.']"
         required
       />
       <TextField
@@ -48,6 +52,10 @@
         type="password"
         label="비밀번호 확인"
         placeholder="비밀번호를 다시 한번 입력해 주세요."
+        :rules="[
+          v => !!v || '필수 정보입니다.',
+          v => v === password || '비밀번호가 일치하지 않습니다.',
+        ]"
         required
       />
       <BirthField v-model="birth" required />

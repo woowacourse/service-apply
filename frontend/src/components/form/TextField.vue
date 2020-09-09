@@ -9,6 +9,7 @@
       :required="required"
       v-model="text"
     />
+    <RuleField :rules="rules" :target="text" />
   </Field>
 </template>
 
@@ -16,12 +17,14 @@
 import Label from "./Label"
 import Field from "./Field"
 import TextInput from "./TextInput"
+import RuleField from "./RuleField"
 
 export const TextField = {
   components: {
     Label,
     Field,
     TextInput,
+    RuleField,
   },
   props: {
     value: String,
@@ -29,6 +32,10 @@ export const TextField = {
     type: String,
     placeholder: String,
     name: String,
+    rules: {
+      type: Array,
+      default: [],
+    },
     required: Boolean,
   },
   data: () => ({
