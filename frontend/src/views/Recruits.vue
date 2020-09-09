@@ -5,7 +5,7 @@
         v-for="tab in tabList"
         :key="tab.name"
         class="list-tab filter"
-        :class="{ active: tab.name === filterBy }"
+        :class="{ active: tab.name === $route.query.query }"
         :id="tab.name"
         @click="setFilter(tab.name)"
       >
@@ -14,7 +14,7 @@
       <h2 class="list-tab" id="mypage">내 지원서</h2>
     </div>
     <div id="component">
-      <RecruitListObject v-bind:recruitsList="recruitsList" />
+      <RecruitListObject v-bind:recruitsList="activeList" />
     </div>
   </div>
 </template>
@@ -29,10 +29,10 @@ export default {
       filterBy: "all",
       tabList: [
         { name: "all", label: "전체" },
-        { name: "ongoing", label: "모집 중" },
-        { name: "finished", label: "모집 종료" },
+        { name: "recruiting", label: "모집 중" },
+        { name: "completed", label: "모집 종료" },
       ],
-      recruitsList: [],
+      activeList: [],
       allList: [
         {
           id: 6,
@@ -71,7 +71,7 @@ export default {
           endTime: new Date("2020-02-09T23:59:00"),
         },
       ],
-      ongoingList: [
+      recruitingList: [
         {
           id: 6,
           title: "웹 백엔드 3기",
@@ -97,7 +97,7 @@ export default {
           endTime: new Date("2020-11-09T23:59:00"),
         },
       ],
-      finishedList: [
+      completedList: [
         {
           id: 2,
           title: "웹 백엔드 2기",
@@ -121,21 +121,27 @@ export default {
   },
   methods: {
     setFilter(filter) {
-      this.filterBy = filter
+      this.$router.push({
+        path: "/recruits/?query=" + filter,
+      })
       this.loadByFilter()
     },
     loadByFilter() {
-      switch (this.filterBy) {
+      switch (this.$route.query.query) {
+        case "recruiting": {
+          this.activeList = this.recruitingList.slice()
+          break
+        }
+        case "completed": {
+          this.activeList = this.completedList.slice()
+          break
+        }
         case "all": {
-          this.recruitsList = this.allList.slice()
+          this.activeList = this.allList.slice()
           break
         }
-        case "ongoing": {
-          this.recruitsList = this.ongoingList.slice()
-          break
-        }
-        case "finished": {
-          this.recruitsList = this.finishedList.slice()
+        default: {
+          this.setFilter("all")
           break
         }
       }
