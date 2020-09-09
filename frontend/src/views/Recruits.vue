@@ -1,9 +1,16 @@
 <template>
   <div id="wrapper">
     <div id="tab-wrapper">
-      <h2 class="list-tab" id="all" @click="setFilter('all')">전체</h2>
-      <h2 class="list-tab" id="ongoing" @click="setFilter('ongoing')">모집 중</h2>
-      <h2 class="list-tab" id="finished" @click="setFilter('finished')">모집 종료</h2>
+      <h2
+        v-for="tab in tabList"
+        :key="tab.name"
+        class="list-tab filter"
+        :class="{ active: tab.name === filterBy }"
+        :id="tab.name"
+        @click="setFilter(tab.name)"
+      >
+        {{ tab.label }}
+      </h2>
       <h2 class="list-tab" id="mypage">내 지원서</h2>
     </div>
     <div id="component">
@@ -19,6 +26,12 @@ export default {
   name: "Recruits",
   data() {
     return {
+      filterBy: "all",
+      tabList: [
+        { name: "all", label: "전체" },
+        { name: "ongoing", label: "모집 중" },
+        { name: "finished", label: "모집 종료" },
+      ],
       recruitsList: [],
       allList: [
         {
@@ -104,18 +117,27 @@ export default {
     RecruitListObject,
   },
   mounted() {
-    this.setFilter("all")
+    this.loadByFilter()
   },
   methods: {
-    setFilter(param) {
-      if (param === "all") {
-        this.recruitsList = this.allList.slice()
-      }
-      if (param === "ongoing") {
-        this.recruitsList = this.ongoingList.slice()
-      }
-      if (param === "finished") {
-        this.recruitsList = this.finishedList.slice()
+    setFilter(filter) {
+      this.filterBy = filter
+      this.loadByFilter()
+    },
+    loadByFilter() {
+      switch (this.filterBy) {
+        case "all": {
+          this.recruitsList = this.allList.slice()
+          break
+        }
+        case "ongoing": {
+          this.recruitsList = this.ongoingList.slice()
+          break
+        }
+        case "finished": {
+          this.recruitsList = this.finishedList.slice()
+          break
+        }
       }
     },
   },
@@ -136,6 +158,14 @@ export default {
 
 .list-tab {
   padding: 0 20px 0 20px;
+}
+
+.filter {
+  color: #aaaaaa;
+}
+
+.active {
+  color: #000000 !important;
 }
 
 @media (max-width: 500px) {
