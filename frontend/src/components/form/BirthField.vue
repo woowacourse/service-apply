@@ -95,20 +95,17 @@ export const BirthField = {
   },
   watch: {
     year() {
-      this.$emit("input", {
-        year: this.year,
-        month: this.month,
-        day: this.day,
-      })
+      this.updateInput()
     },
     month() {
-      this.$emit("input", {
-        year: this.year,
-        month: this.month,
-        day: this.day,
-      })
+      this.updateInput()
     },
     day() {
+      this.updateInput()
+    },
+  },
+  methods: {
+    updateInput() {
       this.$emit("input", {
         year: this.year,
         month: this.month,

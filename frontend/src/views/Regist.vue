@@ -2,7 +2,12 @@
   <div class="regist">
     <Form @submit="submit">
       <h1>지원자 정보</h1>
-      <SummaryCheckField name="policy" label="개인정보 수집 및 이용 동의" v-model="policyCheck" required>
+      <SummaryCheckField
+        name="policy"
+        label="개인정보 수집 및 이용 동의"
+        v-model="policyCheck"
+        required
+      >
         <p class="summary">{{ policySummary }}</p>
       </SummaryCheckField>
       <TextField
