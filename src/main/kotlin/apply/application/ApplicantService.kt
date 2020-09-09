@@ -4,13 +4,18 @@ import apply.domain.applicant.Applicant
 import apply.domain.applicant.ApplicantRepository
 import apply.domain.applicant.Gender
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import javax.annotation.PostConstruct
 
+@Transactional
 @Service
 class ApplicantService(val applicantRepository: ApplicantRepository) {
     fun findAll(): List<Applicant> {
         return applicantRepository.findAll()
     }
+
+    fun getByName(name: String): Applicant =
+        applicantRepository.findByName(name).orElse(null)
 
     @PostConstruct
     private fun populateDummy() {

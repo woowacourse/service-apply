@@ -1,14 +1,21 @@
 package support
 
 import com.vaadin.flow.component.ClickEvent
+import com.vaadin.flow.component.ComponentEventListener
+import com.vaadin.flow.component.Key
+import com.vaadin.flow.component.KeyDownEvent
 import com.vaadin.flow.component.Text
 import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.button.ButtonVariant
 import com.vaadin.flow.component.dialog.Dialog
 import com.vaadin.flow.component.grid.Grid
+import com.vaadin.flow.component.html.Div
+import com.vaadin.flow.component.icon.Icon
+import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
+import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.data.renderer.LocalDateTimeRenderer
 import java.time.LocalDateTime
 
@@ -107,4 +114,16 @@ private fun <T : Any> Grid.Column<T>.addSortableHeader(labelText: String) {
     setHeader(labelText)
     isSortable = true
     isAutoWidth = true
+}
+
+fun createSearchBar(eventListener: (name: String) -> Unit): Div {
+    val textField = TextField()
+    textField.addKeyDownListener(
+        Key.ENTER,
+        ComponentEventListener<KeyDownEvent?> { eventListener(textField.value) }
+    )
+    return Div(
+        textField,
+        Button(Icon(VaadinIcon.SEARCH)) { eventListener(textField.value) }
+    )
 }
