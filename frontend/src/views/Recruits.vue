@@ -28,9 +28,21 @@ export default {
     return {
       filterBy: "all",
       tabList: [
-        { name: "all", label: "전체" },
-        { name: "recruiting", label: "모집 중" },
-        { name: "completed", label: "모집 종료" },
+        {
+          name: "all",
+          label: "전체",
+          strategy: el => (el.activeList = el.allList.slice()),
+        },
+        {
+          name: "recruiting",
+          label: "모집 중",
+          strategy: el => (el.activeList = el.recruitingList.slice()),
+        },
+        {
+          name: "completed",
+          label: "모집 종료",
+          strategy: el => (el.activeList = el.completedList.slice()),
+        },
       ],
       activeList: [],
       allList: [
@@ -127,23 +139,10 @@ export default {
       this.loadByFilter()
     },
     loadByFilter() {
-      switch (this.$route.query.query) {
-        case "recruiting": {
-          this.activeList = this.recruitingList.slice()
-          break
-        }
-        case "completed": {
-          this.activeList = this.completedList.slice()
-          break
-        }
-        case "all": {
-          this.activeList = this.allList.slice()
-          break
-        }
-        default: {
-          this.setFilter("all")
-          break
-        }
+      try {
+        this.tabList.find(el => el.name === this.$route.query.query).strategy(this)
+      } catch {
+        this.setFilter("all")
       }
     },
   },
