@@ -96,5 +96,6 @@ export default {
   height: 40px;
   margin: 10px;
   vertical-align: middle;
+  background-color: #3498db;
 }
 </style>
