@@ -1,14 +1,11 @@
 <template>
   <Field class="text-field">
-    <Label :for="name" :required="required">{{ label }}</Label>
-    <TextInput
-      :id="name"
-      :name="name"
-      :type="type"
-      :placeholder="placeholder"
-      :required="required"
-      v-model="text"
-    />
+    <label class="text-field" @click="$event.currentTarget.click()">
+      <div>
+        <Label :required="required">{{ label }}</Label>
+      </div>
+      <TextInput v-bind="$attrs" :required="required" v-model="text" />
+    </label>
     <RuleField :rules="rules" :target="text" />
   </Field>
 </template>
@@ -26,12 +23,9 @@ export const TextField = {
     TextInput,
     RuleField,
   },
+  inheritAttrs: false,
   props: {
-    value: String,
     label: String,
-    type: String,
-    placeholder: String,
-    name: String,
     rules: {
       type: Array,
       default: [],

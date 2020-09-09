@@ -1,15 +1,13 @@
 <template>
-  <div class="checkbox">
+  <Label class="checkbox" :class="{ checked }" :required="required">
+    {{ label }}
     <input
       type="checkbox"
-      :id="name"
-      :name="name"
-      :checked="checked"
-      @input="$emit('input', (checked = !checked))"
+      v-bind="$attrs"
       :required="required"
+      @input="$emit('change', $event.target.checked)"
     />
-    <Label :for="name" :required="required">{{ label }}</Label>
-  </div>
+  </Label>
 </template>
 
 <script>
@@ -19,14 +17,15 @@ export const CheckBox = {
   components: {
     Label,
   },
-  props: {
-    value: Boolean,
-    name: String,
-    label: String,
-    required: Boolean,
+  inheritAttrs: false,
+  model: {
+    prop: "checked",
+    event: "change",
   },
-  created() {
-    this.checked = this.value
+  props: {
+    label: String,
+    checked: Boolean,
+    required: Boolean,
   },
 }
 
@@ -42,13 +41,13 @@ input[type="checkbox"] {
   outline: none;
 }
 
-label {
+.checkbox {
   display: flex;
   align-items: center;
   cursor: pointer;
 }
 
-label::before {
+.checkbox::before {
   content: "✓";
   display: flex;
   justify-content: center;
@@ -62,7 +61,7 @@ label::before {
   transition-duration: 0.2s;
 }
 
-input[type="checkbox"]:checked + label::before {
+.checked::before {
   background: #0078ff;
   border: 1px solid #e2eaf4;
   color: #fff;

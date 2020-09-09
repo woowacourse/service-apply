@@ -1,13 +1,21 @@
 <template>
-  <input class="button" :class="{ cancel }" />
+  <input :type="type" class="button" :class="{ cancel }" v-on="$listeners" />
 </template>
 
 <script>
 export const Button = {
   props: {
+    type: {
+      type: String,
+      default: "button",
+      validator(value) {
+        return ["button", "submit", "reset"].indexOf(value) !== -1
+      },
+    },
     cancel: Boolean,
   },
 }
+
 export default Button
 </script>
 

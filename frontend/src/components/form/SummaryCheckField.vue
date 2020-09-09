@@ -1,8 +1,6 @@
 <template>
   <Field>
-    <label>
-      <CheckBox :name="name" :label="label" v-model="checked" required />
-    </label>
+    <CheckBox v-bind="$attrs" abc="ad" :label="label" v-model="selected" required />
     <div class="summary" tabindex="-1">
       <slot class="text"></slot>
     </div>
@@ -18,20 +16,21 @@ export const SummaryCheckField = {
     Field,
     CheckBox,
   },
+  inheritAttrs: false,
+  model: {
+    prop: "checked",
+    event: "change",
+  },
   props: {
-    name: String,
+    checked: Boolean,
     label: String,
-    value: Boolean,
   },
   data: () => ({
-    checked: false,
+    selected: false,
   }),
-  created() {
-    this.checked = this.value
-  },
   watch: {
-    checked() {
-      this.$emit("input", this.checked)
+    selected() {
+      this.$emit("change", this.selected)
     },
   },
 }

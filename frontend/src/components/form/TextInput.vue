@@ -1,16 +1,23 @@
 <template>
-  <input class="text-input" :value="value" @input="updateInput" />
+  <input
+    :type="type"
+    class="text-input"
+    :value="value"
+    @input="$emit('input', $event.target.value)"
+  />
 </template>
 
 <script>
 export const TextInput = {
   props: {
-    value: String,
-  },
-  methods: {
-    updateInput({ target }) {
-      this.$emit("input", target.value)
+    type: {
+      type: String,
+      default: "text",
+      validator(value) {
+        return ["text", "email", "password"].indexOf(value) !== -1
+      },
     },
+    value: String,
   },
 }
 

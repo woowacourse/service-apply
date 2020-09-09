@@ -1,6 +1,6 @@
 <template>
   <div class="regist">
-    <Form @submit="submit">
+    <Form @submit.prevent="submit">
       <h1>지원자 정보</h1>
       <SummaryCheckField
         name="policy"
@@ -20,6 +20,7 @@
         required
       />
       <TextField
+        @click="submit"
         v-model="phoneNumber"
         name="phone-number"
         type="text"
@@ -61,7 +62,7 @@
       <BirthField v-model="birth" required />
       <GenderField v-model="gender" required />
       <div class="actions">
-        <Button type="button" cancel value="취소" />
+        <Button cancel value="취소" />
         <Button type="submit" :disabled="!policyCheck" value="다음" />
       </div>
       <footer>
@@ -108,9 +109,7 @@ export default {
     gender: "",
   }),
   methods: {
-    submit(e) {
-      e.preventDefault()
-    },
+    submit() {},
   },
 }
 </script>

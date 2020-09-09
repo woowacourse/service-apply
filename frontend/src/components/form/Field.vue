@@ -5,7 +5,14 @@
 </template>
 
 <script>
-export const Field = {}
+import Label from "./Label"
+
+export const Field = {
+  components: {
+    Label,
+  },
+  props: ["label", "required"],
+}
 export default Field
 </script>
 

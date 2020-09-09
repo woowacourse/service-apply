@@ -1,5 +1,5 @@
 <template>
-  <label class="label" :class="{ required }"><slot></slot></label>
+  <label class="label" :class="{ required }" v-on="$listeners"><slot></slot></label>
 </template>
 
 <script>

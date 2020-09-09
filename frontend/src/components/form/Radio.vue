@@ -1,16 +1,13 @@
 <template>
-  <div class="radio">
+  <Label class="radio" :class="{ checked: checked === $attrs.value }">
+    {{ label }}
     <input
       type="radio"
-      :id="name + '-' + option"
-      :name="name"
-      :value="option"
-      :checked="option === value"
-      @input="$emit('input', option)"
+      v-bind="$attrs"
+      @change="$emit('change', $event.target.value)"
       :required="required"
     />
-    <Label :for="name + '-' + option">{{ label }}</Label>
-  </div>
+  </Label>
 </template>
 
 <script>
@@ -20,11 +17,14 @@ export const Radio = {
   components: {
     Label,
   },
+  inheritAttrs: false,
+  model: {
+    prop: "checked",
+    event: "change",
+  },
   props: {
-    name: String,
     label: String,
-    option: null,
-    value: null,
+    checked: String,
     required: Boolean,
   },
 }
@@ -33,12 +33,6 @@ export default Radio
 </script>
 
 <style scoped>
-.radio {
-  display: flex;
-  align-items: center;
-  margin-right: 10px;
-}
-
 input[type="radio"] {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -47,10 +41,11 @@ input[type="radio"] {
   margin-left: 13px;
 }
 
-label {
+.radio {
   display: flex;
   align-items: center;
   cursor: pointer;
+  margin-right: 10px;
 }
 
 label::before {
@@ -67,7 +62,7 @@ label::before {
   transition-duration: 0.2s;
 }
 
-input[type="radio"]:checked + label::before {
+.checked::before {
   background: #0078ff;
   border: 3px solid #d8e0ea;
   color: #fff;

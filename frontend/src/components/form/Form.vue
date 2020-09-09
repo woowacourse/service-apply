@@ -1,5 +1,5 @@
 <template>
-  <form class="form">
+  <form class="form" v-on="$listeners">
     <slot></slot>
   </form>
 </template>
