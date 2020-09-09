@@ -3,7 +3,7 @@
     <span v-if="incorrect">{{ incorrect }}</span>
   </div>
 </template>
-{
+
 <script>
 export const RuleField = {
   props: {
