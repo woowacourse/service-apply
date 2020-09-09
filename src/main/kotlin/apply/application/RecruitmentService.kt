@@ -2,6 +2,7 @@ package apply.application
 
 import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentRepository
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import support.createLocalDateTime
@@ -9,10 +10,25 @@ import javax.annotation.PostConstruct
 
 @Transactional
 @Service
-class RecruitmentService(val recruitmentRepository: RecruitmentRepository) {
+class RecruitmentService(private val recruitmentRepository: RecruitmentRepository) {
     fun findAll(): List<Recruitment> {
         return recruitmentRepository.findAll()
     }
+
+    fun deleteById(id: Long) {
+        recruitmentRepository.deleteById(id)
+    }
+
+    fun start(id: Long) {
+        getById(id).start()
+    }
+
+    fun stop(id: Long) {
+        getById(id).stop()
+    }
+
+    private fun getById(id: Long): Recruitment =
+        recruitmentRepository.findByIdOrNull(id) ?: throw IllegalArgumentException()
 
     @PostConstruct
     private fun populateDummy() {
