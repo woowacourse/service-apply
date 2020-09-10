@@ -1,7 +1,10 @@
 package apply.domain.applicant
 
+import java.time.LocalDate
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.EnumType
+import javax.persistence.Enumerated
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
@@ -9,29 +12,22 @@ import javax.persistence.Id
 @Entity
 class Applicant(
     @Column(nullable = false)
-    var name: String,
+    val name: String,
 
     @Column(nullable = false)
-    var email: String,
+    val email: String,
 
     @Column(nullable = false)
-    var phoneNumber: String,
+    val phoneNumber: String,
 
     @Column(nullable = false)
-    var gender: String,
+    @Enumerated(EnumType.STRING)
+    val gender: Gender,
 
     @Column(nullable = false)
-    var birthday: String,
+    val birthday: LocalDate,
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L
-) {
-    constructor(name: String, email: String, phoneNumber: String, gender: Gender, birthday: String) : this(
-        name,
-        email,
-        phoneNumber,
-        gender.korean,
-        birthday
-    )
-}
+)

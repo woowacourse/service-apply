@@ -5,17 +5,18 @@ import apply.domain.applicant.ApplicantRepository
 import apply.domain.applicant.Gender
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import support.createLocalDate
 import javax.annotation.PostConstruct
 
 @Transactional
 @Service
-class ApplicantService(val applicantRepository: ApplicantRepository) {
+class ApplicantService(private val applicantRepository: ApplicantRepository) {
     fun findAll(): List<Applicant> {
         return applicantRepository.findAll()
     }
 
-    fun getByName(name: String): Applicant =
-        applicantRepository.findByName(name).orElse(null)
+    fun findByName(name: String): Applicant? =
+        applicantRepository.findByName(name)
 
     @PostConstruct
     private fun populateDummy() {
@@ -25,24 +26,24 @@ class ApplicantService(val applicantRepository: ApplicantRepository) {
         val applicants = listOf(
             Applicant(
                 "홍길동1",
-                "@email.com",
+                "a@email.com",
                 "010-0000-0000",
                 Gender.MALE,
-                "0000.00.00"
+                createLocalDate(2020, 4, 17)
             ),
             Applicant(
                 "홍길동2",
-                "@email.com",
+                "a@email.com",
                 "010-0000-0000",
                 Gender.FEMALE,
-                "0000.00.00"
+                createLocalDate(2020, 5, 5)
             ),
             Applicant(
                 "홍길동3",
-                "@email.com",
+                "a@email.com",
                 "010-0000-0000",
                 Gender.MALE,
-                "0000.00.00"
+                createLocalDate(2020, 1, 1)
             )
         )
         applicantRepository.saveAll(applicants)

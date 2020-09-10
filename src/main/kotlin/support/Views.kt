@@ -16,7 +16,9 @@ import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.textfield.TextField
+import com.vaadin.flow.data.renderer.LocalDateRenderer
 import com.vaadin.flow.data.renderer.LocalDateTimeRenderer
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 typealias ClickListener = (ClickEvent<Button>) -> Unit
@@ -24,6 +26,12 @@ typealias ClickListener = (ClickEvent<Button>) -> Unit
 fun createPrimaryButton(text: String, clickListener: ClickListener): Button {
     return Button(text, clickListener).apply {
         addThemeVariants(ButtonVariant.LUMO_PRIMARY)
+    }
+}
+
+fun createSuccessButton(text: String, clickListener: ClickListener): Button {
+    return createPrimaryButton(text, clickListener).apply {
+        addThemeVariants(ButtonVariant.LUMO_SUCCESS)
     }
 }
 
@@ -105,6 +113,16 @@ fun <T : Any> Grid<T>.addSortableDateTimeColumn(
     valueProvider: (T) -> LocalDateTime
 ): Grid.Column<T> {
     return addColumn(LocalDateTimeRenderer(valueProvider, "yyyy-MM-dd HH:mm:ss")).apply {
+        addSortableHeader(labelText)
+        setComparator(compareBy(valueProvider))
+    }
+}
+
+fun <T : Any> Grid<T>.addSortableDateColumn(
+    labelText: String,
+    valueProvider: (T) -> LocalDate
+): Grid.Column<T> {
+    return addColumn(LocalDateRenderer(valueProvider, "yyyy-MM-dd")).apply {
         addSortableHeader(labelText)
         setComparator(compareBy(valueProvider))
     }

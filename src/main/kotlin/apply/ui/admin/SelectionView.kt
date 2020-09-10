@@ -16,9 +16,10 @@ import com.vaadin.flow.router.HasUrlParameter
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.router.WildcardParameter
 import support.addSortableColumn
-import support.createPrimaryButton
+import support.addSortableDateColumn
 import support.createPrimarySmallButton
 import support.createSearchBar
+import support.createSuccessButton
 
 @Route(value = "admin/selections", layout = BaseLayout::class)
 class SelectionView(
@@ -38,9 +39,9 @@ class SelectionView(
         return HorizontalLayout(
             createSearchBar {
                 removeAll()
-                add(createTitle(), createMenu(), createGrid(getApplicants(applicantService.getByName(it))))
+                add(createTitle(), createMenu(), createGrid(getApplicants(applicantService.findByName(it))))
             },
-            createPrimaryButton("다운로드") {
+            createSuccessButton("다운로드") {
                 // Todo: 엑셀 다운로드
             }
         ).apply {
@@ -62,8 +63,8 @@ class SelectionView(
             addSortableColumn("이름", Applicant::name)
             addSortableColumn("이메일", Applicant::email)
             addSortableColumn("전화번호", Applicant::phoneNumber)
-            addSortableColumn("성별", Applicant::gender)
-            addSortableColumn("생년월일", Applicant::birthday)
+            addSortableColumn("성별") { it.gender.title }
+            addSortableDateColumn("생년월일", Applicant::birthday)
             addColumn(createButtonRenderer()).apply { isAutoWidth = true }
             setItems(applicants)
         }
