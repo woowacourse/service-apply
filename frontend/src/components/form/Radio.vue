@@ -37,6 +37,9 @@ input[type="radio"] {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
+  z-index: -9999;
+  width: 1px;
+  height: 1px;
   position: absolute;
   margin-left: 13px;
 }
