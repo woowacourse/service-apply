@@ -20,7 +20,6 @@
         required
       />
       <TextField
-        @click="submit"
         v-model="phoneNumber"
         name="phone-number"
         type="text"
