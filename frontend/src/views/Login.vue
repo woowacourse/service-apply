@@ -1,103 +1,117 @@
 <template>
-  <div class="loginPage">
-    <h1>내 지원서 보기</h1>
-    <div class="login-form-box">
-      <div class="login-form">
-        <div class="block">
-          <label for="name" class="form-label">이름</label>
-          <input type="text" id="name" size="40" v-model="user.name" />
-        </div>
-        <div class="block">
-          <label for="email" class="form-label">이메일</label>
-          <input type="email" id="email" size="40" v-model="user.email" />
-        </div>
-        <div class="block">
-          <label for="date" class="form-label">생년월일</label>
-          <input type="date" id="date" v-model="user.birthDay" />
-        </div>
-        <div class="block">
-          <label for="password" class="form-label">비밀번호</label>
-          <input type="password" id="password" size="40" v-model="user.password" />
-        </div>
-        <button class="button" @click="submit">확인</button>
+  <div class="login">
+    <Form @submit="submit">
+      <h1>내 지원서 보기</h1>
+      <TextField
+        v-model="name"
+        name="name"
+        type="text"
+        label="이름"
+        placeholder="이름을 입력해 주세요."
+        required
+      />
+      <TextField
+        v-model="email"
+        name="email"
+        type="email"
+        label="이메일"
+        placeholder="이메일 주소를 입력해 주세요."
+        required
+      />
+      <BirthField v-model="birth" required />
+      <TextField
+        v-model="password"
+        name="password"
+        type="password"
+        label="비밀번호"
+        placeholder="비밀번호를 입력해 주세요."
+        required
+      />
+      <div class="actions">
+        <Button type="button" cancel value="취소" />
+        <Button type="submit" value="다음" />
       </div>
-    </div>
-    <div class="password-button">
-      비밀번호 찾기
-    </div>
+      <footer>
+        <a class="logo" href="#"></a>
+        <Label class="click" @click.native="findPassword">비밀번호 찾기</Label>
+      </footer>
+    </Form>
   </div>
 </template>
 
 <script>
+import { Form, Button, TextField, BirthField, Label } from "@/components/form"
+
 export default {
-  name: "LoginPage",
-  components: {},
-  data() {
-    return {
-      user: {
-        name: "",
-        email: "",
-        birthDay: "",
-        password: "",
-      },
-    }
+  name: "Login",
+  components: {
+    Form,
+    Button,
+    TextField,
+    BirthField,
+    Label,
   },
+  data: () => ({
+    name: "",
+    email: "",
+    password: "",
+    birth: {
+      year: "",
+      month: "",
+      day: "",
+    },
+  }),
   methods: {
-    submit() {
+    submit(e) {
+      e.preventDefault()
+    },
+    findPassword() {
+      this.$router.push("/find")
     },
   },
 }
 </script>
 
 <style scoped>
-.loginPage {
-  margin-top: 5%;
-  align-items: center;
-  margin-left: 15vw;
-  margin-right: 15vw;
+* {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", Roboto,
+    "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+    "Noto Color Emoji";
+  box-sizing: border-box;
 }
-.login-form-box {
-  background: #dadada;
-  position: relative;
-  margin-left: 15vw;
-  margin-right: 15vw;
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
-.login-form {
+
+.login {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  height: 100%;
   align-items: center;
-  padding: 1vw;
+  background: #ced6e0;
 }
-input {
-  padding: 10px;
+
+.actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
 }
-.block {
-  margin-bottom: 10px;
+
+.actions > .button {
+  flex: 1;
 }
-.form-label {
-  display: inline-block;
-  width: 80px;
-  text-align: left;
-  margin-bottom: 2vh;
+
+.logo {
+  display: flex;
+  width: 100px;
+  height: 32px;
+  background: url("/assets/logo/logo_full_dark.png");
+  background-size: 100% 100%;
 }
-.button {
-  display: block;
-  width: 70%;
-  border: none;
-  background-color: rgb(52, 152, 219);
-  color: white;
-  padding: 14px 28px;
-  font-size: 16px;
-  text-align: center;
+footer {
+  display: flex;
+  justify-content: space-between;
+}
+.click {
   cursor: pointer;
-}
-.password-button {
-  position: relative;
-  margin-left: 15vw;
-  margin-right: 15vw;
-  margin-top: 1vh;
-  text-align: right;
 }
 </style>
