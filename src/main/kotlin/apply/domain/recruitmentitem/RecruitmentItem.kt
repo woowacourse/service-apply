@@ -1,33 +1,27 @@
 package apply.domain.recruitmentitem
 
-import apply.domain.recruitment.Recruitment
 import javax.persistence.Column
-import javax.persistence.ConstraintMode
 import javax.persistence.Entity
-import javax.persistence.ForeignKey
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
-import javax.persistence.JoinColumn
-import javax.persistence.ManyToOne
 
 @Entity
 class RecruitmentItem(
     @Column(nullable = false)
-    var title: String,
+    val title: String,
 
     @Column(nullable = false)
-    var description: String,
-
-    @ManyToOne
-    @JoinColumn(name = "RECRUITMENT_ID", foreignKey = ForeignKey(name = "none", value = ConstraintMode.NO_CONSTRAINT))
-    var recruitment: Recruitment,
+    val description: String,
 
     @Column(nullable = false)
-    var maximumLength: Int = 1000,
+    val recruitmentId: Long,
 
-    @Column(nullable = false, name = "ORDER_COLUMN")
-    var order: Int = 0,
+    @Column(nullable = false)
+    val maximumLength: Int = 1000,
+
+    @Column(nullable = false)
+    val position: Int = 0,
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
