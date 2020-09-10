@@ -8,6 +8,7 @@
         type="text"
         label="이름"
         placeholder="이름을 입력해 주세요."
+        :rules="rules.name"
         required
       />
       <TextField
@@ -16,6 +17,7 @@
         type="email"
         label="이메일"
         placeholder="이메일 주소를 입력해 주세요."
+        :rules="rules.email"
         required
       />
       <BirthField v-model="birth" required />
@@ -25,6 +27,7 @@
         type="password"
         label="비밀번호"
         placeholder="비밀번호를 입력해 주세요."
+        :rules="rules.password"
         required
       />
       <div class="actions">
@@ -41,6 +44,7 @@
 
 <script>
 import { Form, Button, TextField, BirthField, Label } from "@/components/form"
+import { login } from "@/utils/validation"
 
 export default {
   name: "Login",
@@ -60,6 +64,7 @@ export default {
       month: "",
       day: "",
     },
+    rules: { ...login },
   }),
   methods: {
     submit(e) {
