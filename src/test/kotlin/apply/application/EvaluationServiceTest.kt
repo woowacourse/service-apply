@@ -4,13 +4,13 @@ import apply.domain.evaluation.Evaluation
 import apply.domain.evaluation.EvaluationRepository
 import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentRepository
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.mockito.ArgumentMatchers.anyLong
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.doNothing
+import org.mockito.BDDMockito.given
+import org.mockito.BDDMockito.willDoNothing
 import org.mockito.Mockito.mock
 import org.springframework.beans.factory.annotation.Autowired
 import support.createLocalDateTime
@@ -23,8 +23,8 @@ internal class EvaluationServiceTest {
     private val evaluationRepository: EvaluationRepository = mock(EvaluationRepository::class.java)
     private lateinit var recruitments: List<Recruitment>
     private lateinit var preCourseEvaluation: Evaluation
-    private lateinit var firstWeekEvaluation: Evaluation
-    private lateinit var secondWeekEvaluation: Evaluation
+    private lateinit var firstEvaluation: Evaluation
+    private lateinit var secondEvaluation: Evaluation
     private lateinit var evaluations: List<Evaluation>
 
     @BeforeEach
@@ -55,7 +55,7 @@ internal class EvaluationServiceTest {
             1L
         )
 
-        firstWeekEvaluation = Evaluation(
+        firstEvaluation = Evaluation(
             " 1주차 - 숫자야구게임",
             "[리뷰 절차]\n" +
                 "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
@@ -64,7 +64,7 @@ internal class EvaluationServiceTest {
             2L
         )
 
-        secondWeekEvaluation = Evaluation(
+        secondEvaluation = Evaluation(
             "2주차 - 자동차경주게임 ",
             "[리뷰 절차]\n" +
                 "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
@@ -73,36 +73,36 @@ internal class EvaluationServiceTest {
             3L
         )
 
-        evaluations = listOf(preCourseEvaluation, firstWeekEvaluation, secondWeekEvaluation)
+        evaluations = listOf(preCourseEvaluation, firstEvaluation, secondEvaluation)
     }
 
     @Test
     fun `평가와 모집 정보를 함께 제공한다`() {
-        `when`(evaluationRepository.findAll()).thenReturn(evaluations)
-        `when`(recruitmentRepository.findById(anyLong())).thenReturn(Optional.of(recruitments[0]))
-        `when`(evaluationRepository.findById(1L)).thenReturn(Optional.of(evaluations[0]))
-        `when`(evaluationRepository.findById(2L)).thenReturn(Optional.of(evaluations[1]))
+        given(evaluationRepository.findAll()).willReturn(evaluations)
+        given(recruitmentRepository.findById(anyLong())).willReturn(Optional.of(recruitments[0]))
+        given(evaluationRepository.findById(1L)).willReturn(Optional.of(evaluations[0]))
+        given(evaluationRepository.findById(2L)).willReturn(Optional.of(evaluations[1]))
 
         val findAllWithRecruitment = evaluationService.findAllWithRecruitment()
 
         assertAll(
-            { assertEquals(2L, findAllWithRecruitment[1].id) },
-            { assertEquals(firstWeekEvaluation.title, findAllWithRecruitment[1].title) },
-            { assertEquals(firstWeekEvaluation.description, findAllWithRecruitment[1].description) },
-            { assertEquals(recruitments[0].title, findAllWithRecruitment[1].recruitment) },
-            { assertEquals(firstWeekEvaluation.recruitment, findAllWithRecruitment[1].recruitmentId) },
-            { assertEquals(preCourseEvaluation.title, findAllWithRecruitment[1].beforeEvaluation) },
-            { assertEquals(preCourseEvaluation.id, findAllWithRecruitment[1].beforeEvaluationId) }
+            { assertThat(2L).isEqualTo(findAllWithRecruitment[1].id) },
+            { assertThat(firstEvaluation.title).isEqualTo(findAllWithRecruitment[1].title) },
+            { assertThat(firstEvaluation.description).isEqualTo(findAllWithRecruitment[1].description) },
+            { assertThat(recruitments[0].title).isEqualTo(findAllWithRecruitment[1].recruitment) },
+            { assertThat(firstEvaluation.recruitment).isEqualTo(findAllWithRecruitment[1].recruitmentId) },
+            { assertThat(preCourseEvaluation.title).isEqualTo(findAllWithRecruitment[1].beforeEvaluation) },
+            { assertThat(preCourseEvaluation.id).isEqualTo(findAllWithRecruitment[1].beforeEvaluationId) }
         )
     }
 
     @Test
     fun `삭제된 평가를 이전 평가로 가지는 평가의 이전 평가를 초기화한다`() {
-        `when`(evaluationRepository.findAll()).thenReturn(evaluations)
-        doNothing().`when`(evaluationRepository).deleteById(anyLong())
+        given(evaluationRepository.findAll()).willReturn(evaluations)
+        willDoNothing().given(evaluationRepository).deleteById(anyLong())
 
         evaluationService.deleteById(2L)
 
-        assertEquals(0L, evaluations[2].beforeEvaluation)
+        assertThat(0L).isEqualTo(evaluations[2].beforeEvaluation)
     }
 }
