@@ -31,7 +31,7 @@ const GenderField = {
     },
   },
   created() {
-    this.gender = this.value || ""
+    this.gender = this.value
   },
 }
 
