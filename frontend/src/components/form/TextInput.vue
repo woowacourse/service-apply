@@ -8,7 +8,7 @@
 </template>
 
 <script>
-export const TextInput = {
+const TextInput = {
   props: {
     type: {
       type: String,

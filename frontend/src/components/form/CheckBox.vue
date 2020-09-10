@@ -13,7 +13,7 @@
 <script>
 import Label from "./Label"
 
-export const CheckBox = {
+const CheckBox = {
   components: {
     Label,
   },

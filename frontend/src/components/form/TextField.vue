@@ -16,7 +16,7 @@ import Field from "./Field"
 import TextInput from "./TextInput"
 import RuleField from "./RuleField"
 
-export const TextField = {
+const TextField = {
   components: {
     Label,
     Field,

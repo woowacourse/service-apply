@@ -13,7 +13,7 @@
 <script>
 import Label from "./Label"
 
-export const Radio = {
+const Radio = {
   components: {
     Label,
   },

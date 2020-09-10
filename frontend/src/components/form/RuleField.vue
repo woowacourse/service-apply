@@ -5,7 +5,7 @@
 </template>
 
 <script>
-export const RuleField = {
+const RuleField = {
   props: {
     rules: Array,
     target: String,

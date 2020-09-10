@@ -50,7 +50,7 @@ import Field from "./Field"
 import TextInput from "./TextInput"
 import RuleField from "./RuleField"
 
-export const BirthField = {
+const BirthField = {
   props: {
     value: {
       type: Object,

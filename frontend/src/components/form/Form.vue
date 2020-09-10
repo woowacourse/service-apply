@@ -4,11 +4,6 @@
   </form>
 </template>
 
-<script>
-export const Form = {}
-export default Form
-</script>
-
 <style scoped>
 .form {
   display: flex;

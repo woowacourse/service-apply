@@ -3,7 +3,7 @@
 </template>
 
 <script>
-export const Label = {
+const Label = {
   props: {
     required: Boolean,
   },

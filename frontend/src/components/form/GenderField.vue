@@ -13,7 +13,7 @@ import Label from "./Label"
 import Field from "./Field"
 import Radio from "./Radio"
 
-export const GenderField = {
+const GenderField = {
   components: {
     Label,
     Field,
@@ -34,6 +34,7 @@ export const GenderField = {
     this.gender = this.value || ""
   },
 }
+
 export default GenderField
 </script>
 

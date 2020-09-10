@@ -7,12 +7,13 @@
 <script>
 import Label from "./Label"
 
-export const Field = {
+const Field = {
   components: {
     Label,
   },
   props: ["label", "required"],
 }
+
 export default Field
 </script>
 

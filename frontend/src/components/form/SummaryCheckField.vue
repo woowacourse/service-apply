@@ -11,7 +11,7 @@
 import Field from "./Field"
 import CheckBox from "./CheckBox"
 
-export const SummaryCheckField = {
+const SummaryCheckField = {
   components: {
     Field,
     CheckBox,

@@ -3,7 +3,7 @@
 </template>
 
 <script>
-export const Button = {
+const Button = {
   props: {
     type: {
       type: String,
