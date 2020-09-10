@@ -1,7 +1,7 @@
 <template>
   <Field>
     <CheckBox v-bind="$attrs" abc="ad" :label="label" v-model="selected" required />
-    <div v-if="slotPassed" class="summary" tabindex="-1">
+    <div class="summary" tabindex="-1">
       <slot class="text"></slot>
     </div>
   </Field>
@@ -31,11 +31,6 @@ const SummaryCheckField = {
   watch: {
     selected() {
       this.$emit("change", this.selected)
-    },
-  },
-  computed: {
-    slotPassed() {
-      return !!this.$slots.default
     },
   },
 }
