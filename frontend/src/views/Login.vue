@@ -31,8 +31,8 @@
         required
       />
       <div class="actions">
-        <Button type="button" cancel value="취소" />
-        <Button type="submit" value="다음" />
+        <Button type="button" @click="back" cancel value="이전" />
+        <Button type="submit" value="확인" />
       </div>
       <footer>
         <a class="logo" href="#"></a>
@@ -73,6 +73,9 @@ export default {
     findPassword() {
       this.$router.push("/find")
     },
+    back() {
+      this.$router.go(-1)
+    }
   },
 }
 </script>
