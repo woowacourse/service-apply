@@ -16,7 +16,7 @@
         type="text"
         label="이름"
         placeholder="이름을 입력해 주세요."
-        :rules="[v => !!v || '필수 정보입니다.']"
+        :rules="rules.name"
         required
       />
       <TextField
@@ -25,7 +25,7 @@
         type="text"
         label="전화번호"
         placeholder="연락 가능한 전화번호를 입력해 주세요."
-        :rules="[v => !!v || '필수 정보입니다.']"
+        :rules="rules.phoneNumber"
         required
       />
       <TextField
@@ -34,7 +34,7 @@
         type="email"
         label="이메일"
         placeholder="이메일 주소를 입력해 주세요."
-        :rules="[v => !!v || '필수 정보입니다.']"
+        :rules="rules.email"
         required
       />
       <TextField
@@ -43,19 +43,16 @@
         type="password"
         label="비밀번호"
         placeholder="비밀번호를 입력해 주세요."
-        :rules="[v => !!v || '필수 정보입니다.']"
+        :rules="rules.password"
         required
       />
       <TextField
-        v-model="passwordCheck"
-        name="password-check"
+        v-model="rePassword"
+        name="re-password"
         type="password"
         label="비밀번호 확인"
         placeholder="비밀번호를 다시 한번 입력해 주세요."
-        :rules="[
-          v => !!v || '필수 정보입니다.',
-          v => v === password || '비밀번호가 일치하지 않습니다.',
-        ]"
+        :rules="[...rules.rePassword, v => v === password || '비밀번호가 일치하지 않습니다.']"
         required
       />
       <BirthField v-model="birth" required />
@@ -81,6 +78,8 @@ import {
   SummaryCheckField,
 } from "@/components/form"
 
+import { regist } from "@/utils/validation"
+
 import { POLICY_SUMMARY } from "./constants"
 
 export default {
@@ -99,13 +98,14 @@ export default {
     phoneNumber: "",
     email: "",
     password: "",
-    passwordCheck: "",
+    rePassword: "",
     birth: {
       year: "",
       month: "",
       day: "",
     },
     gender: "",
+    rules: { ...regist },
   }),
   methods: {
     submit() {},

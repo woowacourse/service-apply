@@ -28,17 +28,17 @@
         :required="required"
       />
     </div>
-    <RuleField v-show="incorrectYear" v-model="incorrectYear" :rules="yearRules" :target="year" />
+    <RuleField v-show="incorrectYear" v-model="incorrectYear" :rules="rules.year" :target="year" />
     <RuleField
       v-show="!incorrectYear && incorrectMonth"
       v-model="incorrectMonth"
-      :rules="monthRules"
+      :rules="rules.month"
       :target="month"
     />
     <RuleField
       v-show="!incorrectYear && !incorrectMonth && incorrectDay"
       v-model="incorrectDay"
-      :rules="dayRules"
+      :rules="rules.day"
       :target="day"
     />
   </Field>
@@ -49,6 +49,8 @@ import Label from "./Label"
 import Field from "./Field"
 import TextInput from "./TextInput"
 import RuleField from "./RuleField"
+
+import { birth } from "@/utils/validation"
 
 const BirthField = {
   props: {
@@ -70,20 +72,9 @@ const BirthField = {
   },
   data: () => ({
     year: "",
-    yearRules: [
-      v => !!v || "필수 정보입니다.",
-      v => v.length === 4 || "태어난 년도 4자리를 정확히 입력해 주세요.",
-    ],
     month: "",
-    monthRules: [
-      v => !!v || "필수 정보입니다.",
-      v => v.length === 2 || "태어난 월 2자리를 정확히 입력해 주세요.",
-    ],
     day: "",
-    dayRules: [
-      v => !!v || "필수 정보입니다.",
-      v => v.length === 2 || "태어난 일 2자리를 정확히 입력해 주세요.",
-    ],
+    rules: { ...birth },
     incorrectYear: false,
     incorrectMonth: false,
     incorrectDay: false,
