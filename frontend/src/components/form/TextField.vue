@@ -64,10 +64,10 @@ export default TextField
   margin: 15px 0;
   font-weight: 300;
 }
-
-.length-limit {
+<<<<<<< head .length-limit {
   align-self: flex-end;
   color: #999999;
   font-size: 13px;
 }
+=======>>>>>>>51223bd...feat: implment application-register template;
 </style>

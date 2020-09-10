@@ -9,7 +9,7 @@ const Button = {
       type: String,
       default: "button",
       validator(value) {
-        return ["button", "submit", "reset"].indexOf(value) !== -1
+        return ["button", "submit", "reset", "save"].indexOf(value) !== -1
       },
     },
     cancel: Boolean,

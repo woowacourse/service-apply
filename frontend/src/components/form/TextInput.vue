@@ -22,7 +22,7 @@ const TextInput = {
       type: String,
       default: "text",
       validator(value) {
-        return ["text", "email", "password", "textarea"].indexOf(value) !== -1
+        return ["text", "email", "password", "textarea", "url"].indexOf(value) !== -1
       },
     },
     value: String,
@@ -39,8 +39,9 @@ export default TextInput
 <style scoped>
 input[type="text"],
 input[type="email"],
-input[type="password"],
-input[type="textarea"] {
+input[type="textarea"],
+input[type="url"],
+input[type="password"] {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
