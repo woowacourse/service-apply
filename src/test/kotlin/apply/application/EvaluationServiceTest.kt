@@ -86,13 +86,13 @@ internal class EvaluationServiceTest {
         val findAllWithRecruitment = evaluationService.findAllWithRecruitment()
 
         assertAll(
-            { assertEquals(findAllWithRecruitment[1].id, 2L) },
-            { assertEquals(findAllWithRecruitment[1].title, firstWeekEvaluation.title) },
-            { assertEquals(findAllWithRecruitment[1].description, firstWeekEvaluation.description) },
-            { assertEquals(findAllWithRecruitment[1].recruitment, recruitments[0].title) },
-            { assertEquals(findAllWithRecruitment[1].recruitmentId, firstWeekEvaluation.recruitment) },
-            { assertEquals(findAllWithRecruitment[1].beforeEvaluation, preCourseEvaluation.title) },
-            { assertEquals(findAllWithRecruitment[1].beforeEvaluationId, preCourseEvaluation.id) }
+            { assertEquals(2L, findAllWithRecruitment[1].id) },
+            { assertEquals(firstWeekEvaluation.title, findAllWithRecruitment[1].title) },
+            { assertEquals(firstWeekEvaluation.description, findAllWithRecruitment[1].description) },
+            { assertEquals(recruitments[0].title, findAllWithRecruitment[1].recruitment) },
+            { assertEquals(firstWeekEvaluation.recruitment, findAllWithRecruitment[1].recruitmentId) },
+            { assertEquals(preCourseEvaluation.title, findAllWithRecruitment[1].beforeEvaluation) },
+            { assertEquals(preCourseEvaluation.id, findAllWithRecruitment[1].beforeEvaluationId) }
         )
     }
 
@@ -103,6 +103,6 @@ internal class EvaluationServiceTest {
 
         evaluationService.deleteById(2L)
 
-        assertEquals(evaluations[2].beforeEvaluation, 0L)
+        assertEquals(0L, evaluations[2].beforeEvaluation)
     }
 }
