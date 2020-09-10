@@ -4,19 +4,6 @@
   </div>
 </template>
 
-<script>
-import Label from "./Label"
-
-const Field = {
-  components: {
-    Label,
-  },
-  props: ["label", "required"],
-}
-
-export default Field
-</script>
-
 <style scoped>
 .field {
   display: flex;
