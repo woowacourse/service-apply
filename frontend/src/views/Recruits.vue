@@ -5,7 +5,7 @@
         v-for="tab in tabList"
         :key="tab.name"
         class="list-tab filter"
-        :class="{ active: tab.name === $route.query.query }"
+        :class="{ active: tab.name === $route.query.status }"
         :id="tab.name"
         @click="setFilter(tab.name)"
       >
@@ -134,13 +134,13 @@ export default {
   methods: {
     setFilter(filter) {
       this.$router.push({
-        path: "/recruits/?query=" + filter,
+        path: "/recruits/?status=" + filter,
       })
       this.loadByFilter()
     },
     loadByFilter() {
       try {
-        this.tabList.find(el => el.name === this.$route.query.query).strategy(this)
+        this.tabList.find(el => el.name === this.$route.query.status).strategy(this)
       } catch {
         this.setFilter("all")
       }
