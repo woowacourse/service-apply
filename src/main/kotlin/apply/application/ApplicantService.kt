@@ -15,8 +15,8 @@ class ApplicantService(private val applicantRepository: ApplicantRepository) {
         return applicantRepository.findAll()
     }
 
-    fun findByName(name: String): Applicant? =
-        applicantRepository.findByName(name)
+    fun findByValue(value: String): List<Applicant> =
+        applicantRepository.findByNameContainingOrEmailContaining(value, value)
 
     @PostConstruct
     private fun populateDummy() {
@@ -33,14 +33,14 @@ class ApplicantService(private val applicantRepository: ApplicantRepository) {
             ),
             Applicant(
                 "홍길동2",
-                "a@email.com",
+                "b@email.com",
                 "010-0000-0000",
                 Gender.FEMALE,
                 createLocalDate(2020, 5, 5)
             ),
             Applicant(
                 "홍길동3",
-                "a@email.com",
+                "c@email.com",
                 "010-0000-0000",
                 Gender.MALE,
                 createLocalDate(2020, 1, 1)

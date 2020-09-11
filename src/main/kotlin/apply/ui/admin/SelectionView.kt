@@ -39,7 +39,7 @@ class SelectionView(
         return HorizontalLayout(
             createSearchBar {
                 removeAll()
-                add(createTitle(), createMenu(), createGrid(getApplicants(applicantService.findByName(it))))
+                add(createTitle(), createMenu(), createGrid(applicantService.findByValue(it)))
             },
             createSuccessButton("다운로드") {
                 // Todo: 엑셀 다운로드
@@ -51,12 +51,12 @@ class SelectionView(
         }
     }
 
-    private fun getApplicants(applicant: Applicant?): List<Applicant> {
-        return when (applicant) {
-            null -> emptyList()
-            else -> listOf(applicant)
-        }
-    }
+    // private fun getApplicants(applicant: Applicant?): List<Applicant> {
+    //     return when (applicant) {
+    //         null -> emptyList()
+    //         else -> listOf(applicant)
+    //     }
+    // }
 
     private fun createGrid(applicants: List<Applicant>): Component {
         return Grid<Applicant>(10).apply {
