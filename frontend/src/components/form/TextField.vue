@@ -33,6 +33,7 @@ const TextField = {
       default: [],
     },
     required: Boolean,
+    readOnly: Boolean,
     description: String,
     maxLength: Number,
     value: String,
@@ -64,10 +65,9 @@ export default TextField
   margin: 15px 0;
   font-weight: 300;
 }
-<<<<<<< head .length-limit {
+.length-limit {
   align-self: flex-end;
   color: #999999;
   font-size: 13px;
 }
-=======>>>>>>>51223bd...feat: implment application-register template;
 </style>

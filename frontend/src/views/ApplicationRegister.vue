@@ -2,15 +2,8 @@
   <div class="application-register">
     <Form @submit.prevent="submit">
       <h1>지원서 작성</h1>
-      <TextField
-        v-model="name"
-        name="name"
-        type="text"
-        label="이름"
-        placeholder="이름을 입력해 주세요."
-        :rule="rules.name"
-        required
-      />
+      <!-- TODO: 지원자 정보 입력 페이지에서 입력한 이름을 받아 온다. -->
+      <TextField v-model="name" name="name" type="text" label="이름" readOnly />
       <TextField
         v-model="password"
         name="password"
@@ -37,34 +30,39 @@
         label="URL"
         placeholder="내용을 입력해주세요"
       />
+      <Field>
+        <CheckBox
+          v-model="factCheck"
+          label="위 지원서에 작성한 내용은 모두 사실입니다."
+          required
+        ></CheckBox>
+      </Field>
       <div class="actions">
-        <Button type="reset" value="초기화" />
-        <Button type="save" value="임시 저장" />
-        <Button type="submit" value="제출" />
+        <Button @submit.prevent="reset" type="reset" value="초기화" />
+        <Button @submit.prevent="save" type="save" value="임시 저장" />
+        <Button type="submit" :disabled="!(password && rePassword && factCheck)" value="제출" />
       </div>
       <footer>
-        <a class="logo" href="#"/>
+        <a class="logo" href="#"></a>
       </footer>
     </Form>
   </div>
 </template>
 
 <script>
-  import {
-    Form,
-    Button,
-    TextField,
-
-  } from "../components/form";
+import { Form, Button, TextField, CheckBox, Field } from "../components/form"
+import { regist } from "@/utils/validation"
 
 export default {
   components: {
     Form,
     Button,
     TextField,
-    TextInput,
+    CheckBox,
+    Field,
   },
   data: () => ({
+    factCheck: false,
     name: "",
     password: "",
     rePassword: "",
@@ -72,38 +70,48 @@ export default {
     rules: { ...regist },
   }),
   methods: {
+    reset() {
+      this.factCheck = false
+      this.name = ""
+      this.password = ""
+      this.rePassword = ""
+      this.url = ""
+    },
+    save() {
+      // TODO: 임시 저장 기능 추가 필요
+    },
     submit() {
-      confirm("정말로 제출하시겠습니까?");
+      confirm("정말로 제출하시겠습니까?")
     },
   },
 }
 </script>
 
 <style scoped>
-  .application-register {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: #ced6e0;
-  }
+.application-register {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #ced6e0;
+}
 
-  .actions {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 20px 0;
-  }
+.actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
 
-  .actions > .button {
-    flex: 1;
-  }
+.actions > .button {
+  flex: 1;
+}
 
-  .logo {
-    display: flex;
-    width: 100px;
-    height: 32px;
-    background: url("/assets/logo/logo_full_dark.png");
-    background-size: 100% 100%;
-  }
+.logo {
+  display: flex;
+  width: 100px;
+  height: 32px;
+  background: url("/assets/logo/logo_full_dark.png");
+  background-size: 100% 100%;
+}
 </style>
