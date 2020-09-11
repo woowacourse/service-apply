@@ -39,7 +39,8 @@ export default TextInput
 <style scoped>
 input[type="text"],
 input[type="email"],
-input[type="password"] {
+input[type="password"],
+input[type="textarea"] {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -54,7 +55,9 @@ input[type="password"] {
 }
 
 textarea.text-input {
-  height: 100px;
+  min-width: 100%;
+  max-width: 100%;
+  min-height: 100px;
 }
 
 .text-input:focus {

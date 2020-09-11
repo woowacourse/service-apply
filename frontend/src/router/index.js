@@ -1,7 +1,7 @@
 import Vue from "vue"
 import VueRouter from "vue-router"
 import Regist from "@/views/Regist"
-import RecruitmentRegister from "@/views/RecruitmentRegister";
+import RecruitmentRegister from "@/views/RecruitmentRegister"
 
 Vue.use(VueRouter)
 
@@ -11,7 +11,7 @@ const routes = [
     component: Regist,
   },
   {
-    path: "/recruitment/regist",
+    path: "/application/regist",
     component: RecruitmentRegister,
   },
 ]

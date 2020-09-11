@@ -4,12 +4,8 @@
       <div>
         <Label :required="required">{{ label }}</Label>
       </div>
-      <div v-if="description" class="description">
-        {{ description }}
-      </div>
-      <div v-if="maxLength > 0" class="length-limit">
-        {{ text.length }} / {{ maxLength }}
-      </div>
+      <div v-if="description" class="description">{{ description }}</div>
+      <div v-if="maxLength > 0" class="length-limit">{{ text.length }} / {{ maxLength }}</div>
       <TextInput v-bind="$attrs" :required="required" v-model="text" :max-length="maxLength" />
     </label>
     <RuleField :rules="rules" :target="text" />
@@ -39,6 +35,10 @@ const TextField = {
     required: Boolean,
     description: String,
     maxLength: Number,
+    value: String,
+  },
+  created() {
+    this.text = this.value
   },
   data: () => ({
     text: "",
