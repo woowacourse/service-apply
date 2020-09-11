@@ -5,10 +5,8 @@ import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluation.dto.EvaluationResponse
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
-import java.util.Optional
 import javax.annotation.PostConstruct
 import javax.transaction.Transactional
-import kotlin.streams.toList
 
 @Transactional
 @Service
@@ -27,18 +25,17 @@ class EvaluationService(
     }
 
     fun findAllWithRecruitment(): List<EvaluationResponse> {
-        return findAll().stream()
-            .map {
-                EvaluationResponse(
-                    it.id,
-                    it.title,
-                    it.description,
-                    recruitmentService.getById(it.recruitment).title,
-                    it.recruitment,
-                    findById(it.beforeEvaluation)?.title ?: "이전 평가 없음",
-                    it.beforeEvaluation
-                )
-            }.toList()
+        return findAll().map {
+            EvaluationResponse(
+                it.id,
+                it.title,
+                it.description,
+                recruitmentService.getById(it.recruitment).title,
+                it.recruitment,
+                findById(it.beforeEvaluation)?.title ?: "이전 평가 없음",
+                it.beforeEvaluation
+            )
+        }.toList()
     }
 
     fun deleteById(id: Long) {
@@ -48,15 +45,8 @@ class EvaluationService(
     }
 
     private fun resetBeforeEvaluationContain(id: Long) {
-        val persistEvaluations: List<Evaluation> = evaluationRepository.findAll()
-        val evaluation: Optional<Evaluation> = persistEvaluations.stream()
-            .filter { it.hasSameBeforeEvaluationWith(id) }
-            .findFirst()
-
-        if (evaluation.isPresent) {
-            evaluation.get()
-                .resetBeforeEvaluation()
-        }
+        evaluationRepository.findAll()
+            .firstOrNull { it.hasSameBeforeEvaluationWith(id) }?.resetBeforeEvaluation()
     }
 
     @PostConstruct
