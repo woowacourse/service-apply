@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import { Form, Button, TextField, CheckBox, Field } from "../components/form"
+import { Form, Button, TextField, CheckBox, Field } from "@/components/form"
 import { register } from "@/utils/validation"
 
 export default {
