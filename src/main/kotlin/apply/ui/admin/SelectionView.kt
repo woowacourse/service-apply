@@ -51,13 +51,6 @@ class SelectionView(
         }
     }
 
-    // private fun getApplicants(applicant: Applicant?): List<Applicant> {
-    //     return when (applicant) {
-    //         null -> emptyList()
-    //         else -> listOf(applicant)
-    //     }
-    // }
-
     private fun createGrid(applicants: List<Applicant>): Component {
         return Grid<Applicant>(10).apply {
             addSortableColumn("이름", Applicant::name)
@@ -78,6 +71,7 @@ class SelectionView(
 
     override fun setParameter(event: BeforeEvent?, @WildcardParameter parameter: Long) {
         this.recruitmentId = parameter
+        // Todo: RecruitmentId 별로 지원자를 불러오도록 수정
         add(createTitle(), createMenu(), createGrid(applicantService.findAll()))
     }
 }
