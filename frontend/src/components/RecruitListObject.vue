@@ -1,19 +1,21 @@
 <template>
   <div>
     <div v-for="recruitment in recruitsList" class="card" :key="recruitment.id">
-      <div class="flex space-between">
-        <div>
-          <div class="recruit-title">
-            <b>{{ recruitment.title }}</b>
+      <div class="list-wrapper">
+        <div class="flex space-between">
+          <div>
+            <div class="recruit-title">
+              <b>{{ recruitment.title }}</b>
+            </div>
+            <div class="recruit-duration">
+              {{ parseTime(recruitment.startTime) }} ~ {{ parseTime(recruitment.endTime) }}
+            </div>
           </div>
-          <div class="recruit-duration">
-            {{ parseTime(recruitment.startTime) }} ~ {{ parseTime(recruitment.endTime) }}
+          <div class="button-wrapper">
+            <button class="enroll-button" v-on:click="onClickAdmission(recruitment.id)">
+              지원하기
+            </button>
           </div>
-        </div>
-        <div class="button-wrapper">
-          <button class="enroll-button" v-on:click="onClickAdmission(recruitment.id)">
-            지원하기
-          </button>
         </div>
       </div>
     </div>
@@ -59,36 +61,43 @@ export default {
   .button-wrapper {
     line-height: 90px !important;
   }
+  .list-wrapper {
+    height: 90px !important;
+  }
 }
 
 .card {
   width: 100%;
-  height: 80px;
+  height: 70px;
   background-color: #dcdcdc;
   border-radius: 5px;
   display: inline-block;
-  margin: 10px 0 10px 0;
+  margin: 5px 0 5px 0;
 }
 
 .recruit-title {
-  padding: 10px 0 0 10px;
+  padding: 10px 0px 5px 10px;
   font-size: large;
 }
 
 .recruit-duration {
-  padding: 10px 0 0 10px;
+  padding: 5px 0px 10px 10px;
 }
 
 .flex {
   display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.list-wrapper {
+  display: flex;
+  height: 70px;
 }
 
 .space-between {
   justify-content: space-between;
-}
-
-.button-wrapper {
-  line-height: 80px;
 }
 
 .enroll-button {
