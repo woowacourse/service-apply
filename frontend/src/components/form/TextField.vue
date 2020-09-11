@@ -30,13 +30,12 @@ const TextField = {
     label: String,
     rules: {
       type: Array,
-      default: [],
+      default: () => [],
     },
+    value: String,
     required: Boolean,
-    readOnly: Boolean,
     description: String,
     maxLength: Number,
-    value: String,
   },
   created() {
     this.text = this.value
@@ -47,6 +46,9 @@ const TextField = {
   watch: {
     text() {
       this.$emit("input", this.text)
+    },
+    value() {
+      this.text = this.value
     },
   },
 }

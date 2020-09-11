@@ -12,7 +12,7 @@
     class="text-input"
     :value="value"
     @input="$emit('input', $event.target.value)"
-    :readOnly="readOnly"
+    :readonly="readonly"
   >
 </template>
 
@@ -26,7 +26,7 @@ const TextInput = {
         return ["text", "email", "password", "textarea", "url"].indexOf(value) !== -1
       },
     },
-    readOnly: Boolean,
+    readonly: Boolean,
     value: String,
     maxLength: {
       default: 0,

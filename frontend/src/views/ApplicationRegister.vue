@@ -3,7 +3,7 @@
     <Form @submit.prevent="submit">
       <h1>지원서 작성</h1>
       <!-- TODO: 지원자 정보 입력 페이지에서 입력한 이름을 받아 온다. -->
-      <TextField v-model="name" name="name" type="text" label="이름" readOnly />
+      <TextField v-model="name" name="name" type="text" label="이름" readonly />
       <TextField
         v-model="password"
         name="password"
@@ -28,7 +28,7 @@
         type="url"
         :description="'블로그, GitHub, 포트폴리오 주소 등을 입력해 주세요.'"
         label="URL"
-        placeholder="내용을 입력해주세요"
+        placeholder="ex) https://woowacourse.github.io/javable/"
       />
       <Field>
         <CheckBox
@@ -38,9 +38,9 @@
         ></CheckBox>
       </Field>
       <div class="actions">
-        <Button @submit.prevent="reset" type="reset" value="초기화" />
-        <Button @submit.prevent="save" type="save" value="임시 저장" />
-        <Button type="submit" :disabled="!(password && rePassword && factCheck)" value="제출" />
+        <Button @click="reset" value="초기화" />
+        <Button @click="save" value="임시 저장" />
+        <Button type="submit" :disabled="!factCheck" value="제출" />
       </div>
       <footer>
         <a class="logo" href="#"></a>
@@ -51,7 +51,7 @@
 
 <script>
 import { Form, Button, TextField, CheckBox, Field } from "../components/form"
-import { regist } from "@/utils/validation"
+import { register } from "@/utils/validation"
 
 export default {
   components: {
@@ -63,16 +63,15 @@ export default {
   },
   data: () => ({
     factCheck: false,
-    name: "",
+    name: "서버에서 받아올 이름",
     password: "",
     rePassword: "",
     url: "",
-    rules: { ...regist },
+    rules: { ...register },
   }),
   methods: {
     reset() {
       this.factCheck = false
-      this.name = ""
       this.password = ""
       this.rePassword = ""
       this.url = ""
