@@ -26,22 +26,18 @@ export default {
   name: "Recruits",
   data() {
     return {
-      filterBy: "all",
       tabList: [
         {
           name: "all",
           label: "전체",
-          strategy: el => (el.activeList = el.allList.slice()),
         },
         {
           name: "recruiting",
           label: "모집 중",
-          strategy: el => (el.activeList = el.recruitingList.slice()),
         },
         {
           name: "completed",
           label: "모집 종료",
-          strategy: el => (el.activeList = el.completedList.slice()),
         },
       ],
       activeList: [],
@@ -51,76 +47,42 @@ export default {
           title: "웹 백엔드 3기",
           startTime: new Date("2020-10-24T15:00:00"),
           endTime: new Date("2020-11-09T23:59:00"),
+          recruitmentStatus: "RECRUITABLE",
         },
         {
           id: 5,
           title: "웹 프론트엔드 3기",
           startTime: new Date("2020-10-24T15:00:00"),
           endTime: new Date("2020-11-09T23:59:00"),
+          recruitmentStatus: "RECRUITABLE",
         },
         {
           id: 4,
           title: "모바일(iOS) 3기",
           startTime: new Date("2020-10-24T15:00:00"),
           endTime: new Date("2020-11-09T23:59:00"),
+          recruitmentStatus: "RECRUITABLE",
         },
         {
           id: 3,
           title: "모바일(Android) 3기",
           startTime: new Date("2020-10-24T15:00:00"),
           endTime: new Date("2020-11-09T23:59:00"),
+          recruitmentStatus: "RECRUITABLE",
         },
         {
           id: 2,
           title: "웹 백엔드 2기",
           startTime: new Date("2019-10-24T15:00:00"),
           endTime: new Date("2019-11-09T23:59:00"),
+          recruitmentStatus: "ENDED",
         },
         {
           id: 1,
           title: "웹 백엔드 1기",
           startTime: new Date("2019-01-24T15:00:00"),
           endTime: new Date("2020-02-09T23:59:00"),
-        },
-      ],
-      recruitingList: [
-        {
-          id: 6,
-          title: "웹 백엔드 3기",
-          startTime: new Date("2020-10-24T15:00:00"),
-          endTime: new Date("2020-11-09T23:59:00"),
-        },
-        {
-          id: 5,
-          title: "웹 프론트엔드 3기",
-          startTime: new Date("2020-10-24T15:00:00"),
-          endTime: new Date("2020-11-09T23:59:00"),
-        },
-        {
-          id: 4,
-          title: "모바일(iOS) 3기",
-          startTime: new Date("2020-10-24T15:00:00"),
-          endTime: new Date("2020-11-09T23:59:00"),
-        },
-        {
-          id: 3,
-          title: "모바일(Android) 3기",
-          startTime: new Date("2020-10-24T15:00:00"),
-          endTime: new Date("2020-11-09T23:59:00"),
-        },
-      ],
-      completedList: [
-        {
-          id: 2,
-          title: "웹 백엔드 2기",
-          startTime: new Date("2019-10-24T15:00:00"),
-          endTime: new Date("2019-11-09T23:59:00"),
-        },
-        {
-          id: 1,
-          title: "웹 백엔드 1기",
-          startTime: new Date("2019-01-24T15:00:00"),
-          endTime: new Date("2020-02-09T23:59:00"),
+          recruitmentStatus: "ENDED",
         },
       ],
     }
@@ -133,16 +95,30 @@ export default {
   },
   methods: {
     setFilter(filter) {
-      this.$router.push({
+      this.$router.replace({
         path: "/recruits/?status=" + filter,
       })
-      this.loadByFilter()
+      this.loadByFilter(filter)
     },
-    loadByFilter() {
-      try {
-        this.tabList.find(el => el.name === this.$route.query.status).strategy(this)
-      } catch {
-        this.setFilter("all")
+    loadByFilter(filter) {
+      // TODO: 이 부분을 실제 API 콜로 대체하기
+      switch (filter) {
+        case "recruiting": {
+          this.activeList = this.allList.filter(el => el.recruitmentStatus === "RECRUITABLE")
+          break
+        }
+        case "completed": {
+          this.activeList = this.allList.filter(el => el.recruitmentStatus === "ENDED")
+          break
+        }
+        case "all": {
+          this.activeList = this.allList.slice()
+          break
+        }
+        default: {
+          this.setFilter("all")
+          break
+        }
       }
     },
   },
