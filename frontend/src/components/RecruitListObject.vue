@@ -33,21 +33,22 @@ export default {
   methods: {
     onClickAdmission(id) {
       this.$router.push({
-        path: "/application/" + id,
+        path: `/application/${id}`,
       })
     },
     parseTime(time) {
-      return (
-        time.getFullYear() +
-        "." +
-        (time.getMonth() + 1 < 10 ? "0" + (time.getMonth() + 1) : time.getMonth() + 1) +
-        "." +
-        (time.getDate() < 10 ? "0" + time.getDate() : time.getDate()) +
-        " " +
-        time.getHours() +
-        ":" +
-        (time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes())
-      )
+      const year = time.getFullYear().toString()
+      const month = (time.getMonth() + 1).toString()
+      const date = time.getDate().toString()
+      const hour = time.getHours().toString()
+      const minute = time.getMinutes().toString()
+      const second = time.getSeconds().toString()
+      const parseDigit = digit => {
+        return digit[1] ? digit : "0" + digit[0]
+      }
+
+      return `${year}.${parseDigit(month)}.${parseDigit(date)}
+      ${parseDigit(hour)}:${parseDigit(minute)}:${parseDigit(second)}`
     },
   },
 }
