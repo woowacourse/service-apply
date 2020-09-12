@@ -8,7 +8,7 @@ import javax.annotation.PostConstruct
 
 @Transactional
 @Service
-class RecruitmentItemService(val recruitmentItemItemRepository: RecruitmentItemRepository) {
+class RecruitmentItemService(private val recruitmentItemItemRepository: RecruitmentItemRepository) {
     fun findByRecruitmentId(recruitmentId: Long): List<RecruitmentItem> {
         return recruitmentItemItemRepository.findByRecruitmentIdOrderByPosition(recruitmentId)
     }

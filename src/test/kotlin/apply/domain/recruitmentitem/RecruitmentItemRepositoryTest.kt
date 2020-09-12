@@ -7,7 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 
 @DataJpaTest
-internal class RecruitmentItemRepositoryTest @Autowired constructor(
+internal class RecruitmentItemRepositoryTest(
+    @Autowired
     private val recruitmentItemRepository: RecruitmentItemRepository
 ) {
     companion object {
