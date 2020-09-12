@@ -12,7 +12,7 @@
             </div>
           </div>
           <div class="button-wrapper">
-            <button class="enroll-button" v-on:click="onClickAdmission(recruitment.id)">
+            <button class="enroll-button" @click="onClickAdmission(recruitment.id)">
               지원하기
             </button>
           </div>

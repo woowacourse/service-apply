@@ -14,7 +14,7 @@
       <h2 class="list-tab" id="mypage">내 지원서</h2>
     </div>
     <div id="component">
-      <RecruitListObject v-bind:recruitsList="activeList" />
+      <recruit-list-object :recruitsList="activeList" />
     </div>
   </div>
 </template>
