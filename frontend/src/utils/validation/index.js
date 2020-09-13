@@ -4,4 +4,3 @@ export * from "./email"
 export * from "./name"
 export * from "./regist"
 export * from "./login"
-
