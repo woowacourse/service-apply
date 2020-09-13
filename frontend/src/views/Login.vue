@@ -81,13 +81,6 @@ export default {
 </script>
 
 <style scoped>
-* {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", Roboto,
-    "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
-    "Noto Color Emoji";
-  box-sizing: border-box;
-}
-
 .login {
   display: flex;
   flex-direction: column;
