@@ -67,7 +67,7 @@ export default {
     rules: { ...login },
   }),
   methods: {
-    submit(e) {
+    submit() {
       //TODO Login(나의 지원서보기 위한) API
     },
     findPassword() {
