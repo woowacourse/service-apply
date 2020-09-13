@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    <Form @submit="submit">
+    <Form @submit.prevent="submit">
       <h1>내 지원서 보기</h1>
       <TextField
         v-model="name"
@@ -68,7 +68,7 @@ export default {
   }),
   methods: {
     submit(e) {
-      e.preventDefault()
+      //TODO Login(나의 지원서보기 위한) API
     },
     findPassword() {
       this.$router.push("/find")
