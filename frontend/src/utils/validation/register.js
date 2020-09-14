@@ -2,7 +2,7 @@ import { common } from "./common"
 import { name } from "./name"
 import { email } from "./email"
 
-export const regist = {
+export const register = {
   name: [...name],
   phoneNumber: [...common.required],
   email: [...email],

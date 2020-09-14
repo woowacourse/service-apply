@@ -1,5 +1,5 @@
 <template>
-  <div class="regist">
+  <div class="register">
     <Form @submit.prevent="submit">
       <h1>지원자 정보</h1>
       <SummaryCheckField
@@ -78,7 +78,7 @@ import {
   SummaryCheckField,
 } from "@/components/form"
 
-import { regist } from "@/utils/validation"
+import { register } from "@/utils/validation"
 
 import { POLICY_SUMMARY } from "./constants"
 
@@ -105,7 +105,7 @@ export default {
       day: "",
     },
     gender: "",
-    rules: { ...regist },
+    rules: { ...register },
   }),
   methods: {
     submit() {},
@@ -114,7 +114,7 @@ export default {
 </script>
 
 <style scoped>
-.regist {
+.register {
   display: flex;
   flex-direction: column;
   justify-content: center;

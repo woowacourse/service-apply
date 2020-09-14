@@ -12,6 +12,7 @@
     class="text-input"
     :value="value"
     @input="$emit('input', $event.target.value)"
+    :readonly="readonly"
   />
 </template>
 
@@ -22,9 +23,10 @@ const TextInput = {
       type: String,
       default: "text",
       validator(value) {
-        return ["text", "email", "password", "textarea"].indexOf(value) !== -1
+        return ["text", "email", "password", "textarea", "url"].indexOf(value) !== -1
       },
     },
+    readonly: Boolean,
     value: String,
     maxLength: {
       default: 0,
@@ -39,8 +41,9 @@ export default TextInput
 <style scoped>
 input[type="text"],
 input[type="email"],
-input[type="password"],
-input[type="textarea"] {
+input[type="textarea"],
+input[type="url"],
+input[type="password"] {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -62,5 +65,10 @@ textarea.text-input {
 
 .text-input:focus {
   border: 1px solid #1e90ff;
+}
+
+.text-input:read-only {
+  cursor: default;
+  background: #ccc;
 }
 </style>
