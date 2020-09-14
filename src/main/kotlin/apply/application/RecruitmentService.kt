@@ -27,7 +27,7 @@ class RecruitmentService(private val recruitmentRepository: RecruitmentRepositor
         getById(id).stop()
     }
 
-    private fun getById(id: Long): Recruitment =
+    fun getById(id: Long): Recruitment =
         recruitmentRepository.findByIdOrNull(id) ?: throw IllegalArgumentException()
 
     @PostConstruct
