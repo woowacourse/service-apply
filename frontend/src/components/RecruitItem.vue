@@ -1,22 +1,18 @@
 <template>
-  <div>
-    <div v-for="recruitment in recruitsList" class="card" :key="recruitment.id">
-      <div class="list-wrapper">
-        <div class="flex space-between">
-          <div>
-            <div class="recruit-title">
-              <b>{{ recruitment.title }}</b>
-            </div>
-            <div class="recruit-duration">
-              {{ parseTime(recruitment.startTime) }} ~ {{ parseTime(recruitment.endTime) }}
-            </div>
-          </div>
-          <div class="button-wrapper">
-            <button class="enroll-button" @click="onClickAdmission(recruitment.id)">
-              지원하기
-            </button>
-          </div>
+  <div class="list-wrapper card">
+    <div class="flex space-between">
+      <div>
+        <div class="recruit-title">
+          <b>{{ recruitment.title }}</b>
         </div>
+        <div class="recruit-duration">
+          {{ parseTime(recruitment.startTime) }} ~ {{ parseTime(recruitment.endTime) }}
+        </div>
+      </div>
+      <div class="button-wrapper">
+        <button class="enroll-button" @click="onClickAdmission(recruitment.id)">
+          지원하기
+        </button>
       </div>
     </div>
   </div>
@@ -25,8 +21,8 @@
 <script>
 export default {
   props: {
-    recruitsList: {
-      type: Array,
+    recruitment: {
+      type: Object,
       required: true,
     },
   },

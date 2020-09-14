@@ -14,13 +14,15 @@
       <h2 class="list-tab" id="mypage">내 지원서</h2>
     </div>
     <div id="component">
-      <recruit-list-object :recruitsList="activeList" />
+      <div v-for="recruitment in activeList" :key="recruitment.id">
+        <recruit-item :recruitment="recruitment" />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import RecruitListObject from "@/components/RecruitListObject.vue"
+import RecruitItem from "@/components/RecruitItem.vue"
 
 export default {
   name: "Recruits",
@@ -88,36 +90,39 @@ export default {
     }
   },
   components: {
-    RecruitListObject,
+    RecruitItem,
   },
   mounted() {
-    this.loadByFilter()
+    this.setList(this.$route.query.status)
   },
   methods: {
     setFilter(filter) {
       this.$router.replace({
         path: "/recruits/?status=" + filter,
       })
-      this.loadByFilter(filter)
+      this.setList(filter)
     },
-    loadByFilter(filter) {
-      // TODO: 이 부분을 실제 API 콜로 대체하기
+    async setList(filter) {
+      try {
+        this.activeList = await this.getRecruits(filter)
+      } catch (e) {
+        await this.setFilter("all")
+      }
+    },
+    // TODO: 이 부분을 실제 API 콜로 대체하기
+    getRecruits(filter) {
       switch (filter) {
         case "recruiting": {
-          this.activeList = this.allList.filter(el => el.recruitmentStatus === "RECRUITABLE")
-          break
+          return this.allList.filter(el => el.recruitmentStatus === "RECRUITABLE")
         }
         case "completed": {
-          this.activeList = this.allList.filter(el => el.recruitmentStatus === "ENDED")
-          break
+          return this.allList.filter(el => el.recruitmentStatus === "ENDED")
         }
         case "all": {
-          this.activeList = this.allList.slice()
-          break
+          return this.allList.slice()
         }
         default: {
-          this.setFilter("all")
-          break
+          throw "잘못된 분류 기준입니다!"
         }
       }
     },
