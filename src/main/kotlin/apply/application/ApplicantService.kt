@@ -28,9 +28,19 @@ class ApplicantService(
         email: String,
         phoneNumber: String,
         gender: Gender,
-        birthDay: LocalDate
+        birthDay: LocalDate,
+        password: String
     ): String {
-        applicantRepository.findByEmail(email) ?: createApplicant(name, email, phoneNumber, gender, birthDay)
+        applicantRepository.findByEmail(email)
+            ?.validatePassword(password)
+            ?: createApplicant(
+                name = name,
+                email = email,
+                phoneNumber = phoneNumber,
+                gender = gender,
+                birthDay = birthDay,
+                password = password
+            )
 
         return jwtTokenProvider.createToken(email)
     }
@@ -40,14 +50,16 @@ class ApplicantService(
         email: String,
         phoneNumber: String,
         gender: Gender,
-        birthDay: LocalDate
+        birthDay: LocalDate,
+        password: String
     ) {
         val newApplicant = Applicant(
             name = name,
             email = email,
             phoneNumber = phoneNumber,
             gender = gender,
-            birthday = birthDay
+            birthday = birthDay,
+            password = password
         )
         applicantRepository.save(newApplicant)
     }
@@ -63,21 +75,24 @@ class ApplicantService(
                 "a@email.com",
                 "010-0000-0000",
                 Gender.MALE,
-                createLocalDate(2020, 4, 17)
+                createLocalDate(2020, 4, 17),
+                "password"
             ),
             Applicant(
                 "홍길동2",
                 "b@email.com",
                 "010-0000-0000",
                 Gender.FEMALE,
-                createLocalDate(2020, 5, 5)
+                createLocalDate(2020, 5, 5),
+                "password"
             ),
             Applicant(
                 "홍길동3",
                 "c@email.com",
                 "010-0000-0000",
                 Gender.MALE,
-                createLocalDate(2020, 1, 1)
+                createLocalDate(2020, 1, 1),
+                "password"
             )
         )
         applicantRepository.saveAll(applicants)

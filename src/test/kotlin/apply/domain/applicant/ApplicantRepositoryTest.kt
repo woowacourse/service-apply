@@ -20,21 +20,24 @@ internal class ApplicantRepositoryTest(private val applicantRepository: Applican
                 "a@email.com",
                 "010-0000-0000",
                 Gender.MALE,
-                createLocalDate(2020, 4, 17)
+                createLocalDate(2020, 4, 17),
+                "password"
             ),
             Applicant(
                 "홍길동2",
                 "b@email.com",
                 "010-0000-0000",
                 Gender.FEMALE,
-                createLocalDate(2020, 5, 5)
+                createLocalDate(2020, 5, 5),
+                "password"
             ),
             Applicant(
                 "홍길동3",
                 "c@email.com",
                 "010-0000-0000",
                 Gender.MALE,
-                createLocalDate(2020, 1, 1)
+                createLocalDate(2020, 1, 1),
+                "password"
             )
         )
         applicantRepository.saveAll(applicants)

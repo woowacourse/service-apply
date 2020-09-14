@@ -1,5 +1,6 @@
 package apply.domain.applicant
 
+import java.lang.RuntimeException
 import java.time.LocalDate
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -27,7 +28,16 @@ class Applicant(
     @Column(nullable = false)
     val birthday: LocalDate,
 
+    @Column(nullable = false)
+    val password: String,
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L
-)
+) {
+    fun validatePassword(password: String) {
+        if (this.password != password) {
+            throw RuntimeException("패스워드 불일치")
+        }
+    }
+}
