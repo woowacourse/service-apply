@@ -14,7 +14,7 @@ const routes = [
   {
     path: "/login",
     component: Login,
-  }
+  },
   {
     path: "/application/register",
     component: ApplicationRegister,
