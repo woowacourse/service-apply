@@ -1,3 +1,6 @@
 export * from "./common"
 export * from "./birth"
-export * from "./regist"
+export * from "./email"
+export * from "./name"
+export * from "./login"
+export * from "./register"

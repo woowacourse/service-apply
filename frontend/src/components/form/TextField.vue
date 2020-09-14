@@ -4,7 +4,9 @@
       <div>
         <Label :required="required">{{ label }}</Label>
       </div>
-      <TextInput v-bind="$attrs" :required="required" v-model="text" />
+      <div v-if="description" class="description">{{ description }}</div>
+      <div v-if="maxLength > 0" class="length-limit">{{ text.length }} / {{ maxLength }}</div>
+      <TextInput v-bind="$attrs" :required="required" v-model="text" :max-length="maxLength" />
     </label>
     <RuleField :rules="rules" :target="text" />
   </Field>
@@ -28,19 +30,25 @@ const TextField = {
     label: String,
     rules: {
       type: Array,
-      default: [],
+      default: () => [],
     },
+    value: String,
     required: Boolean,
+    description: String,
+    maxLength: Number,
+  },
+  created() {
+    this.text = this.value
   },
   data: () => ({
     text: "",
   }),
-  created() {
-    this.text = this.value
-  },
   watch: {
     text() {
       this.$emit("input", this.text)
+    },
+    value() {
+      this.text = this.value
     },
   },
 }
@@ -52,5 +60,16 @@ export default TextField
 .text-field {
   display: flex;
   flex-direction: column;
+}
+
+.description {
+  display: flex;
+  margin: 15px 0;
+  font-weight: 300;
+}
+.length-limit {
+  align-self: flex-end;
+  color: #999999;
+  font-size: 13px;
 }
 </style>
