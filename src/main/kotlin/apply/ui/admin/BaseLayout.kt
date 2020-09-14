@@ -19,7 +19,8 @@ import com.vaadin.flow.theme.lumo.Lumo
 class BaseLayout : AppLayout() {
     private val route: Map<String, Class<out Component>> = mapOf(
         "모집 관리" to RecruitmentView::class.java,
-        "선발 과정" to SelectionsView::class.java
+        "선발 과정" to SelectionsView::class.java,
+        "부정 행위자" to CheaterView::class.java
     )
 
     init {
