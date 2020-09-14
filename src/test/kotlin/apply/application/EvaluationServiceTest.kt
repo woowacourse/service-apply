@@ -3,24 +3,27 @@ package apply.application
 import apply.domain.evaluation.Evaluation
 import apply.domain.evaluation.EvaluationRepository
 import apply.domain.recruitment.Recruitment
-import apply.domain.recruitment.RecruitmentRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.willDoNothing
-import org.mockito.Mockito.mock
-import org.springframework.beans.factory.annotation.Autowired
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
 import support.createLocalDateTime
 import java.util.Optional
 
-internal class EvaluationServiceTest {
-    @Autowired
-    private lateinit var evaluationService: EvaluationService
-    private val recruitmentRepository: RecruitmentRepository = mock(RecruitmentRepository::class.java)
-    private val evaluationRepository: EvaluationRepository = mock(EvaluationRepository::class.java)
+@ExtendWith(MockitoExtension::class)
+internal class EvaluationServiceTest(
+    @Mock
+    private val recruitmentService: RecruitmentService,
+    @Mock
+    private val evaluationRepository: EvaluationRepository
+) {
+    private val evaluationService: EvaluationService = EvaluationService(evaluationRepository, recruitmentService)
     private lateinit var recruitments: List<Recruitment>
     private lateinit var preCourseEvaluation: Evaluation
     private lateinit var firstEvaluation: Evaluation
@@ -29,8 +32,6 @@ internal class EvaluationServiceTest {
 
     @BeforeEach
     internal fun setUp() {
-        evaluationService = EvaluationService(evaluationRepository, RecruitmentService(recruitmentRepository))
-
         recruitments = listOf(
             Recruitment(
                 "웹 백엔드 2기",
@@ -79,7 +80,7 @@ internal class EvaluationServiceTest {
     @Test
     fun `평가와 모집 정보를 함께 제공한다`() {
         given(evaluationRepository.findAll()).willReturn(evaluations)
-        given(recruitmentRepository.findById(anyLong())).willReturn(Optional.of(recruitments[0]))
+        given(recruitmentService.getById(anyLong())).willReturn(recruitments[0])
         given(evaluationRepository.findById(1L)).willReturn(Optional.of(evaluations[0]))
         given(evaluationRepository.findById(2L)).willReturn(Optional.of(evaluations[1]))
 
