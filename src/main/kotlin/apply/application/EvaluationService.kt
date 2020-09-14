@@ -46,7 +46,8 @@ class EvaluationService(
 
     private fun resetBeforeEvaluationContain(id: Long) {
         evaluationRepository.findAll()
-            .firstOrNull { it.hasSameBeforeEvaluationWith(id) }?.resetBeforeEvaluation()
+            .filter { it.hasSameBeforeEvaluationWith(id) }
+            .forEach { it.resetBeforeEvaluation() }
     }
 
     @PostConstruct

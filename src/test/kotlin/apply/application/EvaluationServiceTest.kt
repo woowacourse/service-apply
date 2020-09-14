@@ -105,4 +105,26 @@ internal class EvaluationServiceTest {
 
         assertThat(0L).isEqualTo(evaluations[2].beforeEvaluationId)
     }
+
+    @Test
+    fun `삭제된 평가를 이전 평가로 가지는 평가들의 이전 평가를 초기화한다`() {
+        val thirdEvaluation: Evaluation = Evaluation(
+            "3주차 - 포커구현하기 ",
+            "[리뷰 절차]\n" +
+                "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
+            recruitmentId = 1L,
+            beforeEvaluationId = 2L,
+            id = 4L
+        )
+
+        val evaluationsWithDuplicatedBeforeEvaluationID: List<Evaluation> = listOf(*evaluations.toTypedArray(), thirdEvaluation)
+
+        given(evaluationRepository.findAll()).willReturn(evaluationsWithDuplicatedBeforeEvaluationID)
+        willDoNothing().given(evaluationRepository).deleteById(anyLong())
+
+        evaluationService.deleteById(2L)
+
+        assertThat(0L).isEqualTo(evaluationsWithDuplicatedBeforeEvaluationID[2].beforeEvaluationId)
+        assertThat(0L).isEqualTo(evaluationsWithDuplicatedBeforeEvaluationID[3].beforeEvaluationId)
+    }
 }
