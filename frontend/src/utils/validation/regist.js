@@ -6,4 +6,5 @@ export const regist = {
   email: [...common.required],
   password: [...common.required],
   rePassword: [...common.required],
+  recruitmentItem: [...common.required],
 }

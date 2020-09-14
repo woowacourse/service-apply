@@ -1,5 +1,13 @@
 <template>
+  <textarea
+    v-if="type === 'textarea'"
+    class="text-input"
+    :value="value"
+    :maxlength="maxLength"
+    @input="$emit('input', $event.target.value)"
+  />
   <input
+    v-else
     :type="type"
     class="text-input"
     :value="value"
@@ -14,10 +22,14 @@ const TextInput = {
       type: String,
       default: "text",
       validator(value) {
-        return ["text", "email", "password"].indexOf(value) !== -1
+        return ["text", "email", "password", "textarea"].indexOf(value) !== -1
       },
     },
     value: String,
+    maxLength: {
+      default: 0,
+      type: Number,
+    },
   },
 }
 
@@ -27,7 +39,8 @@ export default TextInput
 <style scoped>
 input[type="text"],
 input[type="email"],
-input[type="password"] {
+input[type="password"],
+input[type="textarea"] {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -39,6 +52,12 @@ input[type="password"] {
   border: 1px solid #ced6e0;
   border-radius: 3px;
   transition-duration: 0.5s;
+}
+
+textarea.text-input {
+  min-width: 100%;
+  max-width: 100%;
+  min-height: 100px;
 }
 
 .text-input:focus {
