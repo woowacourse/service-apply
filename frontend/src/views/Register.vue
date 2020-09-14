@@ -69,17 +69,9 @@
 </template>
 
 <script>
-import {
-  Form,
-  Button,
-  TextField,
-  BirthField,
-  GenderField,
-  SummaryCheckField,
-} from "@/components/form"
-
+import { BirthField, Button, Form, GenderField, SummaryCheckField, TextField } from "@/components/form"
+import * as RecruitmentApi from "../api/recruitments"
 import { register } from "@/utils/validation"
-
 import { POLICY_SUMMARY } from "./constants"
 
 export default {
@@ -108,7 +100,27 @@ export default {
     rules: { ...register },
   }),
   methods: {
-    submit() {},
+    async submit() {
+      try {
+        const { data: token } = await RecruitmentApi.fetchToken({
+          name: this.name,
+          phoneNumber: this.phoneNumber,
+          email: this.email,
+          password: this.password,
+          birthDay: this.formatDay(this.birth.year, parseInt(this.birth.month), parseInt(this.birth.day)),
+          gender: this.gender.toUpperCase(),
+        })
+        console.log(token)
+      } catch (e) {
+        console.log(e)
+      }
+    },
+    formatDay(year, month, day) {
+      return `${year}-${this.addZeroPrefixIfLessThanTen(month)}-${this.addZeroPrefixIfLessThanTen(day)}`
+    },
+    addZeroPrefixIfLessThanTen(value) {
+      return `${value < 10 ? `0${value}` : value}`
+    },
   },
 }
 </script>
