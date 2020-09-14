@@ -30,12 +30,12 @@ const TextField = {
     label: String,
     rules: {
       type: Array,
-      default: [],
+      default: () => [],
     },
+    value: String,
     required: Boolean,
     description: String,
     maxLength: Number,
-    value: String,
   },
   created() {
     this.text = this.value
@@ -46,6 +46,9 @@ const TextField = {
   watch: {
     text() {
       this.$emit("input", this.text)
+    },
+    value() {
+      this.text = this.value
     },
   },
 }
@@ -64,7 +67,6 @@ export default TextField
   margin: 15px 0;
   font-weight: 300;
 }
-
 .length-limit {
   align-self: flex-end;
   color: #999999;

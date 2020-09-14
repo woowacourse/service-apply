@@ -1,23 +1,23 @@
 import Vue from "vue"
 import VueRouter from "vue-router"
-import Regist from "@/views/Regist"
-import RecruitmentRegister from "@/views/RecruitmentRegister"
+import Register from "@/views/Register"
+import ApplicationRegister from "@/views/ApplicationRegister"
 import Login from "@/views/Login"
 
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: "/regist",
-    component: Regist,
-  },
-  {
-    path: "/application/regist",
-    component: RecruitmentRegister,
+    path: "/register",
+    component: Register,
   },
   {
     path: "/login",
     component: Login,
+  },
+  {
+    path: "/application/register",
+    component: ApplicationRegister,
   },
 ]
 
