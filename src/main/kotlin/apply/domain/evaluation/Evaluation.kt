@@ -15,17 +15,17 @@ class Evaluation(
     val description: String,
 
     @Column(nullable = false)
-    val recruitment: Long,
+    val recruitmentId: Long,
 
-    var beforeEvaluation: Long = 0L,
+    var beforeEvaluationId: Long = 0L,
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L
 ) {
-    fun hasSameBeforeEvaluationWith(beforeEvaluation: Long): Boolean = this.beforeEvaluation == beforeEvaluation
+    fun hasSameBeforeEvaluationWith(beforeEvaluationId: Long): Boolean = this.beforeEvaluationId == beforeEvaluationId
 
     fun resetBeforeEvaluation() {
-        beforeEvaluation = 0L
+        beforeEvaluationId = 0L
     }
 }

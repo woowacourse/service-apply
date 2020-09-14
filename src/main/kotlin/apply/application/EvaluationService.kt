@@ -30,12 +30,12 @@ class EvaluationService(
                 it.id,
                 it.title,
                 it.description,
-                recruitmentService.getById(it.recruitment).title,
-                it.recruitment,
-                findById(it.beforeEvaluation)?.title ?: "이전 평가 없음",
-                it.beforeEvaluation
+                recruitmentService.getById(it.recruitmentId).title,
+                it.recruitmentId,
+                findById(it.beforeEvaluationId)?.title ?: "이전 평가 없음",
+                it.beforeEvaluationId
             )
-        }.toList()
+        }
     }
 
     fun deleteById(id: Long) {
@@ -59,28 +59,23 @@ class EvaluationService(
                 "프리코스 대상자 선발",
                 "[리뷰 절차]\n" +
                     "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
-                1L
+                recruitmentId = 1L
             ),
             Evaluation(
                 " 1주차 - 숫자야구게임",
                 "[리뷰 절차]\n" +
                     "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
-                1L
+                recruitmentId = 1L,
+                beforeEvaluationId = 1L
             ),
             Evaluation(
                 "2주차 - 자동차경주게임 ",
                 "[리뷰 절차]\n" +
                     "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
-                1L
+                recruitmentId = 1L,
+                beforeEvaluationId = 2L
             )
         )
         evaluationRepository.saveAll(evaluations)
-        val secondEvaluation = findById(2L)
-        secondEvaluation!!.beforeEvaluation = 1L
-
-        val thirdEvaluation = findById(3L)
-        thirdEvaluation!!.beforeEvaluation = 2L
-
-        evaluationRepository.saveAll(listOf(secondEvaluation, thirdEvaluation))
     }
 }

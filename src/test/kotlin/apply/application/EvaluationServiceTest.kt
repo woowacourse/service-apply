@@ -50,27 +50,27 @@ internal class EvaluationServiceTest {
             "프리코스 대상자 선발",
             "[리뷰 절차]\n" +
                 "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
-            1L,
-            0L,
-            1L
+            recruitmentId = 1L,
+            beforeEvaluationId = 0L,
+            id = 1L
         )
 
         firstEvaluation = Evaluation(
             " 1주차 - 숫자야구게임",
             "[리뷰 절차]\n" +
                 "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
-            1L,
-            1L,
-            2L
+            recruitmentId = 1L,
+            beforeEvaluationId = 1L,
+            id = 2L
         )
 
         secondEvaluation = Evaluation(
             "2주차 - 자동차경주게임 ",
             "[리뷰 절차]\n" +
                 "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
-            1L,
-            2L,
-            3L
+            recruitmentId = 1L,
+            beforeEvaluationId = 2L,
+            id = 3L
         )
 
         evaluations = listOf(preCourseEvaluation, firstEvaluation, secondEvaluation)
@@ -90,7 +90,7 @@ internal class EvaluationServiceTest {
             { assertThat(firstEvaluation.title).isEqualTo(findAllWithRecruitment[1].title) },
             { assertThat(firstEvaluation.description).isEqualTo(findAllWithRecruitment[1].description) },
             { assertThat(recruitments[0].title).isEqualTo(findAllWithRecruitment[1].recruitment) },
-            { assertThat(firstEvaluation.recruitment).isEqualTo(findAllWithRecruitment[1].recruitmentId) },
+            { assertThat(firstEvaluation.recruitmentId).isEqualTo(findAllWithRecruitment[1].recruitmentId) },
             { assertThat(preCourseEvaluation.title).isEqualTo(findAllWithRecruitment[1].beforeEvaluation) },
             { assertThat(preCourseEvaluation.id).isEqualTo(findAllWithRecruitment[1].beforeEvaluationId) }
         )
@@ -103,6 +103,6 @@ internal class EvaluationServiceTest {
 
         evaluationService.deleteById(2L)
 
-        assertThat(0L).isEqualTo(evaluations[2].beforeEvaluation)
+        assertThat(0L).isEqualTo(evaluations[2].beforeEvaluationId)
     }
 }
