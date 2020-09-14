@@ -13,7 +13,7 @@
     :value="value"
     @input="$emit('input', $event.target.value)"
     :readonly="readonly"
-  >
+  />
 </template>
 
 <script>

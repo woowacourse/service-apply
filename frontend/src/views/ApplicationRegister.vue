@@ -22,6 +22,21 @@
         :rules="[...rules.rePassword, v => v === password || '비밀번호가 일치하지 않습니다']"
         required
       />
+
+      <TextField
+        v-for="(item, index) in recruitmentItems"
+        v-bind:key="item.id"
+        v-model="recruitmentItemInputs[index]"
+        name="recruitment-item"
+        type="textarea"
+        :label="`${index + 1}. ${item.title}`"
+        :description="item.description"
+        placeholder="내용을 입력해주세요."
+        :rules="rules.recruitmentItem"
+        :max-length="item.maximumLength"
+        required
+      />
+
       <TextField
         v-model="url"
         name="url"
@@ -51,6 +66,7 @@
 
 <script>
 import { Form, Button, TextField, CheckBox, Field } from "@/components/form"
+import * as RecruitmentApi from "../api/recruitments"
 import { register } from "@/utils/validation"
 
 export default {
@@ -67,6 +83,8 @@ export default {
     password: "",
     rePassword: "",
     url: "",
+    recruitmentItems: [],
+    recruitmentItemInputs: [""],
     rules: { ...register },
   }),
   methods: {
@@ -75,6 +93,7 @@ export default {
       this.password = ""
       this.rePassword = ""
       this.url = ""
+      this.recruitmentItemInputs = this.recruitmentItems.map(() => "")
     },
     save() {
       // TODO: 임시 저장 기능 추가 필요
@@ -82,6 +101,11 @@ export default {
     submit() {
       confirm("정말로 제출하시겠습니까?")
     },
+  },
+  async mounted() {
+    const { data } = await RecruitmentApi.fetchItems(1)
+    this.recruitmentItems = data
+    this.recruitmentItemInputs = data.map(() => "")
   },
 }
 </script>
