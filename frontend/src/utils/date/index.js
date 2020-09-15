@@ -1,6 +1,6 @@
 export const formatLocalDate = (year, month, day) => {
-  const monthFormatted = this.addZeroPrefixIfLessThanTen(month)
-  const dayFormatted = this.addZeroPrefixIfLessThanTen(day)
+  const monthFormatted = addZeroPrefixIfLessThanTen(month)
+  const dayFormatted = addZeroPrefixIfLessThanTen(day)
   return `${year}-${monthFormatted}-${dayFormatted}`
 }
 

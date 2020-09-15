@@ -69,6 +69,7 @@
 </template>
 
 <script>
+import { mapActions } from "vuex"
 import {
   BirthField,
   Button,
@@ -77,7 +78,6 @@ import {
   SummaryCheckField,
   TextField,
 } from "@/components/form"
-import * as RecruitmentApi from "@/api/recruitments"
 import * as DateUtil from "@/utils/date"
 import { register } from "@/utils/validation"
 import { POLICY_SUMMARY } from "./constants"
@@ -108,14 +108,15 @@ export default {
     rules: { ...register },
   }),
   methods: {
+    ...mapActions(["fetchToken"]),
     async submit() {
+      const birthday = DateUtil.formatLocalDate(
+        this.birth.year,
+        parseInt(this.birth.month),
+        parseInt(this.birth.day),
+      )
       try {
-        const birthday = DateUtil.formatLocalDate(
-          this.birth.year,
-          parseInt(this.birth.month),
-          parseInt(this.birth.day),
-        )
-        const { data: token } = await RecruitmentApi.fetchToken({
+        await this.fetchToken({
           name: this.name,
           phoneNumber: this.phoneNumber,
           email: this.email,
@@ -123,7 +124,6 @@ export default {
           gender: this.gender.toUpperCase(),
           birthday,
         })
-        console.log(token)
       } catch (e) {
         alert(e.response.data)
       }
