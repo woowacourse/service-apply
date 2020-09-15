@@ -28,9 +28,7 @@ export default {
   },
   methods: {
     onClickAdmission(id) {
-      this.$router.push({
-        path: `/application/${id}`,
-      })
+      this.$router.push({ path: `/register/applicant/${id}` })
     },
     parseTime(time) {
       const year = time.getFullYear().toString()
@@ -55,9 +53,11 @@ export default {
   .card {
     height: 90px !important;
   }
+
   .button-wrapper {
     line-height: 90px !important;
   }
+
   .list-wrapper {
     height: 90px !important;
   }

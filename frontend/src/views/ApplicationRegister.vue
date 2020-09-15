@@ -3,7 +3,7 @@
     <Form @submit.prevent="submit">
       <h1>지원서 작성</h1>
       <!-- TODO: 지원자 정보 입력 페이지에서 입력한 이름을 받아 온다. -->
-      <TextField v-model="name" name="name" type="text" label="이름" readonly />
+      <TextField v-model="applicantName" name="name" type="text" label="이름" readonly />
       <TextField
         v-model="password"
         name="password"
@@ -70,6 +70,10 @@ import * as RecruitmentApi from "../api/recruitments"
 import { register } from "@/utils/validation"
 
 export default {
+  props: {
+    recruitmentId: Number,
+    applicantName: String,
+  },
   components: {
     Form,
     Button,
@@ -79,7 +83,6 @@ export default {
   },
   data: () => ({
     factCheck: false,
-    name: "서버에서 받아올 이름",
     password: "",
     rePassword: "",
     url: "",
@@ -103,7 +106,7 @@ export default {
     },
   },
   async mounted() {
-    const { data } = await RecruitmentApi.fetchItems(1)
+    const { data } = await RecruitmentApi.fetchItems(this.recruitmentId)
     this.recruitmentItems = data
     this.recruitmentItemInputs = data.map(() => "")
   },

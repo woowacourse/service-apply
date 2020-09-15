@@ -83,6 +83,9 @@ import { register } from "@/utils/validation"
 import { POLICY_SUMMARY } from "./constants"
 
 export default {
+  props: {
+    recruitmentId: Number,
+  },
   components: {
     Form,
     Button,
@@ -124,6 +127,7 @@ export default {
           gender: this.gender.toUpperCase(),
           birthday,
         })
+        this.$router.push({ path: `/register/application/${this.recruitmentId}/${this.name}` })
       } catch (e) {
         alert(e.response.data)
       }
