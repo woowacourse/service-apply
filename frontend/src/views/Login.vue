@@ -9,6 +9,7 @@
         label="이름"
         placeholder="이름을 입력해 주세요."
         :rules="rules.name"
+        @valid="v => (this.validName = v)"
         required
       />
       <TextField
@@ -18,9 +19,10 @@
         label="이메일"
         placeholder="이메일 주소를 입력해 주세요."
         :rules="rules.email"
+        @valid="v => (this.validEmail = v)"
         required
       />
-      <BirthField v-model="birth" required />
+      <BirthField v-model="birth" @valid="v => (this.validBirth = v)" required />
       <TextField
         v-model="password"
         name="password"
@@ -28,11 +30,16 @@
         label="비밀번호"
         placeholder="비밀번호를 입력해 주세요."
         :rules="rules.password"
+        @valid="v => (this.validPassword = v)"
         required
       />
       <div class="actions">
         <Button type="button" @click="back" cancel value="이전" />
-        <Button type="submit" value="확인" />
+        <Button
+          type="submit"
+          :disabled="!validName || !validEmail || !validPassword || !validBirth"
+          value="확인"
+        />
       </div>
       <footer>
         <a class="logo" href="#"></a>
@@ -65,6 +72,10 @@ export default {
       day: "",
     },
     rules: { ...login },
+    validName: false,
+    validEmail: false,
+    validBirth: false,
+    validPassword: false,
   }),
   methods: {
     submit() {

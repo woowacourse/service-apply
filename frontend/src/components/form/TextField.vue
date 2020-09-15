@@ -8,7 +8,7 @@
       <div v-if="maxLength > 0" class="length-limit">{{ text.length }} / {{ maxLength }}</div>
       <TextInput v-bind="$attrs" :required="required" v-model="text" :max-length="maxLength" />
     </label>
-    <RuleField :rules="rules" :target="text" />
+    <RuleField @input="valid" :rules="rules" :target="text" />
   </Field>
 </template>
 
@@ -49,6 +49,11 @@ const TextField = {
     },
     value() {
       this.text = this.value
+    },
+  },
+  methods: {
+    valid(v) {
+      this.$emit("valid", v === false)
     },
   },
 }
