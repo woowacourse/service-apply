@@ -39,14 +39,14 @@ class CheaterView(
     }
 
     private fun createAddCheater(): Component {
-        val gridContainer = HorizontalLayout()
+        val container = HorizontalLayout()
         return HorizontalLayout(
             createSearchBar {
-                gridContainer.removeAll()
+                container.removeAll()
                 val founds = applicantService.findByValue(it)
                 if (founds.isNotEmpty()) {
                     val select = createSelectApplicant(founds)
-                    gridContainer.add(
+                    container.add(
                         select,
                         Button("추가") {
                             cheaterService.save(select.value)
@@ -55,7 +55,7 @@ class CheaterView(
                     )
                 }
             },
-            gridContainer
+            container
         ).apply { setSizeFull() }
     }
 
