@@ -4,6 +4,7 @@ import apply.application.ApplicantService
 import apply.application.RecruitmentService
 import apply.domain.applicant.Applicant
 import com.vaadin.flow.component.Component
+import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.html.H1
 import com.vaadin.flow.component.orderedlayout.FlexComponent
@@ -65,7 +66,12 @@ class SelectionView(
 
     private fun createButtonRenderer(): Renderer<Applicant> {
         return ComponentRenderer<Component, Applicant> { applicant ->
-            createPrimarySmallButton("지원서") { applicant.id }
+            createPrimarySmallButton("보기") {
+                UI.getCurrent().navigate(
+                    ApplicationView::class.java,
+                    "recruitments/$recruitmentId/applicants/${applicant.id}/application"
+                )
+            }
         }
     }
 
