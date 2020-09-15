@@ -92,9 +92,9 @@ internal class EvaluationServiceTest {
             { assertThat(2L).isEqualTo(findAllWithRecruitment[1].id) },
             { assertThat(firstEvaluation.title).isEqualTo(findAllWithRecruitment[1].title) },
             { assertThat(firstEvaluation.description).isEqualTo(findAllWithRecruitment[1].description) },
-            { assertThat(recruitments[0].title).isEqualTo(findAllWithRecruitment[1].recruitment) },
+            { assertThat(recruitments[0].title).isEqualTo(findAllWithRecruitment[1].recruitmentTitle) },
             { assertThat(firstEvaluation.recruitmentId).isEqualTo(findAllWithRecruitment[1].recruitmentId) },
-            { assertThat(preCourseEvaluation.title).isEqualTo(findAllWithRecruitment[1].beforeEvaluation) },
+            { assertThat(preCourseEvaluation.title).isEqualTo(findAllWithRecruitment[1].beforeEvaluationTitle) },
             { assertThat(preCourseEvaluation.id).isEqualTo(findAllWithRecruitment[1].beforeEvaluationId) }
         )
     }

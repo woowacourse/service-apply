@@ -45,8 +45,8 @@ class EvaluationView(
     private fun createGrid(): Component {
         return Grid<EvaluationResponse>(10).apply {
             addSortableColumn("평가명", EvaluationResponse::title)
-            addSortableColumn("모집명", EvaluationResponse::recruitment)
-            addSortableColumn("이전 평가명", EvaluationResponse::beforeEvaluation)
+            addSortableColumn("모집명", EvaluationResponse::recruitmentTitle)
+            addSortableColumn("이전 평가명", EvaluationResponse::beforeEvaluationTitle)
             addColumn(createEditAndDeleteButton()).apply { isAutoWidth = true }
             setItems(evaluationService.findAllWithRecruitment())
         }
