@@ -3,11 +3,11 @@ package apply.application
 import apply.domain.applicant.Applicant
 import apply.domain.applicant.ApplicantRepository
 import apply.domain.applicant.Gender
+import apply.domain.applicant.dto.ApplicantRequest
 import apply.security.JwtTokenProvider
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import support.createLocalDate
-import java.time.LocalDate
 import javax.annotation.PostConstruct
 
 @Transactional
@@ -23,44 +23,16 @@ class ApplicantService(
     fun findByValue(value: String): List<Applicant> =
         applicantRepository.findByNameContainingOrEmailContaining(value, value)
 
-    fun validateOrCreateApplicantAndGenerateToken(
-        name: String,
-        email: String,
-        phoneNumber: String,
-        gender: Gender,
-        birthDay: LocalDate,
-        password: String
-    ): String {
-        applicantRepository.findByEmail(email)
-            ?.validatePassword(password)
-            ?: createApplicant(
-                name = name,
-                email = email,
-                phoneNumber = phoneNumber,
-                gender = gender,
-                birthDay = birthDay,
-                password = password
-            )
+    fun validateOrCreateApplicantAndGenerateToken(applicantRequest: ApplicantRequest): String {
+        applicantRepository.findByEmail(applicantRequest.email)
+            ?.validate(applicantRequest)
+            ?: createApplicant(applicantRequest)
 
-        return jwtTokenProvider.createToken(email)
+        return jwtTokenProvider.createToken(applicantRequest.email)
     }
 
-    private fun createApplicant(
-        name: String,
-        email: String,
-        phoneNumber: String,
-        gender: Gender,
-        birthDay: LocalDate,
-        password: String
-    ) {
-        val newApplicant = Applicant(
-            name = name,
-            email = email,
-            phoneNumber = phoneNumber,
-            gender = gender,
-            birthday = birthDay,
-            password = password
-        )
+    private fun createApplicant(applicantRequest: ApplicantRequest) {
+        val newApplicant = applicantRequest.toEntity()
         applicantRepository.save(newApplicant)
     }
 

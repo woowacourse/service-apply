@@ -15,14 +15,7 @@ class ApplicantRestController(
 ) {
     @PostMapping
     fun generateToken(@RequestBody applicantRequest: ApplicantRequest): ResponseEntity<String> {
-        val token = applicantService.validateOrCreateApplicantAndGenerateToken(
-            name = applicantRequest.name,
-            email = applicantRequest.email,
-            phoneNumber = applicantRequest.phoneNumber,
-            gender = applicantRequest.gender,
-            birthDay = applicantRequest.birthDay,
-            password = applicantRequest.password
-        )
+        val token = applicantService.validateOrCreateApplicantAndGenerateToken(applicantRequest)
         return ResponseEntity.ok().body(token)
     }
 }
