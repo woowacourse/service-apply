@@ -17,13 +17,13 @@ import support.createLocalDateTime
 import java.util.Optional
 
 @ExtendWith(MockitoExtension::class)
-internal class EvaluationServiceTest(
+internal class EvaluationServiceTest {
     @Mock
-    private val recruitmentService: RecruitmentService,
+    private lateinit var recruitmentService: RecruitmentService
     @Mock
-    private val evaluationRepository: EvaluationRepository
-) {
-    private val evaluationService: EvaluationService = EvaluationService(evaluationRepository, recruitmentService)
+    private lateinit var evaluationRepository: EvaluationRepository
+
+    private lateinit var evaluationService: EvaluationService
     private lateinit var recruitments: List<Recruitment>
     private lateinit var preCourseEvaluation: Evaluation
     private lateinit var firstEvaluation: Evaluation
@@ -32,6 +32,8 @@ internal class EvaluationServiceTest(
 
     @BeforeEach
     internal fun setUp() {
+        evaluationService = EvaluationService(evaluationRepository, recruitmentService)
+
         recruitments = listOf(
             Recruitment(
                 "웹 백엔드 2기",
