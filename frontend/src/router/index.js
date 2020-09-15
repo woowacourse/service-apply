@@ -3,6 +3,7 @@ import VueRouter from "vue-router"
 import Register from "@/views/Register"
 import ApplicationRegister from "@/views/ApplicationRegister"
 import Login from "@/views/Login"
+import PasswordFind from "@/views/PasswordFind"
 
 Vue.use(VueRouter)
 
@@ -14,6 +15,10 @@ const routes = [
   {
     path: "/login",
     component: Login,
+  },
+  {
+    path: "/find",
+    component: PasswordFind,
   },
   {
     path: "/application/register",
