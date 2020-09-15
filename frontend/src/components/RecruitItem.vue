@@ -10,8 +10,18 @@
         </div>
       </div>
       <div class="button-wrapper">
-        <button class="enroll-button" @click="onClickAdmission(recruitment.id)">
-          지원하기
+        <button
+          class="enroll-button button-recruiting"
+          @click="onClickAdmission(recruitment.id)"
+          v-if="this.isRecruiting()"
+        >
+          {{ buttonLabel() }}
+        </button>
+        <button
+            class="enroll-button button-disabled"
+            v-if="!this.isRecruiting()"
+        >
+          {{ buttonLabel() }}
         </button>
       </div>
     </div>
@@ -27,6 +37,28 @@ export default {
     },
   },
   methods: {
+    isRecruiting() {
+      return this.recruitment.recruitmentStatus === "RECRUITING"
+    },
+    buttonLabel() {
+      switch (this.recruitment.recruitmentStatus) {
+        case "RECRUITING": {
+          return "지원하기"
+        }
+        case "RECRUITABLE": {
+          return "모집 예정"
+        }
+        case "UNRECRUITABLE": {
+          return "일시 중지"
+        }
+        case "ENDED": {
+          return "모집 종료"
+        }
+        default: {
+          throw "올바르지 않은 지원 타입입니다"
+        }
+      }
+    },
     onClickAdmission(id) {
       this.$router.push({
         path: `/application/${id}`,
@@ -102,6 +134,21 @@ export default {
   height: 40px;
   margin: 10px;
   vertical-align: middle;
+}
+
+.button-disabled {
+  background-color: #eeeeee;
+}
+
+.button-disabled:active {
+  background-color: #eeeeee !important;
+}
+
+.button-recruiting {
   background-color: #3498db;
+}
+
+.button-recruiting:active {
+  background-color: #0078ff !important;
 }
 </style>

@@ -34,11 +34,19 @@ export default {
           label: "전체",
         },
         {
+          name: "recruitable",
+          label: "모집 예정",
+        },
+        {
           name: "recruiting",
           label: "모집 중",
         },
         {
-          name: "completed",
+          name: "unrecruitable",
+          label: "일시 중지",
+        },
+        {
+          name: "ended",
           label: "모집 종료",
         },
       ],
@@ -49,19 +57,19 @@ export default {
           title: "웹 백엔드 3기",
           startTime: new Date("2020-10-24T15:00:00"),
           endTime: new Date("2020-11-09T23:59:00"),
-          recruitmentStatus: "RECRUITABLE",
+          recruitmentStatus: "RECRUITING",
         },
         {
           id: 5,
           title: "웹 프론트엔드 3기",
           startTime: new Date("2020-10-24T15:00:00"),
           endTime: new Date("2020-11-09T23:59:00"),
-          recruitmentStatus: "RECRUITABLE",
+          recruitmentStatus: "RECRUITING",
         },
         {
           id: 4,
           title: "모바일(iOS) 3기",
-          startTime: new Date("2020-10-24T15:00:00"),
+          startTime: new Date("2020-10-27T15:00:00"),
           endTime: new Date("2020-11-09T23:59:00"),
           recruitmentStatus: "RECRUITABLE",
         },
@@ -70,7 +78,7 @@ export default {
           title: "모바일(Android) 3기",
           startTime: new Date("2020-10-24T15:00:00"),
           endTime: new Date("2020-11-09T23:59:00"),
-          recruitmentStatus: "RECRUITABLE",
+          recruitmentStatus: "UNRECRUITABLE",
         },
         {
           id: 2,
@@ -112,10 +120,16 @@ export default {
     // TODO: 이 부분을 실제 API 콜로 대체하기
     getRecruits(filter) {
       switch (filter) {
-        case "recruiting": {
+        case "recruitable": {
           return this.allList.filter(el => el.recruitmentStatus === "RECRUITABLE")
         }
-        case "completed": {
+        case "recruiting": {
+          return this.allList.filter(el => el.recruitmentStatus === "RECRUITING")
+        }
+        case "unrecruitable": {
+          return this.allList.filter(el => el.recruitmentStatus === "UNRECRUITABLE")
+        }
+        case "ended": {
           return this.allList.filter(el => el.recruitmentStatus === "ENDED")
         }
         case "all": {
