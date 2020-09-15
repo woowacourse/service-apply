@@ -69,8 +69,16 @@
 </template>
 
 <script>
-import { BirthField, Button, Form, GenderField, SummaryCheckField, TextField } from "@/components/form"
-import * as RecruitmentApi from "../api/recruitments"
+import {
+  BirthField,
+  Button,
+  Form,
+  GenderField,
+  SummaryCheckField,
+  TextField,
+} from "@/components/form"
+import * as RecruitmentApi from "@/api/recruitments"
+import * as DateUtil from "@/utils/date"
 import { register } from "@/utils/validation"
 import { POLICY_SUMMARY } from "./constants"
 
@@ -102,24 +110,23 @@ export default {
   methods: {
     async submit() {
       try {
+        const birthday = DateUtil.formatLocalDate(
+          this.birth.year,
+          parseInt(this.birth.month),
+          parseInt(this.birth.day),
+        )
         const { data: token } = await RecruitmentApi.fetchToken({
           name: this.name,
           phoneNumber: this.phoneNumber,
           email: this.email,
           password: this.password,
-          birthDay: this.formatDay(this.birth.year, parseInt(this.birth.month), parseInt(this.birth.day)),
           gender: this.gender.toUpperCase(),
+          birthday,
         })
         console.log(token)
       } catch (e) {
-        console.log(e)
+        alert(e.response.data)
       }
-    },
-    formatDay(year, month, day) {
-      return `${year}-${this.addZeroPrefixIfLessThanTen(month)}-${this.addZeroPrefixIfLessThanTen(day)}`
-    },
-    addZeroPrefixIfLessThanTen(value) {
-      return `${value < 10 ? `0${value}` : value}`
     },
   },
 }
