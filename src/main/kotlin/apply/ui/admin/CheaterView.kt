@@ -5,7 +5,7 @@ import apply.application.CheaterService
 import apply.domain.applicant.Applicant
 import apply.domain.cheater.Cheater
 import com.vaadin.flow.component.Component
-import com.vaadin.flow.component.button.Button
+import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.html.H1
 import com.vaadin.flow.component.orderedlayout.FlexComponent
@@ -18,6 +18,7 @@ import com.vaadin.flow.router.Route
 import support.addSortableColumn
 import support.addSortableDateTimeColumn
 import support.createDeleteButtonWithDialog
+import support.createPrimaryButton
 import support.createSearchBar
 
 @Route(value = "admin/cheater", layout = BaseLayout::class)
@@ -25,10 +26,8 @@ class CheaterView(
     private val applicantService: ApplicantService,
     private val cheaterService: CheaterService
 ) : VerticalLayout() {
-    private val cheaterGrid: Grid<Pair<Cheater, Applicant>> = createCheaterGrid()
-
     init {
-        add(createTitle(), createAddCheater(), cheaterGrid)
+        add(createTitle(), createAddCheater(), createCheaterGrid())
     }
 
     private fun createTitle(): Component {
@@ -48,9 +47,9 @@ class CheaterView(
                     val select = createSelectApplicant(founds)
                     container.add(
                         select,
-                        Button("추가") {
+                        createPrimaryButton("추가") {
                             cheaterService.save(select.value.id)
-                            cheaterGrid.setItems(cheaterService.findAll())
+                            UI.getCurrent().page.reload()
                         }
                     )
                 }
