@@ -33,21 +33,21 @@
       v-model="incorrectYear"
       :rules="rules.year"
       :target="year"
-      @input="valid"
+      @input="validYear"
     />
     <RuleField
       v-show="!incorrectYear && incorrectMonth"
       v-model="incorrectMonth"
       :rules="rules.month"
       :target="month"
-      @input="valid"
+      @input="validMonth"
     />
     <RuleField
       v-show="!incorrectYear && !incorrectMonth && incorrectDay"
       v-model="incorrectDay"
       :rules="rules.day"
       :target="day"
-      @input="valid"
+      @input="validDay"
     />
   </Field>
 </template>
@@ -111,7 +111,13 @@ const BirthField = {
         day: this.day,
       })
     },
-    valid(v) {
+    validYear(v) {
+      this.$emit("valid", v === false && this.incorrectMonth && this.incorrectDay)
+    },
+    validMonth(v) {
+      this.$emit("valid", v === false && this.incorrectDay)
+    },
+    validDay(v) {
       this.$emit("valid", v === false)
     },
   },
