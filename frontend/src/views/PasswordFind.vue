@@ -64,9 +64,6 @@ export default {
     submit() {
       //TODO 비밀번호 찾기 API
     },
-    findPassword() {
-      this.$router.push("/find")
-    },
     back() {
       this.$router.go(-1)
     },
