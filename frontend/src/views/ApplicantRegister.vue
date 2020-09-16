@@ -115,8 +115,8 @@ export default {
     async submit() {
       const birthday = DateUtil.formatLocalDate(
         this.birth.year,
-        parseInt(this.birth.month),
-        parseInt(this.birth.day),
+        Number(this.birth.month),
+        Number(this.birth.day),
       )
       try {
         await this.fetchToken({
