@@ -1,21 +1,23 @@
 <template>
-  <div id="wrapper">
-    <div id="tab-wrapper">
-      <h2
-        v-for="tab in tabList"
-        :key="tab.name"
-        class="list-tab filter"
-        :class="{ active: tab.name === $route.query.status }"
-        :id="tab.name"
-        @click="setFilter(tab.name)"
-      >
-        {{ tab.label }}
-      </h2>
-      <h2 class="list-tab" id="mypage">내 지원서</h2>
-    </div>
-    <div id="component">
-      <div v-for="recruitment in activeList" :key="recruitment.id">
-        <recruit-item :recruitment="recruitment" />
+  <div id="recruits">
+    <div id="recruits-box">
+      <div id="tab-wrapper">
+        <h2
+          v-for="tab in tabList"
+          :key="tab.name"
+          class="list-tab filter"
+          :class="{ active: tab.name === $route.query.status }"
+          :id="tab.name"
+          @click="setFilter(tab.name)"
+        >
+          {{ tab.label }}
+        </h2>
+        <h2 class="list-tab" id="mypage">내 지원서</h2>
+      </div>
+      <div id="component">
+        <div v-for="recruitment in activeList" :key="recruitment.id">
+          <recruit-item :recruitment="recruitment" />
+        </div>
       </div>
     </div>
   </div>
@@ -141,10 +143,29 @@ export default {
 
 <style scoped>
 @media (min-width: 800px) {
-  #wrapper {
+  #recruits-box {
     width: 800px;
     margin: 0 auto;
   }
+}
+
+#recruits {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #ced6e0;
+  height: 100%;
+}
+
+#recruits-box {
+  align-items: center;
+  width: 100%;
+  max-width: 800px;
+  padding: 20px;
+  margin: 15px;
+  border-radius: 3px;
+  background: #f1f2f6;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.05);
 }
 
 #tab-wrapper {

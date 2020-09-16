@@ -11,14 +11,14 @@
       </div>
       <div class="button-wrapper">
         <button
-          class="enroll-button button-recruiting"
+          class="enroll-button button"
           @click="onClickAdmission(recruitment.id)"
           v-if="this.isRecruiting()"
         >
           {{ buttonLabel() }}
         </button>
         <button
-            class="enroll-button button-disabled"
+            class="enroll-button button" disabled
             v-if="!this.isRecruiting()"
         >
           {{ buttonLabel() }}
@@ -98,10 +98,11 @@ export default {
 .card {
   width: 100%;
   height: 70px;
-  background-color: #dcdcdc;
-  border-radius: 5px;
+  background-color: #ffffff;
+  border-radius: 3px;
   display: inline-block;
   margin: 5px 0 5px 0;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.05);
 }
 
 .recruit-title {
@@ -136,19 +137,25 @@ export default {
   vertical-align: middle;
 }
 
-.button-disabled {
-  background-color: #eeeeee;
+.button-wrapper {
+  margin-right: 12px;
 }
 
-.button-disabled:active {
-  background-color: #eeeeee !important;
+.button {
+  cursor: pointer;
+  outline: none;
+  border: 0;
+  background: #0078ff;
+  color: #fff;
+  border-radius: 3px;
+  padding: 10px;
+  min-width: 80px;
+  min-height: 28px;
+  margin: 5px;
 }
 
-.button-recruiting {
-  background-color: #3498db;
-}
-
-.button-recruiting:active {
-  background-color: #0078ff !important;
+.button:disabled {
+  cursor: default;
+  background: #ccc;
 }
 </style>
