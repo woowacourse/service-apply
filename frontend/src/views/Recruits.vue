@@ -142,19 +142,13 @@ export default {
 </script>
 
 <style scoped>
-@media (min-width: 800px) {
-  #recruits-box {
-    width: 800px;
-    margin: 0 auto;
-  }
-}
-
 #recruits {
   display: flex;
   flex-direction: column;
   align-items: center;
   background: #ced6e0;
   height: 100%;
+  user-select: none;
 }
 
 #recruits-box {
@@ -168,12 +162,26 @@ export default {
   box-shadow: 0 0 7px rgba(0, 0, 0, 0.05);
 }
 
+@media (min-width: 800px) {
+  #recruits-box {
+    width: 800px;
+    margin: 0 auto;
+  }
+}
+
 #tab-wrapper {
   display: flex;
 }
 
 .list-tab {
   padding: 0 20px 0 20px;
+}
+
+@media (max-width: 500px) {
+  .list-tab {
+    font-size: smaller;
+    padding: 0 10px 0 10px;
+  }
 }
 
 .filter {
@@ -184,10 +192,10 @@ export default {
   color: #000000 !important;
 }
 
-@media (max-width: 500px) {
-  .list-tab {
-    font-size: smaller;
-    padding: 0 10px 0 10px;
-  }
+#tab-wrapper > h2 {
+  cursor: pointer;
+}
+.enroll-button button {
+  cursor: pointer;
 }
 </style>
