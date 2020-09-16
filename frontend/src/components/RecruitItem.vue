@@ -13,11 +13,8 @@
         <button
           class="enroll-button button"
           @click="onClickAdmission(recruitment.id)"
-          v-if="this.isRecruiting()"
+          :disabled="!this.isRecruiting()"
         >
-          {{ buttonLabel() }}
-        </button>
-        <button class="enroll-button button" disabled v-if="!this.isRecruiting()">
           {{ buttonLabel() }}
         </button>
       </div>
