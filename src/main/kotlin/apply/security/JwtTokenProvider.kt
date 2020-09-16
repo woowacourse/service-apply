@@ -9,10 +9,12 @@ import org.springframework.stereotype.Component
 import java.util.Date
 import javax.crypto.SecretKey
 
+const val TWELVE_HOURS_IN_MILLISECONDS: Long = 1000 * 60 * 60 * 12
+
 @Component
 class JwtTokenProvider(
     private val signingKey: SecretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256),
-    private val validityInMilliseconds: Long = 1000 * 60 * 60 * 12
+    private val validityInMilliseconds: Long = TWELVE_HOURS_IN_MILLISECONDS
 ) {
 
     fun createToken(payload: String): String {
