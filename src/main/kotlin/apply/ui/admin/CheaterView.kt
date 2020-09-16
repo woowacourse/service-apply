@@ -25,7 +25,7 @@ class CheaterView(
     private val applicantService: ApplicantService,
     private val cheaterService: CheaterService
 ) : VerticalLayout() {
-    private val cheaterGrid: Grid<Cheater> = createCheaterGrid()
+    private val cheaterGrid: Grid<Pair<Cheater, Applicant>> = createCheaterGrid()
 
     init {
         add(createTitle(), createAddCheater(), cheaterGrid)
@@ -49,7 +49,7 @@ class CheaterView(
                     container.add(
                         select,
                         Button("추가") {
-                            cheaterService.save(select.value)
+                            cheaterService.save(select.value.id)
                             cheaterGrid.setItems(cheaterService.findAll())
                         }
                     )
@@ -66,20 +66,20 @@ class CheaterView(
         }
     }
 
-    private fun createCheaterGrid(): Grid<Cheater> {
-        return Grid<Cheater>(10).apply {
-            addSortableColumn("이름") { it.applicant.name }
-            addSortableColumn("이메일") { it.applicant.email }
-            addSortableDateTimeColumn("등록일") { it.createdDateTime }
+    private fun createCheaterGrid(): Grid<Pair<Cheater, Applicant>> {
+        return Grid<Pair<Cheater, Applicant>>(10).apply {
+            addSortableColumn("이름") { it.second.name }
+            addSortableColumn("이메일") { it.second.email }
+            addSortableDateTimeColumn("등록일") { it.first.createdDateTime }
             addColumn(createDeleteButtonRenderer()).apply { isAutoWidth = true }
             setItems(cheaterService.findAll())
         }
     }
 
-    private fun createDeleteButtonRenderer(): Renderer<Cheater> {
-        return ComponentRenderer<Component, Cheater> { cheater ->
+    private fun createDeleteButtonRenderer(): Renderer<Pair<Cheater, Applicant>> {
+        return ComponentRenderer<Component, Pair<Cheater, Applicant>> { pair ->
             createDeleteButtonWithDialog("부정 행위자를 삭제하시겠습니까?") {
-                cheaterService.delete(cheater)
+                cheaterService.deleteById(pair.first.id)
             }
         }
     }
