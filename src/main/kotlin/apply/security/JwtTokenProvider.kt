@@ -12,7 +12,7 @@ import javax.crypto.SecretKey
 @Component
 class JwtTokenProvider(
     private val signingKey: SecretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256),
-    private val validityInMilliseconds: Long = 1000 * 60 * 60 * 24 * 7
+    private val validityInMilliseconds: Long = 1000 * 60 * 60 * 12
 ) {
 
     fun createToken(payload: String): String {
