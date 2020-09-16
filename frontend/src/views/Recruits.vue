@@ -42,10 +42,6 @@ export default {
           label: "모집 중",
         },
         {
-          name: "unrecruitable",
-          label: "일시 중지",
-        },
-        {
           name: "ended",
           label: "모집 종료",
         },
@@ -124,10 +120,9 @@ export default {
           return this.allList.filter(el => el.recruitmentStatus === "RECRUITABLE")
         }
         case "recruiting": {
-          return this.allList.filter(el => el.recruitmentStatus === "RECRUITING")
-        }
-        case "unrecruitable": {
-          return this.allList.filter(el => el.recruitmentStatus === "UNRECRUITABLE")
+          return this.allList.filter(
+            el => el.recruitmentStatus === "RECRUITING" || el.recruitmentStatus === "UNRECRUITABLE",
+          )
         }
         case "ended": {
           return this.allList.filter(el => el.recruitmentStatus === "ENDED")
