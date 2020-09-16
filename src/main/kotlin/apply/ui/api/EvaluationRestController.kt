@@ -22,7 +22,7 @@ class EvaluationRestController(
     }
 
     @GetMapping("/{id}/items")
-    fun findItemsByID(@PathVariable("id") evaluationId: Long): ResponseEntity<List<EvaluationItem>> {
+    fun findItemsById(@PathVariable("id") evaluationId: Long): ResponseEntity<List<EvaluationItem>> {
         return ResponseEntity.ok(evaluationItemService.findByEvaluationId(evaluationId))
     }
 }
