@@ -1,6 +1,6 @@
 import { common } from "./common"
 
-const REGEX = /^(?=.*[a-z])(?=.*[0-9])(?=.*[*.!@#$%^&(){}[\]:;"'<>,?\\/~_+\-=|]).{8,20}$/
+const REGEX = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[*.!@#$%^&(){}[\]:;"'<>,?\\/~_+\-=|]).{8,20}$/
 
 export const password = [
   ...common.required,
