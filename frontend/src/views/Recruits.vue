@@ -153,7 +153,7 @@ export default {
 
 #recruits-box {
   align-items: center;
-  width: 100%;
+  width: 800px;
   max-width: 800px;
   padding: 20px;
   margin: 15px;
@@ -162,9 +162,9 @@ export default {
   box-shadow: 0 0 7px rgba(0, 0, 0, 0.05);
 }
 
-@media (min-width: 800px) {
+@media (max-width: 800px) {
   #recruits-box {
-    width: 800px;
+    width: 100%;
     margin: 0 auto;
   }
 }
