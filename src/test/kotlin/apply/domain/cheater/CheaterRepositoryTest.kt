@@ -2,7 +2,7 @@ package apply.domain.cheater
 
 import apply.domain.applicant.Applicant
 import apply.domain.applicant.Gender
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
@@ -41,8 +41,8 @@ internal class CheaterRepositoryTest(
     @Test
     fun `지원자의 부정 행위 여부를 확인한다`() {
         assertAll(
-            { Assertions.assertThat(cheaterRepository.existsByApplicantId(cheater.id)).isTrue() },
-            { Assertions.assertThat(cheaterRepository.existsByApplicantId(applicant.id)).isFalse() }
+            { assertThat(cheaterRepository.existsByApplicantId(cheater.id)).isTrue() },
+            { assertThat(cheaterRepository.existsByApplicantId(applicant.id)).isFalse() }
         )
     }
 }
