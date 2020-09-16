@@ -18,8 +18,8 @@ class CheaterService(
         cheaterRepository.findAll().map { it to applicantRepository.findByIdOrNull(it.applicantId)!! }
 
     fun save(applicantId: Long) {
-        if (cheaterRepository.existsByApplicantId(applicantId)) {
-            throw IllegalArgumentException("이미 등록된 부정 행위자입니다.")
+        require(!cheaterRepository.existsByApplicantId(applicantId)) {
+            "이미 등록된 부정 행위자입니다."
         }
         cheaterRepository.save(Cheater(applicantId))
     }
