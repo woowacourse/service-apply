@@ -13,7 +13,7 @@ class CheaterService(private val cheaterRepository: CheaterRepository) {
 
     fun save(applicant: Applicant) {
         if (cheaterRepository.existsByApplicant(applicant)) {
-            return
+            throw IllegalArgumentException("이미 등록된 부정 행위자입니다.")
         }
         cheaterRepository.save(Cheater(applicant))
     }
