@@ -3,7 +3,7 @@ package apply.ui.admin
 import apply.application.ApplicantService
 import apply.application.CheaterService
 import apply.domain.applicant.Applicant
-import apply.domain.cheater.Cheater
+import apply.domain.cheater.CheaterResponse
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.grid.Grid
@@ -65,20 +65,20 @@ class CheaterView(
         }
     }
 
-    private fun createCheaterGrid(): Grid<Pair<Cheater, Applicant>> {
-        return Grid<Pair<Cheater, Applicant>>(10).apply {
-            addSortableColumn("이름") { it.second.name }
-            addSortableColumn("이메일") { it.second.email }
-            addSortableDateTimeColumn("등록일") { it.first.createdDateTime }
+    private fun createCheaterGrid(): Grid<CheaterResponse> {
+        return Grid<CheaterResponse>(10).apply {
+            addSortableColumn("이름", CheaterResponse::name)
+            addSortableColumn("이메일", CheaterResponse::email)
+            addSortableDateTimeColumn("등록일", CheaterResponse::createdDateTime)
             addColumn(createDeleteButtonRenderer()).apply { isAutoWidth = true }
             setItems(cheaterService.findAll())
         }
     }
 
-    private fun createDeleteButtonRenderer(): Renderer<Pair<Cheater, Applicant>> {
-        return ComponentRenderer<Component, Pair<Cheater, Applicant>> { pair ->
+    private fun createDeleteButtonRenderer(): Renderer<CheaterResponse> {
+        return ComponentRenderer<Component, CheaterResponse> { cheater ->
             createDeleteButtonWithDialog("부정 행위자를 삭제하시겠습니까?") {
-                cheaterService.deleteById(pair.first.id)
+                cheaterService.deleteById(cheater.id)
             }
         }
     }
