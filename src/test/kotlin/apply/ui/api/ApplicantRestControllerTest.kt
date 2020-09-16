@@ -1,0 +1,99 @@
+package apply.ui.api
+
+import apply.application.ApplicantService
+import apply.domain.applicant.Gender
+import apply.domain.applicant.dto.ApplicantRequest
+import apply.domain.applicant.exception.ApplicantValidateException
+import com.fasterxml.jackson.databind.ObjectMapper
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.eq
+import org.mockito.BDDMockito.given
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.http.MediaType
+import org.springframework.test.context.TestConstructor
+import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.post
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers
+import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder
+import org.springframework.test.web.servlet.setup.MockMvcBuilders
+import org.springframework.web.context.WebApplicationContext
+import org.springframework.web.filter.CharacterEncodingFilter
+import support.createLocalDate
+
+private const val VALID_TOKEN = "SOME_VALID_TOKEN"
+private fun <T : Any> safeRefEq(value: T): T = ArgumentMatchers.refEq(value) ?: value
+
+@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
+@WebMvcTest(controllers = [ApplicantRestController::class])
+internal class ApplicantRestControllerTest(
+    private val objectMapper: ObjectMapper
+) {
+    @MockBean
+    private lateinit var applicantService: ApplicantService
+
+    private lateinit var mockMvc: MockMvc
+
+    private val applicantRequest = ApplicantRequest(
+        name = "지원자",
+        email = "test@email.com",
+        phoneNumber = "010-0000-0000",
+        gender = Gender.MALE,
+        birthday = createLocalDate(1995, 2, 2),
+        password = "password"
+    )
+
+    private val invalidApplicantRequest = ApplicantRequest(
+        name = "지원자",
+        email = "test@email.com",
+        phoneNumber = "010-0000-0000",
+        gender = Gender.MALE,
+        birthday = createLocalDate(1995, 2, 2),
+        password = "invalid_password"
+    )
+
+    private val recruitmentId = 1L
+
+    @BeforeEach
+    internal fun setUp(webApplicationContext: WebApplicationContext) {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+            .addFilter<DefaultMockMvcBuilder>(CharacterEncodingFilter("UTF-8", true))
+            .alwaysDo<DefaultMockMvcBuilder>(MockMvcResultHandlers.print())
+            .build()
+    }
+
+    @Test
+    fun `유효한 지원자 생성 및 검증 요청에 대하여 응답으로 토큰이 반환된다`() {
+        given(
+            applicantService.validateOrCreateApplicantAndGenerateToken(eq(recruitmentId), safeRefEq(applicantRequest))
+        ).willReturn(VALID_TOKEN)
+
+        mockMvc.post("/api/applicants/$recruitmentId") {
+            content = objectMapper.writeValueAsBytes(applicantRequest)
+            contentType = MediaType.APPLICATION_JSON
+        }.andExpect {
+            status { isOk }
+            content { string(VALID_TOKEN) }
+        }
+    }
+
+    @Test
+    fun `기존 지원자 정보와 일치하지 않는 지원자 생성 및 검증 요청에 대하여 unauthorized 응답을 받는다`() {
+        given(
+            applicantService.validateOrCreateApplicantAndGenerateToken(
+                eq(recruitmentId),
+                safeRefEq(invalidApplicantRequest)
+            )
+        ).willThrow(ApplicantValidateException("비밀번호"))
+
+        mockMvc.post("/api/applicants/$recruitmentId") {
+            content = objectMapper.writeValueAsBytes(invalidApplicantRequest)
+            contentType = MediaType.APPLICATION_JSON
+        }.andExpect {
+            status { isUnauthorized }
+            content { string("비밀번호 값이 기존 정보와 일치하지 않습니다") }
+        }
+    }
+}
