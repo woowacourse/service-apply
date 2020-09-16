@@ -42,6 +42,10 @@ dependencyManagement {
     }
 }
 
+noArg {
+    annotation("support.reflect.NoArgsConstructor")
+}
+
 tasks {
     withType<Test> {
         useJUnitPlatform()
