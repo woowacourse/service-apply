@@ -7,9 +7,12 @@ import apply.application.RecruitmentService
 import apply.domain.applicant.Applicant
 import apply.domain.application.Application
 import com.vaadin.flow.component.Component
+import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.dialog.Dialog
 import com.vaadin.flow.component.grid.Grid
+import com.vaadin.flow.component.html.Div
 import com.vaadin.flow.component.html.H1
+import com.vaadin.flow.component.html.H4
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
@@ -22,6 +25,7 @@ import com.vaadin.flow.router.Route
 import com.vaadin.flow.router.WildcardParameter
 import support.addSortableColumn
 import support.addSortableDateColumn
+import support.createNormalButton
 import support.createPrimarySmallButton
 import support.createSearchBar
 import support.createSuccessButton
@@ -94,22 +98,37 @@ class SelectionView(
             .items
             .map { it.recruitmentItemId to it.contents }
             .toMap()
-        return recruitmentItemService.findByRecruitmentId(recruitmentId)
-            .sortedBy { it.position }
+        val items = recruitmentItemService.findByRecruitmentIdOrderByPosition(recruitmentId)
             .map {
-                createQnAs(it.title, answers[it.id] ?: throw IllegalArgumentException())
+                createItem(it.title, createAnswer(answers.getValue(it.id)))
             }.toTypedArray()
+        return addIfExist(items, application.referenceUrl)
     }
 
-    private fun createQnAs(title: String, contents: String): Component {
-        return createAnswer(title, contents).apply {
+    private fun addIfExist(items: Array<Component>, referenceUrl: String): Array<Component> {
+        return when {
+            referenceUrl.isNotEmpty() -> {
+                val referenceItem = createItem(
+                    "포트폴리오",
+                    createNormalButton(referenceUrl) {
+                        UI.getCurrent().page.open(referenceUrl, "_blank")
+                    }
+                )
+                items.plusElement(referenceItem)
+            }
+            else -> items
+        }
+    }
+
+    private fun createItem(title: String, component: Component): Component {
+        return Div(H4(title), component).apply {
             setWidthFull()
             justifyContentMode = FlexComponent.JustifyContentMode.START
         }
     }
 
-    private fun createAnswer(title: String, answer: String): Component {
-        return TextArea(title).apply {
+    private fun createAnswer(answer: String): Component {
+        return TextArea().apply {
             setWidthFull()
             isReadOnly = true
             value = answer
@@ -119,7 +138,8 @@ class SelectionView(
 
     override fun setParameter(event: BeforeEvent?, @WildcardParameter parameter: Long) {
         this.recruitmentId = parameter
-        // Todo: RecruitmentId 별로 지원자를 불러오도록 수정
-        add(createTitle(), createMenu(), createGrid(applicantService.findAll()))
+        val applicantIds = applicationService.findAllByRecruitmentId(recruitmentId)
+            .map { it.applicantId }
+        add(createTitle(), createMenu(), createGrid(applicantService.findAllByIds(applicantIds)))
     }
 }

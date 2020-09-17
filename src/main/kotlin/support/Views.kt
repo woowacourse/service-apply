@@ -23,6 +23,10 @@ import java.time.LocalDateTime
 
 typealias ClickListener = (ClickEvent<Button>) -> Unit
 
+fun createNormalButton(text: String, clickListener: ClickListener): Button {
+    return Button(text, clickListener)
+}
+
 fun createPrimaryButton(text: String, clickListener: ClickListener): Button {
     return Button(text, clickListener).apply {
         addThemeVariants(ButtonVariant.LUMO_PRIMARY)

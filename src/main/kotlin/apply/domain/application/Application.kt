@@ -11,7 +11,6 @@ import javax.persistence.Id
 
 @Entity
 class Application(
-    @Column(nullable = false)
     val referenceUrl: String,
 
     @Column(nullable = false)

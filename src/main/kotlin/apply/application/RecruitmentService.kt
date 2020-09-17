@@ -37,16 +37,16 @@ class RecruitmentService(private val recruitmentRepository: RecruitmentRepositor
         }
         val recruitments = listOf(
             Recruitment(
-                "웹 백엔드 3기",
-                true,
-                createLocalDateTime(2020, 10, 25, 15),
-                createLocalDateTime(2020, 11, 5, 10)
+                title = "웹 백엔드 3기",
+                canRecruit = true,
+                startDateTime = createLocalDateTime(2020, 10, 25, 15),
+                endDateTime = createLocalDateTime(2020, 11, 5, 10)
             ),
             Recruitment(
-                "웹 프론트엔드 3기",
-                false,
-                createLocalDateTime(2020, 10, 25, 15),
-                createLocalDateTime(2020, 11, 5, 10)
+                title = "웹 프론트엔드 3기",
+                canRecruit = false,
+                startDateTime = createLocalDateTime(2020, 10, 25, 15),
+                endDateTime = createLocalDateTime(2020, 11, 5, 10)
             )
         )
         recruitmentRepository.saveAll(recruitments)

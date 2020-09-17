@@ -23,6 +23,6 @@ class RecruitmentRestController(
 
     @GetMapping("/{id}/items")
     fun findItemsById(@PathVariable("id") recruitmentId: Long): ResponseEntity<List<RecruitmentItem>> {
-        return ResponseEntity.ok().body(recruitmentItemService.findByRecruitmentId(recruitmentId))
+        return ResponseEntity.ok().body(recruitmentItemService.findByRecruitmentIdOrderByPosition(recruitmentId))
     }
 }

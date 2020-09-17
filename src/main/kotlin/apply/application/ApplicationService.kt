@@ -14,6 +14,9 @@ import javax.annotation.PostConstruct
 class ApplicationService(
     private val applicationRepository: ApplicationRepository
 ) {
+    fun findAllByRecruitmentId(recruitmentId: Long): List<Application> =
+        applicationRepository.findByRecruitmentId(recruitmentId)
+
     fun getByRecruitmentIdAndApplicantId(recruitmentId: Long, applicantId: Long): Application =
         applicationRepository.findByRecruitmentIdAndApplicantId(recruitmentId, applicantId)
             ?: throw IllegalArgumentException()
@@ -25,14 +28,14 @@ class ApplicationService(
         }
         val applications = listOf(
             Application(
-                "",
-                true,
-                createLocalDateTime(2019, 10, 25, 10),
-                createLocalDateTime(2019, 11, 5, 10),
-                createLocalDateTime(2019, 11, 5, 10),
-                1L,
-                1L,
-                Answers(
+                referenceUrl = "",
+                submitted = true,
+                createdDateTime = createLocalDateTime(2019, 10, 25, 10),
+                modifiedDateTime = createLocalDateTime(2019, 11, 5, 10),
+                submittedDateTime = createLocalDateTime(2019, 11, 5, 10),
+                recruitmentId = 1L,
+                applicantId = 1L,
+                answers = Answers(
                     mutableListOf(
                         Answer("고객에게 가치를 전달하고 싶습니다.", 1L),
                         Answer("도전, 끈기", 2L)
@@ -40,14 +43,14 @@ class ApplicationService(
                 )
             ),
             Application(
-                "",
-                true,
-                createLocalDateTime(2019, 10, 25, 10),
-                createLocalDateTime(2019, 11, 5, 10),
-                createLocalDateTime(2019, 11, 5, 10),
-                1L,
-                2L,
-                Answers(
+                referenceUrl = "www.google.com",
+                submitted = true,
+                createdDateTime = createLocalDateTime(2019, 10, 25, 10),
+                modifiedDateTime = createLocalDateTime(2019, 11, 5, 10),
+                submittedDateTime = createLocalDateTime(2019, 11, 5, 10),
+                recruitmentId = 1L,
+                applicantId = 2L,
+                answers = Answers(
                     mutableListOf(
                         Answer("스타트업을 하고 싶습니다.", 1L),
                         Answer("책임감", 2L)

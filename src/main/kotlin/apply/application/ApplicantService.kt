@@ -11,9 +11,9 @@ import javax.annotation.PostConstruct
 @Transactional
 @Service
 class ApplicantService(private val applicantRepository: ApplicantRepository) {
-    fun findAll(): List<Applicant> {
-        return applicantRepository.findAll()
-    }
+    fun findAll(): List<Applicant> = applicantRepository.findAll()
+
+    fun findAllByIds(applicantIds: List<Long>): List<Applicant> = applicantRepository.findAllById(applicantIds)
 
     fun findByValue(value: String): List<Applicant> =
         applicantRepository.findByNameContainingOrEmailContaining(value, value)
@@ -25,25 +25,25 @@ class ApplicantService(private val applicantRepository: ApplicantRepository) {
         }
         val applicants = listOf(
             Applicant(
-                "홍길동1",
-                "a@email.com",
-                "010-0000-0000",
-                Gender.MALE,
-                createLocalDate(2020, 4, 17)
+                name = "홍길동1",
+                email = "a@email.com",
+                phoneNumber = "010-0000-0000",
+                gender = Gender.MALE,
+                birthday = createLocalDate(2020, 4, 17)
             ),
             Applicant(
-                "홍길동2",
-                "b@email.com",
-                "010-0000-0000",
-                Gender.FEMALE,
-                createLocalDate(2020, 5, 5)
+                name = "홍길동2",
+                email = "b@email.com",
+                phoneNumber = "010-0000-0000",
+                gender = Gender.FEMALE,
+                birthday = createLocalDate(2020, 5, 5)
             ),
             Applicant(
-                "홍길동3",
-                "c@email.com",
-                "010-0000-0000",
-                Gender.MALE,
-                createLocalDate(2020, 1, 1)
+                name = "홍길동3",
+                email = "c@email.com",
+                phoneNumber = "010-0000-0000",
+                gender = Gender.MALE,
+                birthday = createLocalDate(2020, 1, 1)
             )
         )
         applicantRepository.saveAll(applicants)

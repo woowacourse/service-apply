@@ -4,12 +4,12 @@ import apply.application.RecruitmentService
 import apply.domain.recruitment.Recruitment
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
-import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.html.H1
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.router.Route
+import support.createNormalButton
 
 @Route(value = "admin/selections", layout = BaseLayout::class)
 class SelectionsView(private val recruitmentService: RecruitmentService) : VerticalLayout() {
@@ -26,14 +26,18 @@ class SelectionsView(private val recruitmentService: RecruitmentService) : Verti
 
     private fun createButtons(): Array<Component> {
         return recruitmentService.findAll()
-            .map { createButton(it) }
+            .map {
+                createButton(it)
+            }
             .toTypedArray()
     }
 
     private fun createButton(recruitment: Recruitment): Component {
-        val button = Button(recruitment.title)
-        button.addClickListener { UI.getCurrent().navigate(SelectionView::class.java, recruitment.id) }
-        return HorizontalLayout(button).apply {
+        return HorizontalLayout(
+            createNormalButton(recruitment.title) {
+                UI.getCurrent().navigate(SelectionView::class.java, recruitment.id)
+            }
+        ).apply {
             setSizeFull()
             justifyContentMode = FlexComponent.JustifyContentMode.CENTER
         }
