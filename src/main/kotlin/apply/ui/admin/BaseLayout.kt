@@ -1,6 +1,8 @@
 package apply.ui.admin
 
+import apply.ui.admin.evaluation.EvaluationsView
 import apply.ui.admin.recruitment.RecruitmentsView
+import apply.ui.admin.selections.SelectionsView
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.applayout.AppLayout
 import com.vaadin.flow.component.applayout.DrawerToggle
@@ -20,7 +22,7 @@ import com.vaadin.flow.theme.lumo.Lumo
 class BaseLayout : AppLayout() {
     private val route: Map<String, Class<out Component>> = mapOf(
         "모집 관리" to RecruitmentsView::class.java,
-        "평가 관리" to EvaluationView::class.java,
+        "평가 관리" to EvaluationsView::class.java,
         "선발 과정" to SelectionsView::class.java
     )
 
