@@ -1,8 +1,9 @@
-package apply.ui.admin
+package apply.ui.admin.recruitment
 
 import apply.application.RecruitmentService
 import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentStatus
+import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.html.H1

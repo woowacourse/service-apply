@@ -1,5 +1,6 @@
 package apply.ui.admin
 
+import apply.ui.admin.recruitment.RecruitmentView
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.applayout.AppLayout
 import com.vaadin.flow.component.applayout.DrawerToggle
