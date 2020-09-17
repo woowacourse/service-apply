@@ -5,6 +5,7 @@ import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentStatus
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
+import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.html.H1
 import com.vaadin.flow.component.orderedlayout.FlexComponent
@@ -37,7 +38,7 @@ class RecruitmentsView(private val recruitmentService: RecruitmentService) : Ver
     private fun createButton(): Component {
         return HorizontalLayout(
             createPrimaryButton("생성") {
-                // TODO: 모집 관리 페이지에 생성 뷰를 구현한다.
+                UI.getCurrent().navigate(RecruitmentsFormView::class.java)
             }
         ).apply {
             setSizeFull()
