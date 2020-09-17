@@ -15,6 +15,7 @@ import com.vaadin.flow.component.icon.Icon
 import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
+import com.vaadin.flow.component.select.Select
 import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.data.renderer.LocalDateRenderer
 import com.vaadin.flow.data.renderer.LocalDateTimeRenderer
@@ -32,6 +33,18 @@ fun createPrimaryButton(text: String, clickListener: ClickListener): Button {
 fun createSuccessButton(text: String, clickListener: ClickListener): Button {
     return createPrimaryButton(text, clickListener).apply {
         addThemeVariants(ButtonVariant.LUMO_SUCCESS)
+    }
+}
+
+fun createErrorButton(text: String, clickListener: ClickListener): Button {
+    return createPrimaryButton(text, clickListener).apply {
+        addThemeVariants(ButtonVariant.LUMO_ERROR)
+    }
+}
+
+fun createContrastButton(text: String, clickListener: ClickListener): Button {
+    return createPrimaryButton(text, clickListener).apply {
+        addThemeVariants(ButtonVariant.LUMO_CONTRAST)
     }
 }
 
@@ -100,6 +113,10 @@ private fun Dialog.createConfirmButton(clickListener: ClickListener): Button {
         clickListener(it)
         UI.getCurrent().page.reload()
     }
+}
+
+fun createIntSelect(min: Int = 0, max: Int): Select<Int> {
+    return Select(*(min..max).toList().toTypedArray())
 }
 
 fun <T : Any> Grid<T>.addSortableColumn(labelText: String, valueProvider: (T) -> Any): Grid.Column<T> {

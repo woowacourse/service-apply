@@ -9,7 +9,7 @@ import kotlin.reflect.full.createInstance
 abstract class BindingFormLayout<TARGET : Any>(
     private val targetClass: KClass<TARGET>
 ) : FormLayout() {
-    protected val binder: Binder<TARGET> = BeanValidationBinder(targetClass.java)
+    private val binder: Binder<TARGET> = BeanValidationBinder(targetClass.java)
 
     protected fun drawRequired() {
         binder.bindInstanceFields(this)
