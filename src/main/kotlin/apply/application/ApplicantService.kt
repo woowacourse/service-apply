@@ -18,6 +18,8 @@ class ApplicantService(private val applicantRepository: ApplicantRepository) {
     fun findByValue(value: String): List<Applicant> =
         applicantRepository.findByNameContainingOrEmailContaining(value, value)
 
+    fun findAllByIds(ids: List<Long>): List<Applicant> = applicantRepository.findAllById(ids)
+
     @PostConstruct
     private fun populateDummy() {
         if (applicantRepository.count() != 0L) {
