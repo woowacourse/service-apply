@@ -53,7 +53,7 @@ const TextField = {
   },
   methods: {
     valid(v) {
-      this.$emit("valid", v === false)
+      this.$emit("valid", v === true)
     },
   },
 }
