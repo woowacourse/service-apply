@@ -4,6 +4,6 @@ export const formatLocalDate = (year, month, day) => {
   return `${year}-${monthFormatted}-${dayFormatted}`
 }
 
-export const addZeroPrefixIfLessThanTen = value => {
-  return `${value < 10 ? `0${value}` : value}`
+const addZeroPrefixIfLessThanTen = value => {
+  return value < 10 ? `0${value}` : `${value}`
 }
