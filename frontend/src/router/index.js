@@ -20,11 +20,10 @@ const routes = [
     }),
   },
   {
-    path: "/register/application/:recruitmentId/:applicantName",
+    path: "/register/application/:recruitmentId",
     component: ApplicationRegister,
     props: route => ({
       recruitmentId: Number(route.params.recruitmentId),
-      applicantName: route.params.applicantName,
     }),
   },
   {

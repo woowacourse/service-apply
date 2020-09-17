@@ -7,14 +7,27 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     token: "",
+    applicantInfo: {
+      name: "",
+      phoneNumber: "",
+      email: "",
+      birthday: "",
+      gender: "",
+    },
   },
   mutations: {
     setToken(state, payload) {
       state.token = payload
     },
+    setApplicantInfo(state, payload) {
+      state.applicantInfo = payload
+    },
   },
   actions: {
-    async fetchToken({ commit }, { name, phoneNumber, email, password, birthday, gender }) {
+    async fetchTokenAndSetApplicantInfo(
+      { commit },
+      { name, phoneNumber, email, password, birthday, gender },
+    ) {
       const { data: token } = await Api.fetchToken({
         name,
         phoneNumber,
@@ -25,6 +38,7 @@ export default new Vuex.Store({
       })
 
       commit("setToken", token)
+      commit("setApplicantInfo", { name, phoneNumber, email, birthday, gender })
     },
   },
   modules: {},

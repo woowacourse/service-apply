@@ -111,7 +111,7 @@ export default {
     rules: { ...register },
   }),
   methods: {
-    ...mapActions(["fetchToken"]),
+    ...mapActions(["fetchTokenAndSetApplicantInfo"]),
     async submit() {
       const birthday = DateUtil.formatLocalDate(
         this.birth.year,
@@ -119,7 +119,7 @@ export default {
         Number(this.birth.day),
       )
       try {
-        await this.fetchToken({
+        await this.fetchTokenAndSetApplicantInfo({
           name: this.name,
           phoneNumber: this.phoneNumber,
           email: this.email,
@@ -127,7 +127,7 @@ export default {
           gender: this.gender.toUpperCase(),
           birthday,
         })
-        this.$router.push({ path: `/register/application/${this.recruitmentId}/${this.name}` })
+        this.$router.push({ path: `/register/application/${this.recruitmentId}` })
       } catch (e) {
         alert(e.response.data)
       }
