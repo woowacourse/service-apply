@@ -9,19 +9,19 @@ import javax.persistence.Id
 @Entity
 class RecruitmentItem(
     @Column(nullable = false)
-    val title: String,
-
-    @Column(nullable = false)
-    val description: String,
-
-    @Column(nullable = false)
     val recruitmentId: Long,
 
     @Column(nullable = false)
-    val maximumLength: Int = 1000,
+    val title: String,
 
     @Column(nullable = false)
-    val position: Int = 0,
+    val position: Int,
+
+    @Column(nullable = false)
+    val maximumLength: Int,
+
+    @Column(nullable = false)
+    val description: String,
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
