@@ -14,10 +14,7 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    async fetchToken(
-      { commit },
-      { name, phoneNumber, email, password, birthday, gender, recruitmentId },
-    ) {
+    async fetchToken({ commit }, { name, phoneNumber, email, password, birthday, gender }) {
       const { data: token } = await Api.fetchToken({
         name,
         phoneNumber,
@@ -25,7 +22,6 @@ export default new Vuex.Store({
         password,
         birthday,
         gender,
-        recruitmentId,
       })
 
       commit("setToken", token)

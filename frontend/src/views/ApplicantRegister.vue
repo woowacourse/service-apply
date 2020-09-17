@@ -126,7 +126,6 @@ export default {
           password: this.password,
           gender: this.gender.toUpperCase(),
           birthday,
-          recruitmentId: this.recruitmentId,
         })
         this.$router.push({ path: `/register/application/${this.recruitmentId}/${this.name}` })
       } catch (e) {

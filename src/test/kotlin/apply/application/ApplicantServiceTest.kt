@@ -18,7 +18,6 @@ import org.mockito.junit.jupiter.MockitoExtension
 import support.createLocalDate
 
 private const val VALID_TOKEN = "SOME_VALID_TOKEN"
-private const val RECRUITMENT_ID = 1L
 private const val APPLICANT_ID = 1L
 
 @ExtendWith(MockitoExtension::class)
@@ -53,7 +52,7 @@ internal class ApplicantServiceTest {
         given(applicantRepository.findByEmail(validApplicantRequest.email)).willReturn(applicant)
         given(jwtTokenProvider.createToken(validApplicantRequest.email)).willReturn(VALID_TOKEN)
 
-        assertThat(applicantService.validateOrCreateApplicantAndGenerateToken(RECRUITMENT_ID, validApplicantRequest))
+        assertThat(applicantService.validateOrCreateApplicantAndGenerateToken(validApplicantRequest))
             .isEqualTo(VALID_TOKEN)
     }
 
@@ -63,7 +62,7 @@ internal class ApplicantServiceTest {
         given(applicantRepository.findByEmail(inValidApplicantRequest.email)).willReturn(applicant)
 
         assertThatThrownBy {
-            applicantService.validateOrCreateApplicantAndGenerateToken(RECRUITMENT_ID, inValidApplicantRequest)
+            applicantService.validateOrCreateApplicantAndGenerateToken(inValidApplicantRequest)
         }.isInstanceOf(ApplicantValidateException::class.java)
             .hasMessage("비밀번호 값이 기존 정보와 일치하지 않습니다")
     }
@@ -73,7 +72,7 @@ internal class ApplicantServiceTest {
         given(applicantRepository.findByEmail(validApplicantRequest.email)).willReturn(null)
         given(jwtTokenProvider.createToken(validApplicantRequest.email)).willReturn(VALID_TOKEN)
 
-        assertThat(applicantService.validateOrCreateApplicantAndGenerateToken(RECRUITMENT_ID, validApplicantRequest))
+        assertThat(applicantService.validateOrCreateApplicantAndGenerateToken(validApplicantRequest))
             .isEqualTo(VALID_TOKEN)
         val applicant = validApplicantRequest.toEntity(0L)
         verify(applicantRepository).save(ArgumentMatchers.refEq(applicant))

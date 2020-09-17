@@ -23,11 +23,10 @@ class ApplicantService(
     fun findByValue(value: String): List<Applicant> =
         applicantRepository.findByNameContainingOrEmailContaining(value, value)
 
-    fun validateOrCreateApplicantAndGenerateToken(recruitmentId: Long, applicantRequest: ApplicantRequest): String {
+    fun validateOrCreateApplicantAndGenerateToken(applicantRequest: ApplicantRequest): String {
         applicantRepository.findByEmail(applicantRequest.email)
             ?.validate(applicantRequest)
             ?: createApplicant(applicantRequest)
-        // TODO: (모집 id, 지원자 id)로 중복된 지원서가 있나 확인 후, 중복일 경우 이미 등록한 지원자라는 예외 발생시키기
 
         return jwtTokenProvider.createToken(applicantRequest.email)
     }

@@ -22,7 +22,6 @@ import org.springframework.web.filter.CharacterEncodingFilter
 import support.createLocalDate
 
 private const val VALID_TOKEN = "SOME_VALID_TOKEN"
-private const val RECRUITMENT_ID = 1L
 
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @WebMvcTest(controllers = [ApplicantRestController::class])
@@ -55,10 +54,10 @@ internal class ApplicantRestControllerTest(
 
     @Test
     fun `유효한 지원자 생성 및 검증 요청에 대하여 응답으로 토큰이 반환된다`() {
-        given(applicantService.validateOrCreateApplicantAndGenerateToken(RECRUITMENT_ID, applicantRequest))
+        given(applicantService.validateOrCreateApplicantAndGenerateToken(applicantRequest))
             .willReturn(VALID_TOKEN)
 
-        mockMvc.post("/api/applicants/$RECRUITMENT_ID") {
+        mockMvc.post("/api/applicants") {
             content = objectMapper.writeValueAsBytes(applicantRequest)
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
@@ -70,10 +69,10 @@ internal class ApplicantRestControllerTest(
     @Test
     fun `기존 지원자 정보와 일치하지 않는 지원자 생성 및 검증 요청에 대하여 unauthorized 응답을 받는다`() {
         given(
-            applicantService.validateOrCreateApplicantAndGenerateToken(RECRUITMENT_ID, invalidApplicantRequest)
+            applicantService.validateOrCreateApplicantAndGenerateToken(invalidApplicantRequest)
         ).willThrow(ApplicantValidateException("비밀번호"))
 
-        mockMvc.post("/api/applicants/$RECRUITMENT_ID") {
+        mockMvc.post("/api/applicants") {
             content = objectMapper.writeValueAsBytes(invalidApplicantRequest)
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
