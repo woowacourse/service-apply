@@ -38,6 +38,7 @@ class RecruitmentsFormView(private val recruitmentService: RecruitmentService) :
     private fun createAddButton(): Button {
         return createPrimaryButton("생성") {
             recruitmentForm.bindOrNull()?.let {
+                recruitmentService.save(it)
                 UI.getCurrent().navigate(RecruitmentsView::class.java)
             }
         }
