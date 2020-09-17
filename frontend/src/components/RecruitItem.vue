@@ -10,20 +10,24 @@
         </div>
       </div>
       <div class="button-wrapper">
-        <button
+        <Button
           class="enroll-button button"
           @click="onClickAdmission(recruitment.id)"
           :disabled="!this.isRecruiting()"
+          :value="buttonLabel()"
         >
-          {{ buttonLabel() }}
-        </button>
+        </Button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import Button from "@/components/form/Button"
 export default {
+  components: {
+    Button,
+  },
   props: {
     recruitment: {
       type: Object,
@@ -135,21 +139,4 @@ export default {
   margin-right: 12px;
 }
 
-.button {
-  cursor: pointer;
-  outline: none;
-  border: 0;
-  background: #0078ff;
-  color: #fff;
-  border-radius: 3px;
-  padding: 10px;
-  min-width: 80px;
-  min-height: 28px;
-  margin: 5px;
-}
-
-.button:disabled {
-  cursor: default;
-  background: #ccc;
-}
 </style>
