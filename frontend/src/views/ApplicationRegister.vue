@@ -2,7 +2,6 @@
   <div class="application-register">
     <Form @submit.prevent="submit">
       <h1>지원서 작성</h1>
-      <!-- TODO: 지원자 정보 입력 페이지에서 입력한 이름을 받아 온다. -->
       <TextField
         v-model="$store.state.applicantInfo.name"
         name="name"
