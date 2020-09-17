@@ -21,8 +21,8 @@ import support.createPrimaryButton
 import support.createPrimarySmallButton
 import support.createSuccessButtonWithDialog
 
-@Route(value = "admin/recruitment", layout = BaseLayout::class)
-class RecruitmentView(private val recruitmentService: RecruitmentService) : VerticalLayout() {
+@Route(value = "admin/recruitments", layout = BaseLayout::class)
+class RecruitmentsView(private val recruitmentService: RecruitmentService) : VerticalLayout() {
     init {
         add(createTitle(), createButton(), createGrid())
     }
