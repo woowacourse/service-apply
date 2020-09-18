@@ -1,7 +1,7 @@
 <template>
-  <div class="login">
+  <div class="password-find">
     <Form @submit.prevent="submit">
-      <h1>내 지원서 보기</h1>
+      <h1>비밀번호 찾기</h1>
       <TextField
         v-model="name"
         name="name"
@@ -23,34 +23,19 @@
         required
       />
       <BirthField v-model="birth" @valid="v => (this.validBirth = v)" required />
-      <TextField
-        v-model="password"
-        name="password"
-        type="password"
-        label="비밀번호"
-        placeholder="비밀번호를 입력해 주세요."
-        :rules="rules.password"
-        @valid="v => (this.validPassword = v)"
-        required
-      />
       <div class="actions">
         <Button type="button" @click="back" cancel value="이전" />
-        <Button
-          type="submit"
-          :disabled="!validName || !validEmail || !validPassword || !validBirth"
-          value="확인"
-        />
+        <Button type="submit" :disabled="!validName || !validEmail || !validBirth" value="확인" />
       </div>
       <footer>
         <a class="logo" href="#"></a>
-        <Label class="click" @click.native="findPassword">비밀번호 찾기</Label>
       </footer>
     </Form>
   </div>
 </template>
 
 <script>
-import { Form, Button, TextField, BirthField, Label } from "@/components/form"
+import { Form, Button, TextField, BirthField } from "@/components/form"
 import { login } from "@/utils/validation"
 
 export default {
@@ -60,7 +45,6 @@ export default {
     Button,
     TextField,
     BirthField,
-    Label,
   },
   data: () => ({
     name: "",
@@ -75,14 +59,10 @@ export default {
     validName: false,
     validEmail: false,
     validBirth: false,
-    validPassword: false,
   }),
   methods: {
     submit() {
-      //TODO Login(나의 지원서보기 위한) API
-    },
-    findPassword() {
-      this.$router.push("/find")
+      //TODO 비밀번호 찾기 API
     },
     back() {
       this.$router.go(-1)
@@ -92,7 +72,7 @@ export default {
 </script>
 
 <style scoped>
-.login {
+.password-find {
   display: flex;
   flex-direction: column;
   justify-content: center;
