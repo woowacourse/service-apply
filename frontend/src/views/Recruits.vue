@@ -8,7 +8,7 @@
           class="list-tab filter"
           :class="{ active: tab.name === $route.query.status }"
           :id="tab.name"
-          @click="setFilter(tab.name)"
+          @click="setStatus(tab.name)"
         >
           {{ tab.label }}
         </h2>
@@ -102,17 +102,19 @@ export default {
     this.setList(this.$route.query.status)
   },
   methods: {
-    setFilter(filter) {
-      this.$router.replace({
-        path: "/recruits/?status=" + filter,
-      })
-      this.setList(filter)
+    setStatus(status) {
+      if (status !== this.$route.query.status) {
+        this.$router.replace({
+          path: "/recruits/?status=" + status,
+        })
+        this.setList(status)
+      }
     },
     async setList(filter) {
       try {
         this.activeList = await this.getRecruits(filter)
       } catch (e) {
-        await this.setFilter("all")
+        await this.setStatus("all")
       }
     },
     // TODO: 이 부분을 실제 API 콜로 대체하기
