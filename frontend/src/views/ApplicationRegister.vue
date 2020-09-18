@@ -16,6 +16,7 @@
         label="비밀번호"
         placeholder="비밀번호를 입력해 주세요"
         :rules="rules.password"
+        @valid="v => (this.validPassword = v)"
         required
       />
       <TextField
@@ -25,6 +26,7 @@
         label="비밀번호 확인"
         placeholder="비밀번호를 다시 한 번 입력해 주세요"
         :rules="[...rules.rePassword, v => v === password || '비밀번호가 일치하지 않습니다']"
+        @valid="v => (this.validPassword = v && this.password === this.rePassword)"
         required
       />
 
@@ -60,7 +62,7 @@
       <div class="actions">
         <Button @click="reset" value="초기화" />
         <Button @click="save" value="임시 저장" />
-        <Button type="submit" :disabled="!factCheck" value="제출" />
+        <Button type="submit" :disabled="!factCheck || !validPassword" value="제출" />
       </div>
       <footer>
         <a class="logo" href="#"></a>
@@ -93,6 +95,7 @@ export default {
     recruitmentItems: [],
     recruitmentItemInputs: [""],
     rules: { ...register },
+    validPassword: false,
   }),
   methods: {
     reset() {
@@ -122,6 +125,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  min-height: 100%;
   align-items: center;
   background: #ced6e0;
 }

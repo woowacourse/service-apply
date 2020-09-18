@@ -17,6 +17,7 @@
         label="이름"
         placeholder="이름을 입력해 주세요."
         :rules="rules.name"
+        @valid="v => (this.validName = v)"
         required
       />
       <TextField
@@ -26,6 +27,7 @@
         label="전화번호"
         placeholder="연락 가능한 전화번호를 입력해 주세요."
         :rules="rules.phoneNumber"
+        @valid="v => (this.validPhoneNumber = v)"
         required
       />
       <TextField
@@ -35,6 +37,7 @@
         label="이메일"
         placeholder="이메일 주소를 입력해 주세요."
         :rules="rules.email"
+        @valid="v => (this.validEmail = v)"
         required
       />
       <TextField
@@ -44,6 +47,7 @@
         label="비밀번호"
         placeholder="비밀번호를 입력해 주세요."
         :rules="rules.password"
+        @valid="validPasswordInputs"
         required
       />
       <TextField
@@ -53,13 +57,26 @@
         label="비밀번호 확인"
         placeholder="비밀번호를 다시 한번 입력해 주세요."
         :rules="[...rules.rePassword, v => v === password || '비밀번호가 일치하지 않습니다.']"
+        @valid="validPasswordInputs"
         required
       />
-      <BirthField v-model="birth" required />
-      <GenderField v-model="gender" required />
+      <BirthField v-model="birth" @valid="v => (this.validBirth = v)" required />
+      <GenderField v-model="gender" @valid="v => (this.validGender = v)" required />
       <div class="actions">
         <Button cancel value="취소" />
-        <Button type="submit" :disabled="!policyCheck" value="다음" />
+        <Button
+          type="submit"
+          :disabled="
+            !policyCheck ||
+              !validName ||
+              !validPhoneNumber ||
+              !validEmail ||
+              !validPassword ||
+              !validBirth ||
+              !validGender
+          "
+          value="다음"
+        />
       </div>
       <footer>
         <a class="logo" href="#"></a>
@@ -109,6 +126,12 @@ export default {
     },
     gender: "",
     rules: { ...register },
+    validName: false,
+    validPhoneNumber: false,
+    validEmail: false,
+    validPassword: false,
+    validBirth: false,
+    validGender: false,
   }),
   methods: {
     ...mapActions(["fetchTokenAndSetApplicantInfo"]),
@@ -129,6 +152,9 @@ export default {
       } catch (e) {
         alert(e.response.data)
       }
+    },
+    validPasswordInputs(v) {
+      return (this.validPassword = v && this.password === this.rePassword)
     },
   },
 }
