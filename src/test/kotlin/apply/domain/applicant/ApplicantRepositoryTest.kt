@@ -45,7 +45,7 @@ internal class ApplicantRepositoryTest(private val applicantRepository: Applican
 
     @ParameterizedTest
     @CsvSource("홍,3", "a@,1", "'',3", "4,0")
-    fun `findByNameContainingOrEmailContaining 메서드가가 올바르게 작동한다`(keyword: String, expectedSize: Int) {
+    fun `findByNameContainingOrEmailContaining 메서드가 올바르게 작동한다`(keyword: String, expectedSize: Int) {
         val result = applicantRepository.findByNameContainingOrEmailContaining(keyword, keyword)
         assertThat(result).hasSize(expectedSize)
     }
