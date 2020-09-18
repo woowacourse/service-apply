@@ -1,26 +1,17 @@
 import Vue from "vue"
 import Vuex from "vuex"
 import * as Api from "@/api"
+import { ApplicantInfo } from "@/store/ApplicantInfo"
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
     token: "",
-    applicantInfo: {
-      name: "",
-      phoneNumber: "",
-      email: "",
-      birthday: "",
-      gender: "",
-    },
   },
   mutations: {
     setToken(state, payload) {
       state.token = payload
-    },
-    setApplicantInfo(state, payload) {
-      state.applicantInfo = payload
     },
   },
   actions: {
@@ -41,5 +32,7 @@ export default new Vuex.Store({
       commit("setApplicantInfo", { name, phoneNumber, email, birthday, gender })
     },
   },
-  modules: {},
+  modules: {
+    applicantInfo: ApplicantInfo,
+  },
 })
