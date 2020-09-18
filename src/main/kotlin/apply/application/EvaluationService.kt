@@ -14,7 +14,7 @@ class EvaluationService(
     private val evaluationRepository: EvaluationRepository,
     private val recruitmentService: RecruitmentService
 ) {
-    private fun findAll(): List<Evaluation> {
+    fun findAll(): List<Evaluation> {
         return evaluationRepository.findAll()
     }
 
