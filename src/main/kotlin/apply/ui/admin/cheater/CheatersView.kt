@@ -16,11 +16,11 @@ import com.vaadin.flow.component.select.Select
 import com.vaadin.flow.data.renderer.ComponentRenderer
 import com.vaadin.flow.data.renderer.Renderer
 import com.vaadin.flow.router.Route
-import support.addSortableColumn
-import support.addSortableDateTimeColumn
-import support.createDeleteButtonWithDialog
-import support.createPrimaryButton
-import support.createSearchBar
+import support.views.addSortableColumn
+import support.views.addSortableDateTimeColumn
+import support.views.createDeleteButtonWithDialog
+import support.views.createPrimaryButton
+import support.views.createSearchBar
 
 @Route(value = "admin/cheaters", layout = BaseLayout::class)
 class CheatersView(

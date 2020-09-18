@@ -10,8 +10,8 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.router.Route
-import support.createContrastButton
-import support.createPrimaryButton
+import support.views.createContrastButton
+import support.views.createPrimaryButton
 
 @Route(value = "admin/recruitments/form", layout = BaseLayout::class)
 class RecruitmentsFormView(private val recruitmentService: RecruitmentService) : VerticalLayout() {

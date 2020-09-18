@@ -5,8 +5,8 @@ import com.vaadin.flow.component.select.Select
 import com.vaadin.flow.component.textfield.IntegerField
 import com.vaadin.flow.component.textfield.TextArea
 import com.vaadin.flow.component.textfield.TextField
-import support.createIntSelect
 import support.views.BindingFormLayout
+import support.views.createIntSelect
 
 class RecruitmentItemForm() : BindingFormLayout<RecruitmentItemRequest>(RecruitmentItemRequest::class) {
     private val title: TextField = TextField("항목명")

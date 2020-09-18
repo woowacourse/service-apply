@@ -12,10 +12,10 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.data.renderer.ComponentRenderer
 import com.vaadin.flow.data.renderer.Renderer
 import com.vaadin.flow.router.Route
-import support.addSortableColumn
-import support.createDeleteButtonWithDialog
-import support.createPrimaryButton
-import support.createPrimarySmallButton
+import support.views.addSortableColumn
+import support.views.createDeleteButtonWithDialog
+import support.views.createPrimaryButton
+import support.views.createPrimarySmallButton
 
 @Route(value = "admin/evaluations", layout = BaseLayout::class)
 class EvaluationsView(private val evaluationService: EvaluationService) : VerticalLayout() {

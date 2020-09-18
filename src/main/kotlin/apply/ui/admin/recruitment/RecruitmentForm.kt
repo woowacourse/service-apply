@@ -4,9 +4,9 @@ import apply.application.RecruitmentRequest
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.datetimepicker.DateTimePicker
 import com.vaadin.flow.component.textfield.TextField
-import support.createErrorSmallButton
-import support.createPrimarySmallButton
 import support.views.BindingFormLayout
+import support.views.createErrorSmallButton
+import support.views.createPrimarySmallButton
 import java.time.LocalDateTime
 
 class RecruitmentForm() : BindingFormLayout<RecruitmentRequest>(RecruitmentRequest::class) {

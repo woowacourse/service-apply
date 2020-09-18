@@ -14,13 +14,13 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.data.renderer.ComponentRenderer
 import com.vaadin.flow.data.renderer.Renderer
 import com.vaadin.flow.router.Route
-import support.addSortableColumn
-import support.addSortableDateTimeColumn
-import support.createContrastButtonWithDialog
-import support.createDeleteButtonWithDialog
-import support.createPrimaryButton
-import support.createPrimarySmallButton
-import support.createSuccessButtonWithDialog
+import support.views.addSortableColumn
+import support.views.addSortableDateTimeColumn
+import support.views.createContrastButtonWithDialog
+import support.views.createDeleteButtonWithDialog
+import support.views.createPrimaryButton
+import support.views.createPrimarySmallButton
+import support.views.createSuccessButtonWithDialog
 
 @Route(value = "admin/recruitments", layout = BaseLayout::class)
 class RecruitmentsView(private val recruitmentService: RecruitmentService) : VerticalLayout() {
