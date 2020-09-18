@@ -1,7 +1,8 @@
-package apply.ui.admin
+package apply.ui.admin.evaluation
 
 import apply.application.EvaluationService
 import apply.domain.evaluation.dto.EvaluationResponse
+import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.html.H1
@@ -11,15 +12,13 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.data.renderer.ComponentRenderer
 import com.vaadin.flow.data.renderer.Renderer
 import com.vaadin.flow.router.Route
-import support.addSortableColumn
-import support.createDeleteButtonWithDialog
-import support.createPrimaryButton
-import support.createPrimarySmallButton
+import support.views.addSortableColumn
+import support.views.createDeleteButtonWithDialog
+import support.views.createPrimaryButton
+import support.views.createPrimarySmallButton
 
-@Route(value = "admin/evaluation", layout = BaseLayout::class)
-class EvaluationView(
-    private val evaluationService: EvaluationService
-) : VerticalLayout() {
+@Route(value = "admin/evaluations", layout = BaseLayout::class)
+class EvaluationsView(private val evaluationService: EvaluationService) : VerticalLayout() {
     init {
         add(createTitle(), createButton(), createGrid())
     }
