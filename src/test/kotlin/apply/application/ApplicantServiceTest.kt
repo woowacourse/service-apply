@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.BDDMockito.given
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
@@ -43,17 +44,12 @@ internal class ApplicantServiceTest {
     @Test
     fun `지원자 정보와 부정 행위자 여부를 함께 제공한다`() {
         given(applicantRepository.findAll()).willReturn(applicants)
-        given(cheaterRepository.existsByApplicantId(1L)).willReturn(true)
+        given(cheaterRepository.existsByApplicantId(anyLong())).willReturn(true)
 
         val founds = applicantService.findAll()
 
         assertAll(
-            { assertThat(founds[0].id).isEqualTo(applicants[0].id) },
-            { assertThat(founds[0].name).isEqualTo(applicants[0].name) },
-            { assertThat(founds[0].email).isEqualTo(applicants[0].email) },
-            { assertThat(founds[0].phoneNumber).isEqualTo(applicants[0].phoneNumber) },
-            { assertThat(founds[0].birthday).isEqualTo(applicants[0].birthday) },
-            { assertThat(founds[0].gender).isEqualTo(applicants[0].gender) },
+            { assertThat(founds).usingElementComparatorIgnoringFields("isCheater").isEqualTo(applicants) },
             { assertThat(founds[0].isCheater).isEqualTo(true) }
         )
     }
