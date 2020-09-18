@@ -9,7 +9,7 @@ import javax.annotation.PostConstruct
 @Transactional
 @Service
 class EvaluationItemService(private val evaluationItemRepository: EvaluationItemRepository) {
-    fun findByEvaluationId(evaluationId: Long): List<EvaluationItem> {
+    fun findByEvaluationIdOrderByPosition(evaluationId: Long): List<EvaluationItem> {
         return evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluationId)
     }
 
