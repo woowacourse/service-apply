@@ -28,6 +28,7 @@ const GenderField = {
   watch: {
     gender() {
       this.$emit("input", this.gender)
+      this.$nextTick(() => this.$emit("valid", this.gender !== ""))
     },
   },
   created() {
