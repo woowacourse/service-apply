@@ -1,38 +1,24 @@
 import Vue from "vue"
 import Vuex from "vuex"
-import * as Api from "@/api"
-import { ApplicantInfo } from "@/store/ApplicantInfo"
+import { applicantInfo } from "@/store/applicantInfo"
+import { token } from "@/store/token"
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  state: {
-    token: "",
-  },
-  mutations: {
-    setToken(state, payload) {
-      state.token = payload
-    },
-  },
+  state: {},
+  mutations: {},
   actions: {
     async fetchTokenAndSetApplicantInfo(
-      { commit },
+      { commit, dispatch },
       { name, phoneNumber, email, password, birthday, gender },
     ) {
-      const { data: token } = await Api.fetchToken({
-        name,
-        phoneNumber,
-        email,
-        password,
-        birthday,
-        gender,
-      })
-
-      commit("setToken", token)
+      await dispatch("fetchToken", { name, phoneNumber, email, password, birthday, gender })
       commit("setApplicantInfo", { name, phoneNumber, email, birthday, gender })
     },
   },
   modules: {
-    applicantInfo: ApplicantInfo,
+    applicantInfo: applicantInfo,
+    token: token,
   },
 })

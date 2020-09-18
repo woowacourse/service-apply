@@ -1,4 +1,4 @@
-export const ApplicantInfo = {
+export const applicantInfo = {
   state: () => ({
     name: "",
     phoneNumber: "",
