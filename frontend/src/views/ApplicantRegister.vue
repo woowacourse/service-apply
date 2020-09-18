@@ -112,21 +112,19 @@ export default {
   }),
   methods: {
     ...mapActions(["fetchTokenAndSetApplicantInfo"]),
+    parseApplicantInfo() {
+      return {
+        name: this.name,
+        phoneNumber: this.phoneNumber,
+        email: this.email,
+        password: this.password,
+        gender: this.gender.toUpperCase(),
+        birthday: DateUtil.formatLocalDate(this.birth),
+      }
+    },
     async submit() {
-      const birthday = DateUtil.formatLocalDate(
-        this.birth.year,
-        Number(this.birth.month),
-        Number(this.birth.day),
-      )
       try {
-        await this.fetchTokenAndSetApplicantInfo({
-          name: this.name,
-          phoneNumber: this.phoneNumber,
-          email: this.email,
-          password: this.password,
-          gender: this.gender.toUpperCase(),
-          birthday,
-        })
+        await this.fetchTokenAndSetApplicantInfo(this.parseApplicantInfo())
         this.$router.push({ path: `/register/application/${this.recruitmentId}` })
       } catch (e) {
         alert(e.response.data)

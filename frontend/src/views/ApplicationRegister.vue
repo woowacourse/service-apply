@@ -3,7 +3,7 @@
     <Form @submit.prevent="submit">
       <h1>지원서 작성</h1>
       <TextField
-        v-model="$store.state.applicantInfo.name"
+        :value="$store.state.applicantInfo.name"
         name="name"
         type="text"
         label="이름"
@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import { Form, Button, TextField, CheckBox, Field } from "@/components/form"
+import { Button, CheckBox, Field, Form, TextField } from "@/components/form"
 import * as RecruitmentApi from "../api/recruitments"
 import { register } from "@/utils/validation"
 
