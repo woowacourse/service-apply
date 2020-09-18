@@ -13,8 +13,8 @@
         <Button
           class="enroll-button button"
           @click="onClickAdmission(recruitment.id)"
-          :disabled="!this.isRecruiting()"
-          :value="buttonLabel()"
+          :disabled="!this.isRecruiting"
+          :value="buttonLabel"
         >
         </Button>
       </div>
@@ -34,7 +34,7 @@ export default {
       required: true,
     },
   },
-  methods: {
+  computed: {
     isRecruiting() {
       return this.recruitment.recruitmentStatus === "RECRUITING"
     },
@@ -57,6 +57,8 @@ export default {
         }
       }
     },
+  },
+  methods: {
     onClickAdmission(id) {
       this.$router.push({
         path: `/application/${id}`,
@@ -138,5 +140,4 @@ export default {
 .button-wrapper {
   margin-right: 12px;
 }
-
 </style>
