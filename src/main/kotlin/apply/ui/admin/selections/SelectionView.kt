@@ -43,17 +43,17 @@ class SelectionView(
 
     private fun createMenu(): Component {
         return HorizontalLayout(
-                createSearchBar {
-                    removeAll()
-                    add(createTitle(), createMenu(), createGrid(applicantService.findByValue(it)))
-                },
-                createSuccessButton("다운로드") {
-                    val excel = { downloadService.createExcelBy(recruitmentId) }
-                    val registration = VaadinSession.getCurrent()
-                            .resourceRegistry
-                            .registerResource(StreamResource("$recruitmentId.xlsx", excel))
-                    UI.getCurrent().page.setLocation(registration.resourceUri)
-                }
+            createSearchBar {
+                removeAll()
+                add(createTitle(), createMenu(), createGrid(applicantService.findByValue(it)))
+            },
+            createSuccessButton("다운로드") {
+                val excel = { downloadService.createExcelBy(recruitmentId) }
+                val registration = VaadinSession.getCurrent()
+                    .resourceRegistry
+                    .registerResource(StreamResource("${recruitmentService.getById(recruitmentId).title}.xlsx", excel))
+                UI.getCurrent().page.setLocation(registration.resourceUri)
+            }
         ).apply {
             setSizeFull()
             isSpacing = false
