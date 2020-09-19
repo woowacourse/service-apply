@@ -1,29 +1,19 @@
-package apply.domain.recruitmentitem
+package apply.domain.cheater
 
+import java.time.LocalDateTime
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
-import javax.persistence.Lob
 
 @Entity
-class RecruitmentItem(
+class Cheater(
     @Column(nullable = false)
-    val recruitmentId: Long,
+    val applicantId: Long,
 
     @Column(nullable = false)
-    val title: String,
-
-    @Column(nullable = false)
-    val position: Int,
-
-    @Column(nullable = false)
-    val maximumLength: Int,
-
-    @Column(nullable = false)
-    @Lob
-    val description: String,
+    val createdDateTime: LocalDateTime = LocalDateTime.now(),
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -17,12 +17,36 @@ internal class RecruitmentItemRepositoryTest(
     }
 
     @Test
-    fun `모집의 id로 모집 항목들을 Position의 오름차순으로 조회한다`() {
+    fun `특정 모집의 모집 항목을 순서대로 조회한다`() {
         val recruitmentItems = listOf(
-            RecruitmentItem("모집 항목 제목", "모집 항목 설명", RECRUITMENT_ID, 0, 0),
-            RecruitmentItem("모집 항목 제목2", "모집 항목 설명2", RECRUITMENT_ID, 0, 2),
-            RecruitmentItem("모집 항목 제목3", "모집 항목 설명3", RECRUITMENT_ID, 0, 1),
-            RecruitmentItem("모집 항목 제목4", "모집 항목 설명4", DIFFERENT_RECRUITMENT_ID, 0, 1)
+            RecruitmentItem(
+                RECRUITMENT_ID,
+                "모집 항목 제목",
+                position = 1,
+                maximumLength = 1,
+                description = "모집 항목 설명"
+            ),
+            RecruitmentItem(
+                RECRUITMENT_ID,
+                "모집 항목 제목2",
+                position = 3,
+                maximumLength = 1,
+                description = "모집 항목 설명2"
+            ),
+            RecruitmentItem(
+                RECRUITMENT_ID,
+                "모집 항목 제목3",
+                position = 2,
+                maximumLength = 1,
+                description = "모집 항목 설명3"
+            ),
+            RecruitmentItem(
+                DIFFERENT_RECRUITMENT_ID,
+                "모집 항목 제목4",
+                position = 2,
+                maximumLength = 1,
+                description = "모집 항목 설명4"
+            )
         )
 
         recruitmentItemRepository.saveAll(recruitmentItems)

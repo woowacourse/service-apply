@@ -1,9 +1,10 @@
-package apply.ui.admin
+package apply.ui.admin.selections
 
 import apply.application.ApplicantService
 import apply.application.DownloadService
 import apply.application.RecruitmentService
 import apply.domain.applicant.Applicant
+import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.grid.Grid
@@ -19,7 +20,11 @@ import com.vaadin.flow.router.Route
 import com.vaadin.flow.router.WildcardParameter
 import com.vaadin.flow.server.StreamResource
 import com.vaadin.flow.server.VaadinSession
-import support.*
+import support.views.addSortableColumn
+import support.views.addSortableDateColumn
+import support.views.createPrimarySmallButton
+import support.views.createSearchBar
+import support.views.createSuccessButton
 
 @Route(value = "admin/selections", layout = BaseLayout::class)
 class SelectionView(
