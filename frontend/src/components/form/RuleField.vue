@@ -1,6 +1,6 @@
 <template>
   <div class="rule-field">
-    <span v-if="incorrect">{{ incorrect }}</span>
+    <span v-if="incorrect && incorrect !== true">{{ incorrect }}</span>
   </div>
 </template>
 
@@ -17,7 +17,7 @@ const RuleField = {
   watch: {
     target() {
       const result = this.rules.reduce((prev, curr) => prev && curr(this.target), true)
-      this.incorrect = result === true ? false : result
+      this.incorrect = result === true ? true : result
       this.$emit("input", this.incorrect)
     },
   },

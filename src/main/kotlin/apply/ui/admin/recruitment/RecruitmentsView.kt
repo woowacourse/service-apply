@@ -1,9 +1,11 @@
-package apply.ui.admin
+package apply.ui.admin.recruitment
 
 import apply.application.RecruitmentService
 import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentStatus
+import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
+import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.html.H1
 import com.vaadin.flow.component.orderedlayout.FlexComponent
@@ -12,16 +14,16 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.data.renderer.ComponentRenderer
 import com.vaadin.flow.data.renderer.Renderer
 import com.vaadin.flow.router.Route
-import support.addSortableColumn
-import support.addSortableDateTimeColumn
-import support.createContrastButtonWithDialog
-import support.createDeleteButtonWithDialog
-import support.createPrimaryButton
-import support.createPrimarySmallButton
-import support.createSuccessButtonWithDialog
+import support.views.addSortableColumn
+import support.views.addSortableDateTimeColumn
+import support.views.createContrastButtonWithDialog
+import support.views.createDeleteButtonWithDialog
+import support.views.createPrimaryButton
+import support.views.createPrimarySmallButton
+import support.views.createSuccessButtonWithDialog
 
-@Route(value = "admin/recruitment", layout = BaseLayout::class)
-class RecruitmentView(private val recruitmentService: RecruitmentService) : VerticalLayout() {
+@Route(value = "admin/recruitments", layout = BaseLayout::class)
+class RecruitmentsView(private val recruitmentService: RecruitmentService) : VerticalLayout() {
     init {
         add(createTitle(), createButton(), createGrid())
     }
@@ -36,7 +38,7 @@ class RecruitmentView(private val recruitmentService: RecruitmentService) : Vert
     private fun createButton(): Component {
         return HorizontalLayout(
             createPrimaryButton("생성") {
-                // TODO: 모집 관리 페이지에 생성 뷰를 구현한다.
+                UI.getCurrent().navigate(RecruitmentsFormView::class.java)
             }
         ).apply {
             setSizeFull()
