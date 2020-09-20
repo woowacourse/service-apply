@@ -2,7 +2,6 @@ package apply.application
 
 import apply.domain.applicant.Applicant
 import apply.domain.applicant.ApplicantRepository
-import apply.domain.applicant.ApplicantResponse
 import apply.domain.applicant.Gender
 import apply.domain.cheater.CheaterRepository
 import apply.security.JwtTokenProvider

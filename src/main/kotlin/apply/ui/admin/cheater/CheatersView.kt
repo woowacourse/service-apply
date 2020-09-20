@@ -1,8 +1,8 @@
 package apply.ui.admin.cheater
 
+import apply.application.ApplicantResponse
 import apply.application.ApplicantService
 import apply.application.CheaterService
-import apply.domain.applicant.ApplicantResponse
 import apply.domain.cheater.CheaterResponse
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component

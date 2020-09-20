@@ -1,8 +1,8 @@
 package apply.ui.admin.selections
 
+import apply.application.ApplicantResponse
 import apply.application.ApplicantService
 import apply.application.RecruitmentService
-import apply.domain.applicant.ApplicantResponse
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.grid.Grid
