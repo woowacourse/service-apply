@@ -36,7 +36,8 @@ class JwtTokenProvider(
 
     fun validateToken(token: String): Boolean {
         return try {
-            !getClaimsJws(token).body.expiration.before(Date())
+            getClaimsJws(token)
+            true
         } catch (e: JwtException) {
             false
         } catch (e: IllegalArgumentException) {
