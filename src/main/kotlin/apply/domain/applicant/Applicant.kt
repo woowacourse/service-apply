@@ -1,6 +1,6 @@
 package apply.domain.applicant
 
-import apply.domain.applicant.dto.ApplicantRequest
+import apply.application.ApplicantRequest
 import apply.domain.applicant.exception.ApplicantValidateException
 import java.time.LocalDate
 import javax.persistence.Column

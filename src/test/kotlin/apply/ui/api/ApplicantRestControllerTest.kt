@@ -2,7 +2,7 @@ package apply.ui.api
 
 import apply.application.ApplicantService
 import apply.domain.applicant.Gender
-import apply.domain.applicant.dto.ApplicantRequest
+import apply.application.ApplicantRequest
 import apply.domain.applicant.exception.ApplicantValidateException
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.BeforeEach

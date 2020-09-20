@@ -1,7 +1,7 @@
 package apply.ui.api
 
 import apply.application.ApplicantService
-import apply.domain.applicant.dto.ApplicantRequest
+import apply.application.ApplicantRequest
 import apply.domain.applicant.exception.ApplicantValidateException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

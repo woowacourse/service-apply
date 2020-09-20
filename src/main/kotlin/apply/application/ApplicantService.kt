@@ -3,7 +3,6 @@ package apply.application
 import apply.domain.applicant.Applicant
 import apply.domain.applicant.ApplicantRepository
 import apply.domain.applicant.Gender
-import apply.domain.applicant.dto.ApplicantRequest
 import apply.security.JwtTokenProvider
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

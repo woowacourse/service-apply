@@ -1,4 +1,4 @@
-package apply.domain.applicant.dto
+package apply.application
 
 import apply.domain.applicant.Applicant
 import apply.domain.applicant.Gender

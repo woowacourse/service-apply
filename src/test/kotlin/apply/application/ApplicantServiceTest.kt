@@ -2,7 +2,6 @@ package apply.application
 
 import apply.domain.applicant.ApplicantRepository
 import apply.domain.applicant.Gender
-import apply.domain.applicant.dto.ApplicantRequest
 import apply.domain.applicant.exception.ApplicantValidateException
 import apply.security.JwtTokenProvider
 import org.assertj.core.api.Assertions.assertThat
