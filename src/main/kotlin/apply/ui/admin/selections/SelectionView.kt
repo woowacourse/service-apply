@@ -1,11 +1,11 @@
 package apply.ui.admin.selections
 
 import apply.application.ApplicantService
-import apply.application.ApplicationService
+import apply.application.ApplicationFormService
 import apply.application.RecruitmentItemService
 import apply.application.RecruitmentService
 import apply.domain.applicant.Applicant
-import apply.domain.application.Application
+import apply.domain.applicationform.ApplicationForm
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
@@ -34,7 +34,7 @@ import support.views.createSuccessButton
 @Route(value = "admin/selections", layout = BaseLayout::class)
 class SelectionView(
     private val applicantService: ApplicantService,
-    private val applicationService: ApplicationService,
+    private val applicationFormService: ApplicationFormService,
     private val recruitmentService: RecruitmentService,
     private val recruitmentItemService: RecruitmentItemService
 ) : VerticalLayout(), HasUrlParameter<Long> {
@@ -81,7 +81,7 @@ class SelectionView(
                 val dialog = Dialog()
                 dialog.add(
                     *createRecruitmentItems(
-                        applicationService.getByRecruitmentIdAndApplicantId(
+                        applicationFormService.getByRecruitmentIdAndApplicantId(
                             recruitmentId,
                             applicant.id
                         )
@@ -94,8 +94,8 @@ class SelectionView(
         }
     }
 
-    private fun createRecruitmentItems(application: Application): Array<Component> {
-        val answers = application.answers
+    private fun createRecruitmentItems(applicationForm: ApplicationForm): Array<Component> {
+        val answers = applicationForm.answers
             .items
             .map { it.recruitmentItemId to it.contents }
             .toMap()
@@ -103,7 +103,7 @@ class SelectionView(
             .map {
                 createItem(it.title, createAnswer(answers.getValue(it.id)))
             }.toTypedArray()
-        return addIfExist(items, application.referenceUrl)
+        return addIfExist(items, applicationForm.referenceUrl)
     }
 
     private fun addIfExist(items: Array<Component>, referenceUrl: String): Array<Component> {
@@ -139,7 +139,7 @@ class SelectionView(
 
     override fun setParameter(event: BeforeEvent, @WildcardParameter parameter: Long) {
         this.recruitmentId = parameter
-        val applicantIds = applicationService.findAllByRecruitmentId(recruitmentId)
+        val applicantIds = applicationFormService.findAllByRecruitmentId(recruitmentId)
             .map { it.applicantId }
         add(createTitle(), createMenu(), createGrid(applicantService.findAllByIds(applicantIds)))
     }

@@ -20,6 +20,7 @@ import java.util.Optional
 internal class EvaluationServiceTest {
     @Mock
     private lateinit var recruitmentService: RecruitmentService
+
     @Mock
     private lateinit var evaluationRepository: EvaluationRepository
 
@@ -120,14 +121,15 @@ internal class EvaluationServiceTest {
             id = 4L
         )
 
-        val evaluationsWithDuplicatedBeforeEvaluationID: List<Evaluation> = listOf(*evaluations.toTypedArray(), thirdEvaluation)
+        val evaluationsWithDuplicatedBeforeEvaluationId: List<Evaluation> =
+            listOf(*evaluations.toTypedArray(), thirdEvaluation)
 
-        given(evaluationRepository.findAll()).willReturn(evaluationsWithDuplicatedBeforeEvaluationID)
+        given(evaluationRepository.findAll()).willReturn(evaluationsWithDuplicatedBeforeEvaluationId)
         willDoNothing().given(evaluationRepository).deleteById(anyLong())
 
         evaluationService.deleteById(2L)
 
-        assertThat(0L).isEqualTo(evaluationsWithDuplicatedBeforeEvaluationID[2].beforeEvaluationId)
-        assertThat(0L).isEqualTo(evaluationsWithDuplicatedBeforeEvaluationID[3].beforeEvaluationId)
+        assertThat(0L).isEqualTo(evaluationsWithDuplicatedBeforeEvaluationId[2].beforeEvaluationId)
+        assertThat(0L).isEqualTo(evaluationsWithDuplicatedBeforeEvaluationId[3].beforeEvaluationId)
     }
 }

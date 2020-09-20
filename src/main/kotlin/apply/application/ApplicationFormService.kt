@@ -1,7 +1,7 @@
 package apply.application
 
-import apply.domain.application.Application
-import apply.domain.application.ApplicationRepository
+import apply.domain.applicationform.ApplicationForm
+import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.recruitmentitem.Answer
 import apply.domain.recruitmentitem.Answers
 import org.springframework.stereotype.Service
@@ -11,23 +11,23 @@ import javax.annotation.PostConstruct
 
 @Transactional
 @Service
-class ApplicationService(
-    private val applicationRepository: ApplicationRepository
+class ApplicationFormService(
+    private val applicationFormRepository: ApplicationFormRepository
 ) {
-    fun findAllByRecruitmentId(recruitmentId: Long): List<Application> =
-        applicationRepository.findByRecruitmentId(recruitmentId)
+    fun findAllByRecruitmentId(recruitmentId: Long): List<ApplicationForm> =
+        applicationFormRepository.findByRecruitmentId(recruitmentId)
 
-    fun getByRecruitmentIdAndApplicantId(recruitmentId: Long, applicantId: Long): Application =
-        applicationRepository.findByRecruitmentIdAndApplicantId(recruitmentId, applicantId)
+    fun getByRecruitmentIdAndApplicantId(recruitmentId: Long, applicantId: Long): ApplicationForm =
+        applicationFormRepository.findByRecruitmentIdAndApplicantId(recruitmentId, applicantId)
             ?: throw IllegalArgumentException()
 
     @PostConstruct
     private fun populateDummy() {
-        if (applicationRepository.count() != 0L) {
+        if (applicationFormRepository.count() != 0L) {
             return
         }
-        val applications = listOf(
-            Application(
+        val applicationForms = listOf(
+            ApplicationForm(
                 referenceUrl = "",
                 submitted = true,
                 createdDateTime = createLocalDateTime(2019, 10, 25, 10),
@@ -42,7 +42,7 @@ class ApplicationService(
                     )
                 )
             ),
-            Application(
+            ApplicationForm(
                 referenceUrl = "www.google.com",
                 submitted = true,
                 createdDateTime = createLocalDateTime(2019, 10, 25, 10),
@@ -58,6 +58,6 @@ class ApplicationService(
                 )
             )
         )
-        applicationRepository.saveAll(applications)
+        applicationFormRepository.saveAll(applicationForms)
     }
 }

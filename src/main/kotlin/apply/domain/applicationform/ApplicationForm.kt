@@ -1,4 +1,4 @@
-package apply.domain.application
+package apply.domain.applicationform
 
 import apply.domain.recruitmentitem.Answers
 import java.time.LocalDateTime
@@ -10,7 +10,7 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 
 @Entity
-class Application(
+class ApplicationForm(
     val referenceUrl: String,
 
     @Column(nullable = false)
