@@ -19,10 +19,10 @@ class ApplicantService(
         return applicantRepository.findAll()
     }
 
-    fun findByValue(value: String): List<Applicant> =
-        applicantRepository.findByNameContainingOrEmailContaining(value, value)
+    fun findByNameOrEmail(keyword: String): List<Applicant> =
+        applicantRepository.findByNameContainingOrEmailContaining(keyword, keyword)
 
-    fun validateOrCreateApplicantAndGenerateToken(applicantRequest: ApplicantRequest): String {
+    fun generateToken(applicantRequest: ApplicantRequest): String {
         applicantRepository.findByEmail(applicantRequest.email)
             ?.validate(applicantRequest)
             ?: createApplicant(applicantRequest)

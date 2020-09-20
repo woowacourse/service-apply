@@ -51,7 +51,7 @@ internal class ApplicantServiceTest {
         given(applicantRepository.findByEmail(validApplicantRequest.email)).willReturn(applicant)
         given(jwtTokenProvider.createToken(validApplicantRequest.email)).willReturn(VALID_TOKEN)
 
-        assertThat(applicantService.validateOrCreateApplicantAndGenerateToken(validApplicantRequest))
+        assertThat(applicantService.generateToken(validApplicantRequest))
             .isEqualTo(VALID_TOKEN)
     }
 
@@ -61,7 +61,7 @@ internal class ApplicantServiceTest {
         given(applicantRepository.findByEmail(inValidApplicantRequest.email)).willReturn(applicant)
 
         assertThatThrownBy {
-            applicantService.validateOrCreateApplicantAndGenerateToken(inValidApplicantRequest)
+            applicantService.generateToken(inValidApplicantRequest)
         }.isInstanceOf(ApplicantValidateException::class.java)
             .hasMessage("비밀번호 값이 기존 정보와 일치하지 않습니다")
     }
@@ -71,7 +71,7 @@ internal class ApplicantServiceTest {
         given(applicantRepository.findByEmail(validApplicantRequest.email)).willReturn(null)
         given(jwtTokenProvider.createToken(validApplicantRequest.email)).willReturn(VALID_TOKEN)
 
-        assertThat(applicantService.validateOrCreateApplicantAndGenerateToken(validApplicantRequest))
+        assertThat(applicantService.generateToken(validApplicantRequest))
             .isEqualTo(VALID_TOKEN)
         val applicant = validApplicantRequest.toEntity(0L)
         verify(applicantRepository).save(ArgumentMatchers.refEq(applicant))

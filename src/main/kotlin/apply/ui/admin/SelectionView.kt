@@ -39,7 +39,7 @@ class SelectionView(
         return HorizontalLayout(
             createSearchBar {
                 removeAll()
-                add(createTitle(), createMenu(), createGrid(applicantService.findByValue(it)))
+                add(createTitle(), createMenu(), createGrid(applicantService.findByNameOrEmail(it)))
             },
             createSuccessButton("다운로드") {
                 // Todo: 엑셀 다운로드

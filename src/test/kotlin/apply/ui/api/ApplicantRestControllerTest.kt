@@ -54,7 +54,7 @@ internal class ApplicantRestControllerTest(
 
     @Test
     fun `유효한 지원자 생성 및 검증 요청에 대하여 응답으로 토큰이 반환된다`() {
-        given(applicantService.validateOrCreateApplicantAndGenerateToken(applicantRequest))
+        given(applicantService.generateToken(applicantRequest))
             .willReturn(VALID_TOKEN)
 
         mockMvc.post("/api/applicants") {
@@ -69,7 +69,7 @@ internal class ApplicantRestControllerTest(
     @Test
     fun `기존 지원자 정보와 일치하지 않는 지원자 생성 및 검증 요청에 대하여 unauthorized 응답을 받는다`() {
         given(
-            applicantService.validateOrCreateApplicantAndGenerateToken(invalidApplicantRequest)
+            applicantService.generateToken(invalidApplicantRequest)
         ).willThrow(ApplicantValidateException("비밀번호"))
 
         mockMvc.post("/api/applicants") {

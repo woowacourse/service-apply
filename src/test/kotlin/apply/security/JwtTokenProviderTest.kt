@@ -18,7 +18,7 @@ internal class JwtTokenProviderTest {
 
     @Test
     fun `유효시간이 지난 토큰의 유효성 검사가 실패한다`() {
-        val jwtTokenProvider = JwtTokenProvider(validityInMilliseconds = NEGATIVE_VALIDITY_TIME)
+        val jwtTokenProvider = JwtTokenProvider(expirationInMilliseconds = NEGATIVE_VALIDITY_TIME)
         val token = jwtTokenProvider.createToken(PAYLOAD)
 
         assertThat(jwtTokenProvider.validateToken(token)).isFalse()

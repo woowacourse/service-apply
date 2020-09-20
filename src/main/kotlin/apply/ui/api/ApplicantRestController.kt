@@ -18,7 +18,7 @@ class ApplicantRestController(
     @PostMapping
     fun generateToken(@RequestBody applicantRequest: ApplicantRequest): ResponseEntity<String> {
         return try {
-            val token = applicantService.validateOrCreateApplicantAndGenerateToken(applicantRequest)
+            val token = applicantService.generateToken(applicantRequest)
             ResponseEntity.ok().body(token)
         } catch (e: ApplicantValidateException) {
             ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.message)
