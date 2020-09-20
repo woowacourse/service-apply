@@ -2,7 +2,7 @@ package apply.ui.admin.cheater
 
 import apply.application.ApplicantService
 import apply.application.CheaterService
-import apply.domain.applicant.Applicant
+import apply.domain.applicant.ApplicantResponse
 import apply.domain.cheater.CheaterResponse
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
@@ -59,8 +59,8 @@ class CheatersView(
         ).apply { setSizeFull() }
     }
 
-    private fun createSelectApplicant(applicants: List<Applicant>): Select<Applicant> {
-        return Select<Applicant>().apply {
+    private fun createSelectApplicant(applicants: List<ApplicantResponse>): Select<ApplicantResponse> {
+        return Select<ApplicantResponse>().apply {
             setTextRenderer { "${it.name}/${it.email}" }
             setItems(applicants)
         }
