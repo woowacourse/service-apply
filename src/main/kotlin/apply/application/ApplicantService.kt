@@ -23,16 +23,11 @@ class ApplicantService(
         applicantRepository.findByNameContainingOrEmailContaining(keyword, keyword)
 
     fun generateToken(applicantRequest: ApplicantRequest): String {
-        applicantRepository.findByEmail(applicantRequest.email)
-            ?.validate(applicantRequest)
-            ?: createApplicant(applicantRequest)
+        val applicant = applicantRepository.findByEmail(applicantRequest.email)
+            ?.also { it.validate(applicantRequest) }
+            ?: applicantRepository.save(applicantRequest.toEntity())
 
-        return jwtTokenProvider.createToken(applicantRequest.email)
-    }
-
-    private fun createApplicant(applicantRequest: ApplicantRequest) {
-        val newApplicant = applicantRequest.toEntity()
-        applicantRepository.save(newApplicant)
+        return jwtTokenProvider.createToken(applicant.email)
     }
 
     @PostConstruct

@@ -9,10 +9,9 @@ import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.refEq
 import org.mockito.BDDMockito.given
 import org.mockito.Mock
-import org.mockito.Mockito.verify
 import org.mockito.junit.jupiter.MockitoExtension
 import support.createLocalDate
 
@@ -51,8 +50,7 @@ internal class ApplicantServiceTest {
         given(applicantRepository.findByEmail(validApplicantRequest.email)).willReturn(applicant)
         given(jwtTokenProvider.createToken(validApplicantRequest.email)).willReturn(VALID_TOKEN)
 
-        assertThat(applicantService.generateToken(validApplicantRequest))
-            .isEqualTo(VALID_TOKEN)
+        assertThat(applicantService.generateToken(validApplicantRequest)).isEqualTo(VALID_TOKEN)
     }
 
     @Test
@@ -70,10 +68,9 @@ internal class ApplicantServiceTest {
     fun `지원자가 존재하지 않으면 지원자를 저장한 뒤, 유효한 토큰을 반환한다`() {
         given(applicantRepository.findByEmail(validApplicantRequest.email)).willReturn(null)
         given(jwtTokenProvider.createToken(validApplicantRequest.email)).willReturn(VALID_TOKEN)
+        given(applicantRepository.save(refEq(validApplicantRequest.toEntity())))
+            .willReturn(validApplicantRequest.toEntity(APPLICANT_ID))
 
-        assertThat(applicantService.generateToken(validApplicantRequest))
-            .isEqualTo(VALID_TOKEN)
-        val applicant = validApplicantRequest.toEntity(0L)
-        verify(applicantRepository).save(ArgumentMatchers.refEq(applicant))
+        assertThat(applicantService.generateToken(validApplicantRequest)).isEqualTo(VALID_TOKEN)
     }
 }
