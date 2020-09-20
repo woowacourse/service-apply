@@ -1,7 +1,8 @@
-package apply.ui.admin
+package apply.ui.admin.selections
 
 import apply.application.RecruitmentService
 import apply.domain.recruitment.Recruitment
+import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.html.H1
@@ -9,7 +10,7 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.router.Route
-import support.createNormalButton
+import support.views.createNormalButton
 
 @Route(value = "admin/selections", layout = BaseLayout::class)
 class SelectionsView(private val recruitmentService: RecruitmentService) : VerticalLayout() {

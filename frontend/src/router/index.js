@@ -1,12 +1,18 @@
 import Vue from "vue"
 import VueRouter from "vue-router"
+import Recruits from "@/views/Recruits.vue"
 import Register from "@/views/Register"
 import ApplicationRegister from "@/views/ApplicationRegister"
 import Login from "@/views/Login"
+import PasswordFind from "@/views/PasswordFind"
 
 Vue.use(VueRouter)
 
 const routes = [
+  {
+    path: "/recruits",
+    component: Recruits,
+  },
   {
     path: "/register",
     component: Register,
@@ -14,6 +20,10 @@ const routes = [
   {
     path: "/login",
     component: Login,
+  },
+  {
+    path: "/find",
+    component: PasswordFind,
   },
   {
     path: "/application/register",
