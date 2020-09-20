@@ -3,11 +3,13 @@ package apply.application
 import apply.domain.applicant.ApplicantRepository
 import apply.domain.applicant.Gender
 import apply.domain.applicant.exception.ApplicantValidateException
+import apply.domain.cheater.CheaterRepository
 import apply.security.JwtTokenProvider
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatchers.refEq
 import org.mockito.BDDMockito.given
@@ -22,6 +24,9 @@ private const val APPLICANT_ID = 1L
 internal class ApplicantServiceTest {
     @Mock
     private lateinit var applicantRepository: ApplicantRepository
+
+    @Mock
+    private lateinit var cheaterRepository: CheaterRepository
 
     @Mock
     private lateinit var jwtTokenProvider: JwtTokenProvider
@@ -39,9 +44,24 @@ internal class ApplicantServiceTest {
 
     private val inValidApplicantRequest = validApplicantRequest.copy(password = "invalid_password")
 
+    private val applicants = listOf(validApplicantRequest.toEntity(APPLICANT_ID))
+
     @BeforeEach
     internal fun setUp() {
-        applicantService = ApplicantService(applicantRepository, jwtTokenProvider)
+        applicantService = ApplicantService(applicantRepository, cheaterRepository, jwtTokenProvider)
+    }
+
+    @Test
+    fun `지원자 정보와 부정 행위자 여부를 함께 제공한다`() {
+        given(applicantRepository.findAll()).willReturn(applicants)
+        given(cheaterRepository.existsByApplicantId(APPLICANT_ID)).willReturn(true)
+
+        val founds = applicantService.findAll()
+
+        assertAll(
+            { assertThat(founds).usingElementComparatorIgnoringFields("isCheater").isEqualTo(applicants) },
+            { assertThat(founds[0].isCheater).isEqualTo(true) }
+        )
     }
 
     @Test

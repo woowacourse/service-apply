@@ -2,7 +2,9 @@ package apply.application
 
 import apply.domain.applicant.Applicant
 import apply.domain.applicant.ApplicantRepository
+import apply.domain.applicant.ApplicantResponse
 import apply.domain.applicant.Gender
+import apply.domain.cheater.CheaterRepository
 import apply.security.JwtTokenProvider
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -13,14 +15,17 @@ import javax.annotation.PostConstruct
 @Service
 class ApplicantService(
     private val applicantRepository: ApplicantRepository,
+    private val cheaterRepository: CheaterRepository,
     private val jwtTokenProvider: JwtTokenProvider
 ) {
-    fun findAll(): List<Applicant> {
-        return applicantRepository.findAll()
+    fun findAll(): List<ApplicantResponse> = applicantRepository.findAll().map {
+        ApplicantResponse(it, cheaterRepository.existsByApplicantId(it.id))
     }
 
-    fun findByNameOrEmail(keyword: String): List<Applicant> =
-        applicantRepository.findByNameContainingOrEmailContaining(keyword, keyword)
+    fun findByNameOrEmail(keyword: String): List<ApplicantResponse> =
+        applicantRepository.findByNameContainingOrEmailContaining(keyword, keyword).map {
+            ApplicantResponse(it, cheaterRepository.existsByApplicantId(it.id))
+        }
 
     fun generateToken(applicantInfo: ApplicantInfo): String {
         val applicant = applicantRepository.findByEmail(applicantInfo.email)

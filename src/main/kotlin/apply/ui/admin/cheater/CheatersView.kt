@@ -1,9 +1,10 @@
-package apply.ui.admin
+package apply.ui.admin.cheater
 
 import apply.application.ApplicantService
 import apply.application.CheaterService
-import apply.domain.applicant.Applicant
+import apply.domain.applicant.ApplicantResponse
 import apply.domain.cheater.CheaterResponse
+import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.grid.Grid
@@ -15,14 +16,14 @@ import com.vaadin.flow.component.select.Select
 import com.vaadin.flow.data.renderer.ComponentRenderer
 import com.vaadin.flow.data.renderer.Renderer
 import com.vaadin.flow.router.Route
-import support.addSortableColumn
-import support.addSortableDateTimeColumn
-import support.createDeleteButtonWithDialog
-import support.createPrimaryButton
-import support.createSearchBar
+import support.views.addSortableColumn
+import support.views.addSortableDateTimeColumn
+import support.views.createDeleteButtonWithDialog
+import support.views.createPrimaryButton
+import support.views.createSearchBar
 
-@Route(value = "admin/cheater", layout = BaseLayout::class)
-class CheaterView(
+@Route(value = "admin/cheaters", layout = BaseLayout::class)
+class CheatersView(
     private val applicantService: ApplicantService,
     private val cheaterService: CheaterService
 ) : VerticalLayout() {
@@ -58,8 +59,8 @@ class CheaterView(
         ).apply { setSizeFull() }
     }
 
-    private fun createSelectApplicant(applicants: List<Applicant>): Select<Applicant> {
-        return Select<Applicant>().apply {
+    private fun createSelectApplicant(applicants: List<ApplicantResponse>): Select<ApplicantResponse> {
+        return Select<ApplicantResponse>().apply {
             setTextRenderer { "${it.name}/${it.email}" }
             setItems(applicants)
         }

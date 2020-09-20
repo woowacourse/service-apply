@@ -1,21 +1,23 @@
 <template>
-  <div id="wrapper">
-    <div id="tab-wrapper">
-      <h2
-        v-for="tab in tabList"
-        :key="tab.name"
-        class="list-tab filter"
-        :class="{ active: tab.name === $route.query.status }"
-        :id="tab.name"
-        @click="setFilter(tab.name)"
-      >
-        {{ tab.label }}
-      </h2>
-      <h2 class="list-tab" id="mypage">내 지원서</h2>
-    </div>
-    <div id="component">
-      <div v-for="recruitment in activeList" :key="recruitment.id">
-        <recruit-item :recruitment="recruitment" />
+  <div id="recruits">
+    <div id="recruits-box">
+      <div id="tab-wrapper">
+        <h2
+          v-for="tab in tabList"
+          :key="tab.name"
+          class="list-tab filter"
+          :class="{ active: tab.name === $route.query.status }"
+          :id="tab.name"
+          @click="setStatus(tab.name)"
+        >
+          {{ tab.label }}
+        </h2>
+        <h2 class="list-tab" id="mypage">내 지원서</h2>
+      </div>
+      <div id="component">
+        <div v-for="recruitment in activeList" :key="recruitment.id">
+          <recruit-item :recruitment="recruitment" />
+        </div>
       </div>
     </div>
   </div>
@@ -34,11 +36,15 @@ export default {
           label: "전체",
         },
         {
+          name: "recruitable",
+          label: "모집 예정",
+        },
+        {
           name: "recruiting",
           label: "모집 중",
         },
         {
-          name: "completed",
+          name: "ended",
           label: "모집 종료",
         },
       ],
@@ -49,19 +55,19 @@ export default {
           title: "웹 백엔드 3기",
           startTime: new Date("2020-10-24T15:00:00"),
           endTime: new Date("2020-11-09T23:59:00"),
-          recruitmentStatus: "RECRUITABLE",
+          recruitmentStatus: "RECRUITING",
         },
         {
           id: 5,
           title: "웹 프론트엔드 3기",
           startTime: new Date("2020-10-24T15:00:00"),
           endTime: new Date("2020-11-09T23:59:00"),
-          recruitmentStatus: "RECRUITABLE",
+          recruitmentStatus: "RECRUITING",
         },
         {
           id: 4,
           title: "모바일(iOS) 3기",
-          startTime: new Date("2020-10-24T15:00:00"),
+          startTime: new Date("2020-10-27T15:00:00"),
           endTime: new Date("2020-11-09T23:59:00"),
           recruitmentStatus: "RECRUITABLE",
         },
@@ -70,7 +76,7 @@ export default {
           title: "모바일(Android) 3기",
           startTime: new Date("2020-10-24T15:00:00"),
           endTime: new Date("2020-11-09T23:59:00"),
-          recruitmentStatus: "RECRUITABLE",
+          recruitmentStatus: "UNRECRUITABLE",
         },
         {
           id: 2,
@@ -96,26 +102,33 @@ export default {
     this.setList(this.$route.query.status)
   },
   methods: {
-    setFilter(filter) {
-      this.$router.replace({
-        path: "/recruits/?status=" + filter,
-      })
-      this.setList(filter)
+    setStatus(status) {
+      if (status !== this.$route.query.status) {
+        this.$router.replace({
+          path: "/recruits/?status=" + status,
+        })
+        this.setList(status)
+      }
     },
     async setList(filter) {
       try {
         this.activeList = await this.getRecruits(filter)
       } catch (e) {
-        await this.setFilter("all")
+        await this.setStatus("all")
       }
     },
     // TODO: 이 부분을 실제 API 콜로 대체하기
     getRecruits(filter) {
       switch (filter) {
-        case "recruiting": {
+        case "recruitable": {
           return this.allList.filter(el => el.recruitmentStatus === "RECRUITABLE")
         }
-        case "completed": {
+        case "recruiting": {
+          return this.allList.filter(
+            el => el.recruitmentStatus === "RECRUITING" || el.recruitmentStatus === "UNRECRUITABLE",
+          )
+        }
+        case "ended": {
           return this.allList.filter(el => el.recruitmentStatus === "ENDED")
         }
         case "all": {
@@ -131,9 +144,29 @@ export default {
 </script>
 
 <style scoped>
-@media (min-width: 800px) {
-  #wrapper {
-    width: 800px;
+#recruits {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #ced6e0;
+  height: 100%;
+  user-select: none;
+}
+
+#recruits-box {
+  align-items: center;
+  width: 800px;
+  max-width: 800px;
+  padding: 20px;
+  margin: 15px;
+  border-radius: 3px;
+  background: #f1f2f6;
+  box-shadow: 0 0 7px rgba(0, 0, 0, 0.05);
+}
+
+@media (max-width: 800px) {
+  #recruits-box {
+    width: 100%;
     margin: 0 auto;
   }
 }
@@ -146,6 +179,13 @@ export default {
   padding: 0 20px 0 20px;
 }
 
+@media (max-width: 500px) {
+  .list-tab {
+    font-size: smaller;
+    padding: 0 10px 0 10px;
+  }
+}
+
 .filter {
   color: #aaaaaa;
 }
@@ -154,10 +194,10 @@ export default {
   color: #000000 !important;
 }
 
-@media (max-width: 500px) {
-  .list-tab {
-    font-size: smaller;
-    padding: 0 10px 0 10px;
-  }
+#tab-wrapper > h2 {
+  cursor: pointer;
+}
+.enroll-button button {
+  cursor: pointer;
 }
 </style>
