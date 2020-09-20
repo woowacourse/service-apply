@@ -1,6 +1,6 @@
 package apply.domain.applicant
 
-import apply.application.ApplicantRequest
+import apply.application.ApplicantInfo
 import apply.domain.applicant.exception.ApplicantValidateException
 import java.time.LocalDate
 import javax.persistence.Column
@@ -36,30 +36,17 @@ class Applicant(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L
 ) {
-    fun validate(password: String, name: String, phoneNumber: String, gender: Gender, birthday: LocalDate) {
-        if (this.password != password) {
-            throw ApplicantValidateException("비밀번호")
-        }
-        if (this.name != name) {
-            throw ApplicantValidateException("이름")
-        }
-        if (this.phoneNumber != phoneNumber) {
-            throw ApplicantValidateException("전화번호")
-        }
-        if (this.gender != gender) {
-            throw ApplicantValidateException("성별")
-        }
-        if (this.birthday != birthday) {
-            throw ApplicantValidateException("생일")
+    fun validate(applicantRequest: ApplicantInfo) {
+        val applicantInfo = ApplicantInfo(
+            name = name,
+            email = email,
+            phoneNumber = phoneNumber,
+            gender = gender,
+            birthday = birthday,
+            password = password
+        )
+        if (applicantInfo != applicantRequest) {
+            throw ApplicantValidateException()
         }
     }
-
-    fun validate(applicantRequest: ApplicantRequest) =
-        validate(
-            password = applicantRequest.password,
-            name = applicantRequest.name,
-            phoneNumber = applicantRequest.phoneNumber,
-            gender = applicantRequest.gender,
-            birthday = applicantRequest.birthday
-        )
 }

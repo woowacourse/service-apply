@@ -28,7 +28,7 @@ internal class ApplicantServiceTest {
 
     private lateinit var applicantService: ApplicantService
 
-    private val validApplicantRequest = ApplicantRequest(
+    private val validApplicantRequest = ApplicantInfo(
         name = "지원자",
         email = "test@email.com",
         phoneNumber = "010-0000-0000",
@@ -61,7 +61,7 @@ internal class ApplicantServiceTest {
         assertThatThrownBy {
             applicantService.generateToken(inValidApplicantRequest)
         }.isInstanceOf(ApplicantValidateException::class.java)
-            .hasMessage("비밀번호 값이 기존 정보와 일치하지 않습니다")
+            .hasMessage("요청 정보가 기존 지원자 정보와 일치하지 않습니다")
     }
 
     @Test

@@ -2,7 +2,7 @@ package apply.ui.api
 
 import apply.application.ApplicantService
 import apply.domain.applicant.Gender
-import apply.application.ApplicantRequest
+import apply.application.ApplicantInfo
 import apply.domain.applicant.exception.ApplicantValidateException
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.BeforeEach
@@ -33,7 +33,7 @@ internal class ApplicantRestControllerTest(
 
     private lateinit var mockMvc: MockMvc
 
-    private val applicantRequest = ApplicantRequest(
+    private val applicantRequest = ApplicantInfo(
         name = "지원자",
         email = "test@email.com",
         phoneNumber = "010-0000-0000",
@@ -70,7 +70,7 @@ internal class ApplicantRestControllerTest(
     fun `기존 지원자 정보와 일치하지 않는 지원자 생성 및 검증 요청에 대하여 unauthorized 응답을 받는다`() {
         given(
             applicantService.generateToken(invalidApplicantRequest)
-        ).willThrow(ApplicantValidateException("비밀번호"))
+        ).willThrow(ApplicantValidateException())
 
         mockMvc.post("/api/applicants") {
             content = objectMapper.writeValueAsBytes(invalidApplicantRequest)
