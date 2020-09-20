@@ -77,7 +77,7 @@ internal class ApplicantRestControllerTest(
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isUnauthorized }
-            content { string("비밀번호 값이 기존 정보와 일치하지 않습니다") }
+            content { string("잘못된 요청입니다") }
         }
     }
 }

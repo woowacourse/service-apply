@@ -21,7 +21,7 @@ class ApplicantRestController(
             val token = applicantService.generateToken(applicantRequest)
             ResponseEntity.ok().body(token)
         } catch (e: ApplicantValidateException) {
-            ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.message)
+            ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("잘못된 요청입니다")
         }
     }
 }
