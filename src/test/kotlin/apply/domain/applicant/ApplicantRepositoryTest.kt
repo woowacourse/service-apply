@@ -45,18 +45,18 @@ internal class ApplicantRepositoryTest(private val applicantRepository: Applican
 
     @ParameterizedTest
     @CsvSource("홍,3", "a@,1", "'',3", "4,0")
-    fun `검색 키워드가 이름 또는 이메일을 포함되는 applicant들을 모두 조회한다`(keyword: String, expectedSize: Int) {
+    fun `이름 또는 이메일에 검색 키워드가 포함되는 지원자들을 모두 조회한다`(keyword: String, expectedSize: Int) {
         val result = applicantRepository.findByNameContainingOrEmailContaining(keyword, keyword)
         assertThat(result).hasSize(expectedSize)
     }
 
     @Test
-    fun `이메일이 일치하는 applicant를 조회한다`() {
+    fun `이메일이 일치하는 지원자를 조회한다`() {
         assertThat(applicantRepository.findByEmail("b@email.com")!!.name).isEqualTo("홍길동2")
     }
 
     @Test
-    fun `이메일이 일치하는 applicant가 존재하지 않을 때, null을 반환한다`() {
+    fun `이메일이 일치하는 지원자가 존재하지 않을 때, null을 반환한다`() {
         assertThat(applicantRepository.findByEmail("notexist@email.com")).isNull()
     }
 }

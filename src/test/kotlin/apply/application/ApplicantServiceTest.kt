@@ -75,7 +75,7 @@ internal class ApplicantServiceTest {
     }
 
     @Test
-    fun `지원자가 이미 존재하고 필드 값 동등성 검증에 실패하면 ApplicantValidateException이 발생한다`() {
+    fun `지원자가 이미 존재하고 필드 값 동등성 검증에 실패하면 예외가 발생한다`() {
         val applicant = validApplicantRequest.toEntity(APPLICANT_ID)
         given(applicantRepository.findByEmail(inValidApplicantRequest.email)).willReturn(applicant)
 
