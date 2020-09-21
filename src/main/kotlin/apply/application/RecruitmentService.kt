@@ -53,6 +53,12 @@ class RecruitmentService(
         }
         val recruitments = listOf(
             Recruitment(
+                title = "웹 백엔드 2기",
+                canRecruit = true,
+                startDateTime = createLocalDateTime(2019, 10, 25, 10),
+                endDateTime = createLocalDateTime(2019, 11, 5, 10)
+            ),
+            Recruitment(
                 title = "웹 백엔드 3기",
                 canRecruit = true,
                 startDateTime = createLocalDateTime(2020, 10, 25, 15),

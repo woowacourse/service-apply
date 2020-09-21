@@ -2,7 +2,9 @@ package apply.application
 
 import apply.domain.applicant.Applicant
 import apply.domain.applicant.ApplicantRepository
+import apply.domain.applicant.ApplicantResponse
 import apply.domain.applicant.Gender
+import apply.domain.cheater.CheaterRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import support.createLocalDate
@@ -10,13 +12,23 @@ import javax.annotation.PostConstruct
 
 @Transactional
 @Service
-class ApplicantService(private val applicantRepository: ApplicantRepository) {
-    fun findAll(): List<Applicant> = applicantRepository.findAll()
+class ApplicantService(
+    private val applicantRepository: ApplicantRepository,
+    private val cheaterRepository: CheaterRepository
+) {
+    fun findAll(): List<ApplicantResponse> = applicantRepository.findAll().map {
+        ApplicantResponse(it, cheaterRepository.existsByApplicantId(it.id))
+    }
 
-    fun findAllByIds(applicantIds: List<Long>): List<Applicant> = applicantRepository.findAllById(applicantIds)
+    fun findAllByIds(applicantIds: List<Long>): List<ApplicantResponse> =
+        applicantRepository.findAllById(applicantIds).map {
+            ApplicantResponse(it, cheaterRepository.existsByApplicantId(it.id))
+        }
 
-    fun findByValue(value: String): List<Applicant> =
-        applicantRepository.findByNameContainingOrEmailContaining(value, value)
+    fun findByValue(value: String): List<ApplicantResponse> =
+        applicantRepository.findByNameContainingOrEmailContaining(value, value).map {
+            ApplicantResponse(it, cheaterRepository.existsByApplicantId(it.id))
+        }
 
     @PostConstruct
     private fun populateDummy() {

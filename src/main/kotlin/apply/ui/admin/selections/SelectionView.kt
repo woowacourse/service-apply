@@ -4,7 +4,7 @@ import apply.application.ApplicantService
 import apply.application.ApplicationFormService
 import apply.application.RecruitmentItemService
 import apply.application.RecruitmentService
-import apply.domain.applicant.Applicant
+import apply.domain.applicant.ApplicantResponse
 import apply.domain.applicationform.ApplicationForm
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
@@ -63,20 +63,21 @@ class SelectionView(
         }
     }
 
-    private fun createGrid(applicants: List<Applicant>): Component {
-        return Grid<Applicant>(10).apply {
-            addSortableColumn("이름", Applicant::name)
-            addSortableColumn("이메일", Applicant::email)
-            addSortableColumn("전화번호", Applicant::phoneNumber)
+    private fun createGrid(applicants: List<ApplicantResponse>): Component {
+        return Grid<ApplicantResponse>(10).apply {
+            addSortableColumn("이름", ApplicantResponse::name)
+            addSortableColumn("이메일", ApplicantResponse::email)
+            addSortableColumn("전화번호", ApplicantResponse::phoneNumber)
             addSortableColumn("성별") { it.gender.title }
-            addSortableDateColumn("생년월일", Applicant::birthday)
+            addSortableDateColumn("생년월일", ApplicantResponse::birthday)
+            addSortableColumn("부정 행위자") { if (it.isCheater) "O" else "X" }
             addColumn(createButtonRenderer()).apply { isAutoWidth = true }
             setItems(applicants)
         }
     }
 
-    private fun createButtonRenderer(): Renderer<Applicant> {
-        return ComponentRenderer<Component, Applicant> { applicant ->
+    private fun createButtonRenderer(): Renderer<ApplicantResponse> {
+        return ComponentRenderer<Component, ApplicantResponse> { applicant ->
             createPrimarySmallButton("지원서") {
                 val dialog = Dialog()
                 dialog.add(
@@ -112,7 +113,7 @@ class SelectionView(
                 val referenceItem = createItem(
                     "포트폴리오",
                     createNormalButton(referenceUrl) {
-                        UI.getCurrent().page.open(referenceUrl, "_blank")
+                        UI.getCurrent().page.open(referenceUrl)
                     }
                 )
                 items.plusElement(referenceItem)
