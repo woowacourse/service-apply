@@ -11,12 +11,11 @@ class ExcelGenerator {
         private const val HEADER_ROW = 0
 
         fun generateBy(headerTitles: Array<String>, rows: List<ExcelRow>): ByteArrayInputStream {
-            // TODO: applicants 외 필요한 도메인 List를 받아오도록 수정
             val workbook = SXSSFWorkbook()
             val sheet = workbook.createSheet()
 
             styleHeaders(workbook, sheet, headerTitles)
-            fillApplicantsData(sheet, rows, headerTitles.size)
+            fillData(sheet, rows, headerTitles.size)
 
             val out = ByteArrayOutputStream()
             workbook.write(out)
@@ -42,7 +41,7 @@ class ExcelGenerator {
             }
         }
 
-        private fun fillApplicantsData(sheet: SXSSFSheet, rows: List<ExcelRow>, columnSize: Int) {
+        private fun fillData(sheet: SXSSFSheet, rows: List<ExcelRow>, columnSize: Int) {
             sheet.trackAllColumnsForAutoSizing()
 
             rows.forEachIndexed { index, it ->
