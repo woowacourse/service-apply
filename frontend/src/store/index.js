@@ -13,8 +13,10 @@ export default new Vuex.Store({
       { commit, dispatch },
       { name, phoneNumber, email, password, birthday, gender },
     ) {
-      await dispatch("fetchToken", { name, phoneNumber, email, password, birthday, gender })
-      commit("setApplicantInfo", { name, phoneNumber, email, birthday, gender })
+      await Promise.all([
+        dispatch("fetchToken", { name, phoneNumber, email, password, birthday, gender }),
+        commit("setApplicantInfo", { name, phoneNumber, email, birthday, gender }),
+      ])
     },
   },
   modules: {
