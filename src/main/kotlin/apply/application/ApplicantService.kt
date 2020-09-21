@@ -1,6 +1,7 @@
 package apply.application
 
 import apply.domain.applicant.Applicant
+import apply.domain.applicant.ApplicantInformation
 import apply.domain.applicant.ApplicantRepository
 import apply.domain.applicant.Gender
 import apply.domain.cheater.CheaterRepository
@@ -26,10 +27,10 @@ class ApplicantService(
             ApplicantResponse(it, cheaterRepository.existsByApplicantId(it.id))
         }
 
-    fun generateToken(applicantInfo: ApplicantInfo): String {
-        val applicant = applicantRepository.findByEmail(applicantInfo.email)
-            ?.also { it.validate(applicantInfo) }
-            ?: applicantRepository.save(applicantInfo.toEntity())
+    fun generateToken(applicantInformation: ApplicantInformation): String {
+        val applicant = applicantRepository.findByEmail(applicantInformation.email)
+            ?.also { it.validate(applicantInformation) }
+            ?: applicantRepository.save(applicantInformation.toEntity())
 
         return jwtTokenProvider.createToken(applicant.email)
     }

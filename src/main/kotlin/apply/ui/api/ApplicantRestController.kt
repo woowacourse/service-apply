@@ -1,7 +1,7 @@
 package apply.ui.api
 
 import apply.application.ApplicantService
-import apply.application.ApplicantInfo
+import apply.domain.applicant.ApplicantInformation
 import apply.domain.applicant.exception.ApplicantValidateException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -16,9 +16,9 @@ class ApplicantRestController(
     private val applicantService: ApplicantService
 ) {
     @PostMapping
-    fun generateToken(@RequestBody applicantInfo: ApplicantInfo): ResponseEntity<String> {
+    fun generateToken(@RequestBody applicantInformation: ApplicantInformation): ResponseEntity<String> {
         return try {
-            val token = applicantService.generateToken(applicantInfo)
+            val token = applicantService.generateToken(applicantInformation)
             ResponseEntity.ok().body(token)
         } catch (e: ApplicantValidateException) {
             ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("잘못된 요청입니다")

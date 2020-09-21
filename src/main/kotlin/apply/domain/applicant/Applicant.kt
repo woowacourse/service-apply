@@ -1,6 +1,5 @@
 package apply.domain.applicant
 
-import apply.application.ApplicantInfo
 import apply.domain.applicant.exception.ApplicantValidateException
 import java.time.LocalDate
 import javax.persistence.Column
@@ -36,17 +35,18 @@ class Applicant(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L
 ) {
-    fun validate(applicantRequest: ApplicantInfo) {
-        val applicantInfo = ApplicantInfo(
-            name = name,
-            email = email,
-            phoneNumber = phoneNumber,
-            gender = gender,
-            birthday = birthday,
-            password = password
-        )
-        if (applicantInfo != applicantRequest) {
+    fun validate(targetInformation: ApplicantInformation) {
+        if (getInformation() != targetInformation) {
             throw ApplicantValidateException()
         }
     }
+
+    private fun getInformation() = ApplicantInformation(
+        name = name,
+        email = email,
+        phoneNumber = phoneNumber,
+        gender = gender,
+        birthday = birthday,
+        password = password
+    )
 }

@@ -2,7 +2,7 @@ package apply.ui.api
 
 import apply.application.ApplicantService
 import apply.domain.applicant.Gender
-import apply.application.ApplicantInfo
+import apply.domain.applicant.ApplicantInformation
 import apply.domain.applicant.exception.ApplicantValidateException
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.BeforeEach
@@ -33,7 +33,7 @@ internal class ApplicantRestControllerTest(
 
     private lateinit var mockMvc: MockMvc
 
-    private val applicantRequest = ApplicantInfo(
+    private val applicantRequest = ApplicantInformation(
         name = "지원자",
         email = "test@email.com",
         phoneNumber = "010-0000-0000",

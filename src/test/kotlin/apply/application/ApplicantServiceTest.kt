@@ -1,5 +1,6 @@
 package apply.application
 
+import apply.domain.applicant.ApplicantInformation
 import apply.domain.applicant.ApplicantRepository
 import apply.domain.applicant.Gender
 import apply.domain.applicant.exception.ApplicantValidateException
@@ -33,7 +34,7 @@ internal class ApplicantServiceTest {
 
     private lateinit var applicantService: ApplicantService
 
-    private val validApplicantRequest = ApplicantInfo(
+    private val validApplicantRequest = ApplicantInformation(
         name = "지원자",
         email = "test@email.com",
         phoneNumber = "010-0000-0000",
