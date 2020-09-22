@@ -1,7 +1,7 @@
 import Vue from "vue"
 import VueRouter from "vue-router"
 import Recruits from "@/views/Recruits.vue"
-import Register from "@/views/Register"
+import ApplicantRegister from "@/views/ApplicantRegister"
 import ApplicationRegister from "@/views/ApplicationRegister"
 import Login from "@/views/Login"
 import PasswordFind from "@/views/PasswordFind"
@@ -14,8 +14,18 @@ const routes = [
     component: Recruits,
   },
   {
-    path: "/register",
-    component: Register,
+    path: "/register/applicant/:recruitmentId",
+    component: ApplicantRegister,
+    props: route => ({
+      recruitmentId: Number(route.params.recruitmentId),
+    }),
+  },
+  {
+    path: "/register/application/:recruitmentId",
+    component: ApplicationRegister,
+    props: route => ({
+      recruitmentId: Number(route.params.recruitmentId),
+    }),
   },
   {
     path: "/login",
@@ -24,10 +34,6 @@ const routes = [
   {
     path: "/find",
     component: PasswordFind,
-  },
-  {
-    path: "/application/register",
-    component: ApplicationRegister,
   },
 ]
 

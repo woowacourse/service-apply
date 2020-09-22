@@ -1,10 +1,12 @@
 package apply.ui.admin.selections
 
+import apply.application.ApplicantResponse
 import apply.application.ApplicantService
+import apply.application.DownloadService
 import apply.application.RecruitmentService
-import apply.domain.applicant.ApplicantResponse
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
+import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.html.H1
 import com.vaadin.flow.component.orderedlayout.FlexComponent
@@ -16,6 +18,8 @@ import com.vaadin.flow.router.BeforeEvent
 import com.vaadin.flow.router.HasUrlParameter
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.router.WildcardParameter
+import com.vaadin.flow.server.StreamResource
+import com.vaadin.flow.server.VaadinSession
 import support.views.addSortableColumn
 import support.views.addSortableDateColumn
 import support.views.createPrimarySmallButton
@@ -25,7 +29,8 @@ import support.views.createSuccessButton
 @Route(value = "admin/selections", layout = BaseLayout::class)
 class SelectionView(
     private val applicantService: ApplicantService,
-    private val recruitmentService: RecruitmentService
+    private val recruitmentService: RecruitmentService,
+    private val downloadService: DownloadService
 ) : VerticalLayout(), HasUrlParameter<Long> {
     private var recruitmentId: Long = 0L
 
@@ -40,10 +45,14 @@ class SelectionView(
         return HorizontalLayout(
             createSearchBar {
                 removeAll()
-                add(createTitle(), createMenu(), createGrid(applicantService.findByValue(it)))
+                add(createTitle(), createMenu(), createGrid(applicantService.findByNameOrEmail(it)))
             },
             createSuccessButton("다운로드") {
-                // Todo: 엑셀 다운로드
+                val excel = { downloadService.createExcelBy(recruitmentId) }
+                val registration = VaadinSession.getCurrent()
+                    .resourceRegistry
+                    .registerResource(StreamResource("${recruitmentService.getById(recruitmentId).title}.xlsx", excel))
+                UI.getCurrent().page.setLocation(registration.resourceUri)
             }
         ).apply {
             setSizeFull()
