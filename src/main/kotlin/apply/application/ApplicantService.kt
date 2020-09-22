@@ -22,6 +22,11 @@ class ApplicantService(
         ApplicantResponse(it, cheaterRepository.existsByApplicantId(it.id))
     }
 
+    fun findAllByIds(applicantIds: List<Long>): List<ApplicantResponse> =
+        applicantRepository.findAllById(applicantIds).map {
+            ApplicantResponse(it, cheaterRepository.existsByApplicantId(it.id))
+        }
+
     fun findByNameOrEmail(keyword: String): List<ApplicantResponse> =
         applicantRepository.findByNameContainingOrEmailContaining(keyword, keyword).map {
             ApplicantResponse(it, cheaterRepository.existsByApplicantId(it.id))
@@ -35,8 +40,6 @@ class ApplicantService(
         return jwtTokenProvider.createToken(applicant.email)
     }
 
-    fun findAllByIds(ids: List<Long>): List<Applicant> = applicantRepository.findAllById(ids)
-
     @PostConstruct
     private fun populateDummy() {
         if (applicantRepository.count() != 0L) {
@@ -44,28 +47,28 @@ class ApplicantService(
         }
         val applicants = listOf(
             Applicant(
-                "홍길동1",
-                "a@email.com",
-                "010-0000-0000",
-                Gender.MALE,
-                createLocalDate(2020, 4, 17),
-                "password"
+                name = "홍길동1",
+                email = "a@email.com",
+                phoneNumber = "010-0000-0000",
+                gender = Gender.MALE,
+                birthday = createLocalDate(2020, 4, 17),
+                password = "password"
             ),
             Applicant(
-                "홍길동2",
-                "b@email.com",
-                "010-0000-0000",
-                Gender.FEMALE,
-                createLocalDate(2020, 5, 5),
-                "password"
+                name = "홍길동2",
+                email = "b@email.com",
+                phoneNumber = "010-0000-0000",
+                gender = Gender.FEMALE,
+                birthday = createLocalDate(2020, 5, 5),
+                password = "password"
             ),
             Applicant(
-                "홍길동3",
-                "c@email.com",
-                "010-0000-0000",
-                Gender.MALE,
-                createLocalDate(2020, 1, 1),
-                "password"
+                name = "홍길동3",
+                email = "c@email.com",
+                phoneNumber = "010-0000-0000",
+                gender = Gender.MALE,
+                birthday = createLocalDate(2020, 1, 1),
+                password = "password"
             )
         )
         applicantRepository.saveAll(applicants)
