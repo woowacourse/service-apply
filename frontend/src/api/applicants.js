@@ -1,7 +1,7 @@
 import axios from "axios"
 
-export const fetchToken = ({ name, phoneNumber, email, password, birthday, gender }) => {
-  return axios.post("/api/applicants", {
+export const fetchRegister = ({ name, phoneNumber, email, password, birthday, gender }) => {
+  return axios.post("/api/applicants/register", {
     name,
     phoneNumber,
     email,
@@ -11,5 +11,5 @@ export const fetchToken = ({ name, phoneNumber, email, password, birthday, gende
   })
 }
 export const fetchLogin = data => {
-  return axios.post("/api/applicants/verify", { ...data })
+  return axios.post("/api/applicants/login", { ...data })
 }

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController
 class ApplicantRestController(
     private val applicantService: ApplicantService
 ) {
-    @PostMapping
+    @PostMapping("/register")
     fun generateToken(@RequestBody applicantInformation: ApplicantInformation): ResponseEntity<String> {
         return try {
             val token = applicantService.generateToken(applicantInformation)
@@ -26,7 +26,7 @@ class ApplicantRestController(
         }
     }
 
-    @PostMapping("/verify")
+    @PostMapping("/login")
     fun generateToken(@RequestBody applicantVerifyInformation: ApplicantVerifyInformation): ResponseEntity<String> {
         return try {
             val token = applicantService.generateTokenByLogin(applicantVerifyInformation)
