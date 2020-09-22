@@ -134,7 +134,7 @@ export default {
     validGender: false,
   }),
   methods: {
-    ...mapActions(["fetchTokenAndSetApplicantInfo"]),
+    ...mapActions(["fetchRegisterAndSetApplicantInfo"]),
     parseApplicantInfo() {
       return {
         name: this.name,
@@ -147,7 +147,7 @@ export default {
     },
     async submit() {
       try {
-        await this.fetchTokenAndSetApplicantInfo(this.parseApplicantInfo())
+        await this.fetchRegisterAndSetApplicantInfo(this.parseApplicantInfo())
         this.$router.push({ path: `/register/application/${this.recruitmentId}` })
       } catch (e) {
         alert(e.response.data)

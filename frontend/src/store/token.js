@@ -8,8 +8,8 @@ export const token = {
     },
   },
   actions: {
-    async fetchToken({ commit }, { name, phoneNumber, email, password, birthday, gender }) {
-      const { data: token } = await Api.fetchToken({
+    async fetchRegister({ commit }, { name, phoneNumber, email, password, birthday, gender }) {
+      const { data: token } = await Api.fetchRegister({
         name,
         phoneNumber,
         email,
@@ -19,6 +19,18 @@ export const token = {
       })
 
       commit("setToken", token)
+    },
+
+    async login({ commit }, data) {
+      const { data: token } = await Api.fetchLogin(data)
+
+      commit("setToken", token)
+    },
+  },
+
+  getters: {
+    token: state => {
+      return state.value
     },
   },
 }

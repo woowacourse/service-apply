@@ -81,7 +81,7 @@ export default {
   methods: {
     async submit() {
       await this.$store
-        .dispatch("applicant/login", {
+        .dispatch("login", {
           name: this.name,
           email: this.email,
           birthday: DateUtil.formatLocalDate(this.birth),
