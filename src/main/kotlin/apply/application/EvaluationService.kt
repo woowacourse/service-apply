@@ -2,7 +2,8 @@ package apply.application
 
 import apply.domain.evaluation.Evaluation
 import apply.domain.evaluation.EvaluationRepository
-import apply.domain.evaluation.dto.EvaluationResponse
+import apply.domain.evaluationItem.EvaluationItem
+import apply.domain.evaluationItem.EvaluationItemRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import javax.annotation.PostConstruct
@@ -12,8 +13,20 @@ import javax.transaction.Transactional
 @Service
 class EvaluationService(
     private val evaluationRepository: EvaluationRepository,
+    private val evaluationItemRepository: EvaluationItemRepository,
     private val recruitmentService: RecruitmentService
 ) {
+    fun save(request: EvaluationRequest) {
+        val evaluation = evaluationRepository.save(
+            Evaluation(request.title, request.description, request.recruitmentId, request.beforeEvaluationId)
+        )
+        evaluationItemRepository.saveAll(
+            request.recruitmentItems.map {
+                EvaluationItem(evaluation.id, it.title, it.description, it.maximumScore, it.position)
+            }
+        )
+    }
+
     fun findAll(): List<Evaluation> {
         return evaluationRepository.findAll()
     }
@@ -57,21 +70,21 @@ class EvaluationService(
         }
         val evaluations = listOf(
             Evaluation(
-                "프리코스 대상자 선발",
-                "[리뷰 절차]\n" +
+                title = "프리코스 대상자 선발",
+                description = "[리뷰 절차]\n" +
                     "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
                 recruitmentId = 1L
             ),
             Evaluation(
-                " 1주차 - 숫자야구게임",
-                "[리뷰 절차]\n" +
+                title = " 1주차 - 숫자야구게임",
+                description = "[리뷰 절차]\n" +
                     "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
                 recruitmentId = 1L,
                 beforeEvaluationId = 1L
             ),
             Evaluation(
-                "2주차 - 자동차경주게임 ",
-                "[리뷰 절차]\n" +
+                title = "2주차 - 자동차경주게임 ",
+                description = "[리뷰 절차]\n" +
                     "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
                 recruitmentId = 1L,
                 beforeEvaluationId = 2L

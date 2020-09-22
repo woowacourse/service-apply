@@ -9,13 +9,13 @@ import javax.persistence.Id
 @Entity
 class EvaluationItem(
     @Column(nullable = false)
+    val evaluationId: Long,
+
+    @Column(nullable = false)
     val title: String,
 
     @Column(nullable = false)
     val description: String,
-
-    @Column(nullable = false)
-    val evaluationId: Long,
 
     @Column(nullable = false)
     val maximumScore: Int = 2,
