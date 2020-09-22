@@ -52,6 +52,7 @@
 <script>
 import { Form, Button, TextField, BirthField, Label } from "@/components/form"
 import { login } from "@/utils/validation"
+import * as DateUtil from "@/utils/date"
 
 export default {
   name: "Login",
@@ -83,11 +84,15 @@ export default {
         .dispatch("applicant/login", {
           name: this.name,
           email: this.email,
-          birth: this.birth,
+          birthday: DateUtil.formatLocalDate(this.birth),
           password: this.password,
         })
-        .catch(e => alert("로그인 실패 : " + e))
-      //this.$router.push("/recruits");
+        .catch(e => {
+          alert(e.response.data)
+          throw e
+        })
+      alert("로그인 성공")
+      this.$router.push("/recruits")
     },
     findPassword() {
       this.$router.push("/find")

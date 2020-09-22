@@ -11,5 +11,5 @@ export const fetchToken = ({ name, phoneNumber, email, password, birthday, gende
   })
 }
 export const fetchLogin = data => {
-  return axios.post("/api/login", { ...data })
+  return axios.post("/api/applicants/verify", { ...data })
 }
