@@ -10,3 +10,6 @@ export const fetchToken = ({ name, phoneNumber, email, password, birthday, gende
     gender,
   })
 }
+export const fetchLogin = data => {
+  return axios.post("/api/login", { ...data })
+}

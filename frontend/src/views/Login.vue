@@ -78,8 +78,14 @@ export default {
     validPassword: false,
   }),
   methods: {
-    submit() {
-      //TODO Login(나의 지원서보기 위한) API
+    async submit() {
+      await this.$store.dispatch("applicant/login", {
+        name: this.name,
+        email: this.email,
+        birth: this.birth,
+        password: this.password,
+      }).catch(e => alert("로그인 실패 : " + e));
+      //this.$router.push("/recruits");
     },
     findPassword() {
       this.$router.push("/find")
