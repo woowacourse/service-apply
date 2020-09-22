@@ -48,5 +48,13 @@ data class ApplicationFormRequest(
         val isSubmit: Boolean,
 
         @field:NotBlank
-        val answers: List<Answer> = ArrayList()
+        val answers: List<AnswerRequest> = ArrayList()
+)
+
+data class AnswerRequest(
+        @field:Size(min = 1)
+        val contents: String,
+
+        @field:NotNull
+        val recruitmentItemId: Long
 )

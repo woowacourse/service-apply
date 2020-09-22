@@ -1,7 +1,5 @@
 package apply.domain.applicationForm
 
-import apply.domain.answer.Answer
-import apply.domain.applicant.Applicant
 import java.time.LocalDateTime
 import javax.persistence.*
 
@@ -15,10 +13,6 @@ class ApplicationForm(
 
         @Column
         var referenceUrl: String,
-
-        @OneToMany(cascade = [CascadeType.PERSIST])
-        @JoinColumn(name = "FORM_ID")
-        var answers: List<Answer>,
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,12 +30,11 @@ class ApplicationForm(
     @Column
     var submittedDateTime: LocalDateTime? = null
 
-    fun update(referenceUrl: String, answers: List<Answer>) {
-        if(this.submitted) {
+    fun update(referenceUrl: String) {
+        if (this.submitted) {
             throw IllegalAccessException("이미 제출된 지원서입니다. 수정할 수 없습니다.")
         }
         this.referenceUrl = referenceUrl
-        this.answers = answers
         this.modifiedDateTime = LocalDateTime.now()
     }
 

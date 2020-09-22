@@ -12,7 +12,7 @@ internal class ApplicationFormTest {
 
     @BeforeEach
     internal fun setUp() {
-        applicationForm = ApplicationForm(1L, 1L,"http://example.com", ArrayList(), 1L)
+        applicationForm = ApplicationForm(1L, 1L,"http://example.com", 1L)
 
     }
     @Test
@@ -20,13 +20,12 @@ internal class ApplicationFormTest {
         assertFalse(applicationForm.submitted)
         assertEquals(1L, applicationForm.applicantId)
         assertEquals("http://example.com", applicationForm.referenceUrl)
-        assertThat(applicationForm.answers).hasSize(0)
         assertEquals(1L, applicationForm.id)
     }
 
     @Test
     internal fun updateApplicationFormTest() {
-        applicationForm.update("http://h2f.kr", ArrayList())
+        applicationForm.update("http://h2f.kr")
         assertEquals("http://h2f.kr", applicationForm.referenceUrl)
     }
 
@@ -36,7 +35,7 @@ internal class ApplicationFormTest {
 
         assertTrue(applicationForm.submitted)
 
-        assertThatThrownBy { applicationForm.update("http://h2f.kr", ArrayList()) }
+        assertThatThrownBy { applicationForm.update("http://h2f.kr") }
                 .isInstanceOf(IllegalAccessException::class.java)
                 .hasMessageContaining("이미 제출된")
     }

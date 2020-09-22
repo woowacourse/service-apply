@@ -12,12 +12,12 @@ class ApplicationFormController(
 ) {
     @PostMapping("/{id}")
     // TODO: 20. 9. 22. json 형태 응답 고려하기
-    fun saveApplicationForm(@PathVariable id: Long, @RequestBody applicationFormRequest: ApplicationFormRequest): ResponseEntity<Void> {
+    fun saveApplicationForm(@PathVariable id: Long, @RequestBody applicationFormRequest: ApplicationFormRequest): ResponseEntity<String> {
         return try {
-            applicationFormService.save(1L, id, applicationFormRequest)
+            applicationFormService.saveOrUpdate(1L, id, applicationFormRequest)
             ResponseEntity.ok().build()
         } catch (e: Exception) {
-            ResponseEntity.badRequest().build()
+            ResponseEntity.badRequest().body(e.message)
         }
     }
 }
