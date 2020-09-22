@@ -86,20 +86,23 @@
 </template>
 
 <script>
+import { mapActions } from "vuex"
 import {
-  Form,
-  Button,
-  TextField,
   BirthField,
+  Button,
+  Form,
   GenderField,
   SummaryCheckField,
+  TextField,
 } from "@/components/form"
-
+import * as DateUtil from "@/utils/date"
 import { register } from "@/utils/validation"
-
 import { POLICY_SUMMARY } from "./constants"
 
 export default {
+  props: {
+    recruitmentId: Number,
+  },
   components: {
     Form,
     Button,
@@ -131,7 +134,25 @@ export default {
     validGender: false,
   }),
   methods: {
-    submit() {},
+    ...mapActions(["fetchTokenAndSetApplicantInfo"]),
+    parseApplicantInfo() {
+      return {
+        name: this.name,
+        phoneNumber: this.phoneNumber,
+        email: this.email,
+        password: this.password,
+        gender: this.gender.toUpperCase(),
+        birthday: DateUtil.formatLocalDate(this.birth),
+      }
+    },
+    async submit() {
+      try {
+        await this.fetchTokenAndSetApplicantInfo(this.parseApplicantInfo())
+        this.$router.push({ path: `/register/application/${this.recruitmentId}` })
+      } catch (e) {
+        alert(e.response.data)
+      }
+    },
     validPasswordInputs(v) {
       return (this.validPassword = v && this.password === this.rePassword)
     },

@@ -1,5 +1,7 @@
-package apply.domain.applicant
+package apply.application
 
+import apply.domain.applicant.Applicant
+import apply.domain.applicant.Gender
 import java.time.LocalDate
 
 data class ApplicantResponse(
