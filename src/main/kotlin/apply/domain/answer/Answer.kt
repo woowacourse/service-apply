@@ -1,5 +1,6 @@
 package apply.domain.answer
 
+import apply.domain.applicationForm.ApplicationForm
 import javax.persistence.*
 
 @Entity
@@ -8,9 +9,9 @@ class Answer(
         val contents: String,
 
         @Column(nullable = false)
-        val recruitmentItemId: Long,
-
+        val recruitmentItemId: Long
+) {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         val id: Long = 0L
-)
+}

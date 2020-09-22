@@ -16,9 +16,9 @@ class ApplicationForm(
         @Column
         var referenceUrl: String,
 
-        @OneToMany
+        @OneToMany(cascade = [CascadeType.PERSIST])
         @JoinColumn(name = "FORM_ID")
-        var answers: List<Answer> = ArrayList(),
+        var answers: List<Answer>,
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +37,7 @@ class ApplicationForm(
     var submittedDateTime: LocalDateTime? = null
 
     fun update(referenceUrl: String, answers: List<Answer>) {
-        if(this.submitted == true) {
+        if(this.submitted) {
             throw IllegalAccessException("이미 제출된 지원서입니다. 수정할 수 없습니다.")
         }
         this.referenceUrl = referenceUrl
