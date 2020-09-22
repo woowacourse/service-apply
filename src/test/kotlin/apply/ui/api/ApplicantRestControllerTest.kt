@@ -44,10 +44,10 @@ internal class ApplicantRestControllerTest(
     )
 
     private val applicantLoginRequest = ApplicantVerifyInformation(
-        name = "지원자",
-        email = "test@email.com",
-        birthday = createLocalDate(1995, 2, 2),
-        password = "password"
+        name = applicantRequest.name,
+        email = applicantRequest.email,
+        birthday = applicantRequest.birthday,
+        password = applicantRequest.password
     )
 
     private val invalidApplicantRequest = applicantRequest.copy(password = "invalid_password")
