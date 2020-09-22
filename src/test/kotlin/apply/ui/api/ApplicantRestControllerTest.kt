@@ -1,8 +1,9 @@
 package apply.ui.api
 
 import apply.application.ApplicantService
-import apply.domain.applicant.Gender
 import apply.domain.applicant.ApplicantInformation
+import apply.domain.applicant.ApplicantVerifyInformation
+import apply.domain.applicant.Gender
 import apply.domain.applicant.exception.ApplicantValidateException
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.BeforeEach
@@ -42,7 +43,16 @@ internal class ApplicantRestControllerTest(
         password = "password"
     )
 
+    private val applicantLoginRequest = ApplicantVerifyInformation(
+        name = "지원자",
+        email = "test@email.com",
+        birthday = createLocalDate(1995, 2, 2),
+        password = "password"
+    )
+
     private val invalidApplicantRequest = applicantRequest.copy(password = "invalid_password")
+
+    private val invalidApplicantLoginRequest = applicantLoginRequest.copy(password = "invalid_password")
 
     @BeforeEach
     internal fun setUp(webApplicationContext: WebApplicationContext) {
@@ -78,6 +88,36 @@ internal class ApplicantRestControllerTest(
         }.andExpect {
             status { isUnauthorized }
             content { string("잘못된 요청입니다") }
+        }
+    }
+
+    @Test
+    fun `지원자 로그인 요청에 응답으로 Token을 반환한다`() {
+        given(
+            applicantService.generateTokenByLogin(applicantLoginRequest)
+        ).willReturn(VALID_TOKEN)
+
+        mockMvc.post("/api/applicants/login") {
+            content = objectMapper.writeValueAsBytes(applicantLoginRequest)
+            contentType = MediaType.APPLICATION_JSON
+        }.andExpect {
+            status { isOk }
+            content { string(VALID_TOKEN) }
+        }
+    }
+
+    @Test
+    fun `잘못된 지원자 로그인 요청에 응답으로 Bad Request와 메시지를 반환한다`() {
+        given(
+            applicantService.generateTokenByLogin(invalidApplicantLoginRequest)
+        ).willThrow(ApplicantValidateException())
+
+        mockMvc.post("/api/applicants/login") {
+            content = objectMapper.writeValueAsBytes(invalidApplicantLoginRequest)
+            contentType = MediaType.APPLICATION_JSON
+        }.andExpect {
+            status { isBadRequest }
+            content { string("등록된 지원자를 찾을 수 없습니다") }
         }
     }
 }
