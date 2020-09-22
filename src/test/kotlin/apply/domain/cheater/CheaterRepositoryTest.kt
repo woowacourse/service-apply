@@ -21,7 +21,8 @@ internal class CheaterRepositoryTest(
         email = "a@email.com",
         phoneNumber = "010-0000-0000",
         gender = Gender.MALE,
-        birthday = createLocalDate(2020, 4, 17)
+        birthday = createLocalDate(2020, 4, 17),
+        password = "password"
     )
 
     private val applicant = Applicant(
@@ -30,7 +31,8 @@ internal class CheaterRepositoryTest(
         email = "b@email.com",
         phoneNumber = "010-0000-0000",
         gender = Gender.MALE,
-        birthday = createLocalDate(2020, 4, 17)
+        birthday = createLocalDate(2020, 4, 17),
+        password = "password"
     )
 
     @BeforeEach

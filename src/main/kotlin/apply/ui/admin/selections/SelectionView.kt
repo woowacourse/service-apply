@@ -1,10 +1,10 @@
 package apply.ui.admin.selections
 
+import apply.application.ApplicantResponse
 import apply.application.ApplicantService
 import apply.application.ApplicationFormService
 import apply.application.RecruitmentItemService
 import apply.application.RecruitmentService
-import apply.domain.applicant.ApplicantResponse
 import apply.domain.applicationform.ApplicationForm
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
@@ -51,7 +51,7 @@ class SelectionView(
         return HorizontalLayout(
             createSearchBar {
                 removeAll()
-                add(createTitle(), createMenu(), createGrid(applicantService.findByValue(it)))
+                add(createTitle(), createMenu(), createGrid(applicantService.findByNameOrEmail(it)))
             },
             createSuccessButton("다운로드") {
                 // Todo: 엑셀 다운로드
