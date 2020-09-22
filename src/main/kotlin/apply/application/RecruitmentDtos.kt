@@ -1,6 +1,5 @@
 package apply.application
 
-import apply.domain.answer.Answer
 import java.time.LocalDateTime
 import javax.validation.Valid
 import javax.validation.constraints.*
@@ -57,4 +56,20 @@ data class AnswerRequest(
 
         @field:NotNull
         val recruitmentItemId: Long
+)
+
+data class ApplicationFormResponse(
+        val id: Long,
+        val recruitmentId: Long,
+        val referenceUrl: String,
+        val submitted: Boolean,
+        val answers: List<AnswerResponse>,
+        val createdDateTime: LocalDateTime,
+        val modifiedDateTime: LocalDateTime,
+        val submittedDateTime: LocalDateTime?
+)
+
+data class AnswerResponse(
+        val contents: String,
+        val applicationFormId: Long
 )
