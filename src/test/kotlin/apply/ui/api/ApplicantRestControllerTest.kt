@@ -57,7 +57,7 @@ internal class ApplicantRestControllerTest(
         given(applicantService.generateToken(applicantRequest))
             .willReturn(VALID_TOKEN)
 
-        mockMvc.post("/api/applicants") {
+        mockMvc.post("/api/applicants/register") {
             content = objectMapper.writeValueAsBytes(applicantRequest)
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
@@ -72,7 +72,7 @@ internal class ApplicantRestControllerTest(
             applicantService.generateToken(invalidApplicantRequest)
         ).willThrow(ApplicantValidateException())
 
-        mockMvc.post("/api/applicants") {
+        mockMvc.post("/api/applicants/register") {
             content = objectMapper.writeValueAsBytes(invalidApplicantRequest)
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
