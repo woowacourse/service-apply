@@ -35,6 +35,8 @@ class ApplicantService(
         return jwtTokenProvider.createToken(applicant.email)
     }
 
+    fun findAllByIds(ids: List<Long>): List<Applicant> = applicantRepository.findAllById(ids)
+
     @PostConstruct
     private fun populateDummy() {
         if (applicantRepository.count() != 0L) {
