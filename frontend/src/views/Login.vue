@@ -79,12 +79,14 @@ export default {
   }),
   methods: {
     async submit() {
-      await this.$store.dispatch("applicant/login", {
-        name: this.name,
-        email: this.email,
-        birth: this.birth,
-        password: this.password,
-      }).catch(e => alert("로그인 실패 : " + e));
+      await this.$store
+        .dispatch("applicant/login", {
+          name: this.name,
+          email: this.email,
+          birth: this.birth,
+          password: this.password,
+        })
+        .catch(e => alert("로그인 실패 : " + e))
       //this.$router.push("/recruits");
     },
     findPassword() {

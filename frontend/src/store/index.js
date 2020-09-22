@@ -2,7 +2,7 @@ import Vue from "vue"
 import Vuex from "vuex"
 import { applicantInfo } from "@/store/applicantInfo"
 import { token } from "@/store/token"
-import applicant from "@/store/module/applicant";
+import applicant from "@/store/module/applicant"
 
 Vue.use(Vuex)
 
