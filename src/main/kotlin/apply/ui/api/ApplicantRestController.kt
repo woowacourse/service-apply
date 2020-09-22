@@ -2,6 +2,7 @@ package apply.ui.api
 
 import apply.application.ApplicantService
 import apply.domain.applicant.ApplicantInformation
+import apply.domain.applicant.ApplicantVerifyInformation
 import apply.domain.applicant.exception.ApplicantValidateException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -22,6 +23,16 @@ class ApplicantRestController(
             ResponseEntity.ok().body(token)
         } catch (e: ApplicantValidateException) {
             ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("잘못된 요청입니다")
+        }
+    }
+
+    @PostMapping("/verify")
+    fun generateToken(@RequestBody applicantVerifyInformation: ApplicantVerifyInformation): ResponseEntity<String> {
+        return try {
+            val token = applicantService.generateTokenByLogin(applicantVerifyInformation)
+            ResponseEntity.ok().body(token)
+        } catch (e: ApplicantValidateException) {
+            ResponseEntity.status(HttpStatus.BAD_REQUEST).body("등록된 지원자를 찾을 수 없습니다")
         }
     }
 }

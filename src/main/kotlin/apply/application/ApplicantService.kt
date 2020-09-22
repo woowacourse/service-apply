@@ -3,7 +3,9 @@ package apply.application
 import apply.domain.applicant.Applicant
 import apply.domain.applicant.ApplicantInformation
 import apply.domain.applicant.ApplicantRepository
+import apply.domain.applicant.ApplicantVerifyInformation
 import apply.domain.applicant.Gender
+import apply.domain.applicant.exception.ApplicantValidateException
 import apply.domain.cheater.CheaterRepository
 import apply.security.JwtTokenProvider
 import org.springframework.stereotype.Service
@@ -36,6 +38,17 @@ class ApplicantService(
         val applicant = applicantRepository.findByEmail(applicantInformation.email)
             ?.also { it.validate(applicantInformation) }
             ?: applicantRepository.save(applicantInformation.toEntity())
+
+        return jwtTokenProvider.createToken(applicant.email)
+    }
+
+    fun generateTokenByLogin(applicantVerifyInformation: ApplicantVerifyInformation): String {
+        val applicant = applicantRepository.findByNameAndEmailAndBirthdayAndPassword(
+            applicantVerifyInformation.name,
+            applicantVerifyInformation.email,
+            applicantVerifyInformation.birthday,
+            applicantVerifyInformation.password
+        ) ?: throw ApplicantValidateException()
 
         return jwtTokenProvider.createToken(applicant.email)
     }
