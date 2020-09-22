@@ -92,7 +92,7 @@ internal class ApplicantRestControllerTest(
     }
 
     @Test
-    fun `지원자 로그인 요청에 응답으로 Token을 반환한다`() {
+    fun `올바른 지원자 로그인 요청에 응답으로 Token을 반환한다`() {
         given(
             applicantService.generateTokenByLogin(applicantLoginRequest)
         ).willReturn(VALID_TOKEN)
@@ -107,7 +107,7 @@ internal class ApplicantRestControllerTest(
     }
 
     @Test
-    fun `잘못된 지원자 로그인 요청에 응답으로 Bad Request와 메시지를 반환한다`() {
+    fun `잘못된 지원자 로그인 요청에 응답으로 Unauthorized와 메시지를 반환한다`() {
         given(
             applicantService.generateTokenByLogin(invalidApplicantLoginRequest)
         ).willThrow(ApplicantValidateException())
@@ -116,7 +116,7 @@ internal class ApplicantRestControllerTest(
             content = objectMapper.writeValueAsBytes(invalidApplicantLoginRequest)
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
-            status { isBadRequest }
+            status { isUnauthorized }
             content { string("등록된 지원자를 찾을 수 없습니다") }
         }
     }

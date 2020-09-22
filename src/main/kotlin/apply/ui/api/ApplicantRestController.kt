@@ -32,7 +32,7 @@ class ApplicantRestController(
             val token = applicantService.generateTokenByLogin(applicantVerifyInformation)
             ResponseEntity.ok().body(token)
         } catch (e: ApplicantValidateException) {
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).body("등록된 지원자를 찾을 수 없습니다")
+            ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("등록된 지원자를 찾을 수 없습니다")
         }
     }
 }
