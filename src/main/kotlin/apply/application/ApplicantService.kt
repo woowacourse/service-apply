@@ -9,6 +9,7 @@ import apply.security.JwtTokenProvider
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import support.createLocalDate
+import java.lang.IllegalArgumentException
 import javax.annotation.PostConstruct
 
 @Transactional
@@ -36,6 +37,12 @@ class ApplicantService(
     }
 
     fun findAllByIds(ids: List<Long>): List<Applicant> = applicantRepository.findAllById(ids)
+
+    fun changePassword(applicantId: Long, password: String) {
+        val applicant = applicantRepository.findById(applicantId).get()
+        applicant.password = password
+        applicantRepository.save(applicant)
+    }
 
     @PostConstruct
     private fun populateDummy() {

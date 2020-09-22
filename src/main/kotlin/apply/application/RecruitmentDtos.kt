@@ -39,7 +39,7 @@ data class RecruitmentItemRequest(
         var description: String = ""
 )
 
-data class ApplicationFormRequest(
+data class ApplicationFormSaveRequest(
         @field:Size(min = 0, max = 255)
         val referenceUrl: String,
 
@@ -49,6 +49,21 @@ data class ApplicationFormRequest(
         @field:NotBlank
         val answers: List<AnswerRequest> = ArrayList()
 )
+
+data class ApplicationFormUpdateRequest(
+        @field:Size(min = 0, max = 255)
+        val referenceUrl: String,
+
+        @field:NotNull
+        val isSubmit: Boolean,
+
+        @field:NotBlank
+        val answers: List<AnswerRequest> = ArrayList(),
+
+        @field:NotBlank
+        val password: String
+)
+
 
 data class AnswerRequest(
         @field:Size(min = 1)
