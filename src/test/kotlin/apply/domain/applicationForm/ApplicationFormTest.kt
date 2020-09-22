@@ -12,7 +12,7 @@ internal class ApplicationFormTest {
 
     @BeforeEach
     internal fun setUp() {
-        applicationForm = ApplicationForm(1L, "http://example.com", ArrayList(), 1L)
+        applicationForm = ApplicationForm(1L, 1L,"http://example.com", ArrayList(), 1L)
 
     }
     @Test

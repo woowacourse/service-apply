@@ -10,6 +10,9 @@ class ApplicationForm(
         @Column(nullable = false)
         val applicantId: Long,
 
+        @Column(nullable = false)
+        val recruitmentId: Long,
+
         @Column
         var referenceUrl: String,
 
@@ -21,7 +24,6 @@ class ApplicationForm(
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         val id: Long = 0L
 ) {
-
     @Column(nullable = false)
     var submitted: Boolean = false
 
