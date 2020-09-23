@@ -56,4 +56,25 @@ class EvaluationTargetRepositoryTest(
 
         assertThat(actual).isEqualTo(expected)
     }
+
+    @Test
+    fun `지원자의 id들에 해당되는 평가 대상자를 제거한다`() {
+        evaluationTargetRepository.deleteByApplicantIdIn(setOf(1L, 2L))
+
+        assertThat(evaluationTargetRepository.count()).isEqualTo(0)
+    }
+
+    @Test
+    fun `지정한 평가에 해당되고 지원자의 id들에 해당되는 평가 대상자를 제거한다`() {
+        evaluationTargetRepository.save(
+            EvaluationTarget(
+                2L,
+                1L
+            )
+        )
+
+        evaluationTargetRepository.deleteByEvaluationIdAndApplicantIdIn(1L, setOf(1L, 2L))
+
+        assertThat(evaluationTargetRepository.count()).isEqualTo(1)
+    }
 }
