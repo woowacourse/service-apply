@@ -54,21 +54,21 @@ class RecruitmentService(
         val recruitments = listOf(
             Recruitment(
                 title = "웹 백엔드 2기",
-                canRecruit = true,
                 startDateTime = createLocalDateTime(2019, 10, 25, 10),
-                endDateTime = createLocalDateTime(2019, 11, 5, 10)
+                endDateTime = createLocalDateTime(2019, 11, 5, 10),
+                canRecruit = true
             ),
             Recruitment(
                 title = "웹 백엔드 3기",
-                canRecruit = true,
                 startDateTime = createLocalDateTime(2020, 10, 25, 15),
-                endDateTime = createLocalDateTime(2020, 11, 5, 10)
+                endDateTime = createLocalDateTime(2020, 11, 5, 10),
+                canRecruit = true
             ),
             Recruitment(
                 title = "웹 프론트엔드 3기",
-                canRecruit = false,
                 startDateTime = createLocalDateTime(2020, 10, 25, 15),
-                endDateTime = createLocalDateTime(2020, 11, 5, 10)
+                endDateTime = createLocalDateTime(2020, 11, 5, 10),
+                canRecruit = false
             )
         )
         recruitmentRepository.saveAll(recruitments)

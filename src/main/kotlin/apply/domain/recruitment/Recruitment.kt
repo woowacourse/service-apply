@@ -12,7 +12,8 @@ import javax.persistence.Id
 class Recruitment(
     @Column(nullable = false)
     var title: String,
-    canRecruit: Boolean,
+    canRecruit: Boolean = false,
+    isHidden: Boolean = true,
 
     @Embedded
     var period: RecruitmentPeriod,
@@ -25,6 +26,10 @@ class Recruitment(
     var canRecruit: Boolean = canRecruit
         private set
 
+    @Column(nullable = false)
+    var isHidden: Boolean = isHidden
+        private set
+
     val startDateTime: LocalDateTime
         get() = period.startDateTime
 
@@ -32,19 +37,17 @@ class Recruitment(
         get() = period.endDateTime
 
     val status: RecruitmentStatus
-        get() = RecruitmentStatus.of(isPeriodOver = period.isOver, canRecruit = canRecruit)
+        get() = RecruitmentStatus.of(period, canRecruit)
 
-    constructor(title: String, startDateTime: LocalDateTime, endDateTime: LocalDateTime) : this(
-        title,
-        false,
-        startDateTime,
-        endDateTime
-    )
-
-    constructor(title: String, canRecruit: Boolean, startDateTime: LocalDateTime, endDateTime: LocalDateTime) : this(
-        title,
-        canRecruit,
-        RecruitmentPeriod(startDateTime, endDateTime)
+    constructor(
+        title: String,
+        startDateTime: LocalDateTime,
+        endDateTime: LocalDateTime,
+        canRecruit: Boolean = false
+    ) : this(
+        title = title,
+        period = RecruitmentPeriod(startDateTime, endDateTime),
+        canRecruit = canRecruit
     )
 
     fun start() {

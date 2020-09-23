@@ -49,7 +49,8 @@ class RecruitmentsView(private val recruitmentService: RecruitmentService) : Ver
     private fun createGrid(): Component {
         return Grid<Recruitment>(10).apply {
             addSortableColumn("모집명", Recruitment::title)
-            addSortableColumn("상태") { it.status.title }
+            addSortableColumn("상태") { it.status }
+            addSortableColumn("공개 여부") { it.isHidden.toDisclosureText() }
             addSortableDateTimeColumn("시작일시", Recruitment::startDateTime)
             addSortableDateTimeColumn("종료일시", Recruitment::endDateTime)
             addColumn(createButtonRenderer()).apply { isAutoWidth = true }
@@ -63,6 +64,7 @@ class RecruitmentsView(private val recruitmentService: RecruitmentService) : Ver
                 RecruitmentStatus.RECRUITABLE -> createButtonsWhenRecruitable(recruitment)
                 RecruitmentStatus.UNRECRUITABLE -> createButtonsWhenUnrecruitable(recruitment)
                 RecruitmentStatus.ENDED -> HorizontalLayout()
+                else -> HorizontalLayout()
             }
         }
     }
@@ -97,6 +99,14 @@ class RecruitmentsView(private val recruitmentService: RecruitmentService) : Ver
     private fun createEditButton(): Component {
         return createPrimarySmallButton("수정") {
             // TODO: 모집 관리 페이지에 수정 뷰를 구현한다.
+        }
+    }
+
+    private fun Boolean.toDisclosureText(): String {
+        return if (this) {
+            "공개"
+        } else {
+            "비공개"
         }
     }
 }
