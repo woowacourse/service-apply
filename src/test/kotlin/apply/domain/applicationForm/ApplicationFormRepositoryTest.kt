@@ -1,7 +1,5 @@
 package apply.domain.applicationForm
 
-import apply.domain.applicationform.ApplicationForm
-import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.recruitmentitem.Answer
 import apply.domain.recruitmentitem.Answers
 import com.helger.commons.mock.CommonsAssert.assertEquals

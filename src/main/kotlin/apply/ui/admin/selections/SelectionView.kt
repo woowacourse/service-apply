@@ -6,7 +6,7 @@ import apply.application.ApplicationFormService
 import apply.application.DownloadService
 import apply.application.RecruitmentItemService
 import apply.application.RecruitmentService
-import apply.domain.applicationform.ApplicationForm
+import apply.domain.applicationForm.ApplicationForm
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI

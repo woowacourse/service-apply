@@ -1,10 +1,7 @@
 package apply.domain.applicationForm
 
-import apply.domain.applicationform.ApplicationForm
 import apply.domain.recruitmentitem.Answer
 import apply.domain.recruitmentitem.Answers
-import com.helger.commons.annotation.UnsupportedOperation
-import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach

@@ -1,7 +1,7 @@
 package apply.application
 
-import apply.domain.applicationform.ApplicationForm
-import apply.domain.applicationform.ApplicationFormRepository
+import apply.domain.applicationForm.ApplicationForm
+import apply.domain.applicationForm.ApplicationFormRepository
 import apply.domain.recruitmentitem.Answer
 import apply.domain.recruitmentitem.Answers
 import org.springframework.stereotype.Service
