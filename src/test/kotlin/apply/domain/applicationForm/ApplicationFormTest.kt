@@ -1,5 +1,8 @@
 package apply.domain.applicationForm
 
+import apply.domain.applicationform.ApplicationForm
+import apply.domain.recruitmentitem.Answer
+import apply.domain.recruitmentitem.Answers
 import com.helger.commons.annotation.UnsupportedOperation
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -12,7 +15,14 @@ internal class ApplicationFormTest {
 
     @BeforeEach
     internal fun setUp() {
-        applicationForm = ApplicationForm(1L, 1L,"http://example.com", 1L)
+        applicationForm = ApplicationForm(
+                1L,
+                1L,
+                "http://example.com",
+                Answers(mutableListOf(
+                Answer("스타트업을 하고 싶습니다.", 1L),
+                Answer("책임감", 2L)
+        )))
 
     }
     @Test
@@ -20,13 +30,18 @@ internal class ApplicationFormTest {
         assertFalse(applicationForm.submitted)
         assertEquals(1L, applicationForm.applicantId)
         assertEquals("http://example.com", applicationForm.referenceUrl)
-        assertEquals(1L, applicationForm.id)
+        assertEquals("스타트업을 하고 싶습니다.", applicationForm.answers.items[0].contents)
+        assertEquals("책임감", applicationForm.answers.items[1].contents)
     }
 
     @Test
     internal fun updateApplicationFormTest() {
-        applicationForm.update("http://h2f.kr")
+        applicationForm.update("http://h2f.kr", Answers(mutableListOf(
+                Answer("대기업에 취직하고 싶습니다.", 1L),
+                Answer("책임감", 2L)
+        )))
         assertEquals("http://h2f.kr", applicationForm.referenceUrl)
+        assertEquals("대기업에 취직하고 싶습니다.", applicationForm.answers.items[0].contents)
     }
 
     @Test
@@ -35,7 +50,10 @@ internal class ApplicationFormTest {
 
         assertTrue(applicationForm.submitted)
 
-        assertThatThrownBy { applicationForm.update("http://h2f.kr") }
+        assertThatThrownBy { applicationForm.update("http://h2f.kr", Answers(mutableListOf(
+                Answer("스타트업을 하고 싶습니다.", 1L),
+                Answer("책임감", 2L)
+        ))) }
                 .isInstanceOf(IllegalAccessException::class.java)
                 .hasMessageContaining("이미 제출된")
     }
