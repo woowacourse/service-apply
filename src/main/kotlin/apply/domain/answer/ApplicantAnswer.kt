@@ -3,7 +3,7 @@ package apply.domain.answer
 import javax.persistence.*
 
 @Entity
-class Answer(
+class ApplicantAnswer(
         @Column(nullable = false)
         val contents: String,
 

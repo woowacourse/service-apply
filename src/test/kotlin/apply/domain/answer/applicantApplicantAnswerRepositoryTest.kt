@@ -9,34 +9,34 @@ import org.springframework.test.context.TestConstructor
 
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @DataJpaTest
-internal class AnswerRepositoryTest (private val answerRepository: AnswerRepository){
+internal class applicantApplicantAnswerRepositoryTest (private val applicantAnswerRepository: ApplicantAnswerRepository){
     @BeforeEach
     internal fun setUp() {
         val answers = listOf(
-                Answer(
+                ApplicantAnswer(
                         "내용1",
                         1,
                         1
                 ),
-                Answer(
+                ApplicantAnswer(
                         "내용2",
                         1,
                         2
                 )
         )
-        answerRepository.saveAll(answers)
+        applicantAnswerRepository.saveAll(answers)
     }
 
     @Test
     @DisplayName("지원서 ID로 모든 지원서 질문의 답을 찾는다")
     internal fun findAllByApplicationFormIdTest() {
-        assertThat(answerRepository.findAllByApplicationFormId(1)).hasSize(2)
+        assertThat(applicantAnswerRepository.findAllByApplicationFormId(1)).hasSize(2)
     }
 
     @Test
     @DisplayName("지원서 ID로 모든 지원서 질문의 답을 삭제한다")
     internal fun deleteAllByApplicationFormIdTest() {
-        answerRepository.deleteAllByApplicationFormId(1)
-        assertThat(answerRepository.findAllByApplicationFormId(1)).hasSize(0)
+        applicantAnswerRepository.deleteAllByApplicationFormId(1)
+        assertThat(applicantAnswerRepository.findAllByApplicationFormId(1)).hasSize(0)
     }
 }

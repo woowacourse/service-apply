@@ -1,7 +1,7 @@
 package apply.application
 
-import apply.domain.answer.Answer
-import apply.domain.answer.AnswerRepository
+import apply.domain.answer.ApplicantAnswer
+import apply.domain.answer.ApplicantAnswerRepository
 import apply.domain.applicationForm.ApplicationForm
 import apply.domain.applicationForm.ApplicationFormRepository
 import org.springframework.stereotype.Service
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 @Service
 class ApplicationFormService(
         private val applicationFormRepository: ApplicationFormRepository,
-        private val answerRepository: AnswerRepository,
+        private val applicantAnswerRepository: ApplicantAnswerRepository,
         private val applicantService: ApplicantService
 ) {
     fun save(applicantId: Long, recruitmentId: Long, applicationFormSaveRequest: ApplicationFormSaveRequest) {
@@ -21,8 +21,8 @@ class ApplicationFormService(
             applicationForm.submit()
         }
         applicationFormRepository.save(applicationForm)
-        val answers: List<Answer> = applicationFormSaveRequest.answers.map { answer -> Answer(answer.contents, applicationForm.id, answer.recruitmentItemId) }
-        answerRepository.saveAll(answers)
+        val applicantAnswers: List<ApplicantAnswer> = applicationFormSaveRequest.answers.map { answer -> ApplicantAnswer(answer.contents, applicationForm.id, answer.recruitmentItemId) }
+        applicantAnswerRepository.saveAll(applicantAnswers)
     }
 
     fun update(applicantId: Long, recruitmentId: Long, applicationFormUpdateRequest: ApplicationFormUpdateRequest) {
@@ -35,15 +35,15 @@ class ApplicationFormService(
             applicationForm.submit()
         }
         applicationFormRepository.save(applicationForm)
-        answerRepository.deleteAllByApplicationFormId(applicationForm.id)
-        val answers: List<Answer> = applicationFormUpdateRequest.answers.map { answer -> Answer(answer.contents, applicationForm.id, answer.recruitmentItemId) }
-        answerRepository.saveAll(answers)
+        applicantAnswerRepository.deleteAllByApplicationFormId(applicationForm.id)
+        val applicantAnswers: List<ApplicantAnswer> = applicationFormUpdateRequest.answers.map { answer -> ApplicantAnswer(answer.contents, applicationForm.id, answer.recruitmentItemId) }
+        applicantAnswerRepository.saveAll(applicantAnswers)
     }
 
     fun getForm(applicantId: Long, recruitmentId: Long): ApplicationFormResponse {
         val form = applicationFormRepository.findByApplicantIdAndRecruitmentId(applicantId, recruitmentId)
                 ?: throw NoSuchElementException("해당하는 지원서가 없습니다.")
-        val answers = answerRepository.findAllByApplicationFormId(form.id).map { answer -> AnswerResponse(answer.contents, answer.applicationFormId) }
+        val answers = applicantAnswerRepository.findAllByApplicationFormId(form.id).map { answer -> AnswerResponse(answer.contents, answer.applicationFormId) }
         return ApplicationFormResponse(
                 form.id,
                 form.recruitmentId,

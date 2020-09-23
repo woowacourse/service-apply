@@ -5,11 +5,11 @@ import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import javax.transaction.Transactional
 
-interface AnswerRepository : JpaRepository<Answer, Long> {
-    fun findAllByApplicationFormId(applicationFormId: Long) : ArrayList<Answer>
+interface ApplicantAnswerRepository : JpaRepository<ApplicantAnswer, Long> {
+    fun findAllByApplicationFormId(applicationFormId: Long) : ArrayList<ApplicantAnswer>
 
     @Transactional
     @Modifying
-    @Query("delete from Answer a where a.applicationFormId = ?1")
+    @Query("delete from ApplicantAnswer a where a.applicationFormId = ?1")
     fun deleteAllByApplicationFormId(applicationFormId: Long) : Int
 }
