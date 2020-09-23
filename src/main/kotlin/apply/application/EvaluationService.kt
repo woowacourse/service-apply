@@ -21,7 +21,7 @@ class EvaluationService(
             Evaluation(request.title, request.description, request.recruitmentId, request.beforeEvaluationId)
         )
         evaluationItemRepository.saveAll(
-            request.recruitmentItems.map {
+            request.evaluationItems.map {
                 EvaluationItem(evaluation.id, it.title, it.description, it.maximumScore, it.position)
             }
         )
@@ -29,6 +29,10 @@ class EvaluationService(
 
     fun findAll(): List<Evaluation> {
         return evaluationRepository.findAll()
+    }
+
+    fun findAllByRecruitmentId(recruitmentId: Long): List<Evaluation> {
+        return evaluationRepository.findAllByRecruitmentId(recruitmentId)
     }
 
     private fun findById(id: Long): Evaluation? {
