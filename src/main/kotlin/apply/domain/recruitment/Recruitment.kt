@@ -12,11 +12,11 @@ import javax.persistence.Id
 class Recruitment(
     @Column(nullable = false)
     var title: String,
-    canRecruit: Boolean = false,
-    isHidden: Boolean = true,
 
     @Embedded
     var period: RecruitmentPeriod,
+    canRecruit: Boolean = false,
+    isHidden: Boolean = true,
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

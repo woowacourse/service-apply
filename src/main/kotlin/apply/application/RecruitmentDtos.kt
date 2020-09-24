@@ -20,6 +20,12 @@ data class RecruitmentRequest(
     var endDateTime: LocalDateTime = LocalDateTime.MIN,
 
     @field:NotNull
+    var canRecruit: Boolean = false,
+
+    @field:NotNull
+    var isHidden: Boolean = false,
+
+    @field:NotNull
     @field:Valid
     var recruitmentItems: List<RecruitmentItemRequest> = emptyList()
 )
