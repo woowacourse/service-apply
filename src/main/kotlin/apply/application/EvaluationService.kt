@@ -22,7 +22,7 @@ class EvaluationService(
         )
         evaluationItemRepository.saveAll(
             request.evaluationItems.map {
-                EvaluationItem(evaluation.id, it.title, it.description, it.maximumScore, it.position)
+                EvaluationItem(evaluation.id, it.title, it.maximumScore, it.position, it.description)
             }
         )
     }

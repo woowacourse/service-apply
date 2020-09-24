@@ -12,18 +12,17 @@ data class EvaluationRequest(
     @field:Size(min = 1, max = 31)
     var title: String = "",
 
-    @field:NotNull
-    var recruitmentId: Long = 0L,
-
-    @field:NotNull
-    var beforeEvaluationId: Long = 0L,
-
     @field:NotBlank
     var description: String = "",
 
     @field:NotNull
+    var recruitmentId: Long = 0L,
+
+    var beforeEvaluationId: Long = 0L,
+
+    @field:NotNull
     @field:Valid
-    var recruitmentItems: List<EvaluationItemRequest> = emptyList()
+    var evaluationItems: List<EvaluationItemRequest> = emptyList()
 )
 
 data class EvaluationItemRequest(
@@ -32,14 +31,14 @@ data class EvaluationItemRequest(
     var title: String = "",
 
     @field:NotNull
-    @field:Min(1)
-    @field:Max(10)
-    var position: Int = 0,
-
-    @field:NotNull
     @field:Min(0)
     @field:Max(2)
     var maximumScore: Int = 0,
+
+    @field:NotNull
+    @field:Min(1)
+    @field:Max(10)
+    var position: Int = 0,
 
     @field:NotBlank
     var description: String = ""

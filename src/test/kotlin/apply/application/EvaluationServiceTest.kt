@@ -2,6 +2,7 @@ package apply.application
 
 import apply.domain.evaluation.Evaluation
 import apply.domain.evaluation.EvaluationRepository
+import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.recruitment.Recruitment
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -24,6 +25,9 @@ internal class EvaluationServiceTest {
     @Mock
     private lateinit var evaluationRepository: EvaluationRepository
 
+    @Mock
+    private lateinit var evaluationItemRepository: EvaluationItemRepository
+
     private lateinit var evaluationService: EvaluationService
     private lateinit var recruitments: List<Recruitment>
     private lateinit var preCourseEvaluation: Evaluation
@@ -33,7 +37,7 @@ internal class EvaluationServiceTest {
 
     @BeforeEach
     internal fun setUp() {
-        evaluationService = EvaluationService(evaluationRepository, recruitmentService)
+        evaluationService = EvaluationService(evaluationRepository, evaluationItemRepository, recruitmentService)
 
         recruitments = listOf(
             Recruitment(
