@@ -43,18 +43,7 @@ class Recruitment(
         title: String,
         startDateTime: LocalDateTime,
         endDateTime: LocalDateTime,
-        canRecruit: Boolean = false
-    ) : this(
-        title = title,
-        period = RecruitmentPeriod(startDateTime, endDateTime),
-        canRecruit = canRecruit
-    )
-
-    fun start() {
-        canRecruit = true
-    }
-
-    fun stop() {
-        canRecruit = false
-    }
+        canRecruit: Boolean = false,
+        isHidden: Boolean
+    ) : this(title, RecruitmentPeriod(startDateTime, endDateTime), canRecruit, isHidden)
 }
