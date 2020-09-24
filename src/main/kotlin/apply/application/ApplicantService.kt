@@ -9,7 +9,6 @@ import apply.security.JwtTokenProvider
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import support.createLocalDate
-import java.lang.IllegalArgumentException
 import javax.annotation.PostConstruct
 
 @Transactional

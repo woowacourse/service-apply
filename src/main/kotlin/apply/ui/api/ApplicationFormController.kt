@@ -4,12 +4,18 @@ import apply.application.ApplicationFormSaveRequest
 import apply.application.ApplicationFormService
 import apply.application.ApplicationFormUpdateRequest
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/register/application")
 class ApplicationFormController(
-        private val applicationFormService: ApplicationFormService
+    private val applicationFormService: ApplicationFormService
 ) {
     @GetMapping("/{id}")
     fun getApplicationForm(@PathVariable id: Long): ResponseEntity<Any> {
@@ -22,7 +28,10 @@ class ApplicationFormController(
     }
 
     @PostMapping("/{id}")
-    fun saveApplicationForm(@PathVariable id: Long, @RequestBody applicationFormSaveRequest: ApplicationFormSaveRequest): ResponseEntity<String> {
+    fun saveApplicationForm(
+        @PathVariable id: Long,
+        @RequestBody applicationFormSaveRequest: ApplicationFormSaveRequest
+    ): ResponseEntity<String> {
         return try {
             applicationFormService.save(1L, id, applicationFormSaveRequest)
             ResponseEntity.ok().build()
@@ -33,7 +42,10 @@ class ApplicationFormController(
     // TODO: 20. 9. 22. ControllerAdvice로 리팩토링
 
     @PutMapping("/{id}")
-    fun updateApplicationForm(@PathVariable id: Long, @RequestBody applicationFormUpdateRequest: ApplicationFormUpdateRequest): ResponseEntity<String> {
+    fun updateApplicationForm(
+        @PathVariable id: Long,
+        @RequestBody applicationFormUpdateRequest: ApplicationFormUpdateRequest
+    ): ResponseEntity<String> {
         return try {
             applicationFormService.update(1L, id, applicationFormUpdateRequest)
             ResponseEntity.ok().build()

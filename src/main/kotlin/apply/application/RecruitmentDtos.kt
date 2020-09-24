@@ -2,89 +2,92 @@ package apply.application
 
 import java.time.LocalDateTime
 import javax.validation.Valid
-import javax.validation.constraints.*
+import javax.validation.constraints.Max
+import javax.validation.constraints.Min
+import javax.validation.constraints.NotBlank
+import javax.validation.constraints.NotNull
+import javax.validation.constraints.Size
 
 data class RecruitmentRequest(
-        @field:NotBlank
-        @field:Size(min = 1, max = 31)
-        var title: String = "",
+    @field:NotBlank
+    @field:Size(min = 1, max = 31)
+    var title: String = "",
 
-        @field:NotNull
-        var startDateTime: LocalDateTime = LocalDateTime.MIN,
+    @field:NotNull
+    var startDateTime: LocalDateTime = LocalDateTime.MIN,
 
-        @field:NotNull
-        var endDateTime: LocalDateTime = LocalDateTime.MIN,
+    @field:NotNull
+    var endDateTime: LocalDateTime = LocalDateTime.MIN,
 
-        @field:NotNull
-        @field:Valid
-        var recruitmentItems: List<RecruitmentItemRequest> = emptyList()
+    @field:NotNull
+    @field:Valid
+    var recruitmentItems: List<RecruitmentItemRequest> = emptyList()
 )
 
 data class RecruitmentItemRequest(
-        @field:NotBlank
-        @field:Size(min = 1, max = 255)
-        var title: String = "",
+    @field:NotBlank
+    @field:Size(min = 1, max = 255)
+    var title: String = "",
 
-        @field:NotNull
-        @field:Min(1)
-        @field:Max(10)
-        var position: Int = 0,
+    @field:NotNull
+    @field:Min(1)
+    @field:Max(10)
+    var position: Int = 0,
 
-        @field:NotNull
-        @field:Min(1)
-        @field:Max(10000)
-        var maximumLength: Int = 0,
+    @field:NotNull
+    @field:Min(1)
+    @field:Max(10000)
+    var maximumLength: Int = 0,
 
-        @field:NotBlank
-        var description: String = ""
+    @field:NotBlank
+    var description: String = ""
 )
 
 data class ApplicationFormSaveRequest(
-        @field:Size(min = 0, max = 255)
-        val referenceUrl: String,
+    @field:Size(min = 0, max = 255)
+    val referenceUrl: String,
 
-        @field:NotNull
-        val isSubmit: Boolean,
+    @field:NotNull
+    val isSubmit: Boolean,
 
-        @field:NotBlank
-        val answers: List<AnswerRequest> = ArrayList()
+    @field:NotBlank
+    val answers: List<AnswerRequest> = ArrayList()
 )
 
 data class ApplicationFormUpdateRequest(
-        @field:Size(min = 0, max = 255)
-        val referenceUrl: String,
+    @field:Size(min = 0, max = 255)
+    val referenceUrl: String,
 
-        @field:NotNull
-        val isSubmit: Boolean,
+    @field:NotNull
+    val isSubmit: Boolean,
 
-        @field:NotBlank
-        val answers: List<AnswerRequest> = ArrayList(),
+    @field:NotBlank
+    val answers: List<AnswerRequest> = ArrayList(),
 
-        @field:NotBlank
-        val password: String
+    @field:NotBlank
+    val password: String
 )
 
-
 data class AnswerRequest(
-        @field:Size(min = 1)
-        val contents: String,
+    @field:Size(min = 1)
+    val contents: String,
 
-        @field:NotNull
-        val recruitmentItemId: Long
+    @field:NotNull
+    val recruitmentItemId: Long
 )
 
 data class ApplicationFormResponse(
-        val id: Long,
-        val recruitmentId: Long,
-        val referenceUrl: String,
-        val submitted: Boolean,
-        val answers: List<AnswerResponse>,
-        val createdDateTime: LocalDateTime,
-        val modifiedDateTime: LocalDateTime,
-        val submittedDateTime: LocalDateTime?
+    val id: Long,
+    val recruitmentId: Long,
+    val referenceUrl: String,
+    val submitted: Boolean,
+    val answers: List<AnswerResponse>,
+    val createdDateTime: LocalDateTime,
+    val modifiedDateTime: LocalDateTime,
+    val submittedDateTime: LocalDateTime?
 )
 
 data class AnswerResponse(
-        val contents: String,
-        val applicationFormId: Long
+    val contents: String,
+    val applicationFormId: Long
 )

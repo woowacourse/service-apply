@@ -1,25 +1,30 @@
-package apply.domain.applicationForm
+package apply.domain.applicationform
 
 import apply.domain.recruitmentitem.Answers
 import java.time.LocalDateTime
-import javax.persistence.*
+import javax.persistence.Column
+import javax.persistence.Embedded
+import javax.persistence.Entity
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
+import javax.persistence.Id
 
 @Entity
 class ApplicationForm(
-        @Column(nullable = false)
-        var applicantId: Long,
+    @Column(nullable = false)
+    var applicantId: Long,
 
-        @Column(nullable = false)
-        var recruitmentId: Long,
+    @Column(nullable = false)
+    var recruitmentId: Long,
 
-        var referenceUrl: String,
+    var referenceUrl: String,
 
-        @Embedded
-        var answers: Answers,
+    @Embedded
+    var answers: Answers,
 
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        val id: Long = 0L
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long = 0L
 ) {
 
     @Column(nullable = false)
@@ -35,19 +40,21 @@ class ApplicationForm(
     var submittedDateTime: LocalDateTime? = null
 
     constructor(
-            applicantId: Long,
-            recruitmentId: Long,
-            referenceUrl: String,
-            answers: Answers,
-            submitted: Boolean,
-            createdDateTime: LocalDateTime,
-            modifiedDateTime: LocalDateTime,
-            submittedDateTime: LocalDateTime):this(applicantId, recruitmentId, referenceUrl, answers) {
+        applicantId: Long,
+        recruitmentId: Long,
+        referenceUrl: String,
+        answers: Answers,
+        submitted: Boolean,
+        createdDateTime: LocalDateTime,
+        modifiedDateTime: LocalDateTime,
+        submittedDateTime: LocalDateTime
+    ) : this(applicantId, recruitmentId, referenceUrl, answers) {
         this.submitted = submitted
         this.createdDateTime = createdDateTime
         this.modifiedDateTime = modifiedDateTime
         this.submittedDateTime = submittedDateTime
     }
+
     fun update(referenceUrl: String, answers: Answers) {
         if (this.submitted) {
             throw IllegalAccessException("이미 제출된 지원서입니다. 수정할 수 없습니다.")

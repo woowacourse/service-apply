@@ -1,4 +1,4 @@
-package apply.domain.applicationForm
+package apply.domain.applicationform
 
 import apply.domain.recruitmentitem.Answer
 import apply.domain.recruitmentitem.Answers
@@ -8,20 +8,23 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 internal class ApplicationFormTest {
-    private lateinit var applicationForm : ApplicationForm
+    private lateinit var applicationForm: ApplicationForm
 
     @BeforeEach
     internal fun setUp() {
         applicationForm = ApplicationForm(
-                1L,
-                1L,
-                "http://example.com",
-                Answers(mutableListOf(
-                Answer("스타트업을 하고 싶습니다.", 1L),
-                Answer("책임감", 2L)
-        )))
-
+            1L,
+            1L,
+            "http://example.com",
+            Answers(
+                mutableListOf(
+                    Answer("스타트업을 하고 싶습니다.", 1L),
+                    Answer("책임감", 2L)
+                )
+            )
+        )
     }
+
     @Test
     internal fun saveApplicationFormTest() {
         assertFalse(applicationForm.submitted)
@@ -33,10 +36,14 @@ internal class ApplicationFormTest {
 
     @Test
     internal fun updateApplicationFormTest() {
-        applicationForm.update("http://h2f.kr", Answers(mutableListOf(
-                Answer("대기업에 취직하고 싶습니다.", 1L),
-                Answer("책임감", 2L)
-        )))
+        applicationForm.update(
+            "http://h2f.kr", Answers(
+                mutableListOf(
+                    Answer("대기업에 취직하고 싶습니다.", 1L),
+                    Answer("책임감", 2L)
+                )
+            )
+        )
         assertEquals("http://h2f.kr", applicationForm.referenceUrl)
         assertEquals("대기업에 취직하고 싶습니다.", applicationForm.answers.items[0].contents)
     }
@@ -47,11 +54,17 @@ internal class ApplicationFormTest {
 
         assertTrue(applicationForm.submitted)
 
-        assertThatThrownBy { applicationForm.update("http://h2f.kr", Answers(mutableListOf(
-                Answer("스타트업을 하고 싶습니다.", 1L),
-                Answer("책임감", 2L)
-        ))) }
-                .isInstanceOf(IllegalAccessException::class.java)
-                .hasMessageContaining("이미 제출된")
+        assertThatThrownBy {
+            applicationForm.update(
+                "http://h2f.kr", Answers(
+                    mutableListOf(
+                        Answer("스타트업을 하고 싶습니다.", 1L),
+                        Answer("책임감", 2L)
+                    )
+                )
+            )
+        }
+            .isInstanceOf(IllegalAccessException::class.java)
+            .hasMessageContaining("이미 제출된")
     }
 }

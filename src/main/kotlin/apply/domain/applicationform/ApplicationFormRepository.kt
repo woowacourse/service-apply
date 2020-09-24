@@ -1,4 +1,4 @@
-package apply.domain.applicationForm
+package apply.domain.applicationform
 
 import org.springframework.data.jpa.repository.JpaRepository
 

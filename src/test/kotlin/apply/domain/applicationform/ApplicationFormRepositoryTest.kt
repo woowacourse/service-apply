@@ -1,4 +1,4 @@
-package apply.domain.applicationForm
+package apply.domain.applicationform
 
 import apply.domain.recruitmentitem.Answer
 import apply.domain.recruitmentitem.Answers
@@ -12,17 +12,19 @@ import org.springframework.test.context.TestConstructor
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @DataJpaTest
 class ApplicationFormRepositoryTest(
-        private val applicationFormRepository: ApplicationFormRepository
+    private val applicationFormRepository: ApplicationFormRepository
 ) {
     private val applicationForm = ApplicationForm(
-            1L,
-            1L,
-            "http://example.com",
-            Answers(mutableListOf(
-                    Answer("스타트업을 하고 싶습니다.", 1L),
-                    Answer("책임감", 2L)
-            ))
+        1L,
+        1L,
+        "http://example.com",
+        Answers(
+            mutableListOf(
+                Answer("스타트업을 하고 싶습니다.", 1L),
+                Answer("책임감", 2L)
             )
+        )
+    )
 
     @BeforeEach
     internal fun setUp() {
@@ -33,10 +35,10 @@ class ApplicationFormRepositoryTest(
     @DisplayName("저장한 Form을 찾아내는지 테스트한다")
     internal fun formFindTest() {
         val form =
-                applicationFormRepository.findByRecruitmentIdAndApplicantId(1L, 1L)!!
+            applicationFormRepository.findByRecruitmentIdAndApplicantId(1L, 1L)!!
         assertEquals("http://example.com", form.referenceUrl)
         assertEquals(1L, form.id)
-        assertEquals("스타트업을 하고 싶습니다.",form.answers.items[0].contents)
-        assertEquals("책임감",form.answers.items[1].contents)
+        assertEquals("스타트업을 하고 싶습니다.", form.answers.items[0].contents)
+        assertEquals("책임감", form.answers.items[1].contents)
     }
 }
