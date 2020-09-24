@@ -97,9 +97,9 @@ class RecruitmentsView(private val recruitmentService: RecruitmentService) : Ver
 
     private fun Boolean.toText(): String {
         return if (this) {
-            "공개"
-        } else {
             "비공개"
+        } else {
+            "공개"
         }
     }
 }

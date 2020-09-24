@@ -44,6 +44,6 @@ class Recruitment(
         startDateTime: LocalDateTime,
         endDateTime: LocalDateTime,
         canRecruit: Boolean = false,
-        isHidden: Boolean
+        isHidden: Boolean = true
     ) : this(title, RecruitmentPeriod(startDateTime, endDateTime), canRecruit, isHidden)
 }

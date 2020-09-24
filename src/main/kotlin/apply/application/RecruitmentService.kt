@@ -31,6 +31,10 @@ class RecruitmentService(
         return recruitmentRepository.findAll()
     }
 
+    fun findAllNotHidden(): List<Recruitment> {
+        return recruitmentRepository.findAllByIsHiddenFalse()
+    }
+
     fun deleteById(id: Long) {
         recruitmentRepository.deleteById(id)
     }

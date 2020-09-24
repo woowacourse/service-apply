@@ -23,7 +23,7 @@ data class RecruitmentRequest(
     var canRecruit: Boolean = false,
 
     @field:NotNull
-    var isHidden: Boolean = false,
+    var isHidden: Boolean = true,
 
     @field:NotNull
     @field:Valid

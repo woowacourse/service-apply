@@ -16,7 +16,7 @@ class RecruitmentForm() : BindingFormLayout<RecruitmentRequest>(RecruitmentReque
     private val startDateTime: DateTimePicker = DateTimePicker("시작 일시")
     private val endDateTime: DateTimePicker = DateTimePicker("종료 일시")
     private val canRecruit: RadioButtonGroup<Boolean> = createBooleanRadioButtonGroup("모집 여부", "모집 시작", "모집 중지")
-    private val isHidden: RadioButtonGroup<Boolean> = createBooleanRadioButtonGroup("모집 여부", "공개", "비공개")
+    private val isHidden: RadioButtonGroup<Boolean> = createBooleanRadioButtonGroup("공개 여부", "비공개", "공개", true)
     private val recruitmentItems: MutableList<RecruitmentItemForm> = mutableListOf()
 
     init {
