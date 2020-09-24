@@ -87,7 +87,7 @@ internal class ApplicantRestControllerTest(
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isUnauthorized }
-            content { string("잘못된 요청입니다") }
+            content { string("요청 정보가 기존 지원자 정보와 일치하지 않습니다") }
         }
     }
 
@@ -117,7 +117,7 @@ internal class ApplicantRestControllerTest(
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isUnauthorized }
-            content { string("등록된 지원자를 찾을 수 없습니다") }
+            content { string("요청 정보가 기존 지원자 정보와 일치하지 않습니다") }
         }
     }
 }
