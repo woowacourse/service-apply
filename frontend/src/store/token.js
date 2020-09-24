@@ -21,8 +21,8 @@ export const token = {
       commit("setToken", token)
     },
 
-    async login({ commit }, data) {
-      const { data: token } = await Api.fetchLogin(data)
+    async login({ commit }, { name, email, birthday, password }) {
+      const { data: token } = await Api.fetchLogin({ name, email, birthday, password })
 
       commit("setToken", token)
     },

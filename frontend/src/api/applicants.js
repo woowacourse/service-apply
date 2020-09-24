@@ -10,6 +10,6 @@ export const fetchRegister = ({ name, phoneNumber, email, password, birthday, ge
     gender,
   })
 }
-export const fetchLogin = data => {
-  return axios.post("/api/applicants/login", { ...data })
+export const fetchLogin = ({ name, email, birthday, password }) => {
+  return axios.post("/api/applicants/login", { name, email, birthday, password })
 }
