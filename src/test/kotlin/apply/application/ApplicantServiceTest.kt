@@ -108,14 +108,14 @@ internal class ApplicantServiceTest {
     @Test
     fun `(로그인) 지원자가 존재할시, 유효한 토큰을 반환한다`() {
         given(
-            applicantRepository.findByNameAndEmailAndBirthdayAndPassword(
+            applicantRepository.existsByNameAndEmailAndBirthdayAndPassword(
                 validApplicantLoginRequest.name,
                 validApplicantLoginRequest.email,
                 validApplicantLoginRequest.birthday,
                 validApplicantLoginRequest.password
             )
-        ).willReturn(applicants[0])
-        given(jwtTokenProvider.createToken(applicants[0].email)).willReturn(VALID_TOKEN)
+        ).willReturn(true)
+        given(jwtTokenProvider.createToken(validApplicantLoginRequest.email)).willReturn(VALID_TOKEN)
 
         assertThat(applicantService.generateTokenByLogin(validApplicantLoginRequest)).isEqualTo(VALID_TOKEN)
     }
@@ -123,13 +123,13 @@ internal class ApplicantServiceTest {
     @Test
     fun `(로그인) 지원자가 존재하지 않을시, 예외가 발생한다`() {
         given(
-            applicantRepository.findByNameAndEmailAndBirthdayAndPassword(
+            applicantRepository.existsByNameAndEmailAndBirthdayAndPassword(
                 inValidApplicantLoginRequest.name,
                 inValidApplicantLoginRequest.email,
                 inValidApplicantLoginRequest.birthday,
                 inValidApplicantLoginRequest.password
             )
-        ).willReturn(null)
+        ).willReturn(false)
 
         assertThatThrownBy { applicantService.generateTokenByLogin(inValidApplicantLoginRequest) }
             .isInstanceOf(ApplicantValidateException::class.java)

@@ -43,14 +43,17 @@ class ApplicantService(
     }
 
     fun generateTokenByLogin(applicantVerifyInformation: ApplicantVerifyInformation): String {
-        val applicant = applicantRepository.findByNameAndEmailAndBirthdayAndPassword(
-            applicantVerifyInformation.name,
-            applicantVerifyInformation.email,
-            applicantVerifyInformation.birthday,
-            applicantVerifyInformation.password
-        ) ?: throw ApplicantValidateException()
-
-        return jwtTokenProvider.createToken(applicant.email)
+        return when (
+            applicantRepository.existsByNameAndEmailAndBirthdayAndPassword(
+                applicantVerifyInformation.name,
+                applicantVerifyInformation.email,
+                applicantVerifyInformation.birthday,
+                applicantVerifyInformation.password
+            )
+        ) {
+            true -> jwtTokenProvider.createToken(applicantVerifyInformation.email)
+            else -> throw ApplicantValidateException()
+        }
     }
 
     @PostConstruct
