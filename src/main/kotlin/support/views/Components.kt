@@ -28,15 +28,17 @@ fun createBooleanRadioButtonGroup(
         setItems(true, false)
         label = labelText
         value = defaultValue
-        setRenderer(
-            ComponentRenderer<Component, Boolean> { it ->
-                if (it) {
-                    Text(trueText)
-                } else {
-                    Text(falseText)
-                }
-            }
-        )
+        setRenderer(createTextRenderer(trueText, falseText))
+    }
+}
+
+private fun createTextRenderer(trueText: String, falseText: String): ComponentRenderer<Component, Boolean> {
+    return ComponentRenderer { it ->
+        if (it) {
+            Text(trueText)
+        } else {
+            Text(falseText)
+        }
     }
 }
 
