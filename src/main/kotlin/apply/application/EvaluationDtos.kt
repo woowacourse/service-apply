@@ -32,7 +32,7 @@ data class EvaluationItemRequest(
 
     @field:NotNull
     @field:Min(0)
-    @field:Max(2)
+    @field:Max(10)
     var maximumScore: Int = 0,
 
     @field:NotNull

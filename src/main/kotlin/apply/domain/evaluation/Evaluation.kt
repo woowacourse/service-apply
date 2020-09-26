@@ -21,7 +21,7 @@ class Evaluation(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long = 0L
+    val id: Long = 0L
 ) {
     fun hasSameBeforeEvaluationWith(beforeEvaluationId: Long): Boolean = this.beforeEvaluationId == beforeEvaluationId
 

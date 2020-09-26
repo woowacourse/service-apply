@@ -44,7 +44,6 @@ class EvaluationsFormView(
     private fun createAddButton(): Button {
         return createPrimaryButton("생성") {
             evaluationForm.bindOrNull()?.let {
-                print(it.toString())
                 evaluationService.save(it)
                 UI.getCurrent().navigate(EvaluationsView::class.java)
             }
