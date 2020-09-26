@@ -19,7 +19,7 @@ class Recruitment(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long = 0L
+    val id: Long = 0L
 ) {
     @Column(nullable = false)
     var canRecruit: Boolean = canRecruit

@@ -80,7 +80,7 @@ class EvaluationService(
                 recruitmentId = 1L
             ),
             Evaluation(
-                title = " 1주차 - 숫자야구게임",
+                title = "1주차 - 숫자야구게임",
                 description = "[리뷰 절차]\n" +
                     "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
                 recruitmentId = 1L,
