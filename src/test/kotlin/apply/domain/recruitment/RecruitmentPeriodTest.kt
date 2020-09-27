@@ -35,13 +35,20 @@ internal class RecruitmentPeriodTest {
     }
 
     @Test
-    fun `모집 기간 사이`() {
+    fun `모집 기간 전`() {
+        val tomorrow = now.plusDays(1L)
+        val period = RecruitmentPeriod(tomorrow, tomorrow)
+        assertThat(now.isBefore(period)).isTrue()
+    }
+
+    @Test
+    fun `모집 기간 중`() {
         val period = RecruitmentPeriod(now.minusDays(1L), now.plusDays(1L))
         assertThat(now.isBetween(period)).isTrue()
     }
 
     @Test
-    fun `모집 기간 이후`() {
+    fun `모집 기간 후`() {
         val yesterday = now.minusDays(1L)
         val period = RecruitmentPeriod(yesterday, yesterday)
         assertThat(now.isAfter(period)).isTrue()
