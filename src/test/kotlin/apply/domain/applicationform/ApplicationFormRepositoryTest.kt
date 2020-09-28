@@ -2,7 +2,7 @@ package apply.domain.applicationform
 
 import apply.domain.recruitmentitem.Answer
 import apply.domain.recruitmentitem.Answers
-import com.helger.commons.mock.CommonsAssert.assertEquals
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -36,9 +36,9 @@ class ApplicationFormRepositoryTest(
     internal fun formFindTest() {
         val form =
             applicationFormRepository.findByRecruitmentIdAndApplicantId(1L, 1L)!!
-        assertEquals("http://example.com", form.referenceUrl)
-        assertEquals(1L, form.id)
-        assertEquals("스타트업을 하고 싶습니다.", form.answers.items[0].contents)
-        assertEquals("책임감", form.answers.items[1].contents)
+        assertThat(form.referenceUrl).isEqualTo("http://example.com")
+        assertThat(form.id).isEqualTo(1L)
+        assertThat(form.answers.items[0].contents).isEqualTo("스타트업을 하고 싶습니다.")
+        assertThat(form.answers.items[1].contents).isEqualTo("책임감")
     }
 }
