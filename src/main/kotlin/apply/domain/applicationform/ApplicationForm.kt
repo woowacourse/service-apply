@@ -14,7 +14,7 @@ class ApplicationForm(
     val referenceUrl: String,
 
     @Column(nullable = false)
-    val submitted: Boolean,
+    var submitted: Boolean,
 
     @Column(nullable = false)
     val createdDateTime: LocalDateTime,
@@ -22,8 +22,7 @@ class ApplicationForm(
     @Column(nullable = false)
     val modifiedDateTime: LocalDateTime,
 
-    @Column(nullable = false)
-    val submittedDateTime: LocalDateTime,
+    var submittedDateTime: LocalDateTime?,
 
     @Column(nullable = false)
     val recruitmentId: Long,

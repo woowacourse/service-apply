@@ -29,6 +29,7 @@ import com.vaadin.flow.server.StreamResource
 import com.vaadin.flow.server.VaadinSession
 import support.views.addSortableColumn
 import support.views.addSortableDateColumn
+import support.views.addSortableDateTimeColumn
 import support.views.createNormalButton
 import support.views.createPrimarySmallButton
 import support.views.createSearchBar
@@ -72,30 +73,31 @@ class SelectionView(
     }
 
     private fun createGrid(applicants: List<ApplicantResponse>): Component {
+        val applicationForms: HashMap<Long, ApplicationForm> = HashMap()
         return Grid<ApplicantResponse>(10).apply {
             addSortableColumn("이름", ApplicantResponse::name)
             addSortableColumn("이메일", ApplicantResponse::email)
             addSortableColumn("전화번호", ApplicantResponse::phoneNumber)
             addSortableColumn("성별") { it.gender.title }
             addSortableDateColumn("생년월일", ApplicantResponse::birthday)
+            addSortableDateTimeColumn("지원 일시") {
+                val applicationForm = applicationFormService.getByRecruitmentIdAndApplicantId(recruitmentId, it.id)
+                applicationForms[it.id] = applicationForm
+                applicationFormService.getByRecruitmentIdAndApplicantId(recruitmentId, it.id).submittedDateTime
+            }
             addSortableColumn("부정 행위자") { if (it.isCheater) "O" else "X" }
-            addColumn(createButtonRenderer()).apply { isAutoWidth = true }
+            addColumn(createButtonRenderer { applicationForms[it]!! }).apply {
+                isAutoWidth = true
+            }
             setItems(applicants)
         }
     }
 
-    private fun createButtonRenderer(): Renderer<ApplicantResponse> {
+    private fun createButtonRenderer(event: (id: Long) -> ApplicationForm): Renderer<ApplicantResponse> {
         return ComponentRenderer<Component, ApplicantResponse> { applicant ->
             createPrimarySmallButton("지원서") {
                 val dialog = Dialog()
-                dialog.add(
-                    *createRecruitmentItems(
-                        applicationFormService.getByRecruitmentIdAndApplicantId(
-                            recruitmentId,
-                            applicant.id
-                        )
-                    )
-                )
+                dialog.add(*createRecruitmentItems(event(applicant.id)))
                 dialog.width = "800px"
                 dialog.height = "90%"
                 dialog.open()

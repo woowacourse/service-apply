@@ -32,7 +32,7 @@ class ApplicationFormService(
                 submitted = true,
                 createdDateTime = createLocalDateTime(2019, 10, 25, 10),
                 modifiedDateTime = createLocalDateTime(2019, 11, 5, 10),
-                submittedDateTime = createLocalDateTime(2019, 11, 5, 10),
+                submittedDateTime = createLocalDateTime(2019, 11, 5, 10, 10, 10),
                 recruitmentId = 1L,
                 applicantId = 1L,
                 answers = Answers(
@@ -44,10 +44,10 @@ class ApplicationFormService(
             ),
             ApplicationForm(
                 referenceUrl = "https://www.google.com",
-                submitted = true,
+                submitted = false,
                 createdDateTime = createLocalDateTime(2019, 10, 25, 10),
                 modifiedDateTime = createLocalDateTime(2019, 11, 5, 10),
-                submittedDateTime = createLocalDateTime(2019, 11, 5, 10),
+                submittedDateTime = null,
                 recruitmentId = 1L,
                 applicantId = 2L,
                 answers = Answers(
