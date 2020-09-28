@@ -39,7 +39,7 @@ class EvaluationTargetService(
         }
     }
 
-    private fun saveEvaluationTargetOfFirst(evaluation: Evaluation): MutableList<EvaluationTarget> {
+    private fun saveEvaluationTargetOfFirst(evaluation: Evaluation): List<EvaluationTarget> {
         val evaluationTargets: List<EvaluationTarget> = createEvaluationTargetsFromFirst(evaluation)
 
         return evaluationTargetRepository.saveAll(evaluationTargets)
@@ -56,7 +56,7 @@ class EvaluationTargetService(
 
     private fun isNotCheater(applicantId: Long) = !cheaterRepository.existsByApplicantId(applicantId)
 
-    private fun saveEvaluationTarget(evaluation: Evaluation): MutableList<EvaluationTarget> {
+    private fun saveEvaluationTarget(evaluation: Evaluation): List<EvaluationTarget> {
         val evaluationTargets = createEvaluationTargetsFrom(evaluation)
 
         return evaluationTargetRepository.saveAll(evaluationTargets)
