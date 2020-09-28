@@ -18,7 +18,7 @@ class RecruitmentRestController(
 ) {
     @GetMapping
     fun findAll(): ResponseEntity<List<Recruitment>> {
-        return ResponseEntity.ok().body(recruitmentService.findAll())
+        return ResponseEntity.ok().body(recruitmentService.findAllNotHidden())
     }
 
     @GetMapping("/{id}/items")

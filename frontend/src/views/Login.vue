@@ -52,6 +52,7 @@
 <script>
 import { Form, Button, TextField, BirthField, Label } from "@/components/form"
 import { login } from "@/utils/validation"
+import * as DateUtil from "@/utils/date"
 
 export default {
   name: "Login",
@@ -78,8 +79,20 @@ export default {
     validPassword: false,
   }),
   methods: {
-    submit() {
-      //TODO Login(나의 지원서보기 위한) API
+    async submit() {
+      await this.$store
+        .dispatch("login", {
+          name: this.name,
+          email: this.email,
+          birthday: DateUtil.formatLocalDate(this.birth),
+          password: this.password,
+        })
+        .catch(e => {
+          alert(e.response.data)
+          throw e
+        })
+      alert("로그인 성공")
+      this.$router.push("/recruits")
     },
     findPassword() {
       this.$router.push("/find")

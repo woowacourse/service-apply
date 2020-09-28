@@ -2,6 +2,7 @@ package apply.application
 
 import apply.domain.applicant.ApplicantInformation
 import apply.domain.applicant.ApplicantRepository
+import apply.domain.applicant.ApplicantVerifyInformation
 import apply.domain.applicant.Gender
 import apply.domain.applicant.exception.ApplicantValidateException
 import apply.domain.cheater.CheaterRepository
@@ -43,7 +44,16 @@ internal class ApplicantServiceTest {
         password = "password"
     )
 
+    private val validApplicantLoginRequest = ApplicantVerifyInformation(
+        name = validApplicantRequest.name,
+        email = validApplicantRequest.email,
+        birthday = validApplicantRequest.birthday,
+        password = validApplicantRequest.password
+    )
+
     private val inValidApplicantRequest = validApplicantRequest.copy(password = "invalid_password")
+
+    private val inValidApplicantLoginRequest = validApplicantLoginRequest.copy(password = "invalid_password")
 
     private val applicants = listOf(validApplicantRequest.toEntity(APPLICANT_ID))
 
@@ -93,5 +103,36 @@ internal class ApplicantServiceTest {
             .willReturn(validApplicantRequest.toEntity(APPLICANT_ID))
 
         assertThat(applicantService.generateToken(validApplicantRequest)).isEqualTo(VALID_TOKEN)
+    }
+
+    @Test
+    fun `(로그인) 지원자가 존재할시, 유효한 토큰을 반환한다`() {
+        given(
+            applicantRepository.existsByNameAndEmailAndBirthdayAndPassword(
+                validApplicantLoginRequest.name,
+                validApplicantLoginRequest.email,
+                validApplicantLoginRequest.birthday,
+                validApplicantLoginRequest.password
+            )
+        ).willReturn(true)
+        given(jwtTokenProvider.createToken(validApplicantLoginRequest.email)).willReturn(VALID_TOKEN)
+
+        assertThat(applicantService.generateTokenByLogin(validApplicantLoginRequest)).isEqualTo(VALID_TOKEN)
+    }
+
+    @Test
+    fun `(로그인) 지원자가 존재하지 않을시, 예외가 발생한다`() {
+        given(
+            applicantRepository.existsByNameAndEmailAndBirthdayAndPassword(
+                inValidApplicantLoginRequest.name,
+                inValidApplicantLoginRequest.email,
+                inValidApplicantLoginRequest.birthday,
+                inValidApplicantLoginRequest.password
+            )
+        ).willReturn(false)
+
+        assertThatThrownBy { applicantService.generateTokenByLogin(inValidApplicantLoginRequest) }
+            .isInstanceOf(ApplicantValidateException::class.java)
+            .hasMessage("요청 정보가 기존 지원자 정보와 일치하지 않습니다")
     }
 }
