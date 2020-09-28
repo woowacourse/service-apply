@@ -9,10 +9,14 @@ import kotlin.reflect.full.createInstance
 abstract class BindingFormLayout<TARGET : Any>(
     private val targetClass: KClass<TARGET>
 ) : FormLayout() {
-    private val binder: Binder<TARGET> = BeanValidationBinder(targetClass.java)
+    private val binder: Binder<TARGET> by lazy {
+        BeanValidationBinder(targetClass.java).also {
+            it.bindInstanceFields(this)
+        }
+    }
 
     protected fun drawRequired() {
-        binder.bindInstanceFields(this)
+        run { binder }
     }
 
     abstract fun bindOrNull(): TARGET?
@@ -20,5 +24,9 @@ abstract class BindingFormLayout<TARGET : Any>(
     protected fun bindDefaultOrNull(): TARGET? {
         return targetClass.createInstance()
             .takeIf { binder.writeBeanIfValid(it) }
+    }
+
+    fun fillIn(target: TARGET) {
+        binder.readBean(target)
     }
 }
