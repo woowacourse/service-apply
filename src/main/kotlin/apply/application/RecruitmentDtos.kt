@@ -65,10 +65,10 @@ data class ApplicationFormUpdateRequest(
     val referenceUrl: String,
 
     @field:NotNull
-    val isSubmitted: Boolean,
+    val isSubmitted: Boolean = false,
 
-    @field:NotBlank
-    val answers: List<AnswerRequest> = ArrayList(),
+    @field:NotNull
+    val answers: List<AnswerRequest> = emptyList(),
 
     @field:NotBlank
     val password: String
