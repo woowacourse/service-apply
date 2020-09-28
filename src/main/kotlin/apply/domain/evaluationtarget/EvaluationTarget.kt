@@ -35,4 +35,6 @@ class EvaluationTarget(
         administratorId = 0L,
         applicantId = applicantId
     )
+
+    fun isSameStatusWith(evaluationStatus: EvaluationStatus) = this.evaluationStatus == evaluationStatus
 }

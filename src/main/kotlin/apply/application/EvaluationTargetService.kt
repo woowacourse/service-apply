@@ -5,7 +5,7 @@ import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.CheaterRepository
 import apply.domain.evaluation.Evaluation
 import apply.domain.evaluation.EvaluationRepository
-import apply.domain.evaluationtarget.EvaluationStatus
+import apply.domain.evaluationtarget.EvaluationStatus.PASS
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
 import org.springframework.data.repository.findByIdOrNull
@@ -64,7 +64,7 @@ class EvaluationTargetService(
 
     private fun createEvaluationTargetsFrom(evaluation: Evaluation): List<EvaluationTarget> {
         return evaluationTargetRepository.findByEvaluationId(evaluation.beforeEvaluationId)
-            .filter { EvaluationStatus.PASS.equals(it.evaluationStatus) }
+            .filter { it.isSameStatusWith(PASS) }
             .filter { isNotCheater(it.applicantId) }
             .map { EvaluationTarget(evaluationId = evaluation.id, applicantId = it.applicantId) }
     }
