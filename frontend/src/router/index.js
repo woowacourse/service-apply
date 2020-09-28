@@ -14,17 +14,17 @@ const routes = [
     component: Recruits,
   },
   {
-    path: "/register/applicant/:recruitmentId",
+    path: "/register/applicant",
     component: ApplicantRegister,
     props: route => ({
-      recruitmentId: Number(route.params.recruitmentId),
+      recruitmentId: Number(route.query.recruitmentId),
     }),
   },
   {
-    path: "/register/application/:recruitmentId",
+    path: "/register/application",
     component: ApplicationRegister,
     props: route => ({
-      recruitmentId: Number(route.params.recruitmentId),
+      recruitmentId: Number(route.query.recruitmentId),
     }),
     children: [
       {
