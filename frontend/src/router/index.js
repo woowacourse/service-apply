@@ -26,6 +26,12 @@ const routes = [
     props: route => ({
       recruitmentId: Number(route.params.recruitmentId),
     }),
+    children: [
+      {
+        name: "edit",
+        path: "edit",
+      },
+    ],
   },
   {
     path: "/login",

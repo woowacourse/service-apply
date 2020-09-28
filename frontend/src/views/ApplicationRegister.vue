@@ -9,31 +9,34 @@
         label="이름"
         readonly
       />
-      <TextField
-        v-model="password"
-        name="password"
-        type="password"
-        label="비밀번호"
-        placeholder="비밀번호를 입력해 주세요"
-        :rules="rules.password"
-        @valid="v => (this.validPassword = v)"
-        required
-      />
-      <TextField
-        v-model="rePassword"
-        name="re-password"
-        type="password"
-        label="비밀번호 확인"
-        placeholder="비밀번호를 다시 한 번 입력해 주세요"
-        :rules="[...rules.rePassword, v => v === password || '비밀번호가 일치하지 않습니다']"
-        @valid="v => (this.validPassword = v && this.password === this.rePassword)"
-        required
-      />
+
+      <div v-if="isEdited">
+        <TextField
+          v-model="password"
+          name="password"
+          type="password"
+          label="비밀번호"
+          placeholder="비밀번호를 입력해 주세요"
+          :rules="rules.password"
+          @valid="v => (this.validPassword = v)"
+          required
+        />
+        <TextField
+          v-model="rePassword"
+          name="re-password"
+          type="password"
+          label="비밀번호 확인"
+          placeholder="비밀번호를 다시 한 번 입력해 주세요"
+          :rules="[...rules.rePassword, v => v === password || '비밀번호가 일치하지 않습니다']"
+          @valid="v => (this.validPassword = v && this.password === this.rePassword)"
+          required
+        />
+      </div>
 
       <TextField
         v-for="(item, index) in recruitmentItems"
         v-bind:key="item.id"
-        v-model="recruitmentItemInputs[index]"
+        v-model="item.contents"
         name="recruitment-item"
         type="textarea"
         :label="`${index + 1}. ${item.title}`"
@@ -62,7 +65,7 @@
       <div class="actions">
         <Button @click="reset" value="초기화" />
         <Button @click="save" value="임시 저장" />
-        <Button type="submit" :disabled="!factCheck || !validPassword" value="제출" />
+        <Button type="submit" :disabled="!canSubmit" value="제출" />
       </div>
       <footer>
         <a class="logo" href="#"></a>
@@ -73,7 +76,8 @@
 
 <script>
 import { Button, CheckBox, Field, Form, TextField } from "@/components/form"
-import * as RecruitmentApi from "../api/recruitments"
+import * as RecruitmentApi from "@/api/recruitments"
+import * as ApplicationFormsApi from "@/api/application-forms"
 import { register } from "@/utils/validation"
 
 export default {
@@ -93,17 +97,52 @@ export default {
     rePassword: "",
     url: "",
     recruitmentItems: [],
-    recruitmentItemInputs: [""],
     rules: { ...register },
     validPassword: false,
   }),
+  computed: {
+    isEdited() {
+      return this.$route.name === "edit"
+    },
+    canSubmit() {
+      return this.factCheck && (this.isEdited ? this.validPassword : true)
+    },
+  },
+  async created() {
+    try {
+      const { data: recruitmentItems } = await RecruitmentApi.fetchItems(this.recruitmentId)
+      this.recruitmentItems = recruitmentItems.map(recruitmentItem => ({
+        ...recruitmentItem,
+        contents: "",
+      }))
+      if (this.isEdited) {
+        const { data: applicationForm } = await ApplicationFormsApi.fetchForm({
+          token: "token",
+          recruitmentId: this.recruitmentId,
+        })
+        this.url = applicationForm.referenceUrl
+        this.recruitmentItems = recruitmentItems.map(recruitmentItem => ({
+          ...recruitmentItem,
+          contents: applicationForm.answers.items.find(
+            ({ recruitmentItemId }) => recruitmentItemId === recruitmentItem.id,
+          ).contents,
+        }))
+      }
+    } catch (e) {
+      alert("잘못된 요청입니다.")
+      this.$router.replace("/recruits")
+    }
+  },
   methods: {
     reset() {
       this.factCheck = false
       this.password = ""
       this.rePassword = ""
+      this.recruitmentItems = this.recruitmentItems.map(recruitmentItem => ({
+        ...recruitmentItem,
+        contents: "",
+      }))
       this.url = ""
-      this.recruitmentItemInputs = this.recruitmentItems.map(() => "")
     },
     save() {
       // TODO: 임시 저장 기능 추가 필요
@@ -111,11 +150,6 @@ export default {
     submit() {
       confirm("정말로 제출하시겠습니까?")
     },
-  },
-  async mounted() {
-    const { data } = await RecruitmentApi.fetchItems(this.recruitmentId)
-    this.recruitmentItems = data
-    this.recruitmentItemInputs = data.map(() => "")
   },
 }
 </script>
