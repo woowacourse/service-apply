@@ -7,6 +7,7 @@ import apply.application.DownloadService
 import apply.application.RecruitmentItemService
 import apply.application.RecruitmentService
 import apply.domain.applicationform.ApplicationForm
+import apply.domain.dummy.DummyService
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
@@ -40,7 +41,8 @@ class SelectionView(
     private val applicationFormService: ApplicationFormService,
     private val recruitmentService: RecruitmentService,
     private val recruitmentItemService: RecruitmentItemService,
-    private val downloadService: DownloadService
+    private val downloadService: DownloadService,
+    private val dummyService: DummyService
 ) : VerticalLayout(), HasUrlParameter<Long> {
     private var recruitmentId: Long = 0L
 
@@ -80,6 +82,8 @@ class SelectionView(
             addSortableDateColumn("생년월일", ApplicantResponse::birthday)
             addSortableColumn("부정 행위자") { if (it.isCheater) "O" else "X" }
             addColumn(createButtonRenderer()).apply { isAutoWidth = true }
+            // TODO: 버튼 컴포넌트 위치 옮기기
+            addColumn(createEvaluationButtonRenderer()).apply { isAutoWidth = true }
             setItems(applicants)
         }
     }
@@ -151,5 +155,12 @@ class SelectionView(
         val applicantIds = applicationFormService.findAllByRecruitmentId(recruitmentId)
             .map { it.applicantId }
         add(createTitle(), createMenu(), createGrid(applicantService.findAllByIds(applicantIds)))
+    }
+
+    private fun createEvaluationButtonRenderer(): Renderer<ApplicantResponse> {
+        return ComponentRenderer<Component, ApplicantResponse> { _ ->
+            // TODO: Evaluation Target id 받아오기
+            createPrimarySmallButton("평가하기") { DoEvaluationFormDialog(dummyService, 1L) }
+        }
     }
 }
