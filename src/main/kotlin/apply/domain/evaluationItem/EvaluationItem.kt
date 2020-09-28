@@ -9,19 +9,19 @@ import javax.persistence.Id
 @Entity
 class EvaluationItem(
     @Column(nullable = false)
-    val title: String,
-
-    @Column(nullable = false)
-    val description: String,
-
-    @Column(nullable = false)
     val evaluationId: Long,
 
     @Column(nullable = false)
-    val maximumScore: Int = 2,
+    val title: String,
+
+    @Column(nullable = false)
+    val maximumScore: Int,
 
     @Column(nullable = false)
     val position: Int = 0,
+
+    @Column(nullable = false)
+    val description: String,
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

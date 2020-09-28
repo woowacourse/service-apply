@@ -3,7 +3,9 @@ package apply.application
 import apply.domain.applicant.Applicant
 import apply.domain.applicant.ApplicantInformation
 import apply.domain.applicant.ApplicantRepository
+import apply.domain.applicant.ApplicantVerifyInformation
 import apply.domain.applicant.Gender
+import apply.domain.applicant.exception.ApplicantValidateException
 import apply.domain.cheater.CheaterRepository
 import apply.security.JwtTokenProvider
 import org.springframework.data.repository.findByIdOrNull
@@ -45,6 +47,20 @@ class ApplicantService(
         val applicant =
             applicantRepository.findByIdOrNull(applicantId) ?: throw IllegalArgumentException("존재하지 않는 사용자입니다.")
         applicant.password = password
+    }
+
+    fun generateTokenByLogin(applicantVerifyInformation: ApplicantVerifyInformation): String {
+        return when (
+            applicantRepository.existsByNameAndEmailAndBirthdayAndPassword(
+                applicantVerifyInformation.name,
+                applicantVerifyInformation.email,
+                applicantVerifyInformation.birthday,
+                applicantVerifyInformation.password
+            )
+        ) {
+            true -> jwtTokenProvider.createToken(applicantVerifyInformation.email)
+            else -> throw ApplicantValidateException()
+        }
     }
 
     @PostConstruct

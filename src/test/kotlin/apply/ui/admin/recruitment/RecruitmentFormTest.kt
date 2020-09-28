@@ -8,15 +8,19 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import support.createLocalDateTime
 import java.time.LocalDateTime
 
 private fun createRecruitmentForm(
     title: String = "웹 백엔드 3기",
     startDateTime: LocalDateTime = createLocalDateTime(2020, 10, 25),
-    endDateTime: LocalDateTime = createLocalDateTime(2020, 11, 5)
+    endDateTime: LocalDateTime = createLocalDateTime(2020, 11, 5),
+    canRecruit: Boolean = false,
+    isHidden: Boolean = true
 ): RecruitmentForm {
-    return RecruitmentForm(title, startDateTime, endDateTime)
+    return RecruitmentForm(title, startDateTime, endDateTime, canRecruit, isHidden)
 }
 
 @ExtendWith(MockKExtension::class)
@@ -41,5 +45,13 @@ internal class RecruitmentFormTest {
     fun `잘못된 값을 입력한 경우`() {
         val actual = createRecruitmentForm(title = "").bindOrNull()
         assertThat(actual).isNull()
+    }
+
+    @ValueSource(booleans = [true, false])
+    @ParameterizedTest
+    fun `공개 여부 값이 설정되어 있는지 확인`(isHidden: Boolean) {
+        val actual = createRecruitmentForm(isHidden = isHidden).bindOrNull()
+        assertThat(actual).isNotNull()
+        assertThat(actual!!.isHidden).isEqualTo(isHidden)
     }
 }

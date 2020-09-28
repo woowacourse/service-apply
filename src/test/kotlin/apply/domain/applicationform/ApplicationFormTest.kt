@@ -6,6 +6,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.lang.IllegalArgumentException
 
 internal class ApplicationFormTest {
     private lateinit var applicationForm: ApplicationForm
@@ -84,7 +85,7 @@ internal class ApplicationFormTest {
                 )
             )
         }
-            .isInstanceOf(IllegalAccessException::class.java)
+            .isInstanceOf(IllegalArgumentException::class.java)
             .hasMessageContaining("이미 제출된")
     }
 }
