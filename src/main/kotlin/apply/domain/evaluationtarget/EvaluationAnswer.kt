@@ -9,7 +9,7 @@ class EvaluationAnswer(
     private var score: Int = 0,
 
     @Column(nullable = false)
-    private val EvaluationItemId: Long
+    private val evaluationItemId: Long
 ) {
     fun update(score: Int) {
         require(score >= 0)
