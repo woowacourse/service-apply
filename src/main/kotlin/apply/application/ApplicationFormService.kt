@@ -63,8 +63,8 @@ class ApplicationFormService(
     }
 
     fun save(applicantId: Long, recruitmentId: Long, applicationFormSaveRequest: ApplicationFormSaveRequest) {
-        if (applicationFormRepository.findByRecruitmentIdAndApplicantId(recruitmentId, applicantId) != null) {
-            throw IllegalAccessException("이미 저장된 지원서가 있습니다.")
+        if (applicationFormRepository.existsByRecruitmentIdAndApplicantId(recruitmentId, applicantId)) {
+            throw IllegalArgumentException("이미 저장된 지원서가 있습니다.")
         }
         val answers = Answers(
             applicationFormSaveRequest.answers.map { answer ->
