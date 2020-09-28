@@ -18,7 +18,7 @@ import java.lang.IllegalArgumentException
 class ApplicationFormRestController(
     private val applicationFormService: ApplicationFormService
 ) {
-    @GetMapping("")
+    @GetMapping
     fun getApplicationForm(@RequestParam("recruitmentId") recruitment: Long): ResponseEntity<Any> {
         return try {
             val form = applicationFormService.getForm(1L, recruitment)
@@ -28,7 +28,7 @@ class ApplicationFormRestController(
         }
     }
 
-    @PostMapping("")
+    @PostMapping
     fun saveApplicationForm(
         @RequestBody applicationFormSaveRequest: ApplicationFormSaveRequest
     ): ResponseEntity<String> {
@@ -41,7 +41,7 @@ class ApplicationFormRestController(
     }
     // TODO: 20. 9. 22. ControllerAdvice로 리팩토링
 
-    @PutMapping("")
+    @PutMapping
     fun updateApplicationForm(
         @RequestBody applicationFormUpdateRequest: ApplicationFormUpdateRequest
     ): ResponseEntity<String> {
