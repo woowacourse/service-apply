@@ -2,6 +2,7 @@ package apply.ui.api
 
 import apply.application.ApplicantService
 import apply.domain.applicant.ApplicantInformation
+import apply.domain.applicant.ApplicantVerifyInformation
 import apply.domain.applicant.exception.ApplicantValidateException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -15,13 +16,23 @@ import org.springframework.web.bind.annotation.RestController
 class ApplicantRestController(
     private val applicantService: ApplicantService
 ) {
-    @PostMapping
+    @PostMapping("/register")
     fun generateToken(@RequestBody applicantInformation: ApplicantInformation): ResponseEntity<String> {
         return try {
             val token = applicantService.generateToken(applicantInformation)
             ResponseEntity.ok().body(token)
         } catch (e: ApplicantValidateException) {
-            ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("잘못된 요청입니다")
+            ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.message)
+        }
+    }
+
+    @PostMapping("/login")
+    fun generateToken(@RequestBody applicantVerifyInformation: ApplicantVerifyInformation): ResponseEntity<String> {
+        return try {
+            val token = applicantService.generateTokenByLogin(applicantVerifyInformation)
+            ResponseEntity.ok().body(token)
+        } catch (e: ApplicantValidateException) {
+            ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.message)
         }
     }
 }
