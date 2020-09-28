@@ -15,7 +15,7 @@ class EvaluationItem(
     val title: String,
 
     @Column(nullable = false)
-    val maximumScore: Int = 10,
+    val maximumScore: Int,
 
     @Column(nullable = false)
     val position: Int = 0,

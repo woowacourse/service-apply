@@ -4,6 +4,7 @@ import apply.application.EvaluationRequest
 import apply.domain.evaluation.Evaluation
 import apply.domain.recruitment.Recruitment
 import com.vaadin.flow.component.button.Button
+import com.vaadin.flow.component.select.Select
 import com.vaadin.flow.component.textfield.TextArea
 import com.vaadin.flow.component.textfield.TextField
 import support.views.BindingFormLayout
@@ -14,11 +15,11 @@ import support.views.createPrimarySmallButton
 class EvaluationForm() : BindingFormLayout<EvaluationRequest>(EvaluationRequest::class) {
     private val title: TextField = TextField("평가명")
     private val description: TextArea = TextArea("설명")
-    private val recruitment = createItemSelect<Recruitment>("모집").apply {
+    private val recruitment: Select<Recruitment> = createItemSelect<Recruitment>("모집").apply {
         setItemLabelGenerator(Recruitment::title)
         isEmptySelectionAllowed = false
     }
-    private val beforeEvaluation = createItemSelect<Evaluation>("이전 평가").apply {
+    private val beforeEvaluation: Select<Evaluation> = createItemSelect<Evaluation>("이전 평가").apply {
         setItemLabelGenerator(Evaluation::title)
     }
     private val evaluationItems: MutableList<EvaluationItemForm> = mutableListOf()
@@ -26,13 +27,17 @@ class EvaluationForm() : BindingFormLayout<EvaluationRequest>(EvaluationRequest:
     constructor(recruitments: List<Recruitment>, listener: (id: Long) -> List<Evaluation>) : this() {
         recruitment.setItems(recruitments)
         recruitment.addValueChangeListener {
-            beforeEvaluation.setItems(listener.invoke(it.value.id))
+            val evaluations: List<Evaluation> = mutableListOf(
+                Evaluation(
+                    title = "이전 평가 없음",
+                    description = "이전 평가 없음",
+                    recruitmentId = it.value.id
+                )
+            )
+            beforeEvaluation.setItems(evaluations.plus(listener(it.value.id)))
         }
         add(title, recruitment, beforeEvaluation, description)
-        setColspan(title, 2)
-        setColspan(recruitment, 2)
-        setColspan(beforeEvaluation, 2)
-        setColspan(description, 2)
+        setResponsiveSteps(ResponsiveStep("0", 1))
         addFormItem(createAddButton(), "평가 항목")
         drawRequired()
     }
