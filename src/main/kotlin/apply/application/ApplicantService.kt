@@ -45,7 +45,6 @@ class ApplicantService(
         val applicant =
             applicantRepository.findByIdOrNull(applicantId) ?: throw IllegalArgumentException("존재하지 않는 사용자입니다.")
         applicant.password = password
-        applicantRepository.save(applicant)
     }
 
     @PostConstruct
