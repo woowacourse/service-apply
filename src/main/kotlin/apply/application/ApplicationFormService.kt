@@ -62,8 +62,8 @@ class ApplicationFormService(
         applicationFormRepository.saveAll(applicationForms)
     }
 
-    fun save(applicantId: Long, recruitmentId: Long, applicationFormSaveRequest: ApplicationFormSaveRequest) {
-        if (applicationFormRepository.existsByRecruitmentIdAndApplicantId(recruitmentId, applicantId)) {
+    fun save(applicantId: Long, applicationFormSaveRequest: ApplicationFormSaveRequest) {
+        if (applicationFormRepository.existsByRecruitmentIdAndApplicantId(applicationFormSaveRequest.recruitmentId, applicantId)) {
             throw IllegalArgumentException("이미 저장된 지원서가 있습니다.")
         }
         val answers = Answers(
@@ -75,7 +75,12 @@ class ApplicationFormService(
             }.toMutableList()
         )
         val applicationForm =
-            ApplicationForm(applicantId, recruitmentId, applicationFormSaveRequest.referenceUrl, answers)
+            ApplicationForm(
+                applicantId,
+                applicationFormSaveRequest.recruitmentId,
+                applicationFormSaveRequest.referenceUrl,
+                answers
+            )
 
         if (applicationFormSaveRequest.isSubmit) {
             applicationForm.submit()
@@ -83,9 +88,9 @@ class ApplicationFormService(
         applicationFormRepository.save(applicationForm)
     }
 
-    fun update(applicantId: Long, recruitmentId: Long, applicationFormUpdateRequest: ApplicationFormUpdateRequest) {
+    fun update(applicantId: Long, applicationFormUpdateRequest: ApplicationFormUpdateRequest) {
         val applicationForm: ApplicationForm =
-            applicationFormRepository.findByRecruitmentIdAndApplicantId(recruitmentId, applicantId)
+            applicationFormRepository.findByRecruitmentIdAndApplicantId(applicationFormUpdateRequest.recruitmentId, applicantId)
                 ?: throw IllegalAccessException("저장된 지원서가 없습니다.")
         val answers = Answers(
             applicationFormUpdateRequest.answers.map { answer ->

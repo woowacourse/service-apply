@@ -44,6 +44,9 @@ data class RecruitmentItemRequest(
 )
 
 data class ApplicationFormSaveRequest(
+    @field:NotNull
+    val recruitmentId: Long,
+
     @field:Size(min = 0, max = 255)
     val referenceUrl: String,
 
@@ -55,6 +58,9 @@ data class ApplicationFormSaveRequest(
 )
 
 data class ApplicationFormUpdateRequest(
+    @field:NotNull
+    val recruitmentId: Long,
+
     @field:Size(min = 0, max = 255)
     val referenceUrl: String,
 
