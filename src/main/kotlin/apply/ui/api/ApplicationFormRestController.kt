@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/api/register/application")
-class ApplicationFormController(
+@RequestMapping("/api/register/applications")
+class ApplicationFormRestController(
     private val applicationFormService: ApplicationFormService
 ) {
     @GetMapping("/{id}")
