@@ -20,11 +20,11 @@ class EvaluationTargetRepositoryTest(
     private val evaluationTargets: List<EvaluationTarget> = listOf(
         EvaluationTarget(
             EVALUATION_ID,
-            1L
+            applicantId = 1L
         ),
         EvaluationTarget(
             EVALUATION_ID,
-            2L
+            applicantId = 2L
         )
     )
 
@@ -59,8 +59,8 @@ class EvaluationTargetRepositoryTest(
     fun `지정한 평가에 해당되고 지원자의 id들에 해당되는 평가 대상자를 제거한다`() {
         evaluationTargetRepository.save(
             EvaluationTarget(
-                2L,
-                1L
+                evaluationId = 2L,
+                applicantId = 1L
             )
         )
 
