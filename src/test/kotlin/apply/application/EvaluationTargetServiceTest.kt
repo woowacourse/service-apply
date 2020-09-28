@@ -61,93 +61,34 @@ class EvaluationTargetServiceTest(
     @Test
     fun `이전 평가가 없고 저장 된 평가 대상자가 없을 경우 저장하고 불러온다`() {
         // given
-        val firstEvaluation = Evaluation(
+        val firstEvaluation = createEvaluation(
             id = 1L,
-            title = "평가1",
-            description = "평가1에 대한 설명",
             recruitmentId = 1L,
             beforeEvaluationId = 0L
         )
 
         val applicationForms = listOf(
-            ApplicationForm(
+            createApplicationForm(
                 id = 1L,
-                referenceUrl = "",
-                submitted = true,
-                createdDateTime = createLocalDateTime(2019, 10, 25, 10),
-                modifiedDateTime = createLocalDateTime(2019, 11, 5, 10),
-                submittedDateTime = createLocalDateTime(2019, 11, 5, 10),
                 recruitmentId = 1L,
-                applicantId = 1L,
-                answers = Answers(
-                    mutableListOf(
-                        Answer("고객에게 가치를 전달하고 싶습니다.", 1L),
-                        Answer("도전, 끈기", 2L)
-                    )
-                )
+                applicantId = 1L
             ),
-            ApplicationForm(
+            createApplicationForm(
                 id = 2L,
-                referenceUrl = "https://www.google.com",
-                submitted = true,
-                createdDateTime = createLocalDateTime(2019, 10, 25, 10),
-                modifiedDateTime = createLocalDateTime(2019, 11, 5, 10),
-                submittedDateTime = createLocalDateTime(2019, 11, 5, 10),
                 recruitmentId = 1L,
-                applicantId = 2L,
-                answers = Answers(
-                    mutableListOf(
-                        Answer("스타트업을 하고 싶습니다.", 1L),
-                        Answer("책임감", 2L)
-                    )
-                )
+                applicantId = 2L
             ),
-            ApplicationForm(
+            createApplicationForm(
                 id = 3L,
-                referenceUrl = "https://www.google.com",
-                submitted = true,
-                createdDateTime = createLocalDateTime(2019, 10, 25, 10),
-                modifiedDateTime = createLocalDateTime(2019, 11, 5, 10),
-                submittedDateTime = createLocalDateTime(2019, 11, 5, 10),
                 recruitmentId = 1L,
-                applicantId = 3L,
-                answers = Answers(
-                    mutableListOf(
-                        Answer("양자 컴퓨터를 배우고 싶습니다.", 1L),
-                        Answer("노력", 2L)
-                    )
-                )
+                applicantId = 3L
             )
         )
 
         val applicants = listOf(
-            Applicant(
-                id = 1L,
-                name = "홍길동1",
-                email = "a@email.com",
-                phoneNumber = "010-0000-0000",
-                gender = Gender.MALE,
-                birthday = createLocalDate(2020, 4, 17),
-                password = "password"
-            ),
-            Applicant(
-                id = 2L,
-                name = "홍길동2",
-                email = "b@email.com",
-                phoneNumber = "010-0000-0000",
-                gender = Gender.FEMALE,
-                birthday = createLocalDate(2020, 5, 5),
-                password = "password"
-            ),
-            Applicant(
-                id = 3L,
-                name = "홍길동3",
-                email = "c@email.com",
-                phoneNumber = "010-0000-0000",
-                gender = Gender.MALE,
-                birthday = createLocalDate(2020, 1, 1),
-                password = "password"
-            )
+            createApplicant(1L),
+            createApplicant(2L),
+            createApplicant(3L)
         )
 
         // when
@@ -197,10 +138,8 @@ class EvaluationTargetServiceTest(
         evaluationTargetRepository.saveAll(savedEvaluationTargets)
 
         // when
-        val secondEvaluation = Evaluation(
+        val secondEvaluation = createEvaluation(
             id = 2L,
-            title = "평가2",
-            description = "평가2에 대한 설명",
             recruitmentId = 1L,
             beforeEvaluationId = 1L
         )
@@ -247,119 +186,41 @@ class EvaluationTargetServiceTest(
         evaluationTargetRepository.saveAll(savedEvaluationTargets)
 
         // when
-        val firstEvaluation = Evaluation(
+        val firstEvaluation = createEvaluation(
             id = 1L,
-            title = "평가1",
-            description = "평가1에 대한 설명",
             recruitmentId = 1L,
             beforeEvaluationId = 0L
         )
 
         val allApplicationForms = listOf(
-            ApplicationForm(
+            createApplicationForm(
                 id = 1L,
-                referenceUrl = "",
-                submitted = true,
-                createdDateTime = createLocalDateTime(2019, 10, 25, 10),
-                modifiedDateTime = createLocalDateTime(2019, 11, 5, 10),
-                submittedDateTime = createLocalDateTime(2019, 11, 5, 10),
                 recruitmentId = 1L,
-                applicantId = 1L,
-                answers = Answers(
-                    mutableListOf(
-                        Answer("고객에게 가치를 전달하고 싶습니다.", 1L),
-                        Answer("도전, 끈기", 2L)
-                    )
-                )
+                applicantId = 1L
             ),
-            ApplicationForm(
+            createApplicationForm(
                 id = 2L,
-                referenceUrl = "https://www.google.com",
-                submitted = true,
-                createdDateTime = createLocalDateTime(2019, 10, 25, 10),
-                modifiedDateTime = createLocalDateTime(2019, 11, 5, 10),
-                submittedDateTime = createLocalDateTime(2019, 11, 5, 10),
                 recruitmentId = 1L,
-                applicantId = 2L,
-                answers = Answers(
-                    mutableListOf(
-                        Answer("스타트업을 하고 싶습니다.", 1L),
-                        Answer("책임감", 2L)
-                    )
-                )
+                applicantId = 2L
             ),
-            ApplicationForm(
+            createApplicationForm(
                 id = 3L,
-                referenceUrl = "https://www.google.com",
-                submitted = true,
-                createdDateTime = createLocalDateTime(2019, 10, 25, 10),
-                modifiedDateTime = createLocalDateTime(2019, 11, 5, 10),
-                submittedDateTime = createLocalDateTime(2019, 11, 5, 10),
                 recruitmentId = 1L,
-                applicantId = 3L,
-                answers = Answers(
-                    mutableListOf(
-                        Answer("양자 컴퓨터를 배우고 싶습니다.", 1L),
-                        Answer("노력", 2L)
-                    )
-                )
+                applicantId = 3L
             ),
-            ApplicationForm(
+            createApplicationForm(
                 id = 4L,
-                referenceUrl = "",
-                submitted = true,
-                createdDateTime = createLocalDateTime(2019, 10, 25, 10),
-                modifiedDateTime = createLocalDateTime(2019, 11, 5, 10),
-                submittedDateTime = createLocalDateTime(2019, 11, 5, 10),
                 recruitmentId = 1L,
-                applicantId = 4L,
-                answers = Answers(
-                    mutableListOf(
-                        Answer("협업하는 개발자가 되고 싶습니다.", 1L),
-                        Answer("협업", 2L)
-                    )
-                )
+                applicantId = 4L
             )
         )
 
-        val addingApplicant = Applicant(
-            id = 4L,
-            name = "홍길동4",
-            email = "d@email.com",
-            phoneNumber = "010-0000-0000",
-            gender = Gender.MALE,
-            birthday = createLocalDate(2020, 11, 11),
-            password = "password"
-        )
+        val addingApplicant = createApplicant(id = 4L)
 
         val allApplicants = listOf(
-            Applicant(
-                id = 1L,
-                name = "홍길동1",
-                email = "a@email.com",
-                phoneNumber = "010-0000-0000",
-                gender = Gender.MALE,
-                birthday = createLocalDate(2020, 4, 17),
-                password = "password"
-            ),
-            Applicant(
-                id = 2L,
-                name = "홍길동2",
-                email = "b@email.com",
-                phoneNumber = "010-0000-0000",
-                gender = Gender.FEMALE,
-                birthday = createLocalDate(2020, 5, 5),
-                password = "password"
-            ),
-            Applicant(
-                id = 3L,
-                name = "홍길동3",
-                email = "c@email.com",
-                phoneNumber = "010-0000-0000",
-                gender = Gender.MALE,
-                birthday = createLocalDate(2020, 1, 1),
-                password = "password"
-            ),
+            createApplicant(1L),
+            createApplicant(2L),
+            createApplicant(3L),
             addingApplicant
         )
 
@@ -442,23 +303,13 @@ class EvaluationTargetServiceTest(
         evaluationTargetRepository.saveAll(loadingEvaluationTargetsFromBeforeEvaluation)
 
         // when
-        val secondEvaluation = Evaluation(
+        val secondEvaluation = createEvaluation(
             id = 2L,
-            title = "평가2",
-            description = "평가2에 대한 설명",
             recruitmentId = 1L,
             beforeEvaluationId = 1L
         )
 
-        val addingApplicant = Applicant(
-            id = 4L,
-            name = "홍길동4",
-            email = "d@email.com",
-            phoneNumber = "010-0000-0000",
-            gender = Gender.MALE,
-            birthday = createLocalDate(2020, 11, 11),
-            password = "password"
-        )
+        val addingApplicant = createApplicant(4L)
 
         every { evaluationRepository.findByIdOrNull(any()) } returns secondEvaluation
         every { applicantRepository.findAllById(setOf(4L)) } returns listOf(addingApplicant)
@@ -476,6 +327,47 @@ class EvaluationTargetServiceTest(
             { assertThat(actual[0].evaluationStatus).isEqualTo(EvaluationStatus.PASS) },
             { assertThat(actual[1].applicantId).isEqualTo(4L) },
             { assertThat(actual[1].evaluationStatus).isEqualTo(EvaluationStatus.WAITING) }
+        )
+    }
+
+    private fun createEvaluation(id: Long, recruitmentId: Long = 1L, beforeEvaluationId: Long): Evaluation {
+        return Evaluation(
+            id = id,
+            title = "평가$id",
+            description = "평가${id}에 대한 설명",
+            recruitmentId = recruitmentId,
+            beforeEvaluationId = beforeEvaluationId
+        )
+    }
+
+    private fun createApplicationForm(id: Long, recruitmentId: Long = 1L, applicantId: Long): ApplicationForm {
+        return ApplicationForm(
+            id = id,
+            referenceUrl = "",
+            submitted = true,
+            createdDateTime = createLocalDateTime(2019, 10, 25, 10),
+            modifiedDateTime = createLocalDateTime(2019, 11, 5, 10),
+            submittedDateTime = createLocalDateTime(2019, 11, 5, 10),
+            recruitmentId = recruitmentId,
+            applicantId = applicantId,
+            answers = Answers(
+                mutableListOf(
+                    Answer("${id}의 1번 답", 1L),
+                    Answer("${id}의 2번 답", 2L)
+                )
+            )
+        )
+    }
+
+    private fun createApplicant(id: Long): Applicant {
+        return Applicant(
+            id = id,
+            name = "홍길동$id",
+            email = "$id@email.com",
+            phoneNumber = "010-0000-0000",
+            gender = Gender.MALE,
+            birthday = createLocalDate(2020, 4, 17),
+            password = "password"
         )
     }
 }
