@@ -18,6 +18,14 @@ fun createIntSelect(min: Int = 0, max: Int): Select<Int> {
     return Select(*(min..max).toList().toTypedArray())
 }
 
+fun <T> createItemSelect(title: String): Select<T> {
+    val select: Select<T> = Select()
+    select.apply {
+        label = title
+    }
+    return select
+}
+
 fun createBooleanRadioButtonGroup(
     labelText: String,
     trueText: String = true.toString(),
