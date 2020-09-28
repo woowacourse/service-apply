@@ -16,7 +16,7 @@
       </div>
       <div id="component">
         <div v-for="recruitment in activeList" :key="recruitment.id">
-          <recruit-item :recruitment="recruitment" />
+          <RecruitItem :recruitment="recruitment" />
         </div>
       </div>
     </div>
