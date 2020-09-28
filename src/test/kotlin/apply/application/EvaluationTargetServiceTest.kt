@@ -221,7 +221,7 @@ class EvaluationTargetServiceTest(
     }
 
     @Test
-    fun `이전 평가가 없고 저장 된 평가 대상자가 있을 경우 갱신하여 불러온다`() {
+    fun `이전 평가가 없고 저장 된 평가 대상자가 있을 경우 갱신하여 불러온다, 새로 등록된 지원자를 평가 대상자에 추가한다`() {
         // given
         val savedEvaluationTargets = listOf(
             EvaluationTarget(
@@ -387,7 +387,7 @@ class EvaluationTargetServiceTest(
     }
 
     @Test
-    fun `이전 평가가 있고 저장 된 평가 대상자가 있을 경우 갱신하고 불러온다`() {
+    fun `이전 평가가 있고 저장 된 평가 대상자가 있을 경우 갱신하고 불러온다, 이전 평가의 평가 대상자의 평가가 FAIL로 바뀌면 제거한다`() {
         // given
         val savedEvaluationTargets = listOf(
             EvaluationTarget(
