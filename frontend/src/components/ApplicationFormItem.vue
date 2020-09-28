@@ -13,7 +13,7 @@
         <Button
           class="enroll-button button"
           @click="onClickAdmission(recruitment.id)"
-          :disabled="this.isSubmitted"
+          :disabled="submitted"
           :value="buttonLabel"
         >
         </Button>
@@ -39,14 +39,8 @@ export default {
     },
   },
   computed: {
-    isSubmitted() {
-      return this.submitted === true
-    },
     buttonLabel() {
-      if (this.submitted) {
-        return "제출 완료"
-      }
-      return "지원서 수정"
+      return this.submitted ? "제출 완료" : "지원서 수정"
     },
   },
   methods: {

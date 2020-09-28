@@ -1,14 +1,16 @@
 <template>
-  <div class="my-applications">
+  <div class="my-application-forms">
     <h1>내 지원서</h1>
 
-    <div class="applications">
-      <div v-for="(application, index) in applications" :key="application.id">
-        <ApplicationItem
-          :recruitment="recruitments[index]"
-          :submitted="application.submitted"
-        ></ApplicationItem>
-      </div>
+    <div
+      class="application-forms"
+      v-for="(applicationForm, index) in applicationForms"
+      :key="applicationForm.id"
+    >
+      <ApplicationFormItem
+        :recruitment="recruitments[index]"
+        :submitted="applicationForm.submitted"
+      />
     </div>
 
     <footer>
@@ -20,27 +22,23 @@
 <script>
 import * as RecruitmentApi from "../api/recruitments"
 import * as ApplicationApi from "../api/applications"
-import ApplicationItem from "@/components/ApplicationItem"
+import ApplicationFormItem from "@/components/ApplicationFormItem"
 
 export default {
   components: {
-    ApplicationItem,
+    ApplicationFormItem,
   },
   data: () => ({
-    applications: [],
+    applicationForms: [],
     recruitments: [],
   }),
   async mounted() {
     const token = this.$store.state.token.value
-    if (token === "") {
-      alert("로그인이 필요합니다.")
-      return this.$router.push("/login")
-    }
 
     try {
-      const { applicationsData } = await ApplicationApi.fetchMyApplications(token)
+      const { applicationFormsData } = await ApplicationApi.fetchMyApplicationForms(token)
       const { recruitmentData } = await RecruitmentApi.fetchMyRecruitments(token)
-      this.applications = applicationsData
+      this.applicationForms = applicationFormsData
       this.recruitments = recruitmentData
     } catch (e) {
       alert("token이 유효하지 않습니다.")
@@ -51,7 +49,7 @@ export default {
 </script>
 
 <style scoped>
-.my-applications {
+.my-application-forms {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -60,7 +58,7 @@ export default {
   background: #ced6e0;
 }
 
-.applications {
+.application-forms {
   width: 60%;
 }
 

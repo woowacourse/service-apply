@@ -92,7 +92,7 @@ export default {
           throw e
         })
       alert("로그인 성공")
-      this.$router.push("/recruits")
+      this.$router.push("/my-applications")
     },
     findPassword() {
       this.$router.push("/find")

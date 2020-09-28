@@ -9,6 +9,14 @@ import MyApplications from "@/views/MyApplications"
 
 Vue.use(VueRouter)
 
+const requireAuth = () => (to, from, next) => {
+  if (this.$store.state.token.value !== "") {
+    return next
+  }
+  alert("로그인이 필요합니다.")
+  next("/login")
+}
+
 const routes = [
   {
     path: "/recruits",
@@ -39,6 +47,7 @@ const routes = [
   {
     path: "/my-applications",
     component: MyApplications,
+    beforeEnter: requireAuth(),
   },
 ]
 

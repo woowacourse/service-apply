@@ -1,8 +1,8 @@
 import axios from "axios"
 
-const BASE_URL = "/api/applications"
+const BASE_URL = "/api/application-forms"
 
-export const fetchMyApplications = token => {
+export const fetchMyApplicationForms = token => {
   return axios.get(`${BASE_URL}/me`, {
     headers: {
       Authorization: `Bearer ${token}`,

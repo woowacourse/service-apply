@@ -12,7 +12,7 @@
         >
           {{ tab.label }}
         </h2>
-        <h2 class="list-tab" id="mypage">내 지원서</h2>
+        <h2 class="list-tab" id="mypage" @click="goLogin">내 지원서</h2>
       </div>
       <div id="component">
         <div v-for="recruitment in activeList" :key="recruitment.id">
@@ -102,6 +102,9 @@ export default {
     this.setList(this.$route.query.status)
   },
   methods: {
+    goLogin() {
+      this.$router.push("/login")
+    },
     setStatus(status) {
       if (status !== this.$route.query.status) {
         this.$router.replace({
