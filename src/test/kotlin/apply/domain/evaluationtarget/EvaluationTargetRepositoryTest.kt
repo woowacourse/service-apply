@@ -4,11 +4,9 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.Arguments
-import org.junit.jupiter.params.provider.MethodSource
+import org.junit.jupiter.params.provider.CsvSource
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.test.context.TestConstructor
-import java.util.stream.Stream
 
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @DataJpaTest
@@ -17,13 +15,6 @@ class EvaluationTargetRepositoryTest(
 ) {
     companion object {
         private const val EVALUATION_ID = 1L
-
-        @JvmStatic
-        fun provideExistsByEvaluationIdTestArguments(): Stream<Arguments> =
-            Stream.of(
-                Arguments.of(1L, true),
-                Arguments.of(2L, false)
-            )
     }
 
     private val evaluationTargets: List<EvaluationTarget> = listOf(
@@ -49,7 +40,7 @@ class EvaluationTargetRepositoryTest(
         assertThat(results).usingElementComparatorOnFields("applicantId").isEqualTo(evaluationTargets)
     }
 
-    @MethodSource("provideExistsByEvaluationIdTestArguments")
+    @CsvSource(value = ["1,true", "2,false"])
     @ParameterizedTest
     fun `평가의 id를 가지고 있는 평가 대상자의 존재 여부를 확인한다`(evaluationId: Long, expected: Boolean) {
         val actual = evaluationTargetRepository.existsByEvaluationId(evaluationId)
