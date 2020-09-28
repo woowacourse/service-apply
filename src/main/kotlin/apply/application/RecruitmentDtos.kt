@@ -51,7 +51,7 @@ data class ApplicationFormSaveRequest(
     val referenceUrl: String,
 
     @field:NotNull
-    val isSubmit: Boolean,
+    val isSubmitted: Boolean,
 
     @field:NotBlank
     val answers: List<AnswerRequest> = ArrayList()
@@ -65,7 +65,7 @@ data class ApplicationFormUpdateRequest(
     val referenceUrl: String,
 
     @field:NotNull
-    val isSubmit: Boolean,
+    val isSubmitted: Boolean,
 
     @field:NotBlank
     val answers: List<AnswerRequest> = ArrayList(),

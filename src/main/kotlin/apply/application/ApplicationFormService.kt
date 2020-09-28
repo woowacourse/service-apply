@@ -82,7 +82,7 @@ class ApplicationFormService(
                 answers
             )
 
-        if (applicationFormSaveRequest.isSubmit) {
+        if (applicationFormSaveRequest.isSubmitted) {
             applicationForm.submit()
         }
         applicationFormRepository.save(applicationForm)
@@ -103,7 +103,7 @@ class ApplicationFormService(
         applicationForm.update(applicationFormUpdateRequest.referenceUrl, answers)
         applicantService.changePassword(applicantId, applicationFormUpdateRequest.password)
 
-        if (applicationFormUpdateRequest.isSubmit) {
+        if (applicationFormUpdateRequest.isSubmitted) {
             applicationForm.submit()
         }
         applicationFormRepository.save(applicationForm)
