@@ -33,7 +33,7 @@ class ApplicationFormRepositoryTest(
 
     @Test
     @DisplayName("저장한 Form을 찾아내는지 테스트한다")
-    internal fun formFindTest() {
+    fun formFindTest() {
         val form =
             applicationFormRepository.findByRecruitmentIdAndApplicantId(1L, 1L)!!
         assertThat(form.referenceUrl).isEqualTo("http://example.com")

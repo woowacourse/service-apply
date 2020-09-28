@@ -32,7 +32,7 @@ internal class ApplicationFormTest {
     }
 
     @Test
-    internal fun saveApplicationFormTest() {
+    fun saveApplicationFormTest() {
         assertThat(applicationForm.submitted).isFalse()
         assertThat(applicationForm.applicantId).isEqualTo(1L)
         assertThat(applicationForm.referenceUrl).isEqualTo("http://example.com")
@@ -41,7 +41,7 @@ internal class ApplicationFormTest {
     }
 
     @Test
-    internal fun updateApplicationFormTest() {
+    fun updateApplicationFormTest() {
         applicationForm.update(
             "http://h2f.kr",
             Answers(
@@ -62,7 +62,7 @@ internal class ApplicationFormTest {
     }
 
     @Test
-    internal fun submitApplicationFormTest() {
+    fun submitApplicationFormTest() {
         applicationForm.submit()
 
         assertThat(applicationForm.submitted).isTrue()
