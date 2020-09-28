@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import java.lang.IllegalArgumentException
 
 @RestController
 @RequestMapping("/api/applications")
@@ -34,7 +35,7 @@ class ApplicationFormRestController(
         return try {
             applicationFormService.save(1L, applicationFormSaveRequest)
             ResponseEntity.ok().build()
-        } catch (e: Exception) {
+        } catch (e: IllegalArgumentException) {
             ResponseEntity.badRequest().body(e.message)
         }
     }
@@ -47,7 +48,7 @@ class ApplicationFormRestController(
         return try {
             applicationFormService.update(1L, applicationFormUpdateRequest)
             ResponseEntity.ok().build()
-        } catch (e: Exception) {
+        } catch (e: IllegalArgumentException) {
             ResponseEntity.badRequest().body(e.message)
         }
     }

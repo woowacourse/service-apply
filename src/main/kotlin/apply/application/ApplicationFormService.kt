@@ -91,7 +91,7 @@ class ApplicationFormService(
     fun update(applicantId: Long, applicationFormUpdateRequest: ApplicationFormUpdateRequest) {
         val applicationForm: ApplicationForm =
             applicationFormRepository.findByRecruitmentIdAndApplicantId(applicationFormUpdateRequest.recruitmentId, applicantId)
-                ?: throw IllegalAccessException("저장된 지원서가 없습니다.")
+                ?: throw IllegalArgumentException("저장된 지원서가 없습니다.")
         val answers = Answers(
             applicationFormUpdateRequest.answers.map {
                 Answer(
@@ -111,7 +111,7 @@ class ApplicationFormService(
 
     fun getForm(applicantId: Long, recruitmentId: Long): ApplicationFormResponse {
         val form = applicationFormRepository.findByRecruitmentIdAndApplicantId(recruitmentId, applicantId)
-            ?: throw NoSuchElementException("해당하는 지원서가 없습니다.")
+            ?: throw IllegalArgumentException("해당하는 지원서가 없습니다.")
         val answers = form.answers.items.map { AnswerResponse(it.contents, it.recruitmentItemId) }
         return ApplicationFormResponse(
             form.id,
