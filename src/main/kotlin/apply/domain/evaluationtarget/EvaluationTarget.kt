@@ -36,5 +36,6 @@ class EvaluationTarget(
         applicantId = applicantId
     )
 
-    fun isSameStatusWith(evaluationStatus: EvaluationStatus) = this.evaluationStatus == evaluationStatus
+    val isPassed: Boolean
+        get() = this.evaluationStatus == EvaluationStatus.PASS
 }

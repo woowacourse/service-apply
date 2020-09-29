@@ -5,7 +5,6 @@ import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.CheaterRepository
 import apply.domain.evaluation.Evaluation
 import apply.domain.evaluation.EvaluationRepository
-import apply.domain.evaluationtarget.EvaluationStatus.PASS
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
 import org.springframework.data.repository.findByIdOrNull
@@ -25,89 +24,100 @@ class EvaluationTargetService(
     fun findByEvaluationId(evaluationId: Long): List<EvaluationTarget> =
         evaluationTargetRepository.findByEvaluationId(evaluationId)
 
-    fun load(evaluationId: Long): List<EvaluationTarget> {
-        val evaluation: Evaluation =
-            evaluationRepository.findByIdOrNull(evaluationId) ?: throw IllegalArgumentException()
-        val isSavedBefore: Boolean = evaluationTargetRepository.existsByEvaluationId(evaluationId)
+    fun update(evaluationId: Long) {
+        val evaluation = evaluationRepository.findByIdOrNull(evaluationId) ?: throw IllegalArgumentException()
+        val cachedCheaterApplicantIds = cheaterRepository.findAll().map { it.applicantId }
 
         return when {
-            !evaluation.hasBeforeEvaluation() && !isSavedBefore -> saveEvaluationTargetOfFirst(evaluation)
-            evaluation.hasBeforeEvaluation() && !isSavedBefore -> saveEvaluationTarget(evaluation)
-            !evaluation.hasBeforeEvaluation() && isSavedBefore -> updateEvaluationTargetOfFirst(evaluation)
-            evaluation.hasBeforeEvaluation() && isSavedBefore -> updateEvaluationTarget(evaluation)
-            else -> throw IllegalStateException("평가 대상자 리스트를 불러올 수 없습니다.")
+            !evaluation.hasBeforeEvaluation() -> updateEvaluationTargetOfFirst(evaluation, cachedCheaterApplicantIds)
+            evaluation.hasBeforeEvaluation() -> updateEvaluationTarget(evaluation, cachedCheaterApplicantIds)
+            else -> throw IllegalStateException("평가 대상자를 갱신할 수 없습니다.")
         }
     }
 
-    private fun saveEvaluationTargetOfFirst(evaluation: Evaluation): List<EvaluationTarget> {
-        val evaluationTargets: List<EvaluationTarget> = createEvaluationTargetsFromFirst(evaluation)
+    private fun updateEvaluationTargetOfFirst(evaluation: Evaluation, cachedCheaterApplicantIds: List<Long>) {
+        val oldApplicantIds = evaluationTargetRepository.findByEvaluationId(evaluation.id)
+            .map { it.applicantId }
+            .toSet()
 
-        return evaluationTargetRepository.saveAll(evaluationTargets)
+        val newApplicantIds = createEvaluationTargetsFromFirst(evaluation)
+            .map { it.applicantId }
+            .filter { !cachedCheaterApplicantIds.contains(it) }
+            .toSet()
+
+        val cheaterApplicantIds = (oldApplicantIds + newApplicantIds).filter { cachedCheaterApplicantIds.contains(it) }
+
+        if (isAlreadyUpToDate(oldApplicantIds, cheaterApplicantIds, newApplicantIds)) {
+            delete(evaluation, cheaterApplicantIds)
+        } else {
+            deleteAndSave(oldApplicantIds, newApplicantIds, cheaterApplicantIds, evaluation)
+        }
     }
 
     private fun createEvaluationTargetsFromFirst(evaluation: Evaluation): List<EvaluationTarget> {
-        val applicantIds: List<Long> =
-            applicationFormRepository.findByRecruitmentId(evaluation.recruitmentId).map { it.applicantId }
+        val applicantIds = applicationFormRepository.findByRecruitmentId(evaluation.recruitmentId)
+            .map { it.applicantId }
 
         return applicantRepository.findAllById(applicantIds)
-            .filter { isNotCheater(it.id) }
             .map { EvaluationTarget(evaluationId = evaluation.id, applicantId = it.id) }
     }
 
-    private fun isNotCheater(applicantId: Long) = !cheaterRepository.existsByApplicantId(applicantId)
+    private fun isAlreadyUpToDate(
+        oldApplicantIds: Set<Long>,
+        cheaterApplicantIds: List<Long>,
+        newApplicantIds: Set<Long>
+    ): Boolean {
+        val oldNormalApplicantIds = oldApplicantIds - cheaterApplicantIds
+        val newNormalApplicantIds = newApplicantIds - cheaterApplicantIds
 
-    private fun saveEvaluationTarget(evaluation: Evaluation): List<EvaluationTarget> {
-        val evaluationTargets = createEvaluationTargetsFrom(evaluation)
-
-        return evaluationTargetRepository.saveAll(evaluationTargets)
+        return oldNormalApplicantIds.containsAll(newNormalApplicantIds) &&
+            newNormalApplicantIds.containsAll(oldNormalApplicantIds)
     }
 
-    private fun createEvaluationTargetsFrom(evaluation: Evaluation): List<EvaluationTarget> {
-        return evaluationTargetRepository.findByEvaluationId(evaluation.beforeEvaluationId)
-            .filter { it.isSameStatusWith(PASS) }
-            .filter { isNotCheater(it.applicantId) }
-            .map { EvaluationTarget(evaluationId = evaluation.id, applicantId = it.applicantId) }
+    private fun delete(evaluation: Evaluation, cheaterApplicantIds: List<Long>) {
+        evaluationTargetRepository.deleteByEvaluationIdAndApplicantIdIn(evaluation.id, cheaterApplicantIds)
     }
 
-    private fun updateEvaluationTargetOfFirst(evaluation: Evaluation): List<EvaluationTarget> {
-        val persistApplicantIds: Set<Long> =
-            evaluationTargetRepository.findByEvaluationId(evaluation.id).map { it.applicantId }.toSet()
-
-        val newApplicantIds: Set<Long> = createEvaluationTargetsFromFirst(evaluation).map { it.applicantId }.toSet()
-
-        update(persistApplicantIds, newApplicantIds, evaluation)
-
-        return evaluationTargetRepository.findByEvaluationId(evaluation.id)
-    }
-
-    private fun update(
-        persistApplicantIds: Set<Long>,
+    private fun deleteAndSave(
+        oldApplicantIds: Set<Long>,
         newApplicantIds: Set<Long>,
+        cheaterApplicantIds: List<Long>,
         evaluation: Evaluation
     ) {
-        val deletingApplicantIds = persistApplicantIds subtract newApplicantIds
+        val deletingApplicantIds = oldApplicantIds - newApplicantIds + cheaterApplicantIds
 
         evaluationTargetRepository.deleteByEvaluationIdAndApplicantIdIn(evaluation.id, deletingApplicantIds)
 
-        val addingApplicantIds = newApplicantIds subtract persistApplicantIds
-
-        val additionalEvaluationTargets: List<EvaluationTarget> =
-            applicantRepository.findAllById(addingApplicantIds)
-                .filter { isNotCheater(it.id) }
-                .map { EvaluationTarget(evaluationId = evaluation.id, applicantId = it.id) }
+        val addingApplicantIds = newApplicantIds - oldApplicantIds
+        val additionalEvaluationTargets = applicantRepository.findAllById(addingApplicantIds)
+            .map { EvaluationTarget(evaluationId = evaluation.id, applicantId = it.id) }
 
         evaluationTargetRepository.saveAll(additionalEvaluationTargets)
     }
 
-    private fun updateEvaluationTarget(evaluation: Evaluation): List<EvaluationTarget> {
-        val persistApplicantIds =
-            evaluationTargetRepository.findByEvaluationId(evaluation.id).map { it.applicantId }.toSet()
+    private fun updateEvaluationTarget(evaluation: Evaluation, cachedCheaterApplicantIds: List<Long>) {
+        val oldApplicantIds = evaluationTargetRepository.findByEvaluationId(evaluation.id)
+            .map { it.applicantId }
+            .toSet()
 
-        val newApplicantIds = createEvaluationTargetsFrom(evaluation).map { it.applicantId }.toSet()
+        val newApplicantIds = createEvaluationTargetsFrom(evaluation)
+            .map { it.applicantId }
+            .filter { !cachedCheaterApplicantIds.contains(it) }
+            .toSet()
 
-        update(persistApplicantIds, newApplicantIds, evaluation)
+        val cheaterApplicantIds = (oldApplicantIds + newApplicantIds).filter { cachedCheaterApplicantIds.contains(it) }
 
-        return evaluationTargetRepository.findByEvaluationId(evaluation.id)
+        if (isAlreadyUpToDate(oldApplicantIds, cheaterApplicantIds, newApplicantIds)) {
+            delete(evaluation, cheaterApplicantIds)
+        } else {
+            deleteAndSave(oldApplicantIds, newApplicantIds, cheaterApplicantIds, evaluation)
+        }
+    }
+
+    private fun createEvaluationTargetsFrom(evaluation: Evaluation): List<EvaluationTarget> {
+        return evaluationTargetRepository.findByEvaluationId(evaluation.beforeEvaluationId)
+            .filter { it.isPassed }
+            .map { EvaluationTarget(evaluationId = evaluation.id, applicantId = it.applicantId) }
     }
 
     @PostConstruct

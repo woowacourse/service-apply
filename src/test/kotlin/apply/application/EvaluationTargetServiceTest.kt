@@ -5,6 +5,7 @@ import apply.domain.applicant.ApplicantRepository
 import apply.domain.applicant.Gender
 import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormRepository
+import apply.domain.cheater.Cheater
 import apply.domain.cheater.CheaterRepository
 import apply.domain.evaluation.Evaluation
 import apply.domain.evaluation.EvaluationRepository
@@ -85,21 +86,24 @@ class EvaluationTargetServiceTest(
             )
         )
 
-        val applicants = listOf(
-            createApplicant(1L),
-            createApplicant(2L),
-            createApplicant(3L)
-        )
+        val firstApplicant = createApplicant(1L)
+        val secondApplicant = createApplicant(2L)
+        val thirdApplicant = createApplicant(3L)
+
+        val newApplicants = listOf(firstApplicant, secondApplicant, thirdApplicant)
+
+        val additionalApplicants = listOf(firstApplicant, secondApplicant)
 
         // when
         every { evaluationRepository.findByIdOrNull(any()) } returns firstEvaluation
+        every { cheaterRepository.findAll() } returns listOf(Cheater(3L))
         every { applicationFormRepository.findByRecruitmentId(any()) } returns applicationForms
-        every { applicantRepository.findAllById(any()) } returns applicants
-        every { cheaterRepository.existsByApplicantId(1L) } returns false
-        every { cheaterRepository.existsByApplicantId(2L) } returns false
-        every { cheaterRepository.existsByApplicantId(3L) } returns true
+        every { applicantRepository.findAllById(listOf(1L, 2L, 3L)) } returns newApplicants
+        every { applicantRepository.findAllById(setOf(1L, 2L)) } returns additionalApplicants
 
-        val actual: List<EvaluationTarget> = evaluationTargetService.load(firstEvaluation.id)
+        evaluationTargetService.update(firstEvaluation.id)
+
+        val actual = evaluationTargetRepository.findByEvaluationId(firstEvaluation.id)
 
         // then
         assertAll(
@@ -144,12 +148,15 @@ class EvaluationTargetServiceTest(
             beforeEvaluationId = 1L
         )
 
-        every { evaluationRepository.findByIdOrNull(any()) } returns secondEvaluation
-        every { cheaterRepository.existsByApplicantId(1L) } returns false
-        every { cheaterRepository.existsByApplicantId(2L) } returns false
-        every { cheaterRepository.existsByApplicantId(3L) } returns true
+        val addingApplicants = listOf(createApplicant(2L))
 
-        val actual: List<EvaluationTarget> = evaluationTargetService.load(secondEvaluation.id)
+        every { evaluationRepository.findByIdOrNull(any()) } returns secondEvaluation
+        every { cheaterRepository.findAll() } returns listOf(Cheater(3L))
+        every { applicantRepository.findAllById(any()) } returns addingApplicants
+
+        evaluationTargetService.update(secondEvaluation.id)
+
+        val actual = evaluationTargetRepository.findByEvaluationId(secondEvaluation.id)
 
         // then
         assertAll(
@@ -225,15 +232,14 @@ class EvaluationTargetServiceTest(
         )
 
         every { evaluationRepository.findByIdOrNull(any()) } returns firstEvaluation
+        every { cheaterRepository.findAll() } returns listOf(Cheater(3L))
         every { applicationFormRepository.findByRecruitmentId(any()) } returns allApplicationForms
         every { applicantRepository.findAllById(listOf(1L, 2L, 3L, 4L)) } returns allApplicants
         every { applicantRepository.findAllById(setOf(4L)) } returns listOf(addingApplicant)
-        every { cheaterRepository.existsByApplicantId(1L) } returns false
-        every { cheaterRepository.existsByApplicantId(2L) } returns false
-        every { cheaterRepository.existsByApplicantId(3L) } returns true
-        every { cheaterRepository.existsByApplicantId(4L) } returns false
 
-        val actual: List<EvaluationTarget> = evaluationTargetService.load(firstEvaluation.id)
+        evaluationTargetService.update(firstEvaluation.id)
+
+        val actual = evaluationTargetRepository.findByEvaluationId(firstEvaluation.id)
 
         // then
         assertAll(
@@ -250,7 +256,7 @@ class EvaluationTargetServiceTest(
     @Test
     fun `이전 평가가 있고 저장 된 평가 대상자가 있을 경우 갱신하고 불러온다, 이전 평가의 평가 대상자의 평가가 FAIL로 바뀌면 제거한다`() {
         // given
-        val savedEvaluationTargets = listOf(
+        val savedCurrentEvaluationTargets = listOf(
             EvaluationTarget(
                 evaluationId = 2L,
                 administratorId = 0L,
@@ -271,7 +277,7 @@ class EvaluationTargetServiceTest(
             )
         )
 
-        evaluationTargetRepository.saveAll(savedEvaluationTargets)
+        evaluationTargetRepository.saveAll(savedCurrentEvaluationTargets)
 
         val loadingEvaluationTargetsFromBeforeEvaluation = listOf(
             EvaluationTarget(
@@ -312,13 +318,12 @@ class EvaluationTargetServiceTest(
         val addingApplicant = createApplicant(4L)
 
         every { evaluationRepository.findByIdOrNull(any()) } returns secondEvaluation
+        every { cheaterRepository.findAll() } returns listOf(Cheater(3L))
         every { applicantRepository.findAllById(setOf(4L)) } returns listOf(addingApplicant)
-        every { cheaterRepository.existsByApplicantId(1L) } returns false
-        every { cheaterRepository.existsByApplicantId(2L) } returns false
-        every { cheaterRepository.existsByApplicantId(3L) } returns true
-        every { cheaterRepository.existsByApplicantId(4L) } returns false
 
-        val actual: List<EvaluationTarget> = evaluationTargetService.load(secondEvaluation.id)
+        evaluationTargetService.update(secondEvaluation.id)
+
+        val actual = evaluationTargetRepository.findByEvaluationId(secondEvaluation.id)
 
         // then
         assertAll(
