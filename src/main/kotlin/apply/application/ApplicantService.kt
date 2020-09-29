@@ -59,7 +59,7 @@ class ApplicantService(
         }
     }
 
-    fun resetPassword(applicantPasswordFindInformation: ApplicantPasswordFindInformation) {
+    fun resetPassword(applicantPasswordFindInformation: ApplicantPasswordFindInformation): String {
         return when (
             applicantRepository.existsByNameAndEmailAndBirthday(
                 applicantPasswordFindInformation.name,
@@ -72,7 +72,10 @@ class ApplicantService(
         }
     }
 
-    fun updatePassword(applicantPasswordFindInformation: ApplicantPasswordFindInformation, newPassword: String) {
+    fun updatePassword(
+        applicantPasswordFindInformation: ApplicantPasswordFindInformation,
+        newPassword: String
+    ): String {
         val applicant = applicantRepository.findByNameAndEmailAndBirthday(
             applicantPasswordFindInformation.name,
             applicantPasswordFindInformation.email,
@@ -81,6 +84,7 @@ class ApplicantService(
 
         applicant.password = newPassword
         applicantRepository.save(applicant)
+        return applicant.password
     }
 
     @PostConstruct
