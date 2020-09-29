@@ -18,7 +18,7 @@ class ApplicationFormRestController(
     private val applicationFormService: ApplicationFormService
 ) {
     @GetMapping
-    fun getApplicationForm(@RequestParam("recruitmentId") recruitment: Long): ResponseEntity<Any> {
+    fun getForm(@RequestParam("recruitmentId") recruitment: Long): ResponseEntity<Any> {
         return try {
             val form = applicationFormService.getForm(1L, recruitment)
             ResponseEntity.ok().body(form)
@@ -28,7 +28,7 @@ class ApplicationFormRestController(
     }
 
     @PostMapping
-    fun saveApplicationForm(
+    fun save(
         @RequestBody saveApplicationFormRequest: SaveApplicationFormRequest
     ): ResponseEntity<String> {
         return try {
@@ -41,7 +41,7 @@ class ApplicationFormRestController(
     // TODO: 20. 9. 22. ControllerAdvice로 리팩토링
 
     @PutMapping
-    fun updateApplicationForm(
+    fun update(
         @RequestBody updateApplicationFormRequest: UpdateApplicationFormRequest
     ): ResponseEntity<String> {
         return try {
