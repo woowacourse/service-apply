@@ -26,59 +26,65 @@ class ApplicationFormServiceTest {
 
     private lateinit var applicationFormService: ApplicationFormService
 
-    private val applicationForm1 = ApplicationForm(
-        applicantId = 1L,
-        recruitmentId = 1L,
-        referenceUrl = "http://example.com",
-        answers = Answers(
-            mutableListOf(
-                Answer("스타트업을 하고 싶습니다.", 1L),
-                Answer("책임감", 2L)
-            )
-        )
-    )
-
-    private val applicationForm2 = ApplicationForm(
-        applicantId = 2L,
-        recruitmentId = 1L,
-        referenceUrl = "http://example2.com",
-        answers = Answers(
-            mutableListOf(
-                Answer("대기업에 취직하고 싶습니다.", 1L),
-                Answer("신중함", 2L)
-            )
-        )
-    )
-
-    private val applicationFormResponse = ApplicationFormResponse(
-        id = applicationForm1.id,
-        recruitmentId = applicationForm1.recruitmentId,
-        referenceUrl = applicationForm1.referenceUrl,
-        submitted = applicationForm1.submitted,
-        answers = applicationForm1.answers.items.map { AnswerResponse(it.contents, it.recruitmentItemId) },
-        createdDateTime = applicationForm1.createdDateTime,
-        modifiedDateTime = applicationForm1.modifiedDateTime,
-        submittedDateTime = applicationForm1.submittedDateTime
-    )
-
-    private val applicationFormSaveRequest = SaveApplicationFormRequest(
-        recruitmentId = applicationForm1.recruitmentId,
-        referenceUrl = applicationForm1.referenceUrl,
-        isSubmitted = false,
-        answers = applicationForm1.answers.items.map { AnswerRequest(it.contents, it.recruitmentItemId) }
-    )
-
-    private val applicationFormUpdateRequest = UpdateApplicationFormRequest(
-        recruitmentId = applicationForm1.recruitmentId,
-        referenceUrl = applicationForm1.referenceUrl,
-        isSubmitted = false,
-        answers = applicationForm1.answers.items.map { AnswerRequest(it.contents, it.recruitmentItemId) },
-        password = "12345678"
-    )
+    private lateinit var applicationForm1: ApplicationForm
+    private lateinit var applicationForm2: ApplicationForm
+    private lateinit var applicationFormResponse: ApplicationFormResponse
+    private lateinit var applicationFormSaveRequest: SaveApplicationFormRequest
+    private lateinit var applicationFormUpdateRequest: UpdateApplicationFormRequest
 
     @BeforeEach
     internal fun setUp() {
         this.applicationFormService = ApplicationFormService(applicationFormRepository, applicantService)
+
+        applicationForm1 = ApplicationForm(
+            applicantId = 1L,
+            recruitmentId = 1L,
+            referenceUrl = "http://example.com",
+            answers = Answers(
+                mutableListOf(
+                    Answer("스타트업을 하고 싶습니다.", 1L),
+                    Answer("책임감", 2L)
+                )
+            )
+        )
+
+        applicationForm2 = ApplicationForm(
+            applicantId = 2L,
+            recruitmentId = 1L,
+            referenceUrl = "http://example2.com",
+            answers = Answers(
+                mutableListOf(
+                    Answer("대기업에 취직하고 싶습니다.", 1L),
+                    Answer("신중함", 2L)
+                )
+            )
+        )
+
+        applicationFormResponse = ApplicationFormResponse(
+            id = applicationForm1.id,
+            recruitmentId = applicationForm1.recruitmentId,
+            referenceUrl = applicationForm1.referenceUrl,
+            submitted = applicationForm1.submitted,
+            answers = applicationForm1.answers.items.map { AnswerResponse(it.contents, it.recruitmentItemId) },
+            createdDateTime = applicationForm1.createdDateTime,
+            modifiedDateTime = applicationForm1.modifiedDateTime,
+            submittedDateTime = applicationForm1.submittedDateTime
+        )
+
+        applicationFormSaveRequest = SaveApplicationFormRequest(
+            recruitmentId = applicationForm1.recruitmentId,
+            referenceUrl = applicationForm1.referenceUrl,
+            isSubmitted = false,
+            answers = applicationForm1.answers.items.map { AnswerRequest(it.contents, it.recruitmentItemId) }
+        )
+
+        applicationFormUpdateRequest = UpdateApplicationFormRequest(
+            recruitmentId = applicationForm1.recruitmentId,
+            referenceUrl = applicationForm1.referenceUrl,
+            isSubmitted = false,
+            answers = applicationForm1.answers.items.map { AnswerRequest(it.contents, it.recruitmentItemId) },
+            password = "12345678"
+        )
     }
 
     @Test
