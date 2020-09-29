@@ -3,10 +3,9 @@ package apply.domain.applicationform
 import apply.domain.recruitmentitem.Answer
 import apply.domain.recruitmentitem.Answers
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
+import org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.lang.IllegalArgumentException
 
 internal class ApplicationFormTest {
     private lateinit var applicationForm: ApplicationForm
@@ -68,7 +67,7 @@ internal class ApplicationFormTest {
 
         assertThat(applicationForm.submitted).isTrue()
 
-        assertThatThrownBy {
+        assertThatIllegalArgumentException().isThrownBy {
             applicationForm.update(
                 "http://h2f.kr",
                 Answers(
@@ -85,7 +84,6 @@ internal class ApplicationFormTest {
                 )
             )
         }
-            .isInstanceOf(IllegalArgumentException::class.java)
-            .hasMessageContaining("이미 제출된")
+            .withMessageContaining("이미 제출된")
     }
 }
