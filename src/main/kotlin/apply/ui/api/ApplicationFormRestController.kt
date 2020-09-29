@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import java.lang.IllegalArgumentException
 
 @RestController
 @RequestMapping("/api/applications")
@@ -23,7 +22,7 @@ class ApplicationFormRestController(
         return try {
             val form = applicationFormService.getForm(1L, recruitment)
             ResponseEntity.ok().body(form)
-        } catch (e: NoSuchElementException) {
+        } catch (e: IllegalArgumentException) {
             ResponseEntity.badRequest().body(e.message)
         }
     }
