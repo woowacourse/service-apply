@@ -62,12 +62,12 @@ class ApplicationFormService(
         applicationFormRepository.saveAll(applicationForms)
     }
 
-    fun save(applicantId: Long, applicationFormSaveRequest: ApplicationFormSaveRequest) {
-        if (applicationFormRepository.existsByRecruitmentIdAndApplicantId(applicationFormSaveRequest.recruitmentId, applicantId)) {
+    fun save(applicantId: Long, request: ApplicationFormSaveRequest) {
+        if (applicationFormRepository.existsByRecruitmentIdAndApplicantId(request.recruitmentId, applicantId)) {
             throw IllegalArgumentException("이미 저장된 지원서가 있습니다.")
         }
         val answers = Answers(
-            applicationFormSaveRequest.answers.map {
+            request.answers.map {
                 Answer(
                     it.contents,
                     it.recruitmentItemId
@@ -77,36 +77,36 @@ class ApplicationFormService(
         val applicationForm =
             ApplicationForm(
                 applicantId,
-                applicationFormSaveRequest.recruitmentId,
-                applicationFormSaveRequest.referenceUrl,
+                request.recruitmentId,
+                request.referenceUrl,
                 answers
             )
 
-        if (applicationFormSaveRequest.isSubmitted) {
+        if (request.isSubmitted) {
             applicationForm.submit()
         }
         applicationFormRepository.save(applicationForm)
     }
 
-    fun update(applicantId: Long, applicationFormUpdateRequest: ApplicationFormUpdateRequest) {
+    fun update(applicantId: Long, request: ApplicationFormUpdateRequest) {
         val applicationForm: ApplicationForm =
             applicationFormRepository.findByRecruitmentIdAndApplicantId(
-                applicationFormUpdateRequest.recruitmentId,
+                request.recruitmentId,
                 applicantId
             )
                 ?: throw IllegalArgumentException("저장된 지원서가 없습니다.")
         val answers = Answers(
-            applicationFormUpdateRequest.answers.map {
+            request.answers.map {
                 Answer(
                     it.contents,
                     it.recruitmentItemId
                 )
             }.toMutableList()
         )
-        applicationForm.update(applicationFormUpdateRequest.referenceUrl, answers)
-        applicantService.changePassword(applicantId, applicationFormUpdateRequest.password)
+        applicationForm.update(request.referenceUrl, answers)
+        applicantService.changePassword(applicantId, request.password)
 
-        if (applicationFormUpdateRequest.isSubmitted) {
+        if (request.isSubmitted) {
             applicationForm.submit()
         }
         applicationFormRepository.save(applicationForm)
