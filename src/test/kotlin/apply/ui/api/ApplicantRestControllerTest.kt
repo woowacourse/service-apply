@@ -29,7 +29,10 @@ private const val VALID_TOKEN = "SOME_VALID_TOKEN"
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @WebMvcTest(
     controllers = [ApplicantRestController::class],
-    excludeFilters = [ComponentScan.Filter(type = FilterType.REGEX, pattern = ["apply.security.*"])]
+    includeFilters = [
+        ComponentScan.Filter(type = FilterType.REGEX, pattern = ["apply.security.*"]),
+        ComponentScan.Filter(type = FilterType.REGEX, pattern = ["apply.config.*"])
+    ]
 )
 internal class ApplicantRestControllerTest(
     private val objectMapper: ObjectMapper
