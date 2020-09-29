@@ -79,14 +79,14 @@ class ApplicationFormService(
             ?: throw IllegalArgumentException("해당하는 지원서가 없습니다.")
         val answers = form.answers.items.map { AnswerResponse(it.contents, it.recruitmentItemId) }
         return ApplicationFormResponse(
-            form.id,
-            form.recruitmentId,
-            form.referenceUrl,
-            form.submitted,
-            answers,
-            form.createdDateTime,
-            form.modifiedDateTime,
-            form.submittedDateTime
+            id = form.id,
+            recruitmentId = form.recruitmentId,
+            referenceUrl = form.referenceUrl,
+            submitted = form.submitted,
+            answers = answers,
+            createdDateTime = form.createdDateTime,
+            modifiedDateTime = form.modifiedDateTime,
+            submittedDateTime = form.submittedDateTime
         )
     }
 }
