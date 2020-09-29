@@ -40,8 +40,10 @@ class EvaluationTargetService(
 
             evaluationTargetRepository.deleteByApplicantIdIn(currentApplicantIds - updatingApplicantIds)
 
-            if ((updatingApplicantIds - currentApplicantIds).isNotEmpty()) {
-                save(updatingApplicantIds, currentApplicantIds, evaluation)
+            val newlyAddedApplicantIds = updatingApplicantIds - currentApplicantIds
+
+            if (newlyAddedApplicantIds.isNotEmpty()) {
+                save(newlyAddedApplicantIds, evaluation)
             }
         } else {
             evaluationTargetRepository.saveAll(updatingEvaluationTargets)
@@ -70,10 +72,8 @@ class EvaluationTargetService(
             .map { EvaluationTarget(evaluationId = evaluation.id, applicantId = it.id) }
     }
 
-    private fun save(updatingApplicantIds: Set<Long>, currentApplicantIds: Set<Long>, evaluation: Evaluation) {
-        val addingApplicantIds = updatingApplicantIds - currentApplicantIds
-
-        val additionalEvaluationTargets = applicantRepository.findAllById(addingApplicantIds)
+    private fun save(newlyAddedApplicantIds: Set<Long>, evaluation: Evaluation) {
+        val additionalEvaluationTargets = applicantRepository.findAllById(newlyAddedApplicantIds)
             .map { EvaluationTarget(evaluationId = evaluation.id, applicantId = it.id) }
 
         evaluationTargetRepository.saveAll(additionalEvaluationTargets)
