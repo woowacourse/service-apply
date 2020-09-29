@@ -86,7 +86,7 @@ class SelectionView(
                 applicationFormService.getByRecruitmentIdAndApplicantId(recruitmentId, it.id).submittedDateTime
             }
             addSortableColumn("부정 행위자") { if (it.isCheater) "O" else "X" }
-            addColumn(createButtonRenderer { applicationForms[it]!! }).apply {
+            addColumn(createButtonRenderer { applicationForms.getValue(it) }).apply {
                 isAutoWidth = true
             }
             setItems(applicants)
