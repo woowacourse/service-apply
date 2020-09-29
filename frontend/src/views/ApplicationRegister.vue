@@ -117,7 +117,7 @@ export default {
       }))
       if (this.isEdited) {
         const { data: applicationForm } = await ApplicationFormsApi.fetchForm({
-          token: "token",
+          token: this.$store.getters["token"],
           recruitmentId: this.recruitmentId,
         })
         this.url = applicationForm.referenceUrl
