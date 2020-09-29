@@ -101,7 +101,7 @@ class EvaluationTargetServiceTest(
         every { applicantRepository.findAllById(listOf(1L, 2L, 3L)) } returns newApplicants
         every { applicantRepository.findAllById(setOf(1L, 2L)) } returns additionalApplicants
 
-        evaluationTargetService.update(firstEvaluation.id)
+        evaluationTargetService.load(firstEvaluation.id)
 
         val actual = evaluationTargetRepository.findByEvaluationId(firstEvaluation.id)
 
@@ -154,7 +154,7 @@ class EvaluationTargetServiceTest(
         every { cheaterRepository.findAll() } returns listOf(Cheater(3L))
         every { applicantRepository.findAllById(any()) } returns addingApplicants
 
-        evaluationTargetService.update(secondEvaluation.id)
+        evaluationTargetService.load(secondEvaluation.id)
 
         val actual = evaluationTargetRepository.findByEvaluationId(secondEvaluation.id)
 
@@ -237,7 +237,7 @@ class EvaluationTargetServiceTest(
         every { applicantRepository.findAllById(listOf(1L, 2L, 3L, 4L)) } returns allApplicants
         every { applicantRepository.findAllById(setOf(4L)) } returns listOf(addingApplicant)
 
-        evaluationTargetService.update(firstEvaluation.id)
+        evaluationTargetService.load(firstEvaluation.id)
 
         val actual = evaluationTargetRepository.findByEvaluationId(firstEvaluation.id)
 
@@ -321,7 +321,7 @@ class EvaluationTargetServiceTest(
         every { cheaterRepository.findAll() } returns listOf(Cheater(3L))
         every { applicantRepository.findAllById(setOf(4L)) } returns listOf(addingApplicant)
 
-        evaluationTargetService.update(secondEvaluation.id)
+        evaluationTargetService.load(secondEvaluation.id)
 
         val actual = evaluationTargetRepository.findByEvaluationId(secondEvaluation.id)
 

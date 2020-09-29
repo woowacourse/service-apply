@@ -24,34 +24,42 @@ class EvaluationTargetService(
     fun findByEvaluationId(evaluationId: Long): List<EvaluationTarget> =
         evaluationTargetRepository.findByEvaluationId(evaluationId)
 
-    fun update(evaluationId: Long) {
+    fun load(evaluationId: Long) {
         val evaluation = evaluationRepository.findByIdOrNull(evaluationId) ?: throw IllegalArgumentException()
-        val cachedCheaterApplicantIds = cheaterRepository.findAll().map { it.applicantId }
+        val cheaterApplicantIds = cheaterRepository.findAll().map { it.applicantId }
+        val isSavedBefore: Boolean = evaluationTargetRepository.existsByEvaluationId(evaluationId)
 
-        if (evaluation.hasBeforeEvaluation()) {
-            updateEvaluationTarget(evaluation, cachedCheaterApplicantIds)
+        val updatingEvaluationTargets =
+            createUpdatingEvaluationTargets(evaluation).filter { !cheaterApplicantIds.contains(it.applicantId) }
+
+        if (isSavedBefore) {
+            val updatingApplicantIds = updatingEvaluationTargets.map { it.applicantId }.toSet()
+
+            val currentApplicantIds =
+                evaluationTargetRepository.findByEvaluationId(evaluationId).map { it.applicantId }.toSet()
+
+            evaluationTargetRepository.deleteByApplicantIdIn(currentApplicantIds - updatingApplicantIds)
+
+            if ((updatingApplicantIds - currentApplicantIds).isNotEmpty()) {
+                save(updatingApplicantIds, currentApplicantIds, evaluation)
+            }
         } else {
-            updateEvaluationTargetOfFirst(evaluation, cachedCheaterApplicantIds)
+            evaluationTargetRepository.saveAll(updatingEvaluationTargets)
         }
     }
 
-    private fun updateEvaluationTargetOfFirst(evaluation: Evaluation, cachedCheaterApplicantIds: List<Long>) {
-        val oldApplicantIds = evaluationTargetRepository.findByEvaluationId(evaluation.id)
-            .map { it.applicantId }
-            .toSet()
-
-        val newApplicantIds = createEvaluationTargetsFromFirst(evaluation)
-            .map { it.applicantId }
-            .filter { !cachedCheaterApplicantIds.contains(it) }
-            .toSet()
-
-        val cheaterApplicantIds = (oldApplicantIds + newApplicantIds).filter { cachedCheaterApplicantIds.contains(it) }
-
-        if (isAlreadyUpToDate(oldApplicantIds, cheaterApplicantIds, newApplicantIds)) {
-            delete(evaluation, cheaterApplicantIds)
+    private fun createUpdatingEvaluationTargets(evaluation: Evaluation): List<EvaluationTarget> {
+        return if (evaluation.hasBeforeEvaluation()) {
+            createEvaluationTargetsFrom(evaluation)
         } else {
-            deleteAndSave(oldApplicantIds, newApplicantIds, cheaterApplicantIds, evaluation)
+            createEvaluationTargetsFromFirst(evaluation)
         }
+    }
+
+    private fun createEvaluationTargetsFrom(evaluation: Evaluation): List<EvaluationTarget> {
+        return evaluationTargetRepository.findByEvaluationId(evaluation.beforeEvaluationId)
+            .filter { it.isPassed }
+            .map { EvaluationTarget(evaluationId = evaluation.id, applicantId = it.applicantId) }
     }
 
     private fun createEvaluationTargetsFromFirst(evaluation: Evaluation): List<EvaluationTarget> {
@@ -62,62 +70,13 @@ class EvaluationTargetService(
             .map { EvaluationTarget(evaluationId = evaluation.id, applicantId = it.id) }
     }
 
-    private fun isAlreadyUpToDate(
-        oldApplicantIds: Set<Long>,
-        cheaterApplicantIds: List<Long>,
-        newApplicantIds: Set<Long>
-    ): Boolean {
-        val oldNormalApplicantIds = oldApplicantIds - cheaterApplicantIds
-        val newNormalApplicantIds = newApplicantIds - cheaterApplicantIds
+    private fun save(updatingApplicantIds: Set<Long>, currentApplicantIds: Set<Long>, evaluation: Evaluation) {
+        val addingApplicantIds = updatingApplicantIds - currentApplicantIds
 
-        return oldNormalApplicantIds.containsAll(newNormalApplicantIds) &&
-            newNormalApplicantIds.containsAll(oldNormalApplicantIds)
-    }
-
-    private fun delete(evaluation: Evaluation, cheaterApplicantIds: List<Long>) {
-        evaluationTargetRepository.deleteByEvaluationIdAndApplicantIdIn(evaluation.id, cheaterApplicantIds)
-    }
-
-    private fun deleteAndSave(
-        oldApplicantIds: Set<Long>,
-        newApplicantIds: Set<Long>,
-        cheaterApplicantIds: List<Long>,
-        evaluation: Evaluation
-    ) {
-        val deletingApplicantIds = oldApplicantIds - newApplicantIds + cheaterApplicantIds
-
-        evaluationTargetRepository.deleteByEvaluationIdAndApplicantIdIn(evaluation.id, deletingApplicantIds)
-
-        val addingApplicantIds = newApplicantIds - oldApplicantIds
         val additionalEvaluationTargets = applicantRepository.findAllById(addingApplicantIds)
             .map { EvaluationTarget(evaluationId = evaluation.id, applicantId = it.id) }
 
         evaluationTargetRepository.saveAll(additionalEvaluationTargets)
-    }
-
-    private fun updateEvaluationTarget(evaluation: Evaluation, cachedCheaterApplicantIds: List<Long>) {
-        val oldApplicantIds = evaluationTargetRepository.findByEvaluationId(evaluation.id)
-            .map { it.applicantId }
-            .toSet()
-
-        val newApplicantIds = createEvaluationTargetsFrom(evaluation)
-            .map { it.applicantId }
-            .filter { !cachedCheaterApplicantIds.contains(it) }
-            .toSet()
-
-        val cheaterApplicantIds = (oldApplicantIds + newApplicantIds).filter { cachedCheaterApplicantIds.contains(it) }
-
-        if (isAlreadyUpToDate(oldApplicantIds, cheaterApplicantIds, newApplicantIds)) {
-            delete(evaluation, cheaterApplicantIds)
-        } else {
-            deleteAndSave(oldApplicantIds, newApplicantIds, cheaterApplicantIds, evaluation)
-        }
-    }
-
-    private fun createEvaluationTargetsFrom(evaluation: Evaluation): List<EvaluationTarget> {
-        return evaluationTargetRepository.findByEvaluationId(evaluation.beforeEvaluationId)
-            .filter { it.isPassed }
-            .map { EvaluationTarget(evaluationId = evaluation.id, applicantId = it.applicantId) }
     }
 
     @PostConstruct
