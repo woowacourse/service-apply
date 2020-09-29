@@ -6,16 +6,17 @@ import ApplicationRegister from "@/views/ApplicationRegister"
 import Login from "@/views/Login"
 import PasswordFind from "@/views/PasswordFind"
 import MyApplications from "@/views/MyApplications"
+// import store from "@/store"
 
 Vue.use(VueRouter)
 
-const requireAuth = () => (to, from, next) => {
-  if (this.$store.state.token.value !== "") {
-    return next
-  }
-  alert("로그인이 필요합니다.")
-  next("/login")
-}
+// const requireAuth = () => (to, from, next) => {
+//   if (store.state.token.value !== "") {
+//     return next()
+//   }
+//   alert("로그인이 필요합니다.")
+//   next("/login")
+// }
 
 const routes = [
   {
@@ -47,7 +48,7 @@ const routes = [
   {
     path: "/my-applications",
     component: MyApplications,
-    beforeEnter: requireAuth(),
+    // beforeEnter: requireAuth(),
   },
 ]
 

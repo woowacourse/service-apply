@@ -2,16 +2,13 @@
   <div class="my-application-forms">
     <h1>내 지원서</h1>
 
-    <div
+    <ApplicationFormItem
       class="application-forms"
       v-for="(applicationForm, index) in applicationForms"
       :key="applicationForm.id"
-    >
-      <ApplicationFormItem
-        :recruitment="recruitments[index]"
-        :submitted="applicationForm.submitted"
-      />
-    </div>
+      :recruitment="recruitments[index]"
+      :submitted="applicationForm.submitted"
+    />
 
     <footer>
       <a class="logo" href="#"></a>
@@ -21,7 +18,7 @@
 
 <script>
 import * as RecruitmentApi from "../api/recruitments"
-import * as ApplicationApi from "../api/applications"
+import * as ApplicationApi from "../api/application-forms"
 import ApplicationFormItem from "@/components/ApplicationFormItem"
 
 export default {
@@ -32,17 +29,17 @@ export default {
     applicationForms: [],
     recruitments: [],
   }),
-  async mounted() {
-    const token = this.$store.state.token.value
+  async created() {
+    const token = this.$store.getters["token"]
 
     try {
-      const { applicationFormsData } = await ApplicationApi.fetchMyApplicationForms(token)
-      const { recruitmentData } = await RecruitmentApi.fetchMyRecruitments(token)
+      const { data: applicationFormsData } = await ApplicationApi.fetchMyApplicationForms(token)
+      const { data: recruitmentData } = await RecruitmentApi.fetchMyRecruitments(token)
       this.applicationForms = applicationFormsData
       this.recruitments = recruitmentData
     } catch (e) {
       alert("token이 유효하지 않습니다.")
-      await this.$router.push("/login")
+      await this.$router.replace("/login")
     }
   },
 }

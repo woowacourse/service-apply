@@ -6,7 +6,8 @@
           <b>{{ recruitment.title }}</b>
         </div>
         <div class="recruit-duration">
-          {{ parseTime(recruitment.startTime) }} ~ {{ parseTime(recruitment.endTime) }}
+          {{ startTime }} ~
+          {{ endTime }}
         </div>
       </div>
       <div class="button-wrapper">
@@ -24,6 +25,8 @@
 
 <script>
 import Button from "@/components/form/Button"
+import { parseLocalDateTime } from "@/utils/date"
+
 export default {
   components: {
     Button,
@@ -38,6 +41,14 @@ export default {
       required: true,
     },
   },
+  data: () => ({
+    startTime: "",
+    endTime: "",
+  }),
+  created() {
+    this.startTime = parseLocalDateTime(this.recruitment.startTime)
+    this.endTime = parseLocalDateTime(this.recruitment.endTime)
+  },
   computed: {
     buttonLabel() {
       return this.submitted ? "제출 완료" : "지원서 수정"
@@ -46,20 +57,6 @@ export default {
   methods: {
     onClickAdmission(id) {
       this.$router.push({ path: `/register/applicant/${id}` })
-    },
-    parseTime(time) {
-      const year = time.getFullYear().toString()
-      const month = (time.getMonth() + 1).toString()
-      const date = time.getDate().toString()
-      const hour = time.getHours().toString()
-      const minute = time.getMinutes().toString()
-      const second = time.getSeconds().toString()
-      const parseDigit = digit => {
-        return digit[1] ? digit : "0" + digit[0]
-      }
-
-      return `${year}.${parseDigit(month)}.${parseDigit(date)}
-      ${parseDigit(hour)}:${parseDigit(minute)}:${parseDigit(second)}`
     },
   },
 }
