@@ -2,6 +2,7 @@ package apply.ui.api
 
 import apply.application.ApplicantService
 import apply.domain.applicant.ApplicantInformation
+import apply.domain.applicant.ApplicantPasswordFindInformation
 import apply.domain.applicant.ApplicantVerifyInformation
 import apply.domain.applicant.exception.ApplicantValidateException
 import org.springframework.http.HttpStatus
@@ -33,6 +34,16 @@ class ApplicantRestController(
             ResponseEntity.ok().body(token)
         } catch (e: ApplicantValidateException) {
             ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.message)
+        }
+    }
+
+    @PostMapping("/find")
+    fun findPassword(@RequestBody applicantPasswordFindInformation: ApplicantPasswordFindInformation): ResponseEntity<String> {
+        return try {
+            applicantService.resetPassword(applicantPasswordFindInformation)
+            ResponseEntity.noContent().build()
+        } catch (e: ApplicantValidateException) {
+            ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.message)
         }
     }
 }

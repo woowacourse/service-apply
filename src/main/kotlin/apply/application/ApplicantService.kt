@@ -2,12 +2,14 @@ package apply.application
 
 import apply.domain.applicant.Applicant
 import apply.domain.applicant.ApplicantInformation
+import apply.domain.applicant.ApplicantPasswordFindInformation
 import apply.domain.applicant.ApplicantRepository
 import apply.domain.applicant.ApplicantVerifyInformation
 import apply.domain.applicant.Gender
 import apply.domain.applicant.exception.ApplicantValidateException
 import apply.domain.cheater.CheaterRepository
 import apply.security.JwtTokenProvider
+import apply.utils.RandomStringGenerator
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import support.createLocalDate
@@ -18,7 +20,8 @@ import javax.annotation.PostConstruct
 class ApplicantService(
     private val applicantRepository: ApplicantRepository,
     private val cheaterRepository: CheaterRepository,
-    private val jwtTokenProvider: JwtTokenProvider
+    private val jwtTokenProvider: JwtTokenProvider,
+    private val randomStringGenerator: RandomStringGenerator
 ) {
     fun findAll(): List<ApplicantResponse> = applicantRepository.findAll().map {
         ApplicantResponse(it, cheaterRepository.existsByApplicantId(it.id))
@@ -54,6 +57,30 @@ class ApplicantService(
             true -> jwtTokenProvider.createToken(applicantVerifyInformation.email)
             else -> throw ApplicantValidateException()
         }
+    }
+
+    fun resetPassword(applicantPasswordFindInformation: ApplicantPasswordFindInformation) {
+        return when (
+            applicantRepository.existsByNameAndEmailAndBirthday(
+                applicantPasswordFindInformation.name,
+                applicantPasswordFindInformation.email,
+                applicantPasswordFindInformation.birthday
+            )
+        ) {
+            true -> updatePassword(applicantPasswordFindInformation, randomStringGenerator.generateRandomString())
+            else -> throw ApplicantValidateException()
+        }
+    }
+
+    fun updatePassword(applicantPasswordFindInformation: ApplicantPasswordFindInformation, newPassword: String) {
+        val applicant = applicantRepository.findByNameAndEmailAndBirthday(
+            applicantPasswordFindInformation.name,
+            applicantPasswordFindInformation.email,
+            applicantPasswordFindInformation.birthday
+        ) ?: throw ApplicantValidateException()
+
+        applicant.password = newPassword
+        applicantRepository.save(applicant)
     }
 
     @PostConstruct
