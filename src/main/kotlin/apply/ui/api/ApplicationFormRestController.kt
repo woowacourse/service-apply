@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/api/applications")
+@RequestMapping("/api/application-forms")
 class ApplicationFormRestController(
     private val applicationFormService: ApplicationFormService
 ) {
