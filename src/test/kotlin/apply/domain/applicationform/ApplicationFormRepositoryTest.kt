@@ -4,7 +4,6 @@ import apply.domain.recruitmentitem.Answer
 import apply.domain.recruitmentitem.Answers
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.test.context.TestConstructor
@@ -32,8 +31,7 @@ class ApplicationFormRepositoryTest(
     }
 
     @Test
-    @DisplayName("저장한 Form을 찾아내는지 테스트한다")
-    fun formFindTest() {
+    fun `저장한 Form을 찾아내는지 테스트한다`() {
         val form =
             applicationFormRepository.findByRecruitmentIdAndApplicantId(1L, 1L)!!
         assertThat(form.referenceUrl).isEqualTo("http://example.com")

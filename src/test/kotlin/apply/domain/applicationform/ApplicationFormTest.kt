@@ -32,7 +32,7 @@ internal class ApplicationFormTest {
     }
 
     @Test
-    fun saveApplicationFormTest() {
+    fun `지원서가 잘 만들어졌는지 테스트한다`() {
         assertThat(applicationForm.submitted).isFalse()
         assertThat(applicationForm.applicantId).isEqualTo(1L)
         assertThat(applicationForm.referenceUrl).isEqualTo("http://example.com")
@@ -41,7 +41,7 @@ internal class ApplicationFormTest {
     }
 
     @Test
-    fun updateApplicationFormTest() {
+    fun `지원서의 업데이트를 테스트한다`() {
         applicationForm.update(
             "http://h2f.kr",
             Answers(
@@ -62,7 +62,7 @@ internal class ApplicationFormTest {
     }
 
     @Test
-    fun submitApplicationFormTest() {
+    fun `지원서의 제출을 테스트한다`() {
         applicationForm.submit()
 
         assertThat(applicationForm.submitted).isTrue()
