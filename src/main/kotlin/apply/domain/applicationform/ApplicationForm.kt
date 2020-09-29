@@ -39,6 +39,22 @@ class ApplicationForm(
     @Column
     var submittedDateTime: LocalDateTime? = null
 
+    constructor(
+        applicantId: Long,
+        recruitmentId: Long,
+        referenceUrl: String,
+        answers: Answers,
+        submitted: Boolean,
+        createdDateTime: LocalDateTime,
+        modifiedDateTime: LocalDateTime,
+        submittedDateTime: LocalDateTime
+    ) : this(applicantId, recruitmentId, referenceUrl, answers) {
+        this.submitted = submitted
+        this.createdDateTime = createdDateTime
+        this.modifiedDateTime = modifiedDateTime
+        this.submittedDateTime = submittedDateTime
+    }
+
     fun update(referenceUrl: String, answers: Answers) {
         if (this.submitted) {
             throw IllegalArgumentException("이미 제출된 지원서입니다. 수정할 수 없습니다.")

@@ -5,6 +5,8 @@ import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.recruitmentitem.Answer
 import apply.domain.recruitmentitem.Answers
 import org.springframework.stereotype.Service
+import support.createLocalDateTime
+import javax.annotation.PostConstruct
 import javax.transaction.Transactional
 
 @Transactional
@@ -20,12 +22,48 @@ class ApplicationFormService(
         applicationFormRepository.findByRecruitmentIdAndApplicantId(recruitmentId, applicantId)
             ?: throw IllegalArgumentException()
 
-    fun save(applicantId: Long, applicationFormSaveRequest: ApplicationFormSaveRequest) {
-        if (applicationFormRepository.existsByRecruitmentIdAndApplicantId(
-            applicationFormSaveRequest.recruitmentId,
-            applicantId
+    @PostConstruct
+    private fun populateDummy() {
+        if (applicationFormRepository.count() != 0L) {
+            return
+        }
+        val applicationForms = listOf(
+            ApplicationForm(
+                referenceUrl = "",
+                submitted = true,
+                createdDateTime = createLocalDateTime(2019, 10, 25, 10),
+                modifiedDateTime = createLocalDateTime(2019, 11, 5, 10),
+                submittedDateTime = createLocalDateTime(2019, 11, 5, 10),
+                recruitmentId = 1L,
+                applicantId = 1L,
+                answers = Answers(
+                    mutableListOf(
+                        Answer("고객에게 가치를 전달하고 싶습니다.", 1L),
+                        Answer("도전, 끈기", 2L)
+                    )
+                )
+            ),
+            ApplicationForm(
+                referenceUrl = "https://www.google.com",
+                submitted = true,
+                createdDateTime = createLocalDateTime(2019, 10, 25, 10),
+                modifiedDateTime = createLocalDateTime(2019, 11, 5, 10),
+                submittedDateTime = createLocalDateTime(2019, 11, 5, 10),
+                recruitmentId = 1L,
+                applicantId = 2L,
+                answers = Answers(
+                    mutableListOf(
+                        Answer("스타트업을 하고 싶습니다.", 1L),
+                        Answer("책임감", 2L)
+                    )
+                )
+            )
         )
-        ) {
+        applicationFormRepository.saveAll(applicationForms)
+    }
+
+    fun save(applicantId: Long, applicationFormSaveRequest: ApplicationFormSaveRequest) {
+        if (applicationFormRepository.existsByRecruitmentIdAndApplicantId(applicationFormSaveRequest.recruitmentId, applicantId)) {
             throw IllegalArgumentException("이미 저장된 지원서가 있습니다.")
         }
         val answers = Answers(
