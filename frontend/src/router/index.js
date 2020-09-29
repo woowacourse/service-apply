@@ -5,6 +5,7 @@ import ApplicantRegister from "@/views/ApplicantRegister"
 import ApplicationRegister from "@/views/ApplicationRegister"
 import Login from "@/views/Login"
 import PasswordFind from "@/views/PasswordFind"
+import PasswordFindResult from "@/views/PasswordFindResult"
 
 Vue.use(VueRouter)
 
@@ -34,6 +35,10 @@ const routes = [
   {
     path: "/find",
     component: PasswordFind,
+  },
+  {
+    path: "/find/result",
+    component: PasswordFindResult,
   },
 ]
 

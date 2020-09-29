@@ -41,7 +41,7 @@ import * as Api from "@/api"
 import * as DateUtil from "@/utils/date"
 
 export default {
-  name: "Login",
+  name: "PasswordFind",
   components: {
     Form,
     Button,
@@ -69,6 +69,7 @@ export default {
         email: this.email,
         birthday: DateUtil.formatLocalDate(this.birth),
       })
+      this.$router.push("/find/result")
     },
     back() {
       this.$router.go(-1)
