@@ -1,8 +1,8 @@
 package apply.ui.api
 
-import apply.application.ApplicationFormSaveRequest
+import apply.application.SaveApplicationFormRequest
 import apply.application.ApplicationFormService
-import apply.application.ApplicationFormUpdateRequest
+import apply.application.UpdateApplicationFormRequest
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -29,10 +29,10 @@ class ApplicationFormRestController(
 
     @PostMapping
     fun saveApplicationForm(
-        @RequestBody applicationFormSaveRequest: ApplicationFormSaveRequest
+        @RequestBody saveApplicationFormRequest: SaveApplicationFormRequest
     ): ResponseEntity<String> {
         return try {
-            applicationFormService.save(1L, applicationFormSaveRequest)
+            applicationFormService.save(1L, saveApplicationFormRequest)
             ResponseEntity.ok().build()
         } catch (e: IllegalArgumentException) {
             ResponseEntity.badRequest().body(e.message)
@@ -42,10 +42,10 @@ class ApplicationFormRestController(
 
     @PutMapping
     fun updateApplicationForm(
-        @RequestBody applicationFormUpdateRequest: ApplicationFormUpdateRequest
+        @RequestBody updateApplicationFormRequest: UpdateApplicationFormRequest
     ): ResponseEntity<String> {
         return try {
-            applicationFormService.update(1L, applicationFormUpdateRequest)
+            applicationFormService.update(1L, updateApplicationFormRequest)
             ResponseEntity.ok().build()
         } catch (e: IllegalArgumentException) {
             ResponseEntity.badRequest().body(e.message)

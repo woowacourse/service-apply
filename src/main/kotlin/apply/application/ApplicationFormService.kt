@@ -62,9 +62,9 @@ class ApplicationFormService(
         applicationFormRepository.saveAll(applicationForms)
     }
 
-    fun save(applicantId: Long, request: ApplicationFormSaveRequest) {
-        if (applicationFormRepository.existsByRecruitmentIdAndApplicantId(request.recruitmentId, applicantId)) {
-            throw IllegalArgumentException("이미 저장된 지원서가 있습니다.")
+    fun save(applicantId: Long, request: SaveApplicationFormRequest) {
+        require(!applicationFormRepository.existsByRecruitmentIdAndApplicantId(request.recruitmentId, applicantId)) {
+            "이미 저장된 지원서가 있습니다."
         }
         val answers = Answers(
             request.answers.map {
@@ -88,7 +88,7 @@ class ApplicationFormService(
         applicationFormRepository.save(applicationForm)
     }
 
-    fun update(applicantId: Long, request: ApplicationFormUpdateRequest) {
+    fun update(applicantId: Long, request: UpdateApplicationFormRequest) {
         val applicationForm: ApplicationForm =
             applicationFormRepository.findByRecruitmentIdAndApplicantId(
                 request.recruitmentId,

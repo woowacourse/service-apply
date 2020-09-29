@@ -49,7 +49,7 @@ data class RecruitmentItemRequest(
     var description: String = ""
 )
 
-data class ApplicationFormSaveRequest(
+data class SaveApplicationFormRequest(
     @field:NotNull
     val recruitmentId: Long,
 
@@ -63,7 +63,7 @@ data class ApplicationFormSaveRequest(
     val answers: List<AnswerRequest> = ArrayList()
 )
 
-data class ApplicationFormUpdateRequest(
+data class UpdateApplicationFormRequest(
     @field:NotNull
     val recruitmentId: Long,
 

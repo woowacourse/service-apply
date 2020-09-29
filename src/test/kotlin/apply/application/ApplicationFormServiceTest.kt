@@ -61,14 +61,14 @@ class ApplicationFormServiceTest {
         submittedDateTime = applicationForm1.submittedDateTime
     )
 
-    private val applicationFormSaveRequest = ApplicationFormSaveRequest(
+    private val applicationFormSaveRequest = SaveApplicationFormRequest(
         recruitmentId = applicationForm1.recruitmentId,
         referenceUrl = applicationForm1.referenceUrl,
         isSubmitted = false,
         answers = applicationForm1.answers.items.map { AnswerRequest(it.contents, it.recruitmentItemId) }
     )
 
-    private val applicationFormUpdateRequest = ApplicationFormUpdateRequest(
+    private val applicationFormUpdateRequest = UpdateApplicationFormRequest(
         recruitmentId = applicationForm1.recruitmentId,
         referenceUrl = applicationForm1.referenceUrl,
         isSubmitted = false,
