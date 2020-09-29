@@ -10,7 +10,7 @@
         readonly
       />
 
-      <div v-if="isEdited">
+      <div v-if="isEditing">
         <TextField
           v-model="password"
           name="password"
@@ -101,11 +101,11 @@ export default {
     validPassword: false,
   }),
   computed: {
-    isEdited() {
+    isEditing() {
       return this.$route.name === "edit"
     },
     canSubmit() {
-      return this.factCheck && (this.isEdited ? this.validPassword : true)
+      return this.factCheck && (this.isEditing ? this.validPassword : true)
     },
   },
   async created() {
@@ -115,7 +115,7 @@ export default {
         ...recruitmentItem,
         contents: "",
       }))
-      if (this.isEdited) {
+      if (this.isEditing) {
         const { data: applicationForm } = await ApplicationFormsApi.fetchForm({
           token: this.$store.getters["token"],
           recruitmentId: this.recruitmentId,
