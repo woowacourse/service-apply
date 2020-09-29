@@ -28,10 +28,10 @@ class EvaluationTargetService(
         val evaluation = evaluationRepository.findByIdOrNull(evaluationId) ?: throw IllegalArgumentException()
         val cachedCheaterApplicantIds = cheaterRepository.findAll().map { it.applicantId }
 
-        return when {
-            !evaluation.hasBeforeEvaluation() -> updateEvaluationTargetOfFirst(evaluation, cachedCheaterApplicantIds)
-            evaluation.hasBeforeEvaluation() -> updateEvaluationTarget(evaluation, cachedCheaterApplicantIds)
-            else -> throw IllegalStateException("평가 대상자를 갱신할 수 없습니다.")
+        if (evaluation.hasBeforeEvaluation()) {
+            updateEvaluationTarget(evaluation, cachedCheaterApplicantIds)
+        } else {
+            updateEvaluationTargetOfFirst(evaluation, cachedCheaterApplicantIds)
         }
     }
 
