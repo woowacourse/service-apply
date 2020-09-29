@@ -35,3 +35,17 @@ data class ApplicantInformation(
         password = password
     )
 }
+
+data class ApplicantVerifyInformation(
+    @field:NotBlank
+    val name: String,
+
+    @field:NotBlank
+    val email: String,
+
+    @field:NotNull
+    val birthday: LocalDate,
+
+    @field:NotBlank
+    val password: String
+)

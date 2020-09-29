@@ -134,7 +134,7 @@ export default {
     validGender: false,
   }),
   methods: {
-    ...mapActions(["fetchTokenAndSetApplicantInfo"]),
+    ...mapActions(["fetchRegisterAndSetApplicantInfo"]),
     parseApplicantInfo() {
       return {
         name: this.name,

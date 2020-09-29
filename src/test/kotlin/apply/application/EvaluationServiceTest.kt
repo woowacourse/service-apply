@@ -2,6 +2,7 @@ package apply.application
 
 import apply.domain.evaluation.Evaluation
 import apply.domain.evaluation.EvaluationRepository
+import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.recruitment.Recruitment
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -24,6 +25,9 @@ internal class EvaluationServiceTest {
     @Mock
     private lateinit var evaluationRepository: EvaluationRepository
 
+    @Mock
+    private lateinit var evaluationItemRepository: EvaluationItemRepository
+
     private lateinit var evaluationService: EvaluationService
     private lateinit var recruitments: List<Recruitment>
     private lateinit var preCourseEvaluation: Evaluation
@@ -33,20 +37,20 @@ internal class EvaluationServiceTest {
 
     @BeforeEach
     internal fun setUp() {
-        evaluationService = EvaluationService(evaluationRepository, recruitmentService)
+        evaluationService = EvaluationService(evaluationRepository, evaluationItemRepository, recruitmentService)
 
         recruitments = listOf(
             Recruitment(
                 "웹 백엔드 2기",
-                false,
-                createLocalDateTime(2019, 10, 25, 10),
-                createLocalDateTime(2019, 11, 5, 10)
+                startDateTime = createLocalDateTime(2019, 10, 25, 10),
+                endDateTime = createLocalDateTime(2019, 11, 5, 10),
+                canRecruit = false
             ),
             Recruitment(
                 "웹 백엔드 3기",
-                true,
-                createLocalDateTime(2020, 10, 25, 15),
-                createLocalDateTime(2020, 11, 5, 10)
+                startDateTime = createLocalDateTime(2020, 10, 25, 15),
+                endDateTime = createLocalDateTime(2020, 11, 5, 10),
+                canRecruit = true
             )
         )
 
@@ -112,7 +116,7 @@ internal class EvaluationServiceTest {
 
     @Test
     fun `삭제된 평가를 이전 평가로 가지는 평가들의 이전 평가를 초기화한다`() {
-        val thirdEvaluation: Evaluation = Evaluation(
+        val thirdEvaluation = Evaluation(
             "3주차 - 포커구현하기 ",
             "[리뷰 절차]\n" +
                 "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse",

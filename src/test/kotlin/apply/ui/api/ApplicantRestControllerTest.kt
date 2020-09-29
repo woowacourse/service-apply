@@ -1,8 +1,9 @@
 package apply.ui.api
 
 import apply.application.ApplicantService
-import apply.domain.applicant.Gender
 import apply.domain.applicant.ApplicantInformation
+import apply.domain.applicant.ApplicantVerifyInformation
+import apply.domain.applicant.Gender
 import apply.domain.applicant.exception.ApplicantValidateException
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.BeforeEach
@@ -42,7 +43,16 @@ internal class ApplicantRestControllerTest(
         password = "password"
     )
 
+    private val applicantLoginRequest = ApplicantVerifyInformation(
+        name = applicantRequest.name,
+        email = applicantRequest.email,
+        birthday = applicantRequest.birthday,
+        password = applicantRequest.password
+    )
+
     private val invalidApplicantRequest = applicantRequest.copy(password = "invalid_password")
+
+    private val invalidApplicantLoginRequest = applicantLoginRequest.copy(password = "invalid_password")
 
     @BeforeEach
     internal fun setUp(webApplicationContext: WebApplicationContext) {
@@ -57,7 +67,7 @@ internal class ApplicantRestControllerTest(
         given(applicantService.generateToken(applicantRequest))
             .willReturn(VALID_TOKEN)
 
-        mockMvc.post("/api/applicants") {
+        mockMvc.post("/api/applicants/register") {
             content = objectMapper.writeValueAsBytes(applicantRequest)
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
@@ -72,12 +82,42 @@ internal class ApplicantRestControllerTest(
             applicantService.generateToken(invalidApplicantRequest)
         ).willThrow(ApplicantValidateException())
 
-        mockMvc.post("/api/applicants") {
+        mockMvc.post("/api/applicants/register") {
             content = objectMapper.writeValueAsBytes(invalidApplicantRequest)
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isUnauthorized }
-            content { string("잘못된 요청입니다") }
+            content { string("요청 정보가 기존 지원자 정보와 일치하지 않습니다") }
+        }
+    }
+
+    @Test
+    fun `올바른 지원자 로그인 요청에 응답으로 Token을 반환한다`() {
+        given(
+            applicantService.generateTokenByLogin(applicantLoginRequest)
+        ).willReturn(VALID_TOKEN)
+
+        mockMvc.post("/api/applicants/login") {
+            content = objectMapper.writeValueAsBytes(applicantLoginRequest)
+            contentType = MediaType.APPLICATION_JSON
+        }.andExpect {
+            status { isOk }
+            content { string(VALID_TOKEN) }
+        }
+    }
+
+    @Test
+    fun `잘못된 지원자 로그인 요청에 응답으로 Unauthorized와 메시지를 반환한다`() {
+        given(
+            applicantService.generateTokenByLogin(invalidApplicantLoginRequest)
+        ).willThrow(ApplicantValidateException())
+
+        mockMvc.post("/api/applicants/login") {
+            content = objectMapper.writeValueAsBytes(invalidApplicantLoginRequest)
+            contentType = MediaType.APPLICATION_JSON
+        }.andExpect {
+            status { isUnauthorized }
+            content { string("요청 정보가 기존 지원자 정보와 일치하지 않습니다") }
         }
     }
 }

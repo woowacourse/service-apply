@@ -9,12 +9,12 @@ export default new Vuex.Store({
   state: {},
   mutations: {},
   actions: {
-    async fetchTokenAndSetApplicantInfo(
+    async fetchRegisterAndSetApplicantInfo(
       { commit, dispatch },
       { name, phoneNumber, email, password, birthday, gender },
     ) {
       await Promise.all([
-        dispatch("fetchToken", { name, phoneNumber, email, password, birthday, gender }),
+        dispatch("fetchRegister", { name, phoneNumber, email, password, birthday, gender }),
         commit("setApplicantInfo", { name, phoneNumber, email, birthday, gender }),
       ])
     },
