@@ -95,6 +95,7 @@ class ApplicationFormServiceTest {
         given(applicationFormRepository.findByRecruitmentIdAndApplicantId(anyLong(), anyLong())).willReturn(
             applicationForm1
         )
+
         assertThat(applicationFormService.getByRecruitmentIdAndApplicantId(1L, 1L)).isEqualTo(applicationForm1)
     }
 
@@ -103,6 +104,7 @@ class ApplicationFormServiceTest {
         given(applicationFormRepository.findByRecruitmentIdAndApplicantId(anyLong(), anyLong())).willReturn(
             applicationForm1
         )
+
         assertThat(applicationFormService.getForm(1L, 1L)).isEqualTo(applicationFormResponse)
     }
 
@@ -111,6 +113,7 @@ class ApplicationFormServiceTest {
         given(applicationFormRepository.findByRecruitmentIdAndApplicantId(anyLong(), anyLong())).willReturn(
             null
         )
+
         assertThatIllegalArgumentException().isThrownBy { applicationFormService.getForm(1L, 1L) }
             .withMessage("해당하는 지원서가 없습니다.")
     }
@@ -118,12 +121,14 @@ class ApplicationFormServiceTest {
     @Test
     fun `지원서를 최초 저장한다`() {
         given(applicationFormRepository.existsByRecruitmentIdAndApplicantId(anyLong(), anyLong())).willReturn(false)
+
         assertDoesNotThrow { applicationFormService.save(1L, applicationFormSaveRequest) }
     }
 
     @Test
     fun `최초 저장 시 지원이 이미 존재하면 오류를 반환한다`() {
         given(applicationFormRepository.existsByRecruitmentIdAndApplicantId(anyLong(), anyLong())).willReturn(true)
+
         assertThatIllegalArgumentException().isThrownBy { applicationFormService.save(1L, applicationFormSaveRequest) }
             .withMessage("이미 저장된 지원서가 있습니다.")
     }
@@ -131,6 +136,7 @@ class ApplicationFormServiceTest {
     @Test
     fun `업데이트 시 이미 저장된 지원이 없으면 오류를 반환한다`() {
         given(applicationFormRepository.findByRecruitmentIdAndApplicantId(anyLong(), anyLong())).willReturn(null)
+
         assertThatIllegalArgumentException().isThrownBy {
             applicationFormService.update(
                 1L,
@@ -145,8 +151,8 @@ class ApplicationFormServiceTest {
         given(applicationFormRepository.findByRecruitmentIdAndApplicantId(anyLong(), anyLong())).willReturn(
             applicationForm1
         )
-        applicationFormService.update(1L, applicationFormUpdateRequest)
 
+        applicationFormService.update(1L, applicationFormUpdateRequest)
         assertDoesNotThrow { applicationFormRepository.save(applicationForm1) }
         verify(applicantService).changePassword(1L, applicationFormUpdateRequest.password)
     }
