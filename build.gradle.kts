@@ -21,6 +21,7 @@ repositories {
 extra["vaadinVersion"] = "14.3.3"
 
 dependencies {
+    implementation("org.springframework.boot:spring-boot-starter-mail")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-validation")
