@@ -111,7 +111,7 @@ class ApplicationFormServiceTest {
             applicationForm1
         )
 
-        assertThat(applicationFormService.getForm(1L, 1L)).isEqualTo(applicationFormResponse)
+        assertThat(applicationFormService.findForm(1L, 1L)).isEqualTo(applicationFormResponse)
     }
 
     @Test
@@ -120,7 +120,7 @@ class ApplicationFormServiceTest {
             null
         )
 
-        assertThatIllegalArgumentException().isThrownBy { applicationFormService.getForm(1L, 1L) }
+        assertThatIllegalArgumentException().isThrownBy { applicationFormService.findForm(1L, 1L) }
             .withMessage("해당하는 지원서가 없습니다.")
     }
 

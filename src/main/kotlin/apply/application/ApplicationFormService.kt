@@ -112,7 +112,7 @@ class ApplicationFormService(
         applicationFormRepository.save(applicationForm)
     }
 
-    fun getForm(applicantId: Long, recruitmentId: Long): ApplicationFormResponse {
+    fun findForm(applicantId: Long, recruitmentId: Long): ApplicationFormResponse {
         val form = applicationFormRepository.findByRecruitmentIdAndApplicantId(recruitmentId, applicantId)
             ?: throw IllegalArgumentException("해당하는 지원서가 없습니다.")
         val answers = form.answers.items.map { AnswerResponse(it.contents, it.recruitmentItemId) }

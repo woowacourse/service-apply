@@ -20,7 +20,7 @@ class ApplicationFormRestController(
     @GetMapping
     fun getForm(@RequestParam("recruitmentId") recruitment: Long): ResponseEntity<Any> {
         return try {
-            val form = applicationFormService.getForm(1L, recruitment)
+            val form = applicationFormService.findForm(1L, recruitment)
             ResponseEntity.ok().body(form)
         } catch (e: IllegalArgumentException) {
             ResponseEntity.badRequest().body(e.message)
