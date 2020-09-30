@@ -1,5 +1,6 @@
 <template>
   <div class="password-find">
+    <Loading :show="showLoading"></Loading>
     <Form @submit.prevent="submit">
       <h1>비밀번호 찾기</h1>
       <TextField
@@ -39,6 +40,7 @@ import { Form, Button, TextField, BirthField } from "@/components/form"
 import { login } from "@/utils/validation"
 import * as Api from "@/api"
 import * as DateUtil from "@/utils/date"
+import Loading from "@/components/Loading"
 
 export default {
   name: "PasswordFind",
@@ -47,6 +49,7 @@ export default {
     Button,
     TextField,
     BirthField,
+    Loading,
   },
   data: () => ({
     name: "",
@@ -61,13 +64,18 @@ export default {
     validName: false,
     validEmail: false,
     validBirth: false,
+    showLoading: false,
   }),
   methods: {
     async submit() {
+      this.showLoading = true
       await Api.fetchPasswordFind({
         name: this.name,
         email: this.email,
         birthday: DateUtil.formatLocalDate(this.birth),
+      }).catch(e => {
+        this.showLoading = false
+        throw e
       })
       this.$router.push("/find/result")
     },
