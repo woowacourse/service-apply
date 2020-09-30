@@ -6,6 +6,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertAll
 
 internal class ApplicationFormTest {
     private lateinit var applicationForm: ApplicationForm
@@ -33,11 +34,13 @@ internal class ApplicationFormTest {
 
     @Test
     fun `지원서가 잘 만들어졌는지 테스트한다`() {
-        assertThat(applicationForm.submitted).isFalse()
-        assertThat(applicationForm.applicantId).isEqualTo(1L)
-        assertThat(applicationForm.referenceUrl).isEqualTo("http://example.com")
-        assertThat(applicationForm.answers.items[0].contents).isEqualTo("스타트업을 하고 싶습니다.")
-        assertThat(applicationForm.answers.items[1].contents).isEqualTo("책임감")
+        assertAll(
+            { assertThat(applicationForm.submitted).isFalse() },
+            { assertThat(applicationForm.applicantId).isEqualTo(1L) },
+            { assertThat(applicationForm.referenceUrl).isEqualTo("http://example.com") },
+            { assertThat(applicationForm.answers.items[0].contents).isEqualTo("스타트업을 하고 싶습니다.") },
+            { assertThat(applicationForm.answers.items[1].contents).isEqualTo("책임감") }
+        )
     }
 
     @Test
@@ -57,8 +60,10 @@ internal class ApplicationFormTest {
                 )
             )
         )
-        assertThat(applicationForm.referenceUrl).isEqualTo("http://h2f.kr")
-        assertThat(applicationForm.answers.items[0].contents).isEqualTo("대기업에 취직하고 싶습니다.")
+        assertAll(
+            { assertThat(applicationForm.referenceUrl).isEqualTo("http://h2f.kr") },
+            { assertThat(applicationForm.answers.items[0].contents).isEqualTo("대기업에 취직하고 싶습니다.") }
+        )
     }
 
     @Test
