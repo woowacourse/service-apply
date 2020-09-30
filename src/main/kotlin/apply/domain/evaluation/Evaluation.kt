@@ -23,6 +23,8 @@ class Evaluation(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L
 ) {
+    fun hasBeforeEvaluation(): Boolean = beforeEvaluationId != 0L
+
     fun hasSameBeforeEvaluationWith(beforeEvaluationId: Long): Boolean = this.beforeEvaluationId == beforeEvaluationId
 
     fun resetBeforeEvaluation() {

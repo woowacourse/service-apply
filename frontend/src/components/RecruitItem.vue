@@ -66,7 +66,7 @@ export default {
   },
   methods: {
     onClickAdmission(id) {
-      this.$router.push({ path: `/register/applicant/${id}` })
+      this.$router.push({ path: `/register/applicant`, query: { recruitmentId: id } })
     },
   },
 }
