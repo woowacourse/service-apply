@@ -50,30 +50,24 @@ data class RecruitmentItemRequest(
 )
 
 data class SaveApplicationFormRequest(
-    @field:NotNull
     val recruitmentId: Long,
 
     @field:Size(min = 0, max = 255)
     val referenceUrl: String,
 
-    @field:NotNull
-    val isSubmitted: Boolean,
+    val isSubmitted: Boolean = false,
 
-    @field:NotNull
     val answers: List<AnswerRequest> = emptyList()
 )
 
 data class UpdateApplicationFormRequest(
-    @field:NotNull
     val recruitmentId: Long,
 
     @field:Size(min = 0, max = 255)
     val referenceUrl: String,
 
-    @field:NotNull
     val isSubmitted: Boolean = false,
 
-    @field:NotNull
     val answers: List<AnswerRequest> = emptyList(),
 
     @field:NotBlank
