@@ -5,10 +5,7 @@
         <div class="recruit-title">
           <b>{{ recruitment.title }}</b>
         </div>
-        <div class="recruit-duration">
-          {{ startTime }} ~
-          {{ endTime }}
-        </div>
+        <div class="recruit-duration">{{ startTime }} ~ {{ endTime }}</div>
       </div>
       <div class="button-wrapper">
         <Button
@@ -41,17 +38,15 @@ export default {
       required: true,
     },
   },
-  data: () => ({
-    startTime: "",
-    endTime: "",
-  }),
-  created() {
-    this.startTime = parseLocalDateTime(this.recruitment.startTime)
-    this.endTime = parseLocalDateTime(this.recruitment.endTime)
-  },
   computed: {
     buttonLabel() {
       return this.submitted ? "제출 완료" : "지원서 수정"
+    },
+    startTime() {
+      return parseLocalDateTime(this.recruitment.startTime)
+    },
+    endTime() {
+      return parseLocalDateTime(this.recruitment.endTime)
     },
   },
   methods: {

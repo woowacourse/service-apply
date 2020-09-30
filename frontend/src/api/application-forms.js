@@ -16,6 +16,7 @@ export const fetchMyApplicationForms = token => {
             id: 5,
             referenceUrl: "https://www.google.com",
             submitted: false,
+            recruitmentId: 5,
             answers: {
               items: [
                 {
@@ -33,6 +34,7 @@ export const fetchMyApplicationForms = token => {
             id: 4,
             referenceUrl: "https://www.google.com",
             submitted: false,
+            recruitmentId: 4,
             answers: {
               items: [
                 {
@@ -50,6 +52,7 @@ export const fetchMyApplicationForms = token => {
             id: 3,
             referenceUrl: "https://www.google.com",
             submitted: true,
+            recruitmentId: 3,
             answers: {
               items: [
                 {
@@ -67,6 +70,7 @@ export const fetchMyApplicationForms = token => {
             id: 2,
             referenceUrl: "https://www.google.com",
             submitted: true,
+            recruitmentId: 2,
             answers: {
               items: [
                 {

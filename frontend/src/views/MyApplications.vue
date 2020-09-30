@@ -4,10 +4,10 @@
 
     <ApplicationFormItem
       class="application-forms"
-      v-for="(applicationForm, index) in applicationForms"
-      :key="applicationForm.id"
-      :recruitment="recruitments[index]"
-      :submitted="applicationForm.submitted"
+      v-for="recruitment in matchRecruitments"
+      :key="recruitment.id"
+      :recruitment="recruitment"
+      :submitted="isSubmitted(recruitment.id)"
     />
 
     <footer>
@@ -33,14 +33,40 @@ export default {
     const token = this.$store.getters["token"]
 
     try {
-      const { data: applicationFormsData } = await ApplicationApi.fetchMyApplicationForms(token)
-      const { data: recruitmentData } = await RecruitmentApi.fetchMyRecruitments(token)
-      this.applicationForms = applicationFormsData
-      this.recruitments = recruitmentData
+      // todo: 백엔드 api에 따라 가능하면 한 번에 받아오도록 수정
+      Promise.all([
+        ApplicationApi.fetchMyApplicationForms(token),
+        RecruitmentApi.fetchMyRecruitments(token),
+      ]).then(values => {
+        const { data: applicationFormsData } = values[0]
+        const { data: recruitmentData } = values[1]
+        this.applicationForms = applicationFormsData
+        this.recruitments = recruitmentData
+      })
     } catch (e) {
       alert("token이 유효하지 않습니다.")
       await this.$router.replace("/login")
     }
+  },
+  computed: {
+    matchRecruitments() {
+      if (
+        !this.applicationForms ||
+        !this.recruitments ||
+        this.applicationForms.length !== this.recruitments.length
+      ) {
+        return []
+      }
+
+      return this.recruitments.filter(recruitment =>
+        this.applicationForms.map(form => form.recruitmentId).includes(recruitment.id),
+      )
+    },
+  },
+  methods: {
+    isSubmitted(recruitmentId) {
+      return !!this.applicationForms.find(form => form.recruitmentId === recruitmentId).submitted
+    },
   },
 }
 </script>

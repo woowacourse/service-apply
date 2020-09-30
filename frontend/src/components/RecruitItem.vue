@@ -34,15 +34,13 @@ export default {
       required: true,
     },
   },
-  data: () => ({
-    startTime: "",
-    endTime: "",
-  }),
-  created() {
-    this.startTime = parseLocalDateTime(this.recruitment.startTime)
-    this.endTime = parseLocalDateTime(this.recruitment.endTime)
-  },
   computed: {
+    startTime() {
+      return parseLocalDateTime(this.recruitment.startTime)
+    },
+    endTime() {
+      return parseLocalDateTime(this.recruitment.endTime)
+    },
     isRecruiting() {
       return this.recruitment.recruitmentStatus === "RECRUITING"
     },

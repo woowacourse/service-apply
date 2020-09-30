@@ -14,11 +14,11 @@
         </h2>
         <h2 class="list-tab" id="mypage" @click="goMyApplications">내 지원서</h2>
       </div>
-      <div id="component">
-        <div v-for="recruitment in activeList" :key="recruitment.id">
-          <RecruitItem :recruitment="recruitment" />
-        </div>
-      </div>
+      <RecruitItem
+        v-for="recruitment in activeList"
+        :key="recruitment.id"
+        :recruitment="recruitment"
+      />
     </div>
   </div>
 </template>
