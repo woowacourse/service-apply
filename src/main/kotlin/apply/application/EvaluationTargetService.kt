@@ -27,44 +27,40 @@ class EvaluationTargetService(
     fun load(evaluationId: Long) {
         val evaluation = evaluationRepository.findByIdOrNull(evaluationId) ?: throw IllegalArgumentException()
         val cheaterApplicantIds = cheaterRepository.findAll().map { it.applicantId }
-        val isSavedBefore: Boolean = evaluationTargetRepository.existsByEvaluationId(evaluationId)
 
         val updatingEvaluationTargets =
-            createUpdatingEvaluationTargets(evaluation).filter { !cheaterApplicantIds.contains(it.applicantId) }
+            createUpdatingEvaluationTargets(evaluation).filterNot { cheaterApplicantIds.contains(it.applicantId) }
 
-        if (isSavedBefore) {
-            val updatingApplicantIds = updatingEvaluationTargets.map { it.applicantId }.toSet()
+        val updatingApplicantIds = updatingEvaluationTargets.map { it.applicantId }.toSet()
 
-            val currentApplicantIds =
-                evaluationTargetRepository.findByEvaluationId(evaluationId).map { it.applicantId }.toSet()
+        val currentApplicantIds =
+            evaluationTargetRepository.findByEvaluationId(evaluationId).map { it.applicantId }.toSet()
 
-            evaluationTargetRepository.deleteByApplicantIdIn(currentApplicantIds - updatingApplicantIds)
+        evaluationTargetRepository.deleteByEvaluationIdAndApplicantIdIn(
+            evaluationId,
+            currentApplicantIds - updatingApplicantIds
+        )
 
-            val newlyAddedApplicantIds = updatingApplicantIds - currentApplicantIds
+        val newApplicantIds = updatingApplicantIds - currentApplicantIds
 
-            if (newlyAddedApplicantIds.isNotEmpty()) {
-                save(newlyAddedApplicantIds, evaluation)
-            }
-        } else {
-            evaluationTargetRepository.saveAll(updatingEvaluationTargets)
-        }
+        save(newApplicantIds, evaluation)
     }
 
     private fun createUpdatingEvaluationTargets(evaluation: Evaluation): List<EvaluationTarget> {
         return if (evaluation.hasBeforeEvaluation()) {
-            createEvaluationTargetsFrom(evaluation)
+            createEvaluationTargets(evaluation)
         } else {
-            createEvaluationTargetsFromFirst(evaluation)
+            createEvaluationTargetsFromRecruitment(evaluation)
         }
     }
 
-    private fun createEvaluationTargetsFrom(evaluation: Evaluation): List<EvaluationTarget> {
+    private fun createEvaluationTargets(evaluation: Evaluation): List<EvaluationTarget> {
         return evaluationTargetRepository.findByEvaluationId(evaluation.beforeEvaluationId)
             .filter { it.isPassed }
             .map { EvaluationTarget(evaluationId = evaluation.id, applicantId = it.applicantId) }
     }
 
-    private fun createEvaluationTargetsFromFirst(evaluation: Evaluation): List<EvaluationTarget> {
+    private fun createEvaluationTargetsFromRecruitment(evaluation: Evaluation): List<EvaluationTarget> {
         val applicantIds = applicationFormRepository.findByRecruitmentId(evaluation.recruitmentId)
             .map { it.applicantId }
 
@@ -72,8 +68,8 @@ class EvaluationTargetService(
             .map { EvaluationTarget(evaluationId = evaluation.id, applicantId = it.id) }
     }
 
-    private fun save(newlyAddedApplicantIds: Set<Long>, evaluation: Evaluation) {
-        val additionalEvaluationTargets = applicantRepository.findAllById(newlyAddedApplicantIds)
+    private fun save(applicantIds: Set<Long>, evaluation: Evaluation) {
+        val additionalEvaluationTargets = applicantRepository.findAllById(applicantIds)
             .map { EvaluationTarget(evaluationId = evaluation.id, applicantId = it.id) }
 
         evaluationTargetRepository.saveAll(additionalEvaluationTargets)
