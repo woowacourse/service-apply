@@ -1,6 +1,7 @@
 package apply.ui.api
 
 import apply.application.ApplicantService
+import apply.application.MailService
 import apply.domain.applicant.ApplicantInformation
 import apply.domain.applicant.ApplicantPasswordFindInformation
 import apply.domain.applicant.ApplicantVerifyInformation
@@ -15,7 +16,8 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/applicants")
 class ApplicantRestController(
-    private val applicantService: ApplicantService
+    private val applicantService: ApplicantService,
+    private val mailService: MailService
 ) {
     @PostMapping("/register")
     fun generateToken(@RequestBody applicantInformation: ApplicantInformation): ResponseEntity<String> {
@@ -40,7 +42,9 @@ class ApplicantRestController(
     @PostMapping("/find")
     fun findPassword(@RequestBody applicantPasswordFindInformation: ApplicantPasswordFindInformation): ResponseEntity<String> {
         return try {
-            applicantService.resetPassword(applicantPasswordFindInformation)
+            val newPassword = applicantService.resetPassword(applicantPasswordFindInformation)
+            mailService.sendPasswordResetMail(applicantPasswordFindInformation.email, newPassword)
+
             ResponseEntity.noContent().build()
         } catch (e: ApplicantValidateException) {
             ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.message)

@@ -1,6 +1,7 @@
 package apply.ui.api
 
 import apply.application.ApplicantService
+import apply.application.MailService
 import apply.domain.applicant.ApplicantInformation
 import apply.domain.applicant.ApplicantPasswordFindInformation
 import apply.domain.applicant.ApplicantVerifyInformation
@@ -10,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
+import org.mockito.BDDMockito.willDoNothing
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
@@ -33,6 +35,9 @@ internal class ApplicantRestControllerTest(
 ) {
     @MockBean
     private lateinit var applicantService: ApplicantService
+
+    @MockBean
+    private lateinit var mailService: MailService
 
     private lateinit var mockMvc: MockMvc
 
@@ -137,6 +142,8 @@ internal class ApplicantRestControllerTest(
         given(
             applicantService.resetPassword(applicantPasswordFindRequest)
         ).willReturn(RANDOM_PASSWORD)
+
+        willDoNothing().given(mailService).sendPasswordResetMail(applicantLoginRequest.email, RANDOM_PASSWORD)
 
         mockMvc.post("/api/applicants/find") {
             content = objectMapper.writeValueAsBytes(applicantPasswordFindRequest)
