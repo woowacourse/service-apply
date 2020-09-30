@@ -54,7 +54,7 @@ internal class LoginApplicantResolverTest {
             birthday = createLocalDate(2020, 4, 17),
             password = "password"
         )
-        every { applicantService.findByEmail("applicant_email@email.com") } returns expectedApplicant
+        every { applicantService.getByEmail("applicant_email@email.com") } returns expectedApplicant
 
         val result =
             loginApplicantResolver.resolveArgument(loginApplicantParameter, null, nativeWebRequest, null)

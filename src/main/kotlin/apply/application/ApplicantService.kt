@@ -34,7 +34,7 @@ class ApplicantService(
             ApplicantResponse(it, cheaterRepository.existsByApplicantId(it.id))
         }
 
-    fun findByEmail(email: String): Applicant =
+    fun getByEmail(email: String): Applicant =
         applicantRepository.findByEmail(email) ?: throw IllegalArgumentException("email=$email 인 유저가 존재하지 않습니다")
 
     fun generateToken(applicantInformation: ApplicantInformation): String {
