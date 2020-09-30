@@ -147,8 +147,13 @@ export default {
     },
     async submit() {
       try {
-        await this.fetchRegisterAndSetApplicantInfo(this.parseApplicantInfo())
-        this.$router.push({ path: `/register/application/${this.recruitmentId}` })
+        await this.fetchTokenAndSetApplicantInfo(this.parseApplicantInfo())
+        this.$router.push({
+          path: `/register/application`,
+          query: {
+            recruitmentId: this.recruitmentId,
+          },
+        })
       } catch (e) {
         alert(e.response.data)
       }
