@@ -35,7 +35,7 @@ class EvaluationTargetRepositoryTest(
 
     @Test
     fun `평가의 id로 평가 대상자를 찾는다`() {
-        val results = evaluationTargetRepository.findByEvaluationId(EVALUATION_ID)
+        val results = evaluationTargetRepository.findAllByEvaluationId(EVALUATION_ID)
 
         assertThat(results).usingElementComparatorOnFields("applicantId").isEqualTo(evaluationTargets)
     }

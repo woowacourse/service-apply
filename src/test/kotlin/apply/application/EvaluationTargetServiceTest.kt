@@ -103,7 +103,7 @@ class EvaluationTargetServiceTest(
 
         evaluationTargetService.load(firstEvaluation.id)
 
-        val actual = evaluationTargetRepository.findByEvaluationId(firstEvaluation.id)
+        val actual = evaluationTargetRepository.findAllByEvaluationId(firstEvaluation.id)
 
         // then
         assertAll(
@@ -156,7 +156,7 @@ class EvaluationTargetServiceTest(
 
         evaluationTargetService.load(secondEvaluation.id)
 
-        val actual = evaluationTargetRepository.findByEvaluationId(secondEvaluation.id)
+        val actual = evaluationTargetRepository.findAllByEvaluationId(secondEvaluation.id)
 
         // then
         assertAll(
@@ -239,7 +239,7 @@ class EvaluationTargetServiceTest(
 
         evaluationTargetService.load(firstEvaluation.id)
 
-        val actual = evaluationTargetRepository.findByEvaluationId(firstEvaluation.id)
+        val actual = evaluationTargetRepository.findAllByEvaluationId(firstEvaluation.id)
 
         // then
         assertAll(
@@ -323,7 +323,7 @@ class EvaluationTargetServiceTest(
 
         evaluationTargetService.load(secondEvaluation.id)
 
-        val actual = evaluationTargetRepository.findByEvaluationId(secondEvaluation.id)
+        val actual = evaluationTargetRepository.findAllByEvaluationId(secondEvaluation.id)
 
         // then
         assertAll(
@@ -332,6 +332,42 @@ class EvaluationTargetServiceTest(
             { assertThat(actual[0].evaluationStatus).isEqualTo(EvaluationStatus.PASS) },
             { assertThat(actual[1].applicantId).isEqualTo(4L) },
             { assertThat(actual[1].evaluationStatus).isEqualTo(EvaluationStatus.WAITING) }
+        )
+    }
+
+    @Test
+    fun `현재 평가를 불러올 때, 평가 대상자가 부정행위자로 지정되어 제거될 경우 현재 평가에만 영향이 가는지 확인한다`() {
+        // given
+        val beforeEvaluationTarget = EvaluationTarget(evaluationId = 1L, applicantId = 1L)
+        val currentEvaluationTarget = EvaluationTarget(evaluationId = 2L, applicantId = 1L)
+        val nextEvaluationTarget = EvaluationTarget(evaluationId = 3L, applicantId = 1L)
+        evaluationTargetRepository.saveAll(
+            listOf(
+                beforeEvaluationTarget,
+                currentEvaluationTarget,
+                nextEvaluationTarget
+            )
+        )
+
+        // when
+        val currentEvaluation = createEvaluation(
+            id = 2L,
+            recruitmentId = 1L,
+            beforeEvaluationId = 1L
+        )
+
+        every { evaluationRepository.findByIdOrNull(2L) } returns currentEvaluation
+        every { cheaterRepository.findAll() } returns listOf(Cheater(applicantId = 1L))
+        every { applicantRepository.findAllById(listOf(1L)) } returns listOf(createApplicant(1L))
+        every { applicantRepository.findAllById(emptySet()) } returns emptyList()
+
+        evaluationTargetService.load(2L)
+
+        // then
+        assertAll(
+            { assertThat(evaluationTargetRepository.findAllByEvaluationId(1L)).isNotEmpty() },
+            { assertThat(evaluationTargetRepository.findAllByEvaluationId(2L)).isEmpty() },
+            { assertThat(evaluationTargetRepository.findAllByEvaluationId(3L)).isNotEmpty() }
         )
     }
 

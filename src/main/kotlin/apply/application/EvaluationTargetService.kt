@@ -22,7 +22,7 @@ class EvaluationTargetService(
     private val cheaterRepository: CheaterRepository
 ) {
     fun findByEvaluationId(evaluationId: Long): List<EvaluationTarget> =
-        evaluationTargetRepository.findByEvaluationId(evaluationId)
+        evaluationTargetRepository.findAllByEvaluationId(evaluationId)
 
     fun load(evaluationId: Long) {
         val evaluation = evaluationRepository.findByIdOrNull(evaluationId) ?: throw IllegalArgumentException()
@@ -31,8 +31,7 @@ class EvaluationTargetService(
             .filterNot { cheaterApplicantIds.contains(it.applicantId) }
             .map { it.applicantId }
             .toSet()
-        val currentApplicantIds = evaluationTargetRepository
-            .findByEvaluationId(evaluationId)
+        val currentApplicantIds = evaluationTargetRepository.findAllByEvaluationId(evaluationId)
             .map { it.applicantId }
             .toSet()
 
@@ -54,7 +53,7 @@ class EvaluationTargetService(
     }
 
     private fun createEvaluationTargets(evaluation: Evaluation): List<EvaluationTarget> {
-        return evaluationTargetRepository.findByEvaluationId(evaluation.beforeEvaluationId)
+        return evaluationTargetRepository.findAllByEvaluationId(evaluation.beforeEvaluationId)
             .filter { it.isPassed }
             .map { EvaluationTarget(evaluationId = evaluation.id, applicantId = it.applicantId) }
     }
