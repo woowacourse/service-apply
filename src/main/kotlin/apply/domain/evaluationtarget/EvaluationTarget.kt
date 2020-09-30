@@ -13,7 +13,7 @@ class EvaluationTarget(
     val evaluationId: Long = 0L,
 
     // TODO 추후 채점자 개념이 들어가면 수정 필요
-    val administratorId: Long,
+    val administratorId: Long?,
 
     @Column(nullable = false)
     val applicantId: Long,

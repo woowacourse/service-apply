@@ -10,6 +10,9 @@ import apply.domain.cheater.CheaterRepository
 import apply.domain.evaluation.Evaluation
 import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluationtarget.EvaluationStatus
+import apply.domain.evaluationtarget.EvaluationStatus.FAIL
+import apply.domain.evaluationtarget.EvaluationStatus.PASS
+import apply.domain.evaluationtarget.EvaluationStatus.WAITING
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.recruitmentitem.Answer
@@ -62,28 +65,12 @@ class EvaluationTargetServiceTest(
     @Test
     fun `이전 평가가 없고 저장 된 평가 대상자가 없을 경우 저장하고 불러온다`() {
         // given
-        val firstEvaluation = createEvaluation(
-            id = 1L,
-            recruitmentId = 1L,
-            beforeEvaluationId = 0L
-        )
+        val firstEvaluation = createEvaluation(id = 1L, recruitmentId = 1L, beforeEvaluationId = 0L)
 
         val applicationForms = listOf(
-            createApplicationForm(
-                id = 1L,
-                recruitmentId = 1L,
-                applicantId = 1L
-            ),
-            createApplicationForm(
-                id = 2L,
-                recruitmentId = 1L,
-                applicantId = 2L
-            ),
-            createApplicationForm(
-                id = 3L,
-                recruitmentId = 1L,
-                applicantId = 3L
-            )
+            createApplicationForm(id = 1L, recruitmentId = 1L, applicantId = 1L),
+            createApplicationForm(id = 2L, recruitmentId = 1L, applicantId = 2L),
+            createApplicationForm(id = 3L, recruitmentId = 1L, applicantId = 3L)
         )
 
         val firstApplicant = createApplicant(1L)
@@ -109,9 +96,9 @@ class EvaluationTargetServiceTest(
         assertAll(
             { assertThat(actual).hasSize(2) },
             { assertThat(actual[0].applicantId).isEqualTo(1L) },
-            { assertThat(actual[0].evaluationStatus).isEqualTo(EvaluationStatus.WAITING) },
+            { assertThat(actual[0].evaluationStatus).isEqualTo(WAITING) },
             { assertThat(actual[1].applicantId).isEqualTo(2L) },
-            { assertThat(actual[1].evaluationStatus).isEqualTo(EvaluationStatus.WAITING) }
+            { assertThat(actual[1].evaluationStatus).isEqualTo(WAITING) }
         )
     }
 
@@ -119,34 +106,15 @@ class EvaluationTargetServiceTest(
     fun `이전 평가가 있고 저장 된 평가 대상자가 없을 경우 저장하고 불러온다`() {
         // given
         val savedEvaluationTargets = listOf(
-            EvaluationTarget(
-                evaluationId = 1L,
-                administratorId = 0L,
-                applicantId = 1L,
-                evaluationStatus = EvaluationStatus.WAITING
-            ),
-            EvaluationTarget(
-                evaluationId = 1L,
-                administratorId = 0L,
-                applicantId = 2L,
-                evaluationStatus = EvaluationStatus.PASS
-            ),
-            EvaluationTarget(
-                evaluationId = 1L,
-                administratorId = 0L,
-                applicantId = 3L,
-                evaluationStatus = EvaluationStatus.PASS
-            )
+            createEvaluationTarget(1L, 1L, WAITING),
+            createEvaluationTarget(1L, 2L, PASS),
+            createEvaluationTarget(1L, 3L, PASS)
         )
 
         evaluationTargetRepository.saveAll(savedEvaluationTargets)
 
         // when
-        val secondEvaluation = createEvaluation(
-            id = 2L,
-            recruitmentId = 1L,
-            beforeEvaluationId = 1L
-        )
+        val secondEvaluation = createEvaluation(id = 2L, recruitmentId = 1L, beforeEvaluationId = 1L)
 
         val addingApplicants = listOf(createApplicant(2L))
 
@@ -162,7 +130,7 @@ class EvaluationTargetServiceTest(
         assertAll(
             { assertThat(actual).hasSize(1) },
             { assertThat(actual[0].applicantId).isEqualTo(2L) },
-            { assertThat(actual[0].evaluationStatus).isEqualTo(EvaluationStatus.WAITING) }
+            { assertThat(actual[0].evaluationStatus).isEqualTo(WAITING) }
         )
     }
 
@@ -170,56 +138,21 @@ class EvaluationTargetServiceTest(
     fun `이전 평가가 없고 저장 된 평가 대상자가 있을 경우 갱신하여 불러온다, 새로 등록된 지원자를 평가 대상자에 추가한다`() {
         // given
         val savedEvaluationTargets = listOf(
-            EvaluationTarget(
-                evaluationId = 1L,
-                administratorId = 0L,
-                applicantId = 1L,
-                evaluationStatus = EvaluationStatus.FAIL
-            ),
-            EvaluationTarget(
-                evaluationId = 1L,
-                administratorId = 0L,
-                applicantId = 2L,
-                evaluationStatus = EvaluationStatus.PASS
-            ),
-            EvaluationTarget(
-                evaluationId = 1L,
-                administratorId = 0L,
-                applicantId = 3L,
-                evaluationStatus = EvaluationStatus.PASS
-            )
+            createEvaluationTarget(1L, 1L, FAIL),
+            createEvaluationTarget(1L, 2L, PASS),
+            createEvaluationTarget(1L, 3L, PASS)
         )
 
         evaluationTargetRepository.saveAll(savedEvaluationTargets)
 
         // when
-        val firstEvaluation = createEvaluation(
-            id = 1L,
-            recruitmentId = 1L,
-            beforeEvaluationId = 0L
-        )
+        val firstEvaluation = createEvaluation(id = 1L, recruitmentId = 1L, beforeEvaluationId = 0L)
 
         val allApplicationForms = listOf(
-            createApplicationForm(
-                id = 1L,
-                recruitmentId = 1L,
-                applicantId = 1L
-            ),
-            createApplicationForm(
-                id = 2L,
-                recruitmentId = 1L,
-                applicantId = 2L
-            ),
-            createApplicationForm(
-                id = 3L,
-                recruitmentId = 1L,
-                applicantId = 3L
-            ),
-            createApplicationForm(
-                id = 4L,
-                recruitmentId = 1L,
-                applicantId = 4L
-            )
+            createApplicationForm(id = 1L, recruitmentId = 1L, applicantId = 1L),
+            createApplicationForm(id = 2L, recruitmentId = 1L, applicantId = 2L),
+            createApplicationForm(id = 3L, recruitmentId = 1L, applicantId = 3L),
+            createApplicationForm(id = 4L, recruitmentId = 1L, applicantId = 4L)
         )
 
         val addingApplicant = createApplicant(id = 4L)
@@ -245,11 +178,11 @@ class EvaluationTargetServiceTest(
         assertAll(
             { assertThat(actual).hasSize(3) },
             { assertThat(actual[0].applicantId).isEqualTo(1L) },
-            { assertThat(actual[0].evaluationStatus).isEqualTo(EvaluationStatus.FAIL) },
+            { assertThat(actual[0].evaluationStatus).isEqualTo(FAIL) },
             { assertThat(actual[1].applicantId).isEqualTo(2L) },
-            { assertThat(actual[1].evaluationStatus).isEqualTo(EvaluationStatus.PASS) },
+            { assertThat(actual[1].evaluationStatus).isEqualTo(PASS) },
             { assertThat(actual[2].applicantId).isEqualTo(4L) },
-            { assertThat(actual[2].evaluationStatus).isEqualTo(EvaluationStatus.WAITING) }
+            { assertThat(actual[2].evaluationStatus).isEqualTo(WAITING) }
         )
     }
 
@@ -257,53 +190,18 @@ class EvaluationTargetServiceTest(
     fun `이전 평가가 있고 저장 된 평가 대상자가 있을 경우 갱신하고 불러온다, 이전 평가의 평가 대상자의 평가가 FAIL로 바뀌면 제거한다`() {
         // given
         val savedCurrentEvaluationTargets = listOf(
-            EvaluationTarget(
-                evaluationId = 2L,
-                administratorId = 0L,
-                applicantId = 1L,
-                evaluationStatus = EvaluationStatus.WAITING
-            ),
-            EvaluationTarget(
-                evaluationId = 2L,
-                administratorId = 0L,
-                applicantId = 2L,
-                evaluationStatus = EvaluationStatus.PASS
-            ),
-            EvaluationTarget(
-                evaluationId = 2L,
-                administratorId = 0L,
-                applicantId = 3L,
-                evaluationStatus = EvaluationStatus.PASS
-            )
+            createEvaluationTarget(2L, 1L, WAITING),
+            createEvaluationTarget(2L, 2L, PASS),
+            createEvaluationTarget(2L, 3L, PASS)
         )
 
         evaluationTargetRepository.saveAll(savedCurrentEvaluationTargets)
 
         val loadingEvaluationTargetsFromBeforeEvaluation = listOf(
-            EvaluationTarget(
-                evaluationId = 1L,
-                administratorId = 0L,
-                applicantId = 1L,
-                evaluationStatus = EvaluationStatus.FAIL
-            ),
-            EvaluationTarget(
-                evaluationId = 1L,
-                administratorId = 0L,
-                applicantId = 2L,
-                evaluationStatus = EvaluationStatus.PASS
-            ),
-            EvaluationTarget(
-                evaluationId = 1L,
-                administratorId = 0L,
-                applicantId = 3L,
-                evaluationStatus = EvaluationStatus.PASS
-            ),
-            EvaluationTarget(
-                evaluationId = 1L,
-                administratorId = 0L,
-                applicantId = 4L,
-                evaluationStatus = EvaluationStatus.PASS
-            )
+            createEvaluationTarget(1L, 1L, WAITING),
+            createEvaluationTarget(1L, 2L, PASS),
+            createEvaluationTarget(1L, 3L, PASS),
+            createEvaluationTarget(1L, 4L, PASS)
         )
 
         evaluationTargetRepository.saveAll(loadingEvaluationTargetsFromBeforeEvaluation)
@@ -329,9 +227,9 @@ class EvaluationTargetServiceTest(
         assertAll(
             { assertThat(actual).hasSize(2) },
             { assertThat(actual[0].applicantId).isEqualTo(2L) },
-            { assertThat(actual[0].evaluationStatus).isEqualTo(EvaluationStatus.PASS) },
+            { assertThat(actual[0].evaluationStatus).isEqualTo(PASS) },
             { assertThat(actual[1].applicantId).isEqualTo(4L) },
-            { assertThat(actual[1].evaluationStatus).isEqualTo(EvaluationStatus.WAITING) }
+            { assertThat(actual[1].evaluationStatus).isEqualTo(WAITING) }
         )
     }
 
@@ -350,11 +248,7 @@ class EvaluationTargetServiceTest(
         )
 
         // when
-        val currentEvaluation = createEvaluation(
-            id = 2L,
-            recruitmentId = 1L,
-            beforeEvaluationId = 1L
-        )
+        val currentEvaluation = createEvaluation(id = 2L, recruitmentId = 1L, beforeEvaluationId = 1L)
 
         every { evaluationRepository.findByIdOrNull(2L) } returns currentEvaluation
         every { cheaterRepository.findAll() } returns listOf(Cheater(applicantId = 1L))
@@ -378,6 +272,19 @@ class EvaluationTargetServiceTest(
             description = "평가${id}에 대한 설명",
             recruitmentId = recruitmentId,
             beforeEvaluationId = beforeEvaluationId
+        )
+    }
+
+    private fun createEvaluationTarget(
+        evaluationId: Long,
+        applicantId: Long,
+        evaluationStatus: EvaluationStatus
+    ): EvaluationTarget {
+        return EvaluationTarget(
+            evaluationId = evaluationId,
+            administratorId = null,
+            applicantId = applicantId,
+            evaluationStatus = evaluationStatus
         )
     }
 
