@@ -27,14 +27,14 @@ class EvaluationTargetService(
     fun load(evaluationId: Long) {
         val evaluation = evaluationRepository.findByIdOrNull(evaluationId) ?: throw IllegalArgumentException()
         val cheaterApplicantIds = cheaterRepository.findAll().map { it.applicantId }
-
-        val updatingEvaluationTargets =
-            createUpdatingEvaluationTargets(evaluation).filterNot { cheaterApplicantIds.contains(it.applicantId) }
-
-        val updatingApplicantIds = updatingEvaluationTargets.map { it.applicantId }.toSet()
-
-        val currentApplicantIds =
-            evaluationTargetRepository.findByEvaluationId(evaluationId).map { it.applicantId }.toSet()
+        val updatingApplicantIds = createUpdatingEvaluationTargets(evaluation)
+            .filterNot { cheaterApplicantIds.contains(it.applicantId) }
+            .map { it.applicantId }
+            .toSet()
+        val currentApplicantIds = evaluationTargetRepository
+            .findByEvaluationId(evaluationId)
+            .map { it.applicantId }
+            .toSet()
 
         evaluationTargetRepository.deleteByEvaluationIdAndApplicantIdIn(
             evaluationId,
@@ -42,7 +42,6 @@ class EvaluationTargetService(
         )
 
         val newApplicantIds = updatingApplicantIds - currentApplicantIds
-
         save(newApplicantIds, evaluation)
     }
 
