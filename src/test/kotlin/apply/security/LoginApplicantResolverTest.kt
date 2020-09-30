@@ -43,7 +43,7 @@ internal class LoginApplicantResolverTest {
     fun `요청에 담긴 loginApplicantEmail 속성으로 저장된 지원자를 불러온다`() {
         val nativeWebRequest = mockk<NativeWebRequest>()
         every {
-            nativeWebRequest.getAttribute("loginApplicantEmail", SCOPE_REQUEST)
+            nativeWebRequest.getAttribute(APPLICANT_EMAIL_ATTRIBUTE_NAME, SCOPE_REQUEST)
         } returns "applicant_email@email.com"
 
         val expectedApplicant = Applicant(

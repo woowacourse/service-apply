@@ -48,7 +48,7 @@ internal class BearerAuthInterceptorTest {
             bearerAuthInterceptor.preHandle(mockHttpServletRequest, mockHttpServletResponse, nonAuthTargetMethod)
 
         assertAll(
-            { assertThat(mockHttpServletRequest.getAttribute("loginApplicantEmail")).isNull() },
+            { assertThat(mockHttpServletRequest.getAttribute(APPLICANT_EMAIL_ATTRIBUTE_NAME)).isNull() },
             { assertThat(result).isTrue() }
         )
     }
@@ -56,13 +56,13 @@ internal class BearerAuthInterceptorTest {
     @Test
     fun `handler 메서드 파라미터에 @LoginApplicant 어노테이션이 있으면 Bearer 토큰을 추출하고 통과한다`() {
         mockHttpServletRequest.addHeader("Authorization", "Bearer valid_token")
-        every { jwtTokenProvider.getPayload("valid_token") } returns "applicant_email@email.com"
+        every { jwtTokenProvider.getSubject("valid_token") } returns "applicant_email@email.com"
 
         val result =
             bearerAuthInterceptor.preHandle(mockHttpServletRequest, mockHttpServletResponse, authTargetMethod)
 
         assertAll(
-            { assertThat(mockHttpServletRequest.getAttribute("loginApplicantEmail")).isEqualTo("applicant_email@email.com") },
+            { assertThat(mockHttpServletRequest.getAttribute(APPLICANT_EMAIL_ATTRIBUTE_NAME)).isEqualTo("applicant_email@email.com") },
             { assertThat(result).isTrue() }
         )
     }
@@ -70,10 +70,9 @@ internal class BearerAuthInterceptorTest {
     @ParameterizedTest
     @CsvSource(
         "Authorization,Bearertokeninfo",
-        "Authorization,Bearer tokeninfo third",
         "NonAuthorization,Bearer valid_token"
     )
-    fun `handler 메서드 파라미터에 @LoginApplicant 어노테이션이 있고 토큰이 유효하지 않을 경우 예외가 발생한다`(headerName: String, token: String) {
+    fun `handler 메서드 파라미터에 @LoginApplicant 어노테이션이 있고 토큰 형식이 유효하지 않을 경우 예외가 발생한다`(headerName: String, token: String) {
         mockHttpServletRequest.addHeader(headerName, token)
 
         assertThatIllegalArgumentException().isThrownBy {

@@ -28,7 +28,7 @@ class JwtTokenProvider(
             .compact()
     }
 
-    fun getPayload(token: String): String {
+    fun getSubject(token: String): String {
         return getClaimsJws(token)
             .body
             .subject

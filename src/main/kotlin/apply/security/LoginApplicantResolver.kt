@@ -22,7 +22,7 @@ class LoginApplicantResolver(private val applicantService: ApplicantService) : H
         webRequest: NativeWebRequest,
         binderFactory: WebDataBinderFactory?
     ): Applicant {
-        val applicantEmail = webRequest.getAttribute("loginApplicantEmail", SCOPE_REQUEST) as? String
+        val applicantEmail = webRequest.getAttribute(APPLICANT_EMAIL_ATTRIBUTE_NAME, SCOPE_REQUEST) as? String
             ?: throw AssertionError("요청에 loginApplicantEmail 속성이 반드시 존재해야 합니다")
 
         return applicantService.findByEmail(applicantEmail)

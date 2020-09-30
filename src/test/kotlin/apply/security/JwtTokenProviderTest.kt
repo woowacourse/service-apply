@@ -13,7 +13,7 @@ internal class JwtTokenProviderTest {
         val jwtTokenProvider = JwtTokenProvider()
         val token = jwtTokenProvider.createToken(PAYLOAD)
 
-        assertThat(jwtTokenProvider.getPayload(token)).isEqualTo(PAYLOAD)
+        assertThat(jwtTokenProvider.getSubject(token)).isEqualTo(PAYLOAD)
     }
 
     @Test
