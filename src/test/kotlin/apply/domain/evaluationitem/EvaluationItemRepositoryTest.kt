@@ -20,7 +20,7 @@ internal class EvaluationItemRepositoryTest(
 
     @Test
     fun `평가의 id로 평가 항목들을 Position의 오름차순으로 조회한다`() {
-        val evauationItems = listOf(
+        val evaluationItems = listOf(
             EvaluationItem(
                 title = "평가 항목 제목",
                 description = "평가 항목 설명",
@@ -51,10 +51,10 @@ internal class EvaluationItemRepositoryTest(
             )
         )
 
-        evaluationItemRepository.saveAll(evauationItems)
+        evaluationItemRepository.saveAll(evaluationItems)
         val results = evaluationItemRepository.findByEvaluationIdOrderByPosition(EVALUATION_ID)
 
-        val expected = listOf(evauationItems[3], evauationItems[1], evauationItems[0], evauationItems[2])
+        val expected = listOf(evaluationItems[3], evaluationItems[1], evaluationItems[0], evaluationItems[2])
         assertAll(
             { assertThat(results).usingElementComparatorIgnoringFields("id").isEqualTo(expected) },
             { assertThat(results).usingElementComparatorOnFields("id").isNotNull() }
