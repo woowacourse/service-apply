@@ -12,10 +12,10 @@ import javax.persistence.Id
 @Entity
 class ApplicationForm(
     @Column(nullable = false)
-    var applicantId: Long,
+    val applicantId: Long,
 
     @Column(nullable = false)
-    var recruitmentId: Long,
+    val recruitmentId: Long,
 
     var referenceUrl: String,
 

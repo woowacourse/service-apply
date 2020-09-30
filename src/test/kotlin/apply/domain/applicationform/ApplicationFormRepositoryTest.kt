@@ -14,10 +14,10 @@ class ApplicationFormRepositoryTest(
     private val applicationFormRepository: ApplicationFormRepository
 ) {
     private val applicationForm = ApplicationForm(
-        1L,
-        1L,
-        "http://example.com",
-        Answers(
+        applicantId = 1L,
+        recruitmentId = 1L,
+        referenceUrl = "http://example.com",
+        answers = Answers(
             mutableListOf(
                 Answer("스타트업을 하고 싶습니다.", 1L),
                 Answer("책임감", 2L)

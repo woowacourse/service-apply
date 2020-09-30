@@ -59,7 +59,7 @@ data class SaveApplicationFormRequest(
     @field:NotNull
     val isSubmitted: Boolean,
 
-    @field:NotBlank
+    @field:NotNull
     val answers: List<AnswerRequest> = emptyList()
 )
 
