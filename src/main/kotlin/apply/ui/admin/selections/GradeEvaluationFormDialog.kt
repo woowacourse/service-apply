@@ -1,7 +1,7 @@
 package apply.ui.admin.selections
 
-import apply.domain.dummy.DummyService
-import apply.application.DoEvaluationRequest
+import apply.application.EvaluationTargetService
+import apply.application.GradeEvaluationRequest
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.dialog.Dialog
@@ -14,22 +14,21 @@ import support.views.BindingFormLayout
 import support.views.createContrastButton
 import support.views.createPrimaryButton
 
-class DoEvaluationFormDialog(
-    private val dummyService: DummyService,
-    targetId: Long
+class GradeEvaluationFormDialog(
+    private val evaluationTargetService: EvaluationTargetService,
+    private val evaluationTargetId: Long
 ) : VerticalLayout() {
     private val title: H2 = H2().apply { alignItems = FlexComponent.Alignment.CENTER }
     private val description: TextArea = TextArea().apply {
         setWidthFull()
         isReadOnly = true
     }
-    private val doEvaluationForm: BindingFormLayout<DoEvaluationRequest>
+    private val gradeEvaluationForm: BindingFormLayout<GradeEvaluationRequest>
     private val dialog: Dialog
 
     init {
-        // TODO: 평가 정보 가져오기
-        val evaluateResponse = dummyService.getEvaluationByTargetId(targetId)
-        doEvaluationForm = DoEvaluationForm(evaluateResponse)
+        val evaluateResponse = evaluationTargetService.getGradeEvaluation(evaluationTargetId)
+        gradeEvaluationForm = GradeEvaluationForm(evaluateResponse)
         title.text = evaluateResponse.evaluationTitle
         description.value = evaluateResponse.evaluationDescription
         dialog = createDialog()
@@ -37,7 +36,7 @@ class DoEvaluationFormDialog(
 
     private fun createDialog(): Dialog {
         return Dialog().apply {
-            add(createHeader(), doEvaluationForm, createButtons())
+            add(createHeader(), gradeEvaluationForm, createButtons())
             width = "800px"
             height = "90%"
             open()
@@ -59,9 +58,8 @@ class DoEvaluationFormDialog(
 
     private fun createAddButton(): Button {
         return createPrimaryButton("생성") {
-            doEvaluationForm.bindOrNull()?.let {
-                // TODO: 저장 요청
-                dummyService.save(it)
+            gradeEvaluationForm.bindOrNull()?.let {
+                evaluationTargetService.grade(evaluationTargetId, it)
                 dialog.close()
             }
         }

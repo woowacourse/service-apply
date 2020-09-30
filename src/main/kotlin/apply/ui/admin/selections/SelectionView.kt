@@ -4,10 +4,10 @@ import apply.application.ApplicantResponse
 import apply.application.ApplicantService
 import apply.application.ApplicationFormService
 import apply.application.DownloadService
+import apply.application.EvaluationTargetService
 import apply.application.RecruitmentItemService
 import apply.application.RecruitmentService
 import apply.domain.applicationform.ApplicationForm
-import apply.domain.dummy.DummyService
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
@@ -42,7 +42,7 @@ class SelectionView(
     private val recruitmentService: RecruitmentService,
     private val recruitmentItemService: RecruitmentItemService,
     private val downloadService: DownloadService,
-    private val dummyService: DummyService
+    private val evaluationTargetService: EvaluationTargetService
 ) : VerticalLayout(), HasUrlParameter<Long> {
     private var recruitmentId: Long = 0L
 
@@ -160,7 +160,7 @@ class SelectionView(
     private fun createEvaluationButtonRenderer(): Renderer<ApplicantResponse> {
         return ComponentRenderer<Component, ApplicantResponse> { _ ->
             // TODO: Evaluation Target id 받아오기
-            createPrimarySmallButton("평가하기") { DoEvaluationFormDialog(dummyService, 1L) }
+            createPrimarySmallButton("평가하기") { GradeEvaluationFormDialog(evaluationTargetService, 1L) }
         }
     }
 }

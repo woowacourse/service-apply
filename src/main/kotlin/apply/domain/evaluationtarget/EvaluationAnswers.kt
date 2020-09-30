@@ -12,4 +12,7 @@ class EvaluationAnswers(
     fun add(evaluationAnswer: EvaluationAnswer) {
         evaluationAnswers.add(evaluationAnswer)
     }
+
+    fun findScoreByEvaluationItemId(evaluationItemId: Long): Int? =
+        evaluationAnswers.find { it.evaluationItemId == evaluationItemId }?.score
 }

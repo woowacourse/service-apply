@@ -1,6 +1,6 @@
 package apply.application
 
-import apply.domain.dummy.EvaluationStatus
+import apply.domain.evaluationtarget.EvaluationStatus
 import javax.validation.Valid
 import javax.validation.constraints.Max
 import javax.validation.constraints.Min
@@ -55,27 +55,23 @@ data class EvaluationResponse(
     val beforeEvaluationId: Long = 0L
 )
 
-/**
- * 1. targetId를 받아서 Target 조회(note, evaluationStatus)
- * 2. targetId로 Evaluation 조회(description)
- * 3. evaluation으로 List<EvaluationItem> 조회
- */
-data class DoEvaluationResponse(
+data class GradeEvaluationResponse(
     val note: String,
     val evaluationStatus: EvaluationStatus,
     val evaluationDescription: String,
     val evaluationTitle: String,
-    val evaluationItems: List<DoEvaluationItemResponse>
+    val evaluationItems: List<GradeEvaluationItemResponse>
 )
 
-data class DoEvaluationItemResponse(
+data class GradeEvaluationItemResponse(
     val title: String,
     val description: String,
     val maximumScore: Int,
-    val id: Long
+    val id: Long,
+    val score: Int
 )
 
-data class DoEvaluationRequest(
+data class GradeEvaluationRequest(
     @field:NotNull
     @field:Valid
     var evaluationAnswers: List<EvaluationAnswerRequest> = emptyList(),

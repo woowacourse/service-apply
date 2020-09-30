@@ -9,6 +9,10 @@ import apply.domain.cheater.Cheater
 import apply.domain.cheater.CheaterRepository
 import apply.domain.evaluation.Evaluation
 import apply.domain.evaluation.EvaluationRepository
+import apply.domain.evaluationItem.EvaluationItem
+import apply.domain.evaluationItem.EvaluationItemRepository
+import apply.domain.evaluationtarget.EvaluationAnswer
+import apply.domain.evaluationtarget.EvaluationAnswers
 import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.evaluationtarget.EvaluationStatus.FAIL
 import apply.domain.evaluationtarget.EvaluationStatus.PASS
@@ -49,13 +53,17 @@ class EvaluationTargetServiceTest(
     @MockK
     private lateinit var cheaterRepository: CheaterRepository
 
+    @MockK
+    private lateinit var evaluationItemRepository: EvaluationItemRepository
+
     private lateinit var evaluationTargetService: EvaluationTargetService
 
     @BeforeEach
     fun setUp() {
         evaluationTargetService = EvaluationTargetService(
-            evaluationTargetRepository,
             evaluationRepository,
+            evaluationTargetRepository,
+            evaluationItemRepository,
             applicationFormRepository,
             applicantRepository,
             cheaterRepository
@@ -265,6 +273,78 @@ class EvaluationTargetServiceTest(
         )
     }
 
+    @Test
+    fun `평가 대상을 평가(채점)한 적이 없을 때, 채점 정보를 불러온다`() {
+        val evaluationId = 1L
+        val evaluation = createEvaluation(id = evaluationId, beforeEvaluationId = 1L)
+        val evaluationItem = createEvaluationItem(1L, evaluationId)
+        val evaluationTarget = evaluationTargetRepository.save(createEvaluationTarget(evaluationId, 1L, WAITING))
+
+        every { evaluationRepository.findByIdOrNull(evaluationId) } returns evaluation
+        every { evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluationId) } returns listOf(evaluationItem)
+
+        val result = evaluationTargetService.getGradeEvaluation(evaluationTarget.id)
+        assertAll(
+            { assertThat(result.evaluationTitle).isEqualTo(evaluation.title) },
+            { assertThat(result.evaluationDescription).isEqualTo(evaluation.description) },
+            { assertThat(result.evaluationItems).hasSize(1) },
+            { assertThat(result.evaluationItems[0].score).isEqualTo(0) },
+            { assertThat(result.evaluationStatus).isEqualTo(WAITING) },
+            { assertThat(result.note).isBlank() }
+        )
+    }
+
+    @Test
+    fun `평가 대상을 평가(채점)한 적이 있을 때, 채점 정보를 불러온다`() {
+        val evaluationId = 1L
+        val evaluationItemId = 2L
+        val oldScore = 4
+        val oldNote = "특이 사항"
+
+        val evaluation = createEvaluation(id = evaluationId, beforeEvaluationId = 1L)
+        val evaluationItem = createEvaluationItem(evaluationItemId, evaluationId)
+        val answers = EvaluationAnswers(mutableListOf(EvaluationAnswer(oldScore, evaluationItemId)))
+        val evaluationTarget =
+            evaluationTargetRepository.save(createEvaluationTarget(evaluationId, 1L, PASS, oldNote, answers))
+
+        every { evaluationRepository.findByIdOrNull(evaluationId) } returns evaluation
+        every { evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluationId) } returns listOf(evaluationItem)
+
+        val result = evaluationTargetService.getGradeEvaluation(evaluationTarget.id)
+        assertAll(
+            { assertThat(result.evaluationTitle).isEqualTo(evaluation.title) },
+            { assertThat(result.evaluationDescription).isEqualTo(evaluation.description) },
+            { assertThat(result.evaluationItems).hasSize(1) },
+            { assertThat(result.evaluationItems[0].score).isEqualTo(oldScore) },
+            { assertThat(result.evaluationStatus).isEqualTo(PASS) },
+            { assertThat(result.note).isEqualTo(oldNote) }
+        )
+    }
+
+    @Test
+    fun `평가 대상 지원자를 평가하면 평가 상태, 특이사항, 평가 항목에 대한 점수들이 변경된다`() {
+        val evaluationTarget = evaluationTargetRepository.save(createEvaluationTarget(1L, 2L, WAITING))
+
+        val updatedScore = 5
+        val updatedStatus = PASS
+        val updatedNote = "특이 사항"
+        val answers = listOf(EvaluationAnswerRequest(updatedScore, 3L))
+        val gradeEvaluationRequest = GradeEvaluationRequest(answers, updatedNote, updatedStatus)
+
+        evaluationTargetService.grade(evaluationTarget.id, gradeEvaluationRequest)
+
+        val updatedEvaluationTarget = evaluationTargetRepository.findByIdOrNull(evaluationTarget.id)!!
+        val expectedAnswers = EvaluationAnswers(mutableListOf(EvaluationAnswer(updatedScore, 3L)))
+        assertAll(
+            { assertThat(updatedEvaluationTarget.evaluationStatus).isEqualTo(updatedStatus) },
+            { assertThat(updatedEvaluationTarget.note).isEqualTo(updatedNote) },
+            {
+                assertThat(updatedEvaluationTarget.evaluationAnswers).usingRecursiveComparison()
+                    .isEqualTo(expectedAnswers)
+            }
+        )
+    }
+
     private fun createEvaluation(id: Long, recruitmentId: Long = 1L, beforeEvaluationId: Long): Evaluation {
         return Evaluation(
             id = id,
@@ -285,6 +365,33 @@ class EvaluationTargetServiceTest(
             administratorId = null,
             applicantId = applicantId,
             evaluationStatus = evaluationStatus
+        )
+    }
+
+    private fun createEvaluationTarget(
+        evaluationId: Long,
+        applicantId: Long,
+        evaluationStatus: EvaluationStatus,
+        note: String,
+        answers: EvaluationAnswers
+    ): EvaluationTarget {
+        return EvaluationTarget(
+            evaluationId = evaluationId,
+            administratorId = null,
+            applicantId = applicantId,
+            evaluationStatus = evaluationStatus,
+            evaluationAnswers = answers,
+            note = note
+        )
+    }
+
+    private fun createEvaluationItem(id: Long, evaluationId: Long): EvaluationItem {
+        return EvaluationItem(
+            id = id,
+            evaluationId = evaluationId,
+            title = "평가 항목$id",
+            description = "평가 항목에 대한 설명$id",
+            maximumScore = 5
         )
     }
 
