@@ -56,8 +56,8 @@ class ApplicationForm(
     }
 
     fun update(referenceUrl: String, answers: Answers) {
-        if (this.submitted) {
-            throw IllegalArgumentException("이미 제출된 지원서입니다. 수정할 수 없습니다.")
+        require(this.submitted) {
+            "이미 제출된 지원서입니다. 수정할 수 없습니다."
         }
         this.referenceUrl = referenceUrl
         this.modifiedDateTime = LocalDateTime.now()
