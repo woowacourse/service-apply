@@ -110,9 +110,9 @@ class EvaluationTargetService(
     fun grade(evaluationTargetId: Long, gradeEvaluationRequest: GradeEvaluationRequest) {
         val evaluationTarget = getById(evaluationTargetId)
 
-        val evaluationAnswers = gradeEvaluationRequest.evaluationAnswers.map {
-            EvaluationAnswer(it.score, it.evaluationItemId)
-        }.toMutableList()
+        val evaluationAnswers = gradeEvaluationRequest.evaluationAnswers
+            .map { EvaluationAnswer(it.score, it.evaluationItemId) }
+            .toMutableList()
         evaluationTarget.update(
             evaluationStatus = gradeEvaluationRequest.evaluationStatus,
             evaluationAnswers = EvaluationAnswers(evaluationAnswers),

@@ -57,7 +57,7 @@ class GradeEvaluationFormDialog(
     }
 
     private fun createAddButton(): Button {
-        return createPrimaryButton("생성") {
+        return createPrimaryButton("저장") {
             gradeEvaluationForm.bindOrNull()?.let {
                 evaluationTargetService.grade(evaluationTargetId, it)
                 dialog.close()
