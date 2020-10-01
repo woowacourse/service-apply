@@ -1,8 +1,18 @@
 <template>
   <div id="app">
+    <MainHeader />
     <router-view />
   </div>
 </template>
+<script>
+import MainHeader from "./components/MainHeader"
+
+export default {
+  components: {
+    MainHeader,
+  },
+}
+</script>
 
 <style>
 button {
@@ -24,13 +34,8 @@ button:active {
   box-sizing: border-box;
 }
 
-html,
-body,
-#app {
-  height: 100%;
-}
-
 body {
   margin: 0;
+  background: #ced6e0;
 }
 </style>
