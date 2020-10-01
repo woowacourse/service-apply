@@ -69,14 +69,14 @@ class RecruitmentsView(private val recruitmentService: RecruitmentService) : Ver
 
     private fun createButtons(recruitment: Recruitment): Component {
         return HorizontalLayout(
-            createEditButton(),
+            createEditButton(recruitment),
             createDeleteButton(recruitment).apply { isEnabled = !recruitment.canRecruit }
         )
     }
 
-    private fun createEditButton(): Component {
+    private fun createEditButton(recruitment: Recruitment): Component {
         return createPrimarySmallButton("수정") {
-            // TODO: 모집 관리 페이지에 수정 뷰를 구현한다.
+            UI.getCurrent().navigate(RecruitmentsFormView::class.java, recruitment.id)
         }
     }
 

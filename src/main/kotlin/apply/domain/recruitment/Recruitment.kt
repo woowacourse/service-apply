@@ -39,11 +39,15 @@ class Recruitment(
     val status: RecruitmentStatus
         get() = RecruitmentStatus.of(period, canRecruit)
 
+    val isEnded: Boolean
+        get() = status == RecruitmentStatus.ENDED
+
     constructor(
         title: String,
         startDateTime: LocalDateTime,
         endDateTime: LocalDateTime,
         canRecruit: Boolean = false,
-        isHidden: Boolean = true
-    ) : this(title, RecruitmentPeriod(startDateTime, endDateTime), canRecruit, isHidden)
+        isHidden: Boolean = true,
+        id: Long = 0L
+    ) : this(title, RecruitmentPeriod(startDateTime, endDateTime), canRecruit, isHidden, id)
 }

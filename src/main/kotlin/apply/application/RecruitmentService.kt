@@ -16,13 +16,20 @@ class RecruitmentService(
     private val recruitmentRepository: RecruitmentRepository,
     private val recruitmentItemRepository: RecruitmentItemRepository
 ) {
-    fun save(request: RecruitmentRequest) {
+    fun save(request: RecruitmentData) {
         val recruitment = recruitmentRepository.save(
-            Recruitment(request.title, request.startDateTime, request.endDateTime, request.canRecruit, request.isHidden)
+            Recruitment(
+                request.title,
+                request.startDateTime,
+                request.endDateTime,
+                request.canRecruit,
+                request.isHidden,
+                request.id
+            )
         )
         recruitmentItemRepository.saveAll(
             request.recruitmentItems.map {
-                RecruitmentItem(recruitment.id, it.title, it.position, it.maximumLength, it.description)
+                RecruitmentItem(recruitment.id, it.title, it.position, it.maximumLength, it.description, it.id)
             }
         )
     }
@@ -31,8 +38,8 @@ class RecruitmentService(
         return recruitmentRepository.findAll()
     }
 
-    fun findAllNotHidden(): List<Recruitment> {
-        return recruitmentRepository.findAllByIsHiddenFalse()
+    fun findAllNotHidden(): List<RecruitmentResponse> {
+        return recruitmentRepository.findAllByIsHiddenFalse().map(::RecruitmentResponse)
     }
 
     fun deleteById(id: Long) {
@@ -41,6 +48,13 @@ class RecruitmentService(
 
     fun getById(id: Long): Recruitment =
         recruitmentRepository.findByIdOrNull(id) ?: throw IllegalArgumentException()
+
+    fun getDataById(id: Long): RecruitmentData {
+        val recruitment = recruitmentRepository.findByIdOrNull(id) ?: throw IllegalArgumentException()
+        check(!recruitment.isEnded) { "모집이 이미 완료되었습니다." }
+        val recruitmentItems = recruitmentItemRepository.findByRecruitmentIdOrderByPosition(recruitment.id)
+        return RecruitmentData(recruitment, recruitmentItems)
+    }
 
     @PostConstruct
     private fun populateDummy() {

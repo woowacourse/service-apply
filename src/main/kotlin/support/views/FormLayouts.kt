@@ -7,11 +7,11 @@ import com.vaadin.flow.data.binder.ReadOnlyHasValue
 import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance
 
-abstract class BindingFormLayout<TARGET : Any>(
-    private val targetClass: KClass<TARGET>
+abstract class BindingFormLayout<DATA : Any>(
+    private val dataClass: KClass<DATA>
 ) : FormLayout() {
-    private val binder: Binder<TARGET> by lazy {
-        BeanValidationBinder(targetClass.java).also {
+    private val binder: Binder<DATA> by lazy {
+        BeanValidationBinder(dataClass.java).also {
             it.bindInstanceFields(this)
         }
     }
@@ -20,21 +20,23 @@ abstract class BindingFormLayout<TARGET : Any>(
         run { binder }
     }
 
-    abstract fun bindOrNull(): TARGET?
+    abstract fun bindOrNull(): DATA?
 
-    protected fun bindDefaultOrNull(): TARGET? {
-        return targetClass.createInstance()
+    protected fun bindDefaultOrNull(): DATA? {
+        return dataClass.createInstance()
             .takeIf { binder.writeBeanIfValid(it) }
     }
 
-    fun fill(target: TARGET) {
-        binder.readBean(target)
+    abstract fun fill(data: DATA)
+
+    protected fun fillDefault(data: DATA) {
+        binder.readBean(data)
     }
 }
 
-abstract class BindingIdentityFormLayout<TARGET : Any>(
-    targetClass: KClass<TARGET>
-) : BindingFormLayout<TARGET>(targetClass) {
+abstract class BindingIdentityFormLayout<DATA : Any>(
+    dataClass: KClass<DATA>
+) : BindingFormLayout<DATA>(dataClass) {
     private val id: IdField = IdField()
 }
 
