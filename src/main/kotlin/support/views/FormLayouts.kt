@@ -3,6 +3,7 @@ package support.views
 import com.vaadin.flow.component.formlayout.FormLayout
 import com.vaadin.flow.data.binder.BeanValidationBinder
 import com.vaadin.flow.data.binder.Binder
+import com.vaadin.flow.data.binder.ReadOnlyHasValue
 import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance
 
@@ -26,7 +27,19 @@ abstract class BindingFormLayout<TARGET : Any>(
             .takeIf { binder.writeBeanIfValid(it) }
     }
 
-    fun fillIn(target: TARGET) {
+    fun fill(target: TARGET) {
         binder.readBean(target)
+    }
+}
+
+abstract class BindingIdentityFormLayout<TARGET : Any>(
+    targetClass: KClass<TARGET>
+) : BindingFormLayout<TARGET>(targetClass) {
+    private val id: IdField = IdField()
+}
+
+class IdField : ReadOnlyHasValue<Long>({}) {
+    init {
+        value = 0L
     }
 }
