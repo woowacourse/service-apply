@@ -2,14 +2,17 @@
   <div id="app">
     <MainHeader />
     <router-view />
+    <MainFooter />
   </div>
 </template>
 <script>
 import MainHeader from "./components/MainHeader"
+import MainFooter from "./components/MainFooter"
 
 export default {
   components: {
     MainHeader,
+    MainFooter,
   },
 }
 </script>
@@ -34,8 +37,18 @@ button:active {
   box-sizing: border-box;
 }
 
+html,
 body {
   margin: 0;
+  padding: 0;
+  height: 100%;
   background: #ced6e0;
+}
+
+#app {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-between;
 }
 </style>
