@@ -7,6 +7,10 @@ import com.vaadin.flow.data.binder.ReadOnlyHasValue
 import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance
 
+const val NEW_VALUE: String = "new"
+const val EDIT_VALUE: String = "edit"
+val FORM_URL_PATTERN: Regex = Regex("^(\\d*)/?($NEW_VALUE|$EDIT_VALUE)$")
+
 abstract class BindingFormLayout<DATA : Any>(
     private val dataClass: KClass<DATA>
 ) : FormLayout() {

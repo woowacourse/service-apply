@@ -37,7 +37,7 @@ class RecruitmentsView(private val recruitmentService: RecruitmentService) : Ver
     private fun createButton(): Component {
         return HorizontalLayout(
             createPrimaryButton("생성") {
-                UI.getCurrent().navigate(RecruitmentsFormView::class.java)
+                UI.getCurrent().navigate(RecruitmentsFormView::class.java, "new")
             }
         ).apply {
             setSizeFull()
@@ -76,7 +76,7 @@ class RecruitmentsView(private val recruitmentService: RecruitmentService) : Ver
 
     private fun createEditButton(recruitment: Recruitment): Component {
         return createPrimarySmallButton("수정") {
-            UI.getCurrent().navigate(RecruitmentsFormView::class.java, recruitment.id)
+            UI.getCurrent().navigate(RecruitmentsFormView::class.java, "$recruitment.id/edit")
         }
     }
 

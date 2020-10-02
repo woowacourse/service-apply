@@ -10,16 +10,18 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.router.BeforeEvent
 import com.vaadin.flow.router.HasUrlParameter
-import com.vaadin.flow.router.OptionalParameter
 import com.vaadin.flow.router.Route
+import com.vaadin.flow.router.WildcardParameter
+import support.views.EDIT_VALUE
+import support.views.FORM_URL_PATTERN
 import support.views.Title
 import support.views.createContrastButton
 import support.views.createPrimaryButton
 
-@Route(value = "admin/recruitments/form", layout = BaseLayout::class)
+@Route(value = "admin/recruitments", layout = BaseLayout::class)
 class RecruitmentsFormView(
     private val recruitmentService: RecruitmentService
-) : VerticalLayout(), HasUrlParameter<Long> {
+) : VerticalLayout(), HasUrlParameter<String> {
     private val title: Title = Title("모집 생성")
     private val recruitmentForm: RecruitmentForm = RecruitmentForm()
     private val submitButton: Button = createSubmitButton()
@@ -29,12 +31,16 @@ class RecruitmentsFormView(
         add(title, recruitmentForm, createButtons())
     }
 
-    override fun setParameter(event: BeforeEvent, @OptionalParameter parameter: Long?) {
-        if (parameter != null) {
-            title.text = "모집 수정"
-            recruitmentForm.fill(recruitmentService.getDataById(parameter))
-            submitButton.text = "수정"
-        }
+    override fun setParameter(event: BeforeEvent, @WildcardParameter parameter: String) {
+        val result = FORM_URL_PATTERN.find(parameter)
+        result?.let {
+            val (id, value) = it.destructured
+            if (value == EDIT_VALUE) {
+                title.text = "모집 수정"
+                recruitmentForm.fill(recruitmentService.getDataById(id.toLong()))
+                submitButton.text = "수정"
+            }
+        } ?: UI.getCurrent().page.history.back() // TODO: 에러 화면을 구현한다.
     }
 
     private fun createSubmitButton(): Button {
