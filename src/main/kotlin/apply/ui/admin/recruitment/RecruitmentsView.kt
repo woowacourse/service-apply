@@ -76,7 +76,7 @@ class RecruitmentsView(private val recruitmentService: RecruitmentService) : Ver
 
     private fun createEditButton(recruitment: Recruitment): Component {
         return createPrimarySmallButton("수정") {
-            UI.getCurrent().navigate(RecruitmentsFormView::class.java, "$recruitment.id/edit")
+            UI.getCurrent().navigate(RecruitmentsFormView::class.java, "${recruitment.id}/edit")
         }
     }
 
