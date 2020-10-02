@@ -5,14 +5,15 @@ import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.recruitmentitem.Answer
 import apply.domain.recruitmentitem.Answers
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 import support.createLocalDateTime
 import javax.annotation.PostConstruct
+import javax.transaction.Transactional
 
 @Transactional
 @Service
 class ApplicationFormService(
-    private val applicationFormRepository: ApplicationFormRepository
+    private val applicationFormRepository: ApplicationFormRepository,
+    private val applicantService: ApplicantService
 ) {
     fun findAllByRecruitmentId(recruitmentId: Long): List<ApplicationForm> =
         applicationFormRepository.findByRecruitmentId(recruitmentId)
@@ -59,5 +60,71 @@ class ApplicationFormService(
             )
         )
         applicationFormRepository.saveAll(applicationForms)
+    }
+
+    fun save(applicantId: Long, request: SaveApplicationFormRequest) {
+        require(!applicationFormRepository.existsByRecruitmentIdAndApplicantId(request.recruitmentId, applicantId)) {
+            "이미 저장된 지원서가 있습니다."
+        }
+        val answers = Answers(
+            request.answers.map {
+                Answer(
+                    it.contents,
+                    it.recruitmentItemId
+                )
+            }.toMutableList()
+        )
+        val applicationForm =
+            ApplicationForm(
+                applicantId,
+                request.recruitmentId,
+                request.referenceUrl,
+                answers
+            )
+
+        if (request.isSubmitted) {
+            applicationForm.submit()
+        }
+        applicationFormRepository.save(applicationForm)
+    }
+
+    fun update(applicantId: Long, request: UpdateApplicationFormRequest) {
+        val applicationForm: ApplicationForm =
+            applicationFormRepository.findByRecruitmentIdAndApplicantId(
+                request.recruitmentId,
+                applicantId
+            )
+                ?: throw IllegalArgumentException("저장된 지원서가 없습니다.")
+        val answers = Answers(
+            request.answers.map {
+                Answer(
+                    it.contents,
+                    it.recruitmentItemId
+                )
+            }.toMutableList()
+        )
+        applicationForm.update(request.referenceUrl, answers)
+        applicantService.changePassword(applicantId, request.password)
+
+        if (request.isSubmitted) {
+            applicationForm.submit()
+        }
+        applicationFormRepository.save(applicationForm)
+    }
+
+    fun findForm(applicantId: Long, recruitmentId: Long): ApplicationFormResponse {
+        val form = applicationFormRepository.findByRecruitmentIdAndApplicantId(recruitmentId, applicantId)
+            ?: throw IllegalArgumentException("해당하는 지원서가 없습니다.")
+        val answers = form.answers.items.map { AnswerResponse(it.contents, it.recruitmentItemId) }
+        return ApplicationFormResponse(
+            id = form.id,
+            recruitmentId = form.recruitmentId,
+            referenceUrl = form.referenceUrl,
+            submitted = form.submitted,
+            answers = answers,
+            createdDateTime = form.createdDateTime,
+            modifiedDateTime = form.modifiedDateTime,
+            submittedDateTime = form.submittedDateTime
+        )
     }
 }
