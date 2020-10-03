@@ -80,19 +80,18 @@ export default {
   }),
   methods: {
     async submit() {
-      await this.$store
-        .dispatch("login", {
+      try {
+        await this.$store.dispatch("login", {
           name: this.name,
           email: this.email,
           birthday: DateUtil.formatLocalDate(this.birth),
           password: this.password,
         })
-        .catch(e => {
-          alert(e.response.data)
-          throw e
-        })
-      alert("로그인 성공")
-      this.$router.push("/recruits")
+        alert("로그인 성공")
+        this.$router.push("/recruits")
+      } catch (e) {
+        alert(e.response.data)
+      }
     },
     findPassword() {
       this.$router.push("/find")

@@ -69,15 +69,17 @@ export default {
   methods: {
     async submit() {
       this.showLoading = true
-      await Api.fetchPasswordFind({
-        name: this.name,
-        email: this.email,
-        birthday: DateUtil.formatLocalDate(this.birth),
-      }).catch(e => {
+      try {
+        await Api.fetchPasswordFind({
+          name: this.name,
+          email: this.email,
+          birthday: DateUtil.formatLocalDate(this.birth),
+        })
+        this.$router.push("/find/result")
+      } catch (e) {
         this.showLoading = false
-        throw e
-      })
-      this.$router.push("/find/result")
+        alert(e.response.data)
+      }
     },
     back() {
       this.$router.go(-1)

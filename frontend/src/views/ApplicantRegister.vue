@@ -147,7 +147,7 @@ export default {
     },
     async submit() {
       try {
-        await this.fetchTokenAndSetApplicantInfo(this.parseApplicantInfo())
+        await this.fetchRegisterAndSetApplicantInfo(this.parseApplicantInfo())
         this.$router.push({
           path: `/register/application`,
           query: {
@@ -155,7 +155,7 @@ export default {
           },
         })
       } catch (e) {
-        alert(e.response.data)
+        alert(e.response)
       }
     },
     validPasswordInputs(v) {
