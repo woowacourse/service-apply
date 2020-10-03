@@ -92,6 +92,7 @@ export default {
     Field,
   },
   data: () => ({
+    status: "FIRST_WRITE",
     factCheck: false,
     password: "",
     rePassword: "",
@@ -99,6 +100,7 @@ export default {
     recruitmentItems: [],
     rules: { ...register },
     validPassword: false,
+    tempSaveTime: "",
   }),
   computed: {
     isEditing() {
@@ -115,19 +117,19 @@ export default {
         ...recruitmentItem,
         contents: "",
       }))
-      if (this.isEditing) {
-        const { data: applicationForm } = await ApplicationFormsApi.fetchForm({
-          token: this.$store.getters["token"],
-          recruitmentId: this.recruitmentId,
-        })
-        this.referenceUrl = applicationForm.referenceUrl
-        this.recruitmentItems = recruitmentItems.map(recruitmentItem => ({
-          ...recruitmentItem,
-          contents: applicationForm.answers.items.find(
-            ({ recruitmentItemId }) => recruitmentItemId === recruitmentItem.id,
-          ).contents,
-        }))
-      }
+      const { data: applicationForm } = await ApplicationFormsApi.fetchForm({
+        token: this.$store.getters["token"],
+        recruitmentId: this.recruitmentId,
+      })
+      this.referenceUrl = applicationForm.referenceUrl
+      console.log(recruitmentItems)
+      console.log(applicationForm)
+      this.recruitmentItems = recruitmentItems.map(recruitmentItem => ({
+        ...recruitmentItem,
+        contents: applicationForm.answers.find(
+          ({ recruitmentItemId }) => recruitmentItemId === recruitmentItem.id,
+        ).contents,
+      }))
     } catch (e) {
       alert("잘못된 요청입니다.")
       this.$router.replace("/recruits")

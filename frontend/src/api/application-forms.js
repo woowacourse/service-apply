@@ -103,18 +103,16 @@ export const fetchForm = ({ token, recruitmentId }) =>
       Promise.resolve({
         data: {
           referenceUrl: "https://www.google.com",
-          answers: {
-            items: [
-              {
-                contents: "스타트업을 하고 싶습니다.",
-                recruitmentItemId: 1,
-              },
-              {
-                contents: "책임감",
-                recruitmentItemId: 2,
-              },
-            ],
-          },
+          answers: [
+            {
+              contents: "스타트업을 하고 싶습니다.",
+              recruitmentItemId: 1,
+            },
+            {
+              contents: "책임감",
+              recruitmentItemId: 2,
+            },
+          ],
         },
       }),
     )
