@@ -9,6 +9,7 @@ import apply.domain.applicant.Gender
 import apply.domain.applicant.exception.ApplicantValidateException
 import apply.domain.cheater.CheaterRepository
 import apply.security.JwtTokenProvider
+import org.springframework.data.repository.findByIdOrNull
 import apply.utils.RandomStringGenerator
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -43,6 +44,12 @@ class ApplicantService(
             ?: applicantRepository.save(applicantInformation.toEntity())
 
         return jwtTokenProvider.createToken(applicant.email)
+    }
+
+    fun changePassword(applicantId: Long, password: String) {
+        val applicant =
+            applicantRepository.findByIdOrNull(applicantId) ?: throw IllegalArgumentException("존재하지 않는 사용자입니다.")
+        applicant.password = password
     }
 
     fun generateTokenByLogin(applicantVerifyInformation: ApplicantVerifyInformation): String {
