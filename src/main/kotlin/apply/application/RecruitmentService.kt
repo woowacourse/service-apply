@@ -49,8 +49,8 @@ class RecruitmentService(
     fun getById(id: Long): Recruitment =
         recruitmentRepository.findByIdOrNull(id) ?: throw IllegalArgumentException()
 
-    fun getDataById(id: Long): RecruitmentData {
-        val recruitment = recruitmentRepository.findByIdOrNull(id) ?: throw IllegalArgumentException()
+    fun getNotEndedDataById(id: Long): RecruitmentData {
+        val recruitment = getById(id)
         check(!recruitment.isEnded) { "모집이 이미 완료되었습니다." }
         val recruitmentItems = recruitmentItemRepository.findByRecruitmentIdOrderByPosition(recruitment.id)
         return RecruitmentData(recruitment, recruitmentItems)
