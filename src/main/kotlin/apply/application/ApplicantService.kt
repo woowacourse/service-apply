@@ -7,7 +7,6 @@ import apply.domain.applicant.ApplicantVerifyInformation
 import apply.domain.applicant.Gender
 import apply.domain.applicant.exception.ApplicantValidateException
 import apply.domain.applicationform.ApplicationFormRepository
-import apply.domain.cheater.CheaterRepository
 import apply.security.JwtTokenProvider
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -20,19 +19,15 @@ import javax.annotation.PostConstruct
 class ApplicantService(
     private val applicationFormRepository: ApplicationFormRepository,
     private val applicantRepository: ApplicantRepository,
-    private val cheaterRepository: CheaterRepository,
+    private val cheaterService: CheaterService,
     private val jwtTokenProvider: JwtTokenProvider
 ) {
-    fun findAll(): List<ApplicantBasicResponse> = applicantRepository.findAll().map {
-        ApplicantBasicResponse(it)
-    }
-
     fun findAllByRecruitmentId(recruitmentId: Long): List<ApplicantResponse> {
         val applicationForms = applicationFormRepository.findByRecruitmentId(recruitmentId)
             .associateBy { it.applicantId }
 
         return applicantRepository.findAllById(applicationForms.keys).map {
-            ApplicantResponse(it, cheaterRepository.existsByApplicantId(it.id), applicationForms.getValue(it.id))
+            ApplicantResponse(it, cheaterService.existsByApplicantId(it.id), applicationForms.getValue(it.id))
         }
     }
 
