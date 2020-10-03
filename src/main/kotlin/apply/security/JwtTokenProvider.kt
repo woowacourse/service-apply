@@ -34,7 +34,7 @@ class JwtTokenProvider(
             .subject
     }
 
-    fun validateToken(token: String): Boolean {
+    fun isValidToken(token: String): Boolean {
         return try {
             getClaimsJws(token)
             true

@@ -26,6 +26,9 @@ class BearerAuthInterceptor(private val jwtTokenProvider: JwtTokenProvider) : Ha
         }
 
         val token = extractBearerToken(request)
+        if (!jwtTokenProvider.isValidToken(token)) {
+            throw IllegalArgumentException("로그인 정보가 정확하지 않습니다")
+        }
         val applicantEmail = jwtTokenProvider.getSubject(token)
         request.setAttribute(APPLICANT_EMAIL_ATTRIBUTE_NAME, applicantEmail)
 
@@ -44,11 +47,19 @@ class BearerAuthInterceptor(private val jwtTokenProvider: JwtTokenProvider) : Ha
         val authorization = request.getHeader(AUTHORIZATION_HEADER)
             ?: throw IllegalArgumentException("로그인 정보가 정확하지 않습니다")
 
-        val tokenType = authorization.substringBefore(" ")
-        val token = authorization.substringAfter(" ")
+        val (tokenType, token) = splitToTokenFormat(authorization)
         if (tokenType != BEARER) {
             throw IllegalArgumentException("로그인 정보가 정확하지 않습니다")
         }
         return token
+    }
+
+    private fun splitToTokenFormat(authorization: String): Pair<String, String> {
+        return try {
+            val tokenFormat = authorization.split(" ")
+            Pair(tokenFormat[0], tokenFormat[1])
+        } catch (e: IndexOutOfBoundsException) {
+            throw IllegalArgumentException("로그인 정보가 정확하지 않습니다")
+        }
     }
 }
