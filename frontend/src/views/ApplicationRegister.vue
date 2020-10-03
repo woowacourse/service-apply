@@ -64,7 +64,7 @@
       </Field>
       <div class="actions">
         <Button @click="reset" value="초기화" />
-        <Button @click="save" value="임시 저장" />
+        <Button @click="save(false)" value="임시 저장" />
         <Button type="submit" :disabled="!canSubmit" value="제출" />
       </div>
       <footer>
@@ -92,7 +92,7 @@ export default {
     Field,
   },
   data: () => ({
-    status: "FIRST_WRITE",
+    status: "",
     factCheck: false,
     password: "",
     rePassword: "",
@@ -104,7 +104,7 @@ export default {
   }),
   computed: {
     isEditing() {
-      return this.$route.name === "edit"
+      return this.$route.query.action === "edit"
     },
     canSubmit() {
       return this.factCheck && (this.isEditing ? this.validPassword : true)
@@ -117,22 +117,30 @@ export default {
         ...recruitmentItem,
         contents: "",
       }))
-      const { data: applicationForm } = await ApplicationFormsApi.fetchForm({
-        token: this.$store.getters["token"],
-        recruitmentId: this.recruitmentId,
-      })
-      this.referenceUrl = applicationForm.referenceUrl
-      console.log(recruitmentItems)
-      console.log(applicationForm)
-      this.recruitmentItems = recruitmentItems.map(recruitmentItem => ({
-        ...recruitmentItem,
-        contents: applicationForm.answers.find(
-          ({ recruitmentItemId }) => recruitmentItemId === recruitmentItem.id,
-        ).contents,
-      }))
+      if (this.isEditing) {
+        const { data: applicationForm } = await ApplicationFormsApi.fetchForm({
+          token: this.$store.getters["token"],
+          recruitmentId: this.recruitmentId,
+        })
+        this.referenceUrl = applicationForm.referenceUrl
+        console.log(recruitmentItems)
+        console.log(applicationForm)
+        this.recruitmentItems = recruitmentItems.map(recruitmentItem => ({
+          ...recruitmentItem,
+          contents: applicationForm.answers.find(
+            ({ recruitmentItemId }) => recruitmentItemId === recruitmentItem.id,
+          ).contents,
+        }))
+      }
     } catch (e) {
-      alert("잘못된 요청입니다.")
-      this.$router.replace("/recruits")
+      if (e.message.includes("404")) {
+        let query = Object.assign({}, this.$route.query)
+        delete query.action
+        this.$router.replace({ query })
+      } else {
+        alert("잘못된 요청입니다.")
+        this.$router.replace("/recruits")
+      }
     }
   },
   methods: {
@@ -142,7 +150,7 @@ export default {
         referenceUrl: this.referenceUrl,
         answers: await this.recruitmentItems.map(item => ({
           contents: item.contents,
-          recruitmentItemId: item.id
+          recruitmentItemId: item.id,
         })),
       }
     },
@@ -156,12 +164,29 @@ export default {
       }))
       this.referenceUrl = ""
     },
-    save() {
-      this.parseApplicationInfo().then(result => console.log(result))
-      // TODO: 임시 저장 기능 추가 필요
+    save(isSubmitted) {
+      this.parseApplicationInfo()
+        .then(data => ({
+          ...data,
+          isSubmitted: isSubmitted,
+        }))
+        .then(data => {
+          if (this.isEditing) {
+            data = {
+              ...data,
+              password: this.password,
+            }
+            //TODO: 업데이트 API 만들기
+          } else {
+            //TODO: 작성 API 만들기
+          }
+          console.log(data)
+        })
     },
     submit() {
-      confirm("정말로 제출하시겠습니까?")
+      if (confirm("제출하신 뒤에는 수정하실 수 없습니다. 정말로 제출하시겠습니까?")) {
+        this.save(true)
+      }
     },
   },
 }
