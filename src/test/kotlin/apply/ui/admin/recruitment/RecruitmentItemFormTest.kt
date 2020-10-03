@@ -1,5 +1,7 @@
 package apply.ui.admin.recruitment
 
+import apply.createRecruitmentItemData
+import apply.createRecruitmentItemForm
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
