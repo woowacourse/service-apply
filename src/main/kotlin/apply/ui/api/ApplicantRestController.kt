@@ -43,7 +43,7 @@ class ApplicantRestController(
     fun findPassword(@RequestBody applicantPasswordFindInformation: ApplicantPasswordFindInformation): ResponseEntity<String> {
         return try {
             val newPassword = applicantService.resetPassword(applicantPasswordFindInformation)
-            mailService.sendPasswordResetMail(applicantPasswordFindInformation.email, newPassword)
+            mailService.sendPasswordResetMail(applicantPasswordFindInformation, newPassword)
 
             ResponseEntity.noContent().build()
         } catch (e: ApplicantValidateException) {
