@@ -47,5 +47,5 @@ class CheaterService(
         cheaters.remove(id)
     }
 
-    fun existsByApplicantId(applicantId: Long) = cheaters.containsKey(applicantId)
+    fun existsByApplicantId(applicantId: Long) = applicants.containsKey(applicantId)
 }
