@@ -10,7 +10,7 @@ import store from "@/store"
 
 Vue.use(VueRouter)
 
-const requireAuth = () => (to, from, next) => {
+const requireAuth = (to, from, next) => {
   if (store.getters["token"] !== "") {
     return next()
   }
@@ -54,7 +54,7 @@ const routes = [
   {
     path: "/my-applications",
     component: MyApplications,
-    beforeEnter: requireAuth(),
+    beforeEnter: requireAuth,
   },
 ]
 

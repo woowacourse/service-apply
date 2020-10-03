@@ -4,10 +4,10 @@
 
     <ApplicationFormItem
       class="application-forms"
-      v-for="recruitment in matchRecruitments"
+      v-for="recruitment in appliedRecruitments"
       :key="recruitment.id"
       :recruitment="recruitment"
-      :submitted="isSubmitted(recruitment.id)"
+      :submitted="recruitment.submitted"
     />
 
     <footer>
@@ -17,8 +17,8 @@
 </template>
 
 <script>
-import * as RecruitmentApi from "../api/recruitments"
-import * as ApplicationApi from "../api/application-forms"
+import * as RecruitmentApi from "@/api/recruitments"
+import * as ApplicationApi from "@/api/application-forms"
 import ApplicationFormItem from "@/components/ApplicationFormItem"
 
 export default {
@@ -26,8 +26,7 @@ export default {
     ApplicationFormItem,
   },
   data: () => ({
-    applicationForms: [],
-    recruitments: [],
+    appliedRecruitments: [],
   }),
   async created() {
     const token = this.$store.getters["token"]
@@ -40,32 +39,29 @@ export default {
       ]).then(values => {
         const { data: applicationFormsData } = values[0]
         const { data: recruitmentData } = values[1]
-        this.applicationForms = applicationFormsData
-        this.recruitments = recruitmentData
+        this.appliedRecruitments = this.findAppliedRecruitments(
+          applicationFormsData,
+          recruitmentData,
+        )
       })
     } catch (e) {
       alert("token이 유효하지 않습니다.")
-      await this.$router.replace("/login")
+      this.$router.replace("/login")
     }
   },
-  computed: {
-    matchRecruitments() {
-      if (
-        !this.applicationForms ||
-        !this.recruitments ||
-        this.applicationForms.length !== this.recruitments.length
-      ) {
-        return []
-      }
-
-      return this.recruitments.filter(recruitment =>
-        this.applicationForms.map(form => form.recruitmentId).includes(recruitment.id),
-      )
-    },
-  },
   methods: {
-    isSubmitted(recruitmentId) {
-      return !!this.applicationForms.find(form => form.recruitmentId === recruitmentId).submitted
+    findAppliedRecruitments(applicationFormsData, recruitmentsData) {
+      return recruitmentsData
+        .filter(recruitment =>
+          applicationFormsData.find(form => form.recruitmentId === recruitment.id),
+        )
+        .map(recruitment => {
+          return {
+            ...recruitment,
+            submitted: !!applicationFormsData.find(form => form.recruitmentId === recruitment.id)
+              .submitted,
+          }
+        })
     },
   },
 }
