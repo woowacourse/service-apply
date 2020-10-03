@@ -1,11 +1,5 @@
 <template>
-  <Loading
-    :active.sync="show"
-    is-full-page="true"
-    background-color="#000"
-    blur="0.5px"
-    lock-scroll="true"
-  ></Loading>
+  <Loading :active.sync="show" background-color="#000" blur="0.5px"></Loading>
 </template>
 
 <script>
