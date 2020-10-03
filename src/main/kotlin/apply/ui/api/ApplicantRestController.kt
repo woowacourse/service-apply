@@ -47,7 +47,7 @@ class ApplicantRestController(
 
             ResponseEntity.noContent().build()
         } catch (e: ApplicantValidateException) {
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.message)
+            ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.message)
         }
     }
 }

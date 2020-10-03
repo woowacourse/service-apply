@@ -154,7 +154,7 @@ internal class ApplicantRestControllerTest(
     }
 
     @Test
-    fun `잘못된 비밀번호 찾기 요청에 응답으로 BadRequest를 반환한다`() {
+    fun `잘못된 비밀번호 찾기 요청에 응답으로 Unauthorized를 반환한다`() {
         given(
             applicantService.resetPassword(inValidApplicantPasswordFindRequest)
         ).willThrow(ApplicantValidateException())
@@ -163,7 +163,7 @@ internal class ApplicantRestControllerTest(
             content = objectMapper.writeValueAsBytes(inValidApplicantPasswordFindRequest)
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
-            status { isBadRequest }
+            status { isUnauthorized }
         }
     }
 }
