@@ -7,6 +7,8 @@ import apply.domain.applicant.Gender
 import apply.domain.applicant.exception.ApplicantValidateException
 import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormRepository
+import apply.domain.cheater.Cheater
+import apply.domain.cheater.CheaterRepository
 import apply.domain.recruitmentitem.Answer
 import apply.domain.recruitmentitem.Answers
 import apply.security.JwtTokenProvider
@@ -37,7 +39,7 @@ internal class ApplicantServiceTest {
     private lateinit var applicantRepository: ApplicantRepository
 
     @Mock
-    private lateinit var cheaterService: CheaterService
+    private lateinit var cheaterRepository: CheaterRepository
 
     @Mock
     private lateinit var jwtTokenProvider: JwtTokenProvider
@@ -87,14 +89,14 @@ internal class ApplicantServiceTest {
     @BeforeEach
     internal fun setUp() {
         applicantService =
-            ApplicantService(applicationFormRepository, applicantRepository, cheaterService, jwtTokenProvider)
+            ApplicantService(applicationFormRepository, applicantRepository, cheaterRepository, jwtTokenProvider)
     }
 
     @Test
     fun `지원자 정보와 부정 행위자 여부를 함께 제공한다`() {
         given(applicationFormRepository.findByRecruitmentId(anyLong())).willReturn(listOf(applicationForm))
         given(applicantRepository.findAllById(anySet())).willReturn(applicants)
-        given(cheaterService.existsByApplicantId(APPLICANT_ID)).willReturn(true)
+        given(cheaterRepository.findAll()).willReturn(listOf(Cheater(1L)))
 
         val founds = applicantService.findAllByRecruitmentId(1L)
 
