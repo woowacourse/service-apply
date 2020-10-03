@@ -12,13 +12,13 @@
         >
           {{ tab.label }}
         </h2>
-        <h2 class="list-tab" id="mypage">내 지원서</h2>
+        <h2 class="list-tab" id="mypage" @click="goMyApplications">내 지원서</h2>
       </div>
-      <div id="component">
-        <div v-for="recruitment in activeList" :key="recruitment.id">
-          <recruit-item :recruitment="recruitment" />
-        </div>
-      </div>
+      <RecruitItem
+        v-for="recruitment in activeList"
+        :key="recruitment.id"
+        :recruitment="recruitment"
+      />
     </div>
   </div>
 </template>
@@ -102,10 +102,13 @@ export default {
     this.setList(this.$route.query.status)
   },
   methods: {
+    goMyApplications() {
+      this.$router.push("/my-applications").catch(ignore => ignore)
+    },
     setStatus(status) {
       if (status !== this.$route.query.status) {
         this.$router.replace({
-          path: "/recruits/?status=" + status,
+          path: "/recruits?status=" + status,
         })
         this.setList(status)
       }
