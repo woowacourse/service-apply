@@ -46,7 +46,7 @@ export default {
       })
     } catch (e) {
       alert("token이 유효하지 않습니다.")
-      this.$router.replace("/login")
+      await this.$router.replace("/login")
     }
   },
   methods: {
