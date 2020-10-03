@@ -64,7 +64,7 @@
       </Field>
       <div class="actions">
         <Button @click="reset" value="초기화" />
-        <Button @click="save(false)" value="임시 저장" />
+        <Button @click="save(false)" :disabled="!canSave" value="임시 저장" />
         <Button type="submit" :disabled="!canSubmit" value="제출" />
       </div>
       <footer>
@@ -109,6 +109,9 @@ export default {
     canSubmit() {
       return this.factCheck && (this.isEditing ? this.validPassword : true)
     },
+    canSave() {
+      return (this.isEditing ? this.validPassword : true)
+    },
   },
   async created() {
     try {
@@ -123,8 +126,6 @@ export default {
           recruitmentId: this.recruitmentId,
         })
         this.referenceUrl = applicationForm.referenceUrl
-        console.log(recruitmentItems)
-        console.log(applicationForm)
         this.recruitmentItems = recruitmentItems.map(recruitmentItem => ({
           ...recruitmentItem,
           contents: applicationForm.answers.find(
@@ -176,11 +177,19 @@ export default {
               ...data,
               password: this.password,
             }
-            //TODO: 업데이트 API 만들기
+            ApplicationFormsApi.updateForm({
+              token: this.$store.getters["token"],
+              data: data,
+            })
           } else {
-            //TODO: 작성 API 만들기
+            ApplicationFormsApi.saveForm({
+              token: this.$store.getters["token"],
+              data: data,
+            })
+            let query = Object.assign({}, this.$route.query)
+            query.action = "edit"
+            this.$router.replace({ query })
           }
-          console.log(data)
         })
     },
     submit() {
