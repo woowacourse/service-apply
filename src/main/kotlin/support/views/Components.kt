@@ -73,7 +73,7 @@ class Title(val value: H1) : HorizontalLayout(), HasText {
         justifyContentMode = FlexComponent.JustifyContentMode.CENTER
     }
 
-    constructor(text: String) : this(H1(text))
+    constructor(text: String = "") : this(H1(text))
 
     override fun setText(text: String) {
         value.text = text

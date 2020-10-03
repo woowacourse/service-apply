@@ -15,6 +15,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.data.renderer.ComponentRenderer
 import com.vaadin.flow.data.renderer.Renderer
 import com.vaadin.flow.router.Route
+import support.views.EDIT_VALUE
+import support.views.NEW_VALUE
 import support.views.addSortableColumn
 import support.views.addSortableDateTimeColumn
 import support.views.createDeleteButtonWithDialog
@@ -37,7 +39,7 @@ class RecruitmentsView(private val recruitmentService: RecruitmentService) : Ver
     private fun createButton(): Component {
         return HorizontalLayout(
             createPrimaryButton("생성") {
-                UI.getCurrent().navigate(RecruitmentsFormView::class.java, "new")
+                UI.getCurrent().navigate(RecruitmentsFormView::class.java, NEW_VALUE)
             }
         ).apply {
             setSizeFull()
@@ -76,7 +78,7 @@ class RecruitmentsView(private val recruitmentService: RecruitmentService) : Ver
 
     private fun createEditButton(recruitment: Recruitment): Component {
         return createPrimarySmallButton("수정") {
-            UI.getCurrent().navigate(RecruitmentsFormView::class.java, "${recruitment.id}/edit")
+            UI.getCurrent().navigate(RecruitmentsFormView::class.java, "${recruitment.id}/$EDIT_VALUE")
         }
     }
 

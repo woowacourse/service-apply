@@ -11,6 +11,14 @@ const val NEW_VALUE: String = "new"
 const val EDIT_VALUE: String = "edit"
 val FORM_URL_PATTERN: Regex = Regex("^(\\d*)/?($NEW_VALUE|$EDIT_VALUE)$")
 
+fun String.toDisplayName(): String {
+    return when (this) {
+        NEW_VALUE -> "생성"
+        EDIT_VALUE -> "수정"
+        else -> throw IllegalArgumentException()
+    }
+}
+
 abstract class BindingFormLayout<DATA : Any>(
     private val dataClass: KClass<DATA>
 ) : FormLayout() {
