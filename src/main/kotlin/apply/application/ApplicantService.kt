@@ -16,22 +16,33 @@ import javax.annotation.PostConstruct
 @Transactional
 @Service
 class ApplicantService(
+    private val applicationFormService: ApplicationFormService,
     private val applicantRepository: ApplicantRepository,
     private val cheaterRepository: CheaterRepository,
     private val jwtTokenProvider: JwtTokenProvider
 ) {
-    fun findAll(): List<ApplicantResponse> = applicantRepository.findAll().map {
-        ApplicantResponse(it, cheaterRepository.existsByApplicantId(it.id))
+    fun findAll(): List<ApplicantBasicResponse> = applicantRepository.findAll().map {
+        ApplicantBasicResponse(it)
     }
 
-    fun findAllByIds(applicantIds: List<Long>): List<ApplicantResponse> =
-        applicantRepository.findAllById(applicantIds).map {
-            ApplicantResponse(it, cheaterRepository.existsByApplicantId(it.id))
-        }
+    fun findAllByRecruitmentId(recruitmentId: Long): List<ApplicantResponse> {
+        val applicationForms = applicationFormService.findAllByRecruitmentId(recruitmentId).map {
+            it.applicantId to it
+        }.toMap()
 
-    fun findByNameOrEmail(keyword: String): List<ApplicantResponse> =
+        return applicantRepository.findAllById(applicationForms.keys).map {
+            ApplicantResponse(it, cheaterRepository.existsByApplicantId(it.id), applicationForms.getValue(it.id))
+        }
+    }
+
+    fun findByRecruitmentIdAndKeyword(recruitmentId: Long, keyword: String): List<ApplicantResponse> {
+        return findAllByRecruitmentId(recruitmentId)
+            .filter { it.name.contains(keyword) || it.email.contains(keyword) }
+    }
+
+    fun findByNameOrEmail(keyword: String): List<ApplicantCheaterResponse> =
         applicantRepository.findByNameContainingOrEmailContaining(keyword, keyword).map {
-            ApplicantResponse(it, cheaterRepository.existsByApplicantId(it.id))
+            ApplicantCheaterResponse(it)
         }
 
     fun generateToken(applicantInformation: ApplicantInformation): String {

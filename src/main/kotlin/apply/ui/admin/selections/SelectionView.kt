@@ -2,7 +2,6 @@ package apply.ui.admin.selections
 
 import apply.application.ApplicantResponse
 import apply.application.ApplicantService
-import apply.application.ApplicationFormService
 import apply.application.DownloadService
 import apply.application.RecruitmentItemService
 import apply.application.RecruitmentService
@@ -38,7 +37,6 @@ import support.views.createSuccessButton
 @Route(value = "admin/selections", layout = BaseLayout::class)
 class SelectionView(
     private val applicantService: ApplicantService,
-    private val applicationFormService: ApplicationFormService,
     private val recruitmentService: RecruitmentService,
     private val recruitmentItemService: RecruitmentItemService,
     private val downloadService: DownloadService
@@ -56,7 +54,11 @@ class SelectionView(
         return HorizontalLayout(
             createSearchBar {
                 removeAll()
-                add(createTitle(), createMenu(), createGrid(applicantService.findByNameOrEmail(it)))
+                add(
+                    createTitle(),
+                    createMenu(),
+                    createGrid(applicantService.findByRecruitmentIdAndKeyword(recruitmentId, it))
+                )
             },
             createSuccessButton("다운로드") {
                 val excel = { downloadService.createExcelBy(recruitmentId) }
@@ -73,7 +75,6 @@ class SelectionView(
     }
 
     private fun createGrid(applicants: List<ApplicantResponse>): Component {
-        val applicationForms: HashMap<Long, ApplicationForm> = HashMap()
         return Grid<ApplicantResponse>(10).apply {
             addSortableColumn("이름", ApplicantResponse::name)
             addSortableColumn("이메일", ApplicantResponse::email)
@@ -81,23 +82,21 @@ class SelectionView(
             addSortableColumn("성별") { it.gender.title }
             addSortableDateColumn("생년월일", ApplicantResponse::birthday)
             addSortableDateTimeColumn("지원 일시") {
-                val applicationForm = applicationFormService.getByRecruitmentIdAndApplicantId(recruitmentId, it.id)
-                applicationForms[it.id] = applicationForm
-                applicationFormService.getByRecruitmentIdAndApplicantId(recruitmentId, it.id).submittedDateTime
+                it.applicationForm.submittedDateTime
             }
             addSortableColumn("부정 행위자") { if (it.isCheater) "O" else "X" }
-            addColumn(createButtonRenderer { applicationForms.getValue(it) }).apply {
+            addColumn(createButtonRenderer()).apply {
                 isAutoWidth = true
             }
             setItems(applicants)
         }
     }
 
-    private fun createButtonRenderer(event: (id: Long) -> ApplicationForm): Renderer<ApplicantResponse> {
+    private fun createButtonRenderer(): Renderer<ApplicantResponse> {
         return ComponentRenderer<Component, ApplicantResponse> { applicant ->
             createPrimarySmallButton("지원서") {
                 val dialog = Dialog()
-                dialog.add(*createRecruitmentItems(event(applicant.id)))
+                dialog.add(*createRecruitmentItems(applicant.applicationForm))
                 dialog.width = "800px"
                 dialog.height = "90%"
                 dialog.open()
@@ -150,8 +149,10 @@ class SelectionView(
 
     override fun setParameter(event: BeforeEvent, @WildcardParameter parameter: Long) {
         this.recruitmentId = parameter
-        val applicantIds = applicationFormService.findAllByRecruitmentId(recruitmentId)
-            .map { it.applicantId }
-        add(createTitle(), createMenu(), createGrid(applicantService.findAllByIds(applicantIds)))
+        add(
+            createTitle(),
+            createMenu(),
+            createGrid(applicantService.findAllByRecruitmentId(recruitmentId))
+        )
     }
 }
