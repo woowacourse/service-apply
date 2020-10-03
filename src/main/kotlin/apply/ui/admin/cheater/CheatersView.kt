@@ -2,8 +2,8 @@ package apply.ui.admin.cheater
 
 import apply.application.ApplicantBasicResponse
 import apply.application.ApplicantService
+import apply.application.CheaterResponse
 import apply.application.CheaterService
-import apply.domain.cheater.CheaterResponse
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
@@ -68,8 +68,8 @@ class CheatersView(
 
     private fun createCheaterGrid(): Grid<CheaterResponse> {
         return Grid<CheaterResponse>(10).apply {
-            addSortableColumn("이름", CheaterResponse::name)
-            addSortableColumn("이메일", CheaterResponse::email)
+            addSortableColumn("이름") { it.applicant.name }
+            addSortableColumn("이메일") { it.applicant.email }
             addSortableDateTimeColumn("등록일", CheaterResponse::createdDateTime)
             addColumn(createDeleteButtonRenderer()).apply { isAutoWidth = true }
             setItems(cheaterService.findAll())

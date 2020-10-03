@@ -29,6 +29,7 @@ internal class CheaterServiceTest {
     private lateinit var cheaterService: CheaterService
 
     private val applicant = Applicant(
+        id = 1L,
         name = "지원자",
         email = "a@email.com",
         phoneNumber = "010-0000-0000",
