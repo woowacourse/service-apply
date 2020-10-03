@@ -48,7 +48,7 @@
       />
 
       <TextField
-        v-model="url"
+        v-model="referenceUrl"
         name="url"
         type="url"
         :description="'블로그, GitHub, 포트폴리오 주소 등을 입력해 주세요.'"
@@ -95,7 +95,7 @@ export default {
     factCheck: false,
     password: "",
     rePassword: "",
-    url: "",
+    referenceUrl: "",
     recruitmentItems: [],
     rules: { ...register },
     validPassword: false,
@@ -120,7 +120,7 @@ export default {
           token: this.$store.getters["token"],
           recruitmentId: this.recruitmentId,
         })
-        this.url = applicationForm.referenceUrl
+        this.referenceUrl = applicationForm.referenceUrl
         this.recruitmentItems = recruitmentItems.map(recruitmentItem => ({
           ...recruitmentItem,
           contents: applicationForm.answers.items.find(
@@ -134,6 +134,16 @@ export default {
     }
   },
   methods: {
+    async parseApplicationInfo() {
+      return {
+        recruitmentId: this.recruitmentId,
+        referenceUrl: this.referenceUrl,
+        answers: await this.recruitmentItems.map(item => ({
+          contents: item.contents,
+          recruitmentItemId: item.id
+        })),
+      }
+    },
     reset() {
       this.factCheck = false
       this.password = ""
@@ -142,9 +152,10 @@ export default {
         ...recruitmentItem,
         contents: "",
       }))
-      this.url = ""
+      this.referenceUrl = ""
     },
     save() {
+      this.parseApplicationInfo().then(result => console.log(result))
       // TODO: 임시 저장 기능 추가 필요
     },
     submit() {
