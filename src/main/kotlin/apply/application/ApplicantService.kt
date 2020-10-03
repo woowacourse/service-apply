@@ -40,9 +40,9 @@ class ApplicantService(
         findAllByRecruitmentId(recruitmentId)
             .filter { it.name.contains(keyword) || it.email.contains(keyword) }
 
-    fun findByNameOrEmail(keyword: String): List<ApplicantCheaterResponse> =
+    fun findByNameOrEmail(keyword: String): List<ApplicantBasicResponse> =
         applicantRepository.findByNameContainingOrEmailContaining(keyword, keyword).map {
-            ApplicantCheaterResponse(it)
+            ApplicantBasicResponse(it)
         }
 
     fun generateToken(applicantInformation: ApplicantInformation): String {

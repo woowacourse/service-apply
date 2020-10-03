@@ -1,6 +1,6 @@
 package apply.ui.admin.cheater
 
-import apply.application.ApplicantCheaterResponse
+import apply.application.ApplicantBasicResponse
 import apply.application.ApplicantService
 import apply.application.CheaterService
 import apply.domain.cheater.CheaterResponse
@@ -59,8 +59,8 @@ class CheatersView(
         ).apply { setSizeFull() }
     }
 
-    private fun createSelectApplicant(applicants: List<ApplicantCheaterResponse>): Select<ApplicantCheaterResponse> {
-        return Select<ApplicantCheaterResponse>().apply {
+    private fun createSelectApplicant(applicants: List<ApplicantBasicResponse>): Select<ApplicantBasicResponse> {
+        return Select<ApplicantBasicResponse>().apply {
             setTextRenderer { "${it.name}/${it.email}" }
             setItems(applicants)
         }

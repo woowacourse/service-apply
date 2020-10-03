@@ -44,15 +44,3 @@ data class ApplicantResponse(
         applicationForm
     )
 }
-
-data class ApplicantCheaterResponse(
-    val id: Long,
-    val name: String,
-    val email: String
-) {
-    constructor(applicant: Applicant) : this(
-        applicant.id,
-        applicant.name,
-        applicant.email
-    )
-}
