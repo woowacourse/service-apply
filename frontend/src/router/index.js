@@ -44,6 +44,9 @@ const routes = [
   },
   {
     path: "/find/result",
+    props: route => ({
+      email: route.query.email,
+    }),
     component: PasswordFindResult,
   },
 ]

@@ -75,7 +75,7 @@ export default {
           email: this.email,
           birthday: DateUtil.formatLocalDate(this.birth),
         })
-        this.$router.push("/find/result")
+        this.$router.push({ path: `/find/result`, query: { email: this.email } })
       } catch (e) {
         this.showLoading = false
         alert(e.response.data)

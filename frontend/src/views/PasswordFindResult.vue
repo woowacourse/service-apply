@@ -1,9 +1,9 @@
 <template>
   <div class="password-find-result">
     <Form>
-      <h1>임시 비밀번호 발송</h1>
+      <h1>비밀번호 찾기</h1>
       <div>
-        입력하신 이메일 주소로 임시 비밀번호를 발송해 드렸습니다.
+        임시 비밀번호가 <strong>{{ email }}</strong> 으로 발송되었습니다.
       </div>
       <div class="actions">
         <Button type="button" @click="back" cancel value="돌아가기" />
@@ -23,6 +23,12 @@ export default {
   components: {
     Form,
     Button,
+  },
+  props: {
+    email: {
+      type: String,
+      required: true,
+    },
   },
   methods: {
     back() {
