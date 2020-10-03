@@ -27,11 +27,20 @@ class RecruitmentService(
                 request.id
             )
         )
+        recruitmentItemRepository.deleteAll(
+            findRecruitmentItemsToDelete(request.id, request.recruitmentItems.map { it.id })
+        )
         recruitmentItemRepository.saveAll(
             request.recruitmentItems.map {
                 RecruitmentItem(recruitment.id, it.title, it.position, it.maximumLength, it.description, it.id)
             }
         )
+    }
+
+    private fun findRecruitmentItemsToDelete(recruitmentId: Long, excludedItemIds: List<Long>): List<RecruitmentItem> {
+        return recruitmentItemRepository
+            .findByRecruitmentIdOrderByPosition(recruitmentId)
+            .filterNot { excludedItemIds.contains(it.id) }
     }
 
     fun findAll(): List<Recruitment> {
