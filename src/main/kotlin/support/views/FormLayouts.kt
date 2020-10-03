@@ -46,6 +46,12 @@ abstract class BindingFormLayout<DATA : Any>(
     }
 }
 
+/**
+ * If you want to bind a form to [DATA] with an `id` of type [Long], use this [BindingIdentityFormLayout].
+ *
+ * @see BindingFormLayout
+ * @see IdField
+ */
 abstract class BindingIdentityFormLayout<DATA : Any>(
     dataClass: KClass<DATA>
 ) : BindingFormLayout<DATA>(dataClass) {
