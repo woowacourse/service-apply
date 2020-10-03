@@ -46,12 +46,10 @@ class ApplicantService(
         return jwtTokenProvider.createToken(applicant.email)
     }
 
-    fun changePassword(applicantId: Long, password: String): String {
+    fun changePassword(applicantId: Long, password: String) {
         val applicant =
             applicantRepository.findByIdOrNull(applicantId) ?: throw IllegalArgumentException("존재하지 않는 사용자입니다.")
         applicant.password = password
-
-        return applicant.password
     }
 
     fun generateTokenByLogin(applicantVerifyInformation: ApplicantVerifyInformation): String {
@@ -81,8 +79,9 @@ class ApplicantService(
                 applicantPasswordFindInformation.email,
                 applicantPasswordFindInformation.birthday
             ) ?: throw ApplicantValidateException()
+            applicant.password = randomStringGenerator.generateRandomString()
 
-            changePassword(applicant.id, randomStringGenerator.generateRandomString())
+            applicant.password
         } else {
             throw ApplicantValidateException()
         }

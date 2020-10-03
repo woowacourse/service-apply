@@ -290,7 +290,6 @@ class EvaluationTargetServiceTest(
 
     private fun createApplicationForm(id: Long, recruitmentId: Long = 1L, applicantId: Long): ApplicationForm {
         return ApplicationForm(
-            id = id,
             referenceUrl = "",
             submitted = true,
             createdDateTime = createLocalDateTime(2019, 10, 25, 10),
