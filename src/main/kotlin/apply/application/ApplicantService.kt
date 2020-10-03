@@ -9,8 +9,8 @@ import apply.domain.applicant.Gender
 import apply.domain.applicant.exception.ApplicantValidateException
 import apply.domain.cheater.CheaterRepository
 import apply.security.JwtTokenProvider
-import org.springframework.data.repository.findByIdOrNull
 import apply.utils.RandomStringGenerator
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import support.createLocalDate
@@ -46,10 +46,12 @@ class ApplicantService(
         return jwtTokenProvider.createToken(applicant.email)
     }
 
-    fun changePassword(applicantId: Long, password: String) {
+    fun changePassword(applicantId: Long, password: String): String {
         val applicant =
             applicantRepository.findByIdOrNull(applicantId) ?: throw IllegalArgumentException("존재하지 않는 사용자입니다.")
         applicant.password = password
+
+        return applicant.password
     }
 
     fun generateTokenByLogin(applicantVerifyInformation: ApplicantVerifyInformation): String {
@@ -67,31 +69,23 @@ class ApplicantService(
     }
 
     fun resetPassword(applicantPasswordFindInformation: ApplicantPasswordFindInformation): String {
-        return when (
+        return if (
             applicantRepository.existsByNameAndEmailAndBirthday(
                 applicantPasswordFindInformation.name,
                 applicantPasswordFindInformation.email,
                 applicantPasswordFindInformation.birthday
             )
         ) {
-            true -> updatePassword(applicantPasswordFindInformation, randomStringGenerator.generateRandomString())
-            else -> throw ApplicantValidateException()
+            val applicant = applicantRepository.findByNameAndEmailAndBirthday(
+                applicantPasswordFindInformation.name,
+                applicantPasswordFindInformation.email,
+                applicantPasswordFindInformation.birthday
+            ) ?: throw ApplicantValidateException()
+
+            changePassword(applicant.id, randomStringGenerator.generateRandomString())
+        } else {
+            throw ApplicantValidateException()
         }
-    }
-
-    fun updatePassword(
-        applicantPasswordFindInformation: ApplicantPasswordFindInformation,
-        newPassword: String
-    ): String {
-        val applicant = applicantRepository.findByNameAndEmailAndBirthday(
-            applicantPasswordFindInformation.name,
-            applicantPasswordFindInformation.email,
-            applicantPasswordFindInformation.birthday
-        ) ?: throw ApplicantValidateException()
-
-        applicant.password = newPassword
-        applicantRepository.save(applicant)
-        return applicant.password
     }
 
     @PostConstruct
