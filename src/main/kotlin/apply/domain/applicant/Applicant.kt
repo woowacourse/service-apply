@@ -29,7 +29,7 @@ class Applicant(
     val birthday: LocalDate,
 
     @Column(nullable = false)
-    val password: String,
+    var password: String,
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

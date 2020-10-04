@@ -1,13 +1,15 @@
 package apply.application
 
 import apply.domain.applicant.ApplicantRepository
+import apply.domain.cheater.Cheater
 import apply.domain.cheater.CheaterRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.ArgumentMatchers.anyLong
+import org.mockito.BDDMockito.any
+import org.mockito.BDDMockito.anyLong
 import org.mockito.BDDMockito.given
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
@@ -30,6 +32,7 @@ internal class CheaterServiceTest {
     @Test
     fun `부정 행위자를 추가한다`() {
         given(cheaterRepository.existsByApplicantId(anyLong())).willReturn(false)
+        given(cheaterRepository.save(any(Cheater::class.java))).willReturn(Cheater(1L))
         assertDoesNotThrow { cheaterService.save(1L) }
     }
 
