@@ -35,7 +35,8 @@ export default {}
 .nav {
   display: flex;
   align-items: center;
-  width: 800px;
+  width: 830px;
+  padding: 0 15px;
 }
 
 .logo {
