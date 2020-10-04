@@ -55,39 +55,32 @@ data class EvaluationResponse(
     val beforeEvaluationId: Long = 0L
 )
 
-data class GradeEvaluationResponse(
-    val note: String,
-    val evaluationStatus: EvaluationStatus,
-    val evaluationDescription: String,
-    val evaluationTitle: String,
-    val evaluationItems: List<GradeEvaluationItemResponse>
-)
-
-data class GradeEvaluationItemResponse(
-    val title: String,
-    val description: String,
-    val maximumScore: Int,
-    val id: Long,
-    val score: Int
-)
-
-data class GradeEvaluationRequest(
+data class GradeEvaluationData(
     @field:NotNull
     @field:Valid
-    var evaluationAnswers: List<EvaluationAnswerRequest> = emptyList(),
+    var gradeEvaluationItems: List<GradeEvaluationItemData> = emptyList(),
 
     @field:Size(max = 255)
     var note: String = "",
 
     @field:NotNull
-    var evaluationStatus: EvaluationStatus = EvaluationStatus.WAITING
+    var evaluationStatus: EvaluationStatus = EvaluationStatus.WAITING,
+
+    var title: String = "",
+
+    var description: String = ""
 )
 
-data class EvaluationAnswerRequest(
+data class GradeEvaluationItemData(
     @field:NotNull
     @field:Min(0)
     var score: Int = 0,
 
-    @field:NotNull
-    var evaluationItemId: Long = 0L
+    var id: Long = 0L,
+
+    var title: String = "",
+
+    var description: String = "",
+
+    var maximumScore: Int = 0
 )

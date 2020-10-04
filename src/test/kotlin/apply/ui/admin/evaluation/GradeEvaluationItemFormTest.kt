@@ -14,7 +14,7 @@ private fun createEvaluationItemForm(
     return EvaluationItemForm(title, maximumScore, position, description)
 }
 
-internal class EvaluationItemFormTest {
+internal class GradeEvaluationItemFormTest {
     @Test
     fun `유효한 값을 입력하는 경우`() {
         val actual = createEvaluationItemForm().bindOrNull()

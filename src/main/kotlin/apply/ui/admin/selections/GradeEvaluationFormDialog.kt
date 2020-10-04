@@ -1,7 +1,7 @@
 package apply.ui.admin.selections
 
 import apply.application.EvaluationTargetService
-import apply.application.GradeEvaluationRequest
+import apply.application.GradeEvaluationData
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.dialog.Dialog
@@ -23,14 +23,14 @@ class GradeEvaluationFormDialog(
         setWidthFull()
         isReadOnly = true
     }
-    private val gradeEvaluationForm: BindingFormLayout<GradeEvaluationRequest>
+    private val gradeEvaluationForm: BindingFormLayout<GradeEvaluationData>
     private val dialog: Dialog
 
     init {
-        val evaluateResponse = evaluationTargetService.getGradeEvaluation(evaluationTargetId)
-        gradeEvaluationForm = GradeEvaluationForm(evaluateResponse)
-        title.text = evaluateResponse.evaluationTitle
-        description.value = evaluateResponse.evaluationDescription
+        val data = evaluationTargetService.getGradeEvaluation(evaluationTargetId)
+        gradeEvaluationForm = GradeEvaluationForm().apply { fill(data) }
+        title.text = data.title
+        description.value = data.description
         dialog = createDialog()
     }
 

@@ -285,10 +285,10 @@ class EvaluationTargetServiceTest(
 
         val result = evaluationTargetService.getGradeEvaluation(evaluationTarget.id)
         assertAll(
-            { assertThat(result.evaluationTitle).isEqualTo(evaluation.title) },
-            { assertThat(result.evaluationDescription).isEqualTo(evaluation.description) },
-            { assertThat(result.evaluationItems).hasSize(1) },
-            { assertThat(result.evaluationItems[0].score).isEqualTo(0) },
+            { assertThat(result.title).isEqualTo(evaluation.title) },
+            { assertThat(result.description).isEqualTo(evaluation.description) },
+            { assertThat(result.gradeEvaluationItems).hasSize(1) },
+            { assertThat(result.gradeEvaluationItems[0].score).isEqualTo(0) },
             { assertThat(result.evaluationStatus).isEqualTo(WAITING) },
             { assertThat(result.note).isBlank() }
         )
@@ -312,10 +312,10 @@ class EvaluationTargetServiceTest(
 
         val result = evaluationTargetService.getGradeEvaluation(evaluationTarget.id)
         assertAll(
-            { assertThat(result.evaluationTitle).isEqualTo(evaluation.title) },
-            { assertThat(result.evaluationDescription).isEqualTo(evaluation.description) },
-            { assertThat(result.evaluationItems).hasSize(1) },
-            { assertThat(result.evaluationItems[0].score).isEqualTo(oldScore) },
+            { assertThat(result.title).isEqualTo(evaluation.title) },
+            { assertThat(result.description).isEqualTo(evaluation.description) },
+            { assertThat(result.gradeEvaluationItems).hasSize(1) },
+            { assertThat(result.gradeEvaluationItems[0].score).isEqualTo(oldScore) },
             { assertThat(result.evaluationStatus).isEqualTo(PASS) },
             { assertThat(result.note).isEqualTo(oldNote) }
         )
@@ -328,8 +328,8 @@ class EvaluationTargetServiceTest(
         val updatedScore = 5
         val updatedStatus = PASS
         val updatedNote = "특이 사항"
-        val answers = listOf(EvaluationAnswerRequest(updatedScore, 3L))
-        val gradeEvaluationRequest = GradeEvaluationRequest(answers, updatedNote, updatedStatus)
+        val answers = listOf(GradeEvaluationItemData(score = updatedScore, id = 3L))
+        val gradeEvaluationRequest = GradeEvaluationData(answers, updatedNote, updatedStatus)
 
         evaluationTargetService.grade(evaluationTarget.id, gradeEvaluationRequest)
 
