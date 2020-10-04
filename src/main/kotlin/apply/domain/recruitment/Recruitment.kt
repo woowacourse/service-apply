@@ -1,12 +1,10 @@
 package apply.domain.recruitment
 
+import support.domain.BaseEntity
 import java.time.LocalDateTime
 import javax.persistence.Column
 import javax.persistence.Embedded
 import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
 
 @Entity
 class Recruitment(
@@ -17,11 +15,8 @@ class Recruitment(
     var period: RecruitmentPeriod,
     canRecruit: Boolean = false,
     isHidden: Boolean = true,
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0L
-) {
+    id: Long
+) : BaseEntity(id) {
     @Column(nullable = false)
     var canRecruit: Boolean = canRecruit
         private set
@@ -39,11 +34,15 @@ class Recruitment(
     val status: RecruitmentStatus
         get() = RecruitmentStatus.of(period, canRecruit)
 
+    val isEnded: Boolean
+        get() = status == RecruitmentStatus.ENDED
+
     constructor(
         title: String,
         startDateTime: LocalDateTime,
         endDateTime: LocalDateTime,
         canRecruit: Boolean = false,
-        isHidden: Boolean = true
-    ) : this(title, RecruitmentPeriod(startDateTime, endDateTime), canRecruit, isHidden)
+        isHidden: Boolean = true,
+        id: Long = 0L
+    ) : this(title, RecruitmentPeriod(startDateTime, endDateTime), canRecruit, isHidden, id)
 }
