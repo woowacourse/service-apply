@@ -5,9 +5,6 @@
         <a target="_blank" href="https://woowacourse.github.io/">
           <img class="logo" src="/assets/logo/logo_full_white.png" />
         </a>
-        <h3 class="title">
-          <router-link to="/recruits">지원</router-link>
-        </h3>
       </div>
       <div class="copyright">Copyright © 우아한테크코스. All rights reserved</div>
       <div class="social">
