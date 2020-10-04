@@ -29,4 +29,8 @@ class EvaluationItemForm() : BindingFormLayout<EvaluationItemRequest>(Evaluation
     override fun bindOrNull(): EvaluationItemRequest? {
         return bindDefaultOrNull()
     }
+
+    override fun fill(data: EvaluationItemRequest) {
+        // TODO: 모집 관리 페이지에 수정 뷰를 구현한다.
+    }
 }
