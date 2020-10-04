@@ -19,7 +19,7 @@ export default {}
 
 <style scoped>
 .main-header {
-  margin-bottom: 80px;
+  margin-bottom: 93px;
 }
 
 .header {
@@ -29,7 +29,7 @@ export default {}
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 80px;
+  height: 93px;
   background: #fff;
   box-shadow: 0px 4px 6px 0px rgba(12, 0, 46, 0.06);
   z-index: 9999;
@@ -43,8 +43,7 @@ export default {}
 }
 
 .logo {
-  width: 180px;
-  height: 60px;
+  width: 200px;
 }
 
 .title {

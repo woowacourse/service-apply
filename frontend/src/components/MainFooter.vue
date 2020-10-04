@@ -54,8 +54,7 @@ export default {}
 }
 
 .logo {
-  width: 180px;
-  height: 60px;
+  width: 200px;
 }
 
 .title {
@@ -82,6 +81,11 @@ a {
   border: 1px solid #fff;
   transition: all 0.2s linear;
   margin-right: 10px;
+}
+
+.social a:hover {
+  color: #333;
+  background-color: #fff;
 }
 
 .copyright {
