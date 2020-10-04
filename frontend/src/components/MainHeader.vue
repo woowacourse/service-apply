@@ -20,6 +20,7 @@ export default {}
 <style scoped>
 .main-header {
   margin-bottom: 93px;
+  user-select: none;
 }
 
 .header {

@@ -30,6 +30,7 @@ export default {}
 
 <style scoped>
 .main-footer {
+  user-select: none;
   display: flex;
   justify-content: center;
   align-items: center;
