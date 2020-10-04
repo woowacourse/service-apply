@@ -1,5 +1,13 @@
 package apply.application
 
+import apply.EVALUATION_ID
+import apply.EVALUATION_ITEM_ID
+import apply.NOTE
+import apply.SCORE
+import apply.createEvaluation
+import apply.createEvaluationAnswer
+import apply.createEvaluationItem
+import apply.createEvaluationTarget
 import apply.domain.applicant.Applicant
 import apply.domain.applicant.ApplicantRepository
 import apply.domain.applicant.Gender
@@ -7,13 +15,10 @@ import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.Cheater
 import apply.domain.cheater.CheaterRepository
-import apply.domain.evaluation.Evaluation
 import apply.domain.evaluation.EvaluationRepository
-import apply.domain.evaluationItem.EvaluationItem
 import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.evaluationtarget.EvaluationAnswer
 import apply.domain.evaluationtarget.EvaluationAnswers
-import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.evaluationtarget.EvaluationStatus.FAIL
 import apply.domain.evaluationtarget.EvaluationStatus.PASS
 import apply.domain.evaluationtarget.EvaluationStatus.WAITING
@@ -73,7 +78,7 @@ class EvaluationTargetServiceTest(
     @Test
     fun `이전 평가가 없고 저장 된 평가 대상자가 없을 경우 저장하고 불러온다`() {
         // given
-        val firstEvaluation = createEvaluation(id = 1L, recruitmentId = 1L, beforeEvaluationId = 0L)
+        val firstEvaluation = createEvaluation()
 
         val applicationForms = listOf(
             createApplicationForm(id = 1L, recruitmentId = 1L, applicantId = 1L),
@@ -122,7 +127,7 @@ class EvaluationTargetServiceTest(
         evaluationTargetRepository.saveAll(savedEvaluationTargets)
 
         // when
-        val secondEvaluation = createEvaluation(id = 2L, recruitmentId = 1L, beforeEvaluationId = 1L)
+        val secondEvaluation = createEvaluation(id = 2L, beforeEvaluationId = 1L)
 
         val addingApplicants = listOf(createApplicant(2L))
 
@@ -154,7 +159,7 @@ class EvaluationTargetServiceTest(
         evaluationTargetRepository.saveAll(savedEvaluationTargets)
 
         // when
-        val firstEvaluation = createEvaluation(id = 1L, recruitmentId = 1L, beforeEvaluationId = 0L)
+        val firstEvaluation = createEvaluation(id = 1L, beforeEvaluationId = 0L)
 
         val allApplicationForms = listOf(
             createApplicationForm(id = 1L, recruitmentId = 1L, applicantId = 1L),
@@ -215,11 +220,7 @@ class EvaluationTargetServiceTest(
         evaluationTargetRepository.saveAll(loadingEvaluationTargetsFromBeforeEvaluation)
 
         // when
-        val secondEvaluation = createEvaluation(
-            id = 2L,
-            recruitmentId = 1L,
-            beforeEvaluationId = 1L
-        )
+        val secondEvaluation = createEvaluation(id = 2L, beforeEvaluationId = 1L)
 
         val addingApplicant = createApplicant(4L)
 
@@ -256,7 +257,7 @@ class EvaluationTargetServiceTest(
         )
 
         // when
-        val currentEvaluation = createEvaluation(id = 2L, recruitmentId = 1L, beforeEvaluationId = 1L)
+        val currentEvaluation = createEvaluation(id = 2L, beforeEvaluationId = 1L)
 
         every { evaluationRepository.findByIdOrNull(2L) } returns currentEvaluation
         every { cheaterRepository.findAll() } returns listOf(Cheater(applicantId = 1L))
@@ -275,13 +276,15 @@ class EvaluationTargetServiceTest(
 
     @Test
     fun `평가 대상을 평가(채점)한 적이 없을 때, 채점 정보를 불러온다`() {
-        val evaluationId = 1L
-        val evaluation = createEvaluation(id = evaluationId, beforeEvaluationId = 1L)
-        val evaluationItem = createEvaluationItem(1L, evaluationId)
-        val evaluationTarget = evaluationTargetRepository.save(createEvaluationTarget(evaluationId, 1L, WAITING))
+        val evaluation = createEvaluation(id = EVALUATION_ID, beforeEvaluationId = 1L)
+        val evaluationItem = createEvaluationItem(id = 1L)
+        val evaluationTarget =
+            evaluationTargetRepository.save(EvaluationTarget(evaluationId = EVALUATION_ID, applicantId = 1L))
 
-        every { evaluationRepository.findByIdOrNull(evaluationId) } returns evaluation
-        every { evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluationId) } returns listOf(evaluationItem)
+        every { evaluationRepository.findByIdOrNull(EVALUATION_ID) } returns evaluation
+        every {
+            evaluationItemRepository.findByEvaluationIdOrderByPosition(EVALUATION_ID)
+        } returns listOf(evaluationItem)
 
         val result = evaluationTargetService.getGradeEvaluation(evaluationTarget.id)
         assertAll(
@@ -296,28 +299,25 @@ class EvaluationTargetServiceTest(
 
     @Test
     fun `평가 대상을 평가(채점)한 적이 있을 때, 채점 정보를 불러온다`() {
-        val evaluationId = 1L
-        val evaluationItemId = 2L
-        val oldScore = 4
-        val oldNote = "특이 사항"
-
-        val evaluation = createEvaluation(id = evaluationId, beforeEvaluationId = 1L)
-        val evaluationItem = createEvaluationItem(evaluationItemId, evaluationId)
-        val answers = EvaluationAnswers(mutableListOf(EvaluationAnswer(oldScore, evaluationItemId)))
+        val evaluation = createEvaluation(id = EVALUATION_ID, beforeEvaluationId = 1L)
+        val evaluationItem = createEvaluationItem(id = EVALUATION_ITEM_ID)
+        val answers = EvaluationAnswers(mutableListOf(createEvaluationAnswer()))
         val evaluationTarget =
-            evaluationTargetRepository.save(createEvaluationTarget(evaluationId, 1L, PASS, oldNote, answers))
+            evaluationTargetRepository.save(createEvaluationTarget(EVALUATION_ID, 1L, PASS, NOTE, answers))
 
-        every { evaluationRepository.findByIdOrNull(evaluationId) } returns evaluation
-        every { evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluationId) } returns listOf(evaluationItem)
+        every { evaluationRepository.findByIdOrNull(EVALUATION_ID) } returns evaluation
+        every {
+            evaluationItemRepository.findByEvaluationIdOrderByPosition(EVALUATION_ID)
+        } returns listOf(evaluationItem)
 
         val result = evaluationTargetService.getGradeEvaluation(evaluationTarget.id)
         assertAll(
             { assertThat(result.title).isEqualTo(evaluation.title) },
             { assertThat(result.description).isEqualTo(evaluation.description) },
             { assertThat(result.gradeEvaluationItems).hasSize(1) },
-            { assertThat(result.gradeEvaluationItems[0].score).isEqualTo(oldScore) },
+            { assertThat(result.gradeEvaluationItems[0].score).isEqualTo(SCORE) },
             { assertThat(result.evaluationStatus).isEqualTo(PASS) },
-            { assertThat(result.note).isEqualTo(oldNote) }
+            { assertThat(result.note).isEqualTo(NOTE) }
         )
     }
 
@@ -327,7 +327,7 @@ class EvaluationTargetServiceTest(
 
         val updatedScore = 5
         val updatedStatus = PASS
-        val updatedNote = "특이 사항"
+        val updatedNote = "특이 사항(수정)"
         val answers = listOf(GradeEvaluationItemData(score = updatedScore, id = 3L))
         val gradeEvaluationRequest = GradeEvaluationData(answers, updatedNote, updatedStatus)
 
@@ -342,56 +342,6 @@ class EvaluationTargetServiceTest(
                 assertThat(updatedEvaluationTarget.evaluationAnswers).usingRecursiveComparison()
                     .isEqualTo(expectedAnswers)
             }
-        )
-    }
-
-    private fun createEvaluation(id: Long, recruitmentId: Long = 1L, beforeEvaluationId: Long): Evaluation {
-        return Evaluation(
-            id = id,
-            title = "평가$id",
-            description = "평가${id}에 대한 설명",
-            recruitmentId = recruitmentId,
-            beforeEvaluationId = beforeEvaluationId
-        )
-    }
-
-    private fun createEvaluationTarget(
-        evaluationId: Long,
-        applicantId: Long,
-        evaluationStatus: EvaluationStatus
-    ): EvaluationTarget {
-        return EvaluationTarget(
-            evaluationId = evaluationId,
-            administratorId = null,
-            applicantId = applicantId,
-            evaluationStatus = evaluationStatus
-        )
-    }
-
-    private fun createEvaluationTarget(
-        evaluationId: Long,
-        applicantId: Long,
-        evaluationStatus: EvaluationStatus,
-        note: String,
-        answers: EvaluationAnswers
-    ): EvaluationTarget {
-        return EvaluationTarget(
-            evaluationId = evaluationId,
-            administratorId = null,
-            applicantId = applicantId,
-            evaluationStatus = evaluationStatus,
-            evaluationAnswers = answers,
-            note = note
-        )
-    }
-
-    private fun createEvaluationItem(id: Long, evaluationId: Long): EvaluationItem {
-        return EvaluationItem(
-            id = id,
-            evaluationId = evaluationId,
-            title = "평가 항목$id",
-            description = "평가 항목에 대한 설명$id",
-            maximumScore = 5
         )
     }
 

@@ -1,10 +1,8 @@
 package apply.domain.evaluation
 
+import support.domain.BaseEntity
 import javax.persistence.Column
 import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
 
 @Entity
 class Evaluation(
@@ -19,10 +17,8 @@ class Evaluation(
 
     var beforeEvaluationId: Long = 0L,
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0L
-) {
+    id: Long
+) : BaseEntity(id) {
     fun hasBeforeEvaluation(): Boolean = beforeEvaluationId != 0L
 
     fun hasSameBeforeEvaluationWith(beforeEvaluationId: Long): Boolean = this.beforeEvaluationId == beforeEvaluationId

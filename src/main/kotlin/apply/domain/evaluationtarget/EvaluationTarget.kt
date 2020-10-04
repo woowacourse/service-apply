@@ -1,13 +1,11 @@
 package apply.domain.evaluationtarget
 
+import support.domain.BaseEntity
 import javax.persistence.Column
 import javax.persistence.Embedded
 import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
 
 @Entity
 class EvaluationTarget(
@@ -29,10 +27,8 @@ class EvaluationTarget(
 
     var note: String = "",
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0L
-) {
+    id: Long = 0L
+) : BaseEntity(id) {
     constructor(evaluationId: Long, applicantId: Long) : this(
         evaluationId = evaluationId,
         administratorId = 0L,
