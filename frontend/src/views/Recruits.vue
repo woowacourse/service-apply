@@ -13,14 +13,14 @@
           {{ tab.label }}
         </li>
         <li class="tab-item">
-          <router-link to="/login">내 지원서</router-link>
+          <router-link to="/my-applications">내 지원서</router-link>
         </li>
       </ul>
-      <div id="component">
-        <div v-for="recruitment in activeList" :key="recruitment.id">
-          <recruit-item :recruitment="recruitment" />
-        </div>
-      </div>
+      <RecruitItem
+        v-for="recruitment in activeList"
+        :key="recruitment.id"
+        :recruitment="recruitment"
+      />
     </div>
   </div>
 </template>
@@ -107,7 +107,7 @@ export default {
     setStatus(status) {
       if (status !== this.$route.query.status) {
         this.$router.replace({
-          path: "/recruits/?status=" + status,
+          path: "/recruits?status=" + status,
         })
         this.setList(status)
       }

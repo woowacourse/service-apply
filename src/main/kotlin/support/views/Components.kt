@@ -2,13 +2,17 @@ package support.views
 
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.ComponentEventListener
+import com.vaadin.flow.component.HasText
 import com.vaadin.flow.component.Key
 import com.vaadin.flow.component.KeyDownEvent
 import com.vaadin.flow.component.Text
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.html.Div
+import com.vaadin.flow.component.html.H1
 import com.vaadin.flow.component.icon.Icon
 import com.vaadin.flow.component.icon.VaadinIcon
+import com.vaadin.flow.component.orderedlayout.FlexComponent
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup
 import com.vaadin.flow.component.select.Select
 import com.vaadin.flow.component.textfield.TextField
@@ -60,4 +64,22 @@ fun createSearchBar(eventListener: (name: String) -> Unit): Div {
         textField,
         Button(Icon(VaadinIcon.SEARCH)) { eventListener(textField.value) }
     )
+}
+
+class Title(val value: H1) : HorizontalLayout(), HasText {
+    init {
+        add(value)
+        setSizeFull()
+        justifyContentMode = FlexComponent.JustifyContentMode.CENTER
+    }
+
+    constructor(text: String = "") : this(H1(text))
+
+    override fun setText(text: String) {
+        value.text = text
+    }
+
+    override fun getText(): String {
+        return value.text
+    }
 }
