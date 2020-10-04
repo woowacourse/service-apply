@@ -121,46 +121,43 @@ export default {
       return null
     },
   },
-  created() {
-    this.initForm()
-  },
-  methods: {
-    async initForm() {
-      try {
-        const { data: recruitmentItems } = await RecruitmentApi.fetchItems(this.recruitmentId)
-        this.recruitmentItems = recruitmentItems.map(recruitmentItem => ({
-          ...recruitmentItem,
-          contents: "",
-        }))
-        if (this.isEditing) {
-          const { data: applicationForm } = await ApplicationFormsApi.fetchForm({
-            token: this.$store.getters["token"],
-            recruitmentId: this.recruitmentId,
-          })
-          if (applicationForm.submitted) {
-            alert("이미 제출된 지원서입니다. 수정할 수 없습니다.")
-            this.$router.replace("/recruits")
-          }
-          this.tempSaveTime = applicationForm.modifiedDateTime
-          this.referenceUrl = applicationForm.referenceUrl
-          this.recruitmentItems = recruitmentItems.map(recruitmentItem => ({
-            ...recruitmentItem,
-            contents: applicationForm.answers.find(
-              ({ recruitmentItemId }) => recruitmentItemId === recruitmentItem.id,
-            ).contents,
-          }))
-        }
-      } catch (e) {
-        if (e.message.includes("404")) {
-          let query = Object.assign({}, this.$route.query)
-          delete query.action
-          this.$router.replace({ query })
-        } else {
-          alert("잘못된 요청입니다.")
+  async created() {
+    try {
+      const { data: recruitmentItems } = await RecruitmentApi.fetchItems(this.recruitmentId)
+      this.recruitmentItems = recruitmentItems.map(recruitmentItem => ({
+        ...recruitmentItem,
+        contents: "",
+      }))
+      if (this.isEditing) {
+        const { data: applicationForm } = await ApplicationFormsApi.fetchForm({
+          token: this.$store.getters["token"],
+          recruitmentId: this.recruitmentId,
+        })
+        if (applicationForm.submitted) {
+          alert("이미 제출된 지원서입니다. 수정할 수 없습니다.")
           this.$router.replace("/recruits")
         }
+        this.tempSaveTime = applicationForm.modifiedDateTime
+        this.referenceUrl = applicationForm.referenceUrl
+        this.recruitmentItems = recruitmentItems.map(recruitmentItem => ({
+          ...recruitmentItem,
+          contents: applicationForm.answers.find(
+              ({ recruitmentItemId }) => recruitmentItemId === recruitmentItem.id,
+          ).contents,
+        }))
       }
-    },
+    } catch (e) {
+      if (e.message.includes("404")) {
+        let query = Object.assign({}, this.$route.query)
+        delete query.action
+        this.$router.replace({ query })
+      } else {
+        alert("잘못된 요청입니다.")
+        this.$router.replace("/recruits")
+      }
+    }
+  },
+  methods: {
     async parseApplicationInfo() {
       return {
         recruitmentId: this.recruitmentId,
