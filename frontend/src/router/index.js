@@ -10,8 +10,6 @@ import store from "@/store"
 
 Vue.use(VueRouter)
 
-Vue.use(VueRouter)
-
 const requireAuth = (to, from, next) => {
   if (store.getters["token"] !== "") {
     return next()
