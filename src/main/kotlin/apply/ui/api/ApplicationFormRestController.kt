@@ -20,7 +20,7 @@ class ApplicationFormRestController(
     @GetMapping
     fun getForm(@RequestParam("recruitmentId") recruitment: Long): ResponseEntity<Any> {
         return try {
-            val form = applicationFormService.findForm(4L, recruitment)
+            val form = applicationFormService.findForm(1L, recruitment)
             ResponseEntity.ok().body(form)
         } catch (e: IllegalArgumentException) {
             ResponseEntity.notFound().build()
@@ -32,7 +32,7 @@ class ApplicationFormRestController(
         @RequestBody saveApplicationFormRequest: SaveApplicationFormRequest
     ): ResponseEntity<String> {
         return try {
-            applicationFormService.save(4L, saveApplicationFormRequest)
+            applicationFormService.save(1L, saveApplicationFormRequest)
             ResponseEntity.ok().build()
         } catch (e: IllegalArgumentException) {
             ResponseEntity.badRequest().body(e.message)
@@ -45,7 +45,7 @@ class ApplicationFormRestController(
         @RequestBody updateApplicationFormRequest: UpdateApplicationFormRequest
     ): ResponseEntity<String> {
         return try {
-            applicationFormService.update(4L, updateApplicationFormRequest)
+            applicationFormService.update(1L, updateApplicationFormRequest)
             ResponseEntity.ok().build()
         } catch (e: IllegalArgumentException) {
             ResponseEntity.badRequest().body(e.message)
