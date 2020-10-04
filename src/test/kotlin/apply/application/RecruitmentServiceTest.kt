@@ -77,7 +77,7 @@ internal class RecruitmentServiceTest {
         }
 
         @Test
-        fun `지원 항목이 있는 경우 새 지원을 생성하면 지원 및 지원 항목이 저장한다`() {
+        fun `지원 항목이 있는 경우 새 지원을 생성하면 지원 및 지원 항목을 저장한다`() {
             every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns emptyList()
 
             recruitmentService.save(createRecruitmentData(recruitmentItems = listOf(createRecruitmentItemData())))
