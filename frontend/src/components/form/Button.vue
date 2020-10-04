@@ -31,6 +31,7 @@ export default Button
   min-width: 80px;
   min-height: 28px;
   margin: 5px;
+  appearance: none;
 }
 
 .button.cancel {

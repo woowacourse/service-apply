@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <MainHeader />
-    <router-view />
+    <router-view class="main-view" />
     <MainFooter />
   </div>
 </template>
@@ -47,8 +47,11 @@ body {
 
 #app {
   display: flex;
-  height: 100%;
   flex-direction: column;
-  justify-content: space-between;
+  height: 100%;
+}
+
+.main-view {
+  flex: 1 0 auto;
 }
 </style>

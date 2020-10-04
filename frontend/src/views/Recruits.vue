@@ -148,13 +148,10 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: #ced6e0;
-  height: 100%;
   user-select: none;
 }
 
 #recruits-box {
-  align-items: center;
   width: 800px;
   max-width: 800px;
   padding: 20px;
@@ -195,9 +192,6 @@ export default {
 }
 
 #tab-wrapper > h2 {
-  cursor: pointer;
-}
-.enroll-button button {
   cursor: pointer;
 }
 </style>

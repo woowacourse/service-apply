@@ -30,6 +30,7 @@ export default {}
   height: 80px;
   background: #fff;
   box-shadow: 0px 4px 6px 0px rgba(12, 0, 46, 0.06);
+  z-index: 9999;
 }
 
 .nav {

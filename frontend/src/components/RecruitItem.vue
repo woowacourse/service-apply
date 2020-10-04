@@ -133,8 +133,6 @@ export default {
 .enroll-button {
   width: 120px;
   height: 40px;
-  margin: 10px;
-  vertical-align: middle;
 }
 
 .button-wrapper {
