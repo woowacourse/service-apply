@@ -2,7 +2,6 @@ package apply.ui.admin.selections
 
 import apply.application.ApplicantResponse
 import apply.application.ApplicantService
-import apply.application.ApplicationFormService
 import apply.application.DownloadService
 import apply.application.RecruitmentItemService
 import apply.application.RecruitmentService
@@ -29,6 +28,7 @@ import com.vaadin.flow.server.StreamResource
 import com.vaadin.flow.server.VaadinSession
 import support.views.addSortableColumn
 import support.views.addSortableDateColumn
+import support.views.addSortableDateTimeColumn
 import support.views.createNormalButton
 import support.views.createPrimarySmallButton
 import support.views.createSearchBar
@@ -37,7 +37,6 @@ import support.views.createSuccessButton
 @Route(value = "admin/selections", layout = BaseLayout::class)
 class SelectionView(
     private val applicantService: ApplicantService,
-    private val applicationFormService: ApplicationFormService,
     private val recruitmentService: RecruitmentService,
     private val recruitmentItemService: RecruitmentItemService,
     private val downloadService: DownloadService
@@ -55,7 +54,11 @@ class SelectionView(
         return HorizontalLayout(
             createSearchBar {
                 removeAll()
-                add(createTitle(), createMenu(), createGrid(applicantService.findByNameOrEmail(it)))
+                add(
+                    createTitle(),
+                    createMenu(),
+                    createGrid(applicantService.findByRecruitmentIdAndKeyword(recruitmentId, it))
+                )
             },
             createSuccessButton("다운로드") {
                 val excel = { downloadService.createExcelBy(recruitmentId) }
@@ -78,8 +81,13 @@ class SelectionView(
             addSortableColumn("전화번호", ApplicantResponse::phoneNumber)
             addSortableColumn("성별") { it.gender.title }
             addSortableDateColumn("생년월일", ApplicantResponse::birthday)
+            addSortableDateTimeColumn("지원 일시") {
+                it.applicationForm.submittedDateTime
+            }
             addSortableColumn("부정 행위자") { if (it.isCheater) "O" else "X" }
-            addColumn(createButtonRenderer()).apply { isAutoWidth = true }
+            addColumn(createButtonRenderer()).apply {
+                isAutoWidth = true
+            }
             setItems(applicants)
         }
     }
@@ -88,14 +96,7 @@ class SelectionView(
         return ComponentRenderer<Component, ApplicantResponse> { applicant ->
             createPrimarySmallButton("지원서") {
                 val dialog = Dialog()
-                dialog.add(
-                    *createRecruitmentItems(
-                        applicationFormService.getByRecruitmentIdAndApplicantId(
-                            recruitmentId,
-                            applicant.id
-                        )
-                    )
-                )
+                dialog.add(*createRecruitmentItems(applicant.applicationForm))
                 dialog.width = "800px"
                 dialog.height = "90%"
                 dialog.open()
@@ -148,8 +149,10 @@ class SelectionView(
 
     override fun setParameter(event: BeforeEvent, @WildcardParameter parameter: Long) {
         this.recruitmentId = parameter
-        val applicantIds = applicationFormService.findAllByRecruitmentId(recruitmentId)
-            .map { it.applicantId }
-        add(createTitle(), createMenu(), createGrid(applicantService.findAllByIds(applicantIds)))
+        add(
+            createTitle(),
+            createMenu(),
+            createGrid(applicantService.findAllByRecruitmentId(recruitmentId))
+        )
     }
 }
