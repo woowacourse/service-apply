@@ -1,12 +1,12 @@
 <template>
   <div class="main-header">
     <header class="header">
-      <div class="container">
+      <nav class="nav">
         <a target="_blank" href="https://woowacourse.github.io/"
           ><img class="logo" src="/assets/logo/logo_full_dark.png"
         /></a>
         <h3 class="title"><router-link to="/recruits">지원</router-link></h3>
-      </div>
+      </nav>
     </header>
   </div>
 </template>
@@ -29,10 +29,10 @@ export default {}
   width: 100%;
   height: 80px;
   background: #fff;
-  border-bottom: 1px solid #f1f1f1;
+  box-shadow: 0px 4px 6px 0px rgba(12, 0, 46, 0.06);
 }
 
-.container {
+.nav {
   display: flex;
   align-items: center;
   width: 800px;
