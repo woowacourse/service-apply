@@ -103,11 +103,9 @@ export default {
     rules: { ...register },
     validPassword: false,
     tempSaveTime: undefined,
+    isEditing: false,
   }),
   computed: {
-    isEditing() {
-      return this.$route.query.action === "edit"
-    },
     canSubmit() {
       return this.factCheck && (this.isEditing ? this.validPassword : true)
     },
@@ -121,18 +119,22 @@ export default {
       return null
     },
   },
-  async created() {
-    try {
-      const { data: recruitmentItems } = await RecruitmentApi.fetchItems(this.recruitmentId)
-      this.recruitmentItems = recruitmentItems.map(recruitmentItem => ({
-        ...recruitmentItem,
-        contents: "",
-      }))
-      if (this.isEditing) {
+  created() {
+    this.initForm()
+  },
+  methods: {
+    async initForm() {
+      try {
+        const { data: recruitmentItems } = await RecruitmentApi.fetchItems(this.recruitmentId)
+        this.recruitmentItems = recruitmentItems.map(recruitmentItem => ({
+          ...recruitmentItem,
+          contents: "",
+        }))
         const { data: applicationForm } = await ApplicationFormsApi.fetchForm({
           token: this.$store.getters["token"],
           recruitmentId: this.recruitmentId,
         })
+        this.isEditing = true
         if (applicationForm.submitted) {
           alert("이미 제출된 지원서입니다. 수정할 수 없습니다.")
           this.$router.replace("/recruits")
@@ -142,22 +144,18 @@ export default {
         this.recruitmentItems = recruitmentItems.map(recruitmentItem => ({
           ...recruitmentItem,
           contents: applicationForm.answers.find(
-              ({ recruitmentItemId }) => recruitmentItemId === recruitmentItem.id,
+            ({ recruitmentItemId }) => recruitmentItemId === recruitmentItem.id,
           ).contents,
         }))
+      } catch (e) {
+        if (e.message.includes("404")) {
+          this.isEditing = false
+        } else {
+          alert("잘못된 요청입니다.")
+          this.$router.replace("/recruits")
+        }
       }
-    } catch (e) {
-      if (e.message.includes("404")) {
-        let query = Object.assign({}, this.$route.query)
-        delete query.action
-        this.$router.replace({ query })
-      } else {
-        alert("잘못된 요청입니다.")
-        this.$router.replace("/recruits")
-      }
-    }
-  },
-  methods: {
+    },
     async parseApplicationInfo() {
       return {
         recruitmentId: this.recruitmentId,
@@ -206,12 +204,8 @@ export default {
       this.save(false)
         .then(() => {
           alert("정상적으로 저장되었습니다.")
-          if (!this.isEditing) {
-            let query = Object.assign({}, this.$route.query)
-            query.action = "edit"
-            this.$router.replace({ query })
-          }
-          this.$router.go()
+          this.isEditing = true
+          this.initForm()
         })
         .catch(e => {
           alert(e.response.data)
