@@ -41,9 +41,9 @@ export default TextInput
 <style scoped>
 input[type="text"],
 input[type="email"],
-input[type="textarea"],
 input[type="url"],
-input[type="password"] {
+input[type="password"],
+textarea {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;

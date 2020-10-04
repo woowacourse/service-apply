@@ -6,8 +6,10 @@ import apply.domain.applicant.ApplicantRepository
 import apply.domain.applicant.ApplicantVerifyInformation
 import apply.domain.applicant.Gender
 import apply.domain.applicant.exception.ApplicantValidateException
+import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.CheaterRepository
 import apply.security.JwtTokenProvider
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import support.createLocalDate
@@ -16,22 +18,28 @@ import javax.annotation.PostConstruct
 @Transactional
 @Service
 class ApplicantService(
+    private val applicationFormRepository: ApplicationFormRepository,
     private val applicantRepository: ApplicantRepository,
     private val cheaterRepository: CheaterRepository,
     private val jwtTokenProvider: JwtTokenProvider
 ) {
-    fun findAll(): List<ApplicantResponse> = applicantRepository.findAll().map {
-        ApplicantResponse(it, cheaterRepository.existsByApplicantId(it.id))
+    fun findAllByRecruitmentId(recruitmentId: Long): List<ApplicantResponse> {
+        val applicationForms = applicationFormRepository.findByRecruitmentId(recruitmentId)
+            .associateBy { it.applicantId }
+        val cheaterApplicantIds = cheaterRepository.findAll().map { it.applicantId }
+
+        return applicantRepository.findAllById(applicationForms.keys).map {
+            ApplicantResponse(it, cheaterApplicantIds.contains(it.id), applicationForms.getValue(it.id))
+        }
     }
 
-    fun findAllByIds(applicantIds: List<Long>): List<ApplicantResponse> =
-        applicantRepository.findAllById(applicantIds).map {
-            ApplicantResponse(it, cheaterRepository.existsByApplicantId(it.id))
-        }
+    fun findByRecruitmentIdAndKeyword(recruitmentId: Long, keyword: String): List<ApplicantResponse> =
+        findAllByRecruitmentId(recruitmentId)
+            .filter { it.name.contains(keyword) || it.email.contains(keyword) }
 
-    fun findByNameOrEmail(keyword: String): List<ApplicantResponse> =
+    fun findByNameOrEmail(keyword: String): List<ApplicantBasicResponse> =
         applicantRepository.findByNameContainingOrEmailContaining(keyword, keyword).map {
-            ApplicantResponse(it, cheaterRepository.existsByApplicantId(it.id))
+            ApplicantBasicResponse(it)
         }
 
     fun getByEmail(email: String): Applicant =
@@ -43,6 +51,12 @@ class ApplicantService(
             ?: applicantRepository.save(applicantInformation.toEntity())
 
         return jwtTokenProvider.createToken(applicant.email)
+    }
+
+    fun changePassword(applicantId: Long, password: String) {
+        val applicant =
+            applicantRepository.findByIdOrNull(applicantId) ?: throw IllegalArgumentException("존재하지 않는 사용자입니다.")
+        applicant.password = password
     }
 
     fun generateTokenByLogin(applicantVerifyInformation: ApplicantVerifyInformation): String {
