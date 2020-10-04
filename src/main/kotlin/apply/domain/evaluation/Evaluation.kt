@@ -17,7 +17,7 @@ class Evaluation(
 
     var beforeEvaluationId: Long = 0L,
 
-    id: Long
+    id: Long = 0L
 ) : BaseEntity(id) {
     fun hasBeforeEvaluation(): Boolean = beforeEvaluationId != 0L
 
