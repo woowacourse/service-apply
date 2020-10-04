@@ -397,20 +397,20 @@ class EvaluationTargetServiceTest(
 
     private fun createApplicationForm(id: Long, recruitmentId: Long = 1L, applicantId: Long): ApplicationForm {
         return ApplicationForm(
-            id = id,
+            applicantId = applicantId,
+            recruitmentId = recruitmentId,
             referenceUrl = "",
             submitted = true,
             createdDateTime = createLocalDateTime(2019, 10, 25, 10),
             modifiedDateTime = createLocalDateTime(2019, 11, 5, 10),
             submittedDateTime = createLocalDateTime(2019, 11, 5, 10),
-            recruitmentId = recruitmentId,
-            applicantId = applicantId,
             answers = Answers(
                 mutableListOf(
                     Answer("${id}의 1번 답", 1L),
                     Answer("${id}의 2번 답", 2L)
                 )
-            )
+            ),
+            id = id
         )
     }
 

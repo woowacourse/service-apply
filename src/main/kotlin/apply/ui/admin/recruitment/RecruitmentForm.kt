@@ -1,18 +1,19 @@
 package apply.ui.admin.recruitment
 
-import apply.application.RecruitmentRequest
+import apply.application.RecruitmentData
+import apply.application.RecruitmentItemData
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.datetimepicker.DateTimePicker
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup
 import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.data.binder.PropertyId
-import support.views.BindingFormLayout
+import support.views.BindingIdentityFormLayout
 import support.views.createBooleanRadioButtonGroup
 import support.views.createErrorSmallButton
 import support.views.createPrimarySmallButton
 import java.time.LocalDateTime
 
-class RecruitmentForm() : BindingFormLayout<RecruitmentRequest>(RecruitmentRequest::class) {
+class RecruitmentForm() : BindingIdentityFormLayout<RecruitmentData>(RecruitmentData::class) {
     private val title: TextField = TextField("모집명")
     private val startDateTime: DateTimePicker = DateTimePicker("시작 일시")
     private val endDateTime: DateTimePicker = DateTimePicker("종료 일시")
@@ -45,23 +46,35 @@ class RecruitmentForm() : BindingFormLayout<RecruitmentRequest>(RecruitmentReque
 
     private fun createAddButton(): Button {
         return createPrimarySmallButton("추가하기") {
-            val deleteButton = createErrorSmallButton("삭제") {}
-            val item = RecruitmentItemForm().also { recruitmentItems.add(it) }
-            val formItem = addFormItem(item, deleteButton).also { setColspan(it, 2) }
-            deleteButton.addClickListener {
-                it.unregisterListener()
-                recruitmentItems.remove(item)
-                remove(formItem)
-            }
+            addRecruitmentItemForm()
         }
     }
 
-    override fun bindOrNull(): RecruitmentRequest? {
+    private fun addRecruitmentItemForm(data: RecruitmentItemData = RecruitmentItemData()) {
+        val deleteButton = createErrorSmallButton("삭제") {}
+        val item = RecruitmentItemForm().also {
+            it.fill(data)
+            recruitmentItems.add(it)
+        }
+        val formItem = addFormItem(item, deleteButton).also { setColspan(it, 2) }
+        deleteButton.addClickListener {
+            it.unregisterListener()
+            recruitmentItems.remove(item)
+            remove(formItem)
+        }
+    }
+
+    override fun bindOrNull(): RecruitmentData? {
         val result = bindDefaultOrNull()
         val items = recruitmentItems.mapNotNull { it.bindOrNull() }
         if (recruitmentItems.size != items.size) {
             return null
         }
         return result?.apply { recruitmentItems = items }
+    }
+
+    override fun fill(data: RecruitmentData) {
+        fillDefault(data)
+        data.recruitmentItems.forEach { addRecruitmentItemForm(it) }
     }
 }

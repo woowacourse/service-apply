@@ -55,4 +55,8 @@ class GradeEvaluationForm() :
         }
         return result?.apply { evaluationAnswers = answers }
     }
+
+    override fun fill(data: GradeEvaluationRequest) {
+        fillDefault(data)
+    }
 }

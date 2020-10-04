@@ -40,4 +40,8 @@ class EvaluationAnswerForm() : BindingFormLayout<EvaluationAnswerRequest>(Evalua
     override fun bindOrNull(): EvaluationAnswerRequest? {
         return bindDefaultOrNull()
     }
+
+    override fun fill(data: EvaluationAnswerRequest) {
+        fillDefault(data)
+    }
 }

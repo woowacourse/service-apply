@@ -1,8 +1,8 @@
 package apply.ui.api
 
 import apply.application.RecruitmentItemService
+import apply.application.RecruitmentResponse
 import apply.application.RecruitmentService
-import apply.domain.recruitment.Recruitment
 import apply.domain.recruitmentitem.RecruitmentItem
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -17,7 +17,7 @@ class RecruitmentRestController(
     private val recruitmentItemService: RecruitmentItemService
 ) {
     @GetMapping
-    fun findAll(): ResponseEntity<List<Recruitment>> {
+    fun findAll(): ResponseEntity<List<RecruitmentResponse>> {
         return ResponseEntity.ok().body(recruitmentService.findAllNotHidden())
     }
 
