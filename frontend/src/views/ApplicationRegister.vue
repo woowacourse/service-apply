@@ -123,7 +123,7 @@ export default {
         this.url = applicationForm.referenceUrl
         this.recruitmentItems = recruitmentItems.map(recruitmentItem => ({
           ...recruitmentItem,
-          contents: applicationForm.answers.items.find(
+          contents: applicationForm.answers.find(
             ({ recruitmentItemId }) => recruitmentItemId === recruitmentItem.id,
           ).contents,
         }))

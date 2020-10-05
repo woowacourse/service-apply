@@ -54,7 +54,7 @@ const routes = [
     component: PasswordFind,
   },
   {
-    path: "/my-applications",
+    path: "/my-application-forms",
     component: MyApplications,
     beforeEnter: requireAuth,
   },

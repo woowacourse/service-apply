@@ -43,14 +43,14 @@
       </div>
       <footer>
         <a class="logo" href="#"></a>
-        <Label class="click" @click.native="findPassword">비밀번호 찾기</Label>
+        <router-link class="find-password" to="/find">비밀번호 찾기</router-link>
       </footer>
     </Form>
   </div>
 </template>
 
 <script>
-import { Form, Button, TextField, BirthField, Label } from "@/components/form"
+import { Form, Button, TextField, BirthField } from "@/components/form"
 import { login } from "@/utils/validation"
 import * as DateUtil from "@/utils/date"
 
@@ -61,7 +61,6 @@ export default {
     Button,
     TextField,
     BirthField,
-    Label,
   },
   data: () => ({
     name: "",
@@ -80,19 +79,18 @@ export default {
   }),
   methods: {
     async submit() {
-      await this.$store
-        .dispatch("login", {
+      try {
+        await this.$store.dispatch("login", {
           name: this.name,
           email: this.email,
           birthday: DateUtil.formatLocalDate(this.birth),
           password: this.password,
         })
-        .catch(e => {
-          alert(e.response.data)
-          throw e
-        })
-      alert("로그인 성공")
-      this.$router.push("/my-applications")
+        alert("로그인 성공")
+        this.$router.push("/my-application-forms")
+      } catch (e) {
+        alert(e.response.data)
+      }
     },
     findPassword() {
       this.$router.push("/find")
@@ -130,11 +128,15 @@ export default {
   background: url("/assets/logo/logo_full_dark.png");
   background-size: 100% 100%;
 }
+
 footer {
   display: flex;
   justify-content: space-between;
 }
-.click {
-  cursor: pointer;
+
+.find-password {
+  text-decoration: none;
+  font-weight: 500;
+  color: #2c3e50;
 }
 </style>

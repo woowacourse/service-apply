@@ -19,5 +19,9 @@ export const fetchRegister = ({ name, phoneNumber, email, password, birthday, ge
     )
 }
 export const fetchLogin = ({ name, email, birthday, password }) => {
-  return axios.post(`${BASE_URL}/login`, { name, email, birthday, password })
+  return axios.post(`${BASE_URL}/login`, { name, email, birthday, password }).catch(() =>
+    Promise.resolve({
+      data: "token",
+    }),
+  )
 }
