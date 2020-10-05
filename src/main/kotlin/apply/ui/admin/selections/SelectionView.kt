@@ -31,6 +31,7 @@ import com.vaadin.flow.router.HasUrlParameter
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.router.WildcardParameter
 import com.vaadin.flow.server.StreamResource
+import com.vaadin.flow.server.VaadinService
 import com.vaadin.flow.server.VaadinSession
 import support.views.addSortableColumn
 import support.views.addSortableDateColumn
@@ -40,6 +41,8 @@ import support.views.createPrimaryButton
 import support.views.createPrimarySmallButton
 import support.views.createSearchBar
 import support.views.createSuccessButton
+
+const val INDEX_TAB_SESSION_KEY: String = "indexTab"
 
 @Route(value = "admin/selections", layout = BaseLayout::class)
 class SelectionView(
@@ -51,7 +54,7 @@ class SelectionView(
     private val downloadService: DownloadService,
     private val evaluationTargetService: EvaluationTargetService
 ) : VerticalLayout(), HasUrlParameter<Long> {
-    private var recruitmentId: Long = 0L
+    private var recruitmentId = 0L
     private var evaluations = evaluationService.findAllByRecruitmentId(recruitmentId)
 
     private fun createTitle(): Component {
@@ -65,9 +68,12 @@ class SelectionView(
         val tabsToGrids: LinkedHashMap<Tab, Component> = mapTabAndGrid(keyword)
         val (tabs, grids) = createTabComponents(tabsToGrids)
         tabs.setWidthFull()
+        val selectedIndex: Int =
+            VaadinService.getCurrentRequest().wrappedSession.getAttribute(INDEX_TAB_SESSION_KEY) as Int? ?: 0
 
         val menu = HorizontalLayout(
             createSearchBar {
+                saveOnSession(INDEX_TAB_SESSION_KEY, tabs.selectedIndex)
                 removeAll()
                 add(
                     createTitle(),
@@ -80,9 +86,12 @@ class SelectionView(
                 createDownloadButton()
             )
         ).apply {
+            tabs.selectedIndex = selectedIndex
             setWidthFull()
             justifyContentMode = FlexComponent.JustifyContentMode.BETWEEN
         }
+
+        VaadinService.getCurrentRequest().wrappedSession.removeAttribute(INDEX_TAB_SESSION_KEY)
 
         return VerticalLayout(
             menu, grids
@@ -90,10 +99,10 @@ class SelectionView(
     }
 
     private fun mapTabAndGrid(keyword: String): LinkedHashMap<Tab, Component> {
-        val totalApplicantTab = Tab("전체 지원자")
         val tabsToPages = LinkedHashMap<Tab, Component>()
+
         val applicantResponses = applicantService.findByRecruitmentIdAndKeyword(recruitmentId, keyword)
-        tabsToPages[totalApplicantTab] = createTotalApplicantsGrid(applicantResponses)
+        tabsToPages[Tab("전체 지원자")] = createTotalApplicantsGrid(applicantResponses)
 
         evaluations = evaluationService.findAllByRecruitmentId(recruitmentId)
         for (evaluation in evaluations) {
@@ -150,17 +159,20 @@ class SelectionView(
         return Pair(tabs, pages)
     }
 
+    private fun saveOnSession(key: String, value: Int) {
+        VaadinService.getCurrentRequest().wrappedSession.setAttribute(key, value)
+    }
+
     private fun createLoadButton(tabs: Tabs): Button {
         return createPrimaryButton("평가자 불러오기") {
             val evaluation = evaluations.first { it.title == tabs.selectedTab.label }
             evaluationTargetService.load(evaluation.id)
-            System.err.println(tabs.selectedTab.label)
+            saveOnSession(INDEX_TAB_SESSION_KEY, tabs.selectedIndex)
             removeAll()
             add(
                 createTitle(),
                 createContent()
             )
-            setId("load-button")
         }
     }
 
