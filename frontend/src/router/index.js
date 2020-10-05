@@ -20,6 +20,10 @@ const requireAuth = (to, from, next) => {
 
 const routes = [
   {
+    path: "/",
+    redirect: "/recruits",
+  },
+  {
     path: "/recruits",
     component: Recruits,
   },

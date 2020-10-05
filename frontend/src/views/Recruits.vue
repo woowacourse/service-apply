@@ -107,7 +107,8 @@ export default {
     setStatus(status) {
       if (status !== this.$route.query.status) {
         this.$router.replace({
-          path: "/recruits?status=" + status,
+          path: "/recruits",
+          query: { status },
         })
         this.setList(status)
       }
