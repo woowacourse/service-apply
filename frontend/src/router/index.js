@@ -31,17 +31,19 @@ const routes = [
     }),
   },
   {
-    path: "/register/application",
+    path: "/application-forms/new",
     component: ApplicationRegister,
     props: route => ({
       recruitmentId: Number(route.query.recruitmentId),
     }),
-    children: [
-      {
-        name: "edit",
-        path: "edit",
-      },
-    ],
+  },
+  {
+    path: "/application-forms/edit",
+    name: "edit",
+    component: ApplicationRegister,
+    props: route => ({
+      recruitmentId: Number(route.query.recruitmentId),
+    }),
   },
   {
     path: "/login",
