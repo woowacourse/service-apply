@@ -28,7 +28,7 @@ export default {
   data: () => ({
     appliedRecruitments: [],
   }),
-  async created() {
+  created() {
     const token = this.$store.getters["token"]
 
     try {
