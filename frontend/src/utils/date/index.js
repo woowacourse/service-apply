@@ -12,8 +12,7 @@ export const parseLocalDateTime = localDateTime => {
   const minute = addZeroPrefixIfLessThanTen(localDateTime.getMinutes().toString())
   const second = addZeroPrefixIfLessThanTen(localDateTime.getSeconds().toString())
 
-  return `${year}.${month}.${date}
-  ${hour}:${minute}:${second}`
+  return `${year}.${month}.${date} ${hour}:${minute}:${second}`
 }
 
 const addZeroPrefixIfLessThanTen = value => value.padStart(2, "0")

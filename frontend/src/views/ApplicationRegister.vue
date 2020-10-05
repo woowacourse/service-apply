@@ -159,9 +159,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: 100%;
   align-items: center;
-  background: #ced6e0;
 }
 
 .actions {
