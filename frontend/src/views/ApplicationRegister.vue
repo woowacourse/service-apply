@@ -2,7 +2,7 @@
   <div class="application-register">
     <Form @submit.prevent="submit">
       <h1>지원서 작성</h1>
-      <p class="autosave-indicator" v-if="tempSaveTime">
+      <p class="autosave-indicator" v-if="this.isEditing">
         임시 저장되었습니다. ({{ tempSavedTime }})
       </p>
       <TextField
@@ -67,7 +67,7 @@
       </Field>
       <div class="actions">
         <Button @click="reset" value="초기화" />
-        <Button @click="tempSave()" :disabled="!canSave" value="임시 저장" />
+        <Button type="submit" @click="tempSave()" :disabled="!canSave" value="임시 저장" />
         <Button type="submit" :disabled="!canSubmit" value="제출" />
       </div>
       <footer>
@@ -105,7 +105,6 @@ export default {
     rules: { ...register },
     validPassword: false,
     tempSaveTime: undefined,
-    isEditing: false,
   }),
   computed: {
     canSubmit() {
@@ -119,6 +118,9 @@ export default {
         return parseLocalDateTime(new Date(this.tempSaveTime))
       }
       return null
+    },
+    isEditing() {
+      return this.$route.params.status === "edit"
     },
   },
   created() {
@@ -136,10 +138,12 @@ export default {
           token: this.$store.getters["token"],
           recruitmentId: this.recruitmentId,
         })
-        this.isEditing = true
         if (applicationForm.submitted) {
           alert("이미 제출된 지원서입니다. 수정할 수 없습니다.")
-          this.$router.replace("/recruits")
+          this.$router.replace("/")
+        } else if(!this.isEditing) {
+          alert("이미 저장된 지원서가 존재합니다.")
+          this.$router.replace("/")
         }
         this.tempSaveTime = applicationForm.modifiedDateTime
         this.referenceUrl = applicationForm.referenceUrl
@@ -150,15 +154,17 @@ export default {
           ).contents,
         }))
       } catch (e) {
-        if (e.message.includes("404")) {
-          this.isEditing = false
-        } else {
+        if (e.message.includes("404") && this.isEditing) {
+          alert("저장된 지원서가 존재하지 않습니다.")
+          this.$router.replace("/")
+        } else if (this.isEditing) {
           alert("잘못된 요청입니다.")
-          this.$router.replace("/recruits")
+          this.$router.replace("/")
         }
       }
     },
-    async parseApplicationInfo() {
+    parseApplicationInfo() {
+      console.log(this.$route)
       return {
         recruitmentId: this.recruitmentId,
         referenceUrl: this.referenceUrl,
@@ -179,10 +185,11 @@ export default {
       this.referenceUrl = ""
     },
     async save(isSubmitted) {
-      const applicationForm = await this.parseApplicationInfo().then(data => ({
-        ...data,
+      let applicationForm = this.parseApplicationInfo()
+      applicationForm = {
+        ...applicationForm,
         isSubmitted: isSubmitted,
-      }))
+      }
       return await this.saveOrUpdate(applicationForm)
     },
     async saveOrUpdate(applicationForm) {
@@ -201,8 +208,8 @@ export default {
         data: applicationForm,
       })
     },
-    tempSave() {
-      this.save(false)
+    async tempSave() {
+      await this.save(false)
         .then(() => {
           alert("정상적으로 저장되었습니다.")
           this.isEditing = true
@@ -210,19 +217,19 @@ export default {
         })
         .catch(e => {
           alert(e.response.data)
-          this.$router.replace("/recruits")
+          this.$router.replace("/")
         })
     },
-    submit() {
+    async submit() {
       if (confirm("제출하신 뒤에는 수정하실 수 없습니다. 정말로 제출하시겠습니까?")) {
-        this.save(true)
+        await this.save(true)
           .then(() => {
             alert("정상적으로 제출되었습니다.")
-            this.$router.replace("/recruits")
+            this.$router.replace("/")
           })
           .catch(e => {
             alert(e.response.data)
-            this.$router.replace("/recruits")
+            this.$router.replace("/")
           })
       }
     },
