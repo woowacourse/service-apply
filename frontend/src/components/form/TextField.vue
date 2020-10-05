@@ -4,7 +4,7 @@
       <div>
         <Label :required="required">{{ label }}</Label>
       </div>
-      <div v-if="description" class="description">{{ description }}</div>
+      <Description v-if="description">{{ description }}</Description>
       <div v-if="maxLength > 0" class="length-limit">{{ text.length }} / {{ maxLength }}</div>
       <TextInput v-bind="$attrs" :required="required" v-model="text" :max-length="maxLength" />
     </label>
@@ -17,6 +17,7 @@ import Label from "./Label"
 import Field from "./Field"
 import TextInput from "./TextInput"
 import RuleField from "./RuleField"
+import Description from "./Description"
 
 const TextField = {
   components: {
@@ -24,6 +25,7 @@ const TextField = {
     Field,
     TextInput,
     RuleField,
+    Description,
   },
   inheritAttrs: false,
   props: {
@@ -67,11 +69,6 @@ export default TextField
   flex-direction: column;
 }
 
-.description {
-  display: flex;
-  margin: 15px 0;
-  font-weight: 300;
-}
 .length-limit {
   align-self: flex-end;
   color: #999999;

@@ -56,11 +56,12 @@
         placeholder="ex) https://woowacourse.github.io/javable/"
       />
       <Field>
-        <CheckBox
-          v-model="factCheck"
-          label="위 지원서에 작성한 내용은 모두 사실입니다."
-          required
-        ></CheckBox>
+        <Label>지원서 작성 내용 사실 확인</Label>
+        <Description>
+          기재한 사실 중 허위사실이 발견되는 즉시, 교육 대상자에서 제외되며 향후 지원도
+          불가능합니다.
+        </Description>
+        <CheckBox v-model="factCheck" label="동의합니다."></CheckBox>
       </Field>
       <div class="actions">
         <Button @click="reset" value="초기화" />
@@ -75,7 +76,7 @@
 </template>
 
 <script>
-import { Button, CheckBox, Field, Form, TextField } from "@/components/form"
+import { Button, CheckBox, Field, Form, TextField, Label, Description } from "@/components/form"
 import * as RecruitmentApi from "@/api/recruitments"
 import * as ApplicationFormsApi from "@/api/application-forms"
 import { register } from "@/utils/validation"
@@ -90,6 +91,8 @@ export default {
     TextField,
     CheckBox,
     Field,
+    Label,
+    Description,
   },
   data: () => ({
     factCheck: false,
