@@ -8,6 +8,8 @@ import com.vaadin.flow.component.textfield.IntegerField
 import com.vaadin.flow.component.textfield.TextArea
 import support.views.BindingFormLayout
 
+private const val FIXED_ADDED_COMPONENT_COUNT = 3
+
 class EvaluationTargetForm() : BindingFormLayout<EvaluationTargetData>(EvaluationTargetData::class) {
     private val evaluationAnswers: MutableList<EvaluationAnswerForm> = mutableListOf()
     private val note: TextArea = TextArea("기타 특이사항")
@@ -29,9 +31,11 @@ class EvaluationTargetForm() : BindingFormLayout<EvaluationTargetData>(Evaluatio
                 setColspan(this, 2)
             }
             evaluationAnswers.add(answerForm)
-            addComponentAtIndex((children.count() - 3).toInt(), answerForm)
+            addComponentAtIndex(getIndexOfLastAnswer(), answerForm)
         }
     }
+
+    private fun sumOfScore() = evaluationAnswers.map { it.score.value }.sum()
 
     private fun EvaluationStatus.toText() =
         when (this) {
@@ -41,7 +45,7 @@ class EvaluationTargetForm() : BindingFormLayout<EvaluationTargetData>(Evaluatio
             EvaluationStatus.PENDING -> "보류"
         }
 
-    private fun sumOfScore() = evaluationAnswers.map { it.score.value }.sum()
+    private fun getIndexOfLastAnswer() = (children.count() - FIXED_ADDED_COMPONENT_COUNT).toInt()
 
     override fun bindOrNull(): EvaluationTargetData? {
         val result = bindDefaultOrNull()
