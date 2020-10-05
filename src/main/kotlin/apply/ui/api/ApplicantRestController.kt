@@ -39,8 +39,8 @@ class ApplicantRestController(
         }
     }
 
-    @PostMapping("/find")
-    fun findPassword(@RequestBody resetPasswordRequest: ResetPasswordRequest): ResponseEntity<String> {
+    @PostMapping("/reset-password")
+    fun resetPassword(@RequestBody resetPasswordRequest: ResetPasswordRequest): ResponseEntity<String> {
         return try {
             val newPassword = applicantService.resetPassword(resetPasswordRequest)
             mailService.sendPasswordResetMail(resetPasswordRequest, newPassword)

@@ -145,7 +145,7 @@ internal class ApplicantRestControllerTest(
 
         willDoNothing().given(mailService).sendPasswordResetMail(applicantPasswordFindRequest, RANDOM_PASSWORD)
 
-        mockMvc.post("/api/applicants/find") {
+        mockMvc.post("/api/applicants/reset-password") {
             content = objectMapper.writeValueAsBytes(applicantPasswordFindRequest)
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
@@ -159,7 +159,7 @@ internal class ApplicantRestControllerTest(
             applicantService.resetPassword(inValidApplicantPasswordFindRequest)
         ).willThrow(ApplicantValidateException())
 
-        mockMvc.post("/api/applicants/find") {
+        mockMvc.post("/api/applicants/reset-password") {
             content = objectMapper.writeValueAsBytes(inValidApplicantPasswordFindRequest)
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
