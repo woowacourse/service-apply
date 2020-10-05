@@ -82,41 +82,41 @@ class EvaluationTargetService(
         evaluationTargetRepository.saveAll(additionalEvaluationTargets)
     }
 
-    fun getGradeEvaluation(targetId: Long): GradeEvaluationData {
+    fun getGradeEvaluation(targetId: Long): GradeEvaluationResponse {
         val evaluationTarget = getById(targetId)
         val evaluation = evaluationRepository.findByIdOrNull(evaluationTarget.evaluationId)
             ?: throw IllegalArgumentException("EvaluationTarget (id=$targetId)의 Evaluation (id=${evaluationTarget.evaluationId}가 존재하지 않습니다")
         val evaluationItems = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluation.id)
 
-        val gradeEvaluationItems = evaluationItems.map {
-            GradeEvaluationItemData(
-                title = it.title,
-                description = it.description,
-                maximumScore = it.maximumScore,
+        val evaluationAnswers = evaluationItems.map {
+            EvaluationAnswerData(
                 id = it.id,
                 score = evaluationTarget.evaluationAnswers.findScoreByEvaluationItemId(it.id) ?: DEFAULT_SCORE
             )
         }
 
-        return GradeEvaluationData(
-            note = evaluationTarget.note,
-            evaluationStatus = evaluationTarget.evaluationStatus,
+        return GradeEvaluationResponse(
             title = evaluation.title,
             description = evaluation.description,
-            gradeEvaluationItems = gradeEvaluationItems
+            evaluationTargetData = EvaluationTargetData(
+                note = evaluationTarget.note,
+                evaluationStatus = evaluationTarget.evaluationStatus,
+                evaluationAnswersData = evaluationAnswers
+            ),
+            evaluationItems = evaluationItems.map { EvaluationItemResponse(it) }
         )
     }
 
-    fun grade(evaluationTargetId: Long, gradeEvaluationRequest: GradeEvaluationData) {
+    fun grade(evaluationTargetId: Long, evaluationTargetRequest: EvaluationTargetData) {
         val evaluationTarget = getById(evaluationTargetId)
 
-        val evaluationAnswers = gradeEvaluationRequest.gradeEvaluationItems
+        val evaluationAnswers = evaluationTargetRequest.evaluationAnswersData
             .map { EvaluationAnswer(it.score, it.id) }
             .toMutableList()
         evaluationTarget.update(
-            evaluationStatus = gradeEvaluationRequest.evaluationStatus,
+            evaluationStatus = evaluationTargetRequest.evaluationStatus,
             evaluationAnswers = EvaluationAnswers(evaluationAnswers),
-            note = gradeEvaluationRequest.note
+            note = evaluationTargetRequest.note
         )
     }
 

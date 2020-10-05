@@ -1,7 +1,7 @@
 package apply.ui.admin.selections
 
+import apply.application.EvaluationTargetData
 import apply.application.EvaluationTargetService
-import apply.application.GradeEvaluationData
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.dialog.Dialog
@@ -14,7 +14,7 @@ import support.views.BindingFormLayout
 import support.views.createContrastButton
 import support.views.createPrimaryButton
 
-class GradeEvaluationFormDialog(
+class EvaluationTargetFormDialog(
     private val evaluationTargetService: EvaluationTargetService,
     private val evaluationTargetId: Long
 ) : VerticalLayout() {
@@ -23,20 +23,22 @@ class GradeEvaluationFormDialog(
         setWidthFull()
         isReadOnly = true
     }
-    private val gradeEvaluationForm: BindingFormLayout<GradeEvaluationData>
+    private val evaluationTargetForm: BindingFormLayout<EvaluationTargetData>
     private val dialog: Dialog
 
     init {
-        val data = evaluationTargetService.getGradeEvaluation(evaluationTargetId)
-        gradeEvaluationForm = GradeEvaluationForm().apply { fill(data) }
-        title.text = data.title
-        description.value = data.description
+        val response = evaluationTargetService.getGradeEvaluation(evaluationTargetId)
+        evaluationTargetForm = EvaluationTargetForm(response.evaluationItems).apply {
+            fill(response.evaluationTargetData)
+        }
+        title.text = response.title
+        description.value = response.description
         dialog = createDialog()
     }
 
     private fun createDialog(): Dialog {
         return Dialog().apply {
-            add(createHeader(), gradeEvaluationForm, createButtons())
+            add(createHeader(), evaluationTargetForm, createButtons())
             width = "800px"
             height = "90%"
             open()
@@ -58,7 +60,7 @@ class GradeEvaluationFormDialog(
 
     private fun createAddButton(): Button {
         return createPrimaryButton("저장") {
-            gradeEvaluationForm.bindOrNull()?.let {
+            evaluationTargetForm.bindOrNull()?.let {
                 evaluationTargetService.grade(evaluationTargetId, it)
                 dialog.close()
             }

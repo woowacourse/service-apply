@@ -1,5 +1,6 @@
 package apply.application
 
+import apply.domain.evaluationItem.EvaluationItem
 import apply.domain.evaluationtarget.EvaluationStatus
 import javax.validation.Valid
 import javax.validation.constraints.Max
@@ -55,32 +56,46 @@ data class EvaluationResponse(
     val beforeEvaluationId: Long = 0L
 )
 
-data class GradeEvaluationData(
+data class EvaluationItemResponse(
+    val title: String,
+    val description: String,
+    val maximumScore: Int,
+    val position: Int = 0,
+    val evaluationId: Long,
+    val id: Long = 0L
+) {
+    constructor(evaluationItem: EvaluationItem) : this(
+        evaluationItem.title,
+        evaluationItem.description,
+        evaluationItem.maximumScore,
+        evaluationItem.position,
+        evaluationItem.evaluationId,
+        evaluationItem.id
+    )
+}
+
+data class GradeEvaluationResponse(
+    val title: String,
+    val description: String,
+    val evaluationTargetData: EvaluationTargetData,
+    val evaluationItems: List<EvaluationItemResponse>
+)
+
+data class EvaluationTargetData(
     @field:NotNull
     @field:Valid
-    var gradeEvaluationItems: List<GradeEvaluationItemData> = emptyList(),
+    var evaluationAnswersData: List<EvaluationAnswerData> = emptyList(),
 
     @field:Size(max = 255)
     var note: String = "",
 
     @field:NotNull
-    var evaluationStatus: EvaluationStatus = EvaluationStatus.WAITING,
-
-    var title: String = "",
-
-    var description: String = ""
+    var evaluationStatus: EvaluationStatus = EvaluationStatus.WAITING
 )
 
-data class GradeEvaluationItemData(
+data class EvaluationAnswerData(
     @field:NotNull
     @field:Min(0)
     var score: Int = 0,
-
-    var id: Long = 0L,
-
-    var title: String = "",
-
-    var description: String = "",
-
-    var maximumScore: Int = 0
+    var id: Long = 0L
 )

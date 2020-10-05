@@ -1,12 +1,12 @@
 package apply.ui.admin.selections
 
-import apply.application.GradeEvaluationItemData
+import apply.application.EvaluationAnswerData
 import com.vaadin.flow.component.select.Select
 import com.vaadin.flow.component.textfield.TextArea
 import com.vaadin.flow.component.textfield.TextField
 import support.views.BindingIdentityFormLayout
 
-class GradeEvaluationItemForm() : BindingIdentityFormLayout<GradeEvaluationItemData>(GradeEvaluationItemData::class) {
+class EvaluationAnswerForm() : BindingIdentityFormLayout<EvaluationAnswerData>(EvaluationAnswerData::class) {
     val score: Select<Int> = Select(0)
     private val title: TextField = TextField().apply {
         isReadOnly = true
@@ -20,11 +20,8 @@ class GradeEvaluationItemForm() : BindingIdentityFormLayout<GradeEvaluationItemD
         drawRequired()
     }
 
-    constructor(score: Int, maximumScore: Int, title: String, description: String) : this() {
-        this.score.apply {
-            setItems((0..maximumScore).toList())
-            value = score
-        }
+    constructor(title: String, description: String, maximumScore: Int) : this() {
+        this.score.setItems((0..maximumScore).toList())
         this.title.value = title
         this.description.value = description
     }
@@ -33,12 +30,11 @@ class GradeEvaluationItemForm() : BindingIdentityFormLayout<GradeEvaluationItemD
         score.addValueChangeListener { scoreChangeEvent() }
     }
 
-    override fun bindOrNull(): GradeEvaluationItemData? {
+    override fun bindOrNull(): EvaluationAnswerData? {
         return bindDefaultOrNull()
     }
 
-    override fun fill(data: GradeEvaluationItemData) {
-        this.score.setItems((0..data.maximumScore).toList())
+    override fun fill(data: EvaluationAnswerData) {
         fillDefault(data)
     }
 }

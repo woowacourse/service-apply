@@ -1,11 +1,14 @@
 package apply
 
+import apply.application.EvaluationAnswerData
 import apply.domain.evaluation.Evaluation
 import apply.domain.evaluationItem.EvaluationItem
 import apply.domain.evaluationtarget.EvaluationAnswer
 import apply.domain.evaluationtarget.EvaluationAnswers
 import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.evaluationtarget.EvaluationTarget
+import apply.ui.admin.evaluation.EvaluationItemForm
+import apply.ui.admin.selections.EvaluationAnswerForm
 
 const val EVALUATION_ID = 1L
 const val EVALUATION_TITLE1 = "프리코스 대상자 선발"
@@ -17,9 +20,11 @@ const val EVALUATION_DESCRIPTION = "[리뷰 절차]\n" +
 const val EVALUATION_ITEM_ID = 2L
 const val EVALUATION_ITEM_TITLE = "평가 항목 제목"
 const val EVALUATION_ITEM_DESCRIPTION = "평가 항목 설명"
+const val EVALUATION_ITEM_POSITION = 1
 
 const val NOTE = "평가 특이 사항"
 const val SCORE = 3
+private const val MAXIMUM_SCORE = 3
 
 fun createEvaluation(
     title: String = EVALUATION_TITLE1,
@@ -35,8 +40,8 @@ fun createEvaluationItem(
     title: String = EVALUATION_ITEM_TITLE,
     description: String = EVALUATION_ITEM_DESCRIPTION,
     evaluationId: Long = EVALUATION_ID,
-    maximumScore: Int = 3,
-    position: Int = 0,
+    maximumScore: Int = MAXIMUM_SCORE,
+    position: Int = EVALUATION_ITEM_POSITION,
     id: Long = 0L
 ): EvaluationItem {
     return EvaluationItem(title, description, maximumScore, position, evaluationId, id)
@@ -65,4 +70,24 @@ fun createEvaluationAnswer(
     evaluationItemId: Long = EVALUATION_ITEM_ID
 ): EvaluationAnswer {
     return EvaluationAnswer(score, evaluationItemId)
+}
+
+fun createEvaluationItemForm(
+    title: String = EVALUATION_ITEM_TITLE,
+    maximumScore: Int = MAXIMUM_SCORE,
+    position: Int = EVALUATION_ITEM_POSITION,
+    description: String = EVALUATION_ITEM_DESCRIPTION
+): EvaluationItemForm {
+    return EvaluationItemForm(title, maximumScore, position, description)
+}
+
+fun createEvaluationAnswerForm(
+    title: String = EVALUATION_ITEM_TITLE,
+    description: String = EVALUATION_ITEM_DESCRIPTION,
+    maximumScore: Int = MAXIMUM_SCORE,
+    score: Int = SCORE,
+    evaluationItemId: Long = EVALUATION_ITEM_ID
+): EvaluationAnswerForm {
+    return EvaluationAnswerForm(title, description, maximumScore)
+        .apply { fill(EvaluationAnswerData(score, evaluationItemId)) }
 }

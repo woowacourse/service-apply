@@ -161,7 +161,7 @@ class SelectionView(
     private fun createEvaluationButtonRenderer(): Renderer<ApplicantResponse> {
         return ComponentRenderer<Component, ApplicantResponse> { _ ->
             // TODO: Evaluation Target id 받아오기
-            createPrimarySmallButton("평가하기") { GradeEvaluationFormDialog(evaluationTargetService, 1L) }
+            createPrimarySmallButton("평가하기") { EvaluationTargetFormDialog(evaluationTargetService, 1L) }
         }
     }
 }

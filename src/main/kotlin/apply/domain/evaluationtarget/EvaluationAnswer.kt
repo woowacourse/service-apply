@@ -6,8 +6,8 @@ import javax.persistence.Embeddable
 @Embeddable
 class EvaluationAnswer(
     @Column(nullable = false)
-    internal val score: Int = 0,
+    val score: Int = 0,
 
     @Column(nullable = false)
-    internal val evaluationItemId: Long
+    val evaluationItemId: Long
 )
