@@ -49,3 +49,14 @@ data class ApplicantVerifyInformation(
     @field:NotBlank
     val password: String
 )
+
+data class ResetPasswordRequest(
+    @field:NotBlank
+    val name: String,
+
+    @field:NotBlank
+    val email: String,
+
+    @field:NotNull
+    val birthday: LocalDate
+)
