@@ -149,7 +149,7 @@ export default {
       try {
         await this.fetchTokenAndSetApplicantInfo(this.parseApplicantInfo())
         this.$router.push({
-          path: `/register/application`,
+          path: `/application-forms/edit`,
           query: {
             recruitmentId: this.recruitmentId,
           },

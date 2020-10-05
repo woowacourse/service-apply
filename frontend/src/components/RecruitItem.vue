@@ -10,7 +10,7 @@
       <div class="button-wrapper">
         <Button
           class="enroll-button button"
-          @click="onClickAdmission(recruitment.id)"
+          @click="goRegisterApplicant"
           :disabled="!this.isRecruiting"
           :value="buttonLabel"
         >
@@ -65,8 +65,8 @@ export default {
     },
   },
   methods: {
-    onClickAdmission(id) {
-      this.$router.push({ path: `/register/applicant`, query: { recruitmentId: id } })
+    goRegisterApplicant() {
+      this.$router.push({ path: `/applicants/new`, query: { recruitmentId: this.recruitment.id } })
     },
   },
 }

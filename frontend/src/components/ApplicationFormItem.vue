@@ -10,7 +10,7 @@
       <div class="button-wrapper">
         <Button
           class="enroll-button button"
-          @click="onClickAdmission(recruitment.id)"
+          @click="goEditApplicationForm"
           :disabled="submitted"
           :value="buttonLabel"
         >
@@ -50,8 +50,11 @@ export default {
     },
   },
   methods: {
-    onClickAdmission(id) {
-      this.$router.push({ path: `/register/applicant/${id}` })
+    goEditApplicationForm() {
+      this.$router.push({
+        path: `/application-forms/edit`,
+        query: { recruitmentId: this.recruitment.id },
+      })
     },
   },
 }

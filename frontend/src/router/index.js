@@ -24,7 +24,7 @@ const routes = [
     component: Recruits,
   },
   {
-    path: "/register/applicant",
+    path: "/applicants/new",
     component: ApplicantRegister,
     props: route => ({
       recruitmentId: Number(route.query.recruitmentId),
