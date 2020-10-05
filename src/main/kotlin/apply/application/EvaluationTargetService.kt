@@ -168,7 +168,7 @@ class EvaluationTargetService(
             EvaluationTarget(
                 evaluationId = 2L,
                 administratorId = 1L,
-                applicantId = 3L
+                applicantId = 2L
             )
         )
         evaluationTargetRepository.saveAll(evaluationTargets)
