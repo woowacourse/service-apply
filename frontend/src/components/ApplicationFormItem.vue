@@ -43,10 +43,10 @@ export default {
       return this.submitted ? "제출 완료" : "지원서 수정"
     },
     startTime() {
-      return parseLocalDateTime(this.recruitment.startTime)
+      return parseLocalDateTime(new Date(this.recruitment.startDateTime))
     },
     endTime() {
-      return parseLocalDateTime(this.recruitment.endTime)
+      return parseLocalDateTime(new Date(this.recruitment.endDateTime))
     },
   },
   methods: {

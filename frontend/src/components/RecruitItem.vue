@@ -36,16 +36,16 @@ export default {
   },
   computed: {
     startTime() {
-      return parseLocalDateTime(this.recruitment.startTime)
+      return parseLocalDateTime(new Date(this.recruitment.startDateTime))
     },
     endTime() {
-      return parseLocalDateTime(this.recruitment.endTime)
+      return parseLocalDateTime(new Date(this.recruitment.endDateTime))
     },
     isRecruiting() {
-      return this.recruitment.recruitmentStatus === "RECRUITING"
+      return this.recruitment.status === "RECRUITING"
     },
     buttonLabel() {
-      switch (this.recruitment.recruitmentStatus) {
+      switch (this.recruitment.status) {
         case "RECRUITING": {
           return "지원하기"
         }
