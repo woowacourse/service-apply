@@ -1,18 +1,18 @@
-import dayjs from "dayjs"
-import isBetween from "dayjs/plugin/isBetween"
-
-dayjs.extend(isBetween)
-
 export const formatLocalDate = ({ year, month, day }) => {
-  const localDateTime = new Date(year, month - 1, day)
-
-  return dayjs(localDateTime).format("YYYY-MM-DD")
+  const monthFormatted = addZeroPrefixIfLessThanTen(month)
+  const dayFormatted = addZeroPrefixIfLessThanTen(day)
+  return `${year}-${monthFormatted}-${dayFormatted}`
 }
 
 export const parseLocalDateTime = localDateTime => {
-  return dayjs(localDateTime).format("YYYY.MM.DD hh:mm:ss")
+  const year = localDateTime.getFullYear().toString()
+  const month = addZeroPrefixIfLessThanTen((localDateTime.getMonth() + 1).toString())
+  const date = addZeroPrefixIfLessThanTen(localDateTime.getDate().toString())
+  const hour = addZeroPrefixIfLessThanTen(localDateTime.getHours().toString())
+  const minute = addZeroPrefixIfLessThanTen(localDateTime.getMinutes().toString())
+  const second = addZeroPrefixIfLessThanTen(localDateTime.getSeconds().toString())
+
+  return `${year}.${month}.${date} ${hour}:${minute}:${second}`
 }
 
-export const canSubmitToday = (start, end) => {
-  return dayjs().isBetween(start, end)
-}
+const addZeroPrefixIfLessThanTen = value => value.padStart(2, "0")

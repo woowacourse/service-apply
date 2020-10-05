@@ -22,7 +22,7 @@
 
 <script>
 import Button from "@/components/form/Button"
-import { parseLocalDateTime, canSubmitToday } from "@/utils/date"
+import { parseLocalDateTime } from "@/utils/date"
 
 export default {
   components: {
@@ -43,12 +43,10 @@ export default {
       if (this.submitted) {
         return "제출 완료"
       }
-      return canSubmitToday(this.recruitment.startTime, this.recruitment.endTime)
-        ? "지원서 수정"
-        : "기간 만료"
+      return this.submittable ? "지원서 수정" : "기간 만료"
     },
     submittable() {
-      return !this.submitted && canSubmitToday(this.recruitment.startTime, this.recruitment.endTime)
+      return !this.submitted && this.recruitment.recruitmentStatus === "RECRUITING"
     },
     startTime() {
       return parseLocalDateTime(this.recruitment.startTime)
