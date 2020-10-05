@@ -21,16 +21,14 @@ class ExcelService(
         val headerTitles = arrayOf("이름", "이메일", "전화번호", "성별", "생년월일", "지원 일시", "부정 행위자", *titles)
         val excelRows = applicants.map {
             ExcelRow(
-                listOf(
-                    it.name,
-                    it.email,
-                    it.phoneNumber,
-                    it.gender.title,
-                    it.birthday.toString(),
-                    it.applicationForm.submittedDateTime.toString(),
-                    it.isCheater.toText(),
-                    *it.applicationForm.answers.items.map { item -> item.contents }.toTypedArray()
-                )
+                it.name,
+                it.email,
+                it.phoneNumber,
+                it.gender.title,
+                it.birthday.toString(),
+                it.applicationForm.submittedDateTime.toString(),
+                it.isCheater.toText(),
+                *it.applicationForm.answers.items.map { item -> item.contents }.toTypedArray()
             )
         }
         return excelGenerator.generateBy(headerTitles, excelRows)
@@ -42,14 +40,12 @@ class ExcelService(
         val headerTitles = arrayOf("이름", "이메일", "합계", "평가상태", *titles, "기타 특이사항")
         val excelRows = targets.map {
             ExcelRow(
-                listOf(
-                    it.name,
-                    it.email,
-                    it.target.evaluationAnswers.answers.map { item -> item.score }.sum().toString(),
-                    it.target.evaluationStatus.title,
-                    *it.target.evaluationAnswers.answers.map { item -> item.score.toString() }.toTypedArray(),
-                    it.target.note
-                )
+                it.name,
+                it.email,
+                it.target.evaluationAnswers.answers.map { item -> item.score }.sum().toString(),
+                it.target.evaluationStatus.title,
+                *it.target.evaluationAnswers.answers.map { item -> item.score.toString() }.toTypedArray(),
+                it.target.note
             )
         }
         return excelGenerator.generateBy(headerTitles, excelRows)

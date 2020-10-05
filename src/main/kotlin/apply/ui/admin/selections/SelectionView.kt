@@ -24,8 +24,6 @@ import com.vaadin.flow.router.BeforeEvent
 import com.vaadin.flow.router.HasUrlParameter
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.router.WildcardParameter
-import com.vaadin.flow.server.StreamResource
-import com.vaadin.flow.server.VaadinSession
 import support.views.addSortableColumn
 import support.views.addSortableDateColumn
 import support.views.addSortableDateTimeColumn
@@ -33,6 +31,7 @@ import support.views.createNormalButton
 import support.views.createPrimarySmallButton
 import support.views.createSearchBar
 import support.views.createSuccessButton
+import support.views.downloadFile
 
 @Route(value = "admin/selections", layout = BaseLayout::class)
 class SelectionView(
@@ -63,11 +62,8 @@ class SelectionView(
                 )
             },
             createSuccessButton("다운로드") {
-                val excel = { excelService.createApplicantExcel(applicants) }
-                val registration = VaadinSession.getCurrent()
-                    .resourceRegistry
-                    .registerResource(StreamResource("${recruitmentService.getById(recruitmentId).title}.xlsx", excel))
-                UI.getCurrent().page.setLocation(registration.resourceUri)
+                val excel = excelService.createApplicantExcel(applicants)
+                downloadFile("${recruitmentService.getById(recruitmentId).title}.xlsx", excel)
             }
         ).apply {
             setWidthFull()
