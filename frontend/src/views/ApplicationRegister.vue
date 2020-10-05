@@ -67,7 +67,7 @@
       </Field>
       <div class="actions">
         <Button @click="reset" value="초기화" />
-        <Button type="submit" @click="tempSave()" :disabled="!canSave" value="임시 저장" />
+        <Button @click="tempSave()" :disabled="!canSave" value="임시 저장" />
         <Button type="submit" :disabled="!canSubmit" value="제출" />
       </div>
       <footer>
@@ -124,10 +124,10 @@ export default {
     },
   },
   created() {
-    this.initForm()
+    this.refreshForm()
   },
   methods: {
-    async initForm() {
+    async refreshForm() {
       try {
         const { data: recruitmentItems } = await RecruitmentApi.fetchItems(this.recruitmentId)
         this.recruitmentItems = recruitmentItems.map(recruitmentItem => ({
@@ -141,7 +141,7 @@ export default {
         if (applicationForm.submitted) {
           alert("이미 제출된 지원서입니다. 수정할 수 없습니다.")
           this.$router.replace("/")
-        } else if(!this.isEditing) {
+        } else if (!this.isEditing) {
           alert("이미 저장된 지원서가 존재합니다.")
           this.$router.replace("/")
         }
@@ -164,7 +164,6 @@ export default {
       }
     },
     parseApplicationInfo() {
-      console.log(this.$route)
       return {
         recruitmentId: this.recruitmentId,
         referenceUrl: this.referenceUrl,
@@ -212,8 +211,10 @@ export default {
       await this.save(false)
         .then(() => {
           alert("정상적으로 저장되었습니다.")
-          this.isEditing = true
-          this.initForm()
+          if (!this.isEditing) {
+            this.$router.replace("edit?recruitmentId=" + this.recruitmentId)
+          }
+          this.refreshForm()
         })
         .catch(e => {
           alert(e.response.data)
