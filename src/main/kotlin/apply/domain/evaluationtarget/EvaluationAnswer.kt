@@ -6,10 +6,10 @@ import javax.persistence.Embeddable
 @Embeddable
 class EvaluationAnswer(
     @Column(nullable = false)
-    private var score: Int = 0,
+    var score: Int = 0,
 
     @Column(nullable = false)
-    private val evaluationItemId: Long
+    val evaluationItemId: Long
 ) {
     fun update(score: Int) {
         require(score >= 0)

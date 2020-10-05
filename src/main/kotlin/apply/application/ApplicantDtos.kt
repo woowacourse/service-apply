@@ -3,6 +3,7 @@ package apply.application
 import apply.domain.applicant.Applicant
 import apply.domain.applicant.Gender
 import apply.domain.applicationform.ApplicationForm
+import apply.domain.evaluationtarget.EvaluationTarget
 import java.time.LocalDate
 
 data class ApplicantBasicResponse(
@@ -44,3 +45,10 @@ data class ApplicantResponse(
         applicationForm
     )
 }
+
+data class EvaluationTargetResponse(
+    val id: Long,
+    val name: String,
+    val email: String,
+    val target: EvaluationTarget
+)

@@ -7,9 +7,9 @@ import javax.persistence.FetchType
 @Embeddable
 class EvaluationAnswers(
     @ElementCollection(fetch = FetchType.EAGER)
-    private val evaluationAnswers: MutableList<EvaluationAnswer> = mutableListOf()
+    val answers: MutableList<EvaluationAnswer> = mutableListOf()
 ) {
     fun add(evaluationAnswer: EvaluationAnswer) {
-        evaluationAnswers.add(evaluationAnswer)
+        answers.add(evaluationAnswer)
     }
 }
