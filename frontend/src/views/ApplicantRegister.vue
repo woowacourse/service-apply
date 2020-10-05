@@ -171,7 +171,6 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: #ced6e0;
 }
 
 .summary {
