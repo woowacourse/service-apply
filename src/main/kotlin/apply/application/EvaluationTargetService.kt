@@ -20,6 +20,7 @@ private const val DEFAULT_SCORE: Int = 0
 @Transactional
 @Service
 class EvaluationTargetService(
+    private val evaluationTargetRepository: EvaluationTargetRepository,
     private val evaluationRepository: EvaluationRepository,
     private val evaluationTargetRepository: EvaluationTargetRepository,
     private val evaluationItemRepository: EvaluationItemRepository,
@@ -30,8 +31,30 @@ class EvaluationTargetService(
     fun getById(id: Long): EvaluationTarget = evaluationTargetRepository.findByIdOrNull(id)
         ?: throw IllegalArgumentException("EvaluationTarget (id=$id) 가 존재하지 않습니다")
 
-    fun findByEvaluationId(evaluationId: Long): List<EvaluationTarget> =
+    fun findAllByEvaluationId(evaluationId: Long): List<EvaluationTarget> =
         evaluationTargetRepository.findAllByEvaluationId(evaluationId)
+
+    fun findAllWithApplicantByEvaluationIdAndKeyword(
+        evaluationId: Long,
+        keyWord: String
+    ): List<EvaluationTargetResponse> {
+        val evaluationTargets = findAllByEvaluationId(evaluationId)
+        val applicants = applicantRepository.findByNameContainingOrEmailContaining(keyWord, keyWord)
+
+        return evaluationTargets
+            .filter { applicants.any { applicant -> applicant.id == it.applicantId } }
+            .map {
+                val applicant = applicants.first { each -> each.id == it.applicantId }
+                EvaluationTargetResponse(
+                    it.id,
+                    applicant.name,
+                    applicant.email,
+                    it.evaluationAnswers.countTotalScore(),
+                    it.evaluationStatus,
+                    it.administratorId
+                )
+            }
+    }
 
     fun load(evaluationId: Long) {
         val evaluation = evaluationRepository.findByIdOrNull(evaluationId) ?: throw IllegalArgumentException()
@@ -136,7 +159,10 @@ class EvaluationTargetService(
                 evaluationId = 1L,
                 administratorId = 1L,
                 applicantId = 2L
-            ),
+            ).apply {
+                evaluationAnswers.add(EvaluationAnswer(score = 2, evaluationItemId = 1L))
+                evaluationAnswers.add(EvaluationAnswer(score = 1, evaluationItemId = 2L))
+            },
             EvaluationTarget(
                 evaluationId = 2L,
                 administratorId = 1L,
