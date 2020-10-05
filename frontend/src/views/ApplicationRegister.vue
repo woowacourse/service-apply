@@ -2,7 +2,7 @@
   <div class="application-register">
     <Form @submit.prevent="submit">
       <h1>지원서 작성</h1>
-      <p class="autosave-indicator" v-if="tempSaveTime">임시 저장되었습니다. ({{ savedTime }})</p>
+      <p class="autosave-indicator" v-if="tempSaveTime">임시 저장되었습니다. ({{ tempSavedTime }})</p>
       <TextField
         :value="$store.state.applicantInfo.name"
         name="name"
@@ -112,7 +112,7 @@ export default {
     canSave() {
       return this.isEditing ? this.validPassword : true
     },
-    savedTime() {
+    tempSavedTime() {
       if (this.tempSaveTime) {
         return parseLocalDateTime(new Date(this.tempSaveTime))
       }
