@@ -2,7 +2,9 @@
   <div class="application-register">
     <Form @submit.prevent="submit">
       <h1>지원서 작성</h1>
-      <p class="autosave-indicator" v-if="tempSaveTime">임시 저장되었습니다. ({{ tempSavedTime }})</p>
+      <p class="autosave-indicator" v-if="tempSaveTime">
+        임시 저장되었습니다. ({{ tempSavedTime }})
+      </p>
       <TextField
         :value="$store.state.applicantInfo.name"
         name="name"
@@ -160,7 +162,7 @@ export default {
       return {
         recruitmentId: this.recruitmentId,
         referenceUrl: this.referenceUrl,
-        answers: await this.recruitmentItems.map(item => ({
+        answers: this.recruitmentItems.map(item => ({
           contents: item.contents,
           recruitmentItemId: item.id,
         })),
@@ -177,28 +179,27 @@ export default {
       this.referenceUrl = ""
     },
     async save(isSubmitted) {
-      let applicationForm = await this.parseApplicationInfo().then(data => ({
+      const applicationForm = await this.parseApplicationInfo().then(data => ({
         ...data,
         isSubmitted: isSubmitted,
       }))
       return await this.saveOrUpdate(applicationForm)
     },
     async saveOrUpdate(applicationForm) {
+      let saveOrUpdateFunction
       if (this.isEditing) {
         applicationForm = {
           ...applicationForm,
           password: this.password,
         }
-        return await ApplicationFormsApi.updateForm({
-          token: this.$store.getters["token"],
-          data: applicationForm,
-        })
+        saveOrUpdateFunction = ApplicationFormsApi.updateForm
       } else {
-        return await ApplicationFormsApi.saveForm({
-          token: this.$store.getters["token"],
-          data: applicationForm,
-        })
+        saveOrUpdateFunction = ApplicationFormsApi.saveForm
       }
+      await saveOrUpdateFunction({
+        token: this.$store.getters["token"],
+        data: applicationForm,
+      })
     },
     tempSave() {
       this.save(false)
