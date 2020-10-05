@@ -143,7 +143,7 @@ internal class ApplicantRestControllerTest(
             applicantService.resetPassword(applicantPasswordFindRequest)
         ).willReturn(RANDOM_PASSWORD)
 
-        willDoNothing().given(mailService).sendPasswordResetMail(applicantLoginRequest.email, RANDOM_PASSWORD)
+        willDoNothing().given(mailService).sendPasswordResetMail(applicantPasswordFindRequest, RANDOM_PASSWORD)
 
         mockMvc.post("/api/applicants/find") {
             content = objectMapper.writeValueAsBytes(applicantPasswordFindRequest)

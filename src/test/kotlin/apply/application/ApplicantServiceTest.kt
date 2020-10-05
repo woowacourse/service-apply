@@ -185,14 +185,6 @@ internal class ApplicantServiceTest {
     @Test
     fun `지원자의 비밀번호를 초기화한다`() {
         given(
-            applicantRepository.existsByNameAndEmailAndBirthday(
-                validApplicantPasswordFindRequest.name,
-                validApplicantPasswordFindRequest.email,
-                validApplicantPasswordFindRequest.birthday
-            )
-        ).willReturn(true)
-
-        given(
             applicantRepository.findByNameAndEmailAndBirthday(
                 validApplicantPasswordFindRequest.name,
                 validApplicantPasswordFindRequest.email,
@@ -207,14 +199,6 @@ internal class ApplicantServiceTest {
 
     @Test
     fun `비밀번호를 초기화를 위한 검증 데이터가 올바르지 않을시 예외가 발생한다`() {
-        given(
-            applicantRepository.existsByNameAndEmailAndBirthday(
-                inValidApplicantPasswordFindRequest.name,
-                inValidApplicantPasswordFindRequest.email,
-                inValidApplicantPasswordFindRequest.birthday
-            )
-        ).willReturn(false)
-
         assertThatThrownBy { applicantService.resetPassword(inValidApplicantPasswordFindRequest) }
             .isInstanceOf(ApplicantValidateException::class.java)
             .hasMessage("요청 정보가 기존 지원자 정보와 일치하지 않습니다")

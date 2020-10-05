@@ -2,10 +2,10 @@ package apply.application
 
 import apply.domain.applicant.Applicant
 import apply.domain.applicant.ApplicantInformation
-import apply.domain.applicant.ResetPasswordRequest
 import apply.domain.applicant.ApplicantRepository
 import apply.domain.applicant.ApplicantVerifyInformation
 import apply.domain.applicant.Gender
+import apply.domain.applicant.ResetPasswordRequest
 import apply.domain.applicant.exception.ApplicantValidateException
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.CheaterRepository
@@ -74,24 +74,14 @@ class ApplicantService(
     }
 
     fun resetPassword(resetPasswordRequest: ResetPasswordRequest): String {
-        return if (
-            applicantRepository.existsByNameAndEmailAndBirthday(
-                resetPasswordRequest.name,
-                resetPasswordRequest.email,
-                resetPasswordRequest.birthday
-            )
-        ) {
-            val applicant = applicantRepository.findByNameAndEmailAndBirthday(
-                resetPasswordRequest.name,
-                resetPasswordRequest.email,
-                resetPasswordRequest.birthday
-            ) ?: throw ApplicantValidateException()
-            applicant.password = randomStringGenerator.generateRandomString()
-
-            applicant.password
-        } else {
-            throw ApplicantValidateException()
-        }
+        return applicantRepository.findByNameAndEmailAndBirthday(
+            resetPasswordRequest.name,
+            resetPasswordRequest.email,
+            resetPasswordRequest.birthday
+        )?.run {
+            password = randomStringGenerator.generateRandomString()
+            password
+        } ?: throw ApplicantValidateException()
     }
 
     @PostConstruct
