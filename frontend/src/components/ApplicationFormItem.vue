@@ -11,7 +11,7 @@
         <Button
           class="enroll-button button"
           @click="onClickAdmission(recruitment.id)"
-          :disabled="submitted"
+          :disabled="!submittable"
           :value="buttonLabel"
         >
         </Button>
@@ -40,7 +40,13 @@ export default {
   },
   computed: {
     buttonLabel() {
-      return this.submitted ? "제출 완료" : "지원서 수정"
+      if (this.submitted) {
+        return "제출 완료"
+      }
+      return this.submittable ? "지원서 수정" : "기간 만료"
+    },
+    submittable() {
+      return !this.submitted && this.recruitment.recruitmentStatus === "RECRUITING"
     },
     startTime() {
       return parseLocalDateTime(this.recruitment.startTime)
@@ -51,7 +57,7 @@ export default {
   },
   methods: {
     onClickAdmission(id) {
-      this.$router.push({ path: `/register/applicant/${id}` })
+      this.$router.push({ path: `/register/application`, query: { recruitmentId: id } })
     },
   },
 }
