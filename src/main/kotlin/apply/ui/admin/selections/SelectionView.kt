@@ -76,18 +76,7 @@ class SelectionView(
             tabs,
             HorizontalLayout(
                 createLoadButton(tabs),
-                createSuccessButton("다운로드") {
-                    val excel = { downloadService.createExcelBy(recruitmentId) }
-                    val registration = VaadinSession.getCurrent()
-                        .resourceRegistry
-                        .registerResource(
-                            StreamResource(
-                                "${recruitmentService.getById(recruitmentId).title}.xlsx",
-                                excel
-                            )
-                        )
-                    UI.getCurrent().page.setLocation(registration.resourceUri)
-                }
+                createDownloadButton()
             )
         ).apply {
             setWidthFull()
@@ -97,20 +86,6 @@ class SelectionView(
         return VerticalLayout(
             menu, grids
         ).apply { setWidthFull() }
-    }
-
-    private fun createLoadButton(tabs: Tabs): Button {
-        return createPrimaryButton("평가자 불러오기") {
-            val evaluation = evaluations.first { it.title == tabs.selectedTab.label }
-            evaluationTargetService.load(evaluation.id)
-            System.err.println(tabs.selectedTab.label)
-            removeAll()
-            add(
-                createTitle(),
-                createContent()
-            )
-            setId("load-button")
-        }
     }
 
     private fun mapTabAndGrid(keyword: String): LinkedHashMap<Tab, Component> {
@@ -172,6 +147,35 @@ class SelectionView(
         val selectedPage = tabsToPages[tabs.selectedTab]
         selectedPage?.isVisible = true
         return Pair(tabs, pages)
+    }
+
+    private fun createLoadButton(tabs: Tabs): Button {
+        return createPrimaryButton("평가자 불러오기") {
+            val evaluation = evaluations.first { it.title == tabs.selectedTab.label }
+            evaluationTargetService.load(evaluation.id)
+            System.err.println(tabs.selectedTab.label)
+            removeAll()
+            add(
+                createTitle(),
+                createContent()
+            )
+            setId("load-button")
+        }
+    }
+
+    private fun createDownloadButton(): Button {
+        return createSuccessButton("다운로드") {
+            val excel = { downloadService.createExcelBy(recruitmentId) }
+            val registration = VaadinSession.getCurrent()
+                .resourceRegistry
+                .registerResource(
+                    StreamResource(
+                        "${recruitmentService.getById(recruitmentId).title}.xlsx",
+                        excel
+                    )
+                )
+            UI.getCurrent().page.setLocation(registration.resourceUri)
+        }
     }
 
     private fun createButtonRenderer(): Renderer<ApplicantResponse> {
