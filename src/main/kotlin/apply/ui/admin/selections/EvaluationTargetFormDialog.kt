@@ -17,37 +17,32 @@ import support.views.createPrimaryButton
 class EvaluationTargetFormDialog(
     private val evaluationTargetService: EvaluationTargetService,
     private val evaluationTargetId: Long
-) : VerticalLayout() {
-    private val title: H2 = H2().apply { alignItems = FlexComponent.Alignment.CENTER }
+) : Dialog() {
+    private val title: H2 = H2()
     private val description: TextArea = TextArea().apply {
         setWidthFull()
         isReadOnly = true
     }
     private val evaluationTargetForm: BindingFormLayout<EvaluationTargetData>
-    private val dialog: Dialog
 
     init {
         val response = evaluationTargetService.getGradeEvaluation(evaluationTargetId)
-        evaluationTargetForm = EvaluationTargetForm(response.evaluationItems).apply {
-            fill(response.evaluationTargetData)
-        }
+        evaluationTargetForm = EvaluationTargetForm(response.evaluationItems)
+            .apply { fill(response.evaluationTargetData) }
         title.text = response.title
         description.value = response.description
-        dialog = createDialog()
-    }
 
-    private fun createDialog(): Dialog {
-        return Dialog().apply {
-            add(createHeader(), evaluationTargetForm, createButtons())
-            width = "800px"
-            height = "90%"
-            open()
-        }
+        add(createHeader(), evaluationTargetForm, createButtons())
+        width = "800px"
+        height = "90%"
+        open()
     }
 
     private fun createHeader(): VerticalLayout {
         return VerticalLayout(title, description).apply {
             alignItems = FlexComponent.Alignment.CENTER
+            isPadding = false
+            element.style.set("margin-bottom", "20px")
         }
     }
 
@@ -55,6 +50,7 @@ class EvaluationTargetFormDialog(
         return HorizontalLayout(createAddButton(), createCancelButton()).apply {
             setSizeFull()
             justifyContentMode = FlexComponent.JustifyContentMode.CENTER
+            element.style.set("margin-top", "20px")
         }
     }
 
@@ -62,14 +58,14 @@ class EvaluationTargetFormDialog(
         return createPrimaryButton("저장") {
             evaluationTargetForm.bindOrNull()?.let {
                 evaluationTargetService.grade(evaluationTargetId, it)
-                dialog.close()
+                close()
             }
         }
     }
 
     private fun createCancelButton(): Button {
         return createContrastButton("취소") {
-            dialog.close()
+            close()
         }
     }
 }
