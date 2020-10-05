@@ -11,7 +11,7 @@
         <Button
           class="enroll-button button"
           @click="onClickAdmission(recruitment.id)"
-          :disabled="!this.isRecruiting"
+          :disabled="submitted"
           :value="buttonLabel"
         >
         </Button>
@@ -33,40 +33,25 @@ export default {
       type: Object,
       required: true,
     },
+    submitted: {
+      type: Boolean,
+      required: true,
+    },
   },
   computed: {
+    buttonLabel() {
+      return this.submitted ? "제출 완료" : "지원서 수정"
+    },
     startTime() {
       return parseLocalDateTime(this.recruitment.startTime)
     },
     endTime() {
       return parseLocalDateTime(this.recruitment.endTime)
     },
-    isRecruiting() {
-      return this.recruitment.recruitmentStatus === "RECRUITING"
-    },
-    buttonLabel() {
-      switch (this.recruitment.recruitmentStatus) {
-        case "RECRUITING": {
-          return "지원하기"
-        }
-        case "RECRUITABLE": {
-          return "모집 예정"
-        }
-        case "UNRECRUITABLE": {
-          return "일시 중지"
-        }
-        case "ENDED": {
-          return "모집 종료"
-        }
-        default: {
-          throw "올바르지 않은 지원 타입입니다"
-        }
-      }
-    },
   },
   methods: {
     onClickAdmission(id) {
-      this.$router.push({ path: `/register/applicant`, query: { recruitmentId: id } })
+      this.$router.push({ path: `/register/applicant/${id}` })
     },
   },
 }
@@ -125,6 +110,8 @@ export default {
 .enroll-button {
   width: 120px;
   height: 40px;
+  margin: 10px;
+  vertical-align: middle;
 }
 
 .button-wrapper {

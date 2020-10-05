@@ -88,7 +88,7 @@ export default {
           password: this.password,
         })
         alert("로그인 성공")
-        this.$router.push("/recruits")
+        this.$router.push("//my-applications")
       } catch (e) {
         alert(e.response.data)
       }
@@ -108,9 +108,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  height: 100%;
   align-items: center;
-  background: #ced6e0;
 }
 
 .actions {

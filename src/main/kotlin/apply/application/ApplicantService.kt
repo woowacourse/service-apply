@@ -7,6 +7,7 @@ import apply.domain.applicant.ApplicantRepository
 import apply.domain.applicant.ApplicantVerifyInformation
 import apply.domain.applicant.Gender
 import apply.domain.applicant.exception.ApplicantValidateException
+import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.CheaterRepository
 import apply.security.JwtTokenProvider
 import apply.utils.RandomStringGenerator
@@ -19,23 +20,29 @@ import javax.annotation.PostConstruct
 @Transactional
 @Service
 class ApplicantService(
+    private val applicationFormRepository: ApplicationFormRepository,
     private val applicantRepository: ApplicantRepository,
     private val cheaterRepository: CheaterRepository,
     private val jwtTokenProvider: JwtTokenProvider,
     private val randomStringGenerator: RandomStringGenerator
 ) {
-    fun findAll(): List<ApplicantResponse> = applicantRepository.findAll().map {
-        ApplicantResponse(it, cheaterRepository.existsByApplicantId(it.id))
+    fun findAllByRecruitmentId(recruitmentId: Long): List<ApplicantResponse> {
+        val applicationForms = applicationFormRepository.findByRecruitmentId(recruitmentId)
+            .associateBy { it.applicantId }
+        val cheaterApplicantIds = cheaterRepository.findAll().map { it.applicantId }
+
+        return applicantRepository.findAllById(applicationForms.keys).map {
+            ApplicantResponse(it, cheaterApplicantIds.contains(it.id), applicationForms.getValue(it.id))
+        }
     }
 
-    fun findAllByIds(applicantIds: List<Long>): List<ApplicantResponse> =
-        applicantRepository.findAllById(applicantIds).map {
-            ApplicantResponse(it, cheaterRepository.existsByApplicantId(it.id))
-        }
+    fun findByRecruitmentIdAndKeyword(recruitmentId: Long, keyword: String): List<ApplicantResponse> =
+        findAllByRecruitmentId(recruitmentId)
+            .filter { it.name.contains(keyword) || it.email.contains(keyword) }
 
-    fun findByNameOrEmail(keyword: String): List<ApplicantResponse> =
+    fun findByNameOrEmail(keyword: String): List<ApplicantBasicResponse> =
         applicantRepository.findByNameContainingOrEmailContaining(keyword, keyword).map {
-            ApplicantResponse(it, cheaterRepository.existsByApplicantId(it.id))
+            ApplicantBasicResponse(it)
         }
 
     fun generateToken(applicantInformation: ApplicantInformation): String {

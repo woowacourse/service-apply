@@ -26,7 +26,6 @@ class ApplicationForm(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L
 ) {
-
     @Column(nullable = false)
     var submitted: Boolean = false
 
@@ -47,8 +46,25 @@ class ApplicationForm(
         submitted: Boolean,
         createdDateTime: LocalDateTime,
         modifiedDateTime: LocalDateTime,
-        submittedDateTime: LocalDateTime
+        submittedDateTime: LocalDateTime?
     ) : this(applicantId, recruitmentId, referenceUrl, answers) {
+        this.submitted = submitted
+        this.createdDateTime = createdDateTime
+        this.modifiedDateTime = modifiedDateTime
+        this.submittedDateTime = submittedDateTime
+    }
+
+    constructor(
+        applicantId: Long,
+        recruitmentId: Long,
+        referenceUrl: String,
+        submitted: Boolean,
+        createdDateTime: LocalDateTime,
+        modifiedDateTime: LocalDateTime,
+        submittedDateTime: LocalDateTime,
+        answers: Answers,
+        id: Long
+    ) : this(applicantId, recruitmentId, referenceUrl, answers, id) {
         this.submitted = submitted
         this.createdDateTime = createdDateTime
         this.modifiedDateTime = modifiedDateTime

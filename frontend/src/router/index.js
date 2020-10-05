@@ -6,8 +6,18 @@ import ApplicationRegister from "@/views/ApplicationRegister"
 import Login from "@/views/Login"
 import PasswordFind from "@/views/PasswordFind"
 import PasswordFindResult from "@/views/PasswordFindResult"
+import MyApplications from "@/views/MyApplications"
+import store from "@/store"
 
 Vue.use(VueRouter)
+
+const requireAuth = (to, from, next) => {
+  if (store.getters["token"] !== "") {
+    return next()
+  }
+  alert("로그인이 필요합니다.")
+  next("/login")
+}
 
 const routes = [
   {
@@ -48,6 +58,11 @@ const routes = [
       email: route.query.email,
     }),
     component: PasswordFindResult,
+  },
+  {
+    path: "/my-applications",
+    component: MyApplications,
+    beforeEnter: requireAuth,
   },
 ]
 
