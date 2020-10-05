@@ -1,14 +1,14 @@
 package apply.application
 
 import apply.domain.applicant.ApplicantPasswordFindInformation
+import org.springframework.mail.MailSender
 import org.springframework.mail.SimpleMailMessage
-import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 
 @Service
 class MailService(
-    private val mailSender: JavaMailSender,
+    private val mailSender: MailSender,
     private val message: SimpleMailMessage
 ) {
     @Async
