@@ -8,7 +8,7 @@
         v-model="policyCheck"
         required
       >
-        <p class="summary">{{ policySummary }}</p>
+        <p class="summary" v-html="policySummary"></p>
       </SummaryCheckField>
       <TextField
         v-model="name"
