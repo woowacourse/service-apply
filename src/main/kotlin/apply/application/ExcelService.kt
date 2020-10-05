@@ -12,7 +12,8 @@ import java.io.ByteArrayInputStream
 @Transactional
 class ExcelService(
     val recruitmentItemRepository: RecruitmentItemRepository,
-    val evaluationItemRepository: EvaluationItemRepository
+    val evaluationItemRepository: EvaluationItemRepository,
+    val excelGenerator: ExcelGenerator
 ) {
     fun createApplicantExcel(applicants: List<ApplicantResponse>): ByteArrayInputStream {
         val recruitmentItemIds = applicants[0].applicationForm.answers.items.map { it.recruitmentItemId }
@@ -32,7 +33,7 @@ class ExcelService(
                 )
             )
         }
-        return ExcelGenerator.generateBy(headerTitles, excelRows)
+        return excelGenerator.generateBy(headerTitles, excelRows)
     }
 
     fun createTargetExcel(targets: List<EvaluationTargetResponse>): ByteArrayInputStream {
@@ -51,7 +52,7 @@ class ExcelService(
                 )
             )
         }
-        return ExcelGenerator.generateBy(headerTitles, excelRows)
+        return excelGenerator.generateBy(headerTitles, excelRows)
     }
 
     fun Boolean.toText(): String {
