@@ -12,6 +12,7 @@ import apply.domain.applicationform.ApplicationForm
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
+import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.dialog.Dialog
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.html.Div
@@ -51,6 +52,7 @@ class SelectionView(
     private val evaluationTargetService: EvaluationTargetService
 ) : VerticalLayout(), HasUrlParameter<Long> {
     private var recruitmentId: Long = 0L
+    private var evaluations = evaluationService.findAllByRecruitmentId(recruitmentId)
 
     private fun createTitle(): Component {
         return HorizontalLayout(H1(recruitmentService.getById(recruitmentId).title)).apply {
@@ -59,61 +61,65 @@ class SelectionView(
         }
     }
 
-    private fun createMenu(): Component {
-        return HorizontalLayout(
+    private fun createContent(keyword: String = ""): Component {
+        val tabsToGrids: LinkedHashMap<Tab, Component> = mapTabAndGrid(keyword)
+        val (tabs, grids) = createTabComponents(tabsToGrids)
+
+        val menu = HorizontalLayout(
             createSearchBar {
                 removeAll()
                 add(
                     createTitle(),
-                    createMenu(),
-                    createEvaluationTabs(it)
+                    createContent(it)
                 )
             },
-            createSuccessButton("다운로드") {
-                val excel = { downloadService.createExcelBy(recruitmentId) }
-                val registration = VaadinSession.getCurrent()
-                    .resourceRegistry
-                    .registerResource(StreamResource("${recruitmentService.getById(recruitmentId).title}.xlsx", excel))
-                UI.getCurrent().page.setLocation(registration.resourceUri)
-            }
-        ).apply {
-            setWidthFull()
-            isSpacing = false
-            justifyContentMode = FlexComponent.JustifyContentMode.BETWEEN
-        }
-    }
-
-    private fun createEvaluationTabs(keyword: String = ""): Component {
-        val tabsToPages: LinkedHashMap<Tab, Component> = mapTabAndPage(keyword)
-        val (tabs, pages) = createTabComponents(tabsToPages)
-
-        val horizontalLayout = HorizontalLayout(
             tabs,
-            createPrimaryButton("평가 대상자 불러오기") {
-                // TODO api 제대로 연결하기
-                val excel = { downloadService.createExcelBy(recruitmentId) }
-                val registration = VaadinSession.getCurrent()
-                    .resourceRegistry
-                    .registerResource(StreamResource("${recruitmentService.getById(recruitmentId).title}.xlsx", excel))
-                UI.getCurrent().page.setLocation(registration.resourceUri)
-            }
+            HorizontalLayout(
+                createLoadButton(tabs),
+                createSuccessButton("다운로드") {
+                    val excel = { downloadService.createExcelBy(recruitmentId) }
+                    val registration = VaadinSession.getCurrent()
+                        .resourceRegistry
+                        .registerResource(
+                            StreamResource(
+                                "${recruitmentService.getById(recruitmentId).title}.xlsx",
+                                excel
+                            )
+                        )
+                    UI.getCurrent().page.setLocation(registration.resourceUri)
+                }
+            )
         ).apply {
             setWidthFull()
             justifyContentMode = FlexComponent.JustifyContentMode.BETWEEN
         }
 
         return VerticalLayout(
-            horizontalLayout, pages
+            menu, grids
         ).apply { setWidthFull() }
     }
 
-    private fun mapTabAndPage(keyword: String): LinkedHashMap<Tab, Component> {
+    private fun createLoadButton(tabs: Tabs): Button {
+        return createPrimaryButton("평가자 불러오기") {
+            val evaluation = evaluations.first { it.title == tabs.selectedTab.label }
+            evaluationTargetService.load(evaluation.id)
+            System.err.println(tabs.selectedTab.label)
+            removeAll()
+            add(
+                createTitle(),
+                createContent()
+            )
+            setId("load-button")
+        }
+    }
+
+    private fun mapTabAndGrid(keyword: String): LinkedHashMap<Tab, Component> {
         val totalApplicantTab = Tab("전체 지원자")
         val tabsToPages = LinkedHashMap<Tab, Component>()
         val applicantResponses = applicantService.findByRecruitmentIdAndKeyword(recruitmentId, keyword)
         tabsToPages[totalApplicantTab] = createTotalApplicantsGrid(applicantResponses)
 
-        val evaluations = evaluationService.findAllByRecruitmentId(recruitmentId)
+        evaluations = evaluationService.findAllByRecruitmentId(recruitmentId)
         for (evaluation in evaluations) {
             val evaluationTargetResponses =
                 evaluationTargetService.findAllWithApplicantByEvaluationIdAndKeyword(evaluation.id, keyword)
@@ -227,8 +233,7 @@ class SelectionView(
         this.recruitmentId = parameter
         add(
             createTitle(),
-            createMenu(),
-            createEvaluationTabs()
+            createContent()
         )
     }
 

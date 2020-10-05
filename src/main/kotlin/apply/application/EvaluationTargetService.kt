@@ -7,6 +7,7 @@ import apply.domain.evaluation.Evaluation
 import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.evaluationtarget.EvaluationAnswer
+import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.evaluationtarget.EvaluationAnswers
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
@@ -162,6 +163,7 @@ class EvaluationTargetService(
             ).apply {
                 evaluationAnswers.add(EvaluationAnswer(score = 2, evaluationItemId = 1L))
                 evaluationAnswers.add(EvaluationAnswer(score = 1, evaluationItemId = 2L))
+                evaluationStatus = EvaluationStatus.PASS
             },
             EvaluationTarget(
                 evaluationId = 2L,

@@ -123,6 +123,36 @@ class ApplicationFormService(
                         Answer("책임감", 2L)
                     )
                 )
+            ),
+            ApplicationForm(
+                referenceUrl = "https://www.google.com",
+                submitted = false,
+                createdDateTime = createLocalDateTime(2019, 10, 25, 10),
+                modifiedDateTime = createLocalDateTime(2019, 11, 5, 10),
+                submittedDateTime = null,
+                recruitmentId = 1L,
+                applicantId = 3L,
+                answers = Answers(
+                    mutableListOf(
+                        Answer("바딘을 배우고 싶습니다.", 1L),
+                        Answer("건강", 2L)
+                    )
+                )
+            ),
+            ApplicationForm(
+                referenceUrl = "https://www.google.com",
+                submitted = false,
+                createdDateTime = createLocalDateTime(2019, 10, 25, 10),
+                modifiedDateTime = createLocalDateTime(2019, 11, 5, 10),
+                submittedDateTime = null,
+                recruitmentId = 1L,
+                applicantId = 4L,
+                answers = Answers(
+                    mutableListOf(
+                        Answer("코딩 교육을 하고 싶습니다.", 1L),
+                        Answer("사랑", 2L)
+                    )
+                )
             )
         )
         applicationFormRepository.saveAll(applicationForms)
