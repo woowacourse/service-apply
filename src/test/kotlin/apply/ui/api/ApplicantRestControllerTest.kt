@@ -39,7 +39,6 @@ internal class ApplicantRestControllerTest(
 ) {
     @MockBean
     private lateinit var applicantService: ApplicantService
-
     private lateinit var mockMvc: MockMvc
 
     private val applicantRequest = ApplicantInformation(
