@@ -1,19 +1,21 @@
 <template>
-  <div id="recruits">
-    <div id="recruits-box">
-      <div id="tab-wrapper">
-        <h2
+  <div class="recruits">
+    <div class="recruits-box">
+      <ul class="tab-list">
+        <li
           v-for="tab in tabList"
           :key="tab.name"
-          class="list-tab filter"
+          class="tab-item"
           :class="{ active: tab.name === $route.query.status }"
           :id="tab.name"
           @click="setStatus(tab.name)"
         >
           {{ tab.label }}
-        </h2>
-        <h2 class="list-tab" id="mypage" @click="goMyApplications">내 지원서</h2>
-      </div>
+        </li>
+        <li class="tab-item">
+          <router-link to="/my-applications">내 지원서</router-link>
+        </li>
+      </ul>
       <RecruitItem
         v-for="recruitment in activeList"
         :key="recruitment.id"
@@ -24,7 +26,7 @@
 </template>
 
 <script>
-import RecruitItem from "@/components/RecruitItem.vue"
+import RecruitItem from "@/components/RecruitItem"
 
 export default {
   name: "Recruits",
@@ -102,9 +104,6 @@ export default {
     this.setList(this.$route.query.status)
   },
   methods: {
-    goMyApplications() {
-      this.$router.push("/my-applications").catch(ignore => ignore)
-    },
     setStatus(status) {
       if (status !== this.$route.query.status) {
         this.$router.replace({
@@ -147,17 +146,14 @@ export default {
 </script>
 
 <style scoped>
-#recruits {
+.recruits {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: #ced6e0;
-  height: 100%;
   user-select: none;
 }
 
-#recruits-box {
-  align-items: center;
+.recruits-box {
   width: 800px;
   max-width: 800px;
   padding: 20px;
@@ -168,39 +164,32 @@ export default {
 }
 
 @media (max-width: 800px) {
-  #recruits-box {
+  .recruits-box {
     width: 100%;
-    margin: 0 auto;
+    margin: 0;
   }
 }
 
-#tab-wrapper {
+.tab-list {
   display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 10px;
 }
 
-.list-tab {
-  padding: 0 20px 0 20px;
-}
-
-@media (max-width: 500px) {
-  .list-tab {
-    font-size: smaller;
-    padding: 0 10px 0 10px;
-  }
-}
-
-.filter {
-  color: #aaaaaa;
-}
-
-.active {
-  color: #000000 !important;
-}
-
-#tab-wrapper > h2 {
+.tab-item {
   cursor: pointer;
+  color: #aaa;
+  margin-right: 15px;
+  font-weight: bold;
 }
-.enroll-button button {
-  cursor: pointer;
+
+.tab-item.active {
+  color: #333;
+}
+
+.tab-item a {
+  color: #333;
+  text-decoration: none;
 }
 </style>

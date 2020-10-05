@@ -1,5 +1,8 @@
 package apply.ui.admin.recruitment
 
+import apply.createRecruitmentData
+import apply.createRecruitmentForm
+import apply.createRecruitmentItemData
 import com.vaadin.flow.component.UI
 import io.mockk.every
 import io.mockk.junit5.MockKExtension
@@ -10,18 +13,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
-import support.createLocalDateTime
-import java.time.LocalDateTime
-
-private fun createRecruitmentForm(
-    title: String = "웹 백엔드 3기",
-    startDateTime: LocalDateTime = createLocalDateTime(2020, 10, 25),
-    endDateTime: LocalDateTime = createLocalDateTime(2020, 11, 5),
-    canRecruit: Boolean = false,
-    isHidden: Boolean = true
-): RecruitmentForm {
-    return RecruitmentForm(title, startDateTime, endDateTime, canRecruit, isHidden)
-}
 
 @ExtendWith(MockKExtension::class)
 internal class RecruitmentFormTest {
@@ -38,7 +29,7 @@ internal class RecruitmentFormTest {
     @Test
     fun `유효한 값을 입력하는 경우`() {
         val actual = createRecruitmentForm().bindOrNull()
-        assertThat(actual).isNotNull()
+        assertThat(actual).isEqualTo(createRecruitmentData())
     }
 
     @Test
@@ -53,5 +44,18 @@ internal class RecruitmentFormTest {
         val actual = createRecruitmentForm(isHidden = isHidden).bindOrNull()
         assertThat(actual).isNotNull()
         assertThat(actual!!.isHidden).isEqualTo(isHidden)
+    }
+
+    @Test
+    fun `양식에 값을 채울 수 있다`() {
+        val data = createRecruitmentData(id = 1L, recruitmentItems = listOf(createRecruitmentItemData(id = 1L)))
+        val form = createRecruitmentForm()
+        form.fill(data)
+        assertThat(form.bindOrNull()).isEqualTo(
+            createRecruitmentData(
+                id = 1L,
+                recruitmentItems = listOf(createRecruitmentItemData(id = 1L))
+            )
+        )
     }
 }

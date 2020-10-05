@@ -4,6 +4,7 @@ import apply.domain.evaluation.Evaluation
 import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.recruitment.Recruitment
+import apply.domain.recruitment.RecruitmentRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -20,7 +21,7 @@ import java.util.Optional
 @ExtendWith(MockitoExtension::class)
 internal class EvaluationServiceTest {
     @Mock
-    private lateinit var recruitmentService: RecruitmentService
+    private lateinit var recruitmentRepository: RecruitmentRepository
 
     @Mock
     private lateinit var evaluationRepository: EvaluationRepository
@@ -37,7 +38,7 @@ internal class EvaluationServiceTest {
 
     @BeforeEach
     internal fun setUp() {
-        evaluationService = EvaluationService(evaluationRepository, evaluationItemRepository, recruitmentService)
+        evaluationService = EvaluationService(evaluationRepository, evaluationItemRepository, recruitmentRepository)
 
         recruitments = listOf(
             Recruitment(
@@ -87,7 +88,7 @@ internal class EvaluationServiceTest {
     @Test
     fun `평가와 모집 정보를 함께 제공한다`() {
         given(evaluationRepository.findAll()).willReturn(evaluations)
-        given(recruitmentService.getById(anyLong())).willReturn(recruitments[0])
+        given(recruitmentRepository.getOne(anyLong())).willReturn(recruitments[0])
         given(evaluationRepository.findById(1L)).willReturn(Optional.of(evaluations[0]))
         given(evaluationRepository.findById(2L)).willReturn(Optional.of(evaluations[1]))
 

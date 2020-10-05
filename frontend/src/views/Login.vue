@@ -80,19 +80,18 @@ export default {
   }),
   methods: {
     async submit() {
-      await this.$store
-        .dispatch("login", {
+      try {
+        await this.$store.dispatch("login", {
           name: this.name,
           email: this.email,
           birthday: DateUtil.formatLocalDate(this.birth),
           password: this.password,
         })
-        .catch(e => {
-          alert(e.response.data)
-          throw e
-        })
-      alert("로그인 성공")
-      this.$router.push("/my-applications")
+        alert("로그인 성공")
+        this.$router.push("//my-applications")
+      } catch (e) {
+        alert(e.response.data)
+      }
     },
     findPassword() {
       this.$router.push("/find")
@@ -109,9 +108,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  height: 100%;
   align-items: center;
-  background: #ced6e0;
 }
 
 .actions {

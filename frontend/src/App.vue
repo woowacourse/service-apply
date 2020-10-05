@@ -1,8 +1,21 @@
 <template>
   <div id="app">
-    <router-view />
+    <MainHeader />
+    <router-view class="main-view" />
+    <MainFooter />
   </div>
 </template>
+<script>
+import MainHeader from "./components/MainHeader"
+import MainFooter from "./components/MainFooter"
+
+export default {
+  components: {
+    MainHeader,
+    MainFooter,
+  },
+}
+</script>
 
 <style>
 button {
@@ -25,12 +38,20 @@ button:active {
 }
 
 html,
-body,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #ced6e0;
+}
+
 #app {
+  display: flex;
+  flex-direction: column;
   height: 100%;
 }
 
-body {
-  margin: 0;
+.main-view {
+  flex: 1 0 auto;
 }
 </style>
