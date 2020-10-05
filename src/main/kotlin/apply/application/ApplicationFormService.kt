@@ -114,7 +114,7 @@ class ApplicationFormService(
                 submitted = false,
                 createdDateTime = createLocalDateTime(2019, 10, 25, 10),
                 modifiedDateTime = createLocalDateTime(2019, 11, 5, 10),
-                submittedDateTime = null,
+                submittedDateTime = createLocalDateTime(2019, 11, 5, 10, 10, 10),
                 recruitmentId = 1L,
                 applicantId = 2L,
                 answers = Answers(
@@ -128,8 +128,8 @@ class ApplicationFormService(
                 referenceUrl = "https://www.google.com",
                 submitted = false,
                 createdDateTime = createLocalDateTime(2019, 10, 25, 10),
-                modifiedDateTime = createLocalDateTime(2019, 11, 5, 10),
-                submittedDateTime = null,
+                modifiedDateTime = createLocalDateTime(2019, 11, 6, 10),
+                submittedDateTime = createLocalDateTime(2019, 11, 6, 10, 10, 10),
                 recruitmentId = 1L,
                 applicantId = 3L,
                 answers = Answers(
@@ -143,8 +143,8 @@ class ApplicationFormService(
                 referenceUrl = "https://www.google.com",
                 submitted = false,
                 createdDateTime = createLocalDateTime(2019, 10, 25, 10),
-                modifiedDateTime = createLocalDateTime(2019, 11, 5, 10),
-                submittedDateTime = null,
+                modifiedDateTime = createLocalDateTime(2019, 11, 6, 10),
+                submittedDateTime = createLocalDateTime(2019, 11, 6, 10, 10, 10),
                 recruitmentId = 1L,
                 applicantId = 4L,
                 answers = Answers(
