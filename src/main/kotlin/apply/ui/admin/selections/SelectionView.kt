@@ -64,6 +64,7 @@ class SelectionView(
     private fun createContent(keyword: String = ""): Component {
         val tabsToGrids: LinkedHashMap<Tab, Component> = mapTabAndGrid(keyword)
         val (tabs, grids) = createTabComponents(tabsToGrids)
+        tabs.setWidthFull()
 
         val menu = HorizontalLayout(
             createSearchBar {
