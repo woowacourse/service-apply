@@ -3,7 +3,7 @@ package apply.ui.api
 import apply.application.ApplicantService
 import apply.application.MailService
 import apply.domain.applicant.ApplicantInformation
-import apply.domain.applicant.ApplicantPasswordFindInformation
+import apply.domain.applicant.ResetPasswordRequest
 import apply.domain.applicant.ApplicantVerifyInformation
 import apply.domain.applicant.Gender
 import apply.domain.applicant.exception.ApplicantValidateException
@@ -57,7 +57,7 @@ internal class ApplicantRestControllerTest(
         password = applicantRequest.password
     )
 
-    private val applicantPasswordFindRequest = ApplicantPasswordFindInformation(
+    private val applicantPasswordFindRequest = ResetPasswordRequest(
         name = applicantRequest.name,
         email = applicantRequest.email,
         birthday = applicantRequest.birthday

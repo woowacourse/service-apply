@@ -50,7 +50,7 @@ data class ApplicantVerifyInformation(
     val password: String
 )
 
-data class ApplicantPasswordFindInformation(
+data class ResetPasswordRequest(
     @field:NotBlank
     val name: String,
 

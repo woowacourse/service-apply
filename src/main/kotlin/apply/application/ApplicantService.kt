@@ -2,7 +2,7 @@ package apply.application
 
 import apply.domain.applicant.Applicant
 import apply.domain.applicant.ApplicantInformation
-import apply.domain.applicant.ApplicantPasswordFindInformation
+import apply.domain.applicant.ResetPasswordRequest
 import apply.domain.applicant.ApplicantRepository
 import apply.domain.applicant.ApplicantVerifyInformation
 import apply.domain.applicant.Gender
@@ -73,18 +73,18 @@ class ApplicantService(
         }
     }
 
-    fun resetPassword(applicantPasswordFindInformation: ApplicantPasswordFindInformation): String {
+    fun resetPassword(resetPasswordRequest: ResetPasswordRequest): String {
         return if (
             applicantRepository.existsByNameAndEmailAndBirthday(
-                applicantPasswordFindInformation.name,
-                applicantPasswordFindInformation.email,
-                applicantPasswordFindInformation.birthday
+                resetPasswordRequest.name,
+                resetPasswordRequest.email,
+                resetPasswordRequest.birthday
             )
         ) {
             val applicant = applicantRepository.findByNameAndEmailAndBirthday(
-                applicantPasswordFindInformation.name,
-                applicantPasswordFindInformation.email,
-                applicantPasswordFindInformation.birthday
+                resetPasswordRequest.name,
+                resetPasswordRequest.email,
+                resetPasswordRequest.birthday
             ) ?: throw ApplicantValidateException()
             applicant.password = randomStringGenerator.generateRandomString()
 

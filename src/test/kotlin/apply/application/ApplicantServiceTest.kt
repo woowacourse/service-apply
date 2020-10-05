@@ -1,7 +1,7 @@
 package apply.application
 
 import apply.domain.applicant.ApplicantInformation
-import apply.domain.applicant.ApplicantPasswordFindInformation
+import apply.domain.applicant.ResetPasswordRequest
 import apply.domain.applicant.ApplicantRepository
 import apply.domain.applicant.ApplicantVerifyInformation
 import apply.domain.applicant.Gender
@@ -84,7 +84,7 @@ internal class ApplicantServiceTest {
         password = validApplicantRequest.password
     )
 
-    private val validApplicantPasswordFindRequest = ApplicantPasswordFindInformation(
+    private val validApplicantPasswordFindRequest = ResetPasswordRequest(
         name = validApplicantRequest.name,
         email = validApplicantRequest.email,
         birthday = validApplicantRequest.birthday

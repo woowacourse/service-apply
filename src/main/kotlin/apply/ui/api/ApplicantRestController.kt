@@ -3,7 +3,7 @@ package apply.ui.api
 import apply.application.ApplicantService
 import apply.application.MailService
 import apply.domain.applicant.ApplicantInformation
-import apply.domain.applicant.ApplicantPasswordFindInformation
+import apply.domain.applicant.ResetPasswordRequest
 import apply.domain.applicant.ApplicantVerifyInformation
 import apply.domain.applicant.exception.ApplicantValidateException
 import org.springframework.http.HttpStatus
@@ -40,10 +40,10 @@ class ApplicantRestController(
     }
 
     @PostMapping("/find")
-    fun findPassword(@RequestBody applicantPasswordFindInformation: ApplicantPasswordFindInformation): ResponseEntity<String> {
+    fun findPassword(@RequestBody resetPasswordRequest: ResetPasswordRequest): ResponseEntity<String> {
         return try {
-            val newPassword = applicantService.resetPassword(applicantPasswordFindInformation)
-            mailService.sendPasswordResetMail(applicantPasswordFindInformation, newPassword)
+            val newPassword = applicantService.resetPassword(resetPasswordRequest)
+            mailService.sendPasswordResetMail(resetPasswordRequest, newPassword)
 
             ResponseEntity.noContent().build()
         } catch (e: ApplicantValidateException) {
