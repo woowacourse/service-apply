@@ -2,7 +2,7 @@ package apply.ui.admin.selections
 
 import apply.application.ApplicantResponse
 import apply.application.ApplicantService
-import apply.application.DownloadService
+import apply.application.ExcelService
 import apply.application.RecruitmentItemService
 import apply.application.RecruitmentService
 import apply.domain.applicationform.ApplicationForm
@@ -39,9 +39,10 @@ class SelectionView(
     private val applicantService: ApplicantService,
     private val recruitmentService: RecruitmentService,
     private val recruitmentItemService: RecruitmentItemService,
-    private val downloadService: DownloadService
+    private val excelService: ExcelService
 ) : VerticalLayout(), HasUrlParameter<Long> {
     private var recruitmentId: Long = 0L
+    private var applicants: List<ApplicantResponse> = emptyList()
 
     private fun createTitle(): Component {
         return HorizontalLayout(H1(recruitmentService.getById(recruitmentId).title)).apply {
@@ -53,15 +54,16 @@ class SelectionView(
     private fun createMenu(): Component {
         return HorizontalLayout(
             createSearchBar {
+                applicants = applicantService.findByRecruitmentIdAndKeyword(recruitmentId, it)
                 removeAll()
                 add(
                     createTitle(),
                     createMenu(),
-                    createGrid(applicantService.findByRecruitmentIdAndKeyword(recruitmentId, it))
+                    createGrid()
                 )
             },
             createSuccessButton("다운로드") {
-                val excel = { downloadService.createExcelBy(recruitmentId) }
+                val excel = { excelService.createApplicantExcel(applicants) }
                 val registration = VaadinSession.getCurrent()
                     .resourceRegistry
                     .registerResource(StreamResource("${recruitmentService.getById(recruitmentId).title}.xlsx", excel))
@@ -74,7 +76,7 @@ class SelectionView(
         }
     }
 
-    private fun createGrid(applicants: List<ApplicantResponse>): Component {
+    private fun createGrid(): Component {
         return Grid<ApplicantResponse>(10).apply {
             addSortableColumn("이름", ApplicantResponse::name)
             addSortableColumn("이메일", ApplicantResponse::email)
@@ -149,10 +151,11 @@ class SelectionView(
 
     override fun setParameter(event: BeforeEvent, @WildcardParameter parameter: Long) {
         this.recruitmentId = parameter
+        this.applicants = applicantService.findAllByRecruitmentId(recruitmentId)
         add(
             createTitle(),
             createMenu(),
-            createGrid(applicantService.findAllByRecruitmentId(recruitmentId))
+            createGrid()
         )
     }
 }

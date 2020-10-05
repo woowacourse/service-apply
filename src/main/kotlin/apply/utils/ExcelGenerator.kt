@@ -46,9 +46,9 @@ class ExcelGenerator {
 
             rows.forEachIndexed { index, it ->
                 val row = sheet.createRow(index + 1)
-                val properties = it.getData()
+                val properties = it.data
                 properties.forEachIndexed { propertyIndex, property ->
-                    row.createCell(propertyIndex).setCellValue(property.toString())
+                    row.createCell(propertyIndex).setCellValue(property)
                 }
             }
 
