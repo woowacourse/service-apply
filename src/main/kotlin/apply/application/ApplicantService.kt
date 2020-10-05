@@ -10,7 +10,7 @@ import apply.domain.applicant.exception.ApplicantValidateException
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.CheaterRepository
 import apply.security.JwtTokenProvider
-import apply.utils.RandomStringGenerator
+import apply.utils.RandomPasswordGenerator
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -24,7 +24,7 @@ class ApplicantService(
     private val applicantRepository: ApplicantRepository,
     private val cheaterRepository: CheaterRepository,
     private val jwtTokenProvider: JwtTokenProvider,
-    private val randomStringGenerator: RandomStringGenerator
+    private val randomPasswordGenerator: RandomPasswordGenerator
 ) {
     fun findAllByRecruitmentId(recruitmentId: Long): List<ApplicantResponse> {
         val applicationForms = applicationFormRepository.findByRecruitmentId(recruitmentId)
@@ -79,7 +79,7 @@ class ApplicantService(
             resetPasswordRequest.email,
             resetPasswordRequest.birthday
         )?.run {
-            password = randomStringGenerator.generateRandomString()
+            password = randomPasswordGenerator.generate()
             password
         } ?: throw ApplicantValidateException()
     }

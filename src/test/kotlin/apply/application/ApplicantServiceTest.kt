@@ -1,10 +1,10 @@
 package apply.application
 
 import apply.domain.applicant.ApplicantInformation
-import apply.domain.applicant.ResetPasswordRequest
 import apply.domain.applicant.ApplicantRepository
 import apply.domain.applicant.ApplicantVerifyInformation
 import apply.domain.applicant.Gender
+import apply.domain.applicant.ResetPasswordRequest
 import apply.domain.applicant.exception.ApplicantValidateException
 import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormRepository
@@ -13,7 +13,7 @@ import apply.domain.cheater.CheaterRepository
 import apply.domain.recruitmentitem.Answer
 import apply.domain.recruitmentitem.Answers
 import apply.security.JwtTokenProvider
-import apply.utils.RandomStringGenerator
+import apply.utils.RandomPasswordGenerator
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
@@ -48,7 +48,7 @@ internal class ApplicantServiceTest {
     private lateinit var jwtTokenProvider: JwtTokenProvider
 
     @Mock
-    private lateinit var randomStringGenerator: RandomStringGenerator
+    private lateinit var passwordGenerator: RandomPasswordGenerator
 
     private lateinit var applicantService: ApplicantService
 
@@ -104,7 +104,13 @@ internal class ApplicantServiceTest {
     @BeforeEach
     internal fun setUp() {
         applicantService =
-            ApplicantService(applicationFormRepository, applicantRepository, cheaterRepository, jwtTokenProvider, randomStringGenerator)
+            ApplicantService(
+                applicationFormRepository,
+                applicantRepository,
+                cheaterRepository,
+                jwtTokenProvider,
+                passwordGenerator
+            )
     }
 
     @Test
@@ -192,7 +198,7 @@ internal class ApplicantServiceTest {
             )
         ).willReturn(validApplicantRequest.toEntity(APPLICANT_ID))
 
-        given(randomStringGenerator.generateRandomString()).willReturn(RANDOM_PASSWORD)
+        given(passwordGenerator.generate()).willReturn(RANDOM_PASSWORD)
 
         assertThat(applicantService.resetPassword(validApplicantPasswordFindRequest)).isEqualTo(RANDOM_PASSWORD)
     }
