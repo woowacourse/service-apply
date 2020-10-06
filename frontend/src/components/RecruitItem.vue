@@ -46,22 +46,16 @@ export default {
     },
     buttonLabel() {
       switch (this.recruitment.status) {
-        case "RECRUITING": {
+        case "RECRUITING":
           return "지원하기"
-        }
-        case "RECRUITABLE": {
+        case "RECRUITABLE":
           return "모집 예정"
-        }
-        case "UNRECRUITABLE": {
+        case "UNRECRUITABLE":
           return "일시 중지"
-        }
-        case "ENDED": {
+        case "ENDED":
           return "모집 종료"
-        }
-        default: {
-          throw "올바르지 않은 지원 타입입니다"
-        }
       }
+      return ""
     },
   },
   methods: {

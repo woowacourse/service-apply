@@ -55,21 +55,16 @@ export default {
   computed: {
     filteredRecruits() {
       switch (this.$route.query.status) {
-        case "recruitable": {
-          return this.recruits.filter(recruit => recruit.status === "RECRUITABLE")
-        }
-        case "recruiting": {
+        case "recruitable":
+          return this.recruits.filter(({ status }) => status === "RECRUITABLE")
+        case "recruiting":
           return this.recruits.filter(
-            recruit => recruit.status === "RECRUITING" || recruit.status === "UNRECRUITABLE",
+            ({ status }) => status === "RECRUITING" || status === "UNRECRUITABLE",
           )
-        }
-        case "ended": {
-          return this.recruits.filter(recruit => recruit.status === "ENDED")
-        }
-        default: {
-          return this.recruits
-        }
+        case "ended":
+          return this.recruits.filter(({ status }) => status === "ENDED")
       }
+      return this.recruits
     },
   },
   async created() {
