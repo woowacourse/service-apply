@@ -64,7 +64,7 @@ class ApplicationFormServiceTest {
             id = applicationForm1.id,
             recruitmentId = applicationForm1.recruitmentId,
             referenceUrl = applicationForm1.referenceUrl,
-            submitted = applicationForm1.submitted,
+            isSubmitted = applicationForm1.isSubmitted,
             answers = applicationForm1.answers.items.map { AnswerResponse(it.contents, it.recruitmentItemId) },
             createdDateTime = applicationForm1.createdDateTime,
             modifiedDateTime = applicationForm1.modifiedDateTime,

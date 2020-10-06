@@ -35,7 +35,7 @@ internal class ApplicationFormTest {
     @Test
     fun `지원서가 잘 만들어졌는지 테스트한다`() {
         assertAll(
-            { assertThat(applicationForm.submitted).isFalse() },
+            { assertThat(applicationForm.isSubmitted).isFalse() },
             { assertThat(applicationForm.applicantId).isEqualTo(1L) },
             { assertThat(applicationForm.referenceUrl).isEqualTo("http://example.com") },
             { assertThat(applicationForm.answers.items[0].contents).isEqualTo("스타트업을 하고 싶습니다.") },
@@ -70,7 +70,7 @@ internal class ApplicationFormTest {
     fun `지원서의 제출을 테스트한다`() {
         applicationForm.submit()
 
-        assertThat(applicationForm.submitted).isTrue()
+        assertThat(applicationForm.isSubmitted).isTrue()
 
         assertThatIllegalArgumentException().isThrownBy {
             applicationForm.update(
