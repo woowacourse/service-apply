@@ -15,12 +15,16 @@ class ApplicationFormService(
     private val applicationFormRepository: ApplicationFormRepository,
     private val applicantService: ApplicantService
 ) {
+
     fun findAllByRecruitmentId(recruitmentId: Long): List<ApplicationForm> =
         applicationFormRepository.findByRecruitmentId(recruitmentId)
 
     fun getByRecruitmentIdAndApplicantId(recruitmentId: Long, applicantId: Long): ApplicationForm =
         applicationFormRepository.findByRecruitmentIdAndApplicantId(recruitmentId, applicantId)
             ?: throw IllegalArgumentException()
+
+    fun getAllByApplicantId(applicantId: Long): List<ApplicationFormResponse> =
+        applicationFormRepository.findAllByApplicantId(applicantId).map(::ApplicationFormResponse)
 
     fun save(applicantId: Long, request: SaveApplicationFormRequest) {
         require(!applicationFormRepository.existsByRecruitmentIdAndApplicantId(request.recruitmentId, applicantId)) {

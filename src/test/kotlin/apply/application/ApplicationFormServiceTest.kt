@@ -8,6 +8,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatchers.anyLong
@@ -28,6 +29,7 @@ class ApplicationFormServiceTest {
 
     private lateinit var applicationForm1: ApplicationForm
     private lateinit var applicationForm2: ApplicationForm
+    private lateinit var applicationForms: List<ApplicationForm>
     private lateinit var applicationFormResponse: ApplicationFormResponse
     private lateinit var applicationFormSaveRequest: SaveApplicationFormRequest
     private lateinit var applicationFormUpdateRequest: UpdateApplicationFormRequest
@@ -59,6 +61,19 @@ class ApplicationFormServiceTest {
                 )
             )
         )
+
+        applicationForms = listOf(applicationForm1,
+            ApplicationForm(
+                applicantId = 1L,
+                recruitmentId = 2L,
+                referenceUrl = "http://example2.com",
+                answers = Answers(
+                    mutableListOf(
+                        Answer("대기업에 취직하고 싶습니다.", 1L),
+                        Answer("신중함", 2L)
+                    )
+                )
+            ))
 
         applicationFormResponse = ApplicationFormResponse(
             id = applicationForm1.id,
@@ -122,6 +137,30 @@ class ApplicationFormServiceTest {
 
         assertThatIllegalArgumentException().isThrownBy { applicationFormService.findForm(1L, 1L) }
             .withMessage("해당하는 지원서가 없습니다.")
+    }
+
+    @Test
+    fun `지원자가 자신의 지원서를 모두 불러온다`() {
+        given(applicationFormRepository.findAllByApplicantId(1L)).willReturn(applicationForms)
+
+        val expected = applicationFormService.getAllByApplicantId(1L)
+
+        assertAll(
+            { assertThat(expected).isNotNull },
+            { assertThat(expected).hasSize(2) }
+        )
+    }
+
+    @Test
+    fun `지원자가 지원한 지원서가 없으면 빈 리스트를 불러온다`() {
+        given(applicationFormRepository.findAllByApplicantId(1L)).willReturn(emptyList())
+
+        val expected = applicationFormService.getAllByApplicantId(1L)
+
+        assertAll(
+            { assertThat(expected).isNotNull },
+            { assertThat(expected).hasSize(0) }
+        )
     }
 
     @Test

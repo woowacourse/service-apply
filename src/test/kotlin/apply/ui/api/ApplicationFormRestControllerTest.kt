@@ -69,6 +69,29 @@ internal class ApplicationFormRestControllerTest(
         submittedDateTime = null
     )
 
+    private val applicationForms = listOf(
+        ApplicationFormResponse(
+            id = 1L,
+            recruitmentId = 2L,
+            referenceUrl = "URL",
+            submitted = true,
+            answers = listOf(AnswerResponse("열심히 하겠습니다", 1L)),
+            createdDateTime = createLocalDateTime(2020, 10, 1),
+            modifiedDateTime = createLocalDateTime(2020, 10, 3),
+            submittedDateTime = null
+        ),
+        ApplicationFormResponse(
+            id = 1L,
+            recruitmentId = 3L,
+            referenceUrl = "URL",
+            submitted = true,
+            answers = listOf(AnswerResponse("열심히 하겠습니다", 1L)),
+            createdDateTime = createLocalDateTime(2020, 10, 1),
+            modifiedDateTime = createLocalDateTime(2020, 10, 3),
+            submittedDateTime = null
+        )
+    )
+
     @BeforeEach
     internal fun setUp(webApplicationContext: WebApplicationContext) {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
@@ -90,6 +113,21 @@ internal class ApplicationFormRestControllerTest(
         }.andExpect {
             status { isOk }
             content { json(objectMapper.writeValueAsString(applicationForm)) }
+        }
+    }
+
+    @Test
+    fun `내 지원서 요청에 정상적으로 응답한다`() {
+        every { jwtTokenProvider.isValidToken("valid_token") } returns true
+        every { jwtTokenProvider.getSubject("valid_token") } returns applicant.email
+        every { applicantService.getByEmail(applicant.email) } returns applicant
+        every { applicationFormService.getAllByApplicantId(applicant.id) } returns applicationForms
+
+        mockMvc.get("/api/application-forms/me") {
+            header(AUTHORIZATION, "Bearer valid_token")
+        }.andExpect {
+            status { isOk }
+            content { json(objectMapper.writeValueAsString(applicationForms)) }
         }
     }
 }

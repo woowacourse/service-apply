@@ -1,5 +1,6 @@
 package apply.ui.api
 
+import apply.application.ApplicationFormResponse
 import apply.application.ApplicationFormService
 import apply.application.SaveApplicationFormRequest
 import apply.application.UpdateApplicationFormRequest
@@ -19,6 +20,10 @@ import org.springframework.web.bind.annotation.RestController
 class ApplicationFormRestController(
     private val applicationFormService: ApplicationFormService
 ) {
+    @GetMapping("/me")
+    fun getMyApplicationForms(@LoginApplicant applicant: Applicant): ResponseEntity<List<ApplicationFormResponse>> =
+        ResponseEntity.ok().body(applicationFormService.getAllByApplicantId(applicant.id))
+
     @GetMapping
     fun getForm(
         @RequestParam("recruitmentId") recruitment: Long,
