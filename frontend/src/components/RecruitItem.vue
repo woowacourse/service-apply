@@ -5,7 +5,7 @@
     :end-date-time="endDateTime"
     :buttonLabel="buttonLabel"
     :activeButton="isRecruiting"
-    @click="goRegisterApplicant"
+    @click="goApplicantsNewPage"
   />
 </template>
 
@@ -48,7 +48,7 @@ export default {
     },
   },
   methods: {
-    goRegisterApplicant() {
+    goApplicantsNewPage() {
       this.$router.push({ path: `/applicants/new`, query: { recruitmentId: this.recruitment.id } })
     },
   },

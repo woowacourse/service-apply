@@ -5,7 +5,7 @@
     :end-date-time="endDateTime"
     :buttonLabel="buttonLabel"
     :activeButton="submittable"
-    @click="goEditApplicationForm"
+    @click="goApplicationFormsEditPage"
   />
 </template>
 
@@ -45,7 +45,7 @@ export default {
     },
   },
   methods: {
-    goEditApplicationForm() {
+    goApplicationFormsEditPage() {
       this.$router.push({
         path: `/application-forms/edit`,
         query: { recruitmentId: this.recruitment.id },
