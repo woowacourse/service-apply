@@ -1,6 +1,6 @@
 package apply
 
-import apply.application.EvaluationAnswerData
+import apply.application.EvaluationItemScoreData
 import apply.domain.evaluation.Evaluation
 import apply.domain.evaluationItem.EvaluationItem
 import apply.domain.evaluationtarget.EvaluationAnswer
@@ -89,5 +89,5 @@ fun createEvaluationAnswerForm(
     evaluationItemId: Long = EVALUATION_ITEM_ID
 ): EvaluationAnswerForm {
     return EvaluationAnswerForm(title, description, maximumScore)
-        .apply { fill(EvaluationAnswerData(score, evaluationItemId)) }
+        .apply { fill(EvaluationItemScoreData(score, evaluationItemId)) }
 }

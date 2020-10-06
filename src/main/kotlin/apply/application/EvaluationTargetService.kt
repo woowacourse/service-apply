@@ -88,8 +88,8 @@ class EvaluationTargetService(
             ?: throw IllegalArgumentException("EvaluationTarget (id=$targetId)의 Evaluation (id=${evaluationTarget.evaluationId}가 존재하지 않습니다")
         val evaluationItems = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluation.id)
 
-        val evaluationAnswers = evaluationItems.map {
-            EvaluationAnswerData(
+        val evaluationItemScores = evaluationItems.map {
+            EvaluationItemScoreData(
                 id = it.id,
                 score = evaluationTarget.evaluationAnswers.findScoreByEvaluationItemId(it.id) ?: DEFAULT_SCORE
             )
@@ -98,25 +98,25 @@ class EvaluationTargetService(
         return GradeEvaluationResponse(
             title = evaluation.title,
             description = evaluation.description,
-            evaluationTargetData = EvaluationTargetData(
+            evaluationTarget = EvaluationTargetData(
                 note = evaluationTarget.note,
                 evaluationStatus = evaluationTarget.evaluationStatus,
-                evaluationAnswersData = evaluationAnswers
+                evaluationItemScores = evaluationItemScores
             ),
             evaluationItems = evaluationItems.map { EvaluationItemResponse(it) }
         )
     }
 
-    fun grade(evaluationTargetId: Long, evaluationTargetRequest: EvaluationTargetData) {
+    fun grade(evaluationTargetId: Long, request: EvaluationTargetData) {
         val evaluationTarget = getById(evaluationTargetId)
 
-        val evaluationAnswers = evaluationTargetRequest.evaluationAnswersData
+        val evaluationAnswers = request.evaluationItemScores
             .map { EvaluationAnswer(it.score, it.id) }
             .toMutableList()
         evaluationTarget.update(
-            evaluationStatus = evaluationTargetRequest.evaluationStatus,
+            evaluationStatus = request.evaluationStatus,
             evaluationAnswers = EvaluationAnswers(evaluationAnswers),
-            note = evaluationTargetRequest.note
+            note = request.note
         )
     }
 

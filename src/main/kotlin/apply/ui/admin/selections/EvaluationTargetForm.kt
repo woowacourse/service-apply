@@ -53,12 +53,12 @@ class EvaluationTargetForm() : BindingFormLayout<EvaluationTargetData>(Evaluatio
         if (evaluationAnswers.size != answers.size) {
             return null
         }
-        return result?.apply { evaluationAnswersData = answers }
+        return result?.apply { evaluationItemScores = answers }
     }
 
     override fun fill(data: EvaluationTargetData) {
         fillDefault(data)
-        (evaluationAnswers zip data.evaluationAnswersData).forEach {
+        (evaluationAnswers zip data.evaluationItemScores).forEach {
             it.first.apply {
                 fill(it.second)
                 setScoreChangeEvent { sumOfScore.value = sumOfScore() }

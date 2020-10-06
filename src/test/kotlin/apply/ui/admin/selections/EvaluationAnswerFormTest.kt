@@ -1,6 +1,6 @@
 package apply.ui.admin.selections
 
-import apply.application.EvaluationAnswerData
+import apply.application.EvaluationItemScoreData
 import apply.createEvaluationAnswerForm
 import com.vaadin.flow.component.UI
 import dev.mett.vaadin.tooltip.Tooltips
@@ -24,7 +24,7 @@ class EvaluationAnswerFormTest {
     fun `유효한 값을 입력하는 경우`() {
         val actual = createEvaluationAnswerForm(score = 3, evaluationItemId = 1L).bindOrNull()
         assertThat(actual).isNotNull
-        assertThat(actual).isEqualTo(EvaluationAnswerData(score = 3, id = 1L))
+        assertThat(actual).isEqualTo(EvaluationItemScoreData(score = 3, id = 1L))
     }
 
     @Test

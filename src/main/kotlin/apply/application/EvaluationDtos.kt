@@ -77,14 +77,14 @@ data class EvaluationItemResponse(
 data class GradeEvaluationResponse(
     val title: String,
     val description: String,
-    val evaluationTargetData: EvaluationTargetData,
+    val evaluationTarget: EvaluationTargetData,
     val evaluationItems: List<EvaluationItemResponse>
 )
 
 data class EvaluationTargetData(
     @field:NotNull
     @field:Valid
-    var evaluationAnswersData: List<EvaluationAnswerData> = emptyList(),
+    var evaluationItemScores: List<EvaluationItemScoreData> = emptyList(),
 
     @field:Size(max = 255)
     var note: String = "",
@@ -93,7 +93,7 @@ data class EvaluationTargetData(
     var evaluationStatus: EvaluationStatus = EvaluationStatus.WAITING
 )
 
-data class EvaluationAnswerData(
+data class EvaluationItemScoreData(
     @field:NotNull
     @field:Min(0)
     var score: Int = 0,

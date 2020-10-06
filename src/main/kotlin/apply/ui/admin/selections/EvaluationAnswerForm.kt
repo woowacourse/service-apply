@@ -1,13 +1,13 @@
 package apply.ui.admin.selections
 
-import apply.application.EvaluationAnswerData
+import apply.application.EvaluationItemScoreData
 import com.vaadin.flow.component.select.Select
 import com.vaadin.flow.component.textfield.TextField
 import dev.mett.vaadin.tooltip.Tooltips
 import dev.mett.vaadin.tooltip.config.TooltipConfiguration
 import support.views.BindingIdentityFormLayout
 
-class EvaluationAnswerForm() : BindingIdentityFormLayout<EvaluationAnswerData>(EvaluationAnswerData::class) {
+class EvaluationAnswerForm() : BindingIdentityFormLayout<EvaluationItemScoreData>(EvaluationItemScoreData::class) {
     val score: Select<Int> = Select(0)
     private val title: TextField = TextField().apply { isReadOnly = true }
 
@@ -27,11 +27,11 @@ class EvaluationAnswerForm() : BindingIdentityFormLayout<EvaluationAnswerData>(E
         score.addValueChangeListener { scoreChangeEvent() }
     }
 
-    override fun bindOrNull(): EvaluationAnswerData? {
+    override fun bindOrNull(): EvaluationItemScoreData? {
         return bindDefaultOrNull()
     }
 
-    override fun fill(data: EvaluationAnswerData) {
+    override fun fill(data: EvaluationItemScoreData) {
         fillDefault(data)
     }
 }

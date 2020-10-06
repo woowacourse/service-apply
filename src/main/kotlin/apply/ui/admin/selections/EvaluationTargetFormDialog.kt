@@ -28,7 +28,7 @@ class EvaluationTargetFormDialog(
     init {
         val response = evaluationTargetService.getGradeEvaluation(evaluationTargetId)
         evaluationTargetForm = EvaluationTargetForm(response.evaluationItems)
-            .apply { fill(response.evaluationTargetData) }
+            .apply { fill(response.evaluationTarget) }
         title.text = response.title
         description.value = response.description
 

@@ -291,9 +291,9 @@ class EvaluationTargetServiceTest(
             { assertThat(result.title).isEqualTo(evaluation.title) },
             { assertThat(result.description).isEqualTo(evaluation.description) },
             { assertThat(result.evaluationItems).hasSize(1) },
-            { assertThat(result.evaluationTargetData.evaluationAnswersData[0].score).isEqualTo(0) },
-            { assertThat(result.evaluationTargetData.evaluationStatus).isEqualTo(WAITING) },
-            { assertThat(result.evaluationTargetData.note).isBlank() }
+            { assertThat(result.evaluationTarget.evaluationItemScores[0].score).isEqualTo(0) },
+            { assertThat(result.evaluationTarget.evaluationStatus).isEqualTo(WAITING) },
+            { assertThat(result.evaluationTarget.note).isBlank() }
         )
     }
 
@@ -315,9 +315,9 @@ class EvaluationTargetServiceTest(
             { assertThat(result.title).isEqualTo(evaluation.title) },
             { assertThat(result.description).isEqualTo(evaluation.description) },
             { assertThat(result.evaluationItems).hasSize(1) },
-            { assertThat(result.evaluationTargetData.evaluationAnswersData[0].score).isEqualTo(SCORE) },
-            { assertThat(result.evaluationTargetData.evaluationStatus).isEqualTo(PASS) },
-            { assertThat(result.evaluationTargetData.note).isEqualTo(NOTE) }
+            { assertThat(result.evaluationTarget.evaluationItemScores[0].score).isEqualTo(SCORE) },
+            { assertThat(result.evaluationTarget.evaluationStatus).isEqualTo(PASS) },
+            { assertThat(result.evaluationTarget.note).isEqualTo(NOTE) }
         )
     }
 
@@ -328,7 +328,7 @@ class EvaluationTargetServiceTest(
         val updatedScore = 5
         val updatedStatus = PASS
         val updatedNote = "특이 사항(수정)"
-        val answers = listOf(EvaluationAnswerData(score = updatedScore, id = 3L))
+        val answers = listOf(EvaluationItemScoreData(score = updatedScore, id = 3L))
         val gradeEvaluationRequest = EvaluationTargetData(answers, updatedNote, updatedStatus)
 
         evaluationTargetService.grade(evaluationTarget.id, gradeEvaluationRequest)
