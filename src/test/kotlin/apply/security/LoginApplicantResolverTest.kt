@@ -15,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import org.springframework.core.MethodParameter
+import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.web.context.request.NativeWebRequest
 import support.createLocalDate
 
@@ -53,7 +54,7 @@ internal class LoginApplicantResolverTest {
 
     @Test
     fun `요청의 Authorization 헤더로 저장된 지원자를 불러온다`() {
-        every { nativeWebRequest.getHeader(AUTHORIZATION_HEADER) } returns "Bearer valid_token"
+        every { nativeWebRequest.getHeader(AUTHORIZATION) } returns "Bearer valid_token"
         every { jwtTokenProvider.isValidToken("valid_token") } returns true
         every { jwtTokenProvider.getSubject("valid_token") } returns "applicant_email@email.com"
         val expectedApplicant = Applicant(
@@ -77,7 +78,7 @@ internal class LoginApplicantResolverTest {
         "Bearer"
     )
     fun `요청의 Authorization 헤더의 형식이 올바르지 않을 경우 예외가 발생한다`(header: String) {
-        every { nativeWebRequest.getHeader(AUTHORIZATION_HEADER) } returns header
+        every { nativeWebRequest.getHeader(AUTHORIZATION) } returns header
 
         assertThatIllegalArgumentException().isThrownBy {
             loginApplicantResolver.resolveArgument(methodParameter, null, nativeWebRequest, null)
@@ -86,7 +87,7 @@ internal class LoginApplicantResolverTest {
 
     @Test
     fun `요청의 Authorization 헤더가 존재하지 않을 경우 예외가 발생한다`() {
-        every { nativeWebRequest.getHeader(AUTHORIZATION_HEADER) } returns null
+        every { nativeWebRequest.getHeader(AUTHORIZATION) } returns null
 
         assertThatIllegalArgumentException().isThrownBy {
             loginApplicantResolver.resolveArgument(methodParameter, null, nativeWebRequest, null)
@@ -95,7 +96,7 @@ internal class LoginApplicantResolverTest {
 
     @Test
     fun `요청의 토큰이 유효하지 않은 경우 예외가 발생한다`() {
-        every { nativeWebRequest.getHeader(AUTHORIZATION_HEADER) } returns "invalid_token"
+        every { nativeWebRequest.getHeader(AUTHORIZATION) } returns "invalid_token"
         every { jwtTokenProvider.isValidToken("invalid_token") } returns false
 
         assertThatIllegalArgumentException().isThrownBy {

@@ -6,7 +6,6 @@ import apply.application.ApplicationFormResponse
 import apply.application.ApplicationFormService
 import apply.domain.applicant.Applicant
 import apply.domain.applicant.Gender
-import apply.security.AUTHORIZATION_HEADER
 import apply.security.JwtTokenProvider
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
@@ -16,6 +15,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
+import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.test.context.TestConstructor
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
@@ -86,7 +86,7 @@ internal class ApplicationFormRestControllerTest(
 
         mockMvc.get("/api/application-forms") {
             param("recruitmentId", "2")
-            header(AUTHORIZATION_HEADER, "Bearer valid_token")
+            header(AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isOk }
             content { json(objectMapper.writeValueAsString(applicationForm)) }

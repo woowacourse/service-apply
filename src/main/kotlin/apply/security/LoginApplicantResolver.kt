@@ -3,13 +3,13 @@ package apply.security
 import apply.application.ApplicantService
 import apply.domain.applicant.Applicant
 import org.springframework.core.MethodParameter
+import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.support.WebDataBinderFactory
 import org.springframework.web.context.request.NativeWebRequest
 import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.method.support.ModelAndViewContainer
 
-const val AUTHORIZATION_HEADER = "Authorization"
 private const val BEARER = "Bearer"
 
 @Component
@@ -17,7 +17,6 @@ class LoginApplicantResolver(
     private val jwtTokenProvider: JwtTokenProvider,
     private val applicantService: ApplicantService
 ) : HandlerMethodArgumentResolver {
-
     override fun supportsParameter(parameter: MethodParameter) =
         parameter.hasParameterAnnotation(LoginApplicant::class.java)
 
@@ -37,7 +36,7 @@ class LoginApplicantResolver(
     }
 
     private fun extractBearerToken(request: NativeWebRequest): String {
-        val authorization = request.getHeader(AUTHORIZATION_HEADER)
+        val authorization = request.getHeader(AUTHORIZATION)
             ?: throw IllegalArgumentException("로그인 정보가 정확하지 않습니다")
 
         val (tokenType, token) = splitToTokenFormat(authorization)
@@ -50,7 +49,7 @@ class LoginApplicantResolver(
     private fun splitToTokenFormat(authorization: String): Pair<String, String> {
         return try {
             val tokenFormat = authorization.split(" ")
-            Pair(tokenFormat[0], tokenFormat[1])
+            tokenFormat[0] to tokenFormat[1]
         } catch (e: IndexOutOfBoundsException) {
             throw IllegalArgumentException("로그인 정보가 정확하지 않습니다")
         }
