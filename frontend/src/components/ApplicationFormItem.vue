@@ -5,7 +5,7 @@
         <div class="recruit-title">
           <b>{{ recruitment.title }}</b>
         </div>
-        <div class="recruit-duration">{{ startTime }} ~ {{ endTime }}</div>
+        <div class="recruit-duration">{{ startDateTime }} ~ {{ endDateTime }}</div>
       </div>
       <div class="button-wrapper">
         <Button
@@ -42,10 +42,10 @@ export default {
     buttonLabel() {
       return this.submitted ? "제출 완료" : "지원서 수정"
     },
-    startTime() {
+    startDateTime() {
       return parseLocalDateTime(new Date(this.recruitment.startDateTime))
     },
-    endTime() {
+    endDateTime() {
       return parseLocalDateTime(new Date(this.recruitment.endDateTime))
     },
   },
