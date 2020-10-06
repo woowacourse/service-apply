@@ -4,7 +4,7 @@
     :start-date-time="startDateTime"
     :end-date-time="endDateTime"
     :buttonLabel="buttonLabel"
-    :activeButton="!submitted"
+    :activeButton="!submittable"
     @click="onClickAdmission(recruitment.id)"
   />
 </template>
@@ -29,7 +29,13 @@ export default {
   },
   computed: {
     buttonLabel() {
-      return this.submitted ? "제출 완료" : "지원서 수정"
+      if (this.submitted) {
+        return "제출 완료"
+      }
+      return this.submittable ? "지원서 수정" : "기간 만료"
+    },
+    submittable() {
+      return !this.submitted && this.recruitment.recruitmentStatus === "RECRUITING"
     },
     startDateTime() {
       return parseLocalDateTime(new Date(this.recruitment.startDateTime))
@@ -40,7 +46,7 @@ export default {
   },
   methods: {
     onClickAdmission(id) {
-      this.$router.push({ path: `/register/applicant/${id}` })
+      this.$router.push({ path: `/register/application`, query: { recruitmentId: id } })
     },
   },
 }

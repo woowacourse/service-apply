@@ -5,10 +5,12 @@ import apply.domain.applicant.ApplicantInformation
 import apply.domain.applicant.ApplicantRepository
 import apply.domain.applicant.ApplicantVerifyInformation
 import apply.domain.applicant.Gender
+import apply.domain.applicant.ResetPasswordRequest
 import apply.domain.applicant.exception.ApplicantValidateException
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.CheaterRepository
 import apply.security.JwtTokenProvider
+import apply.utils.RandomPasswordGenerator
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -21,7 +23,8 @@ class ApplicantService(
     private val applicationFormRepository: ApplicationFormRepository,
     private val applicantRepository: ApplicantRepository,
     private val cheaterRepository: CheaterRepository,
-    private val jwtTokenProvider: JwtTokenProvider
+    private val jwtTokenProvider: JwtTokenProvider,
+    private val randomPasswordGenerator: RandomPasswordGenerator
 ) {
     fun findAllByRecruitmentId(recruitmentId: Long): List<ApplicantResponse> {
         val applicationForms = applicationFormRepository.findByRecruitmentId(recruitmentId)
@@ -68,6 +71,17 @@ class ApplicantService(
             true -> jwtTokenProvider.createToken(applicantVerifyInformation.email)
             else -> throw ApplicantValidateException()
         }
+    }
+
+    fun resetPassword(resetPasswordRequest: ResetPasswordRequest): String {
+        return applicantRepository.findByNameAndEmailAndBirthday(
+            resetPasswordRequest.name,
+            resetPasswordRequest.email,
+            resetPasswordRequest.birthday
+        )?.run {
+            password = randomPasswordGenerator.generate()
+            password
+        } ?: throw ApplicantValidateException()
     }
 
     @PostConstruct

@@ -27,7 +27,7 @@ export default {
   data: () => ({
     appliedRecruitments: [],
   }),
-  async created() {
+  created() {
     const token = this.$store.getters["token"]
 
     try {
@@ -70,7 +70,6 @@ export default {
 .my-application-forms {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   background: #ced6e0;
 }
