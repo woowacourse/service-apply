@@ -127,50 +127,49 @@ export default {
     this.refreshForm()
   },
   methods: {
+    async fetchRecruitmentItems() {
+      const { data: recruitmentItems } = await RecruitmentApi.fetchItems(this.recruitmentId)
+      this.recruitmentItems = recruitmentItems.map(recruitmentItem => ({
+        ...recruitmentItem,
+        contents: "",
+      }))
+      return recruitmentItems
+    },
+    async fetchApplicationForm() {
+      const { data: applicationForm } = await ApplicationFormsApi.fetchForm({
+        token: this.$store.getters["token"],
+        recruitmentId: this.recruitmentId,
+      })
+      if (applicationForm.submitted) {
+        throw { message: "이미 제출된 지원서입니다. 수정할 수 없습니다." }
+      } else if (!this.isEditing) {
+        throw { message: "이미 저장된 지원서가 있습니다." }
+      }
+      return applicationForm
+    },
+    fillForm(applicationForm, recruitmentItems) {
+      this.tempSaveTime = applicationForm.modifiedDateTime
+      this.referenceUrl = applicationForm.referenceUrl
+      this.recruitmentItems = recruitmentItems.map(recruitmentItem => ({
+        ...recruitmentItem,
+        contents: applicationForm.answers.find(
+          ({ recruitmentItemId }) => recruitmentItemId === recruitmentItem.id,
+        ).contents,
+      }))
+    },
     async refreshForm() {
       try {
-        const { data: recruitmentItems } = await RecruitmentApi.fetchItems(this.recruitmentId)
-        this.recruitmentItems = recruitmentItems.map(recruitmentItem => ({
-          ...recruitmentItem,
-          contents: "",
-        }))
-        const { data: applicationForm } = await ApplicationFormsApi.fetchForm({
-          token: this.$store.getters["token"],
-          recruitmentId: this.recruitmentId,
-        })
-        if (applicationForm.submitted) {
-          alert("이미 제출된 지원서입니다. 수정할 수 없습니다.")
-          this.$router.replace("/")
-        } else if (!this.isEditing) {
-          alert("이미 저장된 지원서가 존재합니다.")
-          this.$router.replace("/")
-        }
-        this.tempSaveTime = applicationForm.modifiedDateTime
-        this.referenceUrl = applicationForm.referenceUrl
-        this.recruitmentItems = recruitmentItems.map(recruitmentItem => ({
-          ...recruitmentItem,
-          contents: applicationForm.answers.find(
-            ({ recruitmentItemId }) => recruitmentItemId === recruitmentItem.id,
-          ).contents,
-        }))
+        const recruitmentItems = await this.fetchRecruitmentItems()
+        const applicationForm = await this.fetchApplicationForm()
+        this.fillForm(applicationForm, recruitmentItems)
       } catch (e) {
         if (e.message.includes("404") && this.isEditing) {
           alert("저장된 지원서가 존재하지 않습니다.")
           this.$router.replace("/")
-        } else if (this.isEditing) {
-          alert("잘못된 요청입니다.")
+        } else if (!e.message.includes("404")) {
+          alert(e.message ? e.message : "잘못된 요청입니다.")
           this.$router.replace("/")
         }
-      }
-    },
-    parseApplicationInfo() {
-      return {
-        recruitmentId: this.recruitmentId,
-        referenceUrl: this.referenceUrl,
-        answers: this.recruitmentItems.map(item => ({
-          contents: item.contents,
-          recruitmentItemId: item.id,
-        })),
       }
     },
     reset() {
@@ -183,10 +182,19 @@ export default {
       }))
       this.referenceUrl = ""
     },
+    parseApplicationInfo() {
+      return {
+        recruitmentId: this.recruitmentId,
+        referenceUrl: this.referenceUrl,
+        answers: this.recruitmentItems.map(item => ({
+          contents: item.contents,
+          recruitmentItemId: item.id,
+        })),
+      }
+    },
     async save(isSubmitted) {
-      let applicationForm = this.parseApplicationInfo()
-      applicationForm = {
-        ...applicationForm,
+      const applicationForm = {
+        ...this.parseApplicationInfo(),
         isSubmitted: isSubmitted,
       }
       return await this.saveOrUpdate(applicationForm)
@@ -208,30 +216,30 @@ export default {
       })
     },
     async tempSave() {
-      await this.save(false)
-        .then(() => {
+      try {
+        await this.save(false).then(() => {
           alert("정상적으로 저장되었습니다.")
           if (!this.isEditing) {
             this.$router.replace("edit?recruitmentId=" + this.recruitmentId)
           }
           this.refreshForm()
         })
-        .catch(e => {
-          alert(e.response.data)
-          this.$router.replace("/")
-        })
+      } catch (e) {
+        alert(e.response.data)
+        this.$router.replace("/")
+      }
     },
     async submit() {
       if (confirm("제출하신 뒤에는 수정하실 수 없습니다. 정말로 제출하시겠습니까?")) {
-        await this.save(true)
-          .then(() => {
+        try {
+          await this.save(true).then(() => {
             alert("정상적으로 제출되었습니다.")
             this.$router.replace("/")
           })
-          .catch(e => {
-            alert(e.response.data)
-            this.$router.replace("/")
-          })
+        } catch (e) {
+          alert(e.response.data)
+          this.$router.replace("/")
+        }
       }
     },
   },
