@@ -10,7 +10,7 @@
           >
         </li>
         <li class="tab-item">
-          <router-link to="/my-applications">내 지원서</router-link>
+          <router-link to="/my-application-forms">내 지원서</router-link>
         </li>
       </ul>
       <RecruitItem

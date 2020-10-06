@@ -33,7 +33,7 @@ class ApplicationFormRestController(
             val form = applicationFormService.findForm(applicant.id, recruitment)
             ResponseEntity.ok().body(form)
         } catch (e: IllegalArgumentException) {
-            ResponseEntity.notFound().build()
+            ResponseEntity.badRequest().body(e.message)
         }
     }
 

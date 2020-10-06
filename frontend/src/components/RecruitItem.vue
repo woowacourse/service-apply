@@ -4,8 +4,8 @@
     :start-date-time="startDateTime"
     :end-date-time="endDateTime"
     :buttonLabel="buttonLabel"
-    :activeButton="this.isRecruiting"
-    @click="onClickAdmission(recruitment.id)"
+    :activeButton="isRecruiting"
+    @click="goApplicantsNewPage"
   />
 </template>
 
@@ -48,8 +48,8 @@ export default {
     },
   },
   methods: {
-    onClickAdmission(id) {
-      this.$router.push({ path: `/register/applicant`, query: { recruitmentId: id } })
+    goApplicantsNewPage() {
+      this.$router.push({ path: `/applicants/new`, query: { recruitmentId: this.recruitment.id } })
     },
   },
 }

@@ -29,25 +29,27 @@ const routes = [
     component: Recruits,
   },
   {
-    path: "/register/applicant",
+    path: "/applicants/new",
     component: ApplicantRegister,
     props: route => ({
       recruitmentId: Number(route.query.recruitmentId),
     }),
   },
   {
-    path: "/applications/:status",
+    path: "/application-forms/new",
     component: ApplicationRegister,
     props: route => ({
       recruitmentId: Number(route.query.recruitmentId),
-      status: status,
+      status: "new",
     }),
-    children: [
-      {
-        name: "edit",
-        path: "edit",
-      },
-    ],
+  },
+  {
+    path: "/application-forms/edit",
+    component: ApplicationRegister,
+    props: route => ({
+      recruitmentId: Number(route.query.recruitmentId),
+      status: "edit",
+    }),
   },
   {
     path: "/login",
@@ -65,7 +67,7 @@ const routes = [
     component: PasswordFindResult,
   },
   {
-    path: "/my-applications",
+    path: "/my-application-forms",
     component: MyApplications,
     beforeEnter: requireAuth,
   },
