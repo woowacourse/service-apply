@@ -53,6 +53,7 @@ class SelectionView(
 ) : VerticalLayout(), HasUrlParameter<Long> {
     private var recruitmentId = 0L
     private var evaluations = evaluationService.findAllByRecruitmentId(recruitmentId)
+    private var tabs = Tabs()
 
     private fun createTitle(): Component {
         return HorizontalLayout(H1(recruitmentService.getById(recruitmentId).title)).apply {
@@ -64,6 +65,7 @@ class SelectionView(
     private fun createContent(keyword: String = ""): Component {
         val tabsToGrids: LinkedHashMap<Tab, Component> = mapTabAndGrid(keyword)
         val (tabs, grids) = createTabComponents(tabsToGrids)
+        this.tabs = tabs
         tabs.setWidthFull()
         val selectedIndex: Int =
             VaadinService.getCurrentRequest().wrappedSession.getAttribute(INDEX_TAB_SESSION_KEY) as Int? ?: 0
@@ -138,7 +140,16 @@ class SelectionView(
 
     private fun createEvaluationButtonRenderer(): Renderer<EvaluationTargetResponse> {
         return ComponentRenderer<Component, EvaluationTargetResponse> { response ->
-            createPrimarySmallButton("평가하기") { EvaluationTargetFormDialog(evaluationTargetService, response.id) }
+            createPrimarySmallButton("평가하기") {
+                EvaluationTargetFormDialog(evaluationTargetService, response.id) {
+                    saveOnSession(INDEX_TAB_SESSION_KEY, tabs.selectedIndex)
+                    removeAll()
+                    add(
+                        createTitle(),
+                        createContent()
+                    )
+                }
+            }
         }
     }
 
