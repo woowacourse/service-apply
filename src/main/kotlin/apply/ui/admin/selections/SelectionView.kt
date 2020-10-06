@@ -51,8 +51,7 @@ class SelectionView(
     private val recruitmentItemService: RecruitmentItemService,
     private val evaluationService: EvaluationService,
     private val evaluationTargetService: EvaluationTargetService,
-    private val downloadService: DownloadService,
-    private val evaluationTargetService: EvaluationTargetService
+    private val downloadService: DownloadService
 ) : VerticalLayout(), HasUrlParameter<Long> {
     private var recruitmentId = 0L
     private var evaluations = evaluationService.findAllByRecruitmentId(recruitmentId)
@@ -110,7 +109,6 @@ class SelectionView(
                 evaluationTargetService.findAllWithApplicantByEvaluationIdAndKeyword(evaluation.id, keyword)
             tabsToPages[Tab(evaluation.title)] = createEvaluationTargetsGrid(evaluationTargetResponses)
         }
-
         return tabsToPages
     }
 
@@ -123,8 +121,7 @@ class SelectionView(
             addSortableDateColumn("생년월일", ApplicantResponse::birthday)
             addSortableDateTimeColumn("지원 일시") { it.applicationForm.submittedDateTime }
             addSortableColumn("부정 행위자") { if (it.isCheater) "O" else "X" }
-            addColumn(createButtonRenderer()).apply { isAutoWidth = true}
-            addColumn(createEvaluationButtonRenderer()).apply { isAutoWidth = true }
+            addColumn(createButtonRenderer()).apply { isAutoWidth = true }
             setItems(applicants)
         }
     }
@@ -136,8 +133,14 @@ class SelectionView(
             addSortableColumn("합계", EvaluationTargetResponse::totalScore)
             addSortableColumn("평가 상태", EvaluationTargetResponse::evaluationStatus)
             addSortableColumn("평가자", EvaluationTargetResponse::administratorId)
-            // TODO 평가 버튼 추가
+            addColumn(createEvaluationButtonRenderer()).apply { isAutoWidth = true }
             setItems(evaluationTargets)
+        }
+    }
+
+    private fun createEvaluationButtonRenderer(): Renderer<EvaluationTargetResponse> {
+        return ComponentRenderer<Component, EvaluationTargetResponse> { response ->
+            createPrimarySmallButton("평가하기") { EvaluationTargetFormDialog(evaluationTargetService, response.id) }
         }
     }
 
@@ -252,12 +255,5 @@ class SelectionView(
             createTitle(),
             createContent()
         )
-    }
-
-    private fun createEvaluationButtonRenderer(): Renderer<ApplicantResponse> {
-        return ComponentRenderer<Component, ApplicantResponse> { _ ->
-            // TODO: Evaluation Target id 받아오기
-            createPrimarySmallButton("평가하기") { EvaluationTargetFormDialog(evaluationTargetService, 1L) }
-        }
     }
 }

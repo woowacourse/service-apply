@@ -7,8 +7,8 @@ import apply.domain.evaluation.Evaluation
 import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.evaluationtarget.EvaluationAnswer
-import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.evaluationtarget.EvaluationAnswers
+import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
 import org.springframework.data.repository.findByIdOrNull
@@ -21,7 +21,6 @@ private const val DEFAULT_SCORE: Int = 0
 @Transactional
 @Service
 class EvaluationTargetService(
-    private val evaluationTargetRepository: EvaluationTargetRepository,
     private val evaluationRepository: EvaluationRepository,
     private val evaluationTargetRepository: EvaluationTargetRepository,
     private val evaluationItemRepository: EvaluationItemRepository,
