@@ -1,8 +1,10 @@
 package apply.ui.api
 
-import apply.application.SaveApplicationFormRequest
 import apply.application.ApplicationFormService
+import apply.application.SaveApplicationFormRequest
 import apply.application.UpdateApplicationFormRequest
+import apply.domain.applicant.Applicant
+import apply.security.LoginApplicant
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -18,9 +20,12 @@ class ApplicationFormRestController(
     private val applicationFormService: ApplicationFormService
 ) {
     @GetMapping
-    fun getForm(@RequestParam("recruitmentId") recruitment: Long): ResponseEntity<Any> {
+    fun getForm(
+        @RequestParam("recruitmentId") recruitment: Long,
+        @LoginApplicant applicant: Applicant
+    ): ResponseEntity<Any> {
         return try {
-            val form = applicationFormService.findForm(1L, recruitment)
+            val form = applicationFormService.findForm(applicant.id, recruitment)
             ResponseEntity.ok().body(form)
         } catch (e: IllegalArgumentException) {
             ResponseEntity.badRequest().body(e.message)
@@ -29,10 +34,11 @@ class ApplicationFormRestController(
 
     @PostMapping
     fun save(
-        @RequestBody saveApplicationFormRequest: SaveApplicationFormRequest
+        @RequestBody saveApplicationFormRequest: SaveApplicationFormRequest,
+        @LoginApplicant applicant: Applicant
     ): ResponseEntity<String> {
         return try {
-            applicationFormService.save(1L, saveApplicationFormRequest)
+            applicationFormService.save(applicant.id, saveApplicationFormRequest)
             ResponseEntity.ok().build()
         } catch (e: IllegalArgumentException) {
             ResponseEntity.badRequest().body(e.message)
@@ -42,10 +48,11 @@ class ApplicationFormRestController(
 
     @PutMapping
     fun update(
-        @RequestBody updateApplicationFormRequest: UpdateApplicationFormRequest
+        @RequestBody updateApplicationFormRequest: UpdateApplicationFormRequest,
+        @LoginApplicant applicant: Applicant
     ): ResponseEntity<String> {
         return try {
-            applicationFormService.update(1L, updateApplicationFormRequest)
+            applicationFormService.update(applicant.id, updateApplicationFormRequest)
             ResponseEntity.ok().build()
         } catch (e: IllegalArgumentException) {
             ResponseEntity.badRequest().body(e.message)
