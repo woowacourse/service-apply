@@ -4,7 +4,7 @@
     :start-date-time="startDateTime"
     :end-date-time="endDateTime"
     :buttonLabel="buttonLabel"
-    :activeButton="!submittable"
+    :activeButton="submittable"
     @click="onClickAdmission(recruitment.id)"
   />
 </template>
