@@ -1,32 +1,21 @@
 <template>
-  <div class="list-wrapper card">
-    <div class="flex space-between">
-      <div>
-        <div class="recruit-title">
-          <b>{{ recruitment.title }}</b>
-        </div>
-        <div class="recruit-duration">{{ startTime }} ~ {{ endTime }}</div>
-      </div>
-      <div class="button-wrapper">
-        <Button
-          class="enroll-button button"
-          @click="goEditApplicationForm"
-          :disabled="submitted"
-          :value="buttonLabel"
-        >
-        </Button>
-      </div>
-    </div>
-  </div>
+  <CommonItem
+    :title="recruitment.title"
+    :start-date-time="startDateTime"
+    :end-date-time="endDateTime"
+    :buttonLabel="buttonLabel"
+    :activeButton="submittable"
+    @click="goEditApplicationForm"
+  />
 </template>
 
 <script>
-import Button from "@/components/form/Button"
+import CommonItem from "@/components/CommonItem"
 import { parseLocalDateTime } from "@/utils/date"
 
 export default {
   components: {
-    Button,
+    CommonItem,
   },
   props: {
     recruitment: {
@@ -40,13 +29,19 @@ export default {
   },
   computed: {
     buttonLabel() {
-      return this.submitted ? "제출 완료" : "지원서 수정"
+      if (this.submitted) {
+        return "제출 완료"
+      }
+      return this.submittable ? "지원서 수정" : "기간 만료"
     },
-    startTime() {
-      return parseLocalDateTime(this.recruitment.startTime)
+    submittable() {
+      return !this.submitted && this.recruitment.recruitmentStatus === "RECRUITING"
     },
-    endTime() {
-      return parseLocalDateTime(this.recruitment.endTime)
+    startDateTime() {
+      return parseLocalDateTime(new Date(this.recruitment.startDateTime))
+    },
+    endDateTime() {
+      return parseLocalDateTime(new Date(this.recruitment.endDateTime))
     },
   },
   methods: {
@@ -59,65 +54,3 @@ export default {
   },
 }
 </script>
-
-<style>
-@media (max-width: 440px) {
-  .card {
-    height: 90px !important;
-  }
-
-  .button-wrapper {
-    line-height: 90px !important;
-  }
-
-  .list-wrapper {
-    height: 90px !important;
-  }
-}
-
-.card {
-  width: 100%;
-  height: 70px;
-  background-color: #ffffff;
-  border-radius: 3px;
-  display: inline-block;
-  margin: 5px 0 5px 0;
-  box-shadow: 0 0 7px rgba(0, 0, 0, 0.05);
-}
-
-.recruit-title {
-  padding: 10px 0px 5px 10px;
-  font-size: large;
-}
-
-.recruit-duration {
-  padding: 5px 0px 10px 10px;
-}
-
-.flex {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-}
-
-.list-wrapper {
-  display: flex;
-  height: 70px;
-}
-
-.space-between {
-  justify-content: space-between;
-}
-
-.enroll-button {
-  width: 120px;
-  height: 40px;
-  margin: 10px;
-  vertical-align: middle;
-}
-
-.button-wrapper {
-  margin-right: 12px;
-}
-</style>

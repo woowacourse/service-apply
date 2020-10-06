@@ -4,6 +4,7 @@ import apply.domain.applicant.ApplicantInformation
 import apply.domain.applicant.ApplicantRepository
 import apply.domain.applicant.ApplicantVerifyInformation
 import apply.domain.applicant.Gender
+import apply.domain.applicant.ResetPasswordRequest
 import apply.domain.applicant.exception.ApplicantValidateException
 import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormRepository
@@ -12,6 +13,7 @@ import apply.domain.cheater.CheaterRepository
 import apply.domain.recruitmentitem.Answer
 import apply.domain.recruitmentitem.Answers
 import apply.security.JwtTokenProvider
+import apply.utils.RandomPasswordGenerator
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
@@ -29,6 +31,7 @@ import support.createLocalDateTime
 
 private const val VALID_TOKEN = "SOME_VALID_TOKEN"
 private const val APPLICANT_ID = 1L
+private const val RANDOM_PASSWORD = "nEw_p@ssw0rd"
 
 @ExtendWith(MockitoExtension::class)
 internal class ApplicantServiceTest {
@@ -43,6 +46,9 @@ internal class ApplicantServiceTest {
 
     @Mock
     private lateinit var jwtTokenProvider: JwtTokenProvider
+
+    @Mock
+    private lateinit var passwordGenerator: RandomPasswordGenerator
 
     private lateinit var applicantService: ApplicantService
 
@@ -78,9 +84,18 @@ internal class ApplicantServiceTest {
         password = validApplicantRequest.password
     )
 
+    private val validApplicantPasswordFindRequest = ResetPasswordRequest(
+        name = validApplicantRequest.name,
+        email = validApplicantRequest.email,
+        birthday = validApplicantRequest.birthday
+    )
+
     private val inValidApplicantRequest = validApplicantRequest.copy(password = "invalid_password")
 
     private val inValidApplicantLoginRequest = validApplicantLoginRequest.copy(password = "invalid_password")
+
+    private val inValidApplicantPasswordFindRequest =
+        validApplicantPasswordFindRequest.copy(birthday = createLocalDate(1995, 4, 4))
 
     private val applicants = listOf(validApplicantRequest.toEntity(APPLICANT_ID))
 
@@ -89,7 +104,13 @@ internal class ApplicantServiceTest {
     @BeforeEach
     internal fun setUp() {
         applicantService =
-            ApplicantService(applicationFormRepository, applicantRepository, cheaterRepository, jwtTokenProvider)
+            ApplicantService(
+                applicationFormRepository,
+                applicantRepository,
+                cheaterRepository,
+                jwtTokenProvider,
+                passwordGenerator
+            )
     }
 
     @Test
@@ -163,6 +184,28 @@ internal class ApplicantServiceTest {
         ).willReturn(false)
 
         assertThatThrownBy { applicantService.generateTokenByLogin(inValidApplicantLoginRequest) }
+            .isInstanceOf(ApplicantValidateException::class.java)
+            .hasMessage("요청 정보가 기존 지원자 정보와 일치하지 않습니다")
+    }
+
+    @Test
+    fun `지원자의 비밀번호를 초기화한다`() {
+        given(
+            applicantRepository.findByNameAndEmailAndBirthday(
+                validApplicantPasswordFindRequest.name,
+                validApplicantPasswordFindRequest.email,
+                validApplicantPasswordFindRequest.birthday
+            )
+        ).willReturn(validApplicantRequest.toEntity(APPLICANT_ID))
+
+        given(passwordGenerator.generate()).willReturn(RANDOM_PASSWORD)
+
+        assertThat(applicantService.resetPassword(validApplicantPasswordFindRequest)).isEqualTo(RANDOM_PASSWORD)
+    }
+
+    @Test
+    fun `비밀번호를 초기화를 위한 검증 데이터가 올바르지 않을시 예외가 발생한다`() {
+        assertThatThrownBy { applicantService.resetPassword(inValidApplicantPasswordFindRequest) }
             .isInstanceOf(ApplicantValidateException::class.java)
             .hasMessage("요청 정보가 기존 지원자 정보와 일치하지 않습니다")
     }

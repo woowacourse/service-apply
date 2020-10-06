@@ -25,3 +25,6 @@ export const fetchLogin = ({ name, email, birthday, password }) => {
     }),
   )
 }
+export const fetchPasswordFind = ({ name, email, birthday }) => {
+  return axios.post("/api/applicants/reset-password", { name, email, birthday })
+}

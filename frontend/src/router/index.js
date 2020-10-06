@@ -5,6 +5,7 @@ import ApplicantRegister from "@/views/ApplicantRegister"
 import ApplicationRegister from "@/views/ApplicationRegister"
 import Login from "@/views/Login"
 import PasswordFind from "@/views/PasswordFind"
+import PasswordFindResult from "@/views/PasswordFindResult"
 import MyApplications from "@/views/MyApplications"
 import store from "@/store"
 
@@ -39,14 +40,15 @@ const routes = [
     component: ApplicationRegister,
     props: route => ({
       recruitmentId: Number(route.query.recruitmentId),
+      status: "new",
     }),
   },
   {
     path: "/application-forms/edit",
-    name: "edit",
     component: ApplicationRegister,
     props: route => ({
       recruitmentId: Number(route.query.recruitmentId),
+      status: "edit",
     }),
   },
   {
@@ -56,6 +58,13 @@ const routes = [
   {
     path: "/find",
     component: PasswordFind,
+  },
+  {
+    path: "/find/result",
+    props: route => ({
+      email: route.query.email,
+    }),
+    component: PasswordFindResult,
   },
   {
     path: "/my-application-forms",

@@ -1,18 +1,16 @@
 package apply.domain.evaluationItem
 
+import support.domain.BaseEntity
 import javax.persistence.Column
 import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
 
 @Entity
 class EvaluationItem(
     @Column(nullable = false)
-    val evaluationId: Long,
+    val title: String,
 
     @Column(nullable = false)
-    val title: String,
+    val description: String,
 
     @Column(nullable = false)
     val maximumScore: Int,
@@ -21,9 +19,7 @@ class EvaluationItem(
     val position: Int = 0,
 
     @Column(nullable = false)
-    val description: String,
+    val evaluationId: Long,
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0L
-)
+    id: Long = 0L
+) : BaseEntity(id)

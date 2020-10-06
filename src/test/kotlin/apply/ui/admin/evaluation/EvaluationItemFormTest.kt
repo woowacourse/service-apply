@@ -1,18 +1,11 @@
 package apply.ui.admin.evaluation
 
+import apply.EVALUATION_ITEM_POSITION
+import apply.EVALUATION_ITEM_TITLE
+import apply.createEvaluationItemForm
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
-
-private fun createEvaluationItemForm(
-    title: String = "README.md 파일에 기능 목록이 추가되어 있는가?",
-    maximumScore: Int = 2,
-    position: Int = 1,
-    description: String = "[리뷰 절차]\n" +
-        "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse"
-): EvaluationItemForm {
-    return EvaluationItemForm(title, maximumScore, position, description)
-}
 
 internal class EvaluationItemFormTest {
     @Test
@@ -20,9 +13,8 @@ internal class EvaluationItemFormTest {
         val actual = createEvaluationItemForm().bindOrNull()
         assertThat(actual).isNotNull
         assertAll(
-            { assertThat(actual!!.title).isEqualTo("README.md 파일에 기능 목록이 추가되어 있는가?") },
-            { assertThat(actual!!.position).isEqualTo(1) },
-            { assertThat(actual!!.maximumScore).isEqualTo(2) }
+            { assertThat(actual!!.title).isEqualTo(EVALUATION_ITEM_TITLE) },
+            { assertThat(actual!!.position).isEqualTo(EVALUATION_ITEM_POSITION) }
         )
     }
 

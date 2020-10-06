@@ -56,3 +56,17 @@ export const fetchForm = ({ token, recruitmentId }) =>
         },
       }),
     )
+
+export const saveForm = ({ token, data }) =>
+  axios.post(`${BASE_URL}`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+
+export const updateForm = ({ token, data }) =>
+  axios.put(`${BASE_URL}`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })

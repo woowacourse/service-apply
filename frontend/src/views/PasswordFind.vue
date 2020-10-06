@@ -37,9 +37,11 @@
 <script>
 import { Form, Button, TextField, BirthField } from "@/components/form"
 import { login } from "@/utils/validation"
+import * as Api from "@/api"
+import * as DateUtil from "@/utils/date"
 
 export default {
-  name: "Login",
+  name: "PasswordFind",
   components: {
     Form,
     Button,
@@ -61,8 +63,17 @@ export default {
     validBirth: false,
   }),
   methods: {
-    submit() {
-      //TODO 비밀번호 찾기 API
+    async submit() {
+      try {
+        await Api.fetchPasswordFind({
+          name: this.name,
+          email: this.email,
+          birthday: DateUtil.formatLocalDate(this.birth),
+        })
+        this.$router.push({ path: `/find/result`, query: { email: this.email } })
+      } catch (e) {
+        alert(e.response.data)
+      }
     },
     back() {
       this.$router.go(-1)
