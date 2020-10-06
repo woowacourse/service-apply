@@ -4,10 +4,12 @@ import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitmentitem.RecruitmentItem
 import apply.domain.recruitmentitem.RecruitmentItemRepository
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import support.createLocalDateTime
+import support.toSort
 import javax.annotation.PostConstruct
 
 @Transactional
@@ -45,6 +47,17 @@ class RecruitmentService(
 
     fun findAll(): List<Recruitment> {
         return recruitmentRepository.findAll()
+    }
+
+    fun findAll(offset: Int, limit: Int, orders: Map<String, String>): List<Recruitment> {
+        val page = offset / limit
+        return recruitmentRepository
+            .findAll(PageRequest.of(page, limit, orders.toSort()))
+            .content
+    }
+
+    fun count(): Long {
+        return recruitmentRepository.count()
     }
 
     fun findAllNotHidden(): List<RecruitmentResponse> {

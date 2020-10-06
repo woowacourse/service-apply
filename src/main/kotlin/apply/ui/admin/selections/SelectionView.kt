@@ -27,9 +27,9 @@ import com.vaadin.flow.router.Route
 import com.vaadin.flow.router.WildcardParameter
 import com.vaadin.flow.server.StreamResource
 import com.vaadin.flow.server.VaadinSession
-import support.views.addSortableColumn
-import support.views.addSortableDateColumn
-import support.views.addSortableDateTimeColumn
+import support.views.addInMemorySortableColumn
+import support.views.addInMemorySortableDateColumn
+import support.views.addInMemorySortableDateTimeColumn
 import support.views.createNormalButton
 import support.views.createPrimarySmallButton
 import support.views.createSearchBar
@@ -78,15 +78,15 @@ class SelectionView(
 
     private fun createGrid(applicants: List<ApplicantResponse>): Component {
         return Grid<ApplicantResponse>(10).apply {
-            addSortableColumn("이름", ApplicantResponse::name)
-            addSortableColumn("이메일", ApplicantResponse::email)
-            addSortableColumn("전화번호", ApplicantResponse::phoneNumber)
-            addSortableColumn("성별") { it.gender.title }
-            addSortableDateColumn("생년월일", ApplicantResponse::birthday)
-            addSortableDateTimeColumn("지원 일시") {
+            addInMemorySortableColumn("이름", ApplicantResponse::name)
+            addInMemorySortableColumn("이메일", ApplicantResponse::email)
+            addInMemorySortableColumn("전화번호", ApplicantResponse::phoneNumber)
+            addInMemorySortableColumn("성별") { it.gender.title }
+            addInMemorySortableDateColumn("생년월일", ApplicantResponse::birthday)
+            addInMemorySortableDateTimeColumn("지원 일시") {
                 it.applicationForm.submittedDateTime
             }
-            addSortableColumn("부정 행위자") { if (it.isCheater) "O" else "X" }
+            addInMemorySortableColumn("부정 행위자") { if (it.isCheater) "O" else "X" }
             addColumn(createButtonRenderer()).apply { isAutoWidth = true }
             // TODO: 버튼 컴포넌트 위치 옮기기
             addColumn(createEvaluationButtonRenderer()).apply { isAutoWidth = true }

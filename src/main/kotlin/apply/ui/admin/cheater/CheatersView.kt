@@ -16,8 +16,8 @@ import com.vaadin.flow.component.select.Select
 import com.vaadin.flow.data.renderer.ComponentRenderer
 import com.vaadin.flow.data.renderer.Renderer
 import com.vaadin.flow.router.Route
-import support.views.addSortableColumn
-import support.views.addSortableDateTimeColumn
+import support.views.addInMemorySortableColumn
+import support.views.addInMemorySortableDateTimeColumn
 import support.views.createDeleteButtonWithDialog
 import support.views.createPrimaryButton
 import support.views.createSearchBar
@@ -68,9 +68,9 @@ class CheatersView(
 
     private fun createCheaterGrid(): Grid<CheaterResponse> {
         return Grid<CheaterResponse>(10).apply {
-            addSortableColumn("이름") { it.applicant.name }
-            addSortableColumn("이메일") { it.applicant.email }
-            addSortableDateTimeColumn("등록일", CheaterResponse::createdDateTime)
+            addInMemorySortableColumn("이름") { it.applicant.name }
+            addInMemorySortableColumn("이메일") { it.applicant.email }
+            addInMemorySortableDateTimeColumn("등록일", CheaterResponse::createdDateTime)
             addColumn(createDeleteButtonRenderer()).apply { isAutoWidth = true }
             setItems(cheaterService.findAll())
         }
