@@ -1,6 +1,7 @@
 package apply.application
 
 import apply.domain.applicant.ResetPasswordRequest
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.mail.MailProperties
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.MimeMessageHelper
@@ -15,12 +16,15 @@ class MailService(
     private val mailProperties: MailProperties,
     private val templateEngine: ISpringTemplateEngine
 ) {
+    @Value("\${spring.frontend.url}")
+    lateinit var url: String
+
     @Async
     fun sendPasswordResetMail(request: ResetPasswordRequest, newPassword: String) {
         val context = Context()
         context.setVariable("name", request.name)
         context.setVariable("password", newPassword)
-        context.setVariable("url", "http://localhost:8081")
+        context.setVariable("url", url)
 
         val message = mailSender.createMimeMessage()
         val messageHelper = MimeMessageHelper(message, "UTF-8")
