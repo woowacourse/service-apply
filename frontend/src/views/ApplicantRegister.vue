@@ -149,7 +149,7 @@ export default {
       try {
         await this.fetchRegisterAndSetApplicantInfo(this.parseApplicantInfo())
         this.$router.push({
-          path: `/register/application`,
+          path: `/applications/new`,
           query: {
             recruitmentId: this.recruitmentId,
           },
