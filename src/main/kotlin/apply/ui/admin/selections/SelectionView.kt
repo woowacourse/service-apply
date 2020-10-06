@@ -31,7 +31,6 @@ import com.vaadin.flow.router.HasUrlParameter
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.router.WildcardParameter
 import com.vaadin.flow.server.StreamResource
-import com.vaadin.flow.server.VaadinService
 import com.vaadin.flow.server.VaadinSession
 import support.views.addSortableColumn
 import support.views.addSortableDateColumn
@@ -54,6 +53,7 @@ class SelectionView(
     private var recruitmentId = 0L
     private var evaluations = evaluationService.findAllByRecruitmentId(recruitmentId)
     private var tabs = Tabs()
+    private var selectedTabIndex = 0
 
     private fun createTitle(): Component {
         return HorizontalLayout(H1(recruitmentService.getById(recruitmentId).title)).apply {
@@ -67,12 +67,10 @@ class SelectionView(
         val (tabs, grids) = createTabComponents(tabsToGrids)
         this.tabs = tabs
         tabs.setWidthFull()
-        val selectedIndex: Int =
-            VaadinService.getCurrentRequest().wrappedSession.getAttribute(INDEX_TAB_SESSION_KEY) as Int? ?: 0
 
         val menu = HorizontalLayout(
             createSearchBar {
-                saveOnSession(INDEX_TAB_SESSION_KEY, tabs.selectedIndex)
+                selectedTabIndex = tabs.selectedIndex
                 removeAll()
                 add(
                     createTitle(),
@@ -85,12 +83,10 @@ class SelectionView(
                 createDownloadButton()
             )
         ).apply {
-            tabs.selectedIndex = selectedIndex
+            tabs.selectedIndex = selectedTabIndex
             setWidthFull()
             justifyContentMode = FlexComponent.JustifyContentMode.BETWEEN
         }
-
-        VaadinService.getCurrentRequest().wrappedSession.removeAttribute(INDEX_TAB_SESSION_KEY)
 
         return VerticalLayout(
             menu, grids
@@ -142,7 +138,7 @@ class SelectionView(
         return ComponentRenderer<Component, EvaluationTargetResponse> { response ->
             createPrimarySmallButton("평가하기") {
                 EvaluationTargetFormDialog(evaluationTargetService, response.id) {
-                    saveOnSession(INDEX_TAB_SESSION_KEY, tabs.selectedIndex)
+                    selectedTabIndex = tabs.selectedIndex
                     removeAll()
                     add(
                         createTitle(),
@@ -171,15 +167,11 @@ class SelectionView(
         return Pair(tabs, pages)
     }
 
-    private fun saveOnSession(key: String, value: Int) {
-        VaadinService.getCurrentRequest().wrappedSession.setAttribute(key, value)
-    }
-
     private fun createLoadButton(tabs: Tabs): Button {
         return createPrimaryButton("평가자 불러오기") {
             val evaluation = evaluations.first { it.title == tabs.selectedTab.label }
             evaluationTargetService.load(evaluation.id)
-            saveOnSession(INDEX_TAB_SESSION_KEY, tabs.selectedIndex)
+            selectedTabIndex = tabs.selectedIndex
             removeAll()
             add(
                 createTitle(),
