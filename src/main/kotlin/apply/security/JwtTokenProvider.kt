@@ -28,13 +28,13 @@ class JwtTokenProvider(
             .compact()
     }
 
-    fun getPayload(token: String): String {
+    fun getSubject(token: String): String {
         return getClaimsJws(token)
             .body
             .subject
     }
 
-    fun validateToken(token: String): Boolean {
+    fun isValidToken(token: String): Boolean {
         return try {
             getClaimsJws(token)
             true

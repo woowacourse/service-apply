@@ -14,6 +14,8 @@ import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.willDoNothing
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.context.annotation.ComponentScan
+import org.springframework.context.annotation.FilterType
 import org.springframework.http.MediaType
 import org.springframework.test.context.TestConstructor
 import org.springframework.test.web.servlet.MockMvc
@@ -29,7 +31,13 @@ private const val VALID_TOKEN = "SOME_VALID_TOKEN"
 private const val RANDOM_PASSWORD = "nEw_p@ssw0rd"
 
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-@WebMvcTest(controllers = [ApplicantRestController::class])
+@WebMvcTest(
+    controllers = [ApplicantRestController::class],
+    includeFilters = [
+        ComponentScan.Filter(type = FilterType.REGEX, pattern = ["apply.security.*"]),
+        ComponentScan.Filter(type = FilterType.REGEX, pattern = ["apply.config.*"])
+    ]
+)
 internal class ApplicantRestControllerTest(
     private val objectMapper: ObjectMapper
 ) {
