@@ -80,7 +80,7 @@ class ApplicationFormService(
             id = form.id,
             recruitmentId = form.recruitmentId,
             referenceUrl = form.referenceUrl,
-            isSubmitted = form.isSubmitted,
+            submitted = form.submitted,
             answers = answers,
             createdDateTime = form.createdDateTime,
             modifiedDateTime = form.modifiedDateTime,

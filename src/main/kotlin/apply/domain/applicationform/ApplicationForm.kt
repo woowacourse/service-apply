@@ -27,7 +27,7 @@ class ApplicationForm(
     val id: Long = 0L
 ) {
     @Column(nullable = false)
-    var isSubmitted: Boolean = false
+    var submitted: Boolean = false
 
     @Column(nullable = false)
     var createdDateTime: LocalDateTime = LocalDateTime.now()
@@ -48,7 +48,7 @@ class ApplicationForm(
         modifiedDateTime: LocalDateTime,
         submittedDateTime: LocalDateTime?
     ) : this(applicantId, recruitmentId, referenceUrl, answers) {
-        this.isSubmitted = submitted
+        this.submitted = submitted
         this.createdDateTime = createdDateTime
         this.modifiedDateTime = modifiedDateTime
         this.submittedDateTime = submittedDateTime
@@ -65,14 +65,14 @@ class ApplicationForm(
         answers: Answers,
         id: Long
     ) : this(applicantId, recruitmentId, referenceUrl, answers, id) {
-        this.isSubmitted = submitted
+        this.submitted = submitted
         this.createdDateTime = createdDateTime
         this.modifiedDateTime = modifiedDateTime
         this.submittedDateTime = submittedDateTime
     }
 
     fun update(referenceUrl: String, answers: Answers) {
-        require(!this.isSubmitted) {
+        require(!this.submitted) {
             "이미 제출된 지원서입니다. 수정할 수 없습니다."
         }
         this.referenceUrl = referenceUrl
@@ -81,7 +81,7 @@ class ApplicationForm(
     }
 
     fun submit() {
-        isSubmitted = true
+        submitted = true
         submittedDateTime = LocalDateTime.now()
     }
 }

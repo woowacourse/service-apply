@@ -42,7 +42,7 @@ data class ApplicationFormResponse(
     val id: Long,
     val recruitmentId: Long,
     val referenceUrl: String,
-    val isSubmitted: Boolean,
+    val submitted: Boolean,
     val answers: List<AnswerResponse>,
     val createdDateTime: LocalDateTime,
     val modifiedDateTime: LocalDateTime,
