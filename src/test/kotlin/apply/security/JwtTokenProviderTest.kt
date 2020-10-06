@@ -4,7 +4,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 private const val PAYLOAD = "email@email.com"
-private const val NOT_VALID_TOKEN = "NOT_VALID_TOKEN"
+private const val NOT_VALID_TOKEN = ""
 private const val NEGATIVE_VALIDITY_TIME = -10L
 
 internal class JwtTokenProviderTest {
@@ -13,7 +13,7 @@ internal class JwtTokenProviderTest {
         val jwtTokenProvider = JwtTokenProvider()
         val token = jwtTokenProvider.createToken(PAYLOAD)
 
-        assertThat(jwtTokenProvider.getPayload(token)).isEqualTo(PAYLOAD)
+        assertThat(jwtTokenProvider.getSubject(token)).isEqualTo(PAYLOAD)
     }
 
     @Test
@@ -21,13 +21,13 @@ internal class JwtTokenProviderTest {
         val jwtTokenProvider = JwtTokenProvider(expirationInMilliseconds = NEGATIVE_VALIDITY_TIME)
         val token = jwtTokenProvider.createToken(PAYLOAD)
 
-        assertThat(jwtTokenProvider.validateToken(token)).isFalse()
+        assertThat(jwtTokenProvider.isValidToken(token)).isFalse()
     }
 
     @Test
     fun `올바르지 않은 토큰의 유효성 검사가 실패한다`() {
         val jwtTokenProvider = JwtTokenProvider()
 
-        assertThat(jwtTokenProvider.validateToken(NOT_VALID_TOKEN)).isFalse()
+        assertThat(jwtTokenProvider.isValidToken(NOT_VALID_TOKEN)).isFalse()
     }
 }
