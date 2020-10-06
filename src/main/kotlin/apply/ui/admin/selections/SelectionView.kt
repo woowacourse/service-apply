@@ -3,6 +3,7 @@ package apply.ui.admin.selections
 import apply.application.ApplicantResponse
 import apply.application.ApplicantService
 import apply.application.DownloadService
+import apply.application.EvaluationTargetService
 import apply.application.RecruitmentItemService
 import apply.application.RecruitmentService
 import apply.domain.applicationform.ApplicationForm
@@ -39,7 +40,8 @@ class SelectionView(
     private val applicantService: ApplicantService,
     private val recruitmentService: RecruitmentService,
     private val recruitmentItemService: RecruitmentItemService,
-    private val downloadService: DownloadService
+    private val downloadService: DownloadService,
+    private val evaluationTargetService: EvaluationTargetService
 ) : VerticalLayout(), HasUrlParameter<Long> {
     private var recruitmentId: Long = 0L
 
@@ -85,9 +87,9 @@ class SelectionView(
                 it.applicationForm.submittedDateTime
             }
             addSortableColumn("부정 행위자") { if (it.isCheater) "O" else "X" }
-            addColumn(createButtonRenderer()).apply {
-                isAutoWidth = true
-            }
+            addColumn(createButtonRenderer()).apply { isAutoWidth = true }
+            // TODO: 버튼 컴포넌트 위치 옮기기
+            addColumn(createEvaluationButtonRenderer()).apply { isAutoWidth = true }
             setItems(applicants)
         }
     }
@@ -154,5 +156,12 @@ class SelectionView(
             createMenu(),
             createGrid(applicantService.findAllByRecruitmentId(recruitmentId))
         )
+    }
+
+    private fun createEvaluationButtonRenderer(): Renderer<ApplicantResponse> {
+        return ComponentRenderer<Component, ApplicantResponse> { _ ->
+            // TODO: Evaluation Target id 받아오기
+            createPrimarySmallButton("평가하기") { EvaluationTargetFormDialog(evaluationTargetService, 1L) }
+        }
     }
 }
