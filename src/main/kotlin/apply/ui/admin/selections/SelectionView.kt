@@ -42,8 +42,6 @@ import support.views.createPrimarySmallButton
 import support.views.createSearchBar
 import support.views.createSuccessButton
 
-const val INDEX_TAB_SESSION_KEY: String = "indexTab"
-
 @Route(value = "admin/selections", layout = BaseLayout::class)
 class SelectionView(
     private val applicantService: ApplicantService,
@@ -255,5 +253,9 @@ class SelectionView(
             createTitle(),
             createContent()
         )
+    }
+
+    companion object {
+        const val INDEX_TAB_SESSION_KEY: String = "indexTab"
     }
 }
