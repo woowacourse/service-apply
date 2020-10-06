@@ -1,6 +1,6 @@
 <template>
   <div class="recruits">
-    <div class="recruits-box">
+    <Box>
       <ul class="tab-list">
         <li v-for="tab in tabList" :key="tab.name" class="tab-item">
           <router-link
@@ -18,16 +18,21 @@
         :key="recruitment.id"
         :recruitment="recruitment"
       />
-    </div>
+    </Box>
   </div>
 </template>
 
 <script>
 import * as RecruitmentApi from "@/api/recruitments"
 import RecruitItem from "@/components/RecruitItem"
+import Box from "@/components/Box"
 
 export default {
   name: "Recruits",
+  components: {
+    RecruitItem,
+    Box,
+  },
   data: () => ({
     tabList: [
       {
@@ -49,9 +54,6 @@ export default {
     ],
     recruits: [],
   }),
-  components: {
-    RecruitItem,
-  },
   computed: {
     filteredRecruits() {
       switch (this.$route.query.status) {
@@ -79,23 +81,6 @@ export default {
   flex-direction: column;
   align-items: center;
   user-select: none;
-}
-
-.recruits-box {
-  width: 800px;
-  max-width: 800px;
-  padding: 20px;
-  margin: 15px;
-  border-radius: 3px;
-  background: #f1f2f6;
-  box-shadow: 0 0 7px rgba(0, 0, 0, 0.05);
-}
-
-@media (max-width: 800px) {
-  .recruits-box {
-    width: 100%;
-    margin: 0;
-  }
 }
 
 .tab-list {
