@@ -8,7 +8,7 @@ import apply.domain.evaluationtarget.EvaluationAnswers
 import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.ui.admin.evaluation.EvaluationItemForm
-import apply.ui.admin.selections.EvaluationAnswerForm
+import apply.ui.admin.selections.EvaluationItemScoreForm
 
 const val EVALUATION_ID = 1L
 const val EVALUATION_TITLE1 = "프리코스 대상자 선발"
@@ -87,7 +87,7 @@ fun createEvaluationAnswerForm(
     maximumScore: Int = MAXIMUM_SCORE,
     score: Int = SCORE,
     evaluationItemId: Long = EVALUATION_ITEM_ID
-): EvaluationAnswerForm {
-    return EvaluationAnswerForm(title, description, maximumScore)
+): EvaluationItemScoreForm {
+    return EvaluationItemScoreForm(title, description, maximumScore)
         .apply { fill(EvaluationItemScoreData(score, evaluationItemId)) }
 }

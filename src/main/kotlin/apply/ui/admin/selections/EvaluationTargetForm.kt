@@ -7,15 +7,16 @@ import com.vaadin.flow.component.select.Select
 import com.vaadin.flow.component.textfield.IntegerField
 import com.vaadin.flow.component.textfield.TextArea
 import support.views.BindingFormLayout
+import support.views.createItemSelect
 
 private const val FIXED_ADDED_COMPONENT_COUNT = 3
 
 class EvaluationTargetForm() : BindingFormLayout<EvaluationTargetData>(EvaluationTargetData::class) {
-    private val evaluationAnswers: MutableList<EvaluationAnswerForm> = mutableListOf()
+    private val evaluationItemScores: MutableList<EvaluationItemScoreForm> = mutableListOf()
     private val note: TextArea = TextArea("기타 특이사항")
-    private val evaluationStatus: Select<EvaluationStatus> = Select(*EvaluationStatus.values()).apply {
+    private val evaluationStatus: Select<EvaluationStatus> = createItemSelect<EvaluationStatus>("평가 상태").apply {
+        setItems(*EvaluationStatus.values())
         setItemLabelGenerator { it.toText() }
-        label = "평가 상태"
     }
     private val sumOfScore: IntegerField = IntegerField("합계").apply { isReadOnly = true }
 
@@ -27,15 +28,15 @@ class EvaluationTargetForm() : BindingFormLayout<EvaluationTargetData>(Evaluatio
 
     constructor(evaluationItems: List<EvaluationItemResponse>) : this() {
         evaluationItems.forEach {
-            val answerForm = EvaluationAnswerForm(it.title, it.description, it.maximumScore).apply {
+            val answerForm = EvaluationItemScoreForm(it.title, it.description, it.maximumScore).apply {
                 setColspan(this, 2)
             }
-            evaluationAnswers.add(answerForm)
+            evaluationItemScores.add(answerForm)
             addComponentAtIndex(getIndexOfLastAnswer(), answerForm)
         }
     }
 
-    private fun sumOfScore() = evaluationAnswers.map { it.score.value }.sum()
+    private fun sumOfScore() = evaluationItemScores.map { it.score.value }.sum()
 
     private fun EvaluationStatus.toText() =
         when (this) {
@@ -49,8 +50,8 @@ class EvaluationTargetForm() : BindingFormLayout<EvaluationTargetData>(Evaluatio
 
     override fun bindOrNull(): EvaluationTargetData? {
         val result = bindDefaultOrNull()
-        val answers = evaluationAnswers.mapNotNull { it.bindOrNull() }
-        if (evaluationAnswers.size != answers.size) {
+        val answers = evaluationItemScores.mapNotNull { it.bindOrNull() }
+        if (evaluationItemScores.size != answers.size) {
             return null
         }
         return result?.apply { evaluationItemScores = answers }
@@ -58,7 +59,7 @@ class EvaluationTargetForm() : BindingFormLayout<EvaluationTargetData>(Evaluatio
 
     override fun fill(data: EvaluationTargetData) {
         fillDefault(data)
-        (evaluationAnswers zip data.evaluationItemScores).forEach {
+        (evaluationItemScores zip data.evaluationItemScores).forEach {
             it.first.apply {
                 fill(it.second)
                 setScoreChangeEvent { sumOfScore.value = sumOfScore() }

@@ -6,9 +6,10 @@ import com.vaadin.flow.component.textfield.TextField
 import dev.mett.vaadin.tooltip.Tooltips
 import dev.mett.vaadin.tooltip.config.TooltipConfiguration
 import support.views.BindingIdentityFormLayout
+import support.views.createIntSelect
 
-class EvaluationAnswerForm() : BindingIdentityFormLayout<EvaluationItemScoreData>(EvaluationItemScoreData::class) {
-    val score: Select<Int> = Select(0)
+class EvaluationItemScoreForm() : BindingIdentityFormLayout<EvaluationItemScoreData>(EvaluationItemScoreData::class) {
+    val score: Select<Int> = createIntSelect(max = 0)
     private val title: TextField = TextField().apply { isReadOnly = true }
 
     init {
