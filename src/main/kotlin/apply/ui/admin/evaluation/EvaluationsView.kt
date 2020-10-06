@@ -15,7 +15,7 @@ import com.vaadin.flow.data.renderer.Renderer
 import com.vaadin.flow.router.Route
 import support.views.EDIT_VALUE
 import support.views.NEW_VALUE
-import support.views.addSortableColumn
+import support.views.addInMemorySortableColumn
 import support.views.createDeleteButtonWithDialog
 import support.views.createPrimaryButton
 import support.views.createPrimarySmallButton
@@ -46,9 +46,9 @@ class EvaluationsView(private val evaluationService: EvaluationService) : Vertic
 
     private fun createGrid(): Component {
         return Grid<EvaluationResponse>(10).apply {
-            addSortableColumn("평가명", EvaluationResponse::title)
-            addSortableColumn("모집명", EvaluationResponse::recruitmentTitle)
-            addSortableColumn("이전 평가명", EvaluationResponse::beforeEvaluationTitle)
+            addInMemorySortableColumn("평가명", EvaluationResponse::title)
+            addInMemorySortableColumn("모집명", EvaluationResponse::recruitmentTitle)
+            addInMemorySortableColumn("이전 평가명", EvaluationResponse::beforeEvaluationTitle)
             addColumn(createEditAndDeleteButton()).apply { isAutoWidth = true }
             setItems(evaluationService.findAllWithRecruitment())
         }

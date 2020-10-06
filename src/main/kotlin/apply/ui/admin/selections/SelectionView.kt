@@ -30,9 +30,9 @@ import com.vaadin.flow.router.BeforeEvent
 import com.vaadin.flow.router.HasUrlParameter
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.router.WildcardParameter
-import support.views.addSortableColumn
-import support.views.addSortableDateColumn
-import support.views.addSortableDateTimeColumn
+import support.views.addInMemorySortableColumn
+import support.views.addInMemorySortableDateColumn
+import support.views.addInMemorySortableDateTimeColumn
 import support.views.createNormalButton
 import support.views.createPrimaryButton
 import support.views.createPrimarySmallButton
@@ -104,13 +104,15 @@ class SelectionView(
 
     private fun createTotalApplicantsGrid(applicants: List<ApplicantAndFormResponse>): Component {
         return Grid<ApplicantAndFormResponse>(10).apply {
-            addSortableColumn("이름", ApplicantAndFormResponse::name)
-            addSortableColumn("이메일", ApplicantAndFormResponse::email)
-            addSortableColumn("전화번호", ApplicantAndFormResponse::phoneNumber)
-            addSortableColumn("성별") { it.gender.title }
-            addSortableDateColumn("생년월일", ApplicantAndFormResponse::birthday)
-            addSortableDateTimeColumn("지원 일시") { it.applicationForm.submittedDateTime }
-            addSortableColumn("부정 행위자") { if (it.isCheater) "O" else "X" }
+            addInMemorySortableColumn("이름", ApplicantAndFormResponse::name)
+            addInMemorySortableColumn("이메일", ApplicantAndFormResponse::email)
+            addInMemorySortableColumn("전화번호", ApplicantAndFormResponse::phoneNumber)
+            addInMemorySortableColumn("성별") { it.gender.title }
+            addInMemorySortableDateColumn("생년월일", ApplicantAndFormResponse::birthday)
+            addInMemorySortableDateTimeColumn("지원 일시") {
+                it.applicationForm.submittedDateTime
+            }
+            addInMemorySortableColumn("부정 행위자") { if (it.isCheater) "O" else "X" }
             addColumn(createButtonRenderer()).apply { isAutoWidth = true }
             setItems(applicants)
         }
@@ -130,11 +132,11 @@ class SelectionView(
 
     private fun createEvaluationTargetsGrid(evaluationTargets: List<EvaluationTargetResponse>): Component {
         return Grid<EvaluationTargetResponse>(10).apply {
-            addSortableColumn("이름", EvaluationTargetResponse::name)
-            addSortableColumn("이메일", EvaluationTargetResponse::email)
-            addSortableColumn("합계", EvaluationTargetResponse::totalScore)
-            addSortableColumn("평가 상태", EvaluationTargetResponse::evaluationStatus)
-            addSortableColumn("평가자", EvaluationTargetResponse::administratorId)
+            addInMemorySortableColumn("이름", EvaluationTargetResponse::name)
+            addInMemorySortableColumn("이메일", EvaluationTargetResponse::email)
+            addInMemorySortableColumn("합계", EvaluationTargetResponse::totalScore)
+            addInMemorySortableColumn("평가 상태", EvaluationTargetResponse::evaluationStatus)
+            addInMemorySortableColumn("평가자", EvaluationTargetResponse::administratorId)
             addColumn(createEvaluationButtonRenderer()).apply { isAutoWidth = true }
             setItems(evaluationTargets)
         }
