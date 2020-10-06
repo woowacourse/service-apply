@@ -122,6 +122,18 @@ class SelectionView(
         }
     }
 
+    private fun createButtonRenderer(): Renderer<ApplicantResponse> {
+        return ComponentRenderer<Component, ApplicantResponse> { applicant ->
+            createPrimarySmallButton("지원서") {
+                val dialog = Dialog()
+                dialog.add(*createRecruitmentItems(applicant.applicationForm))
+                dialog.width = "800px"
+                dialog.height = "90%"
+                dialog.open()
+            }
+        }
+    }
+
     private fun createEvaluationTargetsGrid(evaluationTargets: List<EvaluationTargetResponse>): Component {
         return Grid<EvaluationTargetResponse>(10).apply {
             addSortableColumn("이름", EvaluationTargetResponse::name)
@@ -195,18 +207,6 @@ class SelectionView(
         }
     }
 
-    private fun createButtonRenderer(): Renderer<ApplicantResponse> {
-        return ComponentRenderer<Component, ApplicantResponse> { applicant ->
-            createPrimarySmallButton("지원서") {
-                val dialog = Dialog()
-                dialog.add(*createRecruitmentItems(applicant.applicationForm))
-                dialog.width = "800px"
-                dialog.height = "90%"
-                dialog.open()
-            }
-        }
-    }
-
     private fun createRecruitmentItems(applicationForm: ApplicationForm): Array<Component> {
         val answers = applicationForm.answers
             .items
@@ -256,9 +256,5 @@ class SelectionView(
             createTitle(),
             createContent()
         )
-    }
-
-    companion object {
-        const val INDEX_TAB_SESSION_KEY: String = "indexTab"
     }
 }
