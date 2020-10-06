@@ -17,94 +17,7 @@ export const fetchMyApplicationForms = token => {
             referenceUrl: "https://www.google.com",
             submitted: false,
             recruitmentId: 5,
-            answers: {
-              items: [
-                {
-                  contents: "스타트업을 하고 싶습니다.",
-                  recruitmentItemId: 1,
-                },
-                {
-                  contents: "책임감",
-                  recruitmentItemId: 2,
-                },
-              ],
-            },
-          },
-          {
-            id: 4,
-            referenceUrl: "https://www.google.com",
-            submitted: false,
-            recruitmentId: 4,
-            answers: {
-              items: [
-                {
-                  contents: "스타트업을 하고 싶습니다.",
-                  recruitmentItemId: 1,
-                },
-                {
-                  contents: "책임감",
-                  recruitmentItemId: 2,
-                },
-              ],
-            },
-          },
-          {
-            id: 3,
-            referenceUrl: "https://www.google.com",
-            submitted: true,
-            recruitmentId: 3,
-            answers: {
-              items: [
-                {
-                  contents: "스타트업을 하고 싶습니다.",
-                  recruitmentItemId: 1,
-                },
-                {
-                  contents: "책임감",
-                  recruitmentItemId: 2,
-                },
-              ],
-            },
-          },
-          {
-            id: 2,
-            referenceUrl: "https://www.google.com",
-            submitted: true,
-            recruitmentId: 2,
-            answers: {
-              items: [
-                {
-                  contents: "스타트업을 하고 싶습니다.",
-                  recruitmentItemId: 1,
-                },
-                {
-                  contents: "책임감",
-                  recruitmentItemId: 2,
-                },
-              ],
-            },
-          },
-        ],
-      }),
-    )
-}
-
-export const fetchForm = ({ token, recruitmentId }) =>
-  axios
-    .get(`${BASE_URL}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      params: {
-        recruitmentId,
-      },
-    })
-    .catch(() =>
-      Promise.resolve({
-        data: {
-          referenceUrl: "https://www.google.com",
-          answers: {
-            items: [
+            answers: [
               {
                 contents: "스타트업을 하고 싶습니다.",
                 recruitmentItemId: 1,
@@ -115,6 +28,79 @@ export const fetchForm = ({ token, recruitmentId }) =>
               },
             ],
           },
-        },
+          {
+            id: 4,
+            referenceUrl: "https://www.google.com",
+            submitted: false,
+            recruitmentId: 4,
+            answers: [
+              {
+                contents: "스타트업을 하고 싶습니다.",
+                recruitmentItemId: 1,
+              },
+              {
+                contents: "책임감",
+                recruitmentItemId: 2,
+              },
+            ],
+          },
+          {
+            id: 3,
+            referenceUrl: "https://www.google.com",
+            submitted: true,
+            recruitmentId: 3,
+            answers: [
+              {
+                contents: "스타트업을 하고 싶습니다.",
+                recruitmentItemId: 1,
+              },
+              {
+                contents: "책임감",
+                recruitmentItemId: 2,
+              },
+            ],
+          },
+          {
+            id: 2,
+            referenceUrl: "https://www.google.com",
+            submitted: true,
+            recruitmentId: 2,
+            answers: [
+              {
+                contents: "스타트업을 하고 싶습니다.",
+                recruitmentItemId: 1,
+              },
+              {
+                contents: "책임감",
+                recruitmentItemId: 2,
+              },
+            ],
+          },
+        ],
       }),
     )
+}
+
+export const fetchForm = ({ token, recruitmentId }) =>
+  axios.get(`${BASE_URL}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    params: {
+      recruitmentId,
+    },
+  })
+
+export const saveForm = ({ token, data }) =>
+  axios.post(`${BASE_URL}`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+
+export const updateForm = ({ token, data }) =>
+  axios.put(`${BASE_URL}`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })

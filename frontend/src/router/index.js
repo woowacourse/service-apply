@@ -21,6 +21,10 @@ const requireAuth = (to, from, next) => {
 
 const routes = [
   {
+    path: "/",
+    redirect: "/recruits",
+  },
+  {
     path: "/recruits",
     component: Recruits,
   },
@@ -32,10 +36,11 @@ const routes = [
     }),
   },
   {
-    path: "/register/application",
+    path: "/applications/:status",
     component: ApplicationRegister,
     props: route => ({
       recruitmentId: Number(route.query.recruitmentId),
+      status: status,
     }),
     children: [
       {
