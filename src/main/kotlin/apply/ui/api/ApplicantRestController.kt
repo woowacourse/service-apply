@@ -3,8 +3,8 @@ package apply.ui.api
 import apply.application.ApplicantService
 import apply.application.MailService
 import apply.domain.applicant.ApplicantInformation
-import apply.domain.applicant.ResetPasswordRequest
 import apply.domain.applicant.ApplicantVerifyInformation
+import apply.domain.applicant.ResetPasswordRequest
 import apply.domain.applicant.exception.ApplicantValidateException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

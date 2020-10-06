@@ -1,7 +1,7 @@
 package apply.ui.api
 
-import apply.application.SaveApplicationFormRequest
 import apply.application.ApplicationFormService
+import apply.application.SaveApplicationFormRequest
 import apply.application.UpdateApplicationFormRequest
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
