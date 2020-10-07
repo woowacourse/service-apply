@@ -34,7 +34,7 @@ class EvaluationTargetService(
     fun findAllByEvaluationId(evaluationId: Long): List<EvaluationTarget> =
         evaluationTargetRepository.findAllByEvaluationId(evaluationId)
 
-    fun findAllWithApplicantByEvaluationIdAndKeyword(
+    fun findAllByEvaluationIdAndKeyword(
         evaluationId: Long,
         keyWord: String
     ): List<EvaluationTargetResponse> {

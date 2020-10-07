@@ -65,8 +65,6 @@ class SelectionView(
     private fun createContent(keyword: String = ""): Component {
         val tabsToGrids: LinkedHashMap<Tab, Component> = mapTabAndGrid(keyword)
         val (tabs, grids) = createTabComponents(tabsToGrids)
-        this.tabs = tabs
-        tabs.setWidthFull()
 
         val menu = HorizontalLayout(
             createSearchBar {
@@ -83,14 +81,11 @@ class SelectionView(
                 createDownloadButton()
             )
         ).apply {
-            tabs.selectedIndex = selectedTabIndex
             setWidthFull()
             justifyContentMode = FlexComponent.JustifyContentMode.BETWEEN
         }
 
-        return VerticalLayout(
-            menu, grids
-        ).apply { setWidthFull() }
+        return VerticalLayout(menu, grids).apply { setWidthFull() }
     }
 
     private fun mapTabAndGrid(keyword: String): LinkedHashMap<Tab, Component> {
@@ -102,7 +97,7 @@ class SelectionView(
         evaluations = evaluationService.findAllByRecruitmentId(recruitmentId)
         for (evaluation in evaluations) {
             val evaluationTargetResponses =
-                evaluationTargetService.findAllWithApplicantByEvaluationIdAndKeyword(evaluation.id, keyword)
+                evaluationTargetService.findAllByEvaluationIdAndKeyword(evaluation.id, keyword)
             tabsToPages[Tab(evaluation.title)] = createEvaluationTargetsGrid(evaluationTargetResponses)
         }
         return tabsToPages
@@ -174,9 +169,11 @@ class SelectionView(
             selectedPage?.isVisible = true
         }
 
-        val selectedPage = tabsToPages[tabs.selectedTab]
-        selectedPage?.isVisible = true
-        return Pair(tabs, pages)
+        tabsToPages[tabs.selectedTab]?.apply { isVisible = true }
+        this.tabs = tabs
+        tabs.setWidthFull()
+        tabs.selectedIndex = selectedTabIndex
+        return tabs to pages
     }
 
     private fun createLoadButton(tabs: Tabs): Button {
