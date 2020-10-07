@@ -30,7 +30,7 @@ class ApplicantRestController(
     }
 
     @PostMapping("/reset-password")
-    fun resetPassword(@RequestBody resetPasswordRequest: ResetPasswordRequest): ResponseEntity<String> {
+    fun resetPassword(@RequestBody resetPasswordRequest: ResetPasswordRequest): ResponseEntity<Unit> {
         val newPassword = applicantService.resetPassword(resetPasswordRequest)
         mailService.sendPasswordResetMail(resetPasswordRequest, newPassword)
 

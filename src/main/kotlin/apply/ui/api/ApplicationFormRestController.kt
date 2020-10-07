@@ -33,7 +33,7 @@ class ApplicationFormRestController(
     fun save(
         @RequestBody saveApplicationFormRequest: SaveApplicationFormRequest,
         @LoginApplicant applicant: Applicant
-    ): ResponseEntity<String> {
+    ): ResponseEntity<Unit> {
         applicationFormService.save(applicant.id, saveApplicationFormRequest)
         return ResponseEntity.ok().build()
     }
@@ -42,7 +42,7 @@ class ApplicationFormRestController(
     fun update(
         @RequestBody updateApplicationFormRequest: UpdateApplicationFormRequest,
         @LoginApplicant applicant: Applicant
-    ): ResponseEntity<String> {
+    ): ResponseEntity<Unit> {
         applicationFormService.update(applicant.id, updateApplicationFormRequest)
         return ResponseEntity.ok().build()
     }

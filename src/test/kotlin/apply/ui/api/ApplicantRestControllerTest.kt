@@ -111,7 +111,7 @@ internal class ApplicantRestControllerTest(
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isUnauthorized }
-            content { json(objectMapper.writeValueAsString(ApiResponse<String>(message = "요청 정보가 기존 지원자 정보와 일치하지 않습니다"))) }
+            content { json(objectMapper.writeValueAsString(ApiResponse<Unit>(message = "요청 정보가 기존 지원자 정보와 일치하지 않습니다"))) }
         }
     }
 
@@ -141,7 +141,7 @@ internal class ApplicantRestControllerTest(
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isUnauthorized }
-            content { json(objectMapper.writeValueAsString(ApiResponse<String>("요청 정보가 기존 지원자 정보와 일치하지 않습니다"))) }
+            content { json(objectMapper.writeValueAsString(ApiResponse<Unit>(message = "요청 정보가 기존 지원자 정보와 일치하지 않습니다"))) }
         }
     }
 
