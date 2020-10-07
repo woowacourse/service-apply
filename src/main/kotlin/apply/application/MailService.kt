@@ -13,7 +13,7 @@ import org.thymeleaf.spring5.ISpringTemplateEngine
 class MailService(
     private val mailSender: JavaMailSender,
     private val mailProperties: MailProperties,
-    private val customApplicationProperties: CustomApplicationProperties,
+    private val applicationProperties: ApplicationProperties,
     private val templateEngine: ISpringTemplateEngine
 ) {
     @Async
@@ -21,7 +21,7 @@ class MailService(
         val context = Context().apply {
             setVariable("name", request.name)
             setVariable("password", newPassword)
-            setVariable("url", customApplicationProperties.url)
+            setVariable("url", applicationProperties.url)
         }
 
         val message = mailSender.createMimeMessage()
