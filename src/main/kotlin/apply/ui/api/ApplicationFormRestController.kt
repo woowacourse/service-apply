@@ -1,7 +1,8 @@
 package apply.ui.api
 
-import apply.application.SaveApplicationFormRequest
+import apply.application.ApplicationFormResponse
 import apply.application.ApplicationFormService
+import apply.application.SaveApplicationFormRequest
 import apply.application.UpdateApplicationFormRequest
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -18,37 +19,24 @@ class ApplicationFormRestController(
     private val applicationFormService: ApplicationFormService
 ) {
     @GetMapping
-    fun getForm(@RequestParam("recruitmentId") recruitment: Long): ResponseEntity<Any> {
-        return try {
-            val form = applicationFormService.findForm(1L, recruitment)
-            ResponseEntity.ok().body(form)
-        } catch (e: IllegalArgumentException) {
-            ResponseEntity.badRequest().body(e.message)
-        }
+    fun getForm(@RequestParam("recruitmentId") recruitment: Long): ResponseEntity<APIResponse<ApplicationFormResponse>> {
+        val form = applicationFormService.findForm(1L, recruitment)
+        return ResponseEntity.ok().body(APIResponse(body = form))
     }
 
     @PostMapping
     fun save(
         @RequestBody saveApplicationFormRequest: SaveApplicationFormRequest
-    ): ResponseEntity<String> {
-        return try {
-            applicationFormService.save(1L, saveApplicationFormRequest)
-            ResponseEntity.ok().build()
-        } catch (e: IllegalArgumentException) {
-            ResponseEntity.badRequest().body(e.message)
-        }
+    ): ResponseEntity<APIResponse<String>> {
+        applicationFormService.save(1L, saveApplicationFormRequest)
+        return ResponseEntity.ok().build()
     }
-    // TODO: 20. 9. 22. ControllerAdvice로 리팩토링
 
     @PutMapping
     fun update(
         @RequestBody updateApplicationFormRequest: UpdateApplicationFormRequest
     ): ResponseEntity<String> {
-        return try {
-            applicationFormService.update(1L, updateApplicationFormRequest)
-            ResponseEntity.ok().build()
-        } catch (e: IllegalArgumentException) {
-            ResponseEntity.badRequest().body(e.message)
-        }
+        applicationFormService.update(1L, updateApplicationFormRequest)
+        return ResponseEntity.ok().build()
     }
 }
