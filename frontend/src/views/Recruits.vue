@@ -14,7 +14,7 @@
         </li>
       </ul>
       <RecruitItem
-        v-for="recruitment in filteredRecruits"
+        v-for="recruitment in filteredRecruitments"
         :key="recruitment.id"
         :recruitment="recruitment"
       />
@@ -23,7 +23,6 @@
 </template>
 
 <script>
-import * as RecruitmentApi from "@/api/recruitments"
 import RecruitItem from "@/components/RecruitItem"
 import Box from "@/components/Box"
 
@@ -52,25 +51,26 @@ export default {
         label: "모집 종료",
       },
     ],
-    recruits: [],
+    recruitments: [],
   }),
   computed: {
-    filteredRecruits() {
+    filteredRecruitments() {
       switch (this.$route.query.status) {
         case "recruitable":
-          return this.recruits.filter(({ status }) => status === "RECRUITABLE")
+          return this.recruitments.filter(({ status }) => status === "RECRUITABLE")
         case "recruiting":
-          return this.recruits.filter(
+          return this.recruitments.filter(
             ({ status }) => status === "RECRUITING" || status === "UNRECRUITABLE",
           )
         case "ended":
-          return this.recruits.filter(({ status }) => status === "ENDED")
+          return this.recruitments.filter(({ status }) => status === "ENDED")
       }
-      return this.recruits
+      return this.recruitments
     },
   },
   async created() {
-    this.recruits = (await RecruitmentApi.fetchRecruitments()).data.sort((a, b) => b.id - a.id)
+    await this.$store.dispatch("fetchAllRecruitments")
+    this.recruitments = this.$store.getters["recruitments"]
   },
 }
 </script>

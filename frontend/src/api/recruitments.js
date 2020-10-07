@@ -74,31 +74,3 @@ export const fetchRecruitments = () =>
       ],
     }),
   )
-
-export const fetchMyRecruitments = token =>
-  axios
-    .get(`${BASE_URL}/me`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-    .catch(() =>
-      Promise.resolve({
-        data: [
-          {
-            id: 1,
-            title: "웹 프론트엔드 3기",
-            startDateTime: "2020-09-24T15:00:00",
-            endDateTime: "2020-11-09T23:59:00",
-            status: "RECRUITING",
-          },
-          {
-            id: 2,
-            title: "웹 백엔드 3기",
-            startTime: new Date("2020-09-24T15:00:00"),
-            endTime: new Date("2020-11-09T23:59:00"),
-            recruitmentStatus: "RECRUITING",
-          },
-        ],
-      }),
-    )

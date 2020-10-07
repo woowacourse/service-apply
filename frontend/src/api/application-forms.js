@@ -21,7 +21,7 @@ export const fetchMyApplicationForms = token => {
           {
             id: 2,
             referenceUrl: "https://www.google.com",
-            submitted: false,
+            submitted: true,
             recruitmentId: 2,
           },
         ],

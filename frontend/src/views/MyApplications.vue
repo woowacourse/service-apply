@@ -14,7 +14,6 @@
 </template>
 
 <script>
-import * as RecruitmentApi from "@/api/recruitments"
 import * as ApplicationApi from "@/api/application-forms"
 import ApplicationFormItem from "@/components/ApplicationFormItem"
 import Box from "@/components/Box"
@@ -27,24 +26,16 @@ export default {
   data: () => ({
     appliedRecruitments: [],
   }),
-  created() {
+  async created() {
     const token = this.$store.getters["token"]
 
     try {
-      // todo: 백엔드 api에 따라 가능하면 한 번에 받아오도록 수정
-      Promise.all([
-        ApplicationApi.fetchMyApplicationForms(token),
-        RecruitmentApi.fetchMyRecruitments(token),
-      ]).then(values => {
-        const { data: applicationFormsData } = values[0]
-        const { data: recruitmentData } = values[1]
-        this.appliedRecruitments = this.findAppliedRecruitments(
-          applicationFormsData,
-          recruitmentData,
-        )
-      })
+      const { data: applicationFormsData } = await ApplicationApi.fetchMyApplicationForms(token)
+      const recruitments = this.$store.getters["recruitments"]
+
+      this.appliedRecruitments = this.findAppliedRecruitments(applicationFormsData, recruitments)
     } catch (e) {
-      alert("token이 유효하지 않습니다.")
+      alert("로그인이 필요합니다.")
       this.$router.replace("/login")
     }
   },
