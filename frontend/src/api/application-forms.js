@@ -1,14 +1,15 @@
 import axios from "axios"
+import {convert} from "@/api/converter";
 
 const BASE_URL = "/api/application-forms"
 
-export const fetchMyApplicatonForms = token => {
-    return axios
+export const fetchMyApplicationForms = token => {
+    return convert(axios
         .get(`${BASE_URL}/me`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
-        }).body
+        }).data)
         .catch(() =>
             Promise.resolve({
                 data: [
@@ -90,15 +91,14 @@ export const fetchMyApplicatonForms = token => {
 }
 
 export const fetchForm = ({token, recruitmentId}) =>
-    axios
-        .get(`${BASE_URL}`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-            params: {
-                recruitmentId,
-            },
-        }).body
+    convert(axios.get(`${BASE_URL}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+        params: {
+            recruitmentId,
+        },
+    }).data)
         .catch(() =>
             Promise.resolve({
                 data: {
