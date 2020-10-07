@@ -1,5 +1,7 @@
 package apply.application
 
+import apply.createApplicationForm
+import apply.createApplicationForms
 import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.recruitmentitem.Answer
@@ -38,19 +40,9 @@ class ApplicationFormServiceTest {
     internal fun setUp() {
         this.applicationFormService = ApplicationFormService(applicationFormRepository, applicantService)
 
-        applicationForm1 = ApplicationForm(
-            applicantId = 1L,
-            recruitmentId = 1L,
-            referenceUrl = "http://example.com",
-            answers = Answers(
-                mutableListOf(
-                    Answer("스타트업을 하고 싶습니다.", 1L),
-                    Answer("책임감", 2L)
-                )
-            )
-        )
+        applicationForm1 = createApplicationForm()
 
-        applicationForm2 = ApplicationForm(
+        applicationForm2 = createApplicationForm(
             applicantId = 2L,
             recruitmentId = 1L,
             referenceUrl = "http://example2.com",
@@ -62,18 +54,7 @@ class ApplicationFormServiceTest {
             )
         )
 
-        applicationForms = listOf(applicationForm1,
-            ApplicationForm(
-                applicantId = 1L,
-                recruitmentId = 2L,
-                referenceUrl = "http://example2.com",
-                answers = Answers(
-                    mutableListOf(
-                        Answer("대기업에 취직하고 싶습니다.", 1L),
-                        Answer("신중함", 2L)
-                    )
-                )
-            ))
+        applicationForms = createApplicationForms()
 
         applicationFormResponse = ApplicationFormResponse(
             id = applicationForm1.id,
