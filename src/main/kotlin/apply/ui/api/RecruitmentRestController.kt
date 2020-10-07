@@ -17,13 +17,12 @@ class RecruitmentRestController(
     private val recruitmentItemService: RecruitmentItemService
 ) {
     @GetMapping
-    fun findAll(): ResponseEntity<APIResponse<List<RecruitmentResponse>>> {
-        return ResponseEntity.ok().body(APIResponse(body = recruitmentService.findAllNotHidden()))
+    fun findAll(): ResponseEntity<List<RecruitmentResponse>> {
+        return ResponseEntity.ok().body(recruitmentService.findAllNotHidden())
     }
 
     @GetMapping("/{id}/items")
-    fun findItemsById(@PathVariable("id") recruitmentId: Long): ResponseEntity<APIResponse<List<RecruitmentItem>>> {
-        return ResponseEntity.ok()
-            .body(APIResponse(body = recruitmentItemService.findByRecruitmentIdOrderByPosition(recruitmentId)))
+    fun findItemsById(@PathVariable("id") recruitmentId: Long): ResponseEntity<List<RecruitmentItem>> {
+        return ResponseEntity.ok().body(recruitmentItemService.findByRecruitmentIdOrderByPosition(recruitmentId))
     }
 }

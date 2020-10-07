@@ -1,6 +1,5 @@
 package apply.ui.api
 
-import apply.application.ApplicationFormResponse
 import apply.application.ApplicationFormService
 import apply.application.SaveApplicationFormRequest
 import apply.application.UpdateApplicationFormRequest
@@ -19,15 +18,15 @@ class ApplicationFormRestController(
     private val applicationFormService: ApplicationFormService
 ) {
     @GetMapping
-    fun getForm(@RequestParam("recruitmentId") recruitment: Long): ResponseEntity<APIResponse<ApplicationFormResponse>> {
+    fun getForm(@RequestParam("recruitmentId") recruitment: Long): ResponseEntity<Any> {
         val form = applicationFormService.findForm(1L, recruitment)
-        return ResponseEntity.ok().body(APIResponse(body = form))
+        return ResponseEntity.ok().body(form)
     }
 
     @PostMapping
     fun save(
         @RequestBody saveApplicationFormRequest: SaveApplicationFormRequest
-    ): ResponseEntity<APIResponse<String>> {
+    ): ResponseEntity<String> {
         applicationFormService.save(1L, saveApplicationFormRequest)
         return ResponseEntity.ok().build()
     }

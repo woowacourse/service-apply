@@ -18,19 +18,19 @@ class ApplicantRestController(
     private val mailService: MailService
 ) {
     @PostMapping("/register")
-    fun generateToken(@RequestBody applicantInformation: ApplicantInformation): ResponseEntity<APIResponse<String>> {
+    fun generateToken(@RequestBody applicantInformation: ApplicantInformation): ResponseEntity<String> {
         val token = applicantService.generateToken(applicantInformation)
-        return ResponseEntity.ok().body(APIResponse(body = token))
+        return ResponseEntity.ok().body(token)
     }
 
     @PostMapping("/login")
-    fun generateToken(@RequestBody applicantVerifyInformation: ApplicantVerifyInformation): ResponseEntity<APIResponse<String>> {
+    fun generateToken(@RequestBody applicantVerifyInformation: ApplicantVerifyInformation): ResponseEntity<String> {
         val token = applicantService.generateTokenByLogin(applicantVerifyInformation)
-        return ResponseEntity.ok().body(APIResponse(body = token))
+        return ResponseEntity.ok().body(token)
     }
 
     @PostMapping("/reset-password")
-    fun resetPassword(@RequestBody resetPasswordRequest: ResetPasswordRequest): ResponseEntity<APIResponse<String>> {
+    fun resetPassword(@RequestBody resetPasswordRequest: ResetPasswordRequest): ResponseEntity<String> {
         val newPassword = applicantService.resetPassword(resetPasswordRequest)
         mailService.sendPasswordResetMail(resetPasswordRequest, newPassword)
 
