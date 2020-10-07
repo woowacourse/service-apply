@@ -89,18 +89,18 @@ class SelectionView(
     }
 
     private fun mapTabAndGrid(keyword: String): LinkedHashMap<Tab, Component> {
-        val tabsToPages = LinkedHashMap<Tab, Component>()
+        val tabsToGrids = LinkedHashMap<Tab, Component>()
 
         val applicantResponses = applicantService.findByRecruitmentIdAndKeyword(recruitmentId, keyword)
-        tabsToPages[Tab("전체 지원자")] = createTotalApplicantsGrid(applicantResponses)
+        tabsToGrids[Tab("전체 지원자")] = createTotalApplicantsGrid(applicantResponses)
 
         evaluations = evaluationService.findAllByRecruitmentId(recruitmentId)
         for (evaluation in evaluations) {
             val evaluationTargetResponses =
                 evaluationTargetService.findAllByEvaluationIdAndKeyword(evaluation.id, keyword)
-            tabsToPages[Tab(evaluation.title)] = createEvaluationTargetsGrid(evaluationTargetResponses)
+            tabsToGrids[Tab(evaluation.title)] = createEvaluationTargetsGrid(evaluationTargetResponses)
         }
-        return tabsToPages
+        return tabsToGrids
     }
 
     private fun createTotalApplicantsGrid(applicants: List<ApplicantResponse>): Component {
@@ -156,24 +156,23 @@ class SelectionView(
         }
     }
 
-    private fun createTabComponents(tabsToPages: LinkedHashMap<Tab, Component>): Pair<Tabs, Div> {
-        val tabs = Tabs()
-        tabs.add(*(tabsToPages.keys).toTypedArray())
-        val pages = Div(*tabsToPages.values.toTypedArray())
-        pages.apply { setWidthFull() }
-        tabsToPages.values.forEach { it.isVisible = false }
-
-        tabs.addSelectedChangeListener {
-            tabsToPages.values.forEach { it.isVisible = false }
-            val selectedPage = tabsToPages[tabs.selectedTab]
-            selectedPage?.isVisible = true
+    private fun createTabComponents(tabsToGrids: LinkedHashMap<Tab, Component>): Pair<Tabs, Div> {
+        val tabs = Tabs().apply {
+            add(*(tabsToGrids.keys).toTypedArray())
+            addSelectedChangeListener {
+                tabsToGrids.forEach { (tab, grid) ->
+                    grid.isVisible = (tab == selectedTab)
+                }
+            }
+            setWidthFull()
+            tabsToGrids.forEach { (tab, grid) -> grid.isVisible = (tab == selectedTab) }
+            selectedIndex = selectedTabIndex
+            tabs = this
         }
 
-        tabsToPages[tabs.selectedTab]?.apply { isVisible = true }
-        this.tabs = tabs
-        tabs.setWidthFull()
-        tabs.selectedIndex = selectedTabIndex
-        return tabs to pages
+        val grids = Div(*tabsToGrids.values.toTypedArray()).apply { setWidthFull() }
+
+        return tabs to grids
     }
 
     private fun createLoadButton(tabs: Tabs): Button {
