@@ -8,7 +8,7 @@ internal class EncryptsTest {
     fun `sha256Encrypt - 동일한 입력에 동일한 결과를 출력한다`() {
         val input = "password"
 
-        assertThat(sha256Encrypt(input) == sha256Encrypt(input)).isTrue()
+        assertThat(sha256Encrypt(input)).isEqualTo(sha256Encrypt(input))
     }
 
     @Test
@@ -16,6 +16,6 @@ internal class EncryptsTest {
         val first = "1q2w3e4r!"
         val second = "2w3e4r5t!"
 
-        assertThat(sha256Encrypt(first) != sha256Encrypt(second)).isTrue()
+        assertThat(sha256Encrypt(first)).isNotEqualTo(sha256Encrypt(second))
     }
 }

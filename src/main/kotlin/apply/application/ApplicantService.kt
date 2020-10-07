@@ -55,9 +55,9 @@ class ApplicantService(
     }
 
     fun changePassword(applicantId: Long, newPassword: String) {
-        applicantRepository.findByIdOrNull(applicantId)?.run {
-            password = sha256Encrypt(newPassword)
-        } ?: throw IllegalArgumentException("존재하지 않는 사용자입니다.")
+        applicantRepository.findByIdOrNull(applicantId)
+            ?.run { password = sha256Encrypt(newPassword) }
+            ?: throw IllegalArgumentException("존재하지 않는 사용자입니다.")
     }
 
     fun generateTokenByLogin(applicantVerifyInformation: ApplicantVerifyInformation): String {
@@ -80,9 +80,7 @@ class ApplicantService(
             request.email,
             request.birthday
         )?.run {
-            val newPassword = passwordGenerator.generate()
-            password = sha256Encrypt(newPassword)
-            newPassword
+            passwordGenerator.generate().also { password = sha256Encrypt(it) }
         } ?: throw ApplicantValidateException()
     }
 
