@@ -31,7 +31,6 @@ export default {
 
     try {
       const { data: appliedRecruitmentData } = await RecruitmentApi.fetchAppliedRecruitments(token)
-      console.log(appliedRecruitmentData)
       this.appliedRecruitments = appliedRecruitmentData
     } catch (e) {
       alert("로그인이 필요합니다.")
