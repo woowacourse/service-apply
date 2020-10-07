@@ -4,6 +4,7 @@ import apply.createRecruitment
 import apply.createRecruitmentData
 import apply.createRecruitmentItem
 import apply.createRecruitmentItemData
+import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitmentitem.RecruitmentItem
@@ -28,11 +29,15 @@ internal class RecruitmentServiceTest {
     @MockK
     private lateinit var recruitmentItemRepository: RecruitmentItemRepository
 
+    @MockK
+    private lateinit var applicationFormRepository: ApplicationFormRepository
+
     private lateinit var recruitmentService: RecruitmentService
 
     @BeforeEach
     internal fun setUp() {
-        recruitmentService = RecruitmentService(recruitmentRepository, recruitmentItemRepository)
+        recruitmentService =
+            RecruitmentService(recruitmentRepository, recruitmentItemRepository, applicationFormRepository)
     }
 
     @Nested

@@ -2,33 +2,6 @@ import axios from "axios"
 
 const BASE_URL = "/api/application-forms"
 
-export const fetchMyApplicationForms = token => {
-  return axios
-    .get(`${BASE_URL}/me`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-    .catch(() =>
-      Promise.resolve({
-        data: [
-          {
-            id: 1,
-            referenceUrl: "https://www.google.com",
-            submitted: false,
-            recruitmentId: 1,
-          },
-          {
-            id: 2,
-            referenceUrl: "https://www.google.com",
-            submitted: true,
-            recruitmentId: 2,
-          },
-        ],
-      }),
-    )
-}
-
 export const fetchForm = ({ token, recruitmentId }) =>
   axios
     .get(`${BASE_URL}`, {

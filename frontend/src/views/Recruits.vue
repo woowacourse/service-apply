@@ -23,6 +23,7 @@
 </template>
 
 <script>
+import * as RecruitmentApi from "@/api/recruitments"
 import RecruitItem from "@/components/RecruitItem"
 import Box from "@/components/Box"
 
@@ -69,8 +70,7 @@ export default {
     },
   },
   async created() {
-    await this.$store.dispatch("fetchAllRecruitments")
-    this.recruitments = this.$store.getters["recruitments"]
+    this.recruitments = (await RecruitmentApi.fetchRecruitments()).data.sort((a, b) => b.id - a.id)
   },
 }
 </script>

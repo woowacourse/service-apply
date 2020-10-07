@@ -1,9 +1,12 @@
 package apply.ui.api
 
+import apply.application.AppliedRecruitmentResponse
 import apply.application.RecruitmentItemService
 import apply.application.RecruitmentResponse
 import apply.application.RecruitmentService
+import apply.domain.applicant.Applicant
 import apply.domain.recruitmentitem.RecruitmentItem
+import apply.security.LoginApplicant
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -16,6 +19,10 @@ class RecruitmentRestController(
     private val recruitmentService: RecruitmentService,
     private val recruitmentItemService: RecruitmentItemService
 ) {
+    @GetMapping("/applied")
+    fun getAppliedRecruitments(@LoginApplicant applicant: Applicant): ResponseEntity<List<AppliedRecruitmentResponse>> =
+        ResponseEntity.ok().body(recruitmentService.findAllByApplicantId(applicant.id))
+
     @GetMapping
     fun findAll(): ResponseEntity<List<RecruitmentResponse>> {
         return ResponseEntity.ok().body(recruitmentService.findAllNotHidden())
