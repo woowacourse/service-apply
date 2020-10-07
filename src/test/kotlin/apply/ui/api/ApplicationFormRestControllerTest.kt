@@ -89,7 +89,7 @@ internal class ApplicationFormRestControllerTest(
             header(AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(applicationForm)) }
+            content { json(objectMapper.writeValueAsString(ApiResponse(body = applicationForm))) }
         }
     }
 }

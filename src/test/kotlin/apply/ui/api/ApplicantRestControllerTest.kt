@@ -3,9 +3,9 @@ package apply.ui.api
 import apply.application.ApplicantService
 import apply.application.MailService
 import apply.domain.applicant.ApplicantInformation
-import apply.domain.applicant.ResetPasswordRequest
 import apply.domain.applicant.ApplicantVerifyInformation
 import apply.domain.applicant.Gender
+import apply.domain.applicant.ResetPasswordRequest
 import apply.domain.applicant.exception.ApplicantValidateException
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.BeforeEach
@@ -96,7 +96,7 @@ internal class ApplicantRestControllerTest(
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isOk }
-            content { string(VALID_TOKEN) }
+            content { json(objectMapper.writeValueAsString(ApiResponse(body = VALID_TOKEN))) }
         }
     }
 
@@ -111,7 +111,7 @@ internal class ApplicantRestControllerTest(
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isUnauthorized }
-            content { string("요청 정보가 기존 지원자 정보와 일치하지 않습니다") }
+            content { json(objectMapper.writeValueAsString(ApiResponse<String>(message = "요청 정보가 기존 지원자 정보와 일치하지 않습니다"))) }
         }
     }
 
@@ -126,7 +126,7 @@ internal class ApplicantRestControllerTest(
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isOk }
-            content { string(VALID_TOKEN) }
+            content { json(objectMapper.writeValueAsString(ApiResponse(body = VALID_TOKEN))) }
         }
     }
 
@@ -141,7 +141,7 @@ internal class ApplicantRestControllerTest(
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isUnauthorized }
-            content { string("요청 정보가 기존 지원자 정보와 일치하지 않습니다") }
+            content { json(objectMapper.writeValueAsString(ApiResponse<String>("요청 정보가 기존 지원자 정보와 일치하지 않습니다"))) }
         }
     }
 
