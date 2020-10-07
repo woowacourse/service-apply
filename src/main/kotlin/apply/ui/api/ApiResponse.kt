@@ -1,6 +1,6 @@
 package apply.ui.api
 
-class APIResponse<T>(
+class ApiResponse<T>(
     val success: Boolean = true,
     val message: String? = "",
     val body: T? = null

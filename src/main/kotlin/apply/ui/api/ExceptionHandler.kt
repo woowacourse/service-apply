@@ -10,20 +10,20 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 class ExceptionHandler : ResponseEntityExceptionHandler() {
     @ExceptionHandler(value = [ApplicantValidateException::class])
-    fun handleApplicantValidateException(exception: ApplicantValidateException): ResponseEntity<APIResponse<String>> {
+    fun handleApplicantValidateException(exception: ApplicantValidateException): ResponseEntity<ApiResponse<String>> {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body(APIResponse(success = false, message = exception.message))
+            .body(ApiResponse(success = false, message = exception.message))
     }
 
     @ExceptionHandler(value = [IllegalArgumentException::class])
-    fun handleIllegalArgumentException(exception: IllegalArgumentException): ResponseEntity<APIResponse<String>> {
+    fun handleIllegalArgumentException(exception: IllegalArgumentException): ResponseEntity<ApiResponse<String>> {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body(APIResponse(success = false, message = exception.message))
+            .body(ApiResponse(success = false, message = exception.message))
     }
 
     @ExceptionHandler(value = [Exception::class])
-    fun handleGlobalException(exception: Exception): ResponseEntity<APIResponse<String>> {
+    fun handleGlobalException(exception: Exception): ResponseEntity<ApiResponse<String>> {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body(APIResponse(success = false, message = exception.message))
+            .body(ApiResponse(success = false, message = exception.message))
     }
 }
