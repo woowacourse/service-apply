@@ -1,10 +1,10 @@
 package apply.ui.api
 
+import apply.application.ApplicantInformation
 import apply.application.ApplicantService
+import apply.application.ApplicantVerifyInformation
 import apply.application.MailService
-import apply.domain.applicant.ApplicantInformation
-import apply.domain.applicant.ResetPasswordRequest
-import apply.domain.applicant.ApplicantVerifyInformation
+import apply.application.ResetPasswordRequest
 import apply.domain.applicant.exception.ApplicantValidateException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

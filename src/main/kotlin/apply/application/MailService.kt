@@ -1,6 +1,5 @@
 package apply.application
 
-import apply.domain.applicant.ResetPasswordRequest
 import org.springframework.boot.autoconfigure.mail.MailProperties
 import org.springframework.mail.MailSender
 import org.springframework.mail.SimpleMailMessage

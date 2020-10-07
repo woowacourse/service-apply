@@ -1,10 +1,7 @@
 package apply.application
 
-import apply.domain.applicant.ApplicantInformation
 import apply.domain.applicant.ApplicantRepository
-import apply.domain.applicant.ApplicantVerifyInformation
 import apply.domain.applicant.Gender
-import apply.domain.applicant.ResetPasswordRequest
 import apply.domain.applicant.exception.ApplicantValidateException
 import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormRepository
@@ -28,6 +25,7 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import support.createLocalDate
 import support.createLocalDateTime
+import support.security.sha256Encrypt
 
 private const val VALID_TOKEN = "SOME_VALID_TOKEN"
 private const val APPLICANT_ID = 1L
@@ -97,7 +95,10 @@ internal class ApplicantServiceTest {
     private val inValidApplicantPasswordFindRequest =
         validApplicantPasswordFindRequest.copy(birthday = createLocalDate(1995, 4, 4))
 
-    private val applicants = listOf(validApplicantRequest.toEntity(APPLICANT_ID))
+    private val applicants = listOf(
+        validApplicantRequest.copy(password = sha256Encrypt(validApplicantRequest.password))
+            .toEntity(APPLICANT_ID)
+    )
 
     private val applicantResponses = listOf(ApplicantResponse(applicants[0], true, applicationForm))
 
@@ -129,8 +130,7 @@ internal class ApplicantServiceTest {
 
     @Test
     fun `지원자가 이미 존재하고 검증에 성공하면 유효한 토큰을 반환한다`() {
-        val applicant = validApplicantRequest.toEntity(APPLICANT_ID)
-        given(applicantRepository.findByEmail(validApplicantRequest.email)).willReturn(applicant)
+        given(applicantRepository.findByEmail(validApplicantRequest.email)).willReturn(applicants[0])
         given(jwtTokenProvider.createToken(validApplicantRequest.email)).willReturn(VALID_TOKEN)
 
         assertThat(applicantService.generateToken(validApplicantRequest)).isEqualTo(VALID_TOKEN)
@@ -138,8 +138,7 @@ internal class ApplicantServiceTest {
 
     @Test
     fun `지원자가 이미 존재하고 필드 값 동등성 검증에 실패하면 예외가 발생한다`() {
-        val applicant = validApplicantRequest.toEntity(APPLICANT_ID)
-        given(applicantRepository.findByEmail(inValidApplicantRequest.email)).willReturn(applicant)
+        given(applicantRepository.findByEmail(inValidApplicantRequest.email)).willReturn(applicants[0])
 
         assertThatThrownBy {
             applicantService.generateToken(inValidApplicantRequest)
@@ -151,8 +150,17 @@ internal class ApplicantServiceTest {
     fun `지원자가 존재하지 않으면 지원자를 저장한 뒤, 유효한 토큰을 반환한다`() {
         given(applicantRepository.findByEmail(validApplicantRequest.email)).willReturn(null)
         given(jwtTokenProvider.createToken(validApplicantRequest.email)).willReturn(VALID_TOKEN)
-        given(applicantRepository.save(refEq(validApplicantRequest.toEntity())))
-            .willReturn(validApplicantRequest.toEntity(APPLICANT_ID))
+        given(
+            applicantRepository.save(
+                refEq(
+                    validApplicantRequest.copy(
+                        password = sha256Encrypt(
+                            validApplicantLoginRequest.password
+                        )
+                    ).toEntity()
+                )
+            )
+        ).willReturn(applicants[0])
 
         assertThat(applicantService.generateToken(validApplicantRequest)).isEqualTo(VALID_TOKEN)
     }
@@ -164,7 +172,7 @@ internal class ApplicantServiceTest {
                 validApplicantLoginRequest.name,
                 validApplicantLoginRequest.email,
                 validApplicantLoginRequest.birthday,
-                validApplicantLoginRequest.password
+                sha256Encrypt(validApplicantLoginRequest.password)
             )
         ).willReturn(true)
         given(jwtTokenProvider.createToken(validApplicantLoginRequest.email)).willReturn(VALID_TOKEN)
@@ -179,7 +187,7 @@ internal class ApplicantServiceTest {
                 inValidApplicantLoginRequest.name,
                 inValidApplicantLoginRequest.email,
                 inValidApplicantLoginRequest.birthday,
-                inValidApplicantLoginRequest.password
+                sha256Encrypt(inValidApplicantLoginRequest.password)
             )
         ).willReturn(false)
 
@@ -196,7 +204,7 @@ internal class ApplicantServiceTest {
                 validApplicantPasswordFindRequest.email,
                 validApplicantPasswordFindRequest.birthday
             )
-        ).willReturn(validApplicantRequest.toEntity(APPLICANT_ID))
+        ).willReturn(applicants[0])
 
         given(passwordGenerator.generate()).willReturn(RANDOM_PASSWORD)
 

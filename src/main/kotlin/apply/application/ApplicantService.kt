@@ -1,11 +1,8 @@
 package apply.application
 
 import apply.domain.applicant.Applicant
-import apply.domain.applicant.ApplicantInformation
 import apply.domain.applicant.ApplicantRepository
-import apply.domain.applicant.ApplicantVerifyInformation
 import apply.domain.applicant.Gender
-import apply.domain.applicant.ResetPasswordRequest
 import apply.domain.applicant.exception.ApplicantValidateException
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.CheaterRepository
@@ -15,6 +12,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import support.createLocalDate
+import support.security.sha256Encrypt
 import javax.annotation.PostConstruct
 
 @Transactional
@@ -49,17 +47,18 @@ class ApplicantService(
         applicantRepository.findByEmail(email) ?: throw IllegalArgumentException("email=$email 인 유저가 존재하지 않습니다")
 
     fun generateToken(applicantInformation: ApplicantInformation): String {
-        val applicant = applicantRepository.findByEmail(applicantInformation.email)
-            ?.also { it.validate(applicantInformation) }
-            ?: applicantRepository.save(applicantInformation.toEntity())
+        val encrypted = applicantInformation.copy(password = sha256Encrypt(applicantInformation.password))
+        val applicant = applicantRepository.findByEmail(encrypted.email)
+            ?.also { it.validate(encrypted) }
+            ?: applicantRepository.save(encrypted.toEntity())
 
         return jwtTokenProvider.createToken(applicant.email)
     }
 
-    fun changePassword(applicantId: Long, password: String) {
-        val applicant =
-            applicantRepository.findByIdOrNull(applicantId) ?: throw IllegalArgumentException("존재하지 않는 사용자입니다.")
-        applicant.password = password
+    fun changePassword(applicantId: Long, newPassword: String) {
+        applicantRepository.findByIdOrNull(applicantId)?.run {
+            password = sha256Encrypt(newPassword)
+        } ?: throw IllegalArgumentException("존재하지 않는 사용자입니다.")
     }
 
     fun generateTokenByLogin(applicantVerifyInformation: ApplicantVerifyInformation): String {
@@ -68,7 +67,7 @@ class ApplicantService(
                 applicantVerifyInformation.name,
                 applicantVerifyInformation.email,
                 applicantVerifyInformation.birthday,
-                applicantVerifyInformation.password
+                sha256Encrypt(applicantVerifyInformation.password)
             )
         ) {
             true -> jwtTokenProvider.createToken(applicantVerifyInformation.email)
@@ -82,8 +81,9 @@ class ApplicantService(
             resetPasswordRequest.email,
             resetPasswordRequest.birthday
         )?.run {
-            password = randomPasswordGenerator.generate()
-            password
+            val newPassword = randomPasswordGenerator.generate()
+            password = sha256Encrypt(newPassword)
+            newPassword
         } ?: throw ApplicantValidateException()
     }
 
@@ -99,7 +99,7 @@ class ApplicantService(
                 phoneNumber = "010-0000-0000",
                 gender = Gender.MALE,
                 birthday = createLocalDate(2020, 4, 17),
-                password = "password"
+                password = sha256Encrypt("password")
             ),
             Applicant(
                 name = "홍길동2",
@@ -107,7 +107,7 @@ class ApplicantService(
                 phoneNumber = "010-0000-0000",
                 gender = Gender.FEMALE,
                 birthday = createLocalDate(2020, 5, 5),
-                password = "password"
+                password = sha256Encrypt("password")
             ),
             Applicant(
                 name = "홍길동3",
@@ -115,7 +115,7 @@ class ApplicantService(
                 phoneNumber = "010-0000-0000",
                 gender = Gender.MALE,
                 birthday = createLocalDate(2020, 1, 1),
-                password = "password"
+                password = sha256Encrypt("password")
             )
         )
         applicantRepository.saveAll(applicants)
