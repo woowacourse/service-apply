@@ -25,11 +25,12 @@ class MailService(
         }
 
         val message = mailSender.createMimeMessage()
-        val messageHelper = MimeMessageHelper(message)
-        messageHelper.setFrom(mailProperties.username)
-        messageHelper.setTo(request.email)
-        messageHelper.setSubject("${request.name}님, 임시 비밀번호를 발송해 드립니다.")
-        messageHelper.setText(templateEngine.process("mail/password-reset", context), true)
+        MimeMessageHelper(message).apply {
+            setFrom(mailProperties.username)
+            setTo(request.email)
+            setSubject("${request.name}님, 임시 비밀번호를 발송해 드립니다.")
+            setText(templateEngine.process("mail/password-reset", context), true)
+        }
 
         mailSender.send(message)
     }
