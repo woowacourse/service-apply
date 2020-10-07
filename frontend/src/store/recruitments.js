@@ -13,7 +13,6 @@ export const recruitments = {
     async fetchAllRecruitments({ commit }) {
       const { data: recruitments } = await RecruitmentApi.fetchRecruitments()
       recruitments.sort((a, b) => b.id - a.id)
-      console.log(recruitments)
       commit("setRecruitments", recruitments)
     },
   },
