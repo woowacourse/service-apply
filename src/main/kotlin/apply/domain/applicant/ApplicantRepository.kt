@@ -8,12 +8,6 @@ interface ApplicantRepository : JpaRepository<Applicant, Long> {
 
     fun findByEmail(email: String): Applicant?
 
-    fun existsByNameAndEmailAndBirthday(
-        name: String,
-        email: String,
-        birthDay: LocalDate
-    ): Boolean
-
     fun findByNameAndEmailAndBirthday(
         name: String,
         email: String,
