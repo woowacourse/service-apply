@@ -3,29 +3,29 @@
     <Form @submit.prevent="submit">
       <h1>비밀번호 찾기</h1>
       <TextField
-          v-model="name"
-          name="name"
-          type="text"
-          label="이름"
-          placeholder="이름을 입력해 주세요."
-          :rules="rules.name"
-          @valid="v => (this.validName = v)"
-          required
+        v-model="name"
+        name="name"
+        type="text"
+        label="이름"
+        placeholder="이름을 입력해 주세요."
+        :rules="rules.name"
+        @valid="v => (this.validName = v)"
+        required
       />
       <TextField
-          v-model="email"
-          name="email"
-          type="email"
-          label="이메일"
-          placeholder="이메일 주소를 입력해 주세요."
-          :rules="rules.email"
-          @valid="v => (this.validEmail = v)"
-          required
+        v-model="email"
+        name="email"
+        type="email"
+        label="이메일"
+        placeholder="이메일 주소를 입력해 주세요."
+        :rules="rules.email"
+        @valid="v => (this.validEmail = v)"
+        required
       />
-      <BirthField v-model="birth" @valid="v => (this.validBirth = v)" required/>
+      <BirthField v-model="birth" @valid="v => (this.validBirth = v)" required />
       <div class="actions">
-        <Button type="button" @click="back" cancel value="이전"/>
-        <Button type="submit" :disabled="!validName || !validEmail || !validBirth" value="확인"/>
+        <Button type="button" @click="back" cancel value="이전" />
+        <Button type="submit" :disabled="!validName || !validEmail || !validBirth" value="확인" />
       </div>
       <footer>
         <a class="logo" href="#"></a>
@@ -35,8 +35,8 @@
 </template>
 
 <script>
-import {BirthField, Button, Form, TextField} from "@/components/form"
-import {login} from "@/utils/validation"
+import { BirthField, Button, Form, TextField } from "@/components/form"
+import { login } from "@/utils/validation"
 import * as Api from "@/api"
 import * as DateUtil from "@/utils/date"
 
@@ -57,7 +57,7 @@ export default {
       month: "",
       day: "",
     },
-    rules: {...login},
+    rules: { ...login },
     validName: false,
     validEmail: false,
     validBirth: false,
@@ -70,7 +70,7 @@ export default {
           email: this.email,
           birthday: DateUtil.formatLocalDate(this.birth),
         })
-        this.$router.push({path: `/find/result`, query: {email: this.email}})
+        this.$router.push({ path: `/find/result`, query: { email: this.email } })
       } catch (e) {
         alert(e.response.data.message)
       }

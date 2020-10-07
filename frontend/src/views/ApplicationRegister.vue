@@ -6,69 +6,69 @@
         임시 저장되었습니다. ({{ modifiedDateTime }})
       </p>
       <TextField
-          :value="$store.state.applicantInfo.name"
-          name="name"
-          type="text"
-          label="이름"
-          readonly
+        :value="$store.state.applicantInfo.name"
+        name="name"
+        type="text"
+        label="이름"
+        readonly
       />
 
       <div v-if="isEditing">
         <TextField
-            v-model="password"
-            name="password"
-            type="password"
-            label="비밀번호"
-            placeholder="비밀번호를 입력해 주세요"
-            :rules="rules.password"
-            @valid="v => (this.validPassword = v)"
-            required
+          v-model="password"
+          name="password"
+          type="password"
+          label="비밀번호"
+          placeholder="비밀번호를 입력해 주세요"
+          :rules="rules.password"
+          @valid="v => (this.validPassword = v)"
+          required
         />
         <TextField
-            v-model="rePassword"
-            name="re-password"
-            type="password"
-            label="비밀번호 확인"
-            placeholder="비밀번호를 다시 한 번 입력해 주세요"
-            :rules="[...rules.rePassword, v => v === password || '비밀번호가 일치하지 않습니다']"
-            @valid="v => (this.validPassword = v && this.password === this.rePassword)"
-            required
+          v-model="rePassword"
+          name="re-password"
+          type="password"
+          label="비밀번호 확인"
+          placeholder="비밀번호를 다시 한 번 입력해 주세요"
+          :rules="[...rules.rePassword, v => v === password || '비밀번호가 일치하지 않습니다']"
+          @valid="v => (this.validPassword = v && this.password === this.rePassword)"
+          required
         />
       </div>
 
       <TextField
-          v-for="(item, index) in recruitmentItems"
-          v-bind:key="item.id"
-          v-model="item.contents"
-          name="recruitment-item"
-          type="textarea"
-          :label="`${index + 1}. ${item.title}`"
-          :description="item.description"
-          placeholder="내용을 입력해주세요."
-          :rules="rules.recruitmentItem"
-          :max-length="item.maximumLength"
-          required
+        v-for="(item, index) in recruitmentItems"
+        v-bind:key="item.id"
+        v-model="item.contents"
+        name="recruitment-item"
+        type="textarea"
+        :label="`${index + 1}. ${item.title}`"
+        :description="item.description"
+        placeholder="내용을 입력해주세요."
+        :rules="rules.recruitmentItem"
+        :max-length="item.maximumLength"
+        required
       />
 
       <TextField
-          v-model="referenceUrl"
-          name="url"
-          type="url"
-          :description="'블로그, GitHub, 포트폴리오 주소 등을 입력해 주세요.'"
-          label="URL"
-          placeholder="ex) https://woowacourse.github.io/javable/"
+        v-model="referenceUrl"
+        name="url"
+        type="url"
+        :description="'블로그, GitHub, 포트폴리오 주소 등을 입력해 주세요.'"
+        label="URL"
+        placeholder="ex) https://woowacourse.github.io/javable/"
       />
       <Field>
         <CheckBox
-            v-model="factCheck"
-            label="위 지원서에 작성한 내용은 모두 사실입니다."
-            required
+          v-model="factCheck"
+          label="위 지원서에 작성한 내용은 모두 사실입니다."
+          required
         ></CheckBox>
       </Field>
       <div class="actions">
-        <Button @click="reset" value="초기화"/>
-        <Button @click="saveTemp" :disabled="!canSave" value="임시 저장"/>
-        <Button type="submit" :disabled="!canSubmit" value="제출"/>
+        <Button @click="reset" value="초기화" />
+        <Button @click="saveTemp" :disabled="!canSave" value="임시 저장" />
+        <Button type="submit" :disabled="!canSubmit" value="제출" />
       </div>
       <footer>
         <a class="logo" href="#"></a>
@@ -78,11 +78,11 @@
 </template>
 
 <script>
-import {Button, CheckBox, Field, Form, TextField} from "@/components/form"
+import { Button, CheckBox, Field, Form, TextField } from "@/components/form"
 import * as RecruitmentApi from "@/api/recruitments"
 import * as ApplicationFormsApi from "@/api/application-forms"
-import {register} from "@/utils/validation"
-import {parseLocalDateTime} from "@/utils/date"
+import { register } from "@/utils/validation"
+import { parseLocalDateTime } from "@/utils/date"
 
 export default {
   props: {
@@ -102,7 +102,7 @@ export default {
     rePassword: "",
     referenceUrl: "",
     recruitmentItems: [],
-    rules: {...register},
+    rules: { ...register },
     validPassword: false,
     modifiedDateTime: null,
   }),
@@ -126,7 +126,7 @@ export default {
   methods: {
     async fetchRecruitmentItems() {
       try {
-        const {data} = await RecruitmentApi.fetchItems(this.recruitmentId)
+        const { data } = await RecruitmentApi.fetchItems(this.recruitmentId)
         this.recruitmentItems = data.map(recruitmentItem => ({
           ...recruitmentItem,
           contents: "",
@@ -138,7 +138,7 @@ export default {
     },
     async fetchApplicationForm() {
       try {
-        const {data} = await ApplicationFormsApi.fetchForm({
+        const { data } = await ApplicationFormsApi.fetchForm({
           token: this.$store.getters["token"],
           recruitmentId: this.recruitmentId,
         })
@@ -154,7 +154,7 @@ export default {
       this.recruitmentItems = this.recruitmentItems.map(recruitmentItem => ({
         ...recruitmentItem,
         contents: applicationForm.answers.find(
-            ({recruitmentItemId}) => recruitmentItemId === recruitmentItem.id,
+          ({ recruitmentItemId }) => recruitmentItemId === recruitmentItem.id,
         ).contents,
       }))
     },

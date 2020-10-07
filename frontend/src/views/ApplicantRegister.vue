@@ -3,70 +3,70 @@
     <Form @submit.prevent="submit">
       <h1>지원자 정보</h1>
       <SummaryCheckField
-          name="policy"
-          label="개인정보 수집 및 이용 동의"
-          v-model="policyCheck"
-          required
+        name="policy"
+        label="개인정보 수집 및 이용 동의"
+        v-model="policyCheck"
+        required
       >
         <p class="summary">{{ policySummary }}</p>
       </SummaryCheckField>
       <TextField
-          v-model="name"
-          name="name"
-          type="text"
-          label="이름"
-          placeholder="이름을 입력해 주세요."
-          :rules="rules.name"
-          @valid="v => (this.validName = v)"
-          required
+        v-model="name"
+        name="name"
+        type="text"
+        label="이름"
+        placeholder="이름을 입력해 주세요."
+        :rules="rules.name"
+        @valid="v => (this.validName = v)"
+        required
       />
       <TextField
-          v-model="phoneNumber"
-          name="phone-number"
-          type="text"
-          label="전화번호"
-          placeholder="연락 가능한 전화번호를 입력해 주세요."
-          :rules="rules.phoneNumber"
-          @valid="v => (this.validPhoneNumber = v)"
-          required
+        v-model="phoneNumber"
+        name="phone-number"
+        type="text"
+        label="전화번호"
+        placeholder="연락 가능한 전화번호를 입력해 주세요."
+        :rules="rules.phoneNumber"
+        @valid="v => (this.validPhoneNumber = v)"
+        required
       />
       <TextField
-          v-model="email"
-          name="email"
-          type="email"
-          label="이메일"
-          placeholder="이메일 주소를 입력해 주세요."
-          :rules="rules.email"
-          @valid="v => (this.validEmail = v)"
-          required
+        v-model="email"
+        name="email"
+        type="email"
+        label="이메일"
+        placeholder="이메일 주소를 입력해 주세요."
+        :rules="rules.email"
+        @valid="v => (this.validEmail = v)"
+        required
       />
       <TextField
-          v-model="password"
-          name="password"
-          type="password"
-          label="비밀번호"
-          placeholder="비밀번호를 입력해 주세요."
-          :rules="rules.password"
-          @valid="validPasswordInputs"
-          required
+        v-model="password"
+        name="password"
+        type="password"
+        label="비밀번호"
+        placeholder="비밀번호를 입력해 주세요."
+        :rules="rules.password"
+        @valid="validPasswordInputs"
+        required
       />
       <TextField
-          v-model="rePassword"
-          name="re-password"
-          type="password"
-          label="비밀번호 확인"
-          placeholder="비밀번호를 다시 한번 입력해 주세요."
-          :rules="[...rules.rePassword, v => v === password || '비밀번호가 일치하지 않습니다.']"
-          @valid="validPasswordInputs"
-          required
+        v-model="rePassword"
+        name="re-password"
+        type="password"
+        label="비밀번호 확인"
+        placeholder="비밀번호를 다시 한번 입력해 주세요."
+        :rules="[...rules.rePassword, v => v === password || '비밀번호가 일치하지 않습니다.']"
+        @valid="validPasswordInputs"
+        required
       />
-      <BirthField v-model="birth" @valid="v => (this.validBirth = v)" required/>
-      <GenderField v-model="gender" @valid="v => (this.validGender = v)" required/>
+      <BirthField v-model="birth" @valid="v => (this.validBirth = v)" required />
+      <GenderField v-model="gender" @valid="v => (this.validGender = v)" required />
       <div class="actions">
-        <Button cancel value="취소"/>
+        <Button cancel value="취소" />
         <Button
-            type="submit"
-            :disabled="
+          type="submit"
+          :disabled="
             !policyCheck ||
               !validName ||
               !validPhoneNumber ||
@@ -75,7 +75,7 @@
               !validBirth ||
               !validGender
           "
-            value="다음"
+          value="다음"
         />
       </div>
       <footer>
@@ -86,11 +86,18 @@
 </template>
 
 <script>
-import {mapActions} from "vuex"
-import {BirthField, Button, Form, GenderField, SummaryCheckField, TextField,} from "@/components/form"
+import { mapActions } from "vuex"
+import {
+  BirthField,
+  Button,
+  Form,
+  GenderField,
+  SummaryCheckField,
+  TextField,
+} from "@/components/form"
 import * as DateUtil from "@/utils/date"
-import {register} from "@/utils/validation"
-import {POLICY_SUMMARY} from "./constants"
+import { register } from "@/utils/validation"
+import { POLICY_SUMMARY } from "./constants"
 
 export default {
   props: {
@@ -118,7 +125,7 @@ export default {
       day: "",
     },
     gender: "",
-    rules: {...register},
+    rules: { ...register },
     validName: false,
     validPhoneNumber: false,
     validEmail: false,
