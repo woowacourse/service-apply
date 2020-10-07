@@ -1,19 +1,19 @@
 import axios from "axios"
-import {convert} from "@/api/converter";
+import "./interceptor"
 
 const BASE_URL = "/api/recruitments"
 
 export const fetchItems = recruitmentId => {
-    return convert(axios.get(`${BASE_URL}/${recruitmentId}/items`).data)
+    return axios.get(`${BASE_URL}/${recruitmentId}/items`)
 }
 
 export const fetchMyRecruitments = token => {
-    return convert(axios
+    return axios
         .get(`${BASE_URL}/me`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
-        }).data)
+        })
         .catch(() =>
             Promise.resolve({
                 data: [

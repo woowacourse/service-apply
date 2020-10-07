@@ -1,21 +1,21 @@
 import axios from "axios"
-import {convert} from "@/api/converter";
+import "./interceptor"
 
 const BASE_URL = "/api/applicants"
 
 export const fetchRegister = ({name, phoneNumber, email, password, birthday, gender}) => {
-    return convert(axios.post(`${BASE_URL}/register`, {
+    return axios.post(`${BASE_URL}/register`, {
         name,
         phoneNumber,
         email,
         password,
         birthday,
         gender,
-    }).data)
+    })
 }
 export const fetchLogin = ({name, email, birthday, password}) => {
-    return convert(axios.post(`${BASE_URL}/login`, {name, email, birthday, password}).data)
+    return axios.post(`${BASE_URL}/login`, {name, email, birthday, password})
 }
 export const fetchPasswordFind = ({name, email, birthday}) => {
-    return convert(axios.post("/api/applicants/reset-password", {name, email, birthday}).data)
+    return axios.post("/api/applicants/reset-password", {name, email, birthday})
 }
