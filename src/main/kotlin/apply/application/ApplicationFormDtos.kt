@@ -51,5 +51,5 @@ data class ApplicationFormResponse(
 
 data class AnswerResponse(
     val contents: String,
-    val applicationFormId: Long
+    val recruitmentItemId: Long
 )

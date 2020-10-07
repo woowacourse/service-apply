@@ -4,6 +4,9 @@ import com.vaadin.flow.component.formlayout.FormLayout
 import com.vaadin.flow.data.binder.BeanValidationBinder
 import com.vaadin.flow.data.binder.Binder
 import com.vaadin.flow.data.binder.ReadOnlyHasValue
+import javax.validation.constraints.NotEmpty
+import javax.validation.constraints.NotNull
+import javax.validation.constraints.Size
 import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance
 
@@ -48,6 +51,7 @@ abstract class BindingFormLayout<DATA : Any>(
 
 /**
  * If you want to bind a form to [DATA] with an `id` of type [Long], use this [BindingIdentityFormLayout].
+ * Note that the field `id` should not have any of [NotNull], [NotEmpty], [Size] annotations.
  *
  * @see BindingFormLayout
  * @see IdField

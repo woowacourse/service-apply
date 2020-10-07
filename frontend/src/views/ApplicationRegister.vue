@@ -2,70 +2,73 @@
   <div class="application-register">
     <Form @submit.prevent="submit">
       <h1>지원서 작성</h1>
+      <p class="autosave-indicator" v-if="isEditing">
+        임시 저장되었습니다. ({{ modifiedDateTime }})
+      </p>
       <TextField
-        :value="$store.state.applicantInfo.name"
-        name="name"
-        type="text"
-        label="이름"
-        readonly
+          :value="$store.state.applicantInfo.name"
+          name="name"
+          type="text"
+          label="이름"
+          readonly
       />
 
       <div v-if="isEditing">
         <TextField
-          v-model="password"
-          name="password"
-          type="password"
-          label="비밀번호"
-          placeholder="비밀번호를 입력해 주세요"
-          :rules="rules.password"
-          @valid="v => (this.validPassword = v)"
-          required
+            v-model="password"
+            name="password"
+            type="password"
+            label="비밀번호"
+            placeholder="비밀번호를 입력해 주세요"
+            :rules="rules.password"
+            @valid="v => (this.validPassword = v)"
+            required
         />
         <TextField
-          v-model="rePassword"
-          name="re-password"
-          type="password"
-          label="비밀번호 확인"
-          placeholder="비밀번호를 다시 한 번 입력해 주세요"
-          :rules="[...rules.rePassword, v => v === password || '비밀번호가 일치하지 않습니다']"
-          @valid="v => (this.validPassword = v && this.password === this.rePassword)"
-          required
+            v-model="rePassword"
+            name="re-password"
+            type="password"
+            label="비밀번호 확인"
+            placeholder="비밀번호를 다시 한 번 입력해 주세요"
+            :rules="[...rules.rePassword, v => v === password || '비밀번호가 일치하지 않습니다']"
+            @valid="v => (this.validPassword = v && this.password === this.rePassword)"
+            required
         />
       </div>
 
       <TextField
-        v-for="(item, index) in recruitmentItems"
-        v-bind:key="item.id"
-        v-model="item.contents"
-        name="recruitment-item"
-        type="textarea"
-        :label="`${index + 1}. ${item.title}`"
-        :description="item.description"
-        placeholder="내용을 입력해주세요."
-        :rules="rules.recruitmentItem"
-        :max-length="item.maximumLength"
-        required
+          v-for="(item, index) in recruitmentItems"
+          v-bind:key="item.id"
+          v-model="item.contents"
+          name="recruitment-item"
+          type="textarea"
+          :label="`${index + 1}. ${item.title}`"
+          :description="item.description"
+          placeholder="내용을 입력해주세요."
+          :rules="rules.recruitmentItem"
+          :max-length="item.maximumLength"
+          required
       />
 
       <TextField
-        v-model="url"
-        name="url"
-        type="url"
-        :description="'블로그, GitHub, 포트폴리오 주소 등을 입력해 주세요.'"
-        label="URL"
-        placeholder="ex) https://woowacourse.github.io/javable/"
+          v-model="referenceUrl"
+          name="url"
+          type="url"
+          :description="'블로그, GitHub, 포트폴리오 주소 등을 입력해 주세요.'"
+          label="URL"
+          placeholder="ex) https://woowacourse.github.io/javable/"
       />
       <Field>
         <CheckBox
-          v-model="factCheck"
-          label="위 지원서에 작성한 내용은 모두 사실입니다."
-          required
+            v-model="factCheck"
+            label="위 지원서에 작성한 내용은 모두 사실입니다."
+            required
         ></CheckBox>
       </Field>
       <div class="actions">
-        <Button @click="reset" value="초기화" />
-        <Button @click="save" value="임시 저장" />
-        <Button type="submit" :disabled="!canSubmit" value="제출" />
+        <Button @click="reset" value="초기화"/>
+        <Button @click="saveTemp" :disabled="!canSave" value="임시 저장"/>
+        <Button type="submit" :disabled="!canSubmit" value="제출"/>
       </div>
       <footer>
         <a class="logo" href="#"></a>
@@ -75,14 +78,16 @@
 </template>
 
 <script>
-import { Button, CheckBox, Field, Form, TextField } from "@/components/form"
+import {Button, CheckBox, Field, Form, TextField} from "@/components/form"
 import * as RecruitmentApi from "@/api/recruitments"
 import * as ApplicationFormsApi from "@/api/application-forms"
-import { register } from "@/utils/validation"
+import {register} from "@/utils/validation"
+import {parseLocalDateTime} from "@/utils/date"
 
 export default {
   props: {
     recruitmentId: Number,
+    status: String,
   },
   components: {
     Form,
@@ -95,45 +100,64 @@ export default {
     factCheck: false,
     password: "",
     rePassword: "",
-    url: "",
+    referenceUrl: "",
     recruitmentItems: [],
-    rules: { ...register },
+    rules: {...register},
     validPassword: false,
+    modifiedDateTime: null,
   }),
   computed: {
-    isEditing() {
-      return this.$route.name === "edit"
-    },
     canSubmit() {
       return this.factCheck && (this.isEditing ? this.validPassword : true)
     },
+    canSave() {
+      return this.isEditing ? this.validPassword : true
+    },
+    isEditing() {
+      return this.status === "edit"
+    },
   },
   async created() {
-    try {
-      const { data: recruitmentItems } = await RecruitmentApi.fetchItems(this.recruitmentId)
-      this.recruitmentItems = recruitmentItems.map(recruitmentItem => ({
-        ...recruitmentItem,
-        contents: "",
-      }))
-      if (this.isEditing) {
-        const { data: applicationForm } = await ApplicationFormsApi.fetchForm({
-          token: this.$store.getters["token"],
-          recruitmentId: this.recruitmentId,
-        })
-        this.url = applicationForm.referenceUrl
-        this.recruitmentItems = recruitmentItems.map(recruitmentItem => ({
-          ...recruitmentItem,
-          contents: applicationForm.answers.items.find(
-            ({ recruitmentItemId }) => recruitmentItemId === recruitmentItem.id,
-          ).contents,
-        }))
-      }
-    } catch (e) {
-      alert("잘못된 요청입니다.")
-      this.$router.replace("/recruits")
+    await this.fetchRecruitmentItems()
+    if (this.isEditing) {
+      await this.fetchApplicationForm()
     }
   },
   methods: {
+    async fetchRecruitmentItems() {
+      try {
+        const {data} = await RecruitmentApi.fetchItems(this.recruitmentId)
+        this.recruitmentItems = data.map(recruitmentItem => ({
+          ...recruitmentItem,
+          contents: "",
+        }))
+      } catch (e) {
+        alert(e.response.data.message)
+        this.$router.replace("/")
+      }
+    },
+    async fetchApplicationForm() {
+      try {
+        const {data} = await ApplicationFormsApi.fetchForm({
+          token: this.$store.getters["token"],
+          recruitmentId: this.recruitmentId,
+        })
+        this.fillForm(data)
+      } catch (e) {
+        alert(e.response.data.message)
+        this.$router.replace("/")
+      }
+    },
+    fillForm(applicationForm) {
+      this.modifiedDateTime = parseLocalDateTime(new Date(applicationForm.modifiedDateTime))
+      this.referenceUrl = applicationForm.referenceUrl
+      this.recruitmentItems = this.recruitmentItems.map(recruitmentItem => ({
+        ...recruitmentItem,
+        contents: applicationForm.answers.find(
+            ({recruitmentItemId}) => recruitmentItemId === recruitmentItem.id,
+        ).contents,
+      }))
+    },
     reset() {
       this.factCheck = false
       this.password = ""
@@ -142,13 +166,49 @@ export default {
         ...recruitmentItem,
         contents: "",
       }))
-      this.url = ""
+      this.referenceUrl = ""
     },
-    save() {
-      // TODO: 임시 저장 기능 추가 필요
+    save(isSubmitted) {
+      const applicationForm = {
+        recruitmentId: this.recruitmentId,
+        referenceUrl: this.referenceUrl,
+        answers: this.recruitmentItems.map(item => ({
+          contents: item.contents,
+          recruitmentItemId: item.id,
+        })),
+        password: this.password,
+        isSubmitted,
+      }
+      const invoke = this.isEditing ? ApplicationFormsApi.updateForm : ApplicationFormsApi.saveForm
+      return invoke({
+        token: this.$store.getters["token"],
+        data: applicationForm,
+      })
     },
-    submit() {
-      confirm("정말로 제출하시겠습니까?")
+    async saveTemp() {
+      try {
+        await this.save(false)
+        alert("정상적으로 저장되었습니다.")
+        if (!this.isEditing) {
+          this.$router.replace("edit?recruitmentId=" + this.recruitmentId)
+        }
+        this.fetchApplicationForm()
+      } catch (e) {
+        alert(e.response.data.message)
+        this.$router.replace("/")
+      }
+    },
+    async submit() {
+      if (confirm("제출하신 뒤에는 수정하실 수 없습니다. 정말로 제출하시겠습니까?")) {
+        try {
+          await this.save(true)
+          alert("정상적으로 제출되었습니다.")
+        } catch (e) {
+          alert(e.response.data.message)
+        } finally {
+          this.$router.replace("/")
+        }
+      }
     },
   },
 }
@@ -179,5 +239,9 @@ export default {
   height: 32px;
   background: url("/assets/logo/logo_full_dark.png");
   background-size: 100% 100%;
+}
+
+.autosave-indicator {
+  color: darkred;
 }
 </style>

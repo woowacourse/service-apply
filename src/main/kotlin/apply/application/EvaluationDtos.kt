@@ -1,5 +1,7 @@
 package apply.application
 
+import apply.domain.evaluationItem.EvaluationItem
+import apply.domain.evaluationtarget.EvaluationStatus
 import javax.validation.Valid
 import javax.validation.constraints.Max
 import javax.validation.constraints.Min
@@ -52,4 +54,48 @@ data class EvaluationResponse(
     val recruitmentId: Long,
     val beforeEvaluationTitle: String = "",
     val beforeEvaluationId: Long = 0L
+)
+
+data class EvaluationItemResponse(
+    val title: String,
+    val description: String,
+    val maximumScore: Int,
+    val position: Int = 0,
+    val evaluationId: Long,
+    val id: Long = 0L
+) {
+    constructor(evaluationItem: EvaluationItem) : this(
+        evaluationItem.title,
+        evaluationItem.description,
+        evaluationItem.maximumScore,
+        evaluationItem.position,
+        evaluationItem.evaluationId,
+        evaluationItem.id
+    )
+}
+
+data class GradeEvaluationResponse(
+    val title: String,
+    val description: String,
+    val evaluationTarget: EvaluationTargetData,
+    val evaluationItems: List<EvaluationItemResponse>
+)
+
+data class EvaluationTargetData(
+    @field:NotNull
+    @field:Valid
+    var evaluationItemScores: List<EvaluationItemScoreData> = emptyList(),
+
+    @field:Size(max = 255)
+    var note: String = "",
+
+    @field:NotNull
+    var evaluationStatus: EvaluationStatus = EvaluationStatus.WAITING
+)
+
+data class EvaluationItemScoreData(
+    @field:NotNull
+    @field:Min(0)
+    var score: Int = 0,
+    var id: Long = 0L
 )

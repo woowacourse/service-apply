@@ -43,14 +43,14 @@
       </div>
       <footer>
         <a class="logo" href="#"></a>
-        <Label class="click" @click.native="findPassword">비밀번호 찾기</Label>
+        <router-link class="find-password" to="/find">비밀번호 찾기</router-link>
       </footer>
     </Form>
   </div>
 </template>
 
 <script>
-import {BirthField, Button, Form, Label, TextField} from "@/components/form"
+import {BirthField, Button, Form, TextField} from "@/components/form"
 import {login} from "@/utils/validation"
 import * as DateUtil from "@/utils/date"
 
@@ -61,7 +61,6 @@ export default {
     Button,
     TextField,
     BirthField,
-    Label,
   },
   data: () => ({
     name: "",
@@ -88,9 +87,9 @@ export default {
           password: this.password,
         })
         alert("로그인 성공")
-        this.$router.push("//my-applications")
+        this.$router.push("/my-application-forms")
       } catch (e) {
-        alert(e.message)
+        alert(e.response.data.message)
       }
     },
     findPassword() {
@@ -135,7 +134,9 @@ footer {
   justify-content: space-between;
 }
 
-.click {
-  cursor: pointer;
+.find-password {
+  text-decoration: none;
+  font-weight: 500;
+  color: #2c3e50;
 }
 </style>
