@@ -13,7 +13,6 @@ import apply.domain.cheater.CheaterRepository
 import apply.domain.recruitmentitem.Answer
 import apply.domain.recruitmentitem.Answers
 import apply.security.JwtTokenProvider
-import apply.utils.RandomPasswordGenerator
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
@@ -48,7 +47,7 @@ internal class ApplicantServiceTest {
     private lateinit var jwtTokenProvider: JwtTokenProvider
 
     @Mock
-    private lateinit var passwordGenerator: RandomPasswordGenerator
+    private lateinit var passwordGenerator: PasswordGenerator
 
     private lateinit var applicantService: ApplicantService
 
