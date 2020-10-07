@@ -94,11 +94,9 @@ internal class ApplicantServiceTest {
     private val inValidApplicantPasswordFindRequest =
         validApplicantPasswordFindRequest.copy(birthday = createLocalDate(1995, 4, 4))
 
-    private val applicants = listOf(
-        validApplicantRequest.toEntity(APPLICANT_ID)
-    )
+    private val applicant = validApplicantRequest.toEntity(APPLICANT_ID)
 
-    private val applicantResponses = listOf(ApplicantResponse(applicants[0], true, applicationForm))
+    private val applicantResponses = listOf(ApplicantResponse(applicant, true, applicationForm))
 
     @BeforeEach
     internal fun setUp() {
@@ -115,7 +113,7 @@ internal class ApplicantServiceTest {
     @Test
     fun `지원자 정보와 부정 행위자 여부를 함께 제공한다`() {
         given(applicationFormRepository.findByRecruitmentId(anyLong())).willReturn(listOf(applicationForm))
-        given(applicantRepository.findAllById(anySet())).willReturn(applicants)
+        given(applicantRepository.findAllById(anySet())).willReturn(listOf(applicant))
         given(cheaterRepository.findAll()).willReturn(listOf(Cheater(1L)))
 
         val founds = applicantService.findAllByRecruitmentId(1L)
@@ -128,7 +126,7 @@ internal class ApplicantServiceTest {
 
     @Test
     fun `지원자가 이미 존재하고 검증에 성공하면 유효한 토큰을 반환한다`() {
-        given(applicantRepository.findByEmail(validApplicantRequest.email)).willReturn(applicants[0])
+        given(applicantRepository.findByEmail(validApplicantRequest.email)).willReturn(applicant)
         given(jwtTokenProvider.createToken(validApplicantRequest.email)).willReturn(VALID_TOKEN)
 
         assertThat(applicantService.generateToken(validApplicantRequest)).isEqualTo(VALID_TOKEN)
@@ -136,7 +134,7 @@ internal class ApplicantServiceTest {
 
     @Test
     fun `지원자가 이미 존재하고 필드 값 동등성 검증에 실패하면 예외가 발생한다`() {
-        given(applicantRepository.findByEmail(inValidApplicantRequest.email)).willReturn(applicants[0])
+        given(applicantRepository.findByEmail(inValidApplicantRequest.email)).willReturn(applicant)
 
         assertThatThrownBy {
             applicantService.generateToken(inValidApplicantRequest)
@@ -154,7 +152,7 @@ internal class ApplicantServiceTest {
                     validApplicantRequest.toEntity()
                 )
             )
-        ).willReturn(applicants[0])
+        ).willReturn(applicant)
 
         assertThat(applicantService.generateToken(validApplicantRequest)).isEqualTo(VALID_TOKEN)
     }
@@ -198,7 +196,7 @@ internal class ApplicantServiceTest {
                 validApplicantPasswordFindRequest.email,
                 validApplicantPasswordFindRequest.birthday
             )
-        ).willReturn(applicants[0])
+        ).willReturn(applicant)
 
         given(passwordGenerator.generate()).willReturn(RANDOM_PASSWORD)
 
