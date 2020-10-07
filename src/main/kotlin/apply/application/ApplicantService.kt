@@ -3,6 +3,7 @@ package apply.application
 import apply.domain.applicant.Applicant
 import apply.domain.applicant.ApplicantRepository
 import apply.domain.applicant.Gender
+import apply.domain.applicant.Password
 import apply.domain.applicant.exception.ApplicantValidateException
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.CheaterRepository
@@ -11,7 +12,6 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import support.createLocalDate
-import support.security.sha256Encrypt
 import javax.annotation.PostConstruct
 
 @Transactional
@@ -46,17 +46,16 @@ class ApplicantService(
         applicantRepository.findByEmail(email) ?: throw IllegalArgumentException("email=$email 인 유저가 존재하지 않습니다")
 
     fun generateToken(applicantInformation: ApplicantInformation): String {
-        val encrypted = applicantInformation.copy(password = sha256Encrypt(applicantInformation.password))
-        val applicant = applicantRepository.findByEmail(encrypted.email)
-            ?.also { it.validate(encrypted) }
-            ?: applicantRepository.save(encrypted.toEntity())
+        val applicant = applicantRepository.findByEmail(applicantInformation.email)
+            ?.also { it.validate(applicantInformation) }
+            ?: applicantRepository.save(applicantInformation.toEntity())
 
         return jwtTokenProvider.createToken(applicant.email)
     }
 
     fun changePassword(applicantId: Long, newPassword: String) {
         applicantRepository.findByIdOrNull(applicantId)
-            ?.run { password = sha256Encrypt(newPassword) }
+            ?.run { password = Password(newPassword) }
             ?: throw IllegalArgumentException("존재하지 않는 사용자입니다.")
     }
 
@@ -66,7 +65,7 @@ class ApplicantService(
                 applicantVerifyInformation.name,
                 applicantVerifyInformation.email,
                 applicantVerifyInformation.birthday,
-                sha256Encrypt(applicantVerifyInformation.password)
+                applicantVerifyInformation.password
             )
         ) {
             true -> jwtTokenProvider.createToken(applicantVerifyInformation.email)
@@ -80,7 +79,7 @@ class ApplicantService(
             request.email,
             request.birthday
         )?.run {
-            passwordGenerator.generate().also { password = sha256Encrypt(it) }
+            passwordGenerator.generate().also { password = Password(it) }
         } ?: throw ApplicantValidateException()
     }
 
@@ -91,12 +90,12 @@ class ApplicantService(
         }
         val applicants = listOf(
             Applicant(
-                name = "홍길동1",
+                name = "홍길동",
                 email = "a@email.com",
                 phoneNumber = "010-0000-0000",
                 gender = Gender.MALE,
                 birthday = createLocalDate(2020, 4, 17),
-                password = sha256Encrypt("password")
+                password = Password("password")
             ),
             Applicant(
                 name = "홍길동2",
@@ -104,7 +103,7 @@ class ApplicantService(
                 phoneNumber = "010-0000-0000",
                 gender = Gender.FEMALE,
                 birthday = createLocalDate(2020, 5, 5),
-                password = sha256Encrypt("password")
+                password = Password("password")
             ),
             Applicant(
                 name = "홍길동3",
@@ -112,7 +111,7 @@ class ApplicantService(
                 phoneNumber = "010-0000-0000",
                 gender = Gender.MALE,
                 birthday = createLocalDate(2020, 1, 1),
-                password = sha256Encrypt("password")
+                password = Password("password")
             )
         )
         applicantRepository.saveAll(applicants)

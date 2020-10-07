@@ -2,6 +2,7 @@ package apply.application
 
 import apply.domain.applicant.Applicant
 import apply.domain.applicant.Gender
+import apply.domain.applicant.Password
 import apply.domain.applicationform.ApplicationForm
 import java.time.LocalDate
 import javax.validation.constraints.NotBlank
@@ -64,7 +65,7 @@ data class ApplicantInformation(
     val birthday: LocalDate,
 
     @field:NotBlank
-    val password: String
+    val password: Password
 ) {
     fun toEntity() = toEntity(0L)
 
@@ -90,7 +91,7 @@ data class ApplicantVerifyInformation(
     val birthday: LocalDate,
 
     @field:NotBlank
-    val password: String
+    val password: Password
 )
 
 data class ResetPasswordRequest(

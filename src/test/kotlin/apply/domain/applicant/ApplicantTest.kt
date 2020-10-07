@@ -20,7 +20,7 @@ internal class ApplicantTest {
             "010-0000-0000",
             Gender.MALE,
             createLocalDate(2020, 4, 17),
-            "password"
+            Password("password")
         )
         applicant = applicantInformation.toEntity()
     }

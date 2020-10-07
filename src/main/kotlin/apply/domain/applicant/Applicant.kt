@@ -4,6 +4,7 @@ import apply.application.ApplicantInformation
 import apply.domain.applicant.exception.ApplicantValidateException
 import java.time.LocalDate
 import javax.persistence.Column
+import javax.persistence.Embedded
 import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
@@ -30,7 +31,8 @@ class Applicant(
     val birthday: LocalDate,
 
     @Column(nullable = false)
-    var password: String,
+    @Embedded
+    var password: Password,
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

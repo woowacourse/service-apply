@@ -2,6 +2,7 @@ package apply.application
 
 import apply.domain.applicant.ApplicantRepository
 import apply.domain.applicant.Gender
+import apply.domain.applicant.Password
 import apply.domain.applicant.exception.ApplicantValidateException
 import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormRepository
@@ -24,7 +25,6 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import support.createLocalDate
 import support.createLocalDateTime
-import support.security.sha256Encrypt
 
 private const val VALID_TOKEN = "SOME_VALID_TOKEN"
 private const val APPLICANT_ID = 1L
@@ -71,7 +71,7 @@ internal class ApplicantServiceTest {
         phoneNumber = "010-0000-0000",
         gender = Gender.MALE,
         birthday = createLocalDate(1995, 2, 2),
-        password = "password"
+        password = Password("password")
     )
 
     private val validApplicantLoginRequest = ApplicantVerifyInformation(
@@ -87,16 +87,15 @@ internal class ApplicantServiceTest {
         birthday = validApplicantRequest.birthday
     )
 
-    private val inValidApplicantRequest = validApplicantRequest.copy(password = "invalid_password")
+    private val inValidApplicantRequest = validApplicantRequest.copy(password = Password("invalid_password"))
 
-    private val inValidApplicantLoginRequest = validApplicantLoginRequest.copy(password = "invalid_password")
+    private val inValidApplicantLoginRequest = validApplicantLoginRequest.copy(password = Password("invalid_password"))
 
     private val inValidApplicantPasswordFindRequest =
         validApplicantPasswordFindRequest.copy(birthday = createLocalDate(1995, 4, 4))
 
     private val applicants = listOf(
-        validApplicantRequest.copy(password = sha256Encrypt(validApplicantRequest.password))
-            .toEntity(APPLICANT_ID)
+        validApplicantRequest.toEntity(APPLICANT_ID)
     )
 
     private val applicantResponses = listOf(ApplicantResponse(applicants[0], true, applicationForm))
@@ -152,11 +151,7 @@ internal class ApplicantServiceTest {
         given(
             applicantRepository.save(
                 refEq(
-                    validApplicantRequest.copy(
-                        password = sha256Encrypt(
-                            validApplicantLoginRequest.password
-                        )
-                    ).toEntity()
+                    validApplicantRequest.toEntity()
                 )
             )
         ).willReturn(applicants[0])
@@ -171,7 +166,7 @@ internal class ApplicantServiceTest {
                 validApplicantLoginRequest.name,
                 validApplicantLoginRequest.email,
                 validApplicantLoginRequest.birthday,
-                sha256Encrypt(validApplicantLoginRequest.password)
+                validApplicantLoginRequest.password
             )
         ).willReturn(true)
         given(jwtTokenProvider.createToken(validApplicantLoginRequest.email)).willReturn(VALID_TOKEN)
@@ -186,7 +181,7 @@ internal class ApplicantServiceTest {
                 inValidApplicantLoginRequest.name,
                 inValidApplicantLoginRequest.email,
                 inValidApplicantLoginRequest.birthday,
-                sha256Encrypt(inValidApplicantLoginRequest.password)
+                inValidApplicantLoginRequest.password
             )
         ).willReturn(false)
 
