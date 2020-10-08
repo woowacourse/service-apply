@@ -16,7 +16,8 @@ import support.views.createPrimaryButton
 
 class EvaluationTargetFormDialog(
     private val evaluationTargetService: EvaluationTargetService,
-    private val evaluationTargetId: Long
+    private val evaluationTargetId: Long,
+    reloadComponents: () -> Unit
 ) : Dialog() {
     private val title: H2 = H2()
     private val description: TextArea = TextArea().apply {
@@ -32,7 +33,7 @@ class EvaluationTargetFormDialog(
         title.text = response.title
         description.value = response.description
 
-        add(createHeader(), evaluationTargetForm, createButtons())
+        add(createHeader(), evaluationTargetForm, createButtons(reloadComponents))
         width = "800px"
         height = "90%"
         open()
@@ -46,18 +47,19 @@ class EvaluationTargetFormDialog(
         }
     }
 
-    private fun createButtons(): Component {
-        return HorizontalLayout(createAddButton(), createCancelButton()).apply {
+    private fun createButtons(reloadComponent: () -> Unit): Component {
+        return HorizontalLayout(getCreateAddButton(reloadComponent), createCancelButton()).apply {
             setSizeFull()
             justifyContentMode = FlexComponent.JustifyContentMode.CENTER
             element.style.set("margin-top", "20px")
         }
     }
 
-    private fun createAddButton(): Button {
+    private fun getCreateAddButton(reloadComponent: () -> Unit): Button {
         return createPrimaryButton("저장") {
             evaluationTargetForm.bindOrNull()?.let {
                 evaluationTargetService.grade(evaluationTargetId, it)
+                reloadComponent()
                 close()
             }
         }

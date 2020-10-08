@@ -132,7 +132,7 @@ export default {
           contents: "",
         }))
       } catch (e) {
-        alert(e.response.data)
+        alert(e.response.data.message)
         this.$router.replace("/")
       }
     },
@@ -144,7 +144,7 @@ export default {
         })
         this.fillForm(data)
       } catch (e) {
-        alert(e.response.data)
+        alert(e.response.data.message)
         this.$router.replace("/")
       }
     },
@@ -194,7 +194,7 @@ export default {
         }
         this.fetchApplicationForm()
       } catch (e) {
-        alert(e.response.data)
+        alert(e.response.data.message)
         this.$router.replace("/")
       }
     },
@@ -204,7 +204,7 @@ export default {
           await this.save(true)
           alert("정상적으로 제출되었습니다.")
         } catch (e) {
-          alert(e.response.data)
+          alert(e.response.data.message)
         } finally {
           this.$router.replace("/")
         }
@@ -240,6 +240,7 @@ export default {
   background: url("/assets/logo/logo_full_dark.png");
   background-size: 100% 100%;
 }
+
 .autosave-indicator {
   color: darkred;
 }

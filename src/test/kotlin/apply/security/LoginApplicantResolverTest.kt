@@ -3,6 +3,7 @@ package apply.security
 import apply.application.ApplicantService
 import apply.domain.applicant.Applicant
 import apply.domain.applicant.Gender
+import apply.domain.applicant.Password
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
@@ -63,7 +64,7 @@ internal class LoginApplicantResolverTest {
             phoneNumber = "010-0000-0000",
             gender = Gender.MALE,
             birthday = createLocalDate(2020, 4, 17),
-            password = "password"
+            password = Password("password")
         )
         every { applicantService.getByEmail("applicant_email@email.com") } returns expectedApplicant
 

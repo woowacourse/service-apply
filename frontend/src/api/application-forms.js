@@ -1,4 +1,5 @@
 import axios from "axios"
+import "./interceptor"
 
 const BASE_URL = "/api/application-forms"
 

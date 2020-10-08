@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { Form, Button, TextField, BirthField } from "@/components/form"
+import { BirthField, Button, Form, TextField } from "@/components/form"
 import { login } from "@/utils/validation"
 import * as Api from "@/api"
 import * as DateUtil from "@/utils/date"
@@ -72,7 +72,7 @@ export default {
         })
         this.$router.push({ path: `/find/result`, query: { email: this.email } })
       } catch (e) {
-        alert(e.response.data)
+        alert(e.response.data.message)
       }
     },
     back() {
@@ -108,10 +108,12 @@ export default {
   background: url("/assets/logo/logo_full_dark.png");
   background-size: 100% 100%;
 }
+
 footer {
   display: flex;
   justify-content: space-between;
 }
+
 .click {
   cursor: pointer;
 }
