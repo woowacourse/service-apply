@@ -16,7 +16,7 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
     }
 
     @ExceptionHandler(value = [(IllegalArgumentException::class), (IllegalStateException::class)])
-    fun handleIllegalArgumentException(exception: RuntimeException): ResponseEntity<ApiResponse<Unit>> {
+    fun handleRuntimeException(exception: RuntimeException): ResponseEntity<ApiResponse<Unit>> {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body(ApiResponse.error(exception.message))
     }
