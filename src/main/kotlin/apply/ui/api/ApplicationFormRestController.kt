@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import javax.validation.Valid
 
 @RestController
 @RequestMapping("/api/application-forms")
@@ -31,7 +32,7 @@ class ApplicationFormRestController(
 
     @PostMapping
     fun save(
-        @RequestBody saveApplicationFormRequest: SaveApplicationFormRequest,
+        @RequestBody @Valid saveApplicationFormRequest: SaveApplicationFormRequest,
         @LoginApplicant applicant: Applicant
     ): ResponseEntity<Unit> {
         applicationFormService.save(applicant.id, saveApplicationFormRequest)
@@ -40,7 +41,7 @@ class ApplicationFormRestController(
 
     @PutMapping
     fun update(
-        @RequestBody updateApplicationFormRequest: UpdateApplicationFormRequest,
+        @RequestBody @Valid updateApplicationFormRequest: UpdateApplicationFormRequest,
         @LoginApplicant applicant: Applicant
     ): ResponseEntity<Unit> {
         applicationFormService.update(applicant.id, updateApplicationFormRequest)

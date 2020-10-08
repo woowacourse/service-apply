@@ -1,5 +1,6 @@
 package apply.domain.applicant
 
+import apply.application.ApplicantInformation
 import apply.domain.applicant.exception.ApplicantValidateException
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
@@ -19,7 +20,7 @@ internal class ApplicantTest {
             "010-0000-0000",
             Gender.MALE,
             createLocalDate(2020, 4, 17),
-            "password"
+            Password("password")
         )
         applicant = applicantInformation.toEntity()
     }

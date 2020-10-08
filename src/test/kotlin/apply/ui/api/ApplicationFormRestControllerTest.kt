@@ -6,6 +6,7 @@ import apply.application.ApplicationFormResponse
 import apply.application.ApplicationFormService
 import apply.domain.applicant.Applicant
 import apply.domain.applicant.Gender
+import apply.domain.applicant.Password
 import apply.security.JwtTokenProvider
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
@@ -54,7 +55,7 @@ internal class ApplicationFormRestControllerTest(
         phoneNumber = "010-0000-0000",
         gender = Gender.MALE,
         birthday = createLocalDate(2020, 4, 17),
-        password = "password",
+        password = Password("password"),
         id = 1L
     )
 
@@ -89,7 +90,7 @@ internal class ApplicationFormRestControllerTest(
             header(AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse(body = applicationForm))) }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(applicationForm))) }
         }
     }
 }

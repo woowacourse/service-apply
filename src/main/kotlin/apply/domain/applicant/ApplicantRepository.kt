@@ -18,6 +18,6 @@ interface ApplicantRepository : JpaRepository<Applicant, Long> {
         name: String,
         email: String,
         birthDay: LocalDate,
-        password: String
+        password: Password
     ): Boolean
 }
