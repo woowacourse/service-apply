@@ -9,6 +9,6 @@ export const register = {
   phoneNumber: [...phoneNumber],
   email: [...email],
   password: [...password],
-  rePassword: [...common.required],
+  rePassword: [...password],
   recruitmentItem: [...common.required],
 }

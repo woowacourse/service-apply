@@ -47,7 +47,7 @@
         label="비밀번호"
         placeholder="비밀번호를 입력해 주세요."
         :rules="rules.password"
-        @valid="validPasswordInputs"
+        @valid="v => (this.validPassword = v)"
         required
       />
       <TextField
@@ -57,26 +57,14 @@
         label="비밀번호 확인"
         placeholder="비밀번호를 다시 한번 입력해 주세요."
         :rules="[...rules.rePassword, v => v === password || '비밀번호가 일치하지 않습니다.']"
-        @valid="validPasswordInputs"
+        @valid="v => (this.validRePassword = v)"
         required
       />
       <BirthField v-model="birth" @valid="v => (this.validBirth = v)" required />
       <GenderField v-model="gender" @valid="v => (this.validGender = v)" required />
       <div class="actions">
         <Button cancel value="취소" />
-        <Button
-          type="submit"
-          :disabled="
-            !policyCheck ||
-              !validName ||
-              !validPhoneNumber ||
-              !validEmail ||
-              !validPassword ||
-              !validBirth ||
-              !validGender
-          "
-          value="다음"
-        />
+        <Button type="submit" :disabled="confirmForms()" value="다음" />
       </div>
       <footer>
         <a class="logo" href="#"></a>
@@ -130,6 +118,7 @@ export default {
     validPhoneNumber: false,
     validEmail: false,
     validPassword: false,
+    validRePassword: false,
     validBirth: false,
     validGender: false,
   }),
@@ -155,8 +144,18 @@ export default {
         alert(e.response.data.message)
       }
     },
-    validPasswordInputs(v) {
-      return (this.validPassword = v && this.password === this.rePassword)
+    confirmForms() {
+      return (
+        this.policyCheck &&
+        this.validName &&
+        this.validPhoneNumber &&
+        this.validEmail &&
+        this.validPassword &&
+        this.validRePassword &&
+        this.validBirth &&
+        this.validGender &&
+        this.password === this.rePassword
+      )
     },
   },
 }

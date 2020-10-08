@@ -2,7 +2,7 @@
   <div class="application-register">
     <Form @submit.prevent="submit">
       <h1>지원서 작성</h1>
-      <p class="autosave-indicator" v-if="isEditing">
+      <p class="autosave-indicator" v-if="isEditing && !modifiedDateTime">
         임시 저장되었습니다. ({{ modifiedDateTime }})
       </p>
       <TextField
@@ -31,7 +31,7 @@
           label="비밀번호 확인"
           placeholder="비밀번호를 다시 한 번 입력해 주세요"
           :rules="[...rules.rePassword, v => v === password || '비밀번호가 일치하지 않습니다']"
-          @valid="v => (this.validPassword = v && this.password === this.rePassword)"
+          @valid="v => (this.validRePassword = v)"
           required
         />
       </div>
@@ -104,14 +104,17 @@ export default {
     recruitmentItems: [],
     rules: { ...register },
     validPassword: false,
+    validRePassword: false,
     modifiedDateTime: null,
   }),
   computed: {
     canSubmit() {
-      return this.factCheck && (this.isEditing ? this.validPassword : true)
+      return (
+        this.factCheck && this.confirmContents() && (this.isEditing ? this.confirmPassword() : true)
+      )
     },
     canSave() {
-      return this.isEditing ? this.validPassword : true
+      return this.isEditing ? this.confirmPassword() : true
     },
     isEditing() {
       return this.status === "edit"
@@ -209,6 +212,12 @@ export default {
           this.$router.replace("/")
         }
       }
+    },
+    confirmPassword() {
+      return this.validPassword && this.validRePassword && this.password === this.rePassword
+    },
+    confirmContents() {
+      return this.recruitmentItems.every(item => item.contents !== "")
     },
   },
 }
