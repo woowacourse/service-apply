@@ -52,7 +52,7 @@ export default {
         label: "모집 종료",
       },
     ],
-    recruits: [],
+    // recruits: [],
   }),
   computed: {
     filteredRecruits() {
@@ -68,9 +68,9 @@ export default {
       }
       return this.recruits
     },
-  },
-  async created() {
-    this.recruits = (await RecruitmentApi.fetchRecruitments()).data.sort((a, b) => b.id - a.id)
+    recruits() {
+      return this.$store.getters["recruitments"]
+    },
   },
 }
 </script>
