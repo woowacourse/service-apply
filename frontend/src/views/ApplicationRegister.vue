@@ -1,10 +1,8 @@
 <template>
   <div class="application-register">
-    <Box style="max-width: 512px">
-      <div class="information">
-        <div class="title">{{ this.recruitment.title }}</div>
-        <div class="period">{{ startDateTime }} ~ {{ endDateTime }}</div>
-      </div>
+    <Box class="information">
+      <div class="title">{{ recruitment.title }}</div>
+      <div class="period">{{ startDateTime }} ~ {{ endDateTime }}</div>
     </Box>
     <Form @submit.prevent="submit">
       <h1>지원서 작성</h1>
@@ -90,7 +88,6 @@ import * as ApplicationFormsApi from "@/api/application-forms"
 import { register } from "@/utils/validation"
 import { parseLocalDateTime } from "@/utils/date"
 import Box from "@/components/Box"
-import CommonItem from "@/components/CommonItem"
 
 export default {
   props: {
@@ -104,7 +101,6 @@ export default {
     TextField,
     CheckBox,
     Field,
-    CommonItem,
   },
   data: () => ({
     factCheck: false,
@@ -127,7 +123,7 @@ export default {
       return this.status === "edit"
     },
     recruitment() {
-      return this.$store.getters["recruitments"].find(v => v.id === this.recruitmentId)
+      return this.$store.state.recruitments.items.find(v => v.id === this.recruitmentId)
     },
     startDateTime() {
       return parseLocalDateTime(new Date(this.recruitment.startDateTime))
@@ -255,11 +251,16 @@ export default {
 .title {
   font-size: 18px;
   font-weight: 700;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 }
 
 .period {
   font-size: 16px;
+}
+
+.information {
+  max-width: 512px;
+  margin-bottom: 0;
 }
 
 .logo {
@@ -269,6 +270,7 @@ export default {
   background: url("/assets/logo/logo_full_dark.png");
   background-size: 100% 100%;
 }
+
 .autosave-indicator {
   color: darkred;
 }

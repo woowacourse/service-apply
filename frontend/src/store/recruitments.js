@@ -2,13 +2,13 @@ import * as Api from "@/api"
 
 export const recruitments = {
   state: () => ({
-    recruitments: [],
+    items: [],
   }),
   actions: {
     async fetchRecruitments({ commit }) {
       const { data: recruitments } = await Api.fetchRecruitments()
 
-      await commit(
+      commit(
         "setRecruitments",
         recruitments.sort((a, b) => b.id - a.id),
       )
@@ -16,12 +16,7 @@ export const recruitments = {
   },
   mutations: {
     setRecruitments(state, recruitments) {
-      state.recruitments = recruitments
-    },
-  },
-  getters: {
-    recruitments: state => {
-      return state.recruitments
+      state.items = recruitments
     },
   },
 }

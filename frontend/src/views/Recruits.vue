@@ -6,8 +6,9 @@
           <router-link
             :class="{ active: tab.name === ($route.query.status || '') }"
             :to="{ path: '/recruits', [tab.name && 'query']: { status: tab.name } }"
-            >{{ tab.label }}</router-link
           >
+            {{ tab.label }}
+          </router-link>
         </li>
         <li class="tab-item">
           <router-link to="/my-application-forms">내 지원서</router-link>
@@ -67,7 +68,7 @@ export default {
       return this.recruits
     },
     recruits() {
-      return this.$store.getters["recruitments"]
+      return this.$store.state.recruitments.items
     },
   },
 }
