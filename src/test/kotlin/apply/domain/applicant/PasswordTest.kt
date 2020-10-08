@@ -9,6 +9,6 @@ internal class PasswordTest {
         val input = "password"
         val password = Password(input)
 
-        assertThat(password.password).isNotEqualTo(input)
+        assertThat(password.value).isNotEqualTo(input)
     }
 }

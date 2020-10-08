@@ -3,6 +3,7 @@ package apply.domain.applicant
 import apply.application.ApplicantInformation
 import apply.domain.applicant.exception.ApplicantValidateException
 import java.time.LocalDate
+import javax.persistence.AttributeOverride
 import javax.persistence.Column
 import javax.persistence.Embedded
 import javax.persistence.Entity
@@ -30,7 +31,7 @@ class Applicant(
     @Column(nullable = false)
     val birthday: LocalDate,
 
-    @Column(nullable = false)
+    @AttributeOverride(name = "value", column = Column(name = "password", nullable = false))
     @Embedded
     var password: Password,
 
