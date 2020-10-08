@@ -152,7 +152,7 @@ export default {
           },
         })
       } catch (e) {
-        alert(e.response)
+        alert(e.response.data.message)
       }
     },
     validPasswordInputs(v) {

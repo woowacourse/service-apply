@@ -9,8 +9,6 @@ import com.vaadin.flow.component.textfield.TextArea
 import support.views.BindingFormLayout
 import support.views.createItemSelect
 
-private const val FIXED_ADDED_COMPONENT_COUNT = 3
-
 class EvaluationTargetForm() : BindingFormLayout<EvaluationTargetData>(EvaluationTargetData::class) {
     private val evaluationItemScores: MutableList<EvaluationItemScoreForm> = mutableListOf()
     private val note: TextArea = TextArea("기타 특이사항")
@@ -66,5 +64,9 @@ class EvaluationTargetForm() : BindingFormLayout<EvaluationTargetData>(Evaluatio
             }
         }
         sumOfScore.value = sumOfScore()
+    }
+
+    companion object {
+        private const val FIXED_ADDED_COMPONENT_COUNT = 3
     }
 }
