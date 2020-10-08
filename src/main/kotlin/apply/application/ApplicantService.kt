@@ -112,6 +112,14 @@ class ApplicantService(
                 gender = Gender.MALE,
                 birthday = createLocalDate(2020, 1, 1),
                 password = Password("password")
+            ),
+            Applicant(
+                name = "홍길동4",
+                email = "d@email.com",
+                phoneNumber = "010-0000-0000",
+                gender = Gender.MALE,
+                birthday = createLocalDate(2020, 1, 1),
+                password = Password("password")
             )
         )
         applicantRepository.saveAll(applicants)
