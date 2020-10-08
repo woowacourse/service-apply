@@ -56,7 +56,7 @@ class RecruitmentService(
     fun findAllByApplicantId(applicantId: Long): List<AppliedRecruitmentResponse> {
         val appliedRecruitments = applicationFormRepository.findAllByApplicantId(applicantId)
         val appliedRecruitmentIds = appliedRecruitments.map { it.recruitmentId }
-        val submittedRecruitments = appliedRecruitments.map { it.recruitmentId to it.submitted }.toMap()
+        val submittedRecruitments = appliedRecruitments.associate { it.recruitmentId to it.submitted }
 
         return recruitmentRepository.findAllById(appliedRecruitmentIds).map {
             AppliedRecruitmentResponse(

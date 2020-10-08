@@ -47,6 +47,7 @@ internal class RecruitmentRestControllerTest(
 
     @MockkBean
     private lateinit var applicantService: ApplicantService
+
     @MockkBean
     private lateinit var recruitmentItemService: RecruitmentItemService
     private lateinit var mockMvc: MockMvc
