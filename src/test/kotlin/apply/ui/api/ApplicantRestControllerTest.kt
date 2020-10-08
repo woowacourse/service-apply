@@ -33,7 +33,7 @@ private const val RANDOM_PASSWORD = "nEw_p@ssw0rd"
 private const val PASSWORD = "password"
 private const val INVALID_PASSWORD = "invalid_password"
 
-private fun ApplicantInformation.toMap(password: String): Map<String, Any?> {
+private fun ApplicantInformation.withPlainPassword(password: String): Map<String, Any?> {
     return mapOf(
         "name" to name,
         "email" to email,
@@ -44,7 +44,7 @@ private fun ApplicantInformation.toMap(password: String): Map<String, Any?> {
     )
 }
 
-private fun ApplicantVerifyInformation.toMap(password: String): Map<String, Any?> {
+private fun ApplicantVerifyInformation.withPlainPassword(password: String): Map<String, Any?> {
     return mapOf(
         "name" to name,
         "email" to email,
@@ -115,7 +115,7 @@ internal class ApplicantRestControllerTest(
             .willReturn(VALID_TOKEN)
 
         mockMvc.post("/api/applicants/register") {
-            content = objectMapper.writeValueAsBytes(applicantRequest.toMap(PASSWORD))
+            content = objectMapper.writeValueAsBytes(applicantRequest.withPlainPassword(PASSWORD))
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isOk }
@@ -130,7 +130,7 @@ internal class ApplicantRestControllerTest(
         ).willThrow(ApplicantValidateException())
 
         mockMvc.post("/api/applicants/register") {
-            content = objectMapper.writeValueAsBytes(invalidApplicantRequest.toMap(INVALID_PASSWORD))
+            content = objectMapper.writeValueAsBytes(invalidApplicantRequest.withPlainPassword(INVALID_PASSWORD))
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isUnauthorized }
@@ -145,7 +145,7 @@ internal class ApplicantRestControllerTest(
         ).willReturn(VALID_TOKEN)
 
         mockMvc.post("/api/applicants/login") {
-            content = objectMapper.writeValueAsBytes(applicantLoginRequest.toMap(PASSWORD))
+            content = objectMapper.writeValueAsBytes(applicantLoginRequest.withPlainPassword(PASSWORD))
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isOk }
@@ -160,7 +160,7 @@ internal class ApplicantRestControllerTest(
         ).willThrow(ApplicantValidateException())
 
         mockMvc.post("/api/applicants/login") {
-            content = objectMapper.writeValueAsBytes(invalidApplicantLoginRequest.toMap(INVALID_PASSWORD))
+            content = objectMapper.writeValueAsBytes(invalidApplicantLoginRequest.withPlainPassword(INVALID_PASSWORD))
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isUnauthorized }
