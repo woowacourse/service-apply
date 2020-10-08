@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import javax.validation.Valid
 
 @RestController
 @RequestMapping("/api/applicants")
@@ -20,7 +21,7 @@ class ApplicantRestController(
     private val mailService: MailService
 ) {
     @PostMapping("/register")
-    fun generateToken(@RequestBody applicantInformation: ApplicantInformation): ResponseEntity<String> {
+    fun generateToken(@RequestBody @Valid applicantInformation: ApplicantInformation): ResponseEntity<String> {
         return try {
             val token = applicantService.generateToken(applicantInformation)
             ResponseEntity.ok().body(token)
@@ -30,7 +31,7 @@ class ApplicantRestController(
     }
 
     @PostMapping("/login")
-    fun generateToken(@RequestBody applicantVerifyInformation: ApplicantVerifyInformation): ResponseEntity<String> {
+    fun generateToken(@RequestBody @Valid applicantVerifyInformation: ApplicantVerifyInformation): ResponseEntity<String> {
         return try {
             val token = applicantService.generateTokenByLogin(applicantVerifyInformation)
             ResponseEntity.ok().body(token)
@@ -40,7 +41,7 @@ class ApplicantRestController(
     }
 
     @PostMapping("/reset-password")
-    fun resetPassword(@RequestBody resetPasswordRequest: ResetPasswordRequest): ResponseEntity<String> {
+    fun resetPassword(@RequestBody @Valid resetPasswordRequest: ResetPasswordRequest): ResponseEntity<String> {
         return try {
             val newPassword = applicantService.resetPassword(resetPasswordRequest)
             mailService.sendPasswordResetMail(resetPasswordRequest, newPassword)

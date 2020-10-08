@@ -64,7 +64,7 @@ data class ApplicantInformation(
     @field:NotNull
     val birthday: LocalDate,
 
-    @field:NotBlank
+    @field:NotNull
     val password: Password
 ) {
     fun toEntity() = toEntity(0L)
@@ -90,7 +90,7 @@ data class ApplicantVerifyInformation(
     @field:NotNull
     val birthday: LocalDate,
 
-    @field:NotBlank
+    @field:NotNull
     val password: Password
 )
 
