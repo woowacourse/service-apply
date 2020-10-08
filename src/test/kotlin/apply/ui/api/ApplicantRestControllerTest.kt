@@ -119,7 +119,7 @@ internal class ApplicantRestControllerTest(
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isOk }
-            content { string(VALID_TOKEN) }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(VALID_TOKEN))) }
         }
     }
 
@@ -134,7 +134,7 @@ internal class ApplicantRestControllerTest(
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isUnauthorized }
-            content { string("요청 정보가 기존 지원자 정보와 일치하지 않습니다") }
+            content { json(objectMapper.writeValueAsString(ApiResponse.error("요청 정보가 기존 지원자 정보와 일치하지 않습니다"))) }
         }
     }
 
@@ -149,7 +149,7 @@ internal class ApplicantRestControllerTest(
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isOk }
-            content { string(VALID_TOKEN) }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(VALID_TOKEN))) }
         }
     }
 
@@ -164,7 +164,7 @@ internal class ApplicantRestControllerTest(
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isUnauthorized }
-            content { string("요청 정보가 기존 지원자 정보와 일치하지 않습니다") }
+            content { json(objectMapper.writeValueAsString(ApiResponse.error("요청 정보가 기존 지원자 정보와 일치하지 않습니다"))) }
         }
     }
 
