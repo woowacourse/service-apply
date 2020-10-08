@@ -20,13 +20,13 @@ class ApplicantRestController(
     @PostMapping("/register")
     fun generateToken(@RequestBody applicantInformation: ApplicantInformation): ResponseEntity<ApiResponse<String>> {
         val token = applicantService.generateToken(applicantInformation)
-        return ResponseEntity.ok().body(ApiResponse(body = token))
+        return ResponseEntity.ok().body(ApiResponse.success(token))
     }
 
     @PostMapping("/login")
     fun generateToken(@RequestBody applicantVerifyInformation: ApplicantVerifyInformation): ResponseEntity<ApiResponse<String>> {
         val token = applicantService.generateTokenByLogin(applicantVerifyInformation)
-        return ResponseEntity.ok().body(ApiResponse(body = token))
+        return ResponseEntity.ok().body(ApiResponse.success(token))
     }
 
     @PostMapping("/reset-password")

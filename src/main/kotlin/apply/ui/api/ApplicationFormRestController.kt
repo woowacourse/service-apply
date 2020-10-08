@@ -26,7 +26,7 @@ class ApplicationFormRestController(
         @LoginApplicant applicant: Applicant
     ): ResponseEntity<ApiResponse<ApplicationFormResponse>> {
         val form = applicationFormService.findForm(applicant.id, recruitment)
-        return ResponseEntity.ok().body(ApiResponse(body = form))
+        return ResponseEntity.ok().body(ApiResponse.success(form))
     }
 
     @PostMapping

@@ -12,18 +12,18 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
     @ExceptionHandler(value = [ApplicantValidateException::class])
     fun handleApplicantValidateException(exception: ApplicantValidateException): ResponseEntity<ApiResponse<Unit>> {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body(ApiResponse(message = exception.message))
+            .body(ApiResponse.error(exception.message))
     }
 
-    @ExceptionHandler(value = [IllegalArgumentException::class, IllegalStateException::class])
-    fun handleIllegalArgumentException(exception: IllegalArgumentException): ResponseEntity<ApiResponse<Unit>> {
+    @ExceptionHandler(value = [(IllegalArgumentException::class), (IllegalStateException::class)])
+    fun handleIllegalArgumentException(exception: RuntimeException): ResponseEntity<ApiResponse<Unit>> {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body(ApiResponse(message = exception.message))
+            .body(ApiResponse.error(exception.message))
     }
 
     @ExceptionHandler(value = [Exception::class])
     fun handleGlobalException(exception: Exception): ResponseEntity<ApiResponse<Unit>> {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body(ApiResponse(message = exception.message))
+            .body(ApiResponse.error(exception.message))
     }
 }

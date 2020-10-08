@@ -18,12 +18,12 @@ class RecruitmentRestController(
 ) {
     @GetMapping
     fun findAll(): ResponseEntity<ApiResponse<List<RecruitmentResponse>>> {
-        return ResponseEntity.ok().body(ApiResponse(body = recruitmentService.findAllNotHidden()))
+        return ResponseEntity.ok().body(ApiResponse.success(recruitmentService.findAllNotHidden()))
     }
 
     @GetMapping("/{id}/items")
     fun findItemsById(@PathVariable("id") recruitmentId: Long): ResponseEntity<ApiResponse<List<RecruitmentItem>>> {
         return ResponseEntity.ok()
-            .body(ApiResponse(body = recruitmentItemService.findByRecruitmentIdOrderByPosition(recruitmentId)))
+            .body(ApiResponse.success(recruitmentItemService.findByRecruitmentIdOrderByPosition(recruitmentId)))
     }
 }
