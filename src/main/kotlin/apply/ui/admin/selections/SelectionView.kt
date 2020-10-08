@@ -63,7 +63,7 @@ class SelectionView(
     }
 
     private fun createContent(keyword: String = ""): Component {
-        val tabsToGrids: LinkedHashMap<Tab, Component> = mapTabAndGrid(keyword)
+        val tabsToGrids: Map<Tab, Component> = mapTabAndGrid(keyword)
         val (tabs, grids) = createTabComponents(tabsToGrids)
 
         val menu = HorizontalLayout(
@@ -88,7 +88,7 @@ class SelectionView(
         return VerticalLayout(menu, grids).apply { setWidthFull() }
     }
 
-    private fun mapTabAndGrid(keyword: String): LinkedHashMap<Tab, Component> {
+    private fun mapTabAndGrid(keyword: String): Map<Tab, Component> {
         val tabsToGrids = LinkedHashMap<Tab, Component>()
 
         val applicantResponses = applicantService.findByRecruitmentIdAndKeyword(recruitmentId, keyword)
@@ -156,7 +156,7 @@ class SelectionView(
         }
     }
 
-    private fun createTabComponents(tabsToGrids: LinkedHashMap<Tab, Component>): Pair<Tabs, Div> {
+    private fun createTabComponents(tabsToGrids: Map<Tab, Component>): Pair<Tabs, Div> {
         val tabs = Tabs().apply {
             add(*(tabsToGrids.keys).toTypedArray())
             addSelectedChangeListener {
