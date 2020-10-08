@@ -3,7 +3,7 @@
     <Box style="max-width: 512px">
       <div class="information">
         <div class="title">{{ this.recruitment.title }}</div>
-        <div class="period">{{ this.recruitment.startDateTime }} ~ {{ this.recruitment.endDateTime }}</div>
+        <div class="period">{{ startDateTime }} ~ {{ endDateTime }}</div>
       </div>
     </Box>
     <Form @submit.prevent="submit">
@@ -128,6 +128,12 @@ export default {
     },
     recruitment() {
       return this.$store.getters["recruitments"].find(v => v.id === this.recruitmentId)
+    },
+    startDateTime() {
+      return parseLocalDateTime(new Date(this.recruitment.startDateTime))
+    },
+    endDateTime() {
+      return parseLocalDateTime(new Date(this.recruitment.endDateTime))
     },
   },
   async created() {
