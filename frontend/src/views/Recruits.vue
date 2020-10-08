@@ -23,7 +23,6 @@
 </template>
 
 <script>
-import * as RecruitmentApi from "@/api/recruitments"
 import RecruitItem from "@/components/RecruitItem"
 import Box from "@/components/Box"
 
@@ -52,7 +51,6 @@ export default {
         label: "모집 종료",
       },
     ],
-    // recruits: [],
   }),
   computed: {
     filteredRecruits() {
