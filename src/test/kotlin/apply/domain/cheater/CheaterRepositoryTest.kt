@@ -2,6 +2,7 @@ package apply.domain.cheater
 
 import apply.domain.applicant.Applicant
 import apply.domain.applicant.Gender
+import apply.domain.applicant.Password
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -22,7 +23,7 @@ internal class CheaterRepositoryTest(
         phoneNumber = "010-0000-0000",
         gender = Gender.MALE,
         birthday = createLocalDate(2020, 4, 17),
-        password = "password"
+        password = Password("password")
     )
 
     private val applicant = Applicant(
@@ -32,7 +33,7 @@ internal class CheaterRepositoryTest(
         phoneNumber = "010-0000-0000",
         gender = Gender.MALE,
         birthday = createLocalDate(2020, 4, 17),
-        password = "password"
+        password = Password("password")
     )
 
     @BeforeEach

@@ -11,6 +11,7 @@ import apply.createEvaluationTarget
 import apply.domain.applicant.Applicant
 import apply.domain.applicant.ApplicantRepository
 import apply.domain.applicant.Gender
+import apply.domain.applicant.Password
 import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.Cheater
@@ -372,7 +373,7 @@ class EvaluationTargetServiceTest(
             phoneNumber = "010-0000-0000",
             gender = Gender.MALE,
             birthday = createLocalDate(2020, 4, 17),
-            password = "password"
+            password = Password("password")
         )
     }
 }

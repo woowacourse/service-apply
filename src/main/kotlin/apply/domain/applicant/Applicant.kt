@@ -1,8 +1,11 @@
 package apply.domain.applicant
 
+import apply.application.ApplicantInformation
 import apply.domain.applicant.exception.ApplicantValidateException
 import java.time.LocalDate
+import javax.persistence.AttributeOverride
 import javax.persistence.Column
+import javax.persistence.Embedded
 import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
@@ -28,8 +31,9 @@ class Applicant(
     @Column(nullable = false)
     val birthday: LocalDate,
 
-    @Column(nullable = false)
-    var password: String,
+    @AttributeOverride(name = "value", column = Column(name = "password", nullable = false))
+    @Embedded
+    var password: Password,
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
