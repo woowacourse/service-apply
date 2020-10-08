@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import { Form, Button, TextField, BirthField } from "@/components/form"
+import { BirthField, Button, Form, TextField } from "@/components/form"
 import { login } from "@/utils/validation"
 import * as DateUtil from "@/utils/date"
 
@@ -89,7 +89,7 @@ export default {
         alert("로그인 성공")
         this.$router.push("/my-application-forms")
       } catch (e) {
-        alert(e.response.data)
+        alert(e.response.data.message)
       }
     },
     findPassword() {

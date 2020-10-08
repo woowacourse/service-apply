@@ -1,5 +1,6 @@
 package apply.ui.api
 
+import apply.application.ApplicationFormResponse
 import apply.application.ApplicationFormService
 import apply.application.SaveApplicationFormRequest
 import apply.application.UpdateApplicationFormRequest
@@ -24,39 +25,26 @@ class ApplicationFormRestController(
     fun getForm(
         @RequestParam("recruitmentId") recruitment: Long,
         @LoginApplicant applicant: Applicant
-    ): ResponseEntity<Any> {
-        return try {
-            val form = applicationFormService.findForm(applicant.id, recruitment)
-            ResponseEntity.ok().body(form)
-        } catch (e: IllegalArgumentException) {
-            ResponseEntity.badRequest().body(e.message)
-        }
+    ): ResponseEntity<ApiResponse<ApplicationFormResponse>> {
+        val form = applicationFormService.findForm(applicant.id, recruitment)
+        return ResponseEntity.ok().body(ApiResponse.success(form))
     }
 
     @PostMapping
     fun save(
         @RequestBody @Valid saveApplicationFormRequest: SaveApplicationFormRequest,
         @LoginApplicant applicant: Applicant
-    ): ResponseEntity<String> {
-        return try {
-            applicationFormService.save(applicant.id, saveApplicationFormRequest)
-            ResponseEntity.ok().build()
-        } catch (e: IllegalArgumentException) {
-            ResponseEntity.badRequest().body(e.message)
-        }
+    ): ResponseEntity<Unit> {
+        applicationFormService.save(applicant.id, saveApplicationFormRequest)
+        return ResponseEntity.ok().build()
     }
-    // TODO: 20. 9. 22. ControllerAdvice로 리팩토링
 
     @PutMapping
     fun update(
         @RequestBody @Valid updateApplicationFormRequest: UpdateApplicationFormRequest,
         @LoginApplicant applicant: Applicant
-    ): ResponseEntity<String> {
-        return try {
-            applicationFormService.update(applicant.id, updateApplicationFormRequest)
-            ResponseEntity.ok().build()
-        } catch (e: IllegalArgumentException) {
-            ResponseEntity.badRequest().body(e.message)
-        }
+    ): ResponseEntity<Unit> {
+        applicationFormService.update(applicant.id, updateApplicationFormRequest)
+        return ResponseEntity.ok().build()
     }
 }

@@ -5,8 +5,6 @@ import apply.application.ApplicantService
 import apply.application.ApplicantVerifyInformation
 import apply.application.MailService
 import apply.application.ResetPasswordRequest
-import apply.domain.applicant.exception.ApplicantValidateException
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -21,34 +19,22 @@ class ApplicantRestController(
     private val mailService: MailService
 ) {
     @PostMapping("/register")
-    fun generateToken(@RequestBody @Valid applicantInformation: ApplicantInformation): ResponseEntity<String> {
-        return try {
-            val token = applicantService.generateToken(applicantInformation)
-            ResponseEntity.ok().body(token)
-        } catch (e: ApplicantValidateException) {
-            ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.message)
-        }
+    fun generateToken(@RequestBody @Valid applicantInformation: ApplicantInformation): ResponseEntity<ApiResponse<String>> {
+        val token = applicantService.generateToken(applicantInformation)
+        return ResponseEntity.ok().body(ApiResponse.success(token))
     }
 
     @PostMapping("/login")
-    fun generateToken(@RequestBody @Valid applicantVerifyInformation: ApplicantVerifyInformation): ResponseEntity<String> {
-        return try {
-            val token = applicantService.generateTokenByLogin(applicantVerifyInformation)
-            ResponseEntity.ok().body(token)
-        } catch (e: ApplicantValidateException) {
-            ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.message)
-        }
+    fun generateToken(@RequestBody @Valid applicantVerifyInformation: ApplicantVerifyInformation): ResponseEntity<ApiResponse<String>> {
+        val token = applicantService.generateTokenByLogin(applicantVerifyInformation)
+        return ResponseEntity.ok().body(ApiResponse.success(token))
     }
 
     @PostMapping("/reset-password")
-    fun resetPassword(@RequestBody @Valid resetPasswordRequest: ResetPasswordRequest): ResponseEntity<String> {
-        return try {
-            val newPassword = applicantService.resetPassword(resetPasswordRequest)
-            mailService.sendPasswordResetMail(resetPasswordRequest, newPassword)
+    fun resetPassword(@RequestBody @Valid resetPasswordRequest: ResetPasswordRequest): ResponseEntity<Unit> {
+        val newPassword = applicantService.resetPassword(resetPasswordRequest)
+        mailService.sendPasswordResetMail(resetPasswordRequest, newPassword)
 
-            ResponseEntity.noContent().build()
-        } catch (e: ApplicantValidateException) {
-            ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.message)
-        }
+        return ResponseEntity.noContent().build()
     }
 }
