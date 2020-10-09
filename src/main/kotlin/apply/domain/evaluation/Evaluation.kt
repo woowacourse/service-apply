@@ -19,6 +19,8 @@ class Evaluation(
 
     id: Long = 0L
 ) : BaseEntity(id) {
+    constructor() : this("title", "description", 0L)
+
     fun hasBeforeEvaluation(): Boolean = beforeEvaluationId != 0L
 
     fun hasSameBeforeEvaluationWith(beforeEvaluationId: Long): Boolean = this.beforeEvaluationId == beforeEvaluationId

@@ -17,15 +17,30 @@ class EvaluationService(
     private val evaluationItemRepository: EvaluationItemRepository,
     private val recruitmentRepository: RecruitmentRepository
 ) {
-    fun save(request: EvaluationRequest) {
+    fun save(request: EvaluationFormData) {
         val evaluation = evaluationRepository.save(
-            Evaluation(request.title, request.description, request.recruitmentId, request.beforeEvaluationId)
+            Evaluation(
+                request.title,
+                request.description,
+                request.recruitment.id,
+                request.beforeEvaluation.id,
+                request.id
+            )
+        )
+        evaluationItemRepository.deleteAll(
+            findEvaluationItemsToDelete(request.id, request.evaluationItems.map { it.id })
         )
         evaluationItemRepository.saveAll(
             request.evaluationItems.map {
                 EvaluationItem(it.title, it.description, it.maximumScore, it.position, evaluation.id)
             }
         )
+    }
+
+    private fun findEvaluationItemsToDelete(evaluationId: Long, excludedItemIds: List<Long>): List<EvaluationItem> {
+        return evaluationItemRepository
+            .findByEvaluationIdOrderByPosition(evaluationId)
+            .filterNot { excludedItemIds.contains(it.id) }
     }
 
     fun findAll(): List<Evaluation> {
@@ -40,6 +55,18 @@ class EvaluationService(
         if (id == 0L) return null
 
         return evaluationRepository.findByIdOrNull(id) ?: throw IllegalArgumentException("해당 id의 평가를 찾을 수 없습니다.")
+    }
+
+    fun getById(id: Long): EvaluationFormData {
+        val evaluation = findById(id) ?: throw IllegalArgumentException("해당 id의 평가를 찾을 수 없습니다.")
+        val evaluationItems = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluation.id)
+
+        val recruitment = recruitmentRepository.findByIdOrNull(evaluation.recruitmentId)
+            ?: throw java.lang.IllegalArgumentException("잘못된 모집 id 입니다.")
+
+        val beforeEvaluation = findById(evaluation.beforeEvaluationId) ?: Evaluation("test", "des", 1L)
+
+        return EvaluationFormData(evaluation, recruitment, beforeEvaluation, evaluationItems)
     }
 
     fun findAllWithRecruitment(): List<EvaluationResponse> {

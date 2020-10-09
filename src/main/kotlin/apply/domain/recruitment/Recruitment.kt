@@ -1,5 +1,6 @@
 package apply.domain.recruitment
 
+import support.createLocalDateTime
 import support.domain.BaseEntity
 import java.time.LocalDateTime
 import javax.persistence.Column
@@ -45,4 +46,6 @@ class Recruitment(
         isHidden: Boolean = true,
         id: Long = 0L
     ) : this(title, RecruitmentPeriod(startDateTime, endDateTime), canRecruit, isHidden, id)
+
+    constructor() : this("recruitment", createLocalDateTime(2020), createLocalDateTime(2020), false, true)
 }

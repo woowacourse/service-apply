@@ -1,13 +1,13 @@
 package apply.ui.admin.evaluation
 
-import apply.application.EvaluationItemRequest
+import apply.application.EvaluationItemData
 import com.vaadin.flow.component.select.Select
 import com.vaadin.flow.component.textfield.TextArea
 import com.vaadin.flow.component.textfield.TextField
 import support.views.BindingFormLayout
 import support.views.createIntSelect
 
-class EvaluationItemForm() : BindingFormLayout<EvaluationItemRequest>(EvaluationItemRequest::class) {
+class EvaluationItemForm() : BindingFormLayout<EvaluationItemData>(EvaluationItemData::class) {
     private val title: TextField = TextField("항목명")
     private val maximumScore: Select<Int> = createIntSelect(max = 10).apply { label = "최대 점수" }
     private val position: Select<Int> = createIntSelect(max = 10).apply { label = "순서" }
@@ -26,11 +26,11 @@ class EvaluationItemForm() : BindingFormLayout<EvaluationItemRequest>(Evaluation
         this.description.value = description
     }
 
-    override fun bindOrNull(): EvaluationItemRequest? {
+    override fun bindOrNull(): EvaluationItemData? {
         return bindDefaultOrNull()
     }
 
-    override fun fill(data: EvaluationItemRequest) {
-        // TODO: 모집 관리 페이지에 수정 뷰를 구현한다.
+    override fun fill(data: EvaluationItemData) {
+        fillDefault(data)
     }
 }
