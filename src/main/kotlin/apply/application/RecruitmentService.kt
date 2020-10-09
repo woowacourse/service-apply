@@ -1,6 +1,5 @@
 package apply.application
 
-import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitmentitem.RecruitmentItem
@@ -15,8 +14,7 @@ import javax.annotation.PostConstruct
 @Service
 class RecruitmentService(
     private val recruitmentRepository: RecruitmentRepository,
-    private val recruitmentItemRepository: RecruitmentItemRepository,
-    private val applicationFormRepository: ApplicationFormRepository
+    private val recruitmentItemRepository: RecruitmentItemRepository
 ) {
     fun save(request: RecruitmentData) {
         val recruitment = recruitmentRepository.save(
@@ -51,19 +49,6 @@ class RecruitmentService(
 
     fun findAllNotHidden(): List<RecruitmentResponse> {
         return recruitmentRepository.findAllByIsHiddenFalse().map(::RecruitmentResponse)
-    }
-
-    fun findAllByApplicantId(applicantId: Long): List<AppliedRecruitmentResponse> {
-        val appliedRecruitments = applicationFormRepository.findAllByApplicantId(applicantId)
-        val appliedRecruitmentIds = appliedRecruitments.map { it.recruitmentId }
-        val submittedRecruitments = appliedRecruitments.associate { it.recruitmentId to it.submitted }
-
-        return recruitmentRepository.findAllById(appliedRecruitmentIds).map {
-            AppliedRecruitmentResponse(
-                it,
-                submitted = submittedRecruitments.getOrDefault(it.id, false)
-            )
-        }
     }
 
     fun deleteById(id: Long) {

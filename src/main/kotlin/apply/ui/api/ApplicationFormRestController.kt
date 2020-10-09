@@ -22,8 +22,10 @@ class ApplicationFormRestController(
     private val applicationFormService: ApplicationFormService
 ) {
     @GetMapping("/me")
-    fun getMyApplicationForms(@LoginApplicant applicant: Applicant): ResponseEntity<List<ApplicationFormResponse>> =
-        ResponseEntity.ok().body(applicationFormService.getAllByApplicantId(applicant.id))
+    fun getMyApplicationForms(@LoginApplicant applicant: Applicant): ResponseEntity<ApiResponse<List<ApplicationFormResponse>>> {
+        val form = applicationFormService.getAllByApplicantId(applicant.id)
+        return ResponseEntity.ok().body(ApiResponse.success(form))
+    }
 
     @GetMapping
     fun getForm(
