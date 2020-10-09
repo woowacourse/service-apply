@@ -32,8 +32,7 @@ internal class RecruitmentServiceTest {
 
     @BeforeEach
     internal fun setUp() {
-        recruitmentService =
-            RecruitmentService(recruitmentRepository, recruitmentItemRepository)
+        recruitmentService = RecruitmentService(recruitmentRepository, recruitmentItemRepository)
     }
 
     @Nested

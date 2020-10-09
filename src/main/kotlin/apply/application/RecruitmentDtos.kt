@@ -91,25 +91,3 @@ data class RecruitmentResponse(
         recruitment.status
     )
 }
-
-data class AppliedRecruitmentResponse(
-    val id: Long,
-    val title: String,
-    val canRecruit: Boolean,
-    val isHidden: Boolean,
-    val startDateTime: LocalDateTime,
-    val endDateTime: LocalDateTime,
-    val status: RecruitmentStatus,
-    val submitted: Boolean
-) {
-    constructor(recruitment: Recruitment, submitted: Boolean) : this(
-        recruitment.id,
-        recruitment.title,
-        recruitment.canRecruit,
-        recruitment.isHidden,
-        recruitment.startDateTime,
-        recruitment.endDateTime,
-        recruitment.status,
-        submitted
-    )
-}
