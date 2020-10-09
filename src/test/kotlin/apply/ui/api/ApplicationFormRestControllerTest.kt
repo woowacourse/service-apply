@@ -1,9 +1,11 @@
 package apply.ui.api
 
-import apply.application.AnswerResponse
 import apply.application.ApplicantService
 import apply.application.ApplicationFormResponse
 import apply.application.ApplicationFormService
+import apply.application.MyApplicationFormResponse
+import apply.createApplicationForm
+import apply.createApplicationForms
 import apply.domain.applicant.Applicant
 import apply.domain.applicant.Gender
 import apply.domain.applicant.Password
@@ -26,7 +28,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
 import org.springframework.web.filter.CharacterEncodingFilter
 import support.createLocalDate
-import support.createLocalDateTime
 
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @WebMvcTest(
@@ -59,39 +60,11 @@ internal class ApplicationFormRestControllerTest(
         id = 1L
     )
 
-    private val applicationForm = ApplicationFormResponse(
-        id = 1L,
-        recruitmentId = 2L,
-        referenceUrl = "URL",
-        submitted = true,
-        answers = listOf(AnswerResponse("열심히 하겠습니다", 1L)),
-        createdDateTime = createLocalDateTime(2020, 10, 1),
-        modifiedDateTime = createLocalDateTime(2020, 10, 3),
-        submittedDateTime = null
+    private val applicationFormResponse = ApplicationFormResponse(
+        createApplicationForm()
     )
 
-    private val applicationForms = listOf(
-        ApplicationFormResponse(
-            id = 1L,
-            recruitmentId = 2L,
-            referenceUrl = "URL",
-            submitted = true,
-            answers = listOf(AnswerResponse("열심히 하겠습니다", 1L)),
-            createdDateTime = createLocalDateTime(2020, 10, 1),
-            modifiedDateTime = createLocalDateTime(2020, 10, 3),
-            submittedDateTime = null
-        ),
-        ApplicationFormResponse(
-            id = 1L,
-            recruitmentId = 3L,
-            referenceUrl = "URL",
-            submitted = true,
-            answers = listOf(AnswerResponse("열심히 하겠습니다", 1L)),
-            createdDateTime = createLocalDateTime(2020, 10, 1),
-            modifiedDateTime = createLocalDateTime(2020, 10, 3),
-            submittedDateTime = null
-        )
-    )
+    private val myApplicationFormResponses = createApplicationForms().map(::MyApplicationFormResponse)
 
     @BeforeEach
     internal fun setUp(webApplicationContext: WebApplicationContext) {
@@ -106,14 +79,14 @@ internal class ApplicationFormRestControllerTest(
         every { jwtTokenProvider.isValidToken("valid_token") } returns true
         every { jwtTokenProvider.getSubject("valid_token") } returns applicant.email
         every { applicantService.getByEmail(applicant.email) } returns applicant
-        every { applicationFormService.findForm(applicant.id, 2L) } returns applicationForm
+        every { applicationFormService.findForm(applicant.id, 2L) } returns applicationFormResponse
 
         mockMvc.get("/api/application-forms") {
             param("recruitmentId", "2")
             header(AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(applicationForm))) }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(applicationFormResponse))) }
         }
     }
 
@@ -122,13 +95,13 @@ internal class ApplicationFormRestControllerTest(
         every { jwtTokenProvider.isValidToken("valid_token") } returns true
         every { jwtTokenProvider.getSubject("valid_token") } returns applicant.email
         every { applicantService.getByEmail(applicant.email) } returns applicant
-        every { applicationFormService.getAllByApplicantId(applicant.id) } returns applicationForms
+        every { applicationFormService.getAllByApplicantId(applicant.id) } returns myApplicationFormResponses
 
         mockMvc.get("/api/application-forms/me") {
             header(AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(applicationForms))) }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(myApplicationFormResponses))) }
         }
     }
 }

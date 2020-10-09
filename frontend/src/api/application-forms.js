@@ -31,6 +31,33 @@ export const fetchForm = ({ token, recruitmentId }) =>
       }),
     )
 
+export const fetchMyApplicationForms = token => {
+  return axios
+    .get(`${BASE_URL}/me`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .catch(() =>
+      Promise.resolve({
+        data: [
+          {
+            recruitmentId: 6,
+            submitted: false,
+          },
+          {
+            recruitmentId: 2,
+            submitted: false,
+          },
+          {
+            recruitmentId: 1,
+            submitted: true,
+          },
+        ],
+      }),
+    )
+}
+
 export const saveForm = ({ token, data }) =>
   axios.post(`${BASE_URL}`, data, {
     headers: {

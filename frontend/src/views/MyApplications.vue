@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import * as RecruitmentApi from "@/api/recruitments"
+import * as ApplicationFormApi from "@/api/application-forms"
 import ApplicationFormItem from "@/components/ApplicationFormItem"
 import Box from "@/components/Box"
 
@@ -30,12 +30,29 @@ export default {
     const token = this.$store.getters["token"]
 
     try {
-      const { data: appliedRecruitmentData } = await RecruitmentApi.fetchAppliedRecruitments(token)
-      this.appliedRecruitments = appliedRecruitmentData
+      const { data: myApplicationFormsData } = await ApplicationFormApi.fetchMyApplicationForms(
+        token,
+      )
+      this.appliedRecruitments = this.findAppliedRecruitments(myApplicationFormsData)
     } catch (e) {
       alert("로그인이 필요합니다.")
       this.$router.replace("/login")
     }
+  },
+  methods: {
+    findAppliedRecruitments(applicationFormsData) {
+      return this.$store.state.recruitments.items
+        .filter(recruitment =>
+          applicationFormsData.find(form => form.recruitmentId === recruitment.id),
+        )
+        .map(recruitment => {
+          return {
+            ...recruitment,
+            submitted: !!applicationFormsData.find(form => form.recruitmentId === recruitment.id)
+              .submitted,
+          }
+        })
+    },
   },
 }
 </script>

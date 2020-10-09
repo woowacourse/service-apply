@@ -35,7 +35,7 @@ export default {
       return this.submittable ? "지원서 수정" : "기간 만료"
     },
     submittable() {
-      return !this.submitted && this.recruitment.recruitmentStatus === "RECRUITING"
+      return !this.submitted && this.recruitment.status === "RECRUITING"
     },
     startDateTime() {
       return parseLocalDateTime(new Date(this.recruitment.startDateTime))

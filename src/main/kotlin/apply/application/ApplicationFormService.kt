@@ -23,8 +23,8 @@ class ApplicationFormService(
         applicationFormRepository.findByRecruitmentIdAndApplicantId(recruitmentId, applicantId)
             ?: throw IllegalArgumentException()
 
-    fun getAllByApplicantId(applicantId: Long): List<ApplicationFormResponse> =
-        applicationFormRepository.findAllByApplicantId(applicantId).map(::ApplicationFormResponse)
+    fun getAllByApplicantId(applicantId: Long): List<MyApplicationFormResponse> =
+        applicationFormRepository.findAllByApplicantId(applicantId).map(::MyApplicationFormResponse)
 
     fun save(applicantId: Long, request: SaveApplicationFormRequest) {
         require(!applicationFormRepository.existsByRecruitmentIdAndApplicantId(request.recruitmentId, applicantId)) {
