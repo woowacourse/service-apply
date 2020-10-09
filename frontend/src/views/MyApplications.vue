@@ -35,7 +35,7 @@ export default {
       )
       this.appliedRecruitments = this.findAppliedRecruitments(myApplicationFormsData)
     } catch (e) {
-      alert("로그인이 필요합니다.")
+      alert(e.response.data.message)
       this.$router.replace("/login")
     }
   },
