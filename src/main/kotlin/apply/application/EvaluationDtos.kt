@@ -20,9 +20,9 @@ data class EvaluationFormData(
     var description: String = "",
 
     @field:NotNull
-    var recruitment: Recruitment = Recruitment(),
+    var recruitment: Recruitment = Recruitment.empty(),
 
-    var beforeEvaluation: Evaluation = Evaluation(),
+    var beforeEvaluation: Evaluation = Evaluation.empty(),
 
     @field:NotNull
     @field:Valid
@@ -31,14 +31,14 @@ data class EvaluationFormData(
 ) {
     constructor(
         evaluation: Evaluation,
-        recruitment: Recruitment,
-        beforeEvaluation: Evaluation,
+        recruitment: Recruitment?,
+        beforeEvaluation: Evaluation?,
         evaluationItems: List<EvaluationItem>
     ) : this(
         title = evaluation.title,
         description = evaluation.description,
-        recruitment = recruitment,
-        beforeEvaluation = beforeEvaluation,
+        recruitment = recruitment ?: Recruitment.empty(),
+        beforeEvaluation = beforeEvaluation ?: Evaluation.empty(),
         evaluationItems = evaluationItems.map(::EvaluationItemData),
         id = evaluation.id
     )

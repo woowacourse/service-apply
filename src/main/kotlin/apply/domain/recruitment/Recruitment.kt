@@ -47,5 +47,15 @@ class Recruitment(
         id: Long = 0L
     ) : this(title, RecruitmentPeriod(startDateTime, endDateTime), canRecruit, isHidden, id)
 
-    constructor() : this("recruitment", createLocalDateTime(2020), createLocalDateTime(2020), false, true)
+    companion object {
+        fun empty(): Recruitment {
+            return Recruitment(
+                "",
+                startDateTime = createLocalDateTime(year = 2020),
+                endDateTime = createLocalDateTime(year = 2020),
+                canRecruit = false,
+                isHidden = true
+            )
+        }
+    }
 }

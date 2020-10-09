@@ -62,9 +62,8 @@ class EvaluationService(
         val evaluationItems = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluation.id)
 
         val recruitment = recruitmentRepository.findByIdOrNull(evaluation.recruitmentId)
-            ?: throw java.lang.IllegalArgumentException("잘못된 모집 id 입니다.")
 
-        val beforeEvaluation = findById(evaluation.beforeEvaluationId) ?: Evaluation("test", "des", 1L)
+        val beforeEvaluation = findById(evaluation.beforeEvaluationId)
 
         return EvaluationFormData(evaluation, recruitment, beforeEvaluation, evaluationItems)
     }
