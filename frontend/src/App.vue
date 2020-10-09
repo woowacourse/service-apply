@@ -8,11 +8,18 @@
 <script>
 import MainHeader from "./components/MainHeader"
 import MainFooter from "./components/MainFooter"
+import { mapActions } from "vuex"
 
 export default {
   components: {
     MainHeader,
     MainFooter,
+  },
+  async created() {
+    await this.fetchRecruitments()
+  },
+  methods: {
+    ...mapActions(["fetchRecruitments"]),
   },
 }
 </script>

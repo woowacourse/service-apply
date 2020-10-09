@@ -1,5 +1,9 @@
 <template>
   <div class="application-register">
+    <Box class="information">
+      <div class="title">{{ recruitment.title }}</div>
+      <div class="period">{{ startDateTime }} ~ {{ endDateTime }}</div>
+    </Box>
     <Form @submit.prevent="submit">
       <h1>지원서 작성</h1>
       <p class="autosave-indicator" v-if="isEditing">
@@ -83,6 +87,7 @@ import * as RecruitmentApi from "@/api/recruitments"
 import * as ApplicationFormsApi from "@/api/application-forms"
 import { register } from "@/utils/validation"
 import { parseLocalDateTime } from "@/utils/date"
+import Box from "@/components/Box"
 
 export default {
   props: {
@@ -90,6 +95,7 @@ export default {
     status: String,
   },
   components: {
+    Box,
     Form,
     Button,
     TextField,
@@ -115,6 +121,15 @@ export default {
     },
     isEditing() {
       return this.status === "edit"
+    },
+    recruitment() {
+      return this.$store.state.recruitments.items.find(v => v.id === this.recruitmentId)
+    },
+    startDateTime() {
+      return parseLocalDateTime(new Date(this.recruitment.startDateTime))
+    },
+    endDateTime() {
+      return parseLocalDateTime(new Date(this.recruitment.endDateTime))
     },
   },
   async created() {
@@ -231,6 +246,21 @@ export default {
 
 .actions > .button {
   flex: 1;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.period {
+  font-size: 16px;
+}
+
+.information {
+  max-width: 512px;
+  margin-bottom: 0;
 }
 
 .logo {

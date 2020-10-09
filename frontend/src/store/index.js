@@ -2,6 +2,7 @@ import Vue from "vue"
 import Vuex from "vuex"
 import { applicantInfo } from "@/store/applicantInfo"
 import { token } from "@/store/token"
+import { recruitments } from "@/store/recruitments"
 
 Vue.use(Vuex)
 
@@ -21,6 +22,7 @@ export default new Vuex.Store({
   },
   modules: {
     applicantInfo: applicantInfo,
+    recruitments: recruitments,
     token: token,
   },
 })

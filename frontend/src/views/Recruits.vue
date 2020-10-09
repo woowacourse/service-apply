@@ -6,8 +6,9 @@
           <router-link
             :class="{ active: tab.name === ($route.query.status || '') }"
             :to="{ path: '/recruits', [tab.name && 'query']: { status: tab.name } }"
-            >{{ tab.label }}</router-link
           >
+            {{ tab.label }}
+          </router-link>
         </li>
         <li class="tab-item">
           <router-link to="/my-application-forms">내 지원서</router-link>
@@ -23,7 +24,6 @@
 </template>
 
 <script>
-import * as RecruitmentApi from "@/api/recruitments"
 import RecruitItem from "@/components/RecruitItem"
 import Box from "@/components/Box"
 
@@ -52,7 +52,6 @@ export default {
         label: "모집 종료",
       },
     ],
-    recruitments: [],
   }),
   computed: {
     filteredRecruitments() {
@@ -68,9 +67,9 @@ export default {
       }
       return this.recruitments
     },
-  },
-  async created() {
-    this.recruitments = (await RecruitmentApi.fetchRecruitments()).data.sort((a, b) => b.id - a.id)
+    recruitments() {
+      return this.$store.state.recruitments.items
+    },
   },
 }
 </script>
