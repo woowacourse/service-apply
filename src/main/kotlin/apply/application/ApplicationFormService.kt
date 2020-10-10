@@ -35,42 +35,24 @@ class ApplicationFormService(
         }
     }
 
-    fun save(applicantId: Long, request: SaveApplicationFormRequest) {
+    fun create(applicantId: Long, request: CreateApplicationFormRequest) {
         checkRecruitment(request.recruitmentId)
         require(!applicationFormRepository.existsByRecruitmentIdAndApplicantId(request.recruitmentId, applicantId)) {
-            "이미 저장된 지원서가 있습니다."
+            "작성중인 지원서가 존재합니다."
         }
-
-        val answers = Answers(
-            request.answers.map {
-                Answer(
-                    it.contents,
-                    it.recruitmentItemId
-                )
-            }.toMutableList()
-        )
-        val applicationForm =
-            ApplicationForm(
-                applicantId,
-                request.recruitmentId,
-                request.referenceUrl,
-                answers
-            )
-
-        if (request.isSubmitted) {
-            applicationForm.submit()
-        }
+        val applicationForm = ApplicationForm(applicantId, request.recruitmentId)
         applicationFormRepository.save(applicationForm)
     }
 
     fun update(applicantId: Long, request: UpdateApplicationFormRequest) {
         checkRecruitment(request.recruitmentId)
+
         val applicationForm: ApplicationForm =
             applicationFormRepository.findByRecruitmentIdAndApplicantId(
                 request.recruitmentId,
                 applicantId
-            )
-                ?: throw IllegalArgumentException("저장된 지원서가 없습니다.")
+            ) ?: throw IllegalArgumentException("작성중인 지원서가 존재하지 않습니다.")
+
         val answers = Answers(
             request.answers.map {
                 Answer(
@@ -79,8 +61,12 @@ class ApplicationFormService(
                 )
             }.toMutableList()
         )
+
         applicationForm.update(request.referenceUrl, answers)
-        applicantService.changePassword(applicantId, request.password)
+
+        if (request.password.isNotBlank()) {
+            applicantService.changePassword(applicantId, request.password)
+        }
 
         if (request.isSubmitted) {
             applicationForm.submit()

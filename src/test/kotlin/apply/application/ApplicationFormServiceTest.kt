@@ -15,14 +15,15 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.data.repository.findByIdOrNull
 import java.time.LocalDateTime
 
 @ExtendWith(MockKExtension::class)
+@DataJpaTest
 class ApplicationFormServiceTest {
     @MockK
     private lateinit var applicationFormRepository: ApplicationFormRepository
@@ -38,8 +39,8 @@ class ApplicationFormServiceTest {
     private lateinit var applicationForm1: ApplicationForm
     private lateinit var applicationForm2: ApplicationForm
     private lateinit var applicationFormResponse: ApplicationFormResponse
-    private lateinit var applicationFormSaveRequest: SaveApplicationFormRequest
-    private lateinit var applicationFormUpdateRequest: UpdateApplicationFormRequest
+    private lateinit var updateApplicationFormRequest: UpdateApplicationFormRequest
+    private lateinit var updateApplicationFormRequestWithPassword: UpdateApplicationFormRequest
 
     private lateinit var recruitment: Recruitment
     private lateinit var recruitmentNotRecruiting: Recruitment
@@ -84,14 +85,14 @@ class ApplicationFormServiceTest {
             submittedDateTime = applicationForm1.submittedDateTime
         )
 
-        applicationFormSaveRequest = SaveApplicationFormRequest(
+        updateApplicationFormRequest = UpdateApplicationFormRequest(
             recruitmentId = applicationForm1.recruitmentId,
             referenceUrl = applicationForm1.referenceUrl,
             isSubmitted = false,
             answers = applicationForm1.answers.items.map { AnswerRequest(it.contents, it.recruitmentItemId) }
         )
 
-        applicationFormUpdateRequest = UpdateApplicationFormRequest(
+        updateApplicationFormRequestWithPassword = UpdateApplicationFormRequest(
             recruitmentId = applicationForm1.recruitmentId,
             referenceUrl = applicationForm1.referenceUrl,
             isSubmitted = false,
@@ -159,38 +160,34 @@ class ApplicationFormServiceTest {
     }
 
     @Test
-    fun `지원서를 최초 저장한다`() {
+    fun `지원서를 생성한다`() {
         every { recruimentRepository.findByIdOrNull(any()) } returns recruitment
         every { applicationFormRepository.existsByRecruitmentIdAndApplicantId(any(), any()) } returns false
         every { applicationFormRepository.save(any<ApplicationForm>()) } returns mockk()
-        assertDoesNotThrow { applicationFormService.save(1L, applicationFormSaveRequest) }
+
+        assertDoesNotThrow { applicationFormService.create(1L, CreateApplicationFormRequest(1L)) }
     }
 
     @Test
-    fun `최초 저장 시 지원이 이미 존재하면 오류를 반환한다`() {
+    fun `지원서를 저장한다`() {
         every { recruimentRepository.findByIdOrNull(any()) } returns recruitment
-        every { applicationFormRepository.existsByRecruitmentIdAndApplicantId(any(), any()) } returns true
+        every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns applicationForm1
+        every { applicationFormRepository.save(any<ApplicationForm>()) } returns mockk()
 
-        assertThatIllegalArgumentException().isThrownBy { applicationFormService.save(1L, applicationFormSaveRequest) }
-            .withMessage("이미 저장된 지원서가 있습니다.")
+        assertDoesNotThrow { applicationFormService.update(1L, updateApplicationFormRequest) }
     }
 
     @Test
-    fun `업데이트 시 이미 저장된 지원이 없으면 오류를 반환한다`() {
+    fun `지원서가 없는 경우 저장할 수 없다`() {
+        every { recruimentRepository.findByIdOrNull(any()) } returns recruitment
         every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns null
-        every { recruimentRepository.findByIdOrNull(any()) } returns recruitment
 
-        assertThatIllegalArgumentException().isThrownBy {
-            applicationFormService.update(
-                1L,
-                applicationFormUpdateRequest
-            )
-        }
-            .withMessage("저장된 지원서가 없습니다.")
+        assertThatIllegalArgumentException().isThrownBy { applicationFormService.update(1L, updateApplicationFormRequest) }
+            .withMessage("작성중인 지원서가 존재하지 않습니다.")
     }
 
     @Test
-    fun `업데이트 시 저장과 함께 비밀번호를 업데이트 한다`() {
+    fun `비밀번호가 있는 경우 비밀번호를 업데이트 한다`() {
         every { applicantService.changePassword(any(), any()) } returns mockk()
         every { applicationFormRepository.save(any<ApplicationForm>()) } returns mockk()
         every { recruimentRepository.findByIdOrNull(any()) } returns recruitment
@@ -201,35 +198,22 @@ class ApplicationFormServiceTest {
             )
         } returns applicationForm1
 
-        applicationFormService.update(1L, applicationFormUpdateRequest)
+        applicationFormService.update(1L, updateApplicationFormRequestWithPassword)
         assertDoesNotThrow { applicationFormRepository.save(applicationForm1) }
-        verify { applicantService.changePassword(1L, applicationFormUpdateRequest.password) }
+        verify { applicantService.changePassword(1L, updateApplicationFormRequestWithPassword.password) }
     }
 
     @Test
     fun `모집이 존재하지 않는 경우 지원을 할 수 없다`() {
         every { recruimentRepository.findByIdOrNull(any()) } returns null
 
-        assertAll(
-            { assertThrows<IllegalArgumentException> { applicationFormService.save(1L, applicationFormSaveRequest) } },
-            {
-                assertThrows<IllegalArgumentException> {
-                    applicationFormService.update(
-                        1L,
-                        applicationFormUpdateRequest
-                    )
-                }
-            }
-        )
+        assertThrows<IllegalArgumentException> { applicationFormService.update(1L, updateApplicationFormRequest) }
     }
 
     @Test
     fun `모집중이 아닌 지원서에 대해 저장 및 수정할 수 없다`() {
         every { recruimentRepository.findByIdOrNull(any()) } returns recruitmentNotRecruiting
 
-        assertAll(
-            { assertThrows<IllegalStateException> { applicationFormService.save(1L, applicationFormSaveRequest) } },
-            { assertThrows<IllegalStateException> { applicationFormService.update(1L, applicationFormUpdateRequest) } }
-        )
+        assertThrows<IllegalStateException> { applicationFormService.update(1L, updateApplicationFormRequest) }
     }
 }

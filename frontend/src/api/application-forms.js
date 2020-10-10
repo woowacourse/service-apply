@@ -58,15 +58,19 @@ export const fetchForm = ({ token, recruitmentId }) =>
       }),
     )
 
-export const saveForm = ({ token, data }) =>
-  axios.post(`${BASE_URL}`, data, {
-    headers: {
-      Authorization: `Bearer ${token}`,
+export const createForm = ({ token, recruitmentId }) =>
+  axios.post(
+    `${BASE_URL}`,
+    { recruitmentId },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     },
-  })
+  )
 
-export const updateForm = ({ token, data }) =>
-  axios.put(`${BASE_URL}`, data, {
+export const saveForm = ({ token, data }) =>
+  axios.patch(`${BASE_URL}`, data, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

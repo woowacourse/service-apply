@@ -40,6 +40,11 @@ class ApplicationForm(
 
     constructor(
         applicantId: Long,
+        recruitmentId: Long
+    ) : this(applicantId, recruitmentId, "", Answers())
+
+    constructor(
+        applicantId: Long,
         recruitmentId: Long,
         referenceUrl: String,
         answers: Answers,

@@ -136,9 +136,19 @@ export default {
     },
   },
   async created() {
-    await this.fetchRecruitmentItems()
-    if (this.isEditing) {
-      await this.fetchApplicationForm()
+    try {
+      await this.fetchRecruitmentItems()
+      if (this.isEditing) {
+        await this.fetchApplicationForm()
+      } else {
+        await ApplicationFormsApi.createForm({
+          token: this.$store.getters["token"],
+          recruitmentId: this.recruitmentId,
+        })
+      }
+    } catch (e) {
+      alert(e.response.data.message)
+      this.$router.replace("/")
     }
   },
   methods: {
@@ -197,8 +207,7 @@ export default {
         password: this.password,
         isSubmitted,
       }
-      const invoke = this.isEditing ? ApplicationFormsApi.updateForm : ApplicationFormsApi.saveForm
-      return invoke({
+      return ApplicationFormsApi.saveForm({
         token: this.$store.getters["token"],
         data: applicationForm,
       })
