@@ -1,11 +1,12 @@
 package apply.ui.api
 
+import apply.application.ApplicantInformation
 import apply.application.ApplicantService
+import apply.application.ApplicantVerifyInformation
 import apply.application.MailService
-import apply.domain.applicant.ApplicantInformation
-import apply.domain.applicant.ResetPasswordRequest
-import apply.domain.applicant.ApplicantVerifyInformation
+import apply.application.ResetPasswordRequest
 import apply.domain.applicant.Gender
+import apply.domain.applicant.Password
 import apply.domain.applicant.exception.ApplicantValidateException
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.BeforeEach
@@ -14,6 +15,8 @@ import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.willDoNothing
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.context.annotation.ComponentScan
+import org.springframework.context.annotation.FilterType
 import org.springframework.http.MediaType
 import org.springframework.test.context.TestConstructor
 import org.springframework.test.web.servlet.MockMvc
@@ -27,9 +30,37 @@ import support.createLocalDate
 
 private const val VALID_TOKEN = "SOME_VALID_TOKEN"
 private const val RANDOM_PASSWORD = "nEw_p@ssw0rd"
+private const val PASSWORD = "password"
+private const val INVALID_PASSWORD = "invalid_password"
+
+private fun ApplicantInformation.withPlainPassword(password: String): Map<String, Any?> {
+    return mapOf(
+        "name" to name,
+        "email" to email,
+        "phoneNumber" to phoneNumber,
+        "gender" to gender,
+        "birthday" to birthday,
+        "password" to password
+    )
+}
+
+private fun ApplicantVerifyInformation.withPlainPassword(password: String): Map<String, Any?> {
+    return mapOf(
+        "name" to name,
+        "email" to email,
+        "birthday" to birthday,
+        "password" to password
+    )
+}
 
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-@WebMvcTest(controllers = [ApplicantRestController::class])
+@WebMvcTest(
+    controllers = [ApplicantRestController::class],
+    includeFilters = [
+        ComponentScan.Filter(type = FilterType.REGEX, pattern = ["apply.security.*"]),
+        ComponentScan.Filter(type = FilterType.REGEX, pattern = ["apply.config.*"])
+    ]
+)
 internal class ApplicantRestControllerTest(
     private val objectMapper: ObjectMapper
 ) {
@@ -47,7 +78,7 @@ internal class ApplicantRestControllerTest(
         phoneNumber = "010-0000-0000",
         gender = Gender.MALE,
         birthday = createLocalDate(1995, 2, 2),
-        password = "password"
+        password = Password(PASSWORD)
     )
 
     private val applicantLoginRequest = ApplicantVerifyInformation(
@@ -63,9 +94,9 @@ internal class ApplicantRestControllerTest(
         birthday = applicantRequest.birthday
     )
 
-    private val invalidApplicantRequest = applicantRequest.copy(password = "invalid_password")
+    private val invalidApplicantRequest = applicantRequest.copy(password = Password(INVALID_PASSWORD))
 
-    private val invalidApplicantLoginRequest = applicantLoginRequest.copy(password = "invalid_password")
+    private val invalidApplicantLoginRequest = applicantLoginRequest.copy(password = Password(INVALID_PASSWORD))
 
     private val inValidApplicantPasswordFindRequest =
         applicantPasswordFindRequest.copy(birthday = createLocalDate(1995, 4, 4))
@@ -84,11 +115,11 @@ internal class ApplicantRestControllerTest(
             .willReturn(VALID_TOKEN)
 
         mockMvc.post("/api/applicants/register") {
-            content = objectMapper.writeValueAsBytes(applicantRequest)
+            content = objectMapper.writeValueAsBytes(applicantRequest.withPlainPassword(PASSWORD))
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isOk }
-            content { string(VALID_TOKEN) }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(VALID_TOKEN))) }
         }
     }
 
@@ -99,11 +130,11 @@ internal class ApplicantRestControllerTest(
         ).willThrow(ApplicantValidateException())
 
         mockMvc.post("/api/applicants/register") {
-            content = objectMapper.writeValueAsBytes(invalidApplicantRequest)
+            content = objectMapper.writeValueAsBytes(invalidApplicantRequest.withPlainPassword(INVALID_PASSWORD))
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isUnauthorized }
-            content { string("요청 정보가 기존 지원자 정보와 일치하지 않습니다") }
+            content { json(objectMapper.writeValueAsString(ApiResponse.error("요청 정보가 기존 지원자 정보와 일치하지 않습니다"))) }
         }
     }
 
@@ -114,11 +145,11 @@ internal class ApplicantRestControllerTest(
         ).willReturn(VALID_TOKEN)
 
         mockMvc.post("/api/applicants/login") {
-            content = objectMapper.writeValueAsBytes(applicantLoginRequest)
+            content = objectMapper.writeValueAsBytes(applicantLoginRequest.withPlainPassword(PASSWORD))
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isOk }
-            content { string(VALID_TOKEN) }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(VALID_TOKEN))) }
         }
     }
 
@@ -129,11 +160,11 @@ internal class ApplicantRestControllerTest(
         ).willThrow(ApplicantValidateException())
 
         mockMvc.post("/api/applicants/login") {
-            content = objectMapper.writeValueAsBytes(invalidApplicantLoginRequest)
+            content = objectMapper.writeValueAsBytes(invalidApplicantLoginRequest.withPlainPassword(INVALID_PASSWORD))
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isUnauthorized }
-            content { string("요청 정보가 기존 지원자 정보와 일치하지 않습니다") }
+            content { json(objectMapper.writeValueAsString(ApiResponse.error("요청 정보가 기존 지원자 정보와 일치하지 않습니다"))) }
         }
     }
 

@@ -1,16 +1,13 @@
 package apply.application
 
 import apply.domain.applicant.Applicant
-import apply.domain.applicant.ApplicantInformation
 import apply.domain.applicant.ApplicantRepository
-import apply.domain.applicant.ApplicantVerifyInformation
 import apply.domain.applicant.Gender
-import apply.domain.applicant.ResetPasswordRequest
+import apply.domain.applicant.Password
 import apply.domain.applicant.exception.ApplicantValidateException
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.CheaterRepository
 import apply.security.JwtTokenProvider
-import apply.utils.RandomPasswordGenerator
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -24,7 +21,7 @@ class ApplicantService(
     private val applicantRepository: ApplicantRepository,
     private val cheaterRepository: CheaterRepository,
     private val jwtTokenProvider: JwtTokenProvider,
-    private val randomPasswordGenerator: RandomPasswordGenerator
+    private val passwordGenerator: PasswordGenerator
 ) {
     fun findAllByRecruitmentId(recruitmentId: Long): List<ApplicantResponse> {
         val applicationForms = applicationFormRepository.findByRecruitmentId(recruitmentId)
@@ -45,6 +42,9 @@ class ApplicantService(
             ApplicantBasicResponse(it)
         }
 
+    fun getByEmail(email: String): Applicant =
+        applicantRepository.findByEmail(email) ?: throw IllegalArgumentException("email=$email 인 유저가 존재하지 않습니다")
+
     fun generateToken(applicantInformation: ApplicantInformation): String {
         val applicant = applicantRepository.findByEmail(applicantInformation.email)
             ?.also { it.validate(applicantInformation) }
@@ -53,10 +53,10 @@ class ApplicantService(
         return jwtTokenProvider.createToken(applicant.email)
     }
 
-    fun changePassword(applicantId: Long, password: String) {
-        val applicant =
-            applicantRepository.findByIdOrNull(applicantId) ?: throw IllegalArgumentException("존재하지 않는 사용자입니다.")
-        applicant.password = password
+    fun changePassword(applicantId: Long, newPassword: String) {
+        applicantRepository.findByIdOrNull(applicantId)
+            ?.run { password = Password(newPassword) }
+            ?: throw IllegalArgumentException("존재하지 않는 사용자입니다.")
     }
 
     fun generateTokenByLogin(applicantVerifyInformation: ApplicantVerifyInformation): String {
@@ -73,14 +73,13 @@ class ApplicantService(
         }
     }
 
-    fun resetPassword(resetPasswordRequest: ResetPasswordRequest): String {
+    fun resetPassword(request: ResetPasswordRequest): String {
         return applicantRepository.findByNameAndEmailAndBirthday(
-            resetPasswordRequest.name,
-            resetPasswordRequest.email,
-            resetPasswordRequest.birthday
+            request.name,
+            request.email,
+            request.birthday
         )?.run {
-            password = randomPasswordGenerator.generate()
-            password
+            passwordGenerator.generate().also { password = Password(it) }
         } ?: throw ApplicantValidateException()
     }
 
@@ -91,12 +90,12 @@ class ApplicantService(
         }
         val applicants = listOf(
             Applicant(
-                name = "홍길동1",
+                name = "홍길동",
                 email = "a@email.com",
                 phoneNumber = "010-0000-0000",
                 gender = Gender.MALE,
                 birthday = createLocalDate(2020, 4, 17),
-                password = "password"
+                password = Password("password")
             ),
             Applicant(
                 name = "홍길동2",
@@ -104,7 +103,7 @@ class ApplicantService(
                 phoneNumber = "010-0000-0000",
                 gender = Gender.FEMALE,
                 birthday = createLocalDate(2020, 5, 5),
-                password = "password"
+                password = Password("password")
             ),
             Applicant(
                 name = "홍길동3",
@@ -112,7 +111,15 @@ class ApplicantService(
                 phoneNumber = "010-0000-0000",
                 gender = Gender.MALE,
                 birthday = createLocalDate(2020, 1, 1),
-                password = "password"
+                password = Password("password")
+            ),
+            Applicant(
+                name = "홍길동4",
+                email = "d@email.com",
+                phoneNumber = "010-0000-0000",
+                gender = Gender.MALE,
+                birthday = createLocalDate(2020, 1, 1),
+                password = Password("password")
             )
         )
         applicantRepository.saveAll(applicants)

@@ -2,8 +2,11 @@ package apply.application
 
 import apply.domain.applicant.Applicant
 import apply.domain.applicant.Gender
+import apply.domain.applicant.Password
 import apply.domain.applicationform.ApplicationForm
 import java.time.LocalDate
+import javax.validation.constraints.NotBlank
+import javax.validation.constraints.NotNull
 
 data class ApplicantBasicResponse(
     val id: Long,
@@ -44,3 +47,60 @@ data class ApplicantResponse(
         applicationForm
     )
 }
+
+data class ApplicantInformation(
+    @field:NotBlank
+    val name: String,
+
+    @field:NotBlank
+    val email: String,
+
+    @field:NotBlank
+    val phoneNumber: String,
+
+    @field:NotNull
+    val gender: Gender,
+
+    @field:NotNull
+    val birthday: LocalDate,
+
+    @field:NotNull
+    val password: Password
+) {
+    fun toEntity() = toEntity(0L)
+
+    fun toEntity(id: Long) = Applicant(
+        id = id,
+        name = name,
+        email = email,
+        phoneNumber = phoneNumber,
+        gender = gender,
+        birthday = birthday,
+        password = password
+    )
+}
+
+data class ApplicantVerifyInformation(
+    @field:NotBlank
+    val name: String,
+
+    @field:NotBlank
+    val email: String,
+
+    @field:NotNull
+    val birthday: LocalDate,
+
+    @field:NotNull
+    val password: Password
+)
+
+data class ResetPasswordRequest(
+    @field:NotBlank
+    val name: String,
+
+    @field:NotBlank
+    val email: String,
+
+    @field:NotNull
+    val birthday: LocalDate
+)

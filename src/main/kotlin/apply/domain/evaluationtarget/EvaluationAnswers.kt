@@ -12,4 +12,11 @@ class EvaluationAnswers(
     fun add(evaluationAnswer: EvaluationAnswer) {
         evaluationAnswers.add(evaluationAnswer)
     }
+
+    fun countTotalScore(): Int {
+        return evaluationAnswers.map { it.score }.sum()
+    }
+
+    fun findScoreByEvaluationItemId(evaluationItemId: Long): Int? =
+        evaluationAnswers.find { it.evaluationItemId == evaluationItemId }?.score
 }

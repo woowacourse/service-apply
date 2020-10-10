@@ -1,5 +1,10 @@
 package apply.application
 
+import apply.EVALUATION_TITLE1
+import apply.EVALUATION_TITLE2
+import apply.EVALUATION_TITLE3
+import apply.createEvaluation
+import apply.createRecruitment
 import apply.domain.evaluation.Evaluation
 import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluationItem.EvaluationItemRepository
@@ -15,7 +20,6 @@ import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.willDoNothing
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
-import support.createLocalDateTime
 import java.util.Optional
 
 @ExtendWith(MockitoExtension::class)
@@ -41,46 +45,15 @@ internal class EvaluationServiceTest {
         evaluationService = EvaluationService(evaluationRepository, evaluationItemRepository, recruitmentRepository)
 
         recruitments = listOf(
-            Recruitment(
-                "웹 백엔드 2기",
-                startDateTime = createLocalDateTime(2019, 10, 25, 10),
-                endDateTime = createLocalDateTime(2019, 11, 5, 10),
-                canRecruit = false
-            ),
-            Recruitment(
-                "웹 백엔드 3기",
-                startDateTime = createLocalDateTime(2020, 10, 25, 15),
-                endDateTime = createLocalDateTime(2020, 11, 5, 10),
-                canRecruit = true
-            )
+            createRecruitment(canRecruit = false),
+            createRecruitment(canRecruit = true)
         )
 
-        preCourseEvaluation = Evaluation(
-            "프리코스 대상자 선발",
-            "[리뷰 절차]\n" +
-                "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
-            recruitmentId = 1L,
-            beforeEvaluationId = 0L,
-            id = 1L
-        )
+        preCourseEvaluation = createEvaluation(title = EVALUATION_TITLE1, beforeEvaluationId = 0L, id = 1L)
 
-        firstEvaluation = Evaluation(
-            " 1주차 - 숫자야구게임",
-            "[리뷰 절차]\n" +
-                "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
-            recruitmentId = 1L,
-            beforeEvaluationId = 1L,
-            id = 2L
-        )
+        firstEvaluation = createEvaluation(title = EVALUATION_TITLE2, beforeEvaluationId = 1L, id = 2L)
 
-        secondEvaluation = Evaluation(
-            "2주차 - 자동차경주게임 ",
-            "[리뷰 절차]\n" +
-                "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
-            recruitmentId = 1L,
-            beforeEvaluationId = 2L,
-            id = 3L
-        )
+        secondEvaluation = createEvaluation(title = EVALUATION_TITLE3, beforeEvaluationId = 2L, id = 3L)
 
         evaluations = listOf(preCourseEvaluation, firstEvaluation, secondEvaluation)
     }
@@ -117,14 +90,7 @@ internal class EvaluationServiceTest {
 
     @Test
     fun `삭제된 평가를 이전 평가로 가지는 평가들의 이전 평가를 초기화한다`() {
-        val thirdEvaluation = Evaluation(
-            "3주차 - 포커구현하기 ",
-            "[리뷰 절차]\n" +
-                "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
-            recruitmentId = 1L,
-            beforeEvaluationId = 2L,
-            id = 4L
-        )
+        val thirdEvaluation = createEvaluation(beforeEvaluationId = 2L, id = 4L)
 
         val evaluationsWithDuplicatedBeforeEvaluationId: List<Evaluation> =
             listOf(*evaluations.toTypedArray(), thirdEvaluation)
