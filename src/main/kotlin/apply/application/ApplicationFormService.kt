@@ -23,22 +23,12 @@ class ApplicationFormService(
 
     fun getByRecruitmentIdAndApplicantId(recruitmentId: Long, applicantId: Long): ApplicationForm =
         applicationFormRepository.findByRecruitmentIdAndApplicantId(recruitmentId, applicantId)
-            ?: throw IllegalArgumentException()
-
-    private fun checkRecruitment(recruitmentId: Long) {
-        val recruitment = recruitmentRepository.findByIdOrNull(recruitmentId)
-        requireNotNull(recruitment) {
-            "지원하는 모집이 존재하지 않습니다."
-        }
-        check(recruitment.isRecruiting) {
-            "지원 불가능한 모집입니다."
-        }
-    }
+            ?: throw IllegalArgumentException("해당하는 지원서가 없습니다.")
 
     fun create(applicantId: Long, request: CreateApplicationFormRequest) {
         checkRecruitment(request.recruitmentId)
         require(!applicationFormRepository.existsByRecruitmentIdAndApplicantId(request.recruitmentId, applicantId)) {
-            "작성중인 지원서가 존재합니다."
+            "이미 지원한 이력이 있습니다."
         }
         val applicationForm = ApplicationForm(applicantId, request.recruitmentId)
         applicationFormRepository.save(applicationForm)
@@ -46,13 +36,7 @@ class ApplicationFormService(
 
     fun update(applicantId: Long, request: UpdateApplicationFormRequest) {
         checkRecruitment(request.recruitmentId)
-
-        val applicationForm: ApplicationForm =
-            applicationFormRepository.findByRecruitmentIdAndApplicantId(
-                request.recruitmentId,
-                applicantId
-            ) ?: throw IllegalArgumentException("작성중인 지원서가 존재하지 않습니다.")
-
+        val applicationForm = getByRecruitmentIdAndApplicantId(request.recruitmentId, applicantId)
         val answers = Answers(
             request.answers.map {
                 Answer(
@@ -61,13 +45,10 @@ class ApplicationFormService(
                 )
             }.toMutableList()
         )
-
         applicationForm.update(request.referenceUrl, answers)
-
         if (request.password.isNotBlank()) {
             applicantService.changePassword(applicantId, request.password)
         }
-
         if (request.isSubmitted) {
             applicationForm.submit()
         }
@@ -75,8 +56,7 @@ class ApplicationFormService(
     }
 
     fun findForm(applicantId: Long, recruitmentId: Long): ApplicationFormResponse {
-        val form = applicationFormRepository.findByRecruitmentIdAndApplicantId(recruitmentId, applicantId)
-            ?: throw IllegalArgumentException("해당하는 지원서가 없습니다.")
+        val form = getByRecruitmentIdAndApplicantId(recruitmentId, applicantId)
         val answers = form.answers.items.map { AnswerResponse(it.contents, it.recruitmentItemId) }
         return ApplicationFormResponse(
             id = form.id,
@@ -88,6 +68,16 @@ class ApplicationFormService(
             modifiedDateTime = form.modifiedDateTime,
             submittedDateTime = form.submittedDateTime
         )
+    }
+
+    private fun checkRecruitment(recruitmentId: Long) {
+        val recruitment = recruitmentRepository.findByIdOrNull(recruitmentId)
+        requireNotNull(recruitment) {
+            "지원하는 모집이 존재하지 않습니다."
+        }
+        check(recruitment.isRecruiting) {
+            "지원 불가능한 모집입니다."
+        }
     }
 
     @PostConstruct

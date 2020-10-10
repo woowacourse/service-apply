@@ -198,7 +198,7 @@ class ApplicationFormServiceTest {
         every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns null
 
         assertThatIllegalArgumentException().isThrownBy { applicationFormService.update(1L, updateApplicationFormRequest) }
-            .withMessage("작성중인 지원서가 존재하지 않습니다.")
+            .withMessage("해당하는 지원서가 없습니다.")
     }
 
     @Test
