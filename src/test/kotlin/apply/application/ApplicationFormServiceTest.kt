@@ -12,7 +12,6 @@ import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
@@ -44,6 +43,7 @@ class ApplicationFormServiceTest {
 
     private lateinit var recruitment: Recruitment
     private lateinit var recruitmentNotRecruiting: Recruitment
+    private lateinit var recruitmentHidden: Recruitment
 
     @BeforeEach
     internal fun setUp() {
@@ -130,10 +130,18 @@ class ApplicationFormServiceTest {
             canRecruit = true,
             isHidden = false
         )
+
+        recruitmentHidden = Recruitment(
+            title = "지원할 제목",
+            startDateTime = LocalDateTime.MIN,
+            endDateTime = LocalDateTime.MAX,
+            canRecruit = true,
+            isHidden = true
+        )
     }
 
     @Test
-    fun `특정 지원의 지원서를 모두 불러온다`() {
+    fun `특정 모집의 지원서를 모두 불러온다`() {
         every { applicationFormRepository.findByRecruitmentId(any()) } returns arrayListOf(
             applicationForm1,
             applicationForm2
@@ -143,7 +151,7 @@ class ApplicationFormServiceTest {
     }
 
     @Test
-    fun `관리자가 특정 지원자의 지원서를 불러온다`() {
+    fun `지원자 아이디와 모집 아이디로 지원서를 불러온다`() {
         every {
             applicationFormRepository.findByRecruitmentIdAndApplicantId(
                 any(),
@@ -155,7 +163,7 @@ class ApplicationFormServiceTest {
     }
 
     @Test
-    fun `지원자가 자신의 지원서를 불러온다`() {
+    fun `지원서가 있으면 지원서를 불러온다`() {
         every {
             applicationFormRepository.findByRecruitmentIdAndApplicantId(
                 any(),
@@ -167,11 +175,10 @@ class ApplicationFormServiceTest {
     }
 
     @Test
-    fun `지원서가 없으면 오류를 리턴한다`() {
+    fun `지원서가 없으면 예외를 던진다`() {
         every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns null
 
-        assertThatIllegalArgumentException().isThrownBy { applicationFormService.findForm(1L, 1L) }
-            .withMessage("해당하는 지원서가 없습니다.")
+        assertThrows<IllegalArgumentException> { applicationFormService.findForm(1L, 1L) }
     }
 
     @Test
@@ -184,7 +191,22 @@ class ApplicationFormServiceTest {
     }
 
     @Test
-    fun `지원서를 저장한다`() {
+    fun `지원서가 있는 경우 지원할 수 없다`() {
+        every { recruimentRepository.findByIdOrNull(any()) } returns recruitment
+        every { applicationFormRepository.existsByRecruitmentIdAndApplicantId(any(), any()) } returns true
+
+        assertThrows<IllegalArgumentException> { applicationFormService.create(1L, createApplicationFormRequest) }
+    }
+
+    @Test
+    fun `모집이 없는 경우 지원할 수 없다`() {
+        every { recruimentRepository.findByIdOrNull(any()) } returns null
+
+        assertThrows<IllegalArgumentException> { applicationFormService.create(1L, createApplicationFormRequest) }
+    }
+
+    @Test
+    fun `지원서를 수정한다`() {
         every { recruimentRepository.findByIdOrNull(any()) } returns recruitment
         every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns applicationForm1
         every { applicationFormRepository.save(any<ApplicationForm>()) } returns mockk()
@@ -193,16 +215,7 @@ class ApplicationFormServiceTest {
     }
 
     @Test
-    fun `지원서가 없는 경우 저장할 수 없다`() {
-        every { recruimentRepository.findByIdOrNull(any()) } returns recruitment
-        every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns null
-
-        assertThatIllegalArgumentException().isThrownBy { applicationFormService.update(1L, updateApplicationFormRequest) }
-            .withMessage("해당하는 지원서가 없습니다.")
-    }
-
-    @Test
-    fun `비밀번호가 있는 경우 비밀번호를 업데이트 한다`() {
+    fun `비밀번호가 있는 경우 비밀번호를 수정한다`() {
         every { applicantService.changePassword(any(), any()) } returns mockk()
         every { applicationFormRepository.save(any<ApplicationForm>()) } returns mockk()
         every { recruimentRepository.findByIdOrNull(any()) } returns recruitment
@@ -214,19 +227,20 @@ class ApplicationFormServiceTest {
         } returns applicationForm1
 
         applicationFormService.update(1L, updateApplicationFormRequestWithPassword)
-        assertDoesNotThrow { applicationFormRepository.save(applicationForm1) }
+
         verify { applicantService.changePassword(1L, updateApplicationFormRequestWithPassword.password) }
     }
 
     @Test
-    fun `모집이 존재하지 않는 경우 지원할 수 없다`() {
-        every { recruimentRepository.findByIdOrNull(any()) } returns null
+    fun `지원서가 없는 경우 수정할 수 없다`() {
+        every { recruimentRepository.findByIdOrNull(any()) } returns recruitment
+        every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns null
 
-        assertThrows<IllegalArgumentException> { applicationFormService.create(1L, createApplicationFormRequest) }
+        assertThrows<IllegalArgumentException> { applicationFormService.update(1L, updateApplicationFormRequest) }
     }
 
     @Test
-    fun `모집이 존재하지 않는 경우 지원서를 수정할 수 없다`() {
+    fun `모집이 없는 경우 지원서를 수정할 수 없다`() {
         every { recruimentRepository.findByIdOrNull(any()) } returns null
 
         assertThrows<IllegalArgumentException> { applicationFormService.update(1L, updateApplicationFormRequest) }
