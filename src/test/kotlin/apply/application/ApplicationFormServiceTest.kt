@@ -2,26 +2,35 @@ package apply.application
 
 import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormRepository
+import apply.domain.recruitment.Recruitment
+import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitmentitem.Answer
 import apply.domain.recruitmentitem.Answers
+import io.mockk.every
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
+import io.mockk.mockk
+import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertDoesNotThrow
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.ArgumentMatchers.anyLong
-import org.mockito.BDDMockito.given
-import org.mockito.BDDMockito.verify
-import org.mockito.Mock
-import org.mockito.junit.jupiter.MockitoExtension
+import org.springframework.data.repository.findByIdOrNull
+import java.time.LocalDateTime
 
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockKExtension::class)
 class ApplicationFormServiceTest {
-    @Mock
+    @MockK
     private lateinit var applicationFormRepository: ApplicationFormRepository
 
-    @Mock
+    @MockK
+    private lateinit var recruimentRepository: RecruitmentRepository
+
+    @MockK
     private lateinit var applicantService: ApplicantService
 
     private lateinit var applicationFormService: ApplicationFormService
@@ -32,9 +41,13 @@ class ApplicationFormServiceTest {
     private lateinit var applicationFormSaveRequest: SaveApplicationFormRequest
     private lateinit var applicationFormUpdateRequest: UpdateApplicationFormRequest
 
+    private lateinit var recruitment: Recruitment
+    private lateinit var recruitmentNotRecruiting: Recruitment
+
     @BeforeEach
     internal fun setUp() {
-        this.applicationFormService = ApplicationFormService(applicationFormRepository, applicantService)
+        this.applicationFormService =
+            ApplicationFormService(applicationFormRepository, recruimentRepository, applicantService)
 
         applicationForm1 = ApplicationForm(
             applicantId = 1L,
@@ -85,12 +98,29 @@ class ApplicationFormServiceTest {
             answers = applicationForm1.answers.items.map { AnswerRequest(it.contents, it.recruitmentItemId) },
             password = "12345678"
         )
+
+        recruitment = Recruitment(
+            title = "지원할 제목",
+            startDateTime = LocalDateTime.MIN,
+            endDateTime = LocalDateTime.MAX,
+            canRecruit = true,
+            isHidden = false
+        )
+
+        recruitmentNotRecruiting = Recruitment(
+            title = "지원할 제목",
+            startDateTime = LocalDateTime.now().minusHours(2),
+            endDateTime = LocalDateTime.now().minusHours(1),
+            canRecruit = true,
+            isHidden = false
+        )
     }
 
     @Test
     fun `특정 지원의 지원서를 모두 불러온다`() {
-        given(applicationFormRepository.findByRecruitmentId(anyLong())).willReturn(
-            arrayListOf(applicationForm1, applicationForm2)
+        every { applicationFormRepository.findByRecruitmentId(any()) } returns arrayListOf(
+            applicationForm1,
+            applicationForm2
         )
 
         assertThat(applicationFormService.findAllByRecruitmentId(1L)).hasSize(2)
@@ -98,27 +128,31 @@ class ApplicationFormServiceTest {
 
     @Test
     fun `관리자가 특정 지원자의 지원서를 불러온다`() {
-        given(applicationFormRepository.findByRecruitmentIdAndApplicantId(anyLong(), anyLong())).willReturn(
-            applicationForm1
-        )
+        every {
+            applicationFormRepository.findByRecruitmentIdAndApplicantId(
+                any(),
+                any()
+            )
+        } returns applicationForm1
 
         assertThat(applicationFormService.getByRecruitmentIdAndApplicantId(1L, 1L)).isEqualTo(applicationForm1)
     }
 
     @Test
     fun `지원자가 자신의 지원서를 불러온다`() {
-        given(applicationFormRepository.findByRecruitmentIdAndApplicantId(anyLong(), anyLong())).willReturn(
-            applicationForm1
-        )
+        every {
+            applicationFormRepository.findByRecruitmentIdAndApplicantId(
+                any(),
+                any()
+            )
+        } returns applicationForm1
 
         assertThat(applicationFormService.findForm(1L, 1L)).isEqualTo(applicationFormResponse)
     }
 
     @Test
     fun `지원서가 없으면 오류를 리턴한다`() {
-        given(applicationFormRepository.findByRecruitmentIdAndApplicantId(anyLong(), anyLong())).willReturn(
-            null
-        )
+        every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns null
 
         assertThatIllegalArgumentException().isThrownBy { applicationFormService.findForm(1L, 1L) }
             .withMessage("해당하는 지원서가 없습니다.")
@@ -126,14 +160,16 @@ class ApplicationFormServiceTest {
 
     @Test
     fun `지원서를 최초 저장한다`() {
-        given(applicationFormRepository.existsByRecruitmentIdAndApplicantId(anyLong(), anyLong())).willReturn(false)
-
+        every { recruimentRepository.findByIdOrNull(any()) } returns recruitment
+        every { applicationFormRepository.existsByRecruitmentIdAndApplicantId(any(), any()) } returns false
+        every { applicationFormRepository.save(any<ApplicationForm>()) } returns mockk()
         assertDoesNotThrow { applicationFormService.save(1L, applicationFormSaveRequest) }
     }
 
     @Test
     fun `최초 저장 시 지원이 이미 존재하면 오류를 반환한다`() {
-        given(applicationFormRepository.existsByRecruitmentIdAndApplicantId(anyLong(), anyLong())).willReturn(true)
+        every { recruimentRepository.findByIdOrNull(any()) } returns recruitment
+        every { applicationFormRepository.existsByRecruitmentIdAndApplicantId(any(), any()) } returns true
 
         assertThatIllegalArgumentException().isThrownBy { applicationFormService.save(1L, applicationFormSaveRequest) }
             .withMessage("이미 저장된 지원서가 있습니다.")
@@ -141,7 +177,8 @@ class ApplicationFormServiceTest {
 
     @Test
     fun `업데이트 시 이미 저장된 지원이 없으면 오류를 반환한다`() {
-        given(applicationFormRepository.findByRecruitmentIdAndApplicantId(anyLong(), anyLong())).willReturn(null)
+        every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns null
+        every { recruimentRepository.findByIdOrNull(any()) } returns recruitment
 
         assertThatIllegalArgumentException().isThrownBy {
             applicationFormService.update(
@@ -154,12 +191,45 @@ class ApplicationFormServiceTest {
 
     @Test
     fun `업데이트 시 저장과 함께 비밀번호를 업데이트 한다`() {
-        given(applicationFormRepository.findByRecruitmentIdAndApplicantId(anyLong(), anyLong())).willReturn(
-            applicationForm1
-        )
+        every { applicantService.changePassword(any(), any()) } returns mockk()
+        every { applicationFormRepository.save(any<ApplicationForm>()) } returns mockk()
+        every { recruimentRepository.findByIdOrNull(any()) } returns recruitment
+        every {
+            applicationFormRepository.findByRecruitmentIdAndApplicantId(
+                any(),
+                any()
+            )
+        } returns applicationForm1
 
         applicationFormService.update(1L, applicationFormUpdateRequest)
         assertDoesNotThrow { applicationFormRepository.save(applicationForm1) }
-        verify(applicantService).changePassword(1L, applicationFormUpdateRequest.password)
+        verify { applicantService.changePassword(1L, applicationFormUpdateRequest.password) }
+    }
+
+    @Test
+    fun `모집이 존재하지 않는 경우 지원을 할 수 없다`() {
+        every { recruimentRepository.findByIdOrNull(any()) } returns null
+
+        assertAll(
+            { assertThrows<IllegalArgumentException> { applicationFormService.save(1L, applicationFormSaveRequest) } },
+            {
+                assertThrows<IllegalArgumentException> {
+                    applicationFormService.update(
+                        1L,
+                        applicationFormUpdateRequest
+                    )
+                }
+            }
+        )
+    }
+
+    @Test
+    fun `모집중이 아닌 지원서에 대해 저장 및 수정할 수 없다`() {
+        every { recruimentRepository.findByIdOrNull(any()) } returns recruitmentNotRecruiting
+
+        assertAll(
+            { assertThrows<IllegalStateException> { applicationFormService.save(1L, applicationFormSaveRequest) } },
+            { assertThrows<IllegalStateException> { applicationFormService.update(1L, applicationFormUpdateRequest) } }
+        )
     }
 }

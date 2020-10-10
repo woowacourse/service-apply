@@ -2,8 +2,10 @@ package apply.application
 
 import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormRepository
+import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitmentitem.Answer
 import apply.domain.recruitmentitem.Answers
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import support.createLocalDateTime
 import javax.annotation.PostConstruct
@@ -13,6 +15,7 @@ import javax.transaction.Transactional
 @Service
 class ApplicationFormService(
     private val applicationFormRepository: ApplicationFormRepository,
+    private val recruitmentRepository: RecruitmentRepository,
     private val applicantService: ApplicantService
 ) {
     fun findAllByRecruitmentId(recruitmentId: Long): List<ApplicationForm> =
@@ -22,10 +25,22 @@ class ApplicationFormService(
         applicationFormRepository.findByRecruitmentIdAndApplicantId(recruitmentId, applicantId)
             ?: throw IllegalArgumentException()
 
+    private fun checkRecruitment(recruitmentId: Long) {
+        val recruitment = recruitmentRepository.findByIdOrNull(recruitmentId)
+        requireNotNull(recruitment) {
+            "지원하는 모집이 존재하지 않습니다."
+        }
+        check(recruitment.isRecruiting) {
+            "지원 불가능한 모집입니다."
+        }
+    }
+
     fun save(applicantId: Long, request: SaveApplicationFormRequest) {
+        checkRecruitment(request.recruitmentId)
         require(!applicationFormRepository.existsByRecruitmentIdAndApplicantId(request.recruitmentId, applicantId)) {
             "이미 저장된 지원서가 있습니다."
         }
+
         val answers = Answers(
             request.answers.map {
                 Answer(
@@ -49,6 +64,7 @@ class ApplicationFormService(
     }
 
     fun update(applicantId: Long, request: UpdateApplicationFormRequest) {
+        checkRecruitment(request.recruitmentId)
         val applicationForm: ApplicationForm =
             applicationFormRepository.findByRecruitmentIdAndApplicantId(
                 request.recruitmentId,
