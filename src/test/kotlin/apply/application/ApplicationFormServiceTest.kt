@@ -18,12 +18,10 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.data.repository.findByIdOrNull
 import java.time.LocalDateTime
 
 @ExtendWith(MockKExtension::class)
-@DataJpaTest
 class ApplicationFormServiceTest {
     @MockK
     private lateinit var applicationFormRepository: ApplicationFormRepository
