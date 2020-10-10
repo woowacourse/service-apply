@@ -38,7 +38,9 @@ class ApplicationFormServiceTest {
 
     private lateinit var applicationForm1: ApplicationForm
     private lateinit var applicationForm2: ApplicationForm
+    private lateinit var applicationFormSubmitted: ApplicationForm
     private lateinit var applicationFormResponse: ApplicationFormResponse
+    private lateinit var createApplicationFormRequest: CreateApplicationFormRequest
     private lateinit var updateApplicationFormRequest: UpdateApplicationFormRequest
     private lateinit var updateApplicationFormRequestWithPassword: UpdateApplicationFormRequest
 
@@ -74,6 +76,19 @@ class ApplicationFormServiceTest {
             )
         )
 
+        applicationFormSubmitted = ApplicationForm(
+            applicantId = 3L,
+            recruitmentId = 1L,
+            referenceUrl = "http://example2.com",
+            answers = Answers(
+                mutableListOf(
+                    Answer("대기업에 취직하고 싶습니다.", 1L),
+                    Answer("신중함", 2L)
+                )
+            )
+        )
+        applicationFormSubmitted.submit()
+
         applicationFormResponse = ApplicationFormResponse(
             id = applicationForm1.id,
             recruitmentId = applicationForm1.recruitmentId,
@@ -84,6 +99,8 @@ class ApplicationFormServiceTest {
             modifiedDateTime = applicationForm1.modifiedDateTime,
             submittedDateTime = applicationForm1.submittedDateTime
         )
+
+        createApplicationFormRequest = CreateApplicationFormRequest(1L)
 
         updateApplicationFormRequest = UpdateApplicationFormRequest(
             recruitmentId = applicationForm1.recruitmentId,
@@ -204,16 +221,36 @@ class ApplicationFormServiceTest {
     }
 
     @Test
-    fun `모집이 존재하지 않는 경우 지원을 할 수 없다`() {
+    fun `모집이 존재하지 않는 경우 지원할 수 없다`() {
+        every { recruimentRepository.findByIdOrNull(any()) } returns null
+
+        assertThrows<IllegalArgumentException> { applicationFormService.create(1L, createApplicationFormRequest) }
+    }
+
+    @Test
+    fun `모집이 존재하지 않는 경우 지원서를 수정할 수 없다`() {
         every { recruimentRepository.findByIdOrNull(any()) } returns null
 
         assertThrows<IllegalArgumentException> { applicationFormService.update(1L, updateApplicationFormRequest) }
     }
 
     @Test
-    fun `모집중이 아닌 지원서에 대해 저장 및 수정할 수 없다`() {
+    fun `모집중이 아닌 지원서를 수정할 수 없다`() {
         every { recruimentRepository.findByIdOrNull(any()) } returns recruitmentNotRecruiting
 
         assertThrows<IllegalStateException> { applicationFormService.update(1L, updateApplicationFormRequest) }
+    }
+
+    @Test
+    fun `제출한 지원서를 수정할 수 없다`() {
+        every { recruimentRepository.findByIdOrNull(any()) } returns recruitment
+        every {
+            applicationFormRepository.findByRecruitmentIdAndApplicantId(
+                any(),
+                any()
+            )
+        } returns applicationFormSubmitted
+
+        assertThrows<IllegalStateException> { applicationFormService.update(3L, updateApplicationFormRequest) }
     }
 }
