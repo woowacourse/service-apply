@@ -182,7 +182,7 @@ class ApplicationFormServiceTest {
         every { applicationFormRepository.existsByRecruitmentIdAndApplicantId(any(), any()) } returns false
         every { applicationFormRepository.save(any<ApplicationForm>()) } returns mockk()
 
-        assertDoesNotThrow { applicationFormService.create(1L, CreateApplicationFormRequest(1L)) }
+        assertDoesNotThrow { applicationFormService.create(1L, createApplicationFormRequest) }
     }
 
     @Test
