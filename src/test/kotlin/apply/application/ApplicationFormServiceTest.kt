@@ -84,8 +84,7 @@ class ApplicationFormServiceTest {
                     Answer("신중함", 2L)
                 )
             )
-        )
-        applicationFormSubmitted.submit()
+        ).apply { submit() }
 
         applicationFormResponse = ApplicationFormResponse(
             id = applicationForm1.id,
@@ -152,24 +151,14 @@ class ApplicationFormServiceTest {
 
     @Test
     fun `지원자 아이디와 모집 아이디로 지원서를 불러온다`() {
-        every {
-            applicationFormRepository.findByRecruitmentIdAndApplicantId(
-                any(),
-                any()
-            )
-        } returns applicationForm1
+        every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns applicationForm1
 
         assertThat(applicationFormService.getByRecruitmentIdAndApplicantId(1L, 1L)).isEqualTo(applicationForm1)
     }
 
     @Test
     fun `지원서가 있으면 지원서를 불러온다`() {
-        every {
-            applicationFormRepository.findByRecruitmentIdAndApplicantId(
-                any(),
-                any()
-            )
-        } returns applicationForm1
+        every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns applicationForm1
 
         assertThat(applicationFormService.findForm(1L, 1L)).isEqualTo(applicationFormResponse)
     }
@@ -219,12 +208,7 @@ class ApplicationFormServiceTest {
         every { applicantService.changePassword(any(), any()) } returns mockk()
         every { applicationFormRepository.save(any<ApplicationForm>()) } returns mockk()
         every { recruimentRepository.findByIdOrNull(any()) } returns recruitment
-        every {
-            applicationFormRepository.findByRecruitmentIdAndApplicantId(
-                any(),
-                any()
-            )
-        } returns applicationForm1
+        every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns applicationForm1
 
         applicationFormService.update(1L, updateApplicationFormRequestWithPassword)
 
