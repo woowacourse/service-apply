@@ -65,6 +65,11 @@ class RecruitmentService(
         return RecruitmentData(recruitment, recruitmentItems)
     }
 
+    fun findData(recruitment: Recruitment): RecruitmentData {
+        val recruitmentItems = recruitmentItemRepository.findByRecruitmentIdOrderByPosition(recruitment.id)
+        return RecruitmentData(recruitment, recruitmentItems)
+    }
+
     @PostConstruct
     private fun populateDummy() {
         if (recruitmentRepository.count() != 0L) {

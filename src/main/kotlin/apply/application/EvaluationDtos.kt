@@ -4,12 +4,37 @@ import apply.domain.evaluation.Evaluation
 import apply.domain.evaluationItem.EvaluationItem
 import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.recruitment.Recruitment
+import apply.domain.recruitmentitem.RecruitmentItem
 import javax.validation.Valid
 import javax.validation.constraints.Max
 import javax.validation.constraints.Min
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
+
+data class EvaluationData(
+    @field:NotBlank
+    @field:Size(min = 1, max = 31)
+    var title: String = "",
+
+    @field:NotBlank
+    var description: String = "",
+
+    @field:NotNull
+    val recruitmentId: Long = 0L,
+
+    var beforeEvaluationId: Long = 0L,
+
+    var id: Long = 0L
+) {
+    constructor(evaluation: Evaluation) : this(
+        evaluation.title,
+        evaluation.description,
+        evaluation.recruitmentId,
+        evaluation.beforeEvaluationId,
+        evaluation.id
+    )
+}
 
 data class EvaluationFormData(
     @field:NotBlank
@@ -20,9 +45,9 @@ data class EvaluationFormData(
     var description: String = "",
 
     @field:NotNull
-    var recruitment: Recruitment = Recruitment.empty(),
+    var recruitment: RecruitmentData = RecruitmentData(),
 
-    var beforeEvaluation: Evaluation = Evaluation.empty(),
+    var beforeEvaluation: EvaluationData = EvaluationData(),
 
     @field:NotNull
     @field:Valid
@@ -31,14 +56,21 @@ data class EvaluationFormData(
 ) {
     constructor(
         evaluation: Evaluation,
-        recruitment: Recruitment?,
+        recruitment: Recruitment,
+        recruitmentItems: List<RecruitmentItem>,
         beforeEvaluation: Evaluation?,
         evaluationItems: List<EvaluationItem>
     ) : this(
         title = evaluation.title,
         description = evaluation.description,
-        recruitment = recruitment ?: Recruitment.empty(),
-        beforeEvaluation = beforeEvaluation ?: Evaluation.empty(),
+        recruitment = RecruitmentData(recruitment, recruitmentItems),
+        beforeEvaluation = EvaluationData(
+            beforeEvaluation ?: Evaluation(
+                title = "이전 평가 없음",
+                description = "이전 평가 없음",
+                recruitmentId = recruitment.id
+            )
+        ),
         evaluationItems = evaluationItems.map(::EvaluationItemData),
         id = evaluation.id
     )

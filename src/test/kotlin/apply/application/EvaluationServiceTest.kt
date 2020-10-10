@@ -10,6 +10,7 @@ import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentRepository
+import apply.domain.recruitmentitem.RecruitmentItemRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -28,6 +29,9 @@ internal class EvaluationServiceTest {
     private lateinit var recruitmentRepository: RecruitmentRepository
 
     @Mock
+    private lateinit var recruitmentItemRepository: RecruitmentItemRepository
+
+    @Mock
     private lateinit var evaluationRepository: EvaluationRepository
 
     @Mock
@@ -42,7 +46,7 @@ internal class EvaluationServiceTest {
 
     @BeforeEach
     internal fun setUp() {
-        evaluationService = EvaluationService(evaluationRepository, evaluationItemRepository, recruitmentRepository)
+        evaluationService = EvaluationService(evaluationRepository, evaluationItemRepository, recruitmentRepository, recruitmentItemRepository)
 
         recruitments = listOf(
             createRecruitment(canRecruit = false),

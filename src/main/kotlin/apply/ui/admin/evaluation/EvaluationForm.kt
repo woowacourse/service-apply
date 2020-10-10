@@ -1,9 +1,10 @@
 package apply.ui.admin.evaluation
 
+import apply.application.EvaluationData
 import apply.application.EvaluationFormData
 import apply.application.EvaluationItemData
+import apply.application.RecruitmentData
 import apply.domain.evaluation.Evaluation
-import apply.domain.recruitment.Recruitment
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.select.Select
 import com.vaadin.flow.component.textfield.TextArea
@@ -16,12 +17,12 @@ import support.views.createPrimarySmallButton
 class EvaluationForm() : BindingIdentityFormLayout<EvaluationFormData>(EvaluationFormData::class) {
     private val title: TextField = TextField("평가명")
     private val description: TextArea = TextArea("설명")
-    private val recruitment: Select<Recruitment> = createItemSelect<Recruitment>("모집").apply {
-        setItemLabelGenerator(Recruitment::title)
+    private val recruitment: Select<RecruitmentData> = createItemSelect<RecruitmentData>("모집").apply {
+        setItemLabelGenerator(RecruitmentData::title)
         isEmptySelectionAllowed = false
     }
-    private val beforeEvaluation: Select<Evaluation> = createItemSelect<Evaluation>("이전 평가").apply {
-        setItemLabelGenerator(Evaluation::title)
+    private val beforeEvaluation: Select<EvaluationData> = createItemSelect<EvaluationData>("이전 평가").apply {
+        setItemLabelGenerator(EvaluationData::title)
     }
     private val evaluationItems: MutableList<EvaluationItemForm> = mutableListOf()
 
@@ -32,14 +33,16 @@ class EvaluationForm() : BindingIdentityFormLayout<EvaluationFormData>(Evaluatio
         drawRequired()
     }
 
-    constructor(recruitments: List<Recruitment>, listener: (id: Long) -> List<Evaluation>) : this() {
+    constructor(recruitments: List<RecruitmentData>, listener: (id: Long) -> List<EvaluationData>) : this() {
         recruitment.setItems(recruitments)
         recruitment.addValueChangeListener {
-            val evaluations: List<Evaluation> = mutableListOf(
-                Evaluation(
-                    title = "이전 평가 없음",
-                    description = "이전 평가 없음",
-                    recruitmentId = it.value.id
+            val evaluations: List<EvaluationData> = mutableListOf(
+                EvaluationData(
+                    Evaluation(
+                        title = "이전 평가 없음",
+                        description = "이전 평가 없음",
+                        recruitmentId = it.value.id
+                    )
                 )
             )
             beforeEvaluation.setItems(evaluations.plus(listener(it.value.id)))

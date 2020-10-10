@@ -26,10 +26,11 @@ class EvaluationsFormView(
     private val recruitmentService: RecruitmentService
 ) : VerticalLayout(), HasUrlParameter<String> {
     private val title: Title = Title()
-    private val evaluationForm: EvaluationForm =
-        EvaluationForm(recruitmentService.findAll()) {
-            evaluationService.findAllByRecruitmentId(it)
-        }
+    private val evaluationForm: EvaluationForm = EvaluationForm(
+        recruitmentService.findAll().map(recruitmentService::findData)
+    ) {
+        evaluationService.getAllDataByRecruitmentId(it)
+    }
     private val submitButton: Button = createSubmitButton()
 
     init {
@@ -42,7 +43,7 @@ class EvaluationsFormView(
             val (id, value) = it.destructured
             setDisplayName(value.toDisplayName())
             if (value == EDIT_VALUE) {
-                val evaluationFormData = evaluationService.getById(id.toLong())
+                val evaluationFormData = evaluationService.getFormById(id.toLong())
                 evaluationForm.fill(evaluationFormData)
             }
         } ?: UI.getCurrent().page.history.back() // TODO: 에러 화면을 구현한다.
