@@ -16,7 +16,6 @@
         label="이름"
         readonly
       />
-
       <div v-if="isEditing">
         <TextField
           v-model="password"
@@ -39,7 +38,6 @@
           required
         />
       </div>
-
       <TextField
         v-for="(item, index) in recruitmentItems"
         v-bind:key="item.id"
@@ -53,7 +51,6 @@
         :max-length="item.maximumLength"
         required
       />
-
       <TextField
         v-model="referenceUrl"
         name="url"
