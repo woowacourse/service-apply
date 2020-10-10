@@ -69,7 +69,7 @@ export const createForm = ({ token, recruitmentId }) =>
     },
   )
 
-export const saveForm = ({ token, data }) =>
+export const updateForm = ({ token, data }) =>
   axios.patch(`${BASE_URL}`, data, {
     headers: {
       Authorization: `Bearer ${token}`,

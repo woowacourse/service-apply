@@ -207,7 +207,7 @@ export default {
         password: this.password,
         isSubmitted,
       }
-      return ApplicationFormsApi.saveForm({
+      return ApplicationFormsApi.updateForm({
         token: this.$store.getters["token"],
         data: applicationForm,
       })
