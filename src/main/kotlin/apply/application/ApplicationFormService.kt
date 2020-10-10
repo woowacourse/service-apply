@@ -56,18 +56,8 @@ class ApplicationFormService(
     }
 
     fun findForm(applicantId: Long, recruitmentId: Long): ApplicationFormResponse {
-        val form = getByRecruitmentIdAndApplicantId(recruitmentId, applicantId)
-        val answers = form.answers.items.map { AnswerResponse(it.contents, it.recruitmentItemId) }
-        return ApplicationFormResponse(
-            id = form.id,
-            recruitmentId = form.recruitmentId,
-            referenceUrl = form.referenceUrl,
-            submitted = form.submitted,
-            answers = answers,
-            createdDateTime = form.createdDateTime,
-            modifiedDateTime = form.modifiedDateTime,
-            submittedDateTime = form.submittedDateTime
-        )
+        val applicationForm = getByRecruitmentIdAndApplicantId(recruitmentId, applicantId)
+        return ApplicationFormResponse(applicationForm)
     }
 
     private fun checkRecruitment(recruitmentId: Long) {
