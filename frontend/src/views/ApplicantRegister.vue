@@ -64,7 +64,7 @@
       <GenderField v-model="gender" @valid="v => (this.validGender = v)" required />
       <div class="actions">
         <Button cancel value="취소" />
-        <Button type="submit" :disabled="confirmForms()" value="다음" />
+        <Button type="submit" :disabled="!confirmForms()" value="다음" />
       </div>
       <footer>
         <a class="logo" href="#"></a>
