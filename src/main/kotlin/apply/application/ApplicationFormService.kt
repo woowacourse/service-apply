@@ -18,12 +18,16 @@ class ApplicationFormService(
     private val recruitmentRepository: RecruitmentRepository,
     private val applicantService: ApplicantService
 ) {
+
     fun findAllByRecruitmentId(recruitmentId: Long): List<ApplicationForm> =
         applicationFormRepository.findByRecruitmentId(recruitmentId)
 
     fun getByRecruitmentIdAndApplicantId(recruitmentId: Long, applicantId: Long): ApplicationForm =
         applicationFormRepository.findByRecruitmentIdAndApplicantId(recruitmentId, applicantId)
             ?: throw IllegalArgumentException("해당하는 지원서가 없습니다.")
+
+    fun getAllByApplicantId(applicantId: Long): List<MyApplicationFormResponse> =
+        applicationFormRepository.findAllByApplicantId(applicantId).map(::MyApplicationFormResponse)
 
     fun create(applicantId: Long, request: CreateApplicationFormRequest) {
         checkRecruitment(request.recruitmentId)

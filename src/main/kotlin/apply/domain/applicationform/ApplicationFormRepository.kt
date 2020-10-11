@@ -7,5 +7,7 @@ interface ApplicationFormRepository : JpaRepository<ApplicationForm, Long> {
 
     fun findByRecruitmentIdAndApplicantId(recruitmentId: Long, applicantId: Long): ApplicationForm?
 
+    fun findAllByApplicantId(applicantId: Long): List<ApplicationForm>
+
     fun existsByRecruitmentIdAndApplicantId(recruitmentId: Long, applicantId: Long): Boolean
 }

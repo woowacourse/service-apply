@@ -72,3 +72,13 @@ data class AnswerResponse(
 ) {
     constructor(answer: Answer) : this(answer.contents, answer.recruitmentItemId)
 }
+
+data class MyApplicationFormResponse(
+    val recruitmentId: Long,
+    val submitted: Boolean
+) {
+    constructor(applicationForm: ApplicationForm) : this(
+        applicationForm.recruitmentId,
+        applicationForm.submitted
+    )
+}

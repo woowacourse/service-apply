@@ -3,6 +3,7 @@ package apply.ui.api
 import apply.application.ApplicationFormResponse
 import apply.application.ApplicationFormService
 import apply.application.CreateApplicationFormRequest
+import apply.application.MyApplicationFormResponse
 import apply.application.UpdateApplicationFormRequest
 import apply.domain.applicant.Applicant
 import apply.security.LoginApplicant
@@ -21,6 +22,12 @@ import javax.validation.Valid
 class ApplicationFormRestController(
     private val applicationFormService: ApplicationFormService
 ) {
+    @GetMapping("/me")
+    fun getMyApplicationForms(@LoginApplicant applicant: Applicant): ResponseEntity<ApiResponse<List<MyApplicationFormResponse>>> {
+        val form = applicationFormService.getAllByApplicantId(applicant.id)
+        return ResponseEntity.ok().body(ApiResponse.success(form))
+    }
+
     @GetMapping
     fun getForm(
         @RequestParam("recruitmentId") recruitment: Long,
