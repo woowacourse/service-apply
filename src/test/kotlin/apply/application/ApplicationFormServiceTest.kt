@@ -1,5 +1,7 @@
 package apply.application
 
+import apply.createApplicationForm
+import apply.createApplicationForms
 import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.recruitmentitem.Answer
@@ -8,6 +10,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatchers.anyLong
@@ -28,6 +31,7 @@ class ApplicationFormServiceTest {
 
     private lateinit var applicationForm1: ApplicationForm
     private lateinit var applicationForm2: ApplicationForm
+    private lateinit var applicationForms: List<ApplicationForm>
     private lateinit var applicationFormResponse: ApplicationFormResponse
     private lateinit var applicationFormSaveRequest: SaveApplicationFormRequest
     private lateinit var applicationFormUpdateRequest: UpdateApplicationFormRequest
@@ -36,19 +40,9 @@ class ApplicationFormServiceTest {
     internal fun setUp() {
         this.applicationFormService = ApplicationFormService(applicationFormRepository, applicantService)
 
-        applicationForm1 = ApplicationForm(
-            applicantId = 1L,
-            recruitmentId = 1L,
-            referenceUrl = "http://example.com",
-            answers = Answers(
-                mutableListOf(
-                    Answer("스타트업을 하고 싶습니다.", 1L),
-                    Answer("책임감", 2L)
-                )
-            )
-        )
+        applicationForm1 = createApplicationForm()
 
-        applicationForm2 = ApplicationForm(
+        applicationForm2 = createApplicationForm(
             applicantId = 2L,
             recruitmentId = 1L,
             referenceUrl = "http://example2.com",
@@ -59,6 +53,8 @@ class ApplicationFormServiceTest {
                 )
             )
         )
+
+        applicationForms = createApplicationForms()
 
         applicationFormResponse = ApplicationFormResponse(
             id = applicationForm1.id,
@@ -122,6 +118,30 @@ class ApplicationFormServiceTest {
 
         assertThatIllegalArgumentException().isThrownBy { applicationFormService.findForm(1L, 1L) }
             .withMessage("해당하는 지원서가 없습니다.")
+    }
+
+    @Test
+    fun `지원자가 자신의 지원서를 모두 불러온다`() {
+        given(applicationFormRepository.findAllByApplicantId(1L)).willReturn(applicationForms)
+
+        val expected = applicationFormService.getAllByApplicantId(1L)
+
+        assertAll(
+            { assertThat(expected).isNotNull },
+            { assertThat(expected).hasSize(2) }
+        )
+    }
+
+    @Test
+    fun `지원자가 지원한 지원서가 없으면 빈 리스트를 불러온다`() {
+        given(applicationFormRepository.findAllByApplicantId(1L)).willReturn(emptyList())
+
+        val expected = applicationFormService.getAllByApplicantId(1L)
+
+        assertAll(
+            { assertThat(expected).isNotNull },
+            { assertThat(expected).hasSize(0) }
+        )
     }
 
     @Test
