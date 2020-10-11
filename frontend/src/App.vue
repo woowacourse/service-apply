@@ -20,7 +20,7 @@ export default {
   },
   methods: {
     ...mapActions(["fetchRecruitments"]),
-  }
+  },
 }
 </script>
 
@@ -39,8 +39,8 @@ button:active {
 
 * {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", Roboto,
-  "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
-  "Noto Color Emoji";
+    "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+    "Noto Color Emoji";
   box-sizing: border-box;
 }
 
