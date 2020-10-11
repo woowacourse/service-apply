@@ -15,7 +15,7 @@ fun createNormalButton(text: String, clickListener: ClickListener): Button {
     return Button(text, clickListener)
 }
 
-fun createPrimaryButton(text: String, clickListener: ClickListener): Button {
+fun createPrimaryButton(text: String = "", clickListener: ClickListener): Button {
     return Button(text, clickListener).apply {
         addThemeVariants(ButtonVariant.LUMO_PRIMARY)
     }

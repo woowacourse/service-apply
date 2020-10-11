@@ -16,23 +16,39 @@ class RecruitmentService(
     private val recruitmentRepository: RecruitmentRepository,
     private val recruitmentItemRepository: RecruitmentItemRepository
 ) {
-    fun save(request: RecruitmentRequest) {
+    fun save(request: RecruitmentData) {
         val recruitment = recruitmentRepository.save(
-            Recruitment(request.title, request.startDateTime, request.endDateTime, request.canRecruit, request.isHidden)
+            Recruitment(
+                request.title,
+                request.startDateTime,
+                request.endDateTime,
+                request.canRecruit,
+                request.isHidden,
+                request.id
+            )
+        )
+        recruitmentItemRepository.deleteAll(
+            findRecruitmentItemsToDelete(request.id, request.recruitmentItems.map { it.id })
         )
         recruitmentItemRepository.saveAll(
             request.recruitmentItems.map {
-                RecruitmentItem(recruitment.id, it.title, it.position, it.maximumLength, it.description)
+                RecruitmentItem(recruitment.id, it.title, it.position, it.maximumLength, it.description, it.id)
             }
         )
+    }
+
+    private fun findRecruitmentItemsToDelete(recruitmentId: Long, excludedItemIds: List<Long>): List<RecruitmentItem> {
+        return recruitmentItemRepository
+            .findByRecruitmentIdOrderByPosition(recruitmentId)
+            .filterNot { excludedItemIds.contains(it.id) }
     }
 
     fun findAll(): List<Recruitment> {
         return recruitmentRepository.findAll()
     }
 
-    fun findAllNotHidden(): List<Recruitment> {
-        return recruitmentRepository.findAllByIsHiddenFalse()
+    fun findAllNotHidden(): List<RecruitmentResponse> {
+        return recruitmentRepository.findAllByIsHiddenFalse().map(::RecruitmentResponse)
     }
 
     fun deleteById(id: Long) {
@@ -42,12 +58,26 @@ class RecruitmentService(
     fun getById(id: Long): Recruitment =
         recruitmentRepository.findByIdOrNull(id) ?: throw IllegalArgumentException()
 
+    fun getNotEndedDataById(id: Long): RecruitmentData {
+        val recruitment = getById(id)
+        check(!recruitment.isEnded) { "모집이 이미 완료되었습니다." }
+        val recruitmentItems = recruitmentItemRepository.findByRecruitmentIdOrderByPosition(recruitment.id)
+        return RecruitmentData(recruitment, recruitmentItems)
+    }
+
     @PostConstruct
     private fun populateDummy() {
         if (recruitmentRepository.count() != 0L) {
             return
         }
         val recruitments = listOf(
+            Recruitment(
+                title = "지원할 제목",
+                startDateTime = createLocalDateTime(2020, 10, 5, 10),
+                endDateTime = createLocalDateTime(2020, 11, 5, 10),
+                canRecruit = true,
+                isHidden = false
+            ),
             Recruitment(
                 title = "웹 백엔드 2기",
                 startDateTime = createLocalDateTime(2019, 10, 25, 10),

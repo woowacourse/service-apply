@@ -1,6 +1,7 @@
 package apply.application
 
 import apply.domain.evaluationItem.EvaluationItemRepository
+import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.recruitmentitem.RecruitmentItemRepository
 import apply.utils.ExcelGenerator
 import apply.utils.ExcelRow
@@ -11,11 +12,14 @@ import java.io.ByteArrayInputStream
 @Service
 @Transactional
 class ExcelService(
+    val applicantService: ApplicantService,
+    val evaluationTargetService: EvaluationTargetService,
     val recruitmentItemRepository: RecruitmentItemRepository,
     val evaluationItemRepository: EvaluationItemRepository,
     val excelGenerator: ExcelGenerator
 ) {
-    fun createApplicantExcel(applicants: List<ApplicantResponse>): ByteArrayInputStream {
+    fun createApplicantExcel(recruitmentId: Long): ByteArrayInputStream {
+        val applicants = applicantService.findAllByRecruitmentId(recruitmentId)
         val recruitmentItemIds = applicants[0].applicationForm.answers.items.map { it.recruitmentItemId }
         val titles = recruitmentItemRepository.findAllById(recruitmentItemIds).map { it.title }.toTypedArray()
         val headerTitles = arrayOf("이름", "이메일", "전화번호", "성별", "생년월일", "지원 일시", "부정 행위자", *titles)
@@ -34,18 +38,19 @@ class ExcelService(
         return excelGenerator.generateBy(headerTitles, excelRows)
     }
 
-    fun createTargetExcel(targets: List<EvaluationTargetResponse>): ByteArrayInputStream {
-        val evaluationItemIds = targets[0].target.evaluationAnswers.answers.map { it.evaluationItemId }
+    fun createTargetExcel(evaluationId: Long): ByteArrayInputStream {
+        val targets = evaluationTargetService.findAllByEvaluationIdAndKeyword(evaluationId)
+        val evaluationItemIds = targets[0].answers.map { it.evaluationItemId }
         val titles = evaluationItemRepository.findAllById(evaluationItemIds).map { it.title }.toTypedArray()
         val headerTitles = arrayOf("이름", "이메일", "합계", "평가상태", *titles, "기타 특이사항")
         val excelRows = targets.map {
             ExcelRow(
                 it.name,
                 it.email,
-                it.target.evaluationAnswers.answers.map { item -> item.score }.sum().toString(),
-                it.target.evaluationStatus.title,
-                *it.target.evaluationAnswers.answers.map { item -> item.score.toString() }.toTypedArray(),
-                it.target.note
+                it.totalScore.toString(),
+                it.evaluationStatus.toText(),
+                *it.answers.map { item -> item.score.toString() }.toTypedArray(),
+                it.note
             )
         }
         return excelGenerator.generateBy(headerTitles, excelRows)
@@ -57,4 +62,12 @@ class ExcelService(
             else -> "X"
         }
     }
+
+    private fun EvaluationStatus.toText() =
+        when (this) {
+            EvaluationStatus.WAITING -> "평가 전"
+            EvaluationStatus.PASS -> "합격"
+            EvaluationStatus.FAIL -> "탈락"
+            EvaluationStatus.PENDING -> "보류"
+        }
 }

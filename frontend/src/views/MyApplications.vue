@@ -1,18 +1,15 @@
 <template>
   <div class="my-application-forms">
-    <h1>내 지원서</h1>
-
-    <ApplicationFormItem
-      class="application-forms"
-      v-for="recruitment in appliedRecruitments"
-      :key="recruitment.id"
-      :recruitment="recruitment"
-      :submitted="recruitment.submitted"
-    />
-
-    <footer>
-      <a class="logo" href="#"></a>
-    </footer>
+    <Box>
+      <h1>내 지원서</h1>
+      <ApplicationFormItem
+        class="application-forms"
+        v-for="recruitment in appliedRecruitments"
+        :key="recruitment.id"
+        :recruitment="recruitment"
+        :submitted="recruitment.submitted"
+      />
+    </Box>
   </div>
 </template>
 
@@ -20,15 +17,17 @@
 import * as RecruitmentApi from "@/api/recruitments"
 import * as ApplicationApi from "@/api/application-forms"
 import ApplicationFormItem from "@/components/ApplicationFormItem"
+import Box from "@/components/Box"
 
 export default {
   components: {
     ApplicationFormItem,
+    Box,
   },
   data: () => ({
     appliedRecruitments: [],
   }),
-  async created() {
+  created() {
     const token = this.$store.getters["token"]
 
     try {
@@ -71,21 +70,7 @@ export default {
 .my-application-forms {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  min-height: 100%;
   align-items: center;
   background: #ced6e0;
-}
-
-.application-forms {
-  width: 60%;
-}
-
-.logo {
-  display: flex;
-  width: 100px;
-  height: 32px;
-  background: url("/assets/logo/logo_full_dark.png");
-  background-size: 100% 100%;
 }
 </style>

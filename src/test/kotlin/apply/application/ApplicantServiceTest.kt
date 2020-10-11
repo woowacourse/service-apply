@@ -1,9 +1,8 @@
 package apply.application
 
-import apply.domain.applicant.ApplicantInformation
 import apply.domain.applicant.ApplicantRepository
-import apply.domain.applicant.ApplicantVerifyInformation
 import apply.domain.applicant.Gender
+import apply.domain.applicant.Password
 import apply.domain.applicant.exception.ApplicantValidateException
 import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormRepository
@@ -29,6 +28,7 @@ import support.createLocalDateTime
 
 private const val VALID_TOKEN = "SOME_VALID_TOKEN"
 private const val APPLICANT_ID = 1L
+private const val RANDOM_PASSWORD = "nEw_p@ssw0rd"
 
 @ExtendWith(MockitoExtension::class)
 internal class ApplicantServiceTest {
@@ -43,6 +43,9 @@ internal class ApplicantServiceTest {
 
     @Mock
     private lateinit var jwtTokenProvider: JwtTokenProvider
+
+    @Mock
+    private lateinit var passwordGenerator: PasswordGenerator
 
     private lateinit var applicantService: ApplicantService
 
@@ -68,7 +71,7 @@ internal class ApplicantServiceTest {
         phoneNumber = "010-0000-0000",
         gender = Gender.MALE,
         birthday = createLocalDate(1995, 2, 2),
-        password = "password"
+        password = Password("password")
     )
 
     private val validApplicantLoginRequest = ApplicantVerifyInformation(
@@ -78,24 +81,39 @@ internal class ApplicantServiceTest {
         password = validApplicantRequest.password
     )
 
-    private val inValidApplicantRequest = validApplicantRequest.copy(password = "invalid_password")
+    private val validApplicantPasswordFindRequest = ResetPasswordRequest(
+        name = validApplicantRequest.name,
+        email = validApplicantRequest.email,
+        birthday = validApplicantRequest.birthday
+    )
 
-    private val inValidApplicantLoginRequest = validApplicantLoginRequest.copy(password = "invalid_password")
+    private val inValidApplicantRequest = validApplicantRequest.copy(password = Password("invalid_password"))
 
-    private val applicants = listOf(validApplicantRequest.toEntity(APPLICANT_ID))
+    private val inValidApplicantLoginRequest = validApplicantLoginRequest.copy(password = Password("invalid_password"))
 
-    private val applicantResponses = listOf(ApplicantResponse(applicants[0], true, applicationForm))
+    private val inValidApplicantPasswordFindRequest =
+        validApplicantPasswordFindRequest.copy(birthday = createLocalDate(1995, 4, 4))
+
+    private val applicant = validApplicantRequest.toEntity(APPLICANT_ID)
+
+    private val applicantResponses = listOf(ApplicantResponse(applicant, true, applicationForm))
 
     @BeforeEach
     internal fun setUp() {
         applicantService =
-            ApplicantService(applicationFormRepository, applicantRepository, cheaterRepository, jwtTokenProvider)
+            ApplicantService(
+                applicationFormRepository,
+                applicantRepository,
+                cheaterRepository,
+                jwtTokenProvider,
+                passwordGenerator
+            )
     }
 
     @Test
     fun `지원자 정보와 부정 행위자 여부를 함께 제공한다`() {
         given(applicationFormRepository.findByRecruitmentId(anyLong())).willReturn(listOf(applicationForm))
-        given(applicantRepository.findAllById(anySet())).willReturn(applicants)
+        given(applicantRepository.findAllById(anySet())).willReturn(listOf(applicant))
         given(cheaterRepository.findAll()).willReturn(listOf(Cheater(1L)))
 
         val founds = applicantService.findAllByRecruitmentId(1L)
@@ -108,7 +126,6 @@ internal class ApplicantServiceTest {
 
     @Test
     fun `지원자가 이미 존재하고 검증에 성공하면 유효한 토큰을 반환한다`() {
-        val applicant = validApplicantRequest.toEntity(APPLICANT_ID)
         given(applicantRepository.findByEmail(validApplicantRequest.email)).willReturn(applicant)
         given(jwtTokenProvider.createToken(validApplicantRequest.email)).willReturn(VALID_TOKEN)
 
@@ -117,7 +134,6 @@ internal class ApplicantServiceTest {
 
     @Test
     fun `지원자가 이미 존재하고 필드 값 동등성 검증에 실패하면 예외가 발생한다`() {
-        val applicant = validApplicantRequest.toEntity(APPLICANT_ID)
         given(applicantRepository.findByEmail(inValidApplicantRequest.email)).willReturn(applicant)
 
         assertThatThrownBy {
@@ -130,8 +146,13 @@ internal class ApplicantServiceTest {
     fun `지원자가 존재하지 않으면 지원자를 저장한 뒤, 유효한 토큰을 반환한다`() {
         given(applicantRepository.findByEmail(validApplicantRequest.email)).willReturn(null)
         given(jwtTokenProvider.createToken(validApplicantRequest.email)).willReturn(VALID_TOKEN)
-        given(applicantRepository.save(refEq(validApplicantRequest.toEntity())))
-            .willReturn(validApplicantRequest.toEntity(APPLICANT_ID))
+        given(
+            applicantRepository.save(
+                refEq(
+                    validApplicantRequest.toEntity()
+                )
+            )
+        ).willReturn(applicant)
 
         assertThat(applicantService.generateToken(validApplicantRequest)).isEqualTo(VALID_TOKEN)
     }
@@ -163,6 +184,28 @@ internal class ApplicantServiceTest {
         ).willReturn(false)
 
         assertThatThrownBy { applicantService.generateTokenByLogin(inValidApplicantLoginRequest) }
+            .isInstanceOf(ApplicantValidateException::class.java)
+            .hasMessage("요청 정보가 기존 지원자 정보와 일치하지 않습니다")
+    }
+
+    @Test
+    fun `지원자의 비밀번호를 초기화한다`() {
+        given(
+            applicantRepository.findByNameAndEmailAndBirthday(
+                validApplicantPasswordFindRequest.name,
+                validApplicantPasswordFindRequest.email,
+                validApplicantPasswordFindRequest.birthday
+            )
+        ).willReturn(applicant)
+
+        given(passwordGenerator.generate()).willReturn(RANDOM_PASSWORD)
+
+        assertThat(applicantService.resetPassword(validApplicantPasswordFindRequest)).isEqualTo(RANDOM_PASSWORD)
+    }
+
+    @Test
+    fun `비밀번호를 초기화를 위한 검증 데이터가 올바르지 않을시 예외가 발생한다`() {
+        assertThatThrownBy { applicantService.resetPassword(inValidApplicantPasswordFindRequest) }
             .isInstanceOf(ApplicantValidateException::class.java)
             .hasMessage("요청 정보가 기존 지원자 정보와 일치하지 않습니다")
     }

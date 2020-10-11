@@ -4,6 +4,7 @@ import apply.domain.evaluation.Evaluation
 import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluationItem.EvaluationItem
 import apply.domain.evaluationItem.EvaluationItemRepository
+import apply.domain.recruitment.RecruitmentRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import javax.annotation.PostConstruct
@@ -14,7 +15,7 @@ import javax.transaction.Transactional
 class EvaluationService(
     private val evaluationRepository: EvaluationRepository,
     private val evaluationItemRepository: EvaluationItemRepository,
-    private val recruitmentService: RecruitmentService
+    private val recruitmentRepository: RecruitmentRepository
 ) {
     fun save(request: EvaluationRequest) {
         val evaluation = evaluationRepository.save(
@@ -22,7 +23,7 @@ class EvaluationService(
         )
         evaluationItemRepository.saveAll(
             request.evaluationItems.map {
-                EvaluationItem(evaluation.id, it.title, it.maximumScore, it.position, it.description)
+                EvaluationItem(it.title, it.description, it.maximumScore, it.position, evaluation.id)
             }
         )
     }
@@ -47,7 +48,7 @@ class EvaluationService(
                 it.id,
                 it.title,
                 it.description,
-                recruitmentService.getById(it.recruitmentId).title,
+                recruitmentRepository.getOne(it.recruitmentId).title,
                 it.recruitmentId,
                 findById(it.beforeEvaluationId)?.title ?: "이전 평가 없음",
                 it.beforeEvaluationId

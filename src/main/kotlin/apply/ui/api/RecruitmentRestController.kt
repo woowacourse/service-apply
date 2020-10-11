@@ -1,8 +1,8 @@
 package apply.ui.api
 
 import apply.application.RecruitmentItemService
+import apply.application.RecruitmentResponse
 import apply.application.RecruitmentService
-import apply.domain.recruitment.Recruitment
 import apply.domain.recruitmentitem.RecruitmentItem
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -17,12 +17,13 @@ class RecruitmentRestController(
     private val recruitmentItemService: RecruitmentItemService
 ) {
     @GetMapping
-    fun findAll(): ResponseEntity<List<Recruitment>> {
-        return ResponseEntity.ok().body(recruitmentService.findAllNotHidden())
+    fun findAll(): ResponseEntity<ApiResponse<List<RecruitmentResponse>>> {
+        return ResponseEntity.ok().body(ApiResponse.success(recruitmentService.findAllNotHidden()))
     }
 
     @GetMapping("/{id}/items")
-    fun findItemsById(@PathVariable("id") recruitmentId: Long): ResponseEntity<List<RecruitmentItem>> {
-        return ResponseEntity.ok().body(recruitmentItemService.findByRecruitmentIdOrderByPosition(recruitmentId))
+    fun findItemsById(@PathVariable("id") recruitmentId: Long): ResponseEntity<ApiResponse<List<RecruitmentItem>>> {
+        return ResponseEntity.ok()
+            .body(ApiResponse.success(recruitmentItemService.findByRecruitmentIdOrderByPosition(recruitmentId)))
     }
 }

@@ -5,6 +5,7 @@ import ApplicantRegister from "@/views/ApplicantRegister"
 import ApplicationRegister from "@/views/ApplicationRegister"
 import Login from "@/views/Login"
 import PasswordFind from "@/views/PasswordFind"
+import PasswordFindResult from "@/views/PasswordFindResult"
 import MyApplications from "@/views/MyApplications"
 import store from "@/store"
 
@@ -20,28 +21,35 @@ const requireAuth = (to, from, next) => {
 
 const routes = [
   {
+    path: "/",
+    redirect: "/recruits",
+  },
+  {
     path: "/recruits",
     component: Recruits,
   },
   {
-    path: "/register/applicant",
+    path: "/applicants/new",
     component: ApplicantRegister,
     props: route => ({
       recruitmentId: Number(route.query.recruitmentId),
     }),
   },
   {
-    path: "/register/application",
+    path: "/application-forms/new",
     component: ApplicationRegister,
     props: route => ({
       recruitmentId: Number(route.query.recruitmentId),
+      status: "new",
     }),
-    children: [
-      {
-        name: "edit",
-        path: "edit",
-      },
-    ],
+  },
+  {
+    path: "/application-forms/edit",
+    component: ApplicationRegister,
+    props: route => ({
+      recruitmentId: Number(route.query.recruitmentId),
+      status: "edit",
+    }),
   },
   {
     path: "/login",
@@ -52,7 +60,14 @@ const routes = [
     component: PasswordFind,
   },
   {
-    path: "/my-applications",
+    path: "/find/result",
+    props: route => ({
+      email: route.query.email,
+    }),
+    component: PasswordFindResult,
+  },
+  {
+    path: "/my-application-forms",
     component: MyApplications,
     beforeEnter: requireAuth,
   },

@@ -1,14 +1,14 @@
 package apply.ui.admin.recruitment
 
-import apply.application.RecruitmentItemRequest
+import apply.application.RecruitmentItemData
 import com.vaadin.flow.component.select.Select
 import com.vaadin.flow.component.textfield.IntegerField
 import com.vaadin.flow.component.textfield.TextArea
 import com.vaadin.flow.component.textfield.TextField
-import support.views.BindingFormLayout
+import support.views.BindingIdentityFormLayout
 import support.views.createIntSelect
 
-class RecruitmentItemForm() : BindingFormLayout<RecruitmentItemRequest>(RecruitmentItemRequest::class) {
+class RecruitmentItemForm() : BindingIdentityFormLayout<RecruitmentItemData>(RecruitmentItemData::class) {
     private val title: TextField = TextField("항목명")
     private val position: Select<Int> = createIntSelect(max = 10).apply { label = "순서" }
     private val maximumLength: IntegerField = IntegerField("최대 글자 수")
@@ -27,7 +27,11 @@ class RecruitmentItemForm() : BindingFormLayout<RecruitmentItemRequest>(Recruitm
         this.description.value = description
     }
 
-    override fun bindOrNull(): RecruitmentItemRequest? {
+    override fun bindOrNull(): RecruitmentItemData? {
         return bindDefaultOrNull()
+    }
+
+    override fun fill(data: RecruitmentItemData) {
+        fillDefault(data)
     }
 }

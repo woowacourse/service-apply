@@ -21,7 +21,7 @@ internal class ApplicantRepositoryTest(private val applicantRepository: Applican
                 "010-0000-0000",
                 Gender.MALE,
                 createLocalDate(2020, 4, 17),
-                "password"
+                Password("password")
             ),
             Applicant(
                 "홍길동2",
@@ -29,7 +29,7 @@ internal class ApplicantRepositoryTest(private val applicantRepository: Applican
                 "010-0000-0000",
                 Gender.FEMALE,
                 createLocalDate(2020, 5, 5),
-                "password"
+                Password("password")
             ),
             Applicant(
                 "홍길동3",
@@ -37,7 +37,7 @@ internal class ApplicantRepositoryTest(private val applicantRepository: Applican
                 "010-0000-0000",
                 Gender.MALE,
                 createLocalDate(2020, 1, 1),
-                "password"
+                Password("password")
             )
         )
         applicantRepository.saveAll(applicants)

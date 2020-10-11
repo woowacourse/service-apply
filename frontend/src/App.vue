@@ -1,8 +1,28 @@
 <template>
   <div id="app">
-    <router-view />
+    <MainHeader />
+    <router-view class="main-view" />
+    <MainFooter />
   </div>
 </template>
+<script>
+import MainHeader from "./components/MainHeader"
+import MainFooter from "./components/MainFooter"
+import { mapActions } from "vuex"
+
+export default {
+  components: {
+    MainHeader,
+    MainFooter,
+  },
+  async created() {
+    await this.fetchRecruitments()
+  },
+  methods: {
+    ...mapActions(["fetchRecruitments"]),
+  }
+}
+</script>
 
 <style>
 button {
@@ -19,18 +39,26 @@ button:active {
 
 * {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", Roboto,
-    "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
-    "Noto Color Emoji";
+  "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+  "Noto Color Emoji";
   box-sizing: border-box;
 }
 
 html,
-body,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #ced6e0;
+}
+
 #app {
+  display: flex;
+  flex-direction: column;
   height: 100%;
 }
 
-body {
-  margin: 0;
+.main-view {
+  flex: 1 0 auto;
 }
 </style>
