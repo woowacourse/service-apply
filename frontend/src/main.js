@@ -10,3 +10,5 @@ new Vue({
   store,
   render: h => h(App),
 }).$mount("#app")
+
+document.title = "우아한테크코스 지원하기"
