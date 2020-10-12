@@ -40,6 +40,11 @@ class ApplicationForm(
 
     constructor(
         applicantId: Long,
+        recruitmentId: Long
+    ) : this(applicantId, recruitmentId, "", Answers())
+
+    constructor(
+        applicantId: Long,
         recruitmentId: Long,
         referenceUrl: String,
         answers: Answers,
@@ -72,7 +77,7 @@ class ApplicationForm(
     }
 
     fun update(referenceUrl: String, answers: Answers) {
-        require(!this.submitted) {
+        check(!this.submitted) {
             "이미 제출된 지원서입니다. 수정할 수 없습니다."
         }
         this.referenceUrl = referenceUrl

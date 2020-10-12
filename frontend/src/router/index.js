@@ -21,6 +21,10 @@ const requireAuth = (to, from, next) => {
 
 const routes = [
   {
+    path: "/index.html",
+    redirect: "/",
+  },
+  {
     path: "/",
     redirect: "/recruits",
   },
@@ -42,6 +46,7 @@ const routes = [
       recruitmentId: Number(route.query.recruitmentId),
       status: "new",
     }),
+    beforeEnter: requireAuth,
   },
   {
     path: "/application-forms/edit",
@@ -50,6 +55,7 @@ const routes = [
       recruitmentId: Number(route.query.recruitmentId),
       status: "edit",
     }),
+    beforeEnter: requireAuth,
   },
   {
     path: "/login",
