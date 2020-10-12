@@ -1,5 +1,7 @@
 package apply.application
 
+import apply.domain.evaluationtarget.EvaluationAnswer
+import apply.domain.evaluationtarget.EvaluationAnswers
 import apply.domain.evaluationtarget.EvaluationStatus
 
 data class EvaluationTargetResponse(
@@ -8,7 +10,9 @@ data class EvaluationTargetResponse(
     val email: String,
     val totalScore: Int,
     val evaluationStatus: EvaluationStatus,
-    val administratorId: Long
+    val administratorId: Long,
+    val note: String,
+    val answers: List<EvaluationAnswerResponse>
 ) {
     constructor(
         id: Long,
@@ -16,13 +20,24 @@ data class EvaluationTargetResponse(
         email: String,
         totalScore: Int,
         evaluationStatus: EvaluationStatus,
-        administratorId: Long?
+        administratorId: Long?,
+        note: String,
+        answers: EvaluationAnswers
     ) : this(
         id,
         name,
         email,
         totalScore,
         evaluationStatus,
-        administratorId ?: 0L
+        administratorId ?: 0L,
+        note,
+        answers.answers.map(::EvaluationAnswerResponse)
     )
+}
+
+data class EvaluationAnswerResponse(
+    val score: Int,
+    val evaluationItemId: Long
+) {
+    constructor(answer: EvaluationAnswer) : this(answer.score, answer.evaluationItemId)
 }
