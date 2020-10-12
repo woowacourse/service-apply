@@ -35,7 +35,7 @@ class ApplicantService(
 
     fun findByRecruitmentIdAndKeyword(recruitmentId: Long, keyword: String): List<ApplicantResponse> =
         findAllByRecruitmentId(recruitmentId)
-            .filter { it.name.contains(keyword) || it.email.contains(keyword) }
+            .filter { (it.name.contains(keyword) || it.email.contains(keyword)) && it.applicationForm.submitted }
 
     fun findByNameOrEmail(keyword: String): List<ApplicantBasicResponse> =
         applicantRepository.findByNameContainingOrEmailContaining(keyword, keyword).map {
