@@ -63,7 +63,7 @@
       />
       <BirthField v-model="birth" @valid="v => (this.validBirth = v)" required />
       <GenderField v-model="gender" @valid="v => (this.validGender = v)" required />
-      <div class="actions">
+      <template v-slot:actions>
         <Button cancel value="취소" />
         <Button
           type="submit"
@@ -78,10 +78,7 @@
           "
           value="다음"
         />
-      </div>
-      <footer>
-        <a class="logo" href="#"></a>
-      </footer>
+      </template>
     </Form>
   </div>
 </template>
@@ -183,24 +180,5 @@ export default {
   margin: 0;
   color: #333;
   font-size: 12px;
-}
-
-.actions {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 20px 0;
-}
-
-.actions > .button {
-  flex: 1;
-}
-
-.logo {
-  display: flex;
-  width: 100px;
-  height: 32px;
-  background: url("/assets/logo/logo_full_dark.png");
-  background-size: 100% 100%;
 }
 </style>

@@ -64,14 +64,11 @@
         </Description>
         <CheckBox v-model="factCheck" label="동의합니다." />
       </Field>
-      <div class="actions">
+      <template v-slot:actions>
         <Button @click="reset" value="초기화" />
         <Button @click="saveTemp" :disabled="!canSave" value="임시 저장" />
         <Button type="submit" :disabled="!canSubmit" value="제출" />
-      </div>
-      <footer>
-        <a class="logo" href="#"></a>
-      </footer>
+      </template>
     </Form>
   </div>
 </template>
@@ -236,25 +233,6 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-
-.actions {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 20px 0;
-}
-
-.actions > .button {
-  flex: 1;
-}
-
-.logo {
-  display: flex;
-  width: 100px;
-  height: 32px;
-  background: url("/assets/logo/logo_full_dark.png");
-  background-size: 100% 100%;
 }
 
 .autosave-indicator {
