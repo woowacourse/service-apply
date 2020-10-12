@@ -20,8 +20,8 @@ class ExcelService(
 ) {
     fun createApplicantExcel(recruitmentId: Long): ByteArrayInputStream {
         val applicants = applicantService.findAllByRecruitmentId(recruitmentId)
-        val recruitmentItemIds = applicants[0].applicationForm.answers.items.map { it.recruitmentItemId }
-        val titles = recruitmentItemRepository.findAllById(recruitmentItemIds).map { it.title }.toTypedArray()
+        val titles =
+            recruitmentItemRepository.findByRecruitmentIdOrderByPosition(recruitmentId).map { it.title }.toTypedArray()
         val headerTitles = arrayOf("이름", "이메일", "전화번호", "성별", "생년월일", "지원 일시", "부정 행위자", *titles)
         val excelRows = applicants.map {
             ExcelRow(
@@ -40,8 +40,8 @@ class ExcelService(
 
     fun createTargetExcel(evaluationId: Long): ByteArrayInputStream {
         val targets = evaluationTargetService.findAllByEvaluationIdAndKeyword(evaluationId)
-        val evaluationItemIds = targets[0].answers.map { it.evaluationItemId }
-        val titles = evaluationItemRepository.findAllById(evaluationItemIds).map { it.title }.toTypedArray()
+        val titles =
+            evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluationId).map { it.title }.toTypedArray()
         val headerTitles = arrayOf("이름", "이메일", "합계", "평가상태", *titles, "기타 특이사항")
         val excelRows = targets.map {
             ExcelRow(
