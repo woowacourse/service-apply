@@ -62,7 +62,6 @@ export default {
   align-items: center;
   font-size: 16px;
   color: #333;
-  padding: 1px 5px;
   border-radius: 5px;
   text-align: center;
 }
