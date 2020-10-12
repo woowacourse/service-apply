@@ -1,75 +1,99 @@
 <template>
   <div class="application-register">
     <RecruitCard :recruitment="recruitment" />
-    <Form @submit.prevent="submit">
-      <h1>지원서 작성</h1>
-      <p class="autosave-indicator" v-if="isEditing && !modifiedDateTime">
-        임시 저장되었습니다. ({{ modifiedDateTime }})
-      </p>
-      <TextField
-        :value="$store.state.applicantInfo.name"
-        name="name"
-        type="text"
-        label="이름"
-        readonly
-      />
-      <div v-if="isEditing">
+    <ValidationObserver v-slot="{ handleSubmit, passed }">
+      <Form @submit.prevent="handleSubmit(submit)">
+        <h1>지원서 작성</h1>
+        <p class="autosave-indicator" v-if="isEditing && !modifiedDateTime">
+          임시 저장되었습니다. ({{ modifiedDateTime }})
+        </p>
         <TextField
-          v-model="password"
-          name="password"
-          type="password"
-          label="비밀번호"
-          placeholder="비밀번호를 입력해 주세요"
-          :rules="rules.password"
-          @valid="v => (this.validPassword = v)"
-          required
+          :value="$store.state.applicantInfo.name"
+          name="name"
+          type="text"
+          label="이름"
+          readonly
         />
-        <TextField
-          v-model="rePassword"
-          name="re-password"
-          type="password"
-          label="비밀번호 확인"
-          placeholder="비밀번호를 다시 한 번 입력해 주세요"
-          :rules="[...rules.rePassword, v => v === password || '비밀번호가 일치하지 않습니다']"
-          @valid="v => (this.validRePassword = v)"
-          required
-        />
-      </div>
-      <TextField
-        v-for="(item, index) in recruitmentItems"
-        v-bind:key="item.id"
-        v-model="item.contents"
-        name="recruitment-item"
-        type="textarea"
-        :label="`${index + 1}. ${item.title}`"
-        :description="item.description"
-        placeholder="내용을 입력해주세요."
-        :rules="rules.recruitmentItem"
-        :max-length="item.maximumLength"
-        required
-      />
-      <TextField
-        v-model="referenceUrl"
-        name="url"
-        type="url"
-        :description="'블로그, GitHub, 포트폴리오 주소 등을 입력해 주세요.'"
-        label="URL"
-        placeholder="ex) https://woowacourse.github.io/javable/"
-      />
-      <Field>
-        <Label>지원서 작성 내용 사실 확인</Label>
-        <Description>
-          기재한 사실 중 허위사실이 발견되는 즉시, 교육 대상자에서 제외되며 향후 지원도
-          불가능합니다.
-        </Description>
-        <CheckBox v-model="factCheck" label="동의합니다." />
-      </Field>
-      <template v-slot:actions>
-        <Button @click="reset" value="초기화" />
-        <Button @click="saveTemp" :disabled="!canSave" value="임시 저장" />
-        <Button type="submit" :disabled="!canSubmit" value="제출" />
-      </template>
-    </Form>
+        <ValidationObserver v-if="isEditing">
+          <ValidationProvider
+            name="password"
+            rules="password|required"
+            :bails="false"
+            v-slot="{ errors }"
+          >
+            <TextField
+              v-model="password"
+              name="password"
+              type="password"
+              label="비밀번호"
+              placeholder="비밀번호를 입력해 주세요"
+              required
+            />
+            <p v-for="(error, index) in errors" :key="index" class="rule-field">{{ error }}</p>
+          </ValidationProvider>
+          <ValidationProvider
+            rules="password|rePassword:@password|required"
+            :bails="false"
+            v-slot="{ errors }"
+          >
+            <TextField
+              v-model="rePassword"
+              name="re-password"
+              type="password"
+              label="비밀번호 확인"
+              placeholder="비밀번호를 다시 한 번 입력해 주세요"
+              required
+            />
+            <p v-for="(error, index) in errors" :key="index" class="rule-field">{{ error }}</p>
+          </ValidationProvider>
+        </ValidationObserver>
+        <ValidationProvider
+          v-for="(item, index) in recruitmentItems"
+          v-bind:key="item.id"
+          rules="required"
+          v-slot="{ errors }"
+        >
+          <TextField
+            v-model="item.contents"
+            name="recruitment-item"
+            type="textarea"
+            :label="`${index + 1}. ${item.title}`"
+            :description="item.description"
+            placeholder="내용을 입력해주세요."
+            :max-length="item.maximumLength"
+            required
+          />
+          <p v-for="(error, index) in errors" :key="index" class="rule-field">{{ error }}</p>
+        </ValidationProvider>
+        <ValidationProvider rules="url" immediate v-slot="{ errors }">
+          <TextField
+            v-model="referenceUrl"
+            name="url"
+            type="url"
+            :description="'블로그, GitHub, 포트폴리오 주소 등을 입력해 주세요.'"
+            label="URL"
+            placeholder="ex) https://woowacourse.github.io/javable/"
+          />
+          <p class="rule-field">{{ errors[0] }}</p>
+        </ValidationProvider>
+        <ValidationProvider rules="required" v-slot="{ errors }">
+          <Field>
+            <Label>지원서 작성 내용 사실 확인</Label>
+            <Description>
+              기재한 사실 중 허위사실이 발견되는 즉시, 교육 대상자에서 제외되며 향후 지원도
+              불가능합니다.
+            </Description>
+            <CheckBox v-model="factCheck" label="동의합니다." />
+          </Field>
+          <p class="rule-field">{{ errors[0] }}</p>
+        </ValidationProvider>
+        <template v-slot:actions>
+          <Button @click="reset" value="초기화" />
+          <Button @click="saveTemp" :disabled="!passed" value="임시 저장" />
+          <Button type="submit" :disabled="!passed" value="제출" />
+        </template>
+      </Form>
+    </ValidationObserver>
   </div>
 </template>
 
@@ -78,7 +102,6 @@ import { Button, CheckBox, Field, Form, TextField, Label, Description } from "@/
 import RecruitCard from "@/components/RecruitCard"
 import * as RecruitmentApi from "@/api/recruitments"
 import * as ApplicationFormsApi from "@/api/application-forms"
-import { register } from "@/utils/validation"
 import { parseLocalDateTime } from "@/utils/date"
 
 export default {
@@ -102,20 +125,9 @@ export default {
     rePassword: "",
     referenceUrl: "",
     recruitmentItems: [],
-    rules: { ...register },
-    validPassword: false,
-    validRePassword: false,
     modifiedDateTime: null,
   }),
   computed: {
-    canSubmit() {
-      return (
-        this.factCheck && this.confirmContents() && (this.isEditing ? this.confirmPassword() : true)
-      )
-    },
-    canSave() {
-      return this.isEditing ? this.confirmPassword() : true
-    },
     isEditing() {
       return this.status === "edit"
     },
@@ -228,12 +240,6 @@ export default {
         }
       }
     },
-    confirmPassword() {
-      return this.validPassword && this.validRePassword && this.password === this.rePassword
-    },
-    confirmContents() {
-      return this.recruitmentItems.every(item => item.contents !== "")
-    },
   },
 }
 </script>
@@ -244,6 +250,12 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.rule-field {
+  margin-left: 8px;
+  font-size: 12px;
+  color: #ff0000;
 }
 
 .autosave-indicator {

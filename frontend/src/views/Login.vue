@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    <ValidationObserver v-slot="{ handleSubmit }">
+    <ValidationObserver v-slot="{ handleSubmit, passed }">
       <Form @submit.prevent="handleSubmit(submit)">
         <h1>내 지원서 보기</h1>
         <ValidationProvider rules="name|required" :bails="false" v-slot="{ errors }">
@@ -14,7 +14,6 @@
           />
           <p v-for="(error, index) in errors" :key="index" class="rule-field">{{ error }}</p>
         </ValidationProvider>
-
         <ValidationProvider rules="email|required" :bails="false" v-slot="{ errors }">
           <TextField
             v-model="email"
@@ -26,7 +25,6 @@
           />
           <p v-for="(error, index) in errors" :key="index" class="rule-field">{{ error }}</p>
         </ValidationProvider>
-
         <ValidationProvider rules="year|month|day|required" :bails="false" v-slot="{ errors }">
           <BirthField v-model="birth" required />
           <p v-for="(error, index) in errors" :key="index" class="rule-field">{{ error }}</p>
@@ -49,7 +47,7 @@
         </ValidationProvider>
         <template v-slot:actions>
           <Button type="button" @click="back" cancel value="이전" />
-          <Button type="submit" value="확인" />
+          <Button type="submit" :disabled="!passed" value="확인" />
         </template>
         <template v-slot:footer>
           <router-link class="find-password" to="/find">비밀번호 찾기</router-link>
@@ -62,8 +60,6 @@
 <script>
 import { BirthField, Button, Form, TextField } from "@/components/form"
 import * as DateUtil from "@/utils/date"
-import ValidationProvider from "@/utils/validation/validator"
-import { ValidationObserver } from "vee-validate"
 
 export default {
   name: "Login",
@@ -72,8 +68,6 @@ export default {
     Button,
     TextField,
     BirthField,
-    ValidationProvider,
-    ValidationObserver,
   },
   data: () => ({
     name: "",

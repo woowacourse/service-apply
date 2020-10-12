@@ -1,6 +1,6 @@
 <template>
   <div class="password-find">
-    <ValidationObserver v-slot="{ handleSubmit }">
+    <ValidationObserver v-slot="{ handleSubmit, passed }">
       <Form @submit.prevent="handleSubmit(submit)">
         <h1>비밀번호 찾기</h1>
         <ValidationProvider rules="name|required" :bails="false" v-slot="{ errors }">
@@ -26,12 +26,12 @@
           <p v-for="(error, index) in errors" :key="index" class="rule-field">{{ error }}</p>
         </ValidationProvider>
         <ValidationProvider rules="year|month|day|required" :bails="false" v-slot="{ errors }">
-          <BirthField v-model="birth" @valid="v => (this.validBirth = v)" required />
+          <BirthField v-model="birth" required />
           <p v-for="(error, index) in errors" :key="index" class="rule-field">{{ error }}</p>
         </ValidationProvider>
         <template v-slot:actions>
           <Button type="button" @click="back" cancel value="이전" />
-          <Button type="submit" value="확인" />
+          <Button type="submit" :disabled="!passed" value="확인" />
         </template>
       </Form>
     </ValidationObserver>
@@ -42,8 +42,6 @@
 import { BirthField, Button, Form, TextField } from "@/components/form"
 import * as Api from "@/api"
 import * as DateUtil from "@/utils/date"
-import ValidationProvider from "@/utils/validation/validator"
-import { ValidationObserver } from "vee-validate"
 
 export default {
   name: "PasswordFind",
@@ -52,8 +50,6 @@ export default {
     Button,
     TextField,
     BirthField,
-    ValidationProvider,
-    ValidationObserver,
   },
   data: () => ({
     name: "",

@@ -1,7 +1,7 @@
 <template>
   <div class="applicant-register">
     <RecruitCard :recruitment="recruitment" />
-    <ValidationObserver v-slot="{ handleSubmit }">
+    <ValidationObserver v-slot="{ handleSubmit, passed }">
       <Form @submit.prevent="handleSubmit(submit)">
         <h1>지원자 정보</h1>
         <ValidationProvider rules="required" v-slot="{ errors }">
@@ -11,7 +11,7 @@
             v-model="policyCheck"
             required
           >
-            <p class="summary">{{ policySummary }}</p>
+            <p class="summary" v-html="policySummary"></p>
           </SummaryCheckField>
           <p class="rule-field">{{ errors[0] }}</p>
         </ValidationProvider>
@@ -99,7 +99,7 @@
 
         <template v-slot:actions>
           <Button cancel value="취소" />
-          <Button type="submit" value="다음" />
+          <Button type="submit" :disabled="!passed" value="다음" />
         </template>
       </Form>
     </ValidationObserver>
@@ -119,8 +119,6 @@ import {
 import RecruitCard from "@/components/RecruitCard"
 import * as DateUtil from "@/utils/date"
 import { POLICY_SUMMARY } from "./constants"
-import ValidationProvider from "@/utils/validation/validator"
-import { ValidationObserver } from "vee-validate"
 
 export default {
   props: {
@@ -134,8 +132,6 @@ export default {
     BirthField,
     GenderField,
     SummaryCheckField,
-    ValidationProvider,
-    ValidationObserver,
   },
   data: () => ({
     policySummary: POLICY_SUMMARY,
