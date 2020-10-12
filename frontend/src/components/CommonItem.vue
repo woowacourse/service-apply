@@ -48,6 +48,10 @@ export default {
   color: #333;
 }
 
+.information {
+  margin-right: 10px;
+}
+
 .title {
   font-size: 18px;
   font-weight: 700;
