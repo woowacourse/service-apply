@@ -1,22 +1,18 @@
 package apply.application
 
+import apply.domain.applicationform.ApplicationForm
+import apply.domain.recruitmentitem.Answer
 import java.time.LocalDateTime
-import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
-data class SaveApplicationFormRequest(
-    val recruitmentId: Long,
-
-    @field:Size(min = 0, max = 255)
-    val referenceUrl: String,
-
-    val isSubmitted: Boolean = false,
-
-    val answers: List<AnswerRequest> = emptyList()
+data class CreateApplicationFormRequest(
+    @field:NotNull
+    val recruitmentId: Long
 )
 
 data class UpdateApplicationFormRequest(
+    @field:NotNull
     val recruitmentId: Long,
 
     @field:Size(min = 0, max = 255)
@@ -26,9 +22,19 @@ data class UpdateApplicationFormRequest(
 
     val answers: List<AnswerRequest> = emptyList(),
 
-    @field:NotBlank
     val password: String
-)
+) {
+    constructor(
+        recruitmentId: Long,
+        referenceUrl: String,
+        isSubmitted: Boolean,
+        answers: List<AnswerRequest>
+    ) : this(recruitmentId, referenceUrl, isSubmitted, answers, "")
+
+    constructor(
+        recruitmentId: Long
+    ) : this(recruitmentId, "", false, emptyList(), "")
+}
 
 data class AnswerRequest(
     @field:Size(min = 1)
@@ -47,9 +53,32 @@ data class ApplicationFormResponse(
     val createdDateTime: LocalDateTime,
     val modifiedDateTime: LocalDateTime,
     val submittedDateTime: LocalDateTime?
-)
+) {
+    constructor(applicationForm: ApplicationForm) : this(
+        applicationForm.id,
+        applicationForm.recruitmentId,
+        applicationForm.referenceUrl,
+        applicationForm.submitted,
+        applicationForm.answers.items.map(::AnswerResponse),
+        applicationForm.createdDateTime,
+        applicationForm.modifiedDateTime,
+        applicationForm.submittedDateTime
+    )
+}
 
 data class AnswerResponse(
     val contents: String,
     val recruitmentItemId: Long
-)
+) {
+    constructor(answer: Answer) : this(answer.contents, answer.recruitmentItemId)
+}
+
+data class MyApplicationFormResponse(
+    val recruitmentId: Long,
+    val submitted: Boolean
+) {
+    constructor(applicationForm: ApplicationForm) : this(
+        applicationForm.recruitmentId,
+        applicationForm.submitted
+    )
+}

@@ -8,9 +8,8 @@
       </div>
       <div class="copyright">Copyright © 우아한테크코스. All rights reserved</div>
       <div class="social">
-        <!-- 3기 모집 안내문 링크로 수정 필요 -->
         <a
-          href="https://woowabros.github.io/techcourse/2019/10/14/woowacourse.html"
+          href="https://woowabros.github.io/techcourse/2020/10/06/woowacourse.html"
           target="_blank"
           class="ti-github"
         ></a>

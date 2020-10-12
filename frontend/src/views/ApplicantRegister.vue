@@ -1,5 +1,6 @@
 <template>
-  <div class="register">
+  <div class="applicant-register">
+    <RecruitCard :recruitment="recruitment" />
     <ValidationObserver v-slot="{ handleSubmit }">
       <Form @submit.prevent="handleSubmit(submit)">
         <h1>지원자 정보</h1>
@@ -96,13 +97,10 @@
           <p class="rule-field">{{ errors[0] }}</p>
         </ValidationProvider>
 
-        <div class="actions">
+        <template v-slot:actions>
           <Button cancel value="취소" />
           <Button type="submit" value="다음" />
-        </div>
-        <footer>
-          <a class="logo" href="#"></a>
-        </footer>
+        </template>
       </Form>
     </ValidationObserver>
   </div>
@@ -118,6 +116,7 @@ import {
   SummaryCheckField,
   TextField,
 } from "@/components/form"
+import RecruitCard from "@/components/RecruitCard"
 import * as DateUtil from "@/utils/date"
 import { POLICY_SUMMARY } from "./constants"
 import ValidationProvider from "@/utils/validation/validator"
@@ -128,6 +127,7 @@ export default {
     recruitmentId: Number,
   },
   components: {
+    RecruitCard,
     Form,
     Button,
     TextField,
@@ -152,6 +152,11 @@ export default {
     },
     gender: "",
   }),
+  computed: {
+    recruitment() {
+      return this.$store.state.recruitments.items.find(v => v.id === this.recruitmentId)
+    },
+  },
   methods: {
     ...mapActions(["fetchRegisterAndSetApplicantInfo"]),
     async submit() {
@@ -179,7 +184,7 @@ export default {
 </script>
 
 <style scoped>
-.register {
+.applicant-register {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -197,24 +202,5 @@ export default {
   margin-left: 8px;
   font-size: 12px;
   color: #ff0000;
-}
-
-.actions {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 20px 0;
-}
-
-.actions > .button {
-  flex: 1;
-}
-
-.logo {
-  display: flex;
-  width: 100px;
-  height: 32px;
-  background: url("/assets/logo/logo_full_dark.png");
-  background-size: 100% 100%;
 }
 </style>

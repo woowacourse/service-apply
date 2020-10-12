@@ -37,6 +37,9 @@ class Recruitment(
     val isEnded: Boolean
         get() = status == RecruitmentStatus.ENDED
 
+    val isRecruiting: Boolean
+        get() = status == RecruitmentStatus.RECRUITING
+
     constructor(
         title: String,
         startDateTime: LocalDateTime,

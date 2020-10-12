@@ -3,7 +3,7 @@ package apply.domain.applicationform
 import apply.domain.recruitmentitem.Answer
 import apply.domain.recruitmentitem.Answers
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatIllegalArgumentException
+import org.assertj.core.api.Assertions.assertThatIllegalStateException
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
@@ -72,7 +72,7 @@ internal class ApplicationFormTest {
 
         assertThat(applicationForm.submitted).isTrue()
 
-        assertThatIllegalArgumentException().isThrownBy {
+        assertThatIllegalStateException().isThrownBy {
             applicationForm.update(
                 "http://h2f.kr",
                 Answers(

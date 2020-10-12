@@ -47,14 +47,13 @@
           />
           <p v-for="(error, index) in errors" :key="index" class="rule-field">{{ error }}</p>
         </ValidationProvider>
-        <div class="actions">
+        <template v-slot:actions>
           <Button type="button" @click="back" cancel value="이전" />
           <Button type="submit" value="확인" />
-        </div>
-        <footer>
-          <a class="logo" href="#"></a>
+        </template>
+        <template v-slot:footer>
           <router-link class="find-password" to="/find">비밀번호 찾기</router-link>
-        </footer>
+        </template>
       </Form>
     </ValidationObserver>
   </div>
@@ -119,39 +118,16 @@ export default {
   align-items: center;
 }
 
-.actions {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 20px 0;
-}
-
-.actions > .button {
-  flex: 1;
-}
-
-.logo {
-  display: flex;
-  width: 100px;
-  height: 32px;
-  background: url("/assets/logo/logo_full_dark.png");
-  background-size: 100% 100%;
-}
-
 .rule-field {
   margin-left: 8px;
   font-size: 12px;
   color: #ff0000;
 }
 
-footer {
-  display: flex;
-  justify-content: space-between;
-}
-
 .find-password {
   text-decoration: none;
   font-weight: 500;
   color: #2c3e50;
+  margin-right: 5px;
 }
 </style>

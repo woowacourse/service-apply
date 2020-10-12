@@ -61,8 +61,10 @@ fun createSearchBar(eventListener: (name: String) -> Unit): Div {
         ComponentEventListener<KeyDownEvent?> { eventListener(textField.value) }
     )
     return Div(
-        textField,
-        Button(Icon(VaadinIcon.SEARCH)) { eventListener(textField.value) }
+        HorizontalLayout(
+            textField,
+            Button(Icon(VaadinIcon.SEARCH)) { eventListener(textField.value) }
+        )
     )
 }
 
