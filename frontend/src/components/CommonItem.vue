@@ -36,7 +36,6 @@ export default {
 .common-item {
   display: flex;
   width: 100%;
-  height: 70px;
   justify-content: space-between;
   align-items: center;
   background-color: #ffffff;
@@ -61,8 +60,7 @@ export default {
 .period {
   display: flex;
   align-items: center;
-  font-size: 12px;
-  background: #ecf0f1;
+  font-size: 16px;
   color: #333;
   padding: 1px 5px;
   border-radius: 5px;
