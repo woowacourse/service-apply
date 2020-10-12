@@ -16,8 +16,6 @@ import org.springframework.stereotype.Service
 import javax.annotation.PostConstruct
 import javax.transaction.Transactional
 
-private const val DEFAULT_SCORE: Int = 0
-
 @Transactional
 @Service
 class EvaluationTargetService(
@@ -116,7 +114,7 @@ class EvaluationTargetService(
         val evaluationItemScores = evaluationItems.map {
             EvaluationItemScoreData(
                 id = it.id,
-                score = evaluationTarget.evaluationAnswers.findScoreByEvaluationItemId(it.id) ?: DEFAULT_SCORE
+                score = evaluationTarget.evaluationAnswers.findScoreByEvaluationItemId(it.id)
             )
         }
 

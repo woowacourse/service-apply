@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.io.ByteArrayInputStream
 
-@Service
 @Transactional
+@Service
 class ExcelService(
     val applicantService: ApplicantService,
     val evaluationTargetService: EvaluationTargetService,

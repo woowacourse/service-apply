@@ -53,8 +53,6 @@ class ExcelGenerator {
             }
         }
 
-        for (col in 0 until columnSize) {
-            sheet.autoSizeColumn(col)
-        }
+        repeat(columnSize) { col -> sheet.autoSizeColumn(col) }
     }
 }

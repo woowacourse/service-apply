@@ -31,7 +31,7 @@ data class EvaluationTargetResponse(
         evaluationStatus,
         administratorId ?: 0L,
         note,
-        EvaluationAnswerResponse.from(answers)
+        answers.answers.map(::EvaluationAnswerResponse)
     )
 }
 
@@ -39,11 +39,5 @@ data class EvaluationAnswerResponse(
     val score: Int,
     val evaluationItemId: Long
 ) {
-    companion object {
-        fun from(answers: EvaluationAnswers): List<EvaluationAnswerResponse> {
-            return answers.answers.map(::EvaluationAnswerResponse)
-        }
-    }
-
     constructor(answer: EvaluationAnswer) : this(answer.score, answer.evaluationItemId)
 }
