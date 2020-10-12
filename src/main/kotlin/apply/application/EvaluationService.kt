@@ -58,7 +58,9 @@ class EvaluationService(
     }
 
     fun findAllRecruitmentSelectData(): List<RecruitmentSelectData> {
-        return recruitmentRepository.findAll().map { recruitment -> RecruitmentSelectData(recruitment) }
+        return recruitmentRepository.findAll()
+            .map { recruitment -> RecruitmentSelectData(recruitment) }
+            .sortedByDescending { it.id }
     }
 
     fun getDataById(id: Long): EvaluationData {
