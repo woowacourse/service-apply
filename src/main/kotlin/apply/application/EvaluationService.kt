@@ -73,7 +73,7 @@ class EvaluationService(
     }
 
     fun getAllSelectDataByRecruitmentId(id: Long): List<EvaluationSelectData> {
-        return evaluationRepository.findAllByRecruitmentId(id).map { EvaluationSelectData(it) }
+        return findAllByRecruitmentId(id).map { EvaluationSelectData(it) }
     }
 
     fun findAllWithRecruitment(): List<EvaluationResponse> {
