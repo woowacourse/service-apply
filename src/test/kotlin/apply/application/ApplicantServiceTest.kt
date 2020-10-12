@@ -116,7 +116,7 @@ internal class ApplicantServiceTest {
         given(applicantRepository.findAllById(anySet())).willReturn(listOf(applicant))
         given(cheaterRepository.findAll()).willReturn(listOf(Cheater(1L)))
 
-        val founds = applicantService.findAllByRecruitmentId(1L)
+        val founds = applicantService.findAllByRecruitmentIdAndSubmittedTrue(1L)
 
         assertAll(
             { assertThat(founds).usingElementComparatorIgnoringFields("isCheater").isEqualTo(applicantResponses) },

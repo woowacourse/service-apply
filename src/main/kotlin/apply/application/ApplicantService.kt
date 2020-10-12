@@ -23,8 +23,9 @@ class ApplicantService(
     private val jwtTokenProvider: JwtTokenProvider,
     private val passwordGenerator: PasswordGenerator
 ) {
-    fun findAllByRecruitmentId(recruitmentId: Long): List<ApplicantResponse> {
+    fun findAllByRecruitmentIdAndSubmittedTrue(recruitmentId: Long): List<ApplicantResponse> {
         val applicationForms = applicationFormRepository.findByRecruitmentId(recruitmentId)
+            .filter { it.submitted }
             .associateBy { it.applicantId }
         val cheaterApplicantIds = cheaterRepository.findAll().map { it.applicantId }
 
@@ -34,8 +35,8 @@ class ApplicantService(
     }
 
     fun findByRecruitmentIdAndKeyword(recruitmentId: Long, keyword: String): List<ApplicantResponse> =
-        findAllByRecruitmentId(recruitmentId)
-            .filter { (it.name.contains(keyword) || it.email.contains(keyword)) && it.applicationForm.submitted }
+        findAllByRecruitmentIdAndSubmittedTrue(recruitmentId)
+            .filter { it.name.contains(keyword) || it.email.contains(keyword) }
 
     fun findByNameOrEmail(keyword: String): List<ApplicantBasicResponse> =
         applicantRepository.findByNameContainingOrEmailContaining(keyword, keyword).map {
