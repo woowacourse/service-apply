@@ -2,14 +2,15 @@ package apply.log
 
 import apply.utils.Log
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.aspectj.lang.ProceedingJoinPoint
+import org.aspectj.lang.JoinPoint
+import org.aspectj.lang.annotation.AfterThrowing
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.annotation.Before
 import org.aspectj.lang.annotation.Pointcut
-import org.aspectj.lang.reflect.MethodSignature
 import org.springframework.stereotype.Component
 import org.springframework.web.context.request.RequestContextHolder
 import org.springframework.web.context.request.ServletRequestAttributes
+import java.util.Arrays
 import java.util.Date
 
 @Component
@@ -22,11 +23,11 @@ class LoggerAspect(val objectMapper: ObjectMapper) {
     }
 
     @Before("methodPointCut()")
-    fun methodLog(proceedingJoinPoint: ProceedingJoinPoint): Any {
+    fun methodLog(joinPoint: JoinPoint) {
         val request = (RequestContextHolder.getRequestAttributes() as ServletRequestAttributes).request
 
-        val controllerName = proceedingJoinPoint.signature.declaringType.simpleName
-        val methodName = proceedingJoinPoint.signature.name
+        val controllerName = joinPoint.signature.declaringType.simpleName
+        val methodName = joinPoint.signature.name
 
         val params = mutableMapOf<String, Any>()
         params["controller"] = controllerName
@@ -37,19 +38,22 @@ class LoggerAspect(val objectMapper: ObjectMapper) {
         params["http_method"] = request.method
 
         logger.info("{}", params)
-        return proceedingJoinPoint.proceed()
     }
 
-    @Pointcut("execution(* apply..*Handler.*(..))")
+    @Pointcut("execution(* apply..*Service.*(..))")
     fun errorPointCut() {
     }
 
-    @Before("errorPointCut()")
-    fun errorLog(proceedingJoinPoint: ProceedingJoinPoint): Any {
-        val methodSignature = proceedingJoinPoint.signature as MethodSignature
-        val parameters = methodSignature.method.parameters
-        parameters.forEach { logger.error("message", it) }
+    @AfterThrowing(pointcut = "errorPointCut()", throwing = "ex")
+    fun errorLog(joinPoint: JoinPoint, ex: Throwable) {
+        val signature = joinPoint.signature
+        val methodName = signature.name
+        val args = Arrays.toString(joinPoint.args)
+        val params = mutableMapOf<String, String>()
+        params["methodName"] = methodName
+        params["arguments"] = args
+        params["message"] = ex.message ?: ""
 
-        return proceedingJoinPoint.proceed()
+        logger.error("{}", params)
     }
 }
