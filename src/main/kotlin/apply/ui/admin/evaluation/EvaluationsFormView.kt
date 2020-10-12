@@ -1,7 +1,6 @@
 package apply.ui.admin.evaluation
 
 import apply.application.EvaluationService
-import apply.application.RecruitmentService
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
@@ -22,15 +21,15 @@ import support.views.toDisplayName
 
 @Route(value = "admin/evaluations", layout = BaseLayout::class)
 class EvaluationsFormView(
-    private val evaluationService: EvaluationService,
-    private val recruitmentService: RecruitmentService
+    private val evaluationService: EvaluationService
 ) : VerticalLayout(), HasUrlParameter<String> {
     private val title: Title = Title()
     private val evaluationForm: EvaluationForm = EvaluationForm(
-        recruitmentService.findAll().map(recruitmentService::findData)
+        evaluationService.findAllRecruitmentSelectData()
     ) {
-        evaluationService.getAllDataByRecruitmentId(it)
+        evaluationService.getAllSelectDataByRecruitmentId(it)
     }
+
     private val submitButton: Button = createSubmitButton()
 
     init {
@@ -43,7 +42,7 @@ class EvaluationsFormView(
             val (id, value) = it.destructured
             setDisplayName(value.toDisplayName())
             if (value == EDIT_VALUE) {
-                val evaluationFormData = evaluationService.getFormById(id.toLong())
+                val evaluationFormData = evaluationService.getDataById(id.toLong())
                 evaluationForm.fill(evaluationFormData)
             }
         } ?: UI.getCurrent().page.history.back() // TODO: 에러 화면을 구현한다.

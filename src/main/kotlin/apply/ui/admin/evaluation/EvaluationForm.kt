@@ -1,9 +1,9 @@
 package apply.ui.admin.evaluation
 
 import apply.application.EvaluationData
-import apply.application.EvaluationFormData
 import apply.application.EvaluationItemData
-import apply.application.RecruitmentData
+import apply.application.EvaluationSelectData
+import apply.application.RecruitmentSelectData
 import apply.domain.evaluation.Evaluation
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.select.Select
@@ -14,15 +14,15 @@ import support.views.createErrorSmallButton
 import support.views.createItemSelect
 import support.views.createPrimarySmallButton
 
-class EvaluationForm() : BindingIdentityFormLayout<EvaluationFormData>(EvaluationFormData::class) {
+class EvaluationForm() : BindingIdentityFormLayout<EvaluationData>(EvaluationData::class) {
     private val title: TextField = TextField("평가명")
     private val description: TextArea = TextArea("설명")
-    private val recruitment: Select<RecruitmentData> = createItemSelect<RecruitmentData>("모집").apply {
-        setItemLabelGenerator(RecruitmentData::title)
+    private val recruitment: Select<RecruitmentSelectData> = createItemSelect<RecruitmentSelectData>("모집").apply {
+        setItemLabelGenerator(RecruitmentSelectData::title)
         isEmptySelectionAllowed = false
     }
-    private val beforeEvaluation: Select<EvaluationData> = createItemSelect<EvaluationData>("이전 평가").apply {
-        setItemLabelGenerator(EvaluationData::title)
+    private val beforeEvaluation: Select<EvaluationSelectData> = createItemSelect<EvaluationSelectData>("이전 평가").apply {
+        setItemLabelGenerator(EvaluationSelectData::title)
     }
     private val evaluationItems: MutableList<EvaluationItemForm> = mutableListOf()
 
@@ -33,11 +33,14 @@ class EvaluationForm() : BindingIdentityFormLayout<EvaluationFormData>(Evaluatio
         drawRequired()
     }
 
-    constructor(recruitments: List<RecruitmentData>, listener: (id: Long) -> List<EvaluationData>) : this() {
+    constructor(
+        recruitments: List<RecruitmentSelectData>,
+        listener: (id: Long) -> List<EvaluationSelectData>
+    ) : this() {
         recruitment.setItems(recruitments)
         recruitment.addValueChangeListener {
-            val evaluations: List<EvaluationData> = mutableListOf(
-                EvaluationData(
+            val evaluations: List<EvaluationSelectData> = mutableListOf(
+                EvaluationSelectData(
                     Evaluation(
                         title = "이전 평가 없음",
                         description = "이전 평가 없음",
@@ -76,7 +79,7 @@ class EvaluationForm() : BindingIdentityFormLayout<EvaluationFormData>(Evaluatio
         }
     }
 
-    override fun bindOrNull(): EvaluationFormData? {
+    override fun bindOrNull(): EvaluationData? {
         val result = bindDefaultOrNull()
         val items = evaluationItems.mapNotNull { it.bindOrNull() }
         if (evaluationItems.size != items.size) {
@@ -91,7 +94,7 @@ class EvaluationForm() : BindingIdentityFormLayout<EvaluationFormData>(Evaluatio
         }
     }
 
-    override fun fill(data: EvaluationFormData) {
+    override fun fill(data: EvaluationData) {
         fillDefault(data)
         data.evaluationItems.forEach { addEvaluationItemForm(it) }
     }

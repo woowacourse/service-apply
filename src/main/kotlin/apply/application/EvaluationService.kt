@@ -5,7 +5,6 @@ import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluationItem.EvaluationItem
 import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.recruitment.RecruitmentRepository
-import apply.domain.recruitmentitem.RecruitmentItemRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import javax.annotation.PostConstruct
@@ -16,10 +15,9 @@ import javax.transaction.Transactional
 class EvaluationService(
     private val evaluationRepository: EvaluationRepository,
     private val evaluationItemRepository: EvaluationItemRepository,
-    private val recruitmentRepository: RecruitmentRepository,
-    private val recruitmentItemRepository: RecruitmentItemRepository
+    private val recruitmentRepository: RecruitmentRepository
 ) {
-    fun save(request: EvaluationFormData) {
+    fun save(request: EvaluationData) {
         val evaluation = evaluationRepository.save(
             Evaluation(
                 request.title,
@@ -59,20 +57,21 @@ class EvaluationService(
         return evaluationRepository.findByIdOrNull(id) ?: throw IllegalArgumentException("해당 id의 평가를 찾을 수 없습니다.")
     }
 
-    fun getFormById(id: Long): EvaluationFormData {
-        val evaluation = findById(id) ?: throw IllegalArgumentException("해당 id의 평가를 찾을 수 없습니다.")
-        val evaluationItems = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluation.id)
-
-        val recruitment = recruitmentRepository.getOne(evaluation.recruitmentId)
-        val recruitmentItems = recruitmentItemRepository.findByRecruitmentIdOrderByPosition(recruitment.id)
-
-        val beforeEvaluation = findById(evaluation.beforeEvaluationId)
-
-        return EvaluationFormData(evaluation, recruitment, recruitmentItems, beforeEvaluation, evaluationItems)
+    fun findAllRecruitmentSelectData(): List<RecruitmentSelectData> {
+        return recruitmentRepository.findAll().map { recruitment -> RecruitmentSelectData(recruitment) }
     }
 
-    fun getAllDataByRecruitmentId(id: Long): List<EvaluationData> {
-        return evaluationRepository.findAllByRecruitmentId(id).map { EvaluationData(it) }
+    fun getDataById(id: Long): EvaluationData {
+        val evaluation = findById(id) ?: throw IllegalArgumentException("해당 id의 평가를 찾을 수 없습니다.")
+        val evaluationItems = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluation.id)
+        val recruitment = recruitmentRepository.getOne(evaluation.recruitmentId)
+        val beforeEvaluation = findById(evaluation.beforeEvaluationId)
+
+        return EvaluationData(evaluation, recruitment, beforeEvaluation, evaluationItems)
+    }
+
+    fun getAllSelectDataByRecruitmentId(id: Long): List<EvaluationSelectData> {
+        return evaluationRepository.findAllByRecruitmentId(id).map { EvaluationSelectData(it) }
     }
 
     fun findAllWithRecruitment(): List<EvaluationResponse> {

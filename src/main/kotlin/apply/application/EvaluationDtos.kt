@@ -4,13 +4,36 @@ import apply.domain.evaluation.Evaluation
 import apply.domain.evaluationItem.EvaluationItem
 import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.recruitment.Recruitment
-import apply.domain.recruitmentitem.RecruitmentItem
 import javax.validation.Valid
 import javax.validation.constraints.Max
 import javax.validation.constraints.Min
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
+
+data class EvaluationSelectData(
+    @field:NotBlank
+    @field:Size(min = 1, max = 31)
+    var title: String = "",
+    var id: Long = 0L
+) {
+    constructor(evaluation: Evaluation) : this(
+        evaluation.title,
+        evaluation.id
+    )
+}
+
+data class RecruitmentSelectData(
+    @field:NotBlank
+    @field:Size(min = 1, max = 31)
+    var title: String = "",
+    var id: Long = 0L
+) {
+    constructor(recruitment: Recruitment) : this(
+        recruitment.title,
+        recruitment.id
+    )
+}
 
 data class EvaluationData(
     @field:NotBlank
@@ -21,33 +44,9 @@ data class EvaluationData(
     var description: String = "",
 
     @field:NotNull
-    val recruitmentId: Long = 0L,
+    var recruitment: RecruitmentSelectData = RecruitmentSelectData(),
 
-    var beforeEvaluationId: Long = 0L,
-
-    var id: Long = 0L
-) {
-    constructor(evaluation: Evaluation) : this(
-        evaluation.title,
-        evaluation.description,
-        evaluation.recruitmentId,
-        evaluation.beforeEvaluationId,
-        evaluation.id
-    )
-}
-
-data class EvaluationFormData(
-    @field:NotBlank
-    @field:Size(min = 1, max = 31)
-    var title: String = "",
-
-    @field:NotBlank
-    var description: String = "",
-
-    @field:NotNull
-    var recruitment: RecruitmentData = RecruitmentData(),
-
-    var beforeEvaluation: EvaluationData = EvaluationData(),
+    var beforeEvaluation: EvaluationSelectData = EvaluationSelectData(),
 
     @field:NotNull
     @field:Valid
@@ -57,14 +56,13 @@ data class EvaluationFormData(
     constructor(
         evaluation: Evaluation,
         recruitment: Recruitment,
-        recruitmentItems: List<RecruitmentItem>,
         beforeEvaluation: Evaluation?,
         evaluationItems: List<EvaluationItem>
     ) : this(
         title = evaluation.title,
         description = evaluation.description,
-        recruitment = RecruitmentData(recruitment, recruitmentItems),
-        beforeEvaluation = EvaluationData(
+        recruitment = RecruitmentSelectData(recruitment),
+        beforeEvaluation = EvaluationSelectData(
             beforeEvaluation ?: Evaluation(
                 title = "이전 평가 없음",
                 description = "이전 평가 없음",
