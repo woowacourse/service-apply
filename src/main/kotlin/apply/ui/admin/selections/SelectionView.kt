@@ -70,7 +70,7 @@ class SelectionView(
                 removeAll()
                 add(
                     createTitle(),
-                    createContent(keyword)
+                    createContent(keyword = it)
                 )
                 selectedTabIndex = tabs.selectedIndex
             },
