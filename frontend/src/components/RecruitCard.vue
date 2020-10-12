@@ -2,8 +2,8 @@
   <Box class="recruit-card">
     <BaseItem
       :title="recruitment.title"
-      :start-date-time="startDateTime"
-      :end-date-time="endDateTime"
+      :start-date-time="recruitment.startDateTime"
+      :end-date-time="recruitment.endDateTime"
     />
   </Box>
 </template>
@@ -11,7 +11,6 @@
 <script>
 import Box from "@/components/Box"
 import BaseItem from "@/components/BaseItem"
-import { parseLocalDateTime } from "@/utils/date"
 
 export default {
   components: {
@@ -22,14 +21,6 @@ export default {
     recruitment: {
       type: Object,
       required: true,
-    },
-  },
-  computed: {
-    startDateTime() {
-      return parseLocalDateTime(new Date(this.recruitment.startDateTime))
-    },
-    endDateTime() {
-      return parseLocalDateTime(new Date(this.recruitment.endDateTime))
     },
   },
 }

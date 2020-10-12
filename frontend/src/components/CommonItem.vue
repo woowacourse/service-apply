@@ -1,6 +1,10 @@
 <template>
   <div class="common-item">
-    <BaseItem :title="title" :start-date-time="startDateTime" :end-date-time="endDateTime" />
+    <BaseItem
+      :title="recruitment.title"
+      :start-date-time="recruitment.startDateTime"
+      :end-date-time="recruitment.endDateTime"
+    />
     <Button class="button" @click="$emit('click')" :disabled="!activeButton" :value="buttonLabel" />
   </div>
 </template>
@@ -15,9 +19,10 @@ export default {
     Button,
   },
   props: {
-    title: String,
-    startDateTime: String,
-    endDateTime: String,
+    recruitment: {
+      type: Object,
+      required: true,
+    },
     buttonLabel: String,
     activeButton: Boolean,
   },

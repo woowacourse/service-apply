@@ -4,20 +4,30 @@
     <div class="period">
       <span class="ti-calendar"></span>
       <div class="date">
-        <span class="start">{{ startDateTime }}</span>
+        <span class="start">{{ start }}</span>
         <span class="between"></span>
-        <span calss="end">{{ endDateTime }}</span>
+        <span calss="end">{{ end }}</span>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { parseLocalDateTime } from "@/utils/date"
+
 export default {
   props: {
     title: String,
     startDateTime: String,
     endDateTime: String,
+  },
+  computed: {
+    start() {
+      return parseLocalDateTime(new Date(this.startDateTime))
+    },
+    end() {
+      return parseLocalDateTime(new Date(this.endDateTime))
+    },
   },
 }
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div class="register">
+  <div class="applicant-register">
     <RecruitCard :recruitment="recruitment" />
     <Form @submit.prevent="submit">
       <h1>지원자 정보</h1>
@@ -171,7 +171,7 @@ export default {
 </script>
 
 <style scoped>
-.register {
+.applicant-register {
   display: flex;
   flex-direction: column;
   justify-content: center;
