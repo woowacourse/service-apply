@@ -1,58 +1,70 @@
 <template>
   <div class="login">
-    <Form @submit.prevent="submit">
-      <h1>내 지원서 보기</h1>
-      <TextField
-        v-model="name"
-        name="name"
-        type="text"
-        label="이름"
-        placeholder="이름을 입력해 주세요."
-        :rules="rules.name"
-        @valid="v => (this.validName = v)"
-        required
-      />
-      <TextField
-        v-model="email"
-        name="email"
-        type="email"
-        label="이메일"
-        placeholder="이메일 주소를 입력해 주세요."
-        :rules="rules.email"
-        @valid="v => (this.validEmail = v)"
-        required
-      />
-      <BirthField v-model="birth" @valid="v => (this.validBirth = v)" required />
-      <TextField
-        v-model="password"
-        name="password"
-        type="password"
-        label="비밀번호"
-        placeholder="비밀번호를 입력해 주세요."
-        :rules="rules.password"
-        @valid="v => (this.validPassword = v)"
-        required
-      />
-      <div class="actions">
-        <Button type="button" @click="back" cancel value="이전" />
-        <Button
-          type="submit"
-          :disabled="!validName || !validEmail || !validPassword || !validBirth"
-          value="확인"
-        />
-      </div>
-      <footer>
-        <a class="logo" href="#"></a>
-        <router-link class="find-password" to="/find">비밀번호 찾기</router-link>
-      </footer>
-    </Form>
+    <ValidationObserver v-slot="{ handleSubmit }">
+      <Form @submit.prevent="handleSubmit(submit)">
+        <h1>내 지원서 보기</h1>
+        <ValidationProvider rules="name|required" :bails="false" v-slot="{ errors }">
+          <TextField
+            v-model="name"
+            name="name"
+            type="text"
+            label="이름"
+            placeholder="이름을 입력해 주세요."
+            required
+          />
+          <p v-for="(error, index) in errors" :key="index" class="rule-field">{{ error }}</p>
+        </ValidationProvider>
+
+        <ValidationProvider rules="email|required" :bails="false" v-slot="{ errors }">
+          <TextField
+            v-model="email"
+            name="email"
+            type="email"
+            label="이메일"
+            placeholder="이메일 주소를 입력해 주세요."
+            required
+          />
+          <p v-for="(error, index) in errors" :key="index" class="rule-field">{{ error }}</p>
+        </ValidationProvider>
+
+        <ValidationProvider rules="year|month|day|required" :bails="false" v-slot="{ errors }">
+          <BirthField v-model="birth" required />
+          <p v-for="(error, index) in errors" :key="index" class="rule-field">{{ error }}</p>
+        </ValidationProvider>
+        <ValidationProvider
+          name="password"
+          rules="password|required"
+          :bails="false"
+          v-slot="{ errors }"
+        >
+          <TextField
+            v-model="password"
+            name="password"
+            type="password"
+            label="비밀번호"
+            placeholder="비밀번호를 입력해 주세요."
+            required
+          />
+          <p v-for="(error, index) in errors" :key="index" class="rule-field">{{ error }}</p>
+        </ValidationProvider>
+        <div class="actions">
+          <Button type="button" @click="back" cancel value="이전" />
+          <Button type="submit" value="확인" />
+        </div>
+        <footer>
+          <a class="logo" href="#"></a>
+          <router-link class="find-password" to="/find">비밀번호 찾기</router-link>
+        </footer>
+      </Form>
+    </ValidationObserver>
   </div>
 </template>
 
 <script>
 import { BirthField, Button, Form, TextField } from "@/components/form"
-import { login } from "@/utils/validation"
 import * as DateUtil from "@/utils/date"
+import ValidationProvider from "@/utils/validation/validator"
+import { ValidationObserver } from "vee-validate"
 
 export default {
   name: "Login",
@@ -61,6 +73,8 @@ export default {
     Button,
     TextField,
     BirthField,
+    ValidationProvider,
+    ValidationObserver,
   },
   data: () => ({
     name: "",
@@ -71,11 +85,6 @@ export default {
       month: "",
       day: "",
     },
-    rules: { ...login },
-    validName: false,
-    validEmail: false,
-    validBirth: false,
-    validPassword: false,
   }),
   methods: {
     async submit() {
@@ -127,6 +136,12 @@ export default {
   height: 32px;
   background: url("/assets/logo/logo_full_dark.png");
   background-size: 100% 100%;
+}
+
+.rule-field {
+  margin-left: 8px;
+  font-size: 12px;
+  color: #ff0000;
 }
 
 footer {
