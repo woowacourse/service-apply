@@ -180,7 +180,6 @@ class EvaluationTargetServiceTest(
 
         every { evaluationRepository.findByIdOrNull(any()) } returns firstEvaluation
         every { cheaterRepository.findAll() } returns listOf(Cheater(3L))
-        // every { applicationFormRepository.findByRecruitmentId(any()) } returns allApplicationForms
         every { applicationFormRepository.findByRecruitmentIdAndSubmittedTrue(any()) } returns allApplicationForms
         every { applicantRepository.findAllById(listOf(1L, 2L, 3L, 4L)) } returns allApplicants
         every { applicantRepository.findAllById(setOf(4L)) } returns listOf(addingApplicant)
