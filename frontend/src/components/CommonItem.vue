@@ -2,7 +2,14 @@
   <div class="common-item">
     <div class="information">
       <div class="title">{{ title }}</div>
-      <div class="period">{{ startDateTime }} ~ {{ endDateTime }}</div>
+      <div class="period">
+        <span class="ti-calendar"></span>
+        <div class="date">
+          <span class="start">{{ startDateTime }}</span>
+          <span class="between"></span>
+          <span calss="end">{{ endDateTime }}</span>
+        </div>
+      </div>
     </div>
     <Button class="button" @click="$emit('click')" :disabled="!activeButton" :value="buttonLabel" />
   </div>
@@ -48,11 +55,36 @@ export default {
 }
 
 .period {
-  font-size: 16px;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  background: #ecf0f1;
+  color: #333;
+  padding: 1px 5px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.date {
+  display: flex;
+}
+
+.start {
+  padding-left: 5px;
+}
+
+.between {
+  display: flex;
+  align-items: center;
+}
+
+.between::before {
+  content: "~";
+  padding: 0 5px;
 }
 
 .button {
-  width: 120px;
+  width: 110px;
   height: 40px;
 }
 </style>
