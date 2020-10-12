@@ -86,8 +86,4 @@ export default {
   justify-content: center;
   align-items: center;
 }
-
-.click {
-  cursor: pointer;
-}
 </style>
