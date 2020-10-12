@@ -1,6 +1,5 @@
 package apply.domain.recruitment
 
-import support.createLocalDateTime
 import support.domain.BaseEntity
 import java.time.LocalDateTime
 import javax.persistence.Column
@@ -46,16 +45,4 @@ class Recruitment(
         isHidden: Boolean = true,
         id: Long = 0L
     ) : this(title, RecruitmentPeriod(startDateTime, endDateTime), canRecruit, isHidden, id)
-
-    companion object {
-        fun empty(): Recruitment {
-            return Recruitment(
-                "",
-                startDateTime = createLocalDateTime(year = 2020),
-                endDateTime = createLocalDateTime(year = 2020),
-                canRecruit = false,
-                isHidden = true
-            )
-        }
-    }
 }

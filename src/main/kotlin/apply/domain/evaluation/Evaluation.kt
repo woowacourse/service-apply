@@ -26,10 +26,4 @@ class Evaluation(
     fun resetBeforeEvaluation() {
         beforeEvaluationId = 0L
     }
-
-    companion object {
-        fun empty(): Evaluation {
-            return Evaluation(title = "", description = "", recruitmentId = 0L)
-        }
-    }
 }
