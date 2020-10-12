@@ -1,5 +1,6 @@
 <template>
   <div class="register">
+    <RecruitCard :recruitment="recruitment" />
     <Form @submit.prevent="submit">
       <h1>지원자 정보</h1>
       <SummaryCheckField
@@ -95,6 +96,7 @@ import {
   SummaryCheckField,
   TextField,
 } from "@/components/form"
+import RecruitCard from "@/components/RecruitCard"
 import * as DateUtil from "@/utils/date"
 import { register } from "@/utils/validation"
 import { POLICY_SUMMARY } from "./constants"
@@ -104,6 +106,7 @@ export default {
     recruitmentId: Number,
   },
   components: {
+    RecruitCard,
     Form,
     Button,
     TextField,
@@ -133,6 +136,11 @@ export default {
     validBirth: false,
     validGender: false,
   }),
+  computed: {
+    recruitment() {
+      return this.$store.state.recruitments.items.find(v => v.id === this.recruitmentId)
+    },
+  },
   methods: {
     ...mapActions(["fetchRegisterAndSetApplicantInfo"]),
     async submit() {
