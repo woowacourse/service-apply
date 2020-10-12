@@ -1,8 +1,6 @@
 <template>
   <CommonItem
-    :title="recruitment.title"
-    :start-date-time="startDateTime"
-    :end-date-time="endDateTime"
+    :recruitment="recruitment"
     :buttonLabel="buttonLabel"
     :activeButton="isRecruiting"
     @click="goApplicantsNewPage"
@@ -11,7 +9,6 @@
 
 <script>
 import CommonItem from "@/components/CommonItem"
-import { parseLocalDateTime } from "@/utils/date"
 
 export default {
   components: {
@@ -24,12 +21,6 @@ export default {
     },
   },
   computed: {
-    startDateTime() {
-      return parseLocalDateTime(new Date(this.recruitment.startDateTime))
-    },
-    endDateTime() {
-      return parseLocalDateTime(new Date(this.recruitment.endDateTime))
-    },
     isRecruiting() {
       return this.recruitment.status === "RECRUITING"
     },

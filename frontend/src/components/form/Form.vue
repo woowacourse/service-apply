@@ -1,6 +1,13 @@
 <template>
   <form class="form" v-on="$listeners">
     <slot></slot>
+    <div class="actions">
+      <slot name="actions"></slot>
+    </div>
+    <footer>
+      <a class="logo" href="#"></a>
+      <slot name="footer"></slot>
+    </footer>
   </form>
 </template>
 
@@ -25,5 +32,29 @@
 
 .form > h1 {
   color: #2c3e50;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.actions > .button {
+  flex: 1;
+}
+
+.logo {
+  display: flex;
+  width: 100px;
+  height: 32px;
+  background: url("/assets/logo/logo_full_dark.png");
+  background-size: 100% 100%;
+}
+
+footer {
+  display: flex;
+  justify-content: space-between;
 }
 </style>

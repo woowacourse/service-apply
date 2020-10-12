@@ -1,5 +1,6 @@
 <template>
-  <div class="register">
+  <div class="applicant-register">
+    <RecruitCard :recruitment="recruitment" />
     <Form @submit.prevent="submit">
       <h1>지원자 정보</h1>
       <SummaryCheckField
@@ -8,7 +9,7 @@
         v-model="policyCheck"
         required
       >
-        <p class="summary">{{ policySummary }}</p>
+        <p class="summary" v-html="policySummary"></p>
       </SummaryCheckField>
       <TextField
         v-model="name"
@@ -62,7 +63,7 @@
       />
       <BirthField v-model="birth" @valid="v => (this.validBirth = v)" required />
       <GenderField v-model="gender" @valid="v => (this.validGender = v)" required />
-      <div class="actions">
+      <template v-slot:actions>
         <Button cancel value="취소" />
         <Button
           type="submit"
@@ -77,10 +78,7 @@
           "
           value="다음"
         />
-      </div>
-      <footer>
-        <a class="logo" href="#"></a>
-      </footer>
+      </template>
     </Form>
   </div>
 </template>
@@ -95,6 +93,7 @@ import {
   SummaryCheckField,
   TextField,
 } from "@/components/form"
+import RecruitCard from "@/components/RecruitCard"
 import * as DateUtil from "@/utils/date"
 import { register } from "@/utils/validation"
 import { POLICY_SUMMARY } from "./constants"
@@ -104,6 +103,7 @@ export default {
     recruitmentId: Number,
   },
   components: {
+    RecruitCard,
     Form,
     Button,
     TextField,
@@ -133,6 +133,11 @@ export default {
     validBirth: false,
     validGender: false,
   }),
+  computed: {
+    recruitment() {
+      return this.$store.state.recruitments.items.find(v => v.id === this.recruitmentId)
+    },
+  },
   methods: {
     ...mapActions(["fetchRegisterAndSetApplicantInfo"]),
     async submit() {
@@ -163,7 +168,7 @@ export default {
 </script>
 
 <style scoped>
-.register {
+.applicant-register {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -175,24 +180,5 @@ export default {
   margin: 0;
   color: #333;
   font-size: 12px;
-}
-
-.actions {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 20px 0;
-}
-
-.actions > .button {
-  flex: 1;
-}
-
-.logo {
-  display: flex;
-  width: 100px;
-  height: 32px;
-  background: url("/assets/logo/logo_full_dark.png");
-  background-size: 100% 100%;
 }
 </style>

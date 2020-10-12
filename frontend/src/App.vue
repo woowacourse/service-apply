@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <MainHeader />
-    <router-view class="main-view" />
+    <router-view v-if="isLoaded" class="main-view" />
     <MainFooter />
   </div>
 </template>
@@ -15,12 +15,14 @@ export default {
     MainHeader,
     MainFooter,
   },
+  data: () => ({
+    isLoaded: false,
+  }),
   async created() {
     await this.fetchRecruitments()
+    this.isLoaded = true
   },
-  methods: {
-    ...mapActions(["fetchRecruitments"]),
-  },
+  methods: mapActions(["fetchRecruitments"]),
 }
 </script>
 

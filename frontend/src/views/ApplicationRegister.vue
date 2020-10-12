@@ -1,9 +1,6 @@
 <template>
   <div class="application-register">
-    <Box class="information">
-      <div class="title">{{ recruitment.title }}</div>
-      <div class="period">{{ startDateTime }} ~ {{ endDateTime }}</div>
-    </Box>
+    <RecruitCard :recruitment="recruitment" />
     <Form @submit.prevent="submit">
       <h1>지원서 작성</h1>
       <p class="autosave-indicator" v-if="isEditing">
@@ -16,7 +13,6 @@
         label="이름"
         readonly
       />
-
       <div v-if="isEditing">
         <TextField
           v-model="password"
@@ -39,7 +35,6 @@
           required
         />
       </div>
-
       <TextField
         v-for="(item, index) in recruitmentItems"
         v-bind:key="item.id"
@@ -53,7 +48,6 @@
         :max-length="item.maximumLength"
         required
       />
-
       <TextField
         v-model="referenceUrl"
         name="url"
@@ -63,31 +57,29 @@
         placeholder="ex) https://woowacourse.github.io/javable/"
       />
       <Field>
-        <CheckBox
-          v-model="factCheck"
-          label="위 지원서에 작성한 내용은 모두 사실입니다."
-          required
-        ></CheckBox>
+        <Label>지원서 작성 내용 사실 확인</Label>
+        <Description>
+          기재한 사실 중 허위사실이 발견되는 즉시, 교육 대상자에서 제외되며 향후 지원도
+          불가능합니다.
+        </Description>
+        <CheckBox v-model="factCheck" label="동의합니다." />
       </Field>
-      <div class="actions">
+      <template v-slot:actions>
         <Button @click="reset" value="초기화" />
         <Button @click="saveTemp" :disabled="!canSave" value="임시 저장" />
         <Button type="submit" :disabled="!canSubmit" value="제출" />
-      </div>
-      <footer>
-        <a class="logo" href="#"></a>
-      </footer>
+      </template>
     </Form>
   </div>
 </template>
 
 <script>
-import { Button, CheckBox, Field, Form, TextField } from "@/components/form"
+import { Button, CheckBox, Field, Form, TextField, Label, Description } from "@/components/form"
+import RecruitCard from "@/components/RecruitCard"
 import * as RecruitmentApi from "@/api/recruitments"
 import * as ApplicationFormsApi from "@/api/application-forms"
 import { register } from "@/utils/validation"
 import { parseLocalDateTime } from "@/utils/date"
-import Box from "@/components/Box"
 
 export default {
   props: {
@@ -95,12 +87,14 @@ export default {
     status: String,
   },
   components: {
-    Box,
+    RecruitCard,
     Form,
     Button,
     TextField,
     CheckBox,
     Field,
+    Label,
+    Description,
   },
   data: () => ({
     factCheck: false,
@@ -125,17 +119,21 @@ export default {
     recruitment() {
       return this.$store.state.recruitments.items.find(v => v.id === this.recruitmentId)
     },
-    startDateTime() {
-      return parseLocalDateTime(new Date(this.recruitment.startDateTime))
-    },
-    endDateTime() {
-      return parseLocalDateTime(new Date(this.recruitment.endDateTime))
-    },
   },
   async created() {
-    await this.fetchRecruitmentItems()
-    if (this.isEditing) {
-      await this.fetchApplicationForm()
+    try {
+      await this.fetchRecruitmentItems()
+      if (this.isEditing) {
+        await this.fetchApplicationForm()
+      } else {
+        await ApplicationFormsApi.createForm({
+          token: this.$store.getters["token"],
+          recruitmentId: this.recruitmentId,
+        })
+      }
+    } catch (e) {
+      alert(e.response.data.message)
+      this.$router.replace("/")
     }
   },
   methods: {
@@ -168,9 +166,10 @@ export default {
       this.referenceUrl = applicationForm.referenceUrl
       this.recruitmentItems = this.recruitmentItems.map(recruitmentItem => ({
         ...recruitmentItem,
-        contents: applicationForm.answers.find(
-          ({ recruitmentItemId }) => recruitmentItemId === recruitmentItem.id,
-        ).contents,
+        contents:
+          (applicationForm.answers.find(
+            ({ recruitmentItemId }) => recruitmentItemId === recruitmentItem.id,
+          ) || {})["contents"] || "",
       }))
     },
     reset() {
@@ -194,8 +193,7 @@ export default {
         password: this.password,
         isSubmitted,
       }
-      const invoke = this.isEditing ? ApplicationFormsApi.updateForm : ApplicationFormsApi.saveForm
-      return invoke({
+      return ApplicationFormsApi.updateForm({
         token: this.$store.getters["token"],
         data: applicationForm,
       })
@@ -235,40 +233,6 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-
-.actions {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 20px 0;
-}
-
-.actions > .button {
-  flex: 1;
-}
-
-.title {
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 10px;
-}
-
-.period {
-  font-size: 16px;
-}
-
-.information {
-  max-width: 512px;
-  margin-bottom: 0;
-}
-
-.logo {
-  display: flex;
-  width: 100px;
-  height: 32px;
-  background: url("/assets/logo/logo_full_dark.png");
-  background-size: 100% 100%;
 }
 
 .autosave-indicator {

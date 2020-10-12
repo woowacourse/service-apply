@@ -2,15 +2,15 @@ package apply.ui.api
 
 import apply.application.ApplicationFormResponse
 import apply.application.ApplicationFormService
+import apply.application.CreateApplicationFormRequest
 import apply.application.MyApplicationFormResponse
-import apply.application.SaveApplicationFormRequest
 import apply.application.UpdateApplicationFormRequest
 import apply.domain.applicant.Applicant
 import apply.security.LoginApplicant
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -38,20 +38,20 @@ class ApplicationFormRestController(
     }
 
     @PostMapping
-    fun save(
-        @RequestBody @Valid saveApplicationFormRequest: SaveApplicationFormRequest,
+    fun create(
+        @RequestBody @Valid request: CreateApplicationFormRequest,
         @LoginApplicant applicant: Applicant
     ): ResponseEntity<Unit> {
-        applicationFormService.save(applicant.id, saveApplicationFormRequest)
+        applicationFormService.create(applicant.id, request)
         return ResponseEntity.ok().build()
     }
 
-    @PutMapping
+    @PatchMapping
     fun update(
-        @RequestBody @Valid updateApplicationFormRequest: UpdateApplicationFormRequest,
+        @RequestBody @Valid request: UpdateApplicationFormRequest,
         @LoginApplicant applicant: Applicant
     ): ResponseEntity<Unit> {
-        applicationFormService.update(applicant.id, updateApplicationFormRequest)
+        applicationFormService.update(applicant.id, request)
         return ResponseEntity.ok().build()
     }
 }
