@@ -56,7 +56,7 @@ class ExcelService(
         return excelGenerator.generateBy(headerTitles, excelRows)
     }
 
-    fun Boolean.toText(): String {
+    private fun Boolean.toText(): String {
         return when (this) {
             true -> "O"
             else -> "X"
