@@ -169,9 +169,10 @@ export default {
       this.referenceUrl = applicationForm.referenceUrl
       this.recruitmentItems = this.recruitmentItems.map(recruitmentItem => ({
         ...recruitmentItem,
-        contents: applicationForm.answers.find(
-          ({ recruitmentItemId }) => recruitmentItemId === recruitmentItem.id,
-        ).contents,
+        contents:
+          (applicationForm.answers.find(
+            ({ recruitmentItemId }) => recruitmentItemId === recruitmentItem.id,
+          ) || {})["contents"] || "",
       }))
     },
     reset() {
