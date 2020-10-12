@@ -176,14 +176,16 @@ export default {
       }))
     },
     reset() {
-      this.factCheck = false
-      this.password = ""
-      this.rePassword = ""
-      this.recruitmentItems = this.recruitmentItems.map(recruitmentItem => ({
-        ...recruitmentItem,
-        contents: "",
-      }))
-      this.referenceUrl = ""
+      if (confirm("정말 초기화하시겠습니까?")) {
+        this.factCheck = false
+        this.password = ""
+        this.rePassword = ""
+        this.recruitmentItems = this.recruitmentItems.map(recruitmentItem => ({
+          ...recruitmentItem,
+          contents: "",
+        }))
+        this.referenceUrl = ""
+      }
     },
     save(isSubmitted) {
       const applicationForm = {

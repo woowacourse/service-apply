@@ -9,8 +9,14 @@ import * as phoneNumber from "./phoneNumber"
 import * as url from "./url"
 
 extend("required", {
-  validate: v => common.isValid(v),
+  validate: v => {
+    return {
+      require: true,
+      valid: common.isValid(v),
+    }
+  },
   message: common.MESSAGE,
+  computesRequired: true,
 })
 extend("url", {
   validate: v => url.isValid(v),
