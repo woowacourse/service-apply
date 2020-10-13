@@ -24,8 +24,7 @@ class ApplicantService(
     private val passwordGenerator: PasswordGenerator
 ) {
     fun findAllByRecruitmentIdAndSubmittedTrue(recruitmentId: Long): List<ApplicantResponse> {
-        val applicationForms = applicationFormRepository.findByRecruitmentId(recruitmentId)
-            .filter { it.submitted }
+        val applicationForms = applicationFormRepository.findByRecruitmentIdAndSubmittedTrue(recruitmentId)
             .associateBy { it.applicantId }
         val cheaterApplicantIds = cheaterRepository.findAll().map { it.applicantId }
 
