@@ -1,19 +1,28 @@
 <template>
   <div id="app">
     <MainHeader />
-    <router-view class="main-view" />
+    <router-view v-if="isLoaded" class="main-view" />
     <MainFooter />
   </div>
 </template>
 <script>
 import MainHeader from "./components/MainHeader"
 import MainFooter from "./components/MainFooter"
+import { mapActions } from "vuex"
 
 export default {
   components: {
     MainHeader,
     MainFooter,
   },
+  data: () => ({
+    isLoaded: false,
+  }),
+  async created() {
+    await this.fetchRecruitments()
+    this.isLoaded = true
+  },
+  methods: mapActions(["fetchRecruitments"]),
 }
 </script>
 

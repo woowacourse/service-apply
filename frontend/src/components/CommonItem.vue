@@ -1,24 +1,28 @@
 <template>
   <div class="common-item">
-    <div class="information">
-      <div class="title">{{ title }}</div>
-      <div class="period">{{ startDateTime }} ~ {{ endDateTime }}</div>
-    </div>
+    <BaseItem
+      :title="recruitment.title"
+      :start-date-time="recruitment.startDateTime"
+      :end-date-time="recruitment.endDateTime"
+    />
     <Button class="button" @click="$emit('click')" :disabled="!activeButton" :value="buttonLabel" />
   </div>
 </template>
 
 <script>
+import BaseItem from "@/components/BaseItem"
 import Button from "@/components/form/Button"
 
 export default {
   components: {
+    BaseItem,
     Button,
   },
   props: {
-    title: String,
-    startDateTime: String,
-    endDateTime: String,
+    recruitment: {
+      type: Object,
+      required: true,
+    },
     buttonLabel: String,
     activeButton: Boolean,
   },
@@ -29,7 +33,6 @@ export default {
 .common-item {
   display: flex;
   width: 100%;
-  height: 70px;
   justify-content: space-between;
   align-items: center;
   background-color: #ffffff;
@@ -41,18 +44,8 @@ export default {
   color: #333;
 }
 
-.title {
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 5px;
-}
-
-.period {
-  font-size: 16px;
-}
-
 .button {
-  width: 120px;
+  width: 110px;
   height: 40px;
 }
 </style>

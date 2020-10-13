@@ -1,5 +1,7 @@
 package apply.utils
 
-interface ExcelRow {
-    fun getData(): List<Any?>
+data class ExcelRow(
+    val data: List<String>
+) {
+    constructor(vararg data: String) : this(data.toList())
 }
