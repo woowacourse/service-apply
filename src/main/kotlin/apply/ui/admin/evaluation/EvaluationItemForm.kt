@@ -4,10 +4,10 @@ import apply.application.EvaluationItemData
 import com.vaadin.flow.component.select.Select
 import com.vaadin.flow.component.textfield.TextArea
 import com.vaadin.flow.component.textfield.TextField
-import support.views.BindingFormLayout
+import support.views.BindingIdentityFormLayout
 import support.views.createIntSelect
 
-class EvaluationItemForm() : BindingFormLayout<EvaluationItemData>(EvaluationItemData::class) {
+class EvaluationItemForm() : BindingIdentityFormLayout<EvaluationItemData>(EvaluationItemData::class) {
     private val title: TextField = TextField("항목명")
     private val maximumScore: Select<Int> = createIntSelect(max = 10).apply { label = "최대 점수" }
     private val position: Select<Int> = createIntSelect(max = 10).apply { label = "순서" }
