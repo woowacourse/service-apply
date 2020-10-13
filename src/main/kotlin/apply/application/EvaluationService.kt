@@ -17,15 +17,30 @@ class EvaluationService(
     private val evaluationItemRepository: EvaluationItemRepository,
     private val recruitmentRepository: RecruitmentRepository
 ) {
-    fun save(request: EvaluationRequest) {
+    fun save(request: EvaluationData) {
         val evaluation = evaluationRepository.save(
-            Evaluation(request.title, request.description, request.recruitmentId, request.beforeEvaluationId)
+            Evaluation(
+                request.title,
+                request.description,
+                request.recruitment.id,
+                request.beforeEvaluation.id,
+                request.id
+            )
+        )
+        evaluationItemRepository.deleteAll(
+            findEvaluationItemsToDelete(request.id, request.evaluationItems.map { it.id })
         )
         evaluationItemRepository.saveAll(
             request.evaluationItems.map {
-                EvaluationItem(it.title, it.description, it.maximumScore, it.position, evaluation.id)
+                EvaluationItem(it.title, it.description, it.maximumScore, it.position, evaluation.id, it.id)
             }
         )
+    }
+
+    private fun findEvaluationItemsToDelete(evaluationId: Long, excludedItemIds: List<Long>): List<EvaluationItem> {
+        return evaluationItemRepository
+            .findByEvaluationIdOrderByPosition(evaluationId)
+            .filterNot { excludedItemIds.contains(it.id) }
     }
 
     fun findAll(): List<Evaluation> {
@@ -40,6 +55,25 @@ class EvaluationService(
         if (id == 0L) return null
 
         return evaluationRepository.findByIdOrNull(id) ?: throw IllegalArgumentException("해당 id의 평가를 찾을 수 없습니다.")
+    }
+
+    fun findAllRecruitmentSelectData(): List<RecruitmentSelectData> {
+        return recruitmentRepository.findAll()
+            .map { recruitment -> RecruitmentSelectData(recruitment) }
+            .sortedByDescending { it.id }
+    }
+
+    fun getDataById(id: Long): EvaluationData {
+        val evaluation = findById(id) ?: throw IllegalArgumentException("해당 id의 평가를 찾을 수 없습니다.")
+        val evaluationItems = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluation.id)
+        val recruitment = recruitmentRepository.getOne(evaluation.recruitmentId)
+        val beforeEvaluation = findById(evaluation.beforeEvaluationId)
+
+        return EvaluationData(evaluation, recruitment, beforeEvaluation, evaluationItems)
+    }
+
+    fun getAllSelectDataByRecruitmentId(id: Long): List<EvaluationSelectData> {
+        return findAllByRecruitmentId(id).map { EvaluationSelectData(it) }
     }
 
     fun findAllWithRecruitment(): List<EvaluationResponse> {

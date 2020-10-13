@@ -1,52 +1,71 @@
 package apply.ui.admin.evaluation
 
 import apply.application.EvaluationService
-import apply.application.RecruitmentService
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.button.Button
-import com.vaadin.flow.component.html.H1
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
+import com.vaadin.flow.router.BeforeEvent
+import com.vaadin.flow.router.HasUrlParameter
 import com.vaadin.flow.router.Route
+import com.vaadin.flow.router.WildcardParameter
+import support.views.EDIT_VALUE
+import support.views.FORM_URL_PATTERN
+import support.views.Title
 import support.views.createContrastButton
 import support.views.createPrimaryButton
+import support.views.toDisplayName
 
-@Route(value = "admin/evaluations/form", layout = BaseLayout::class)
+@Route(value = "admin/evaluations", layout = BaseLayout::class)
 class EvaluationsFormView(
-    private val evaluationService: EvaluationService,
-    private val recruitmentService: RecruitmentService
-) : VerticalLayout() {
-    private val evaluationForm: EvaluationForm = EvaluationForm(recruitmentService.findAll()) {
-        evaluationService.findAllByRecruitmentId(it)
+    private val evaluationService: EvaluationService
+) : VerticalLayout(), HasUrlParameter<String> {
+    private val title: Title = Title()
+    private val evaluationForm: EvaluationForm = EvaluationForm(
+        evaluationService.findAllRecruitmentSelectData()
+    ) {
+        evaluationService.getAllSelectDataByRecruitmentId(it)
     }
+
+    private val submitButton: Button = createSubmitButton()
 
     init {
-        add(createTitle(), evaluationForm, createButtons())
+        add(title, evaluationForm, createButtons())
     }
 
-    private fun createTitle(): Component {
-        return HorizontalLayout(H1("평가 생성")).apply {
-            setSizeFull()
-            justifyContentMode = FlexComponent.JustifyContentMode.CENTER
-        }
+    override fun setParameter(event: BeforeEvent, @WildcardParameter parameter: String) {
+        val result = FORM_URL_PATTERN.find(parameter)
+        result?.let {
+            val (id, value) = it.destructured
+            setDisplayName(value.toDisplayName())
+            if (value == EDIT_VALUE) {
+                val evaluationFormData = evaluationService.getDataById(id.toLong())
+                evaluationForm.fill(evaluationFormData)
+            }
+        } ?: UI.getCurrent().page.history.back() // TODO: 에러 화면을 구현한다.
     }
 
-    private fun createButtons(): Component {
-        return HorizontalLayout(createAddButton(), createCancelButton()).apply {
-            setSizeFull()
-            justifyContentMode = FlexComponent.JustifyContentMode.CENTER
-        }
+    private fun setDisplayName(displayName: String) {
+        title.text = "평가 $displayName"
+        submitButton.text = displayName
     }
 
-    private fun createAddButton(): Button {
-        return createPrimaryButton("생성") {
+    private fun createSubmitButton(): Button {
+        return createPrimaryButton {
             evaluationForm.bindOrNull()?.let {
                 evaluationService.save(it)
                 UI.getCurrent().navigate(EvaluationsView::class.java)
             }
+        }
+    }
+
+    private fun createButtons(): Component {
+        return HorizontalLayout(submitButton, createCancelButton()).apply {
+            setSizeFull()
+            justifyContentMode = FlexComponent.JustifyContentMode.CENTER
         }
     }
 
