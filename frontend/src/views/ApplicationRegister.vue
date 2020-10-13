@@ -4,7 +4,7 @@
     <ValidationObserver v-slot="{ handleSubmit, passed }">
       <Form @submit.prevent="handleSubmit(submit)">
         <h1>지원서 작성</h1>
-        <p class="autosave-indicator" v-if="isEditing && !modifiedDateTime">
+        <p class="autosave-indicator" v-if="isEditing">
           임시 저장되었습니다. ({{ modifiedDateTime }})
         </p>
         <TextField
@@ -15,12 +15,7 @@
           readonly
         />
         <ValidationObserver v-if="isEditing">
-          <ValidationProvider
-            name="password"
-            rules="password|required"
-            :bails="false"
-            v-slot="{ errors }"
-          >
+          <ValidationProvider name="password" rules="password|required" v-slot="{ errors }">
             <TextField
               v-model="password"
               name="password"
@@ -29,13 +24,9 @@
               placeholder="비밀번호를 입력해 주세요"
               required
             />
-            <p v-for="(error, index) in errors" :key="index" class="rule-field">{{ error }}</p>
+            <p class="rule-field">{{ errors[0] }}</p>
           </ValidationProvider>
-          <ValidationProvider
-            rules="password|rePassword:@password|required"
-            :bails="false"
-            v-slot="{ errors }"
-          >
+          <ValidationProvider rules="password|rePassword:@password|required" v-slot="{ errors }">
             <TextField
               v-model="rePassword"
               name="re-password"
@@ -44,7 +35,7 @@
               placeholder="비밀번호를 다시 한 번 입력해 주세요"
               required
             />
-            <p v-for="(error, index) in errors" :key="index" class="rule-field">{{ error }}</p>
+            <p class="rule-field">{{ errors[0] }}</p>
           </ValidationProvider>
         </ValidationObserver>
         <ValidationProvider
@@ -63,7 +54,7 @@
             :max-length="item.maximumLength"
             required
           />
-          <p v-for="(error, index) in errors" :key="index" class="rule-field">{{ error }}</p>
+          <p class="rule-field">{{ errors[0] }}</p>
         </ValidationProvider>
         <ValidationProvider rules="url" immediate v-slot="{ errors }">
           <TextField

@@ -15,8 +15,7 @@
           </SummaryCheckField>
           <p class="rule-field">{{ errors[0] }}</p>
         </ValidationProvider>
-
-        <ValidationProvider rules="name|required" :bails="false" v-slot="{ errors }">
+        <ValidationProvider rules="name|required" v-slot="{ errors }">
           <TextField
             v-model="name"
             name="name"
@@ -25,10 +24,9 @@
             placeholder="이름을 입력해 주세요."
             required
           />
-          <p v-for="(error, index) in errors" :key="index" class="rule-field">{{ error }}</p>
+          <p class="rule-field">{{ errors[0] }}</p>
         </ValidationProvider>
-
-        <ValidationProvider rules="phoneNumber|required" :bails="false" v-slot="{ errors }">
+        <ValidationProvider rules="phoneNumber|required" v-slot="{ errors }">
           <TextField
             v-model="phoneNumber"
             name="phone-number"
@@ -37,10 +35,9 @@
             placeholder="연락 가능한 전화번호를 입력해 주세요."
             required
           />
-          <p v-for="(error, index) in errors" :key="index" class="rule-field">{{ error }}</p>
+          <p class="rule-field">{{ errors[0] }}</p>
         </ValidationProvider>
-
-        <ValidationProvider rules="email|required" :bails="false" v-slot="{ errors }">
+        <ValidationProvider rules="email|required" v-slot="{ errors }">
           <TextField
             v-model="email"
             name="email"
@@ -49,16 +46,10 @@
             placeholder="이메일 주소를 입력해 주세요."
             required
           />
-          <p v-for="(error, index) in errors" :key="index" class="rule-field">{{ error }}</p>
+          <p class="rule-field">{{ errors[0] }}</p>
         </ValidationProvider>
-
         <ValidationObserver>
-          <ValidationProvider
-            name="password"
-            rules="password|required"
-            :bails="false"
-            v-slot="{ errors }"
-          >
+          <ValidationProvider name="password" rules="password|required" v-slot="{ errors }">
             <TextField
               v-model="password"
               name="password"
@@ -67,14 +58,9 @@
               placeholder="비밀번호를 입력해 주세요."
               required
             />
-            <p v-for="(error, index) in errors" :key="index" class="rule-field">{{ error }}</p>
+            <p class="rule-field">{{ errors[0] }}</p>
           </ValidationProvider>
-
-          <ValidationProvider
-            rules="password|rePassword:@password|required"
-            :bails="false"
-            v-slot="{ errors }"
-          >
+          <ValidationProvider rules="rePassword:@password|required" v-slot="{ errors }">
             <TextField
               v-model="rePassword"
               name="re-password"
@@ -83,20 +69,17 @@
               placeholder="비밀번호를 다시 한번 입력해 주세요."
               required
             />
-            <p v-for="(error, index) in errors" :key="index" class="rule-field">{{ error }}</p>
+            <p class="rule-field">{{ errors[0] }}</p>
           </ValidationProvider>
         </ValidationObserver>
-
-        <ValidationProvider rules="year|month|day|required" :bails="false" v-slot="{ errors }">
+        <ValidationProvider rules="year|month|day|required" v-slot="{ errors }">
           <BirthField v-model="birth" required />
-          <p v-for="(error, index) in errors" :key="index" class="rule-field">{{ error }}</p>
+          <p class="rule-field">{{ errors[0] }}</p>
         </ValidationProvider>
-
         <ValidationProvider rules="required" v-slot="{ errors }">
           <GenderField v-model="gender" required />
           <p class="rule-field">{{ errors[0] }}</p>
         </ValidationProvider>
-
         <template v-slot:actions>
           <Button cancel value="취소" />
           <Button type="submit" :disabled="!passed" value="다음" />

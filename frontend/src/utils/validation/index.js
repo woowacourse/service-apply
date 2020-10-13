@@ -2,7 +2,7 @@ import Vue from "vue"
 import { ValidationProvider, extend, ValidationObserver } from "vee-validate"
 import * as name from "./name"
 import * as email from "./email"
-import * as common from "./common"
+import * as required from "./reqruied"
 import * as birth from "./birth"
 import * as password from "./password"
 import * as phoneNumber from "./phoneNumber"
@@ -12,10 +12,10 @@ extend("required", {
   validate: v => {
     return {
       require: true,
-      valid: common.isValid(v),
+      valid: required.isValid(v),
     }
   },
-  message: common.MESSAGE,
+  message: required.MESSAGE,
   computesRequired: true,
 })
 

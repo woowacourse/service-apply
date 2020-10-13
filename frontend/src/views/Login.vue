@@ -3,7 +3,7 @@
     <ValidationObserver v-slot="{ handleSubmit, passed }">
       <Form @submit.prevent="handleSubmit(submit)">
         <h1>내 지원서 보기</h1>
-        <ValidationProvider rules="name|required" :bails="false" v-slot="{ errors }">
+        <ValidationProvider rules="name|required" v-slot="{ errors }">
           <TextField
             v-model="name"
             name="name"
@@ -12,9 +12,9 @@
             placeholder="이름을 입력해 주세요."
             required
           />
-          <p v-for="(error, index) in errors" :key="index" class="rule-field">{{ error }}</p>
+          <p class="rule-field">{{ errors[0] }}</p>
         </ValidationProvider>
-        <ValidationProvider rules="email|required" :bails="false" v-slot="{ errors }">
+        <ValidationProvider rules="email|required" v-slot="{ errors }">
           <TextField
             v-model="email"
             name="email"
@@ -23,18 +23,13 @@
             placeholder="이메일 주소를 입력해 주세요."
             required
           />
-          <p v-for="(error, index) in errors" :key="index" class="rule-field">{{ error }}</p>
+          <p class="rule-field">{{ errors[0] }}</p>
         </ValidationProvider>
-        <ValidationProvider rules="year|month|day|required" :bails="false" v-slot="{ errors }">
+        <ValidationProvider rules="year|month|day|required" v-slot="{ errors }">
           <BirthField v-model="birth" required />
-          <p v-for="(error, index) in errors" :key="index" class="rule-field">{{ error }}</p>
+          <p class="rule-field">{{ errors[0] }}</p>
         </ValidationProvider>
-        <ValidationProvider
-          name="password"
-          rules="password|required"
-          :bails="false"
-          v-slot="{ errors }"
-        >
+        <ValidationProvider name="password" rules="password|required" v-slot="{ errors }">
           <TextField
             v-model="password"
             name="password"
@@ -43,7 +38,7 @@
             placeholder="비밀번호를 입력해 주세요."
             required
           />
-          <p v-for="(error, index) in errors" :key="index" class="rule-field">{{ error }}</p>
+          <p class="rule-field">{{ errors[0] }}</p>
         </ValidationProvider>
         <template v-slot:actions>
           <Button type="button" @click="back" cancel value="이전" />
