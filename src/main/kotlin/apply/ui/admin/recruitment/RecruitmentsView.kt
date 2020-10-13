@@ -60,13 +60,7 @@ class RecruitmentsView(private val recruitmentService: RecruitmentService) : Ver
     }
 
     private fun createButtonRenderer(): Renderer<Recruitment> {
-        return ComponentRenderer<Component, Recruitment> { it ->
-            if (it.status == RecruitmentStatus.ENDED) {
-                HorizontalLayout()
-            } else {
-                createButtons(it)
-            }
-        }
+        return ComponentRenderer<Component, Recruitment> { it -> createButtons(it) }
     }
 
     private fun createButtons(recruitment: Recruitment): Component {

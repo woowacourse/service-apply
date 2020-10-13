@@ -52,7 +52,9 @@ class RecruitmentService(
     }
 
     fun deleteById(id: Long) {
-        recruitmentRepository.deleteById(id)
+        val recruitment = getById(id)
+        check(!recruitment.canRecruit)
+        recruitmentRepository.delete(recruitment)
     }
 
     fun getById(id: Long): Recruitment =
