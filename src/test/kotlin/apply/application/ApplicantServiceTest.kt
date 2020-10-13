@@ -112,11 +112,15 @@ internal class ApplicantServiceTest {
 
     @Test
     fun `지원자 정보와 부정 행위자 여부를 함께 제공한다`() {
-        given(applicationFormRepository.findByRecruitmentId(anyLong())).willReturn(listOf(applicationForm))
+        given(applicationFormRepository.findByRecruitmentIdAndSubmittedTrue(anyLong())).willReturn(
+            listOf(
+                applicationForm
+            )
+        )
         given(applicantRepository.findAllById(anySet())).willReturn(listOf(applicant))
         given(cheaterRepository.findAll()).willReturn(listOf(Cheater(1L)))
 
-        val founds = applicantService.findAllByRecruitmentId(1L)
+        val founds = applicantService.findAllByRecruitmentIdAndSubmittedTrue(1L)
 
         assertAll(
             { assertThat(founds).usingElementComparatorIgnoringFields("isCheater").isEqualTo(applicantResponses) },

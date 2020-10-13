@@ -91,7 +91,7 @@ class EvaluationTargetService(
     }
 
     private fun createEvaluationTargetsFromRecruitment(evaluation: Evaluation): List<EvaluationTarget> {
-        val applicantIds = applicationFormRepository.findByRecruitmentId(evaluation.recruitmentId)
+        val applicantIds = applicationFormRepository.findByRecruitmentIdAndSubmittedTrue(evaluation.recruitmentId)
             .map { it.applicantId }
 
         return applicantRepository.findAllById(applicantIds)
