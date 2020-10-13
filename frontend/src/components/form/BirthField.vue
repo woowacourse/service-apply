@@ -28,14 +28,6 @@
         :required="required"
       />
     </div>
-    <RuleField v-show="incorrectYear" v-model="incorrectYear" :rules="rules.year" :target="year" />
-    <RuleField
-      v-show="incorrectMonth"
-      v-model="incorrectMonth"
-      :rules="rules.month"
-      :target="month"
-    />
-    <RuleField v-show="incorrectDay" v-model="incorrectDay" :rules="rules.day" :target="day" />
   </Field>
 </template>
 
@@ -43,9 +35,6 @@
 import Label from "./Label"
 import Field from "./Field"
 import TextInput from "./TextInput"
-import RuleField from "./RuleField"
-
-import { birth } from "@/utils/validation"
 
 const BirthField = {
   props: {
@@ -63,16 +52,11 @@ const BirthField = {
     Label,
     Field,
     TextInput,
-    RuleField,
   },
   data: () => ({
     year: "",
     month: "",
     day: "",
-    rules: { ...birth },
-    incorrectYear: false,
-    incorrectMonth: false,
-    incorrectDay: false,
   }),
   created() {
     this.year = this.value.year
@@ -96,12 +80,6 @@ const BirthField = {
         year: this.year,
         month: this.month,
         day: this.day,
-      })
-      this.$nextTick(() => {
-        this.$emit(
-          "valid",
-          this.incorrectYear === true && this.incorrectMonth === true && this.incorrectDay === true,
-        )
       })
     },
   },
