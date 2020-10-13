@@ -97,7 +97,7 @@ class ApplicationFormService(
             ),
             ApplicationForm(
                 referenceUrl = "https://www.google.com",
-                submitted = false,
+                submitted = true,
                 createdDateTime = createLocalDateTime(2019, 10, 25, 10),
                 modifiedDateTime = createLocalDateTime(2019, 11, 5, 10),
                 submittedDateTime = createLocalDateTime(2019, 11, 5, 10, 10, 10),
