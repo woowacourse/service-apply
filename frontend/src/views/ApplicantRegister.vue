@@ -155,7 +155,8 @@ export default {
           },
         })
       } catch (e) {
-        alert(e.response.data.message)
+        alert("이미 신청서를 작성했습니다. 로그인 페이지로 이동합니다.")
+        this.$router.replace("/login")
       }
     },
   },

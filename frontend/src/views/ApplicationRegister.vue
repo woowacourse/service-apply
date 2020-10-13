@@ -61,7 +61,10 @@
             v-model="referenceUrl"
             name="url"
             type="url"
-            :description="'블로그, GitHub, 포트폴리오 주소 등을 입력해 주세요.'"
+            :description="
+              `블로그, GitHub, 포트폴리오 주소 등을 입력해 주세요.<br>
+                (여러 개가 있는 경우 Notion, Google 문서 등을 사용하여 하나로 묶어 주세요)`
+            "
             label="URL"
             placeholder="ex) https://woowacourse.github.io/javable/"
           />
@@ -138,8 +141,14 @@ export default {
         })
       }
     } catch (e) {
-      alert(e.response.data.message)
-      this.$router.replace("/")
+      const ALREADY_REGISTER = "이미 지원한 이력이 있습니다."
+      if (e.response.data.message === ALREADY_REGISTER) {
+        alert("이미 신청서를 작성했습니다. 로그인 페이지로 이동합니다.")
+        this.$router.replace("/login")
+      } else {
+        alert(e.response.data.message)
+        this.$router.replace("/")
+      }
     }
   },
   methods: {

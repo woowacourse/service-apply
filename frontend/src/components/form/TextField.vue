@@ -4,7 +4,7 @@
       <div>
         <Label :required="required">{{ label }}</Label>
       </div>
-      <Description v-if="description">{{ description }}</Description>
+      <Description v-if="description" v-html="description" />
       <div v-if="maxLength > 0" class="length-limit">{{ text.length }} / {{ maxLength }}</div>
       <TextInput v-bind="$attrs" :required="required" v-model="text" :max-length="maxLength" />
     </label>
