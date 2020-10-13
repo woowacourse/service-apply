@@ -1,5 +1,6 @@
 package apply
 
+import apply.application.EvaluationItemData
 import apply.application.EvaluationItemScoreData
 import apply.domain.evaluation.Evaluation
 import apply.domain.evaluationItem.EvaluationItem
@@ -45,6 +46,16 @@ fun createEvaluationItem(
     id: Long = 0L
 ): EvaluationItem {
     return EvaluationItem(title, description, maximumScore, position, evaluationId, id)
+}
+
+fun createEvaluationItemData(
+    title: String = EVALUATION_ITEM_TITLE,
+    description: String = EVALUATION_ITEM_DESCRIPTION,
+    maximumScore: Int = MAXIMUM_SCORE,
+    position: Int = EVALUATION_ITEM_POSITION,
+    id: Long = 0L
+): EvaluationItemData {
+    return EvaluationItemData(EvaluationItem(title, description, maximumScore, position, id))
 }
 
 fun createEvaluationTarget(
