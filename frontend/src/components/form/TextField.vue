@@ -8,7 +8,6 @@
       <div v-if="maxLength > 0" class="length-limit">{{ text.length }} / {{ maxLength }}</div>
       <TextInput v-bind="$attrs" :required="required" v-model="text" :max-length="maxLength" />
     </label>
-    <RuleField @input="valid" :rules="rules" :target="text" />
   </Field>
 </template>
 

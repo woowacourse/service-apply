@@ -1,39 +1,45 @@
 <template>
   <div class="password-find">
-    <Form @submit.prevent="submit">
-      <h1>비밀번호 찾기</h1>
-      <TextField
-        v-model="name"
-        name="name"
-        type="text"
-        label="이름"
-        placeholder="이름을 입력해 주세요."
-        :rules="rules.name"
-        @valid="v => (this.validName = v)"
-        required
-      />
-      <TextField
-        v-model="email"
-        name="email"
-        type="email"
-        label="이메일"
-        placeholder="이메일 주소를 입력해 주세요."
-        :rules="rules.email"
-        @valid="v => (this.validEmail = v)"
-        required
-      />
-      <BirthField v-model="birth" @valid="v => (this.validBirth = v)" required />
-      <template v-slot:actions>
-        <Button type="button" @click="back" cancel value="이전" />
-        <Button type="submit" :disabled="!validName || !validEmail || !validBirth" value="확인" />
-      </template>
-    </Form>
+    <ValidationObserver v-slot="{ handleSubmit, passed }">
+      <Form @submit.prevent="handleSubmit(submit)">
+        <h1>비밀번호 찾기</h1>
+        <ValidationProvider rules="name|required" v-slot="{ errors }">
+          <TextField
+            v-model="name"
+            name="name"
+            type="text"
+            label="이름"
+            placeholder="이름을 입력해 주세요."
+            required
+          />
+          <p class="rule-field">{{ errors[0] }}</p>
+        </ValidationProvider>
+        <ValidationProvider rules="email|required" v-slot="{ errors }">
+          <TextField
+            v-model="email"
+            name="email"
+            type="email"
+            label="이메일"
+            placeholder="이메일 주소를 입력해 주세요."
+            required
+          />
+          <p class="rule-field">{{ errors[0] }}</p>
+        </ValidationProvider>
+        <ValidationProvider rules="year|month|day|required" v-slot="{ errors }">
+          <BirthField v-model="birth" required />
+          <p class="rule-field">{{ errors[0] }}</p>
+        </ValidationProvider>
+        <template v-slot:actions>
+          <Button type="button" @click="back" cancel value="이전" />
+          <Button type="submit" :disabled="!passed" value="확인" />
+        </template>
+      </Form>
+    </ValidationObserver>
   </div>
 </template>
 
 <script>
 import { BirthField, Button, Form, TextField } from "@/components/form"
-import { login } from "@/utils/validation"
 import * as Api from "@/api"
 import * as DateUtil from "@/utils/date"
 
@@ -54,10 +60,6 @@ export default {
       month: "",
       day: "",
     },
-    rules: { ...login },
-    validName: false,
-    validEmail: false,
-    validBirth: false,
   }),
   methods: {
     async submit() {
@@ -85,5 +87,11 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.rule-field {
+  margin-left: 8px;
+  font-size: 12px;
+  color: #ff0000;
 }
 </style>
