@@ -62,7 +62,6 @@ class RecruitmentService(
 
     fun getNotEndedDataById(id: Long): RecruitmentData {
         val recruitment = getById(id)
-        check(!recruitment.isEnded) { "모집이 이미 완료되었습니다." }
         val recruitmentItems = recruitmentItemRepository.findByRecruitmentIdOrderByPosition(recruitment.id)
         return RecruitmentData(recruitment, recruitmentItems)
     }
