@@ -10,6 +10,9 @@
             {{ tab.label }}
           </router-link>
         </li>
+        <li v-if="this.token" class="tab-item edit-password">
+          <router-link to="/edit">비밀번호 변경</router-link>
+        </li>
       </ul>
       <div v-if="selectedTab !== 'applied'">
         <RecruitItem
@@ -135,5 +138,12 @@ export default {
 
 .tab-item a.active {
   color: #333;
+}
+
+.tab-item.edit-password {
+  display: flex;
+  justify-content: flex-end;
+  flex: 1;
+  margin: 0;
 }
 </style>
