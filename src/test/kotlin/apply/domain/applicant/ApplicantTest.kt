@@ -2,10 +2,13 @@ package apply.domain.applicant
 
 import apply.application.ApplicantInformation
 import apply.domain.applicant.exception.ApplicantValidateException
+import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 import support.createLocalDate
 
 internal class ApplicantTest {
@@ -37,5 +40,13 @@ internal class ApplicantTest {
         assertThatThrownBy { applicant.validate(invalidApplicantInformation) }
             .isInstanceOf(ApplicantValidateException::class.java)
             .hasMessage("요청 정보가 기존 지원자 정보와 일치하지 않습니다")
+    }
+
+    @ParameterizedTest
+    @CsvSource("password,true", "wrongPassword,false")
+    fun `지원자의 기존 비밀번호와 다른 비밀번호와의 일치 여부를 확인한다`(password: String, expected: Boolean) {
+        val samePassword = Password(password)
+
+        assertThat(applicant.isSamePassword(samePassword)).isEqualTo(expected)
     }
 }

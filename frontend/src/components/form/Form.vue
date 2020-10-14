@@ -15,7 +15,7 @@
 .form {
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 512px;
   max-width: 512px;
   padding: 20px;
   margin: 15px;
@@ -26,6 +26,7 @@
 
 @media screen and (max-width: 512px) {
   .form {
+    width: 100vw;
     margin: 0;
   }
 }

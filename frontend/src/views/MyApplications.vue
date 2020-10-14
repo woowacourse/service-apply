@@ -1,7 +1,10 @@
 <template>
   <div class="my-application-forms">
     <Box>
-      <h1>내 지원서</h1>
+      <div class="head">
+        <h1>내 지원서</h1>
+        <router-link class="edit-password" to="/edit">비밀번호 변경</router-link>
+      </div>
       <ApplicationFormItem
         class="application-forms"
         v-for="recruitment in appliedRecruitments"
@@ -63,5 +66,18 @@ export default {
   flex-direction: column;
   align-items: center;
   background: #ced6e0;
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+}
+
+.edit-password {
+  text-decoration: none;
+  text-align: right;
+  font-weight: 500;
+  color: #2c3e50;
+  margin: 35px 5px;
 }
 </style>

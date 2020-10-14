@@ -3,8 +3,11 @@ package apply.ui.api
 import apply.application.ApplicantInformation
 import apply.application.ApplicantService
 import apply.application.ApplicantVerifyInformation
+import apply.application.EditPasswordRequest
 import apply.application.MailService
 import apply.application.ResetPasswordRequest
+import apply.domain.applicant.Applicant
+import apply.security.LoginApplicant
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -34,6 +37,16 @@ class ApplicantRestController(
     fun resetPassword(@RequestBody @Valid resetPasswordRequest: ResetPasswordRequest): ResponseEntity<Unit> {
         val newPassword = applicantService.resetPassword(resetPasswordRequest)
         mailService.sendPasswordResetMail(resetPasswordRequest, newPassword)
+
+        return ResponseEntity.noContent().build()
+    }
+
+    @PostMapping("/edit-password")
+    fun editPassword(
+        @RequestBody @Valid editPasswordRequest: EditPasswordRequest,
+        @LoginApplicant applicant: Applicant
+    ): ResponseEntity<Unit> {
+        applicantService.editPassword(applicant, editPasswordRequest)
 
         return ResponseEntity.noContent().build()
     }

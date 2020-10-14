@@ -16,25 +16,12 @@ data class UpdateApplicationFormRequest(
     val recruitmentId: Long,
 
     @field:Size(min = 0, max = 255)
-    val referenceUrl: String,
+    val referenceUrl: String = "",
 
     val isSubmitted: Boolean = false,
 
-    val answers: List<AnswerRequest> = emptyList(),
-
-    val password: String
-) {
-    constructor(
-        recruitmentId: Long,
-        referenceUrl: String,
-        isSubmitted: Boolean,
-        answers: List<AnswerRequest>
-    ) : this(recruitmentId, referenceUrl, isSubmitted, answers, "")
-
-    constructor(
-        recruitmentId: Long
-    ) : this(recruitmentId, "", false, emptyList(), "")
-}
+    val answers: List<AnswerRequest> = emptyList()
+)
 
 data class AnswerRequest(
     @field:Size(min = 1)

@@ -6,6 +6,7 @@ import ApplicationRegister from "@/views/ApplicationRegister"
 import Login from "@/views/Login"
 import PasswordFind from "@/views/PasswordFind"
 import PasswordFindResult from "@/views/PasswordFindResult"
+import PasswordEdit from "@/views/PasswordEdit"
 import MyApplications from "@/views/MyApplications"
 import store from "@/store"
 
@@ -64,6 +65,11 @@ const routes = [
   {
     path: "/find",
     component: PasswordFind,
+  },
+  {
+    path: "/edit",
+    component: PasswordEdit,
+    beforeEnter: requireAuth,
   },
   {
     path: "/find/result",
