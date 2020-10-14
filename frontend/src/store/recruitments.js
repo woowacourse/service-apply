@@ -45,13 +45,11 @@ export const recruitments = {
         .filter(recruitment =>
           myApplicationForms.find(form => form.recruitmentId === recruitment.id),
         )
-        .map(recruitment => {
-          return {
-            ...recruitment,
-            submitted: !!myApplicationForms.find(form => form.recruitmentId === recruitment.id)
-              .submitted,
-          }
-        })
+        .map(recruitment => ({
+          ...recruitment,
+          submitted: !!myApplicationForms.find(form => form.recruitmentId === recruitment.id)
+            .submitted,
+        }))
     },
   },
 }
