@@ -77,11 +77,11 @@ class ApplicantService(
     }
 
     fun editPassword(applicant: Applicant, request: EditPasswordRequest) {
-        if (applicant.isSamePassword(request.beforePassword)) {
-            applicant.password = request.newPassword
-        } else {
-            throw ApplicantValidateException()
-        }
+        applicant.takeIf { it.isSamePassword(request.beforePassword) }
+            ?.run {
+                applicant.password = request.newPassword
+                applicantRepository.save(applicant)
+            } ?: throw ApplicantValidateException()
     }
 
     @PostConstruct
