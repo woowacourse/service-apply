@@ -53,6 +53,7 @@
 </template>
 
 <script>
+import { mapActions } from "vuex"
 import { BirthField, Button, Form, TextField } from "@/components/form"
 import * as DateUtil from "@/utils/date"
 
@@ -75,9 +76,10 @@ export default {
     },
   }),
   methods: {
+    ...mapActions("token", ["fetchLogin"]),
     async submit() {
       try {
-        await this.$store.dispatch("login", {
+        await this.fetchLogin({
           name: this.name,
           email: this.email,
           birthday: DateUtil.formatLocalDate(this.birth),

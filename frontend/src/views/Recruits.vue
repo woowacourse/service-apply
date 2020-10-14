@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from "vuex"
+import { mapGetters, mapActions } from "vuex"
 import RecruitItem from "@/components/RecruitItem"
 import ApplicationFormItem from "@/components/ApplicationFormItem"
 import Box from "@/components/Box"
@@ -75,9 +75,9 @@ export default {
     selectedTab() {
       return this.$route.query.status || "all"
     },
-    ...mapState({
-      token: ({ token }) => token.value,
-    }),
+    token() {
+      return this.$store.state.token.value
+    },
     ...mapGetters("recruitments", ["all", "recruitable", "recruiting", "ended", "applied"]),
   },
   watch: {

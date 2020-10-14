@@ -5,7 +5,7 @@
         <h1>비밀번호 변경</h1>
         <ValidationProvider name="before-password" rules="password|required" v-slot="{ errors }">
           <TextField
-            v-model="beforePassword"
+            v-model="password"
             name="before-password"
             type="password"
             label="기존 비밀번호"
@@ -16,7 +16,7 @@
         </ValidationProvider>
         <ValidationProvider name="password" rules="password|required" v-slot="{ errors }">
           <TextField
-            v-model="password"
+            v-model="newPassword"
             name="password"
             type="password"
             label="새 비밀번호"
@@ -27,7 +27,7 @@
         </ValidationProvider>
         <ValidationProvider rules="password|rePassword:@password|required" v-slot="{ errors }">
           <TextField
-            v-model="rePassword"
+            v-model="reNewPassword"
             name="re-password"
             type="password"
             label="비밀번호 확인"
@@ -46,6 +46,7 @@
 </template>
 
 <script>
+import { mapActions } from "vuex"
 import { Button, Form, TextField } from "@/components/form"
 import * as Api from "@/api"
 
@@ -57,23 +58,29 @@ export default {
     TextField,
   },
   data: () => ({
-    beforePassword: "",
     password: "",
-    rePassword: "",
+    newPassword: "",
+    reNewPassword: "",
   }),
+  computed: {
+    token() {
+      return this.$store.state.token.value
+    },
+  },
   methods: {
+    ...mapActions("token", ["resetToken"]),
     back() {
       this.$router.go(-1)
     },
     async submit() {
       try {
         await Api.fetchPasswordEdit({
-          token: this.$store.getters["token"],
-          password: this.beforePassword,
-          newPassword: this.password,
+          token: this.token,
+          password: this.password,
+          newPassword: this.newPassword,
         })
         alert("비밀번호가 변경되었습니다. 다시 로그인해주세요.")
-        this.$store.dispatch("resetToken")
+        this.resetToken()
         this.$router.push("/login")
       } catch (e) {
         alert(e.response.data.message)

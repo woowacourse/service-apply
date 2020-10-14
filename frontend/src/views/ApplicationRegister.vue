@@ -93,8 +93,11 @@ export default {
     isEditing() {
       return this.status === "edit"
     },
+    token() {
+      return this.$store.state.token.value
+    },
     recruitment() {
-      return this.$store.state.recruitments.items.find(v => v.id === this.recruitmentId)
+      return this.$store.getters["recruitments/findById"](this.recruitmentId)
     },
   },
   async created() {
@@ -104,7 +107,7 @@ export default {
         await this.fetchApplicationForm()
       } else {
         await ApplicationFormsApi.createForm({
-          token: this.$store.getters["token"],
+          token: this.token,
           recruitmentId: this.recruitmentId,
         })
       }
@@ -134,7 +137,7 @@ export default {
     async fetchApplicationForm() {
       try {
         const { data } = await ApplicationFormsApi.fetchForm({
-          token: this.$store.getters["token"],
+          token: this.token,
           recruitmentId: this.recruitmentId,
         })
         this.fillForm(data)
@@ -175,7 +178,7 @@ export default {
         isSubmitted,
       }
       return ApplicationFormsApi.updateForm({
-        token: this.$store.getters["token"],
+        token: this.token,
         data: applicationForm,
       })
     },

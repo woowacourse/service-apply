@@ -133,14 +133,14 @@ export default {
   }),
   computed: {
     recruitment() {
-      return this.$store.state.recruitments.items.find(v => v.id === this.recruitmentId)
+      return this.$store.getters["recruitments/findById"](this.recruitmentId)
     },
   },
   methods: {
-    ...mapActions(["fetchRegisterAndSetApplicantInfo"]),
+    ...mapActions("token", ["fetchRegister"]),
     async submit() {
       try {
-        await this.fetchRegisterAndSetApplicantInfo({
+        await this.fetchRegister({
           name: this.name,
           phoneNumber: this.phoneNumber,
           email: this.email,

@@ -12,7 +12,7 @@ import store from "@/store"
 Vue.use(VueRouter)
 
 const requireAuth = (to, from, next) => {
-  if (store.getters["token"] !== "") {
+  if (store.state.token.value !== "") {
     return next()
   }
   alert("로그인이 필요합니다.")

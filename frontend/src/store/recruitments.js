@@ -51,5 +51,6 @@ export const recruitments = {
           : previous
       }, [])
     },
+    findById: state => recruitmentId => state.items.find(({ id }) => id === recruitmentId),
   },
 }
