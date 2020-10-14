@@ -224,6 +224,8 @@ internal class ApplicantServiceTest {
 
     @Test
     fun `지원자의 비밀번호를 수정한다`() {
+        given(applicantRepository.save(applicant)).willReturn(applicant)
+
         assertDoesNotThrow { applicantService.editPassword(applicant, validEditPasswordRequest) }
     }
 

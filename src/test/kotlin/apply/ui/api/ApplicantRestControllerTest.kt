@@ -3,11 +3,13 @@ package apply.ui.api
 import apply.application.ApplicantInformation
 import apply.application.ApplicantService
 import apply.application.ApplicantVerifyInformation
+import apply.application.EditPasswordRequest
 import apply.application.MailService
 import apply.application.ResetPasswordRequest
 import apply.domain.applicant.Gender
 import apply.domain.applicant.Password
 import apply.domain.applicant.exception.ApplicantValidateException
+import apply.security.JwtTokenProvider
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -17,6 +19,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
+import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.MediaType
 import org.springframework.test.context.TestConstructor
 import org.springframework.test.web.servlet.MockMvc
@@ -70,6 +73,9 @@ internal class ApplicantRestControllerTest(
     @MockBean
     private lateinit var mailService: MailService
 
+    @MockBean
+    private lateinit var jwtTokenProvider: JwtTokenProvider
+
     private lateinit var mockMvc: MockMvc
 
     private val applicantRequest = ApplicantInformation(
@@ -100,6 +106,13 @@ internal class ApplicantRestControllerTest(
 
     private val inValidApplicantPasswordFindRequest =
         applicantPasswordFindRequest.copy(birthday = createLocalDate(1995, 4, 4))
+
+    private val validEditPasswordRequest = EditPasswordRequest(
+        beforePassword = Password("password"),
+        newPassword = Password("NEW_PASSWORD")
+    )
+
+    private val inValidEditPasswordRequest = validEditPasswordRequest.copy(beforePassword = Password("wrongPassword"))
 
     @BeforeEach
     internal fun setUp(webApplicationContext: WebApplicationContext) {
@@ -195,6 +208,39 @@ internal class ApplicantRestControllerTest(
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isUnauthorized }
+        }
+    }
+
+    @Test
+    fun `올바른 비밀번호 변경 요청에 응답으로 NoContent를 반환한다`() {
+        given(jwtTokenProvider.isValidToken("valid_token")).willReturn(true)
+        given(jwtTokenProvider.getSubject("valid_token")).willReturn(applicantRequest.email)
+        given(applicantService.getByEmail(applicantRequest.email)).willReturn(applicantRequest.toEntity())
+        willDoNothing().given(applicantService).editPassword(applicantRequest.toEntity(), validEditPasswordRequest)
+
+        mockMvc.post("/api/applicants/edit-password") {
+            content = objectMapper.writeValueAsBytes(validEditPasswordRequest)
+            contentType = MediaType.APPLICATION_JSON
+            header(AUTHORIZATION, "Bearer valid_token")
+        }.andExpect {
+            status { isNoContent }
+        }
+    }
+
+    @Test
+    fun `잘못된 비밀번호 변경 요청에 응답으로 Unauthorized를 반환한다`() {
+        given(jwtTokenProvider.isValidToken("valid_token")).willReturn(true)
+        given(jwtTokenProvider.getSubject("valid_token")).willReturn(applicantRequest.email)
+        given(applicantService.getByEmail(applicantRequest.email)).willReturn(applicantRequest.toEntity())
+        given(applicantService.editPassword(applicantRequest.toEntity(), inValidEditPasswordRequest))
+            .willThrow(ApplicantValidateException())
+
+        mockMvc.post("/api/applicants/edit-password") {
+            content = objectMapper.writeValueAsBytes(inValidEditPasswordRequest)
+            contentType = MediaType.APPLICATION_JSON
+            header(AUTHORIZATION, "Bearer valid_token")
+        }.andExpect {
+            status { isNoContent }
         }
     }
 }
