@@ -1,21 +1,36 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
 <configuration>
-    <property name="LOG_PATH" value="./log"/>
+    <springProfile name="every-minute">
+        <property name="ROLLOVER_PERIOD_PATTERN" value="yyyy-MM-dd_HH:mm"/>
+    </springProfile>
 
-    <appender class="ch.qos.logback.core.rolling.RollingFileAppender" name="FILE">
-        <file>${LOG_PATH}/apply-log.log</file>
-        <encoder>
-            <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%thread] [%-5level] %C.%M.%L :%msg%n
-            </pattern>
-        </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}/apply-log-%d{yyyy-MM-dd}.log</fileNamePattern>
-            <maxHistory>90</maxHistory>
-        </rollingPolicy>
-    </appender>
+    <springProfile name="file-logging">
+        <property name="LOG_PATH" value="./logs"/>
+        <property name="LOG_FILE_NAME" value="apply"/>
+        <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${LOG_PATH}/${LOG_FILE_NAME}.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>
+                    ${LOG_PATH}/${LOG_FILE_NAME}-%d{${ROLLOVER_PERIOD_PATTERN:-yyyy-MM-dd}}.log
+                </fileNamePattern>
+                <maxHistory>30</maxHistory>
+            </rollingPolicy>
+            <encoder>
+                <pattern>%d{HH:mm:ss.SSS} [%level] [%thread] [%logger{36}] - %msg%n</pattern>
+            </encoder>
+        </appender>
+    </springProfile>
+
+    <springProfile name="console-logging">
+        <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+        <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+    </springProfile>
 
     <root level="INFO">
-        <appender-ref ref="FILE"/>
+        <springProfile name="file-logging">
+            <appender-ref ref="FILE"/>
+        </springProfile>
+        <springProfile name="console-logging">
+            <appender-ref ref="CONSOLE"/>
+        </springProfile>
     </root>
 </configuration>
