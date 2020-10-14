@@ -81,9 +81,9 @@ export default {
     ...mapGetters("recruitments", ["all", "recruitable", "recruiting", "ended", "applied"]),
   },
   watch: {
-    "$route.query.status": {
-      async handler(newStatus) {
-        if (newStatus !== "applied") {
+    selectedTab: {
+      async handler(newTab) {
+        if (newTab !== "applied") {
           return
         }
         if (this.token === "") {
