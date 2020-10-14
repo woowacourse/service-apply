@@ -116,6 +116,7 @@ export default {
 .find-password {
   text-decoration: none;
   font-weight: 500;
+  font-size: 14px !important;
   color: #2c3e50;
   margin-right: 5px;
 }
