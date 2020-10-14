@@ -15,7 +15,7 @@
           </SummaryCheckField>
           <p class="rule-field">{{ errors[0] }}</p>
         </ValidationProvider>
-        <ValidationProvider rules="name|required" v-slot="{ errors }">
+        <ValidationProvider rules="required|name" v-slot="{ errors }">
           <TextField
             v-model="name"
             name="name"
@@ -26,7 +26,7 @@
           />
           <p class="rule-field">{{ errors[0] }}</p>
         </ValidationProvider>
-        <ValidationProvider rules="phoneNumber|required" v-slot="{ errors }">
+        <ValidationProvider rules="required|phoneNumber" v-slot="{ errors }">
           <TextField
             v-model="phoneNumber"
             name="phone-number"
@@ -37,7 +37,7 @@
           />
           <p class="rule-field">{{ errors[0] }}</p>
         </ValidationProvider>
-        <ValidationProvider rules="email|required" v-slot="{ errors }">
+        <ValidationProvider rules="required|email" v-slot="{ errors }">
           <TextField
             v-model="email"
             name="email"
@@ -48,31 +48,29 @@
           />
           <p class="rule-field">{{ errors[0] }}</p>
         </ValidationProvider>
-        <ValidationObserver>
-          <ValidationProvider name="password" rules="password|required" v-slot="{ errors }">
-            <TextField
-              v-model="password"
-              name="password"
-              type="password"
-              label="비밀번호"
-              placeholder="비밀번호를 입력해 주세요."
-              required
-            />
-            <p class="rule-field">{{ errors[0] }}</p>
-          </ValidationProvider>
-          <ValidationProvider rules="rePassword:@password|required" v-slot="{ errors }">
-            <TextField
-              v-model="rePassword"
-              name="re-password"
-              type="password"
-              label="비밀번호 확인"
-              placeholder="비밀번호를 다시 한번 입력해 주세요."
-              required
-            />
-            <p class="rule-field">{{ errors[0] }}</p>
-          </ValidationProvider>
-        </ValidationObserver>
-        <ValidationProvider rules="year|month|day|required" v-slot="{ errors }">
+        <ValidationProvider name="password" rules="required|password" v-slot="{ errors }">
+          <TextField
+            v-model="password"
+            name="password"
+            type="password"
+            label="비밀번호"
+            placeholder="비밀번호를 입력해 주세요."
+            required
+          />
+          <p class="rule-field">{{ errors[0] }}</p>
+        </ValidationProvider>
+        <ValidationProvider rules="required|confirmed:@password" v-slot="{ errors }">
+          <TextField
+            v-model="rePassword"
+            name="re-password"
+            type="password"
+            label="비밀번호 확인"
+            placeholder="비밀번호를 다시 한번 입력해 주세요."
+            required
+          />
+          <p class="rule-field">{{ errors[0] }}</p>
+        </ValidationProvider>
+        <ValidationProvider rules="year|month|day" v-slot="{ errors }">
           <BirthField v-model="birth" required />
           <p class="rule-field">{{ errors[0] }}</p>
         </ValidationProvider>

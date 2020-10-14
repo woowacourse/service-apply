@@ -3,10 +3,10 @@
     <ValidationObserver v-slot="{ handleSubmit, passed }">
       <Form @submit.prevent="handleSubmit(submit)">
         <h1>비밀번호 변경</h1>
-        <ValidationProvider name="before-password" rules="password|required" v-slot="{ errors }">
+        <ValidationProvider rules="required|password" v-slot="{ errors }">
           <TextField
             v-model="password"
-            name="before-password"
+            name="password"
             type="password"
             label="기존 비밀번호"
             placeholder="기존 비밀번호를 입력해 주세요"
@@ -14,10 +14,10 @@
           />
           <p class="rule-field">{{ errors[0] }}</p>
         </ValidationProvider>
-        <ValidationProvider name="password" rules="password|required" v-slot="{ errors }">
+        <ValidationProvider name="new-password" rules="required|password" v-slot="{ errors }">
           <TextField
             v-model="newPassword"
-            name="password"
+            name="new-password"
             type="password"
             label="새 비밀번호"
             placeholder="비밀번호를 입력해 주세요"
@@ -25,10 +25,10 @@
           />
           <p class="rule-field">{{ errors[0] }}</p>
         </ValidationProvider>
-        <ValidationProvider rules="password|rePassword:@password|required" v-slot="{ errors }">
+        <ValidationProvider rules="required|confirmed:@new-password" v-slot="{ errors }">
           <TextField
             v-model="reNewPassword"
-            name="re-password"
+            name="re-new-password"
             type="password"
             label="비밀번호 확인"
             placeholder="비밀번호를 다시 한 번 입력해 주세요"
