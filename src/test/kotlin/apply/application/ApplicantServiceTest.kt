@@ -96,11 +96,11 @@ internal class ApplicantServiceTest {
         validApplicantPasswordFindRequest.copy(birthday = createLocalDate(1995, 4, 4))
 
     private val validEditPasswordRequest = EditPasswordRequest(
-        beforePassword = Password("password"),
+        password = Password("password"),
         newPassword = Password("NEW_PASSWORD")
     )
 
-    private val inValidEditPasswordRequest = validEditPasswordRequest.copy(beforePassword = Password("wrongPassword"))
+    private val inValidEditPasswordRequest = validEditPasswordRequest.copy(password = Password("wrongPassword"))
 
     private val applicant = validApplicantRequest.toEntity(APPLICANT_ID)
 

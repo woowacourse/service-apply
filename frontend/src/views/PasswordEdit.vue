@@ -69,7 +69,7 @@ export default {
       try {
         await Api.fetchPasswordEdit({
           token: this.$store.getters["token"],
-          beforePassword: this.beforePassword,
+          password: this.beforePassword,
           newPassword: this.password,
         })
         alert("비밀번호가 변경되었습니다. 다시 로그인해주세요.")

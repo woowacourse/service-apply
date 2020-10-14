@@ -111,7 +111,7 @@ data class ResetPasswordRequest(
 
 data class EditPasswordRequest(
     @field:NotNull
-    val beforePassword: Password,
+    val password: Password,
 
     @field:NotNull
     val newPassword: Password

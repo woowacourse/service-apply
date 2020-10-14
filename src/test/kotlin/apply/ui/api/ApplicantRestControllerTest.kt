@@ -108,11 +108,11 @@ internal class ApplicantRestControllerTest(
         applicantPasswordFindRequest.copy(birthday = createLocalDate(1995, 4, 4))
 
     private val validEditPasswordRequest = EditPasswordRequest(
-        beforePassword = Password("password"),
+        password = Password("password"),
         newPassword = Password("NEW_PASSWORD")
     )
 
-    private val inValidEditPasswordRequest = validEditPasswordRequest.copy(beforePassword = Password("wrongPassword"))
+    private val inValidEditPasswordRequest = validEditPasswordRequest.copy(password = Password("wrongPassword"))
 
     @BeforeEach
     internal fun setUp(webApplicationContext: WebApplicationContext) {

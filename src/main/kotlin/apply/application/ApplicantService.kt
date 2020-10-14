@@ -77,7 +77,7 @@ class ApplicantService(
     }
 
     fun editPassword(applicant: Applicant, request: EditPasswordRequest) {
-        applicant.takeIf { it.isSamePassword(request.beforePassword) }
+        applicant.takeIf { it.isSamePassword(request.password) }
             ?.run {
                 applicant.password = request.newPassword
                 applicantRepository.save(applicant)

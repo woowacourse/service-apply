@@ -19,10 +19,10 @@ export const fetchLogin = ({ name, email, birthday, password }) =>
 export const fetchPasswordFind = ({ name, email, birthday }) =>
   axios.post("/api/applicants/reset-password", { name, email, birthday })
 
-export const fetchPasswordEdit = ({ token, beforePassword, newPassword }) =>
+export const fetchPasswordEdit = ({ token, password, newPassword }) =>
   axios.post(
     "/api/applicants/edit-password",
-    { beforePassword, newPassword },
+    { password, newPassword },
     {
       headers: {
         Authorization: `Bearer ${token}`,
