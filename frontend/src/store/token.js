@@ -26,6 +26,10 @@ export const token = {
 
       commit("setToken", token)
     },
+
+    resetToken({ commit }) {
+      commit("setToken", "")
+    },
   },
 
   getters: {
