@@ -2,9 +2,9 @@
   <div class="main-header">
     <header class="header">
       <nav class="nav">
-        <a target="_blank" href="https://woowacourse.github.io/">
+        <router-link to="/recruits">
           <img class="logo" src="/assets/logo/logo_full_dark.png" />
-        </a>
+        </router-link>
         <h3 class="title">
           <router-link to="/recruits">지원하기</router-link>
         </h3>

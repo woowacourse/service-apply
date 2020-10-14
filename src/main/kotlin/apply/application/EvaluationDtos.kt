@@ -1,7 +1,9 @@
 package apply.application
 
+import apply.domain.evaluation.Evaluation
 import apply.domain.evaluationItem.EvaluationItem
 import apply.domain.evaluationtarget.EvaluationStatus
+import apply.domain.recruitment.Recruitment
 import javax.validation.Valid
 import javax.validation.constraints.Max
 import javax.validation.constraints.Min
@@ -9,7 +11,31 @@ import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
-data class EvaluationRequest(
+data class EvaluationSelectData(
+    @field:NotBlank
+    @field:Size(min = 1, max = 31)
+    var title: String = "",
+    var id: Long = 0L
+) {
+    constructor(evaluation: Evaluation) : this(
+        evaluation.title,
+        evaluation.id
+    )
+}
+
+data class RecruitmentSelectData(
+    @field:NotBlank
+    @field:Size(min = 1, max = 31)
+    var title: String = "",
+    var id: Long = 0L
+) {
+    constructor(recruitment: Recruitment) : this(
+        recruitment.title,
+        recruitment.id
+    )
+}
+
+data class EvaluationData(
     @field:NotBlank
     @field:Size(min = 1, max = 31)
     var title: String = "",
@@ -18,16 +44,37 @@ data class EvaluationRequest(
     var description: String = "",
 
     @field:NotNull
-    var recruitmentId: Long = 0L,
+    var recruitment: RecruitmentSelectData = RecruitmentSelectData(),
 
-    var beforeEvaluationId: Long = 0L,
+    var beforeEvaluation: EvaluationSelectData = EvaluationSelectData(),
 
     @field:NotNull
     @field:Valid
-    var evaluationItems: List<EvaluationItemRequest> = emptyList()
-)
+    var evaluationItems: List<EvaluationItemData> = emptyList(),
+    var id: Long = 0L
+) {
+    constructor(
+        evaluation: Evaluation,
+        recruitment: Recruitment,
+        beforeEvaluation: Evaluation?,
+        evaluationItems: List<EvaluationItem>
+    ) : this(
+        title = evaluation.title,
+        description = evaluation.description,
+        recruitment = RecruitmentSelectData(recruitment),
+        beforeEvaluation = EvaluationSelectData(
+            beforeEvaluation ?: Evaluation(
+                title = "이전 평가 없음",
+                description = "이전 평가 없음",
+                recruitmentId = recruitment.id
+            )
+        ),
+        evaluationItems = evaluationItems.map(::EvaluationItemData),
+        id = evaluation.id
+    )
+}
 
-data class EvaluationItemRequest(
+data class EvaluationItemData(
     @field:NotBlank
     @field:Size(min = 1, max = 255)
     var title: String = "",
@@ -43,8 +90,17 @@ data class EvaluationItemRequest(
     var position: Int = 0,
 
     @field:NotBlank
-    var description: String = ""
-)
+    var description: String = "",
+    var id: Long = 0L
+) {
+    constructor(evaluationItem: EvaluationItem) : this(
+        evaluationItem.title,
+        evaluationItem.maximumScore,
+        evaluationItem.position,
+        evaluationItem.description,
+        evaluationItem.id
+    )
+}
 
 data class EvaluationResponse(
     val id: Long,

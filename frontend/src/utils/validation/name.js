@@ -1,5 +1,5 @@
-import { common } from "./common"
-
 const REGEX = /^[가-힣]+$/
 
-export const name = [...common.required, v => REGEX.test(v) || "정확한 한글 이름을 입력해 주세요"]
+export const isValid = v => REGEX.test(v)
+
+export const MESSAGE = "정확한 한글 이름을 입력해 주세요"

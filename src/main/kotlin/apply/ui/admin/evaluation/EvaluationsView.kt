@@ -13,6 +13,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.data.renderer.ComponentRenderer
 import com.vaadin.flow.data.renderer.Renderer
 import com.vaadin.flow.router.Route
+import support.views.EDIT_VALUE
+import support.views.NEW_VALUE
 import support.views.addInMemorySortableColumn
 import support.views.createDeleteButtonWithDialog
 import support.views.createPrimaryButton
@@ -34,7 +36,7 @@ class EvaluationsView(private val evaluationService: EvaluationService) : Vertic
     private fun createButton(): Component {
         return HorizontalLayout(
             createPrimaryButton("생성") {
-                UI.getCurrent().navigate(EvaluationsFormView::class.java)
+                UI.getCurrent().navigate(EvaluationsFormView::class.java, NEW_VALUE)
             }
         ).apply {
             setSizeFull()
@@ -56,7 +58,7 @@ class EvaluationsView(private val evaluationService: EvaluationService) : Vertic
         return ComponentRenderer<Component, EvaluationResponse> { evaluationResponse ->
             HorizontalLayout(
                 createPrimarySmallButton("수정") {
-                    // TODO: 모집 관리 페이지에 수정 뷰를 구현한다.
+                    UI.getCurrent().navigate(EvaluationsFormView::class.java, "${evaluationResponse.id}/$EDIT_VALUE")
                 },
                 createDeleteButtonWithDialog("평가를 삭제하시겠습니까?") {
                     evaluationService.deleteById(evaluationResponse.id)

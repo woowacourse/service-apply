@@ -5,6 +5,7 @@ import apply.domain.applicant.Gender
 import apply.domain.applicant.Password
 import apply.domain.applicationform.ApplicationForm
 import java.time.LocalDate
+import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
@@ -52,7 +53,8 @@ data class ApplicantInformation(
     @field:NotBlank
     val name: String,
 
-    @field:NotBlank
+    @field:NotNull
+    @field:Email
     val email: String,
 
     @field:NotBlank
@@ -84,7 +86,8 @@ data class ApplicantVerifyInformation(
     @field:NotBlank
     val name: String,
 
-    @field:NotBlank
+    @field:NotNull
+    @field:Email
     val email: String,
 
     @field:NotNull
@@ -98,9 +101,18 @@ data class ResetPasswordRequest(
     @field:NotBlank
     val name: String,
 
-    @field:NotBlank
+    @field:NotNull
+    @field:Email
     val email: String,
 
     @field:NotNull
     val birthday: LocalDate
+)
+
+data class EditPasswordRequest(
+    @field:NotNull
+    val password: Password,
+
+    @field:NotNull
+    val newPassword: Password
 )

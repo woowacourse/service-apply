@@ -86,8 +86,8 @@ data class RecruitmentResponse(
         recruitment.title,
         recruitment.canRecruit,
         recruitment.isHidden,
-        recruitment.endDateTime,
         recruitment.startDateTime,
+        recruitment.endDateTime,
         recruitment.status
     )
 }

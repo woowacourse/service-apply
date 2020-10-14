@@ -2,10 +2,10 @@ package apply.ui.admin.selections
 
 import apply.application.ApplicantResponse
 import apply.application.ApplicantService
-import apply.application.DownloadService
 import apply.application.EvaluationService
 import apply.application.EvaluationTargetResponse
 import apply.application.EvaluationTargetService
+import apply.application.ExcelService
 import apply.application.RecruitmentItemService
 import apply.application.RecruitmentService
 import apply.domain.applicationform.ApplicationForm
@@ -30,8 +30,6 @@ import com.vaadin.flow.router.BeforeEvent
 import com.vaadin.flow.router.HasUrlParameter
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.router.WildcardParameter
-import com.vaadin.flow.server.StreamResource
-import com.vaadin.flow.server.VaadinSession
 import support.views.addInMemorySortableColumn
 import support.views.addInMemorySortableDateColumn
 import support.views.addInMemorySortableDateTimeColumn
@@ -40,6 +38,7 @@ import support.views.createPrimaryButton
 import support.views.createPrimarySmallButton
 import support.views.createSearchBar
 import support.views.createSuccessButton
+import support.views.downloadFile
 
 @Route(value = "admin/selections", layout = BaseLayout::class)
 class SelectionView(
@@ -48,7 +47,7 @@ class SelectionView(
     private val recruitmentItemService: RecruitmentItemService,
     private val evaluationService: EvaluationService,
     private val evaluationTargetService: EvaluationTargetService,
-    private val downloadService: DownloadService
+    private val excelService: ExcelService
 ) : VerticalLayout(), HasUrlParameter<Long> {
     private var recruitmentId = 0L
     private var evaluations = evaluationService.findAllByRecruitmentId(recruitmentId)
@@ -68,12 +67,12 @@ class SelectionView(
 
         val menu = HorizontalLayout(
             createSearchBar {
-                selectedTabIndex = tabs.selectedIndex
                 removeAll()
                 add(
                     createTitle(),
-                    createContent(it)
+                    createContent(keyword = it)
                 )
+                selectedTabIndex = tabs.selectedIndex
             },
             tabs,
             HorizontalLayout(
@@ -190,16 +189,14 @@ class SelectionView(
 
     private fun createDownloadButton(): Button {
         return createSuccessButton("다운로드") {
-            val excel = { downloadService.createExcelBy(recruitmentId) }
-            val registration = VaadinSession.getCurrent()
-                .resourceRegistry
-                .registerResource(
-                    StreamResource(
-                        "${recruitmentService.getById(recruitmentId).title}.xlsx",
-                        excel
-                    )
-                )
-            UI.getCurrent().page.setLocation(registration.resourceUri)
+            if (tabs.selectedIndex == 0) {
+                val excel = excelService.createApplicantExcel(recruitmentId)
+                downloadFile("${recruitmentService.getById(recruitmentId).title}.xlsx", excel)
+            } else {
+                val evaluation = evaluations[tabs.selectedIndex - 1]
+                val excel = excelService.createTargetExcel(evaluation.id)
+                downloadFile("${evaluation.title}.xlsx", excel)
+            }
         }
     }
 

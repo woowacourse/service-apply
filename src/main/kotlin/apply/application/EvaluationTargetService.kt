@@ -16,8 +16,6 @@ import org.springframework.stereotype.Service
 import javax.annotation.PostConstruct
 import javax.transaction.Transactional
 
-private const val DEFAULT_SCORE: Int = 0
-
 @Transactional
 @Service
 class EvaluationTargetService(
@@ -36,7 +34,7 @@ class EvaluationTargetService(
 
     fun findAllByEvaluationIdAndKeyword(
         evaluationId: Long,
-        keyWord: String
+        keyWord: String = ""
     ): List<EvaluationTargetResponse> {
         val evaluationTargets = findAllByEvaluationId(evaluationId)
         val applicants = applicantRepository.findByNameContainingOrEmailContaining(keyWord, keyWord)
@@ -51,7 +49,9 @@ class EvaluationTargetService(
                     applicant.email,
                     it.evaluationAnswers.countTotalScore(),
                     it.evaluationStatus,
-                    it.administratorId
+                    it.administratorId,
+                    it.note,
+                    it.evaluationAnswers
                 )
             }
     }
@@ -91,7 +91,7 @@ class EvaluationTargetService(
     }
 
     private fun createEvaluationTargetsFromRecruitment(evaluation: Evaluation): List<EvaluationTarget> {
-        val applicantIds = applicationFormRepository.findByRecruitmentId(evaluation.recruitmentId)
+        val applicantIds = applicationFormRepository.findByRecruitmentIdAndSubmittedTrue(evaluation.recruitmentId)
             .map { it.applicantId }
 
         return applicantRepository.findAllById(applicantIds)
@@ -114,7 +114,7 @@ class EvaluationTargetService(
         val evaluationItemScores = evaluationItems.map {
             EvaluationItemScoreData(
                 id = it.id,
-                score = evaluationTarget.evaluationAnswers.findScoreByEvaluationItemId(it.id) ?: DEFAULT_SCORE
+                score = evaluationTarget.evaluationAnswers.findScoreByEvaluationItemId(it.id)
             )
         }
 

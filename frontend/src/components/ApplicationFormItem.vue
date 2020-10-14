@@ -1,8 +1,6 @@
 <template>
   <CommonItem
-    :title="recruitment.title"
-    :start-date-time="startDateTime"
-    :end-date-time="endDateTime"
+    :recruitment="recruitment"
     :buttonLabel="buttonLabel"
     :activeButton="submittable"
     @click="goApplicationFormsEditPage"
@@ -11,7 +9,6 @@
 
 <script>
 import CommonItem from "@/components/CommonItem"
-import { parseLocalDateTime } from "@/utils/date"
 
 export default {
   components: {
@@ -35,13 +32,7 @@ export default {
       return this.submittable ? "지원서 수정" : "기간 만료"
     },
     submittable() {
-      return !this.submitted && this.recruitment.recruitmentStatus === "RECRUITING"
-    },
-    startDateTime() {
-      return parseLocalDateTime(new Date(this.recruitment.startDateTime))
-    },
-    endDateTime() {
-      return parseLocalDateTime(new Date(this.recruitment.endDateTime))
+      return !this.submitted && this.recruitment.status === "RECRUITING"
     },
   },
   methods: {

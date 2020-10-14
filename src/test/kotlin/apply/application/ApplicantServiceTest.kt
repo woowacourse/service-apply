@@ -16,6 +16,7 @@ import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
+import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.anySet
@@ -94,6 +95,13 @@ internal class ApplicantServiceTest {
     private val inValidApplicantPasswordFindRequest =
         validApplicantPasswordFindRequest.copy(birthday = createLocalDate(1995, 4, 4))
 
+    private val validEditPasswordRequest = EditPasswordRequest(
+        password = Password("password"),
+        newPassword = Password("NEW_PASSWORD")
+    )
+
+    private val inValidEditPasswordRequest = validEditPasswordRequest.copy(password = Password("wrongPassword"))
+
     private val applicant = validApplicantRequest.toEntity(APPLICANT_ID)
 
     private val applicantResponses = listOf(ApplicantResponse(applicant, true, applicationForm))
@@ -112,11 +120,15 @@ internal class ApplicantServiceTest {
 
     @Test
     fun `지원자 정보와 부정 행위자 여부를 함께 제공한다`() {
-        given(applicationFormRepository.findByRecruitmentId(anyLong())).willReturn(listOf(applicationForm))
+        given(applicationFormRepository.findByRecruitmentIdAndSubmittedTrue(anyLong())).willReturn(
+            listOf(
+                applicationForm
+            )
+        )
         given(applicantRepository.findAllById(anySet())).willReturn(listOf(applicant))
         given(cheaterRepository.findAll()).willReturn(listOf(Cheater(1L)))
 
-        val founds = applicantService.findAllByRecruitmentId(1L)
+        val founds = applicantService.findAllByRecruitmentIdAndSubmittedTrue(1L)
 
         assertAll(
             { assertThat(founds).usingElementComparatorIgnoringFields("isCheater").isEqualTo(applicantResponses) },
@@ -206,6 +218,20 @@ internal class ApplicantServiceTest {
     @Test
     fun `비밀번호를 초기화를 위한 검증 데이터가 올바르지 않을시 예외가 발생한다`() {
         assertThatThrownBy { applicantService.resetPassword(inValidApplicantPasswordFindRequest) }
+            .isInstanceOf(ApplicantValidateException::class.java)
+            .hasMessage("요청 정보가 기존 지원자 정보와 일치하지 않습니다")
+    }
+
+    @Test
+    fun `지원자의 비밀번호를 수정한다`() {
+        given(applicantRepository.save(applicant)).willReturn(applicant)
+
+        assertDoesNotThrow { applicantService.editPassword(applicant, validEditPasswordRequest) }
+    }
+
+    @Test
+    fun `비밀번호 수정시 기존 비밀번호를 다르게 입력했을경우 예외가 발생한다`() {
+        assertThatThrownBy { applicantService.editPassword(applicant, inValidEditPasswordRequest) }
             .isInstanceOf(ApplicantValidateException::class.java)
             .hasMessage("요청 정보가 기존 지원자 정보와 일치하지 않습니다")
     }

@@ -45,6 +45,10 @@ class Applicant(
         }
     }
 
+    fun isSamePassword(password: Password): Boolean {
+        return this.password == password
+    }
+
     private fun getInformation() = ApplicantInformation(
         name = name,
         email = email,

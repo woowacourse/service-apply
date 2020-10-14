@@ -1,7 +1,10 @@
 <template>
   <div class="my-application-forms">
     <Box>
-      <h1>내 지원서</h1>
+      <div class="head">
+        <h1>내 지원서</h1>
+        <router-link class="edit-password" to="/edit">비밀번호 변경</router-link>
+      </div>
       <ApplicationFormItem
         class="application-forms"
         v-for="recruitment in appliedRecruitments"
@@ -14,8 +17,7 @@
 </template>
 
 <script>
-import * as RecruitmentApi from "@/api/recruitments"
-import * as ApplicationApi from "@/api/application-forms"
+import * as ApplicationFormApi from "@/api/application-forms"
 import ApplicationFormItem from "@/components/ApplicationFormItem"
 import Box from "@/components/Box"
 
@@ -27,30 +29,22 @@ export default {
   data: () => ({
     appliedRecruitments: [],
   }),
-  created() {
+  async created() {
     const token = this.$store.getters["token"]
 
     try {
-      // todo: 백엔드 api에 따라 가능하면 한 번에 받아오도록 수정
-      Promise.all([
-        ApplicationApi.fetchMyApplicationForms(token),
-        RecruitmentApi.fetchMyRecruitments(token),
-      ]).then(values => {
-        const { data: applicationFormsData } = values[0]
-        const { data: recruitmentData } = values[1]
-        this.appliedRecruitments = this.findAppliedRecruitments(
-          applicationFormsData,
-          recruitmentData,
-        )
-      })
+      const { data: myApplicationFormsData } = await ApplicationFormApi.fetchMyApplicationForms(
+        token,
+      )
+      this.appliedRecruitments = this.findAppliedRecruitments(myApplicationFormsData)
     } catch (e) {
-      alert("token이 유효하지 않습니다.")
+      alert(e.response.data.message)
       this.$router.replace("/login")
     }
   },
   methods: {
-    findAppliedRecruitments(applicationFormsData, recruitmentsData) {
-      return recruitmentsData
+    findAppliedRecruitments(applicationFormsData) {
+      return this.$store.state.recruitments.items
         .filter(recruitment =>
           applicationFormsData.find(form => form.recruitmentId === recruitment.id),
         )
@@ -72,5 +66,18 @@ export default {
   flex-direction: column;
   align-items: center;
   background: #ced6e0;
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+}
+
+.edit-password {
+  text-decoration: none;
+  text-align: right;
+  font-weight: 500;
+  color: #2c3e50;
+  margin: 35px 5px;
 }
 </style>
