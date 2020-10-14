@@ -7,37 +7,6 @@
         <p class="autosave-indicator" v-if="isEditing">
           임시 저장되었습니다. ({{ modifiedDateTime }})
         </p>
-        <TextField
-          :value="$store.state.applicantInfo.name"
-          name="name"
-          type="text"
-          label="이름"
-          readonly
-        />
-        <ValidationObserver v-if="isEditing">
-          <ValidationProvider name="password" rules="password|required" v-slot="{ errors }">
-            <TextField
-              v-model="password"
-              name="password"
-              type="password"
-              label="비밀번호"
-              placeholder="비밀번호를 입력해 주세요"
-              required
-            />
-            <p class="rule-field">{{ errors[0] }}</p>
-          </ValidationProvider>
-          <ValidationProvider rules="password|rePassword:@password|required" v-slot="{ errors }">
-            <TextField
-              v-model="rePassword"
-              name="re-password"
-              type="password"
-              label="비밀번호 확인"
-              placeholder="비밀번호를 다시 한 번 입력해 주세요"
-              required
-            />
-            <p class="rule-field">{{ errors[0] }}</p>
-          </ValidationProvider>
-        </ValidationObserver>
         <ValidationProvider
           v-for="(item, index) in recruitmentItems"
           v-bind:key="item.id"
@@ -112,8 +81,6 @@ export default {
   },
   data: () => ({
     factCheck: false,
-    password: "",
-    rePassword: "",
     referenceUrl: "",
     recruitmentItems: [],
     modifiedDateTime: null,
@@ -181,8 +148,6 @@ export default {
     reset() {
       if (confirm("정말 초기화하시겠습니까?")) {
         this.factCheck = false
-        this.password = ""
-        this.rePassword = ""
         this.recruitmentItems = this.recruitmentItems.map(recruitmentItem => ({
           ...recruitmentItem,
           contents: "",
@@ -198,7 +163,6 @@ export default {
           contents: item.contents,
           recruitmentItemId: item.id,
         })),
-        password: this.password,
         isSubmitted,
       }
       return ApplicationFormsApi.updateForm({
