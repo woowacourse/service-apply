@@ -5,7 +5,7 @@
         <li v-for="tab in tabList" :key="tab.name" class="tab-item">
           <router-link
             :class="{ active: tab.name === selectedTab }"
-            :to="{ path: '/recruits', [tab.name && 'query']: { status: tab.name } }"
+            :to="{ path: '/recruits', query: { status: tab.name } }"
           >
             {{ tab.label }}
           </router-link>
