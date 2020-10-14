@@ -13,3 +13,4 @@ export const POLICY_SUMMARY = `
 <br>
 위 개인정보 수집·이용에 동의하지 않으실 수 있으며, 동의하지 않으실 경우 우아한테크코스 지원이 제한됩니다.
 `
+export const ALREADY_REGISTER = "이미 지원한 이력이 있습니다."
