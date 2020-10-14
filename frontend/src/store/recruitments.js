@@ -35,7 +35,7 @@ export const recruitments = {
       return items.filter(({ status }) => status === "RECRUITABLE")
     },
     recruiting({ items }) {
-      return items.filter(({ status }) => status === "RECRUITING" || status === "UNRECRUITABLE")
+      return items.filter(({ status }) => ["RECRUITING", "UNRECRUITABLE"].includes(status))
     },
     ended({ items }) {
       return items.filter(({ status }) => status === "ENDED")
