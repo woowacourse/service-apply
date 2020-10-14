@@ -41,15 +41,15 @@ export const recruitments = {
       return items.filter(({ status }) => status === "ENDED")
     },
     applied({ items, myApplicationForms }) {
-      return items
-        .filter(recruitment =>
-          myApplicationForms.find(form => form.recruitmentId === recruitment.id),
-        )
-        .map(recruitment => ({
-          ...recruitment,
-          submitted: !!myApplicationForms.find(form => form.recruitmentId === recruitment.id)
-            .submitted,
-        }))
+      return items.reduce((previous, current) => {
+        const form = myApplicationForms.find(form => form.recruitmentId === current.id)
+        return form
+          ? previous.concat({
+              ...current,
+              submitted: form.submitted,
+            })
+          : previous
+      }, [])
     },
   },
 }
