@@ -8,7 +8,6 @@ import apply.domain.applicant.exception.ApplicantValidateException
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.CheaterRepository
 import apply.security.JwtTokenProvider
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import support.createLocalDate
@@ -53,12 +52,6 @@ class ApplicantService(
         return jwtTokenProvider.createToken(applicant.email)
     }
 
-    fun changePassword(applicantId: Long, newPassword: String) {
-        applicantRepository.findByIdOrNull(applicantId)
-            ?.run { password = Password(newPassword) }
-            ?: throw IllegalArgumentException("존재하지 않는 사용자입니다.")
-    }
-
     fun generateTokenByLogin(applicantVerifyInformation: ApplicantVerifyInformation): String {
         return when (
             applicantRepository.existsByNameAndEmailAndBirthdayAndPassword(
@@ -81,6 +74,14 @@ class ApplicantService(
         )?.run {
             passwordGenerator.generate().also { password = Password(it) }
         } ?: throw ApplicantValidateException()
+    }
+
+    fun editPassword(applicant: Applicant, request: EditPasswordRequest) {
+        if (applicant.isSamePassword(request.beforePassword)) {
+            applicant.password = request.newPassword
+        } else {
+            throw ApplicantValidateException()
+        }
     }
 
     @PostConstruct

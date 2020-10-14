@@ -108,3 +108,11 @@ data class ResetPasswordRequest(
     @field:NotNull
     val birthday: LocalDate
 )
+
+data class EditPasswordRequest(
+    @field:NotNull
+    val beforePassword: Password,
+
+    @field:NotNull
+    val newPassword: Password
+)

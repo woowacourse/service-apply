@@ -20,20 +20,11 @@ data class UpdateApplicationFormRequest(
 
     val isSubmitted: Boolean = false,
 
-    val answers: List<AnswerRequest> = emptyList(),
-
-    val password: String
+    val answers: List<AnswerRequest> = emptyList()
 ) {
     constructor(
-        recruitmentId: Long,
-        referenceUrl: String,
-        isSubmitted: Boolean,
-        answers: List<AnswerRequest>
-    ) : this(recruitmentId, referenceUrl, isSubmitted, answers, "")
-
-    constructor(
         recruitmentId: Long
-    ) : this(recruitmentId, "", false, emptyList(), "")
+    ) : this(recruitmentId, "", false, emptyList())
 }
 
 data class AnswerRequest(

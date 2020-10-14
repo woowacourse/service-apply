@@ -15,8 +15,7 @@ import javax.transaction.Transactional
 @Service
 class ApplicationFormService(
     private val applicationFormRepository: ApplicationFormRepository,
-    private val recruitmentRepository: RecruitmentRepository,
-    private val applicantService: ApplicantService
+    private val recruitmentRepository: RecruitmentRepository
 ) {
 
     fun findAllByRecruitmentId(recruitmentId: Long): List<ApplicationForm> =
@@ -50,9 +49,6 @@ class ApplicationFormService(
             }.toMutableList()
         )
         applicationForm.update(request.referenceUrl, answers)
-        if (request.password.isNotBlank()) {
-            applicantService.changePassword(applicantId, request.password)
-        }
         if (request.isSubmitted) {
             applicationForm.submit()
         }

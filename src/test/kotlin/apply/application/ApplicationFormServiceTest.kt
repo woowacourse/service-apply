@@ -12,7 +12,6 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
-import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -52,7 +51,7 @@ class ApplicationFormServiceTest {
     @BeforeEach
     internal fun setUp() {
         this.applicationFormService =
-            ApplicationFormService(applicationFormRepository, recruimentRepository, applicantService)
+            ApplicationFormService(applicationFormRepository, recruimentRepository)
 
         applicationForm1 = createApplicationForm()
 
@@ -106,8 +105,7 @@ class ApplicationFormServiceTest {
             recruitmentId = applicationForm1.recruitmentId,
             referenceUrl = applicationForm1.referenceUrl,
             isSubmitted = false,
-            answers = applicationForm1.answers.items.map { AnswerRequest(it.contents, it.recruitmentItemId) },
-            password = "12345678"
+            answers = applicationForm1.answers.items.map { AnswerRequest(it.contents, it.recruitmentItemId) }
         )
 
         recruitment = Recruitment(
@@ -221,18 +219,6 @@ class ApplicationFormServiceTest {
         every { applicationFormRepository.save(any<ApplicationForm>()) } returns mockk()
 
         assertDoesNotThrow { applicationFormService.update(1L, updateApplicationFormRequest) }
-    }
-
-    @Test
-    fun `비밀번호가 있는 경우 비밀번호를 수정한다`() {
-        every { applicantService.changePassword(any(), any()) } returns mockk()
-        every { applicationFormRepository.save(any<ApplicationForm>()) } returns mockk()
-        every { recruimentRepository.findByIdOrNull(any()) } returns recruitment
-        every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns applicationForm1
-
-        applicationFormService.update(1L, updateApplicationFormRequestWithPassword)
-
-        verify { applicantService.changePassword(1L, updateApplicationFormRequestWithPassword.password) }
     }
 
     @Test
