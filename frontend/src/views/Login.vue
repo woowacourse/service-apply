@@ -84,7 +84,7 @@ export default {
           password: this.password,
         })
         alert("로그인 성공")
-        this.$router.push("/my-application-forms")
+        this.$router.push({ path: "/recruits", query: { status: "applied" } })
       } catch (e) {
         alert(e.response.data.message)
       }

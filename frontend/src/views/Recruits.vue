@@ -4,39 +4,50 @@
       <ul class="tab-list">
         <li v-for="tab in tabList" :key="tab.name" class="tab-item">
           <router-link
-            :class="{ active: tab.name === ($route.query.status || '') }"
+            :class="{ active: tab.name === selectedTab }"
             :to="{ path: '/recruits', [tab.name && 'query']: { status: tab.name } }"
           >
             {{ tab.label }}
           </router-link>
         </li>
-        <li class="tab-item">
-          <router-link to="/my-application-forms">내 지원서</router-link>
-        </li>
       </ul>
-      <RecruitItem
-        v-for="recruitment in filteredRecruitments"
-        :key="recruitment.id"
-        :recruitment="recruitment"
-      />
+      <div v-if="selectedTab !== 'applied'">
+        <RecruitItem
+          v-for="recruitment in this[selectedTab]"
+          :key="recruitment.id"
+          :recruitment="recruitment"
+        />
+      </div>
+      <div v-else>
+        <ApplicationFormItem
+          class="application-forms"
+          v-for="recruitment in this[selectedTab]"
+          :key="recruitment.id"
+          :recruitment="recruitment"
+          :submitted="recruitment.submitted"
+        />
+      </div>
     </Box>
   </div>
 </template>
 
 <script>
+import { mapState, mapGetters, mapActions } from "vuex"
 import RecruitItem from "@/components/RecruitItem"
+import ApplicationFormItem from "@/components/ApplicationFormItem"
 import Box from "@/components/Box"
 
 export default {
   name: "Recruits",
   components: {
     RecruitItem,
+    ApplicationFormItem,
     Box,
   },
   data: () => ({
     tabList: [
       {
-        name: "",
+        name: "all",
         label: "전체",
       },
       {
@@ -51,25 +62,44 @@ export default {
         name: "ended",
         label: "모집 종료",
       },
+      {
+        name: "applied",
+        label: "내 지원서",
+      },
     ],
   }),
   computed: {
-    filteredRecruitments() {
-      switch (this.$route.query.status) {
-        case "recruitable":
-          return this.recruitments.filter(({ status }) => status === "RECRUITABLE")
-        case "recruiting":
-          return this.recruitments.filter(
-            ({ status }) => status === "RECRUITING" || status === "UNRECRUITABLE",
-          )
-        case "ended":
-          return this.recruitments.filter(({ status }) => status === "ENDED")
-      }
-      return this.recruitments
+    selectedTab() {
+      return this.$route.query.status || "all"
     },
-    recruitments() {
-      return this.$store.state.recruitments.items
+    ...mapState({
+      token: ({ token }) => token.value,
+    }),
+    ...mapGetters("recruitments", ["all", "recruitable", "recruiting", "ended", "applied"]),
+  },
+  watch: {
+    "$route.query.status": {
+      async handler(newStatus) {
+        if (newStatus !== "applied") {
+          return
+        }
+        if (this.token === "") {
+          alert("로그인이 필요합니다.")
+          this.$router.replace("/login")
+          return
+        }
+        try {
+          await this.fetchMyApplicationForms(this.token)
+        } catch (e) {
+          alert("내 지원서를 불러오는데 실패했습니다.")
+          this.$router.replace("/login")
+        }
+      },
+      immediate: true,
     },
+  },
+  methods: {
+    ...mapActions("recruitments", ["fetchMyApplicationForms"]),
   },
 }
 </script>

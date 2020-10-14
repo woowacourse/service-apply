@@ -22,7 +22,7 @@ export default {
     await this.fetchRecruitments()
     this.isLoaded = true
   },
-  methods: mapActions(["fetchRecruitments"]),
+  methods: mapActions("recruitments", ["fetchRecruitments"]),
 }
 </script>
 

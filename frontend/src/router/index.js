@@ -7,7 +7,6 @@ import Login from "@/views/Login"
 import PasswordFind from "@/views/PasswordFind"
 import PasswordFindResult from "@/views/PasswordFindResult"
 import PasswordEdit from "@/views/PasswordEdit"
-import MyApplications from "@/views/MyApplications"
 import store from "@/store"
 
 Vue.use(VueRouter)
@@ -77,11 +76,6 @@ const routes = [
       email: route.query.email,
     }),
     component: PasswordFindResult,
-  },
-  {
-    path: "/my-application-forms",
-    component: MyApplications,
-    beforeEnter: requireAuth,
   },
 ]
 
