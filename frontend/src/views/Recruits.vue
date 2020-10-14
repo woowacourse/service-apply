@@ -10,7 +10,7 @@
             {{ tab.label }}
           </router-link>
         </li>
-        <li v-if="this.token" class="tab-item edit-password">
+        <li v-if="token" class="tab-item edit-password">
           <router-link to="/edit">비밀번호 변경</router-link>
         </li>
       </ul>
