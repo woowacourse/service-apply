@@ -39,16 +39,15 @@
           />
           <p class="rule-field">{{ errors[0] }}</p>
         </ValidationProvider>
-        <ValidationProvider rules="required" v-slot="{ errors }">
+        <ValidationProvider rules="required">
           <Field>
-            <Label>지원서 작성 내용 사실 확인</Label>
+            <Label required>지원서 작성 내용 사실 확인</Label>
             <Description>
               기재한 사실 중 허위사실이 발견되는 즉시, 교육 대상자에서 제외되며 향후 지원도
               불가능합니다.
             </Description>
             <CheckBox v-model="factCheck" label="동의합니다." />
           </Field>
-          <p class="rule-field">{{ errors[0] }}</p>
         </ValidationProvider>
         <template v-slot:actions>
           <Button @click="reset" value="초기화" />
