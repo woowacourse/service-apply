@@ -4,7 +4,7 @@
     <ValidationObserver v-slot="{ handleSubmit, passed }">
       <Form @submit.prevent="handleSubmit(submit)">
         <h1>지원자 정보</h1>
-        <ValidationProvider rules="required" v-slot="{ errors }">
+        <ValidationProvider rules="required">
           <SummaryCheckField
             name="policy"
             label="개인정보 수집 및 이용 동의"
@@ -13,7 +13,6 @@
           >
             <p class="summary" v-html="policySummary"></p>
           </SummaryCheckField>
-          <p class="rule-field">{{ errors[0] }}</p>
         </ValidationProvider>
         <ValidationProvider rules="required|name" v-slot="{ errors }">
           <TextField
