@@ -52,7 +52,7 @@
         </ValidationProvider>
         <template v-slot:actions>
           <Button @click="reset" value="초기화" />
-          <Button @click="saveTemp" :disabled="!passed" value="임시 저장" />
+          <Button @click="saveTemp" value="임시 저장" />
           <Button type="submit" :disabled="!passed" value="제출" />
         </template>
       </Form>
