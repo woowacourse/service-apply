@@ -3,7 +3,7 @@
     <ValidationObserver v-slot="{ handleSubmit, passed }">
       <Form @submit.prevent="handleSubmit(submit)">
         <h1>비밀번호 변경</h1>
-        <ValidationProvider rules="required|password" v-slot="{ errors }">
+        <ValidationProvider rules="required" v-slot="{ errors }">
           <TextField
             v-model="password"
             name="password"
