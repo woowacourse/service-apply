@@ -50,6 +50,9 @@ class ApplicationFormService(
         )
         applicationForm.update(request.referenceUrl, answers)
         if (request.isSubmitted) {
+            require(!applicationFormRepository.existsByApplicantIdAndSubmittedTrue(applicantId)) {
+                "이미 제출 완료한 지원서가 존재하여 제출할 수 없습니다."
+            }
             applicationForm.submit()
         }
         applicationFormRepository.save(applicationForm)

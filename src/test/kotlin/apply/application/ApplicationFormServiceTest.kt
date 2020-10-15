@@ -255,4 +255,14 @@ class ApplicationFormServiceTest {
 
         assertThrows<IllegalStateException> { applicationFormService.update(3L, updateApplicationFormRequest) }
     }
+
+    @Test
+    fun `단 하나의 지원서만 제출할 수 있다`() {
+        every { recruimentRepository.findByIdOrNull(any()) } returns recruitment
+        every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns applicationForm1
+        every { applicationFormRepository.existsByApplicantIdAndSubmittedTrue(any()) } returns true
+        every { applicationFormRepository.save(any<ApplicationForm>()) } returns mockk()
+
+        assertDoesNotThrow { applicationFormService.update(1L, UpdateApplicationFormRequest(1L)) }
+    }
 }
