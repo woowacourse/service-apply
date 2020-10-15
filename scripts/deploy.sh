@@ -14,6 +14,7 @@ fi
 
 DEPLOY_PATH=/home/ubuntu/
 cp $BUILD_PATH $DEPLOY_PATH
+cd $DEPLOY_PATH
 
 DEPLOY_JAR=$DEPLOY_PATH$JAR_NAME
 nohup java -jar $DEPLOY_JAR > /dev/null 2> /dev/null < /dev/null &
