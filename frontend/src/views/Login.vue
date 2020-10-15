@@ -14,7 +14,7 @@
           />
           <p class="rule-field">{{ errors[0] }}</p>
         </ValidationProvider>
-        <ValidationProvider name="password" rules="required|password" v-slot="{ errors }">
+        <ValidationProvider name="password" rules="required" v-slot="{ errors }">
           <TextField
             v-model="password"
             name="password"
