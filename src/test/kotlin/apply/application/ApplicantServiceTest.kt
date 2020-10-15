@@ -76,9 +76,7 @@ internal class ApplicantServiceTest {
     )
 
     private val validApplicantLoginRequest = ApplicantVerifyInformation(
-        name = validApplicantRequest.name,
         email = validApplicantRequest.email,
-        birthday = validApplicantRequest.birthday,
         password = validApplicantRequest.password
     )
 
@@ -172,10 +170,8 @@ internal class ApplicantServiceTest {
     @Test
     fun `(로그인) 지원자가 존재할시, 유효한 토큰을 반환한다`() {
         given(
-            applicantRepository.existsByNameAndEmailAndBirthdayAndPassword(
-                validApplicantLoginRequest.name,
+            applicantRepository.existsByEmailAndPassword(
                 validApplicantLoginRequest.email,
-                validApplicantLoginRequest.birthday,
                 validApplicantLoginRequest.password
             )
         ).willReturn(true)
@@ -187,10 +183,8 @@ internal class ApplicantServiceTest {
     @Test
     fun `(로그인) 지원자가 존재하지 않을시, 예외가 발생한다`() {
         given(
-            applicantRepository.existsByNameAndEmailAndBirthdayAndPassword(
-                inValidApplicantLoginRequest.name,
+            applicantRepository.existsByEmailAndPassword(
                 inValidApplicantLoginRequest.email,
-                inValidApplicantLoginRequest.birthday,
                 inValidApplicantLoginRequest.password
             )
         ).willReturn(false)

@@ -48,12 +48,7 @@ private fun ApplicantInformation.withPlainPassword(password: String): Map<String
 }
 
 private fun ApplicantVerifyInformation.withPlainPassword(password: String): Map<String, Any?> {
-    return mapOf(
-        "name" to name,
-        "email" to email,
-        "birthday" to birthday,
-        "password" to password
-    )
+    return mapOf("email" to email, "password" to password)
 }
 
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
@@ -88,9 +83,7 @@ internal class ApplicantRestControllerTest(
     )
 
     private val applicantLoginRequest = ApplicantVerifyInformation(
-        name = applicantRequest.name,
         email = applicantRequest.email,
-        birthday = applicantRequest.birthday,
         password = applicantRequest.password
     )
 
