@@ -55,7 +55,6 @@ class ApplicationFormService(
             }
             applicationForm.submit()
         }
-        applicationFormRepository.save(applicationForm)
     }
 
     fun findForm(applicantId: Long, recruitmentId: Long): ApplicationFormResponse {

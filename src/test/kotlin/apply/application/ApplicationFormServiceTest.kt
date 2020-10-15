@@ -216,7 +216,6 @@ class ApplicationFormServiceTest {
     fun `지원서를 수정한다`() {
         every { recruimentRepository.findByIdOrNull(any()) } returns recruitment
         every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns applicationForm1
-        every { applicationFormRepository.save(any<ApplicationForm>()) } returns mockk()
 
         assertDoesNotThrow { applicationFormService.update(1L, updateApplicationFormRequest) }
     }
@@ -261,8 +260,12 @@ class ApplicationFormServiceTest {
         every { recruimentRepository.findByIdOrNull(any()) } returns recruitment
         every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns applicationForm1
         every { applicationFormRepository.existsByApplicantIdAndSubmittedTrue(any()) } returns true
-        every { applicationFormRepository.save(any<ApplicationForm>()) } returns mockk()
 
-        assertDoesNotThrow { applicationFormService.update(1L, UpdateApplicationFormRequest(1L)) }
+        assertThrows<IllegalArgumentException> {
+            applicationFormService.update(
+                1L,
+                UpdateApplicationFormRequest(recruitmentId = 1L, isSubmitted = true)
+            )
+        }
     }
 }
