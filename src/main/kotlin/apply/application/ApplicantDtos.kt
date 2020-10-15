@@ -83,15 +83,9 @@ data class ApplicantInformation(
 }
 
 data class ApplicantVerifyInformation(
-    @field:NotBlank
-    val name: String,
-
     @field:NotNull
     @field:Email
     val email: String,
-
-    @field:NotNull
-    val birthday: LocalDate,
 
     @field:NotNull
     val password: Password
