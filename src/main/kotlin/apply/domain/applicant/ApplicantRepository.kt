@@ -14,10 +14,5 @@ interface ApplicantRepository : JpaRepository<Applicant, Long> {
         birthDay: LocalDate
     ): Applicant?
 
-    fun existsByNameAndEmailAndBirthdayAndPassword(
-        name: String,
-        email: String,
-        birthDay: LocalDate,
-        password: Password
-    ): Boolean
+    fun existsByEmailAndPassword(email: String, password: Password): Boolean
 }

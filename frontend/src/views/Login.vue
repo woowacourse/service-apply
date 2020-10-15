@@ -3,18 +3,7 @@
     <ValidationObserver v-slot="{ handleSubmit, passed }">
       <Form @submit.prevent="handleSubmit(submit)">
         <h1>내 지원서 보기</h1>
-        <ValidationProvider rules="name|required" v-slot="{ errors }">
-          <TextField
-            v-model="name"
-            name="name"
-            type="text"
-            label="이름"
-            placeholder="이름을 입력해 주세요."
-            required
-          />
-          <p class="rule-field">{{ errors[0] }}</p>
-        </ValidationProvider>
-        <ValidationProvider rules="email|required" v-slot="{ errors }">
+        <ValidationProvider rules="required|email" v-slot="{ errors }">
           <TextField
             v-model="email"
             name="email"
@@ -25,11 +14,7 @@
           />
           <p class="rule-field">{{ errors[0] }}</p>
         </ValidationProvider>
-        <ValidationProvider rules="year|month|day|required" v-slot="{ errors }">
-          <BirthField v-model="birth" required />
-          <p class="rule-field">{{ errors[0] }}</p>
-        </ValidationProvider>
-        <ValidationProvider name="password" rules="password|required" v-slot="{ errors }">
+        <ValidationProvider name="password" rules="required|password" v-slot="{ errors }">
           <TextField
             v-model="password"
             name="password"
@@ -54,8 +39,7 @@
 
 <script>
 import { mapActions } from "vuex"
-import { BirthField, Button, Form, TextField } from "@/components/form"
-import * as DateUtil from "@/utils/date"
+import { Button, Form, TextField } from "@/components/form"
 
 export default {
   name: "Login",
@@ -63,26 +47,17 @@ export default {
     Form,
     Button,
     TextField,
-    BirthField,
   },
   data: () => ({
-    name: "",
     email: "",
     password: "",
-    birth: {
-      year: "",
-      month: "",
-      day: "",
-    },
   }),
   methods: {
     ...mapActions("token", ["fetchLogin"]),
     async submit() {
       try {
         await this.fetchLogin({
-          name: this.name,
           email: this.email,
-          birthday: DateUtil.formatLocalDate(this.birth),
           password: this.password,
         })
         alert("로그인 성공")
@@ -90,9 +65,6 @@ export default {
       } catch (e) {
         alert(e.response.data.message)
       }
-    },
-    findPassword() {
-      this.$router.push("/find")
     },
     back() {
       this.$router.go(-1)

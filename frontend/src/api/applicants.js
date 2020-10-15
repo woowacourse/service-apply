@@ -13,8 +13,8 @@ export const fetchRegister = ({ name, phoneNumber, email, password, birthday, ge
     gender,
   })
 
-export const fetchLogin = ({ name, email, birthday, password }) =>
-  axios.post(`${BASE_URL}/login`, { name, email, birthday, password })
+export const fetchLogin = ({ email, password }) =>
+  axios.post(`${BASE_URL}/login`, { email, password })
 
 export const fetchPasswordFind = ({ name, email, birthday }) =>
   axios.post("/api/applicants/reset-password", { name, email, birthday })
