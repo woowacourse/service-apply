@@ -54,10 +54,8 @@ class ApplicantService(
 
     fun generateTokenByLogin(applicantVerifyInformation: ApplicantVerifyInformation): String {
         return when (
-            applicantRepository.existsByNameAndEmailAndBirthdayAndPassword(
-                applicantVerifyInformation.name,
+            applicantRepository.existsByEmailAndPassword(
                 applicantVerifyInformation.email,
-                applicantVerifyInformation.birthday,
                 applicantVerifyInformation.password
             )
         ) {
