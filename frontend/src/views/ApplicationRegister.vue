@@ -39,20 +39,19 @@
           />
           <p class="rule-field">{{ errors[0] }}</p>
         </ValidationProvider>
-        <ValidationProvider rules="required" v-slot="{ errors }">
+        <ValidationProvider rules="required">
           <Field>
-            <Label>지원서 작성 내용 사실 확인</Label>
+            <Label required>지원서 작성 내용 사실 확인</Label>
             <Description>
               기재한 사실 중 허위사실이 발견되는 즉시, 교육 대상자에서 제외되며 향후 지원도
               불가능합니다.
             </Description>
             <CheckBox v-model="factCheck" label="동의합니다." />
           </Field>
-          <p class="rule-field">{{ errors[0] }}</p>
         </ValidationProvider>
         <template v-slot:actions>
           <Button @click="reset" value="초기화" />
-          <Button @click="saveTemp" :disabled="!passed" value="임시 저장" />
+          <Button @click="saveTemp" value="임시 저장" />
           <Button type="submit" :disabled="!passed" value="제출" />
         </template>
       </Form>
@@ -93,8 +92,11 @@ export default {
     isEditing() {
       return this.status === "edit"
     },
+    token() {
+      return this.$store.state.token.value
+    },
     recruitment() {
-      return this.$store.state.recruitments.items.find(v => v.id === this.recruitmentId)
+      return this.$store.getters["recruitments/findById"](this.recruitmentId)
     },
   },
   async created() {
@@ -104,7 +106,7 @@ export default {
         await this.fetchApplicationForm()
       } else {
         await ApplicationFormsApi.createForm({
-          token: this.$store.getters["token"],
+          token: this.token,
           recruitmentId: this.recruitmentId,
         })
       }
@@ -134,7 +136,7 @@ export default {
     async fetchApplicationForm() {
       try {
         const { data } = await ApplicationFormsApi.fetchForm({
-          token: this.$store.getters["token"],
+          token: this.token,
           recruitmentId: this.recruitmentId,
         })
         this.fillForm(data)
@@ -175,7 +177,7 @@ export default {
         isSubmitted,
       }
       return ApplicationFormsApi.updateForm({
-        token: this.$store.getters["token"],
+        token: this.token,
         data: applicationForm,
       })
     },

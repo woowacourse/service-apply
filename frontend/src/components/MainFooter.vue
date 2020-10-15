@@ -37,7 +37,7 @@ export default {}
   padding: 30px 0;
   background: #333;
   color: #fff;
-  flex: 1 0 auto;
+  flex: 0 0 auto;
 }
 
 .container {
