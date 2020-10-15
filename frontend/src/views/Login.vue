@@ -3,7 +3,7 @@
     <ValidationObserver v-slot="{ handleSubmit, passed }">
       <Form @submit.prevent="handleSubmit(submit)">
         <h1>내 지원서 보기</h1>
-        <ValidationProvider rules="email|required" v-slot="{ errors }">
+        <ValidationProvider rules="required|email" v-slot="{ errors }">
           <TextField
             v-model="email"
             name="email"
@@ -14,7 +14,7 @@
           />
           <p class="rule-field">{{ errors[0] }}</p>
         </ValidationProvider>
-        <ValidationProvider name="password" rules="password|required" v-slot="{ errors }">
+        <ValidationProvider name="password" rules="required|password" v-slot="{ errors }">
           <TextField
             v-model="password"
             name="password"
@@ -38,6 +38,7 @@
 </template>
 
 <script>
+import { mapActions } from "vuex"
 import { Button, Form, TextField } from "@/components/form"
 
 export default {
@@ -52,14 +53,15 @@ export default {
     password: "",
   }),
   methods: {
+    ...mapActions("token", ["fetchLogin"]),
     async submit() {
       try {
-        await this.$store.dispatch("login", {
+        await this.fetchLogin({
           email: this.email,
           password: this.password,
         })
         alert("로그인 성공")
-        this.$router.push("/my-application-forms")
+        this.$router.push({ path: "/recruits", query: { status: "applied" } })
       } catch (e) {
         alert(e.response.data.message)
       }
@@ -88,6 +90,7 @@ export default {
 .find-password {
   text-decoration: none;
   font-weight: 500;
+  font-size: 14px !important;
   color: #2c3e50;
   margin-right: 5px;
 }
