@@ -36,6 +36,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.apache.poi:poi-ooxml:4.1.2")
     implementation("dev.mett.vaadin:tooltip:1.7.0")
+    implementation("com.amazonaws:aws-java-sdk-ses:1.11.880")
     compileOnly("io.jsonwebtoken:jjwt-api:0.11.2")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.2")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.2")
