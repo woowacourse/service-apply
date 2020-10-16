@@ -76,14 +76,14 @@ class ApplicationFormServiceTest {
         updateApplicationFormRequest = UpdateApplicationFormRequest(
             recruitmentId = applicationForm1.recruitmentId,
             referenceUrl = applicationForm1.referenceUrl,
-            isSubmitted = false,
+            submitted = false,
             answers = applicationForm1.answers.items.map { AnswerRequest(it.contents, it.recruitmentItemId) }
         )
 
         updateApplicationFormRequestWithPassword = UpdateApplicationFormRequest(
             recruitmentId = applicationForm1.recruitmentId,
             referenceUrl = applicationForm1.referenceUrl,
-            isSubmitted = false,
+            submitted = false,
             answers = applicationForm1.answers.items.map { AnswerRequest(it.contents, it.recruitmentItemId) }
         )
 
@@ -229,7 +229,7 @@ class ApplicationFormServiceTest {
         assertThrows<IllegalArgumentException> {
             applicationFormService.update(
                 1L,
-                UpdateApplicationFormRequest(recruitmentId = 1L, isSubmitted = true)
+                UpdateApplicationFormRequest(recruitmentId = 1L, submitted = true)
             )
         }
     }

@@ -166,7 +166,7 @@ export default {
         this.referenceUrl = ""
       }
     },
-    save(isSubmitted) {
+    save(submitted) {
       const applicationForm = {
         recruitmentId: this.recruitmentId,
         referenceUrl: this.referenceUrl,
@@ -174,7 +174,7 @@ export default {
           contents: item.contents,
           recruitmentItemId: item.id,
         })),
-        isSubmitted,
+        submitted,
       }
       return ApplicationFormsApi.updateForm({
         token: this.token,
