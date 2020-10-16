@@ -18,7 +18,7 @@ data class UpdateApplicationFormRequest(
     @field:Size(min = 0, max = 255)
     val referenceUrl: String = "",
 
-    val isSubmitted: Boolean = false,
+    val submitted: Boolean = false,
 
     val answers: List<AnswerRequest> = emptyList()
 )
