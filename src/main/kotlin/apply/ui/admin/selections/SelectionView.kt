@@ -2,10 +2,10 @@ package apply.ui.admin.selections
 
 import apply.application.ApplicantResponse
 import apply.application.ApplicantService
-import apply.application.ExcelService
 import apply.application.EvaluationService
 import apply.application.EvaluationTargetResponse
 import apply.application.EvaluationTargetService
+import apply.application.ExcelService
 import apply.application.RecruitmentItemService
 import apply.application.RecruitmentService
 import apply.domain.applicationform.ApplicationForm
@@ -207,7 +207,7 @@ class SelectionView(
             .toMap()
         val items = recruitmentItemService.findByRecruitmentIdOrderByPosition(recruitmentId)
             .map {
-                createItem(it.title, createAnswer(answers.getValue(it.id)))
+                createItem(it.title, createAnswer(answers.getOrDefault(it.id, "")))
             }.toTypedArray()
         return addIfExist(items, applicationForm.referenceUrl)
     }
