@@ -2,7 +2,7 @@
   <div class="application-register">
     <RecruitCard :recruitment="recruitment" />
     <ValidationObserver v-slot="{ handleSubmit, passed }">
-      <Form @submit.prevent="handleSubmit(submit)">
+      <Form class="application-form" @submit.prevent="handleSubmit(submit)">
         <h1>지원서 작성</h1>
         <p class="autosave-indicator" v-if="isEditing">
           임시 저장되었습니다. ({{ modifiedDateTime }})
@@ -216,6 +216,18 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.application-form {
+  width: 800px;
+  max-width: 800px;
+}
+
+@media screen and (max-width: 800px) {
+  .application-form {
+    width: 100vw;
+    margin: 0;
+  }
 }
 
 .rule-field {
