@@ -2,12 +2,11 @@ package apply.application
 
 import apply.createApplicationForm
 import apply.createApplicationForms
+import apply.createRecruitment
 import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentRepository
-import apply.domain.recruitmentitem.Answer
-import apply.domain.recruitmentitem.Answers
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
@@ -55,29 +54,9 @@ class ApplicationFormServiceTest {
 
         applicationForm1 = createApplicationForm()
 
-        applicationForm2 = createApplicationForm(
-            applicantId = 2L,
-            recruitmentId = 1L,
-            referenceUrl = "http://example2.com",
-            answers = Answers(
-                mutableListOf(
-                    Answer("대기업에 취직하고 싶습니다.", 1L),
-                    Answer("신중함", 2L)
-                )
-            )
-        )
+        applicationForm2 = createApplicationForm(applicantId = 2L)
 
-        applicationFormSubmitted = ApplicationForm(
-            applicantId = 3L,
-            recruitmentId = 1L,
-            referenceUrl = "http://example2.com",
-            answers = Answers(
-                mutableListOf(
-                    Answer("대기업에 취직하고 싶습니다.", 1L),
-                    Answer("신중함", 2L)
-                )
-            )
-        ).apply { submit() }
+        applicationFormSubmitted = createApplicationForm(applicantId = 3L).apply { submit() }
 
         applicationForms = createApplicationForms()
 
@@ -97,40 +76,26 @@ class ApplicationFormServiceTest {
         updateApplicationFormRequest = UpdateApplicationFormRequest(
             recruitmentId = applicationForm1.recruitmentId,
             referenceUrl = applicationForm1.referenceUrl,
-            isSubmitted = false,
+            submitted = false,
             answers = applicationForm1.answers.items.map { AnswerRequest(it.contents, it.recruitmentItemId) }
         )
 
         updateApplicationFormRequestWithPassword = UpdateApplicationFormRequest(
             recruitmentId = applicationForm1.recruitmentId,
             referenceUrl = applicationForm1.referenceUrl,
-            isSubmitted = false,
+            submitted = false,
             answers = applicationForm1.answers.items.map { AnswerRequest(it.contents, it.recruitmentItemId) }
         )
 
-        recruitment = Recruitment(
-            title = "지원할 제목",
-            startDateTime = LocalDateTime.MIN,
-            endDateTime = LocalDateTime.MAX,
-            canRecruit = true,
-            isHidden = false
-        )
+        recruitment = createRecruitment(isHidden = false)
 
-        recruitmentNotRecruiting = Recruitment(
-            title = "지원할 제목",
+        recruitmentNotRecruiting = createRecruitment(
             startDateTime = LocalDateTime.now().minusHours(2),
             endDateTime = LocalDateTime.now().minusHours(1),
-            canRecruit = true,
             isHidden = false
         )
 
-        recruitmentHidden = Recruitment(
-            title = "지원할 제목",
-            startDateTime = LocalDateTime.MIN,
-            endDateTime = LocalDateTime.MAX,
-            canRecruit = true,
-            isHidden = true
-        )
+        recruitmentHidden = createRecruitment()
     }
 
     @Test
@@ -216,7 +181,6 @@ class ApplicationFormServiceTest {
     fun `지원서를 수정한다`() {
         every { recruimentRepository.findByIdOrNull(any()) } returns recruitment
         every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns applicationForm1
-        every { applicationFormRepository.save(any<ApplicationForm>()) } returns mockk()
 
         assertDoesNotThrow { applicationFormService.update(1L, updateApplicationFormRequest) }
     }
@@ -254,5 +218,19 @@ class ApplicationFormServiceTest {
         } returns applicationFormSubmitted
 
         assertThrows<IllegalStateException> { applicationFormService.update(3L, updateApplicationFormRequest) }
+    }
+
+    @Test
+    fun `단 하나의 지원서만 제출할 수 있다`() {
+        every { recruimentRepository.findByIdOrNull(any()) } returns recruitment
+        every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns applicationForm1
+        every { applicationFormRepository.existsByApplicantIdAndSubmittedTrue(any()) } returns true
+
+        assertThrows<IllegalArgumentException> {
+            applicationFormService.update(
+                1L,
+                UpdateApplicationFormRequest(recruitmentId = 1L, submitted = true)
+            )
+        }
     }
 }

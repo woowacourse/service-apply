@@ -6,12 +6,11 @@ import apply.domain.recruitment.Recruitment
 import apply.domain.recruitmentitem.RecruitmentItem
 import apply.ui.admin.recruitment.RecruitmentForm
 import apply.ui.admin.recruitment.RecruitmentItemForm
-import support.createLocalDateTime
 import java.time.LocalDateTime
 
 private const val RECRUITMENT_TITLE: String = "웹 백엔드 3기"
-private val START_DATE_TIME: LocalDateTime = createLocalDateTime(2020, 10, 25)
-private val END_DATE_TIME: LocalDateTime = createLocalDateTime(2020, 10, 25)
+private val START_DATE_TIME: LocalDateTime = LocalDateTime.MIN
+private val END_DATE_TIME: LocalDateTime = LocalDateTime.MAX
 
 private const val RECRUITMENT_ITEM_TITLE: String = "프로그래밍 학습 과정과 현재 자신이 생각하는 역량은?"
 private const val POSITION: Int = 1
