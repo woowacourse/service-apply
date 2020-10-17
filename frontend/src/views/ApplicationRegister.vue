@@ -1,6 +1,6 @@
 <template>
   <div class="application-register">
-    <RecruitCard :recruitment="recruitment" />
+    <RecruitCard class="recruit-card" :recruitment="recruitment" />
     <ValidationObserver v-slot="{ handleSubmit, passed }">
       <Form class="application-form" @submit.prevent="handleSubmit(submit)">
         <h1>지원서 작성</h1>
@@ -218,15 +218,24 @@ export default {
   align-items: center;
 }
 
+.recruit-card,
 .application-form {
   width: 800px;
   max-width: 800px;
 }
 
 @media screen and (max-width: 800px) {
+  .recruit-card,
   .application-form {
     width: 100vw;
+    max-width: 100vw;
     margin: 0;
+  }
+
+  .recruit-card {
+    box-shadow: none;
+    border-radius: 0;
+    border-bottom: 1px solid #ddd;
   }
 }
 
