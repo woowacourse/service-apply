@@ -214,27 +214,18 @@ export default {
 .application-register {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
 }
 
 .recruit-card,
 .application-form {
   width: 800px;
-  max-width: 800px;
 }
 
 @media screen and (max-width: 800px) {
   .recruit-card,
   .application-form {
     width: 100vw;
-    margin: 0;
-  }
-
-  .recruit-card {
-    box-shadow: none;
-    border-radius: 0;
-    border-bottom: 1px solid #ddd;
   }
 }
 

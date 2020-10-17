@@ -85,7 +85,6 @@ export default {
 .password-find {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
 }
 
