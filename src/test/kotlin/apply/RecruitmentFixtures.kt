@@ -22,11 +22,11 @@ fun createRecruitment(
     title: String = RECRUITMENT_TITLE,
     startDateTime: LocalDateTime = START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
-    canRecruit: Boolean = true,
-    isHidden: Boolean = true,
+    recruitable: Boolean = true,
+    hidden: Boolean = true,
     id: Long = 0L
 ): Recruitment {
-    return Recruitment(title, startDateTime, endDateTime, canRecruit, isHidden, id)
+    return Recruitment(title, startDateTime, endDateTime, recruitable, hidden, id)
 }
 
 fun createRecruitmentItem(
@@ -44,12 +44,12 @@ fun createRecruitmentData(
     title: String = RECRUITMENT_TITLE,
     startDateTime: LocalDateTime = START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
-    canRecruit: Boolean = false,
-    isHidden: Boolean = true,
+    recruitable: Boolean = false,
+    hidden: Boolean = true,
     recruitmentItems: List<RecruitmentItemData> = emptyList(),
     id: Long = 0L
 ): RecruitmentData {
-    return RecruitmentData(title, startDateTime, endDateTime, canRecruit, isHidden, recruitmentItems, id)
+    return RecruitmentData(title, startDateTime, endDateTime, recruitable, hidden, recruitmentItems, id)
 }
 
 fun createRecruitmentItemData(
@@ -66,10 +66,10 @@ fun createRecruitmentForm(
     title: String = RECRUITMENT_TITLE,
     startDateTime: LocalDateTime = START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
-    canRecruit: Boolean = false,
-    isHidden: Boolean = true
+    recruitable: Boolean = false,
+    hidden: Boolean = true
 ): RecruitmentForm {
-    return RecruitmentForm(title, startDateTime, endDateTime, canRecruit, isHidden)
+    return RecruitmentForm(title, startDateTime, endDateTime, recruitable, hidden)
 }
 
 fun createRecruitmentItemForm(
