@@ -228,7 +228,6 @@ export default {
   .recruit-card,
   .application-form {
     width: 100vw;
-    max-width: 100vw;
     margin: 0;
   }
 
