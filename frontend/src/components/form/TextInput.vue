@@ -50,7 +50,7 @@ textarea {
   outline: none;
 }
 
-@media screen and (min-width: 512px) {
+@media screen and (min-width: 513px) {
   textarea {
     min-height: 200px !important;
   }
