@@ -50,6 +50,12 @@ textarea {
   outline: none;
 }
 
+@media screen and (min-width: 513px) {
+  textarea {
+    min-height: 200px !important;
+  }
+}
+
 .text-input {
   padding: 12px;
   border: 1px solid #ced6e0;
