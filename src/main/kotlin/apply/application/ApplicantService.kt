@@ -7,7 +7,6 @@ import apply.domain.applicant.Gender
 import apply.domain.applicant.Password
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.CheaterRepository
-import apply.security.JwtTokenProvider
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import support.createLocalDate
@@ -19,7 +18,6 @@ class ApplicantService(
     private val applicationFormRepository: ApplicationFormRepository,
     private val applicantRepository: ApplicantRepository,
     private val cheaterRepository: CheaterRepository,
-    private val jwtTokenProvider: JwtTokenProvider,
     private val passwordGenerator: PasswordGenerator
 ) {
     fun findAllByRecruitmentIdAndSubmittedTrue(recruitmentId: Long): List<ApplicantResponse> {
