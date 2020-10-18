@@ -94,7 +94,6 @@ export default {
 .password-edit {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
 }
 

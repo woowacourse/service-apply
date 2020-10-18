@@ -27,12 +27,13 @@ export default {
 </script>
 <style scoped>
 .recruit-card {
-  max-width: 512px;
+  width: 512px;
   margin-bottom: 0;
 }
 
 @media screen and (max-width: 512px) {
   .recruit-card {
+    width: 100vw;
     box-shadow: none;
     border-radius: 0;
     border-bottom: 1px solid #ddd;

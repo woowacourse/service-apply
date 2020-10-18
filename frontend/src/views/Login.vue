@@ -77,7 +77,6 @@ export default {
 .login {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
 }
 

@@ -16,7 +16,6 @@
   display: flex;
   flex-direction: column;
   width: 512px;
-  max-width: 512px;
   padding: 20px;
   margin: 15px;
   border-radius: 3px;
