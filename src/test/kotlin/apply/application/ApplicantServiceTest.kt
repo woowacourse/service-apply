@@ -3,13 +3,12 @@ package apply.application
 import apply.BIRTHDAY
 import apply.EMAIL
 import apply.NAME
+import apply.PASSWORD
 import apply.RANDOM_PASSWORD_TEXT
 import apply.createApplicant
 import apply.createApplicationForm
-import apply.domain.applicant.Applicant
 import apply.domain.applicant.ApplicantRepository
 import apply.domain.applicant.ApplicantValidateException
-import apply.domain.applicant.Gender
 import apply.domain.applicant.Password
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.Cheater
@@ -46,29 +45,14 @@ internal class ApplicantServiceTest {
 
     private lateinit var applicantService: ApplicantService
 
-    private val validApplicantRequest = RegisterApplicantRequest(
-        name = "지원자",
-        email = "test@email.com",
-        phoneNumber = "010-0000-0000",
-        gender = Gender.MALE,
-        birthday = createLocalDate(1995, 2, 2),
-        password = Password("password")
-    )
-
-    private val validEditPasswordRequest = EditPasswordRequest(
-        password = Password("password"),
-        newPassword = Password("NEW_PASSWORD")
-    )
-
-    private val inValidEditPasswordRequest = validEditPasswordRequest.copy(password = Password("wrongPassword"))
-
-    private val applicant: Applicant =
-        Applicant(validApplicantRequest.information, validApplicantRequest.password, APPLICANT_ID)
-
     @BeforeEach
     internal fun setUp() {
-        applicantService =
-            ApplicantService(applicationFormRepository, applicantRepository, cheaterRepository, passwordGenerator)
+        applicantService = ApplicantService(
+            applicationFormRepository,
+            applicantRepository,
+            cheaterRepository,
+            passwordGenerator
+        )
     }
 
     @Test
@@ -91,7 +75,7 @@ internal class ApplicantServiceTest {
         assertThat(actual[0].isCheater).isTrue()
     }
 
-    @DisplayName("지원자의 비밀번호는")
+    @DisplayName("비밀번호 초기화는")
     @Nested
     inner class ResetPassword {
         private lateinit var request: ResetPasswordRequest
@@ -119,17 +103,32 @@ internal class ApplicantServiceTest {
         }
     }
 
-    @Test
-    fun `지원자의 비밀번호를 수정한다`() {
-        every { applicantRepository.getOne(applicant.id) } returns applicant
-        assertDoesNotThrow { applicantService.editPassword(applicant, validEditPasswordRequest) }
-    }
+    @DisplayName("비밀번호 변경은")
+    @Nested
+    inner class EditPassword {
+        private lateinit var request: EditPasswordRequest
 
-    @Test
-    fun `비밀번호 수정시 기존 비밀번호를 다르게 입력했을경우 예외가 발생한다`() {
-        every { applicantRepository.getOne(applicant.id) } returns applicant
-        assertThatThrownBy { applicantService.editPassword(applicant, inValidEditPasswordRequest) }
-            .isInstanceOf(ApplicantValidateException::class.java)
-            .hasMessage("요청 정보가 기존 지원자 정보와 일치하지 않습니다")
+        @BeforeEach
+        internal fun setUp() {
+            slot<Long>().also { slot ->
+                every { applicantRepository.getOne(capture(slot)) } answers { createApplicant(id = slot.captured) }
+            }
+        }
+
+        fun subject() {
+            applicantService.editPassword(createApplicant(), request)
+        }
+
+        @Test
+        fun `만약 기존 비밀번호가 일치한다면 변경한다`() {
+            request = EditPasswordRequest(PASSWORD, Password("new_password"))
+            assertDoesNotThrow { subject() }
+        }
+
+        @Test
+        fun `만약 기존 비밀번호가 일치하지 않다면 예외가 발생한다`() {
+            request = EditPasswordRequest(Password("wrong_password"), Password("new_password"))
+            assertThatThrownBy { subject() }.isInstanceOf(ApplicantValidateException::class.java)
+        }
     }
 }
