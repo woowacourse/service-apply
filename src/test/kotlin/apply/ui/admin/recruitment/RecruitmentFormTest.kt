@@ -40,10 +40,10 @@ internal class RecruitmentFormTest {
 
     @ValueSource(booleans = [true, false])
     @ParameterizedTest
-    fun `공개 여부 값이 설정되어 있는지 확인`(isHidden: Boolean) {
-        val actual = createRecruitmentForm(isHidden = isHidden).bindOrNull()
+    fun `공개 여부 값이 설정되어 있는지 확인`(hidden: Boolean) {
+        val actual = createRecruitmentForm(hidden = hidden).bindOrNull()
         assertThat(actual).isNotNull()
-        assertThat(actual!!.isHidden).isEqualTo(isHidden)
+        assertThat(actual!!.hidden).isEqualTo(hidden)
     }
 
     @Test

@@ -22,8 +22,8 @@ class RecruitmentService(
                 request.title,
                 request.startDateTime,
                 request.endDateTime,
-                request.canRecruit,
-                request.isHidden,
+                request.recruitable,
+                request.hidden,
                 request.id
             )
         )
@@ -48,12 +48,12 @@ class RecruitmentService(
     }
 
     fun findAllNotHidden(): List<RecruitmentResponse> {
-        return recruitmentRepository.findAllByIsHiddenFalse().map(::RecruitmentResponse)
+        return recruitmentRepository.findAllByHiddenFalse().map(::RecruitmentResponse)
     }
 
     fun deleteById(id: Long) {
         val recruitment = getById(id)
-        check(!recruitment.canRecruit)
+        check(!recruitment.recruitable)
         recruitmentRepository.delete(recruitment)
     }
 
@@ -76,29 +76,29 @@ class RecruitmentService(
                 title = "지원할 제목",
                 startDateTime = createLocalDateTime(2020, 10, 5, 10),
                 endDateTime = createLocalDateTime(2020, 11, 5, 10),
-                canRecruit = true,
-                isHidden = false
+                recruitable = true,
+                hidden = false
             ),
             Recruitment(
                 title = "웹 백엔드 2기",
                 startDateTime = createLocalDateTime(2019, 10, 25, 10),
                 endDateTime = createLocalDateTime(2019, 11, 5, 10),
-                canRecruit = true,
-                isHidden = false
+                recruitable = true,
+                hidden = false
             ),
             Recruitment(
                 title = "웹 백엔드 3기",
                 startDateTime = createLocalDateTime(2020, 10, 25, 15),
                 endDateTime = createLocalDateTime(2020, 11, 5, 10),
-                canRecruit = true,
-                isHidden = true
+                recruitable = true,
+                hidden = true
             ),
             Recruitment(
                 title = "웹 프론트엔드 3기",
                 startDateTime = createLocalDateTime(2020, 10, 25, 15),
                 endDateTime = createLocalDateTime(2020, 11, 5, 10),
-                canRecruit = false,
-                isHidden = false
+                recruitable = false,
+                hidden = false
             )
         )
         recruitmentRepository.saveAll(recruitments)

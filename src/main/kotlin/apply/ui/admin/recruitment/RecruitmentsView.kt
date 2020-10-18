@@ -51,7 +51,7 @@ class RecruitmentsView(private val recruitmentService: RecruitmentService) : Ver
         return Grid<Recruitment>(10).apply {
             addSortableColumn("모집명", Recruitment::title)
             addSortableColumn("상태") { it.status.toText() }
-            addSortableColumn("공개 여부") { it.isHidden.toText() }
+            addSortableColumn("공개 여부") { it.hidden.toText() }
             addSortableDateTimeColumn("시작일시", Recruitment::startDateTime)
             addSortableDateTimeColumn("종료일시", Recruitment::endDateTime)
             addColumn(createButtonRenderer()).apply { isAutoWidth = true }
@@ -66,7 +66,7 @@ class RecruitmentsView(private val recruitmentService: RecruitmentService) : Ver
     private fun createButtons(recruitment: Recruitment): Component {
         return HorizontalLayout(
             createEditButton(recruitment),
-            createDeleteButton(recruitment).apply { isEnabled = !recruitment.canRecruit }
+            createDeleteButton(recruitment).apply { isEnabled = !recruitment.recruitable }
         )
     }
 

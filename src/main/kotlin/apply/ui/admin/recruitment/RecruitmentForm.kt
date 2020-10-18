@@ -6,7 +6,6 @@ import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.datetimepicker.DateTimePicker
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup
 import com.vaadin.flow.component.textfield.TextField
-import com.vaadin.flow.data.binder.PropertyId
 import support.views.BindingIdentityFormLayout
 import support.views.createBooleanRadioButtonGroup
 import support.views.createErrorSmallButton
@@ -17,14 +16,12 @@ class RecruitmentForm() : BindingIdentityFormLayout<RecruitmentData>(Recruitment
     private val title: TextField = TextField("모집명")
     private val startDateTime: DateTimePicker = DateTimePicker("시작 일시")
     private val endDateTime: DateTimePicker = DateTimePicker("종료 일시")
-    private val canRecruit: RadioButtonGroup<Boolean> = createBooleanRadioButtonGroup("모집 여부", "모집 시작", "모집 중지")
-
-    @PropertyId("hidden")
-    private val isHidden: RadioButtonGroup<Boolean> = createBooleanRadioButtonGroup("공개 여부", "비공개", "공개", true)
+    private val recruitable: RadioButtonGroup<Boolean> = createBooleanRadioButtonGroup("모집 여부", "모집 시작", "모집 중지")
+    private val hidden: RadioButtonGroup<Boolean> = createBooleanRadioButtonGroup("공개 여부", "비공개", "공개", true)
     private val recruitmentItems: MutableList<RecruitmentItemForm> = mutableListOf()
 
     init {
-        add(title, startDateTime, endDateTime, canRecruit, isHidden)
+        add(title, startDateTime, endDateTime, recruitable, hidden)
         addFormItem(createAddButton(), "모집 항목")
         setResponsiveSteps(ResponsiveStep("0", 1))
         drawRequired()
@@ -34,14 +31,14 @@ class RecruitmentForm() : BindingIdentityFormLayout<RecruitmentData>(Recruitment
         title: String,
         startDateTime: LocalDateTime,
         endDateTime: LocalDateTime,
-        canRecruit: Boolean,
-        isHidden: Boolean
+        recruitable: Boolean,
+        hidden: Boolean
     ) : this() {
         this.title.value = title
         this.startDateTime.value = startDateTime
         this.endDateTime.value = endDateTime
-        this.canRecruit.value = canRecruit
-        this.isHidden.value = isHidden
+        this.recruitable.value = recruitable
+        this.hidden.value = hidden
     }
 
     private fun createAddButton(): Button {

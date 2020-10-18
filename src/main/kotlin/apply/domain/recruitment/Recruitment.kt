@@ -13,16 +13,16 @@ class Recruitment(
 
     @Embedded
     var period: RecruitmentPeriod,
-    canRecruit: Boolean = false,
-    isHidden: Boolean = true,
+    recruitable: Boolean = false,
+    hidden: Boolean = true,
     id: Long
 ) : BaseEntity(id) {
     @Column(nullable = false)
-    var canRecruit: Boolean = canRecruit
+    var recruitable: Boolean = recruitable
         private set
 
     @Column(nullable = false)
-    var isHidden: Boolean = isHidden
+    var hidden: Boolean = hidden
         private set
 
     val startDateTime: LocalDateTime
@@ -32,7 +32,7 @@ class Recruitment(
         get() = period.endDateTime
 
     val status: RecruitmentStatus
-        get() = RecruitmentStatus.of(period, canRecruit)
+        get() = RecruitmentStatus.of(period, recruitable)
 
     val isEnded: Boolean
         get() = status == RecruitmentStatus.ENDED
@@ -44,8 +44,8 @@ class Recruitment(
         title: String,
         startDateTime: LocalDateTime,
         endDateTime: LocalDateTime,
-        canRecruit: Boolean = false,
-        isHidden: Boolean = true,
+        recruitable: Boolean = false,
+        hidden: Boolean = true,
         id: Long = 0L
-    ) : this(title, RecruitmentPeriod(startDateTime, endDateTime), canRecruit, isHidden, id)
+    ) : this(title, RecruitmentPeriod(startDateTime, endDateTime), recruitable, hidden, id)
 }
