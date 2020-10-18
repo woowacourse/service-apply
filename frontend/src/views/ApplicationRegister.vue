@@ -31,11 +31,11 @@
             name="url"
             type="url"
             :description="
-              `블로그, GitHub, 포트폴리오 주소 등을 입력해 주세요.
-                <span style='font-size: 15px'>(여러 개가 있는 경우 Notion, Google 문서 등을 사용하여 하나로 묶어 주세요)</span>`
+              `자신을 드러낼 수 있는 개인 블로그, GitHub, 포트폴리오 주소 등이 있다면 입력해 주세요.
+              <div style='margin-top: 4px; font-size: 14px; color: #555'>여러 개가 있는 경우 Notion, Google 문서 등을 사용하여 하나로 묶어 주세요.</div>`
             "
             label="URL"
-            placeholder="ex) https://woowacourse.github.io/javable/"
+            placeholder="ex) https://woowacourse.github.io/javable"
           />
           <p class="rule-field">{{ errors[0] }}</p>
         </ValidationProvider>
