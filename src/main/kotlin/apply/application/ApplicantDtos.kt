@@ -1,6 +1,7 @@
 package apply.application
 
 import apply.domain.applicant.Applicant
+import apply.domain.applicant.ApplicantInformation
 import apply.domain.applicant.Gender
 import apply.domain.applicant.Password
 import apply.domain.applicationform.ApplicationForm
@@ -49,7 +50,7 @@ data class ApplicantResponse(
     )
 }
 
-data class ApplicantInformation(
+data class RegisterApplicantRequest(
     @field:NotBlank
     val name: String,
 
@@ -69,17 +70,9 @@ data class ApplicantInformation(
     @field:NotNull
     val password: Password
 ) {
-    fun toEntity() = toEntity(0L)
+    val information: ApplicantInformation = ApplicantInformation(name, email, phoneNumber, gender, birthday)
 
-    fun toEntity(id: Long) = Applicant(
-        id = id,
-        name = name,
-        email = email,
-        phoneNumber = phoneNumber,
-        gender = gender,
-        birthday = birthday,
-        password = password
-    )
+    fun toEntity(): Applicant = Applicant(name, email, phoneNumber, gender, birthday, password)
 }
 
 data class VerifyApplicantRequest(

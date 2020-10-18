@@ -1,5 +1,6 @@
 package apply.application
 
+import apply.domain.applicant.Applicant
 import apply.domain.applicant.ApplicantRepository
 import apply.domain.applicant.ApplicantValidateException
 import apply.domain.applicant.Gender
@@ -33,7 +34,7 @@ internal class ApplicantVerificationServiceTest {
         applicantVerificationService = ApplicantVerificationService(applicantRepository, jwtTokenProvider)
     }
 
-    private val validApplicantRequest = ApplicantInformation(
+    private val validApplicantRequest = RegisterApplicantRequest(
         name = "지원자",
         email = "test@email.com",
         phoneNumber = "010-0000-0000",
@@ -51,7 +52,7 @@ internal class ApplicantVerificationServiceTest {
 
     private val inValidApplicantLoginRequest = validApplicantLoginRequest.copy(password = Password("invalid_password"))
 
-    private val applicant = validApplicantRequest.toEntity(APPLICANT_ID)
+    private val applicant = Applicant(validApplicantRequest.information, validApplicantRequest.password, APPLICANT_ID)
 
     @Test
     fun `지원자가 이미 존재하고 검증에 성공하면 유효한 토큰을 반환한다`() {
@@ -78,12 +79,7 @@ internal class ApplicantVerificationServiceTest {
 
     @Test
     fun `(로그인) 지원자가 존재할시, 유효한 토큰을 반환한다`() {
-        every {
-            applicantRepository.existsByEmailAndPassword(
-                validApplicantLoginRequest.email,
-                validApplicantLoginRequest.password
-            )
-        } returns true
+        every { applicantRepository.findByEmail(validApplicantLoginRequest.email) } returns applicant
         every { jwtTokenProvider.createToken(validApplicantRequest.email) } returns VALID_TOKEN
         assertThat(applicantVerificationService.generateTokenByLogin(validApplicantLoginRequest))
             .isEqualTo(VALID_TOKEN)
@@ -91,13 +87,7 @@ internal class ApplicantVerificationServiceTest {
 
     @Test
     fun `(로그인) 지원자가 존재하지 않을시, 예외가 발생한다`() {
-        every {
-            applicantRepository.existsByEmailAndPassword(
-                inValidApplicantLoginRequest.email,
-                inValidApplicantLoginRequest.password
-            )
-        } returns false
-
+        every { applicantRepository.findByEmail(inValidApplicantLoginRequest.email) } returns applicant
         assertThatThrownBy { applicantVerificationService.generateTokenByLogin(inValidApplicantLoginRequest) }
             .isInstanceOf(ApplicantValidateException::class.java)
     }

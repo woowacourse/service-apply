@@ -37,7 +37,7 @@ class EvaluationTargetService(
         keyWord: String = ""
     ): List<EvaluationTargetResponse> {
         val evaluationTargets = findAllByEvaluationId(evaluationId)
-        val applicants = applicantRepository.findByNameContainingOrEmailContaining(keyWord, keyWord)
+        val applicants = applicantRepository.findByInformationNameContainingOrInformationEmailContaining(keyWord, keyWord)
 
         return evaluationTargets
             .filter { applicants.any { applicant -> applicant.id == it.applicantId } }

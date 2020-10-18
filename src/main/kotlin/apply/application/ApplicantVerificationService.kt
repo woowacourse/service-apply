@@ -12,16 +12,17 @@ class ApplicantVerificationService(
     private val applicantRepository: ApplicantRepository,
     private val jwtTokenProvider: JwtTokenProvider
 ) {
-    fun generateToken(applicantInformation: ApplicantInformation): String {
-        val applicant = applicantRepository.findByEmail(applicantInformation.email)
-            ?.also { it.validate(applicantInformation) }
-            ?: applicantRepository.save(applicantInformation.toEntity())
+    fun generateToken(request: RegisterApplicantRequest): String {
+        val applicant = applicantRepository.findByEmail(request.email)
+            ?.also { it.verify(request.password, request.information) }
+            ?: applicantRepository.save(request.toEntity())
 
         return jwtTokenProvider.createToken(applicant.email)
     }
 
     fun generateTokenByLogin(request: VerifyApplicantRequest): String {
-        if (!applicantRepository.existsByEmailAndPassword(request.email, request.password)) {
+        val applicant = applicantRepository.findByEmail(request.email)!!
+        if (!applicant.samePassword(request.password)) {
             throw ApplicantValidateException()
         }
         return jwtTokenProvider.createToken(request.email)

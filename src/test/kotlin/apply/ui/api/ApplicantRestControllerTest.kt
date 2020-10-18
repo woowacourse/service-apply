@@ -1,6 +1,6 @@
 package apply.ui.api
 
-import apply.application.ApplicantInformation
+import apply.application.RegisterApplicantRequest
 import apply.application.ApplicantService
 import apply.application.ApplicantVerificationService
 import apply.application.EditPasswordRequest
@@ -37,7 +37,7 @@ private const val RANDOM_PASSWORD = "nEw_p@ssw0rd"
 private const val PASSWORD = "password"
 private const val INVALID_PASSWORD = "invalid_password"
 
-private fun ApplicantInformation.withPlainPassword(password: String): Map<String, Any?> {
+private fun RegisterApplicantRequest.withPlainPassword(password: String): Map<String, Any?> {
     return mapOf(
         "name" to name,
         "email" to email,
@@ -77,7 +77,7 @@ internal class ApplicantRestControllerTest(
 
     private lateinit var mockMvc: MockMvc
 
-    private val applicantRequest = ApplicantInformation(
+    private val applicantRequest = RegisterApplicantRequest(
         name = "지원자",
         email = "test@email.com",
         phoneNumber = "010-0000-0000",

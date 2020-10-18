@@ -1,5 +1,6 @@
 package apply.application
 
+import apply.domain.applicant.Applicant
 import apply.domain.applicant.ApplicantRepository
 import apply.domain.applicant.ApplicantValidateException
 import apply.domain.applicant.Gender
@@ -26,7 +27,6 @@ import org.mockito.junit.jupiter.MockitoExtension
 import support.createLocalDate
 import support.createLocalDateTime
 
-private const val VALID_TOKEN = "SOME_VALID_TOKEN"
 private const val APPLICANT_ID = 1L
 private const val RANDOM_PASSWORD = "nEw_p@ssw0rd"
 
@@ -65,7 +65,7 @@ internal class ApplicantServiceTest {
         )
     )
 
-    private val validApplicantRequest = ApplicantInformation(
+    private val validApplicantRequest = RegisterApplicantRequest(
         name = "지원자",
         email = "test@email.com",
         phoneNumber = "010-0000-0000",
@@ -74,20 +74,11 @@ internal class ApplicantServiceTest {
         password = Password("password")
     )
 
-    private val validApplicantLoginRequest = VerifyApplicantRequest(
-        email = validApplicantRequest.email,
-        password = validApplicantRequest.password
-    )
-
     private val validApplicantPasswordFindRequest = ResetPasswordRequest(
         name = validApplicantRequest.name,
         email = validApplicantRequest.email,
         birthday = validApplicantRequest.birthday
     )
-
-    private val inValidApplicantRequest = validApplicantRequest.copy(password = Password("invalid_password"))
-
-    private val inValidApplicantLoginRequest = validApplicantLoginRequest.copy(password = Password("invalid_password"))
 
     private val inValidApplicantPasswordFindRequest =
         validApplicantPasswordFindRequest.copy(birthday = createLocalDate(1995, 4, 4))
@@ -99,20 +90,15 @@ internal class ApplicantServiceTest {
 
     private val inValidEditPasswordRequest = validEditPasswordRequest.copy(password = Password("wrongPassword"))
 
-    private val applicant = validApplicantRequest.toEntity(APPLICANT_ID)
+    private val applicant: Applicant =
+        Applicant(validApplicantRequest.information, validApplicantRequest.password, APPLICANT_ID)
 
     private val applicantResponses = listOf(ApplicantResponse(applicant, true, applicationForm))
 
     @BeforeEach
     internal fun setUp() {
         applicantService =
-            ApplicantService(
-                applicationFormRepository,
-                applicantRepository,
-                cheaterRepository,
-                jwtTokenProvider,
-                passwordGenerator
-            )
+            ApplicantService(applicationFormRepository, applicantRepository, cheaterRepository, passwordGenerator)
     }
 
     @Test
@@ -135,35 +121,29 @@ internal class ApplicantServiceTest {
 
     @Test
     fun `지원자의 비밀번호를 초기화한다`() {
-        given(
-            applicantRepository.findByNameAndEmailAndBirthday(
-                validApplicantPasswordFindRequest.name,
-                validApplicantPasswordFindRequest.email,
-                validApplicantPasswordFindRequest.birthday
-            )
-        ).willReturn(applicant)
-
+        given(applicantRepository.findByEmail(validApplicantPasswordFindRequest.email)).willReturn(applicant)
         given(passwordGenerator.generate()).willReturn(RANDOM_PASSWORD)
-
         assertThat(applicantService.resetPassword(validApplicantPasswordFindRequest)).isEqualTo(RANDOM_PASSWORD)
     }
 
     @Test
     fun `비밀번호를 초기화를 위한 검증 데이터가 올바르지 않을시 예외가 발생한다`() {
+        given(applicantRepository.findByEmail(inValidApplicantPasswordFindRequest.email)).willReturn(applicant)
+        given(passwordGenerator.generate()).willReturn(RANDOM_PASSWORD)
         assertThatThrownBy { applicantService.resetPassword(inValidApplicantPasswordFindRequest) }
             .isInstanceOf(ApplicantValidateException::class.java)
-            .hasMessage("요청 정보가 기존 지원자 정보와 일치하지 않습니다")
     }
 
     @Test
     fun `지원자의 비밀번호를 수정한다`() {
-        given(applicantRepository.save(applicant)).willReturn(applicant)
+        given(applicantRepository.getOne(applicant.id)).willReturn(applicant)
 
         assertDoesNotThrow { applicantService.editPassword(applicant, validEditPasswordRequest) }
     }
 
     @Test
     fun `비밀번호 수정시 기존 비밀번호를 다르게 입력했을경우 예외가 발생한다`() {
+        given(applicantRepository.getOne(applicant.id)).willReturn(applicant)
         assertThatThrownBy { applicantService.editPassword(applicant, inValidEditPasswordRequest) }
             .isInstanceOf(ApplicantValidateException::class.java)
             .hasMessage("요청 정보가 기존 지원자 정보와 일치하지 않습니다")

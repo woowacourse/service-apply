@@ -1,6 +1,6 @@
 package apply.ui.api
 
-import apply.application.ApplicantInformation
+import apply.application.RegisterApplicantRequest
 import apply.application.ApplicantService
 import apply.application.ApplicantVerificationService
 import apply.application.EditPasswordRequest
@@ -24,8 +24,8 @@ class ApplicantRestController(
     private val mailService: MailService
 ) {
     @PostMapping("/register")
-    fun generateToken(@RequestBody @Valid applicantInformation: ApplicantInformation): ResponseEntity<ApiResponse<String>> {
-        val token = applicantVerificationService.generateToken(applicantInformation)
+    fun generateToken(@RequestBody @Valid registerApplicantRequest: RegisterApplicantRequest): ResponseEntity<ApiResponse<String>> {
+        val token = applicantVerificationService.generateToken(registerApplicantRequest)
         return ResponseEntity.ok().body(ApiResponse.success(token))
     }
 
