@@ -11,7 +11,9 @@ import apply.domain.cheater.Cheater
 import apply.domain.cheater.CheaterRepository
 import apply.domain.recruitmentitem.Answer
 import apply.domain.recruitmentitem.Answers
-import apply.security.JwtTokenProvider
+import io.mockk.every
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
@@ -19,32 +21,24 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.ArgumentMatchers.anyLong
-import org.mockito.ArgumentMatchers.anySet
-import org.mockito.BDDMockito.given
-import org.mockito.Mock
-import org.mockito.junit.jupiter.MockitoExtension
 import support.createLocalDate
 import support.createLocalDateTime
 
 private const val APPLICANT_ID = 1L
 private const val RANDOM_PASSWORD = "nEw_p@ssw0rd"
 
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockKExtension::class)
 internal class ApplicantServiceTest {
-    @Mock
+    @MockK
     private lateinit var applicationFormRepository: ApplicationFormRepository
 
-    @Mock
+    @MockK
     private lateinit var applicantRepository: ApplicantRepository
 
-    @Mock
+    @MockK
     private lateinit var cheaterRepository: CheaterRepository
 
-    @Mock
-    private lateinit var jwtTokenProvider: JwtTokenProvider
-
-    @Mock
+    @MockK
     private lateinit var passwordGenerator: PasswordGenerator
 
     private lateinit var applicantService: ApplicantService
@@ -103,13 +97,9 @@ internal class ApplicantServiceTest {
 
     @Test
     fun `지원자 정보와 부정 행위자 여부를 함께 제공한다`() {
-        given(applicationFormRepository.findByRecruitmentIdAndSubmittedTrue(anyLong())).willReturn(
-            listOf(
-                applicationForm
-            )
-        )
-        given(applicantRepository.findAllById(anySet())).willReturn(listOf(applicant))
-        given(cheaterRepository.findAll()).willReturn(listOf(Cheater(1L)))
+        every { applicationFormRepository.findByRecruitmentIdAndSubmittedTrue(any()) } returns listOf(applicationForm)
+        every { applicantRepository.findAllById(any()) } returns listOf(applicant)
+        every { cheaterRepository.findAll() } returns listOf(Cheater(1L))
 
         val founds = applicantService.findAllByRecruitmentIdAndSubmittedTrue(1L)
 
@@ -121,29 +111,28 @@ internal class ApplicantServiceTest {
 
     @Test
     fun `지원자의 비밀번호를 초기화한다`() {
-        given(applicantRepository.findByEmail(validApplicantPasswordFindRequest.email)).willReturn(applicant)
-        given(passwordGenerator.generate()).willReturn(RANDOM_PASSWORD)
+        every { applicantRepository.findByEmail(validApplicantPasswordFindRequest.email) } returns applicant
+        every { passwordGenerator.generate() } returns RANDOM_PASSWORD
         assertThat(applicantService.resetPassword(validApplicantPasswordFindRequest)).isEqualTo(RANDOM_PASSWORD)
     }
 
     @Test
     fun `비밀번호를 초기화를 위한 검증 데이터가 올바르지 않을시 예외가 발생한다`() {
-        given(applicantRepository.findByEmail(inValidApplicantPasswordFindRequest.email)).willReturn(applicant)
-        given(passwordGenerator.generate()).willReturn(RANDOM_PASSWORD)
+        every { applicantRepository.findByEmail(inValidApplicantPasswordFindRequest.email) } returns applicant
+        every { passwordGenerator.generate() } returns RANDOM_PASSWORD
         assertThatThrownBy { applicantService.resetPassword(inValidApplicantPasswordFindRequest) }
             .isInstanceOf(ApplicantValidateException::class.java)
     }
 
     @Test
     fun `지원자의 비밀번호를 수정한다`() {
-        given(applicantRepository.getOne(applicant.id)).willReturn(applicant)
-
+        every { applicantRepository.getOne(applicant.id) } returns applicant
         assertDoesNotThrow { applicantService.editPassword(applicant, validEditPasswordRequest) }
     }
 
     @Test
     fun `비밀번호 수정시 기존 비밀번호를 다르게 입력했을경우 예외가 발생한다`() {
-        given(applicantRepository.getOne(applicant.id)).willReturn(applicant)
+        every { applicantRepository.getOne(applicant.id) } returns applicant
         assertThatThrownBy { applicantService.editPassword(applicant, inValidEditPasswordRequest) }
             .isInstanceOf(ApplicantValidateException::class.java)
             .hasMessage("요청 정보가 기존 지원자 정보와 일치하지 않습니다")
