@@ -20,7 +20,6 @@ import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.anySet
-import org.mockito.ArgumentMatchers.refEq
 import org.mockito.BDDMockito.given
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
@@ -132,66 +131,6 @@ internal class ApplicantServiceTest {
             { assertThat(founds).usingElementComparatorIgnoringFields("isCheater").isEqualTo(applicantResponses) },
             { assertThat(founds[0].isCheater).isEqualTo(true) }
         )
-    }
-
-    @Test
-    fun `지원자가 이미 존재하고 검증에 성공하면 유효한 토큰을 반환한다`() {
-        given(applicantRepository.findByEmail(validApplicantRequest.email)).willReturn(applicant)
-        given(jwtTokenProvider.createToken(validApplicantRequest.email)).willReturn(VALID_TOKEN)
-
-        assertThat(applicantService.generateToken(validApplicantRequest)).isEqualTo(VALID_TOKEN)
-    }
-
-    @Test
-    fun `지원자가 이미 존재하고 필드 값 동등성 검증에 실패하면 예외가 발생한다`() {
-        given(applicantRepository.findByEmail(inValidApplicantRequest.email)).willReturn(applicant)
-
-        assertThatThrownBy {
-            applicantService.generateToken(inValidApplicantRequest)
-        }.isInstanceOf(ApplicantValidateException::class.java)
-            .hasMessage("요청 정보가 기존 지원자 정보와 일치하지 않습니다")
-    }
-
-    @Test
-    fun `지원자가 존재하지 않으면 지원자를 저장한 뒤, 유효한 토큰을 반환한다`() {
-        given(applicantRepository.findByEmail(validApplicantRequest.email)).willReturn(null)
-        given(jwtTokenProvider.createToken(validApplicantRequest.email)).willReturn(VALID_TOKEN)
-        given(
-            applicantRepository.save(
-                refEq(
-                    validApplicantRequest.toEntity()
-                )
-            )
-        ).willReturn(applicant)
-
-        assertThat(applicantService.generateToken(validApplicantRequest)).isEqualTo(VALID_TOKEN)
-    }
-
-    @Test
-    fun `(로그인) 지원자가 존재할시, 유효한 토큰을 반환한다`() {
-        given(
-            applicantRepository.existsByEmailAndPassword(
-                validApplicantLoginRequest.email,
-                validApplicantLoginRequest.password
-            )
-        ).willReturn(true)
-        given(jwtTokenProvider.createToken(validApplicantLoginRequest.email)).willReturn(VALID_TOKEN)
-
-        assertThat(applicantService.generateTokenByLogin(validApplicantLoginRequest)).isEqualTo(VALID_TOKEN)
-    }
-
-    @Test
-    fun `(로그인) 지원자가 존재하지 않을시, 예외가 발생한다`() {
-        given(
-            applicantRepository.existsByEmailAndPassword(
-                inValidApplicantLoginRequest.email,
-                inValidApplicantLoginRequest.password
-            )
-        ).willReturn(false)
-
-        assertThatThrownBy { applicantService.generateTokenByLogin(inValidApplicantLoginRequest) }
-            .isInstanceOf(ApplicantValidateException::class.java)
-            .hasMessage("요청 정보가 기존 지원자 정보와 일치하지 않습니다")
     }
 
     @Test
