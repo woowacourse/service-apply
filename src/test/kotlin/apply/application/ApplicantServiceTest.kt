@@ -27,8 +27,6 @@ import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.extension.ExtendWith
 import support.createLocalDate
 
-private const val APPLICANT_ID = 1L
-
 @ExtendWith(MockKExtension::class)
 internal class ApplicantServiceTest {
     @MockK
