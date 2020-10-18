@@ -23,10 +23,10 @@ data class RecruitmentData(
     var endDateTime: LocalDateTime = LocalDateTime.MIN,
 
     @field:NotNull
-    var canRecruit: Boolean = false,
+    var recruitable: Boolean = false,
 
     @field:NotNull
-    var isHidden: Boolean = true,
+    var hidden: Boolean = true,
 
     @field:NotNull
     @field:Valid
@@ -37,8 +37,8 @@ data class RecruitmentData(
         recruitment.title,
         recruitment.startDateTime,
         recruitment.endDateTime,
-        recruitment.canRecruit,
-        recruitment.isHidden,
+        recruitment.recruitable,
+        recruitment.hidden,
         recruitmentItems.map(::RecruitmentItemData),
         recruitment.id
     )
@@ -75,8 +75,8 @@ data class RecruitmentItemData(
 data class RecruitmentResponse(
     val id: Long,
     val title: String,
-    val canRecruit: Boolean,
-    val isHidden: Boolean,
+    val recruitable: Boolean,
+    val hidden: Boolean,
     val startDateTime: LocalDateTime,
     val endDateTime: LocalDateTime,
     val status: RecruitmentStatus
@@ -84,8 +84,8 @@ data class RecruitmentResponse(
     constructor(recruitment: Recruitment) : this(
         recruitment.id,
         recruitment.title,
-        recruitment.canRecruit,
-        recruitment.isHidden,
+        recruitment.recruitable,
+        recruitment.hidden,
         recruitment.startDateTime,
         recruitment.endDateTime,
         recruitment.status

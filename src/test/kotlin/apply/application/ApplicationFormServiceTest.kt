@@ -87,12 +87,12 @@ class ApplicationFormServiceTest {
             answers = applicationForm1.answers.items.map { AnswerRequest(it.contents, it.recruitmentItemId) }
         )
 
-        recruitment = createRecruitment(isHidden = false)
+        recruitment = createRecruitment(hidden = false)
 
         recruitmentNotRecruiting = createRecruitment(
             startDateTime = LocalDateTime.now().minusHours(2),
             endDateTime = LocalDateTime.now().minusHours(1),
-            isHidden = false
+            hidden = false
         )
 
         recruitmentHidden = createRecruitment()
