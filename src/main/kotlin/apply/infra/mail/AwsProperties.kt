@@ -1,8 +1,8 @@
-package apply.application
+package apply.infra.mail
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding
 
-@ConfigurationProperties("application")
+@ConfigurationProperties("aws")
 @ConstructorBinding
-data class ApplicationProperties(val url: String)
+data class AwsProperties(val accessKey: String, val secretKey: String)
