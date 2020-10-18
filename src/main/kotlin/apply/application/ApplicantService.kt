@@ -2,9 +2,9 @@ package apply.application
 
 import apply.domain.applicant.Applicant
 import apply.domain.applicant.ApplicantRepository
+import apply.domain.applicant.ApplicantValidateException
 import apply.domain.applicant.Gender
 import apply.domain.applicant.Password
-import apply.domain.applicant.exception.ApplicantValidateException
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.CheaterRepository
 import apply.security.JwtTokenProvider
@@ -43,21 +43,6 @@ class ApplicantService(
 
     fun getByEmail(email: String): Applicant =
         applicantRepository.findByEmail(email) ?: throw IllegalArgumentException("email=$email 인 유저가 존재하지 않습니다")
-
-    fun generateToken(applicantInformation: ApplicantInformation): String {
-        val applicant = applicantRepository.findByEmail(applicantInformation.email)
-            ?.also { it.validate(applicantInformation) }
-            ?: applicantRepository.save(applicantInformation.toEntity())
-
-        return jwtTokenProvider.createToken(applicant.email)
-    }
-
-    fun generateTokenByLogin(request: VerifyApplicantRequest): String {
-        if (!applicantRepository.existsByEmailAndPassword(request.email, request.password)) {
-            throw ApplicantValidateException()
-        }
-        return jwtTokenProvider.createToken(request.email)
-    }
 
     fun resetPassword(request: ResetPasswordRequest): String {
         return applicantRepository.findByNameAndEmailAndBirthday(

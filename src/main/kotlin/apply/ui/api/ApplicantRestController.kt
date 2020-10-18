@@ -2,6 +2,7 @@ package apply.ui.api
 
 import apply.application.ApplicantInformation
 import apply.application.ApplicantService
+import apply.application.ApplicantVerificationService
 import apply.application.EditPasswordRequest
 import apply.application.ResetPasswordRequest
 import apply.application.VerifyApplicantRequest
@@ -19,17 +20,18 @@ import javax.validation.Valid
 @RequestMapping("/api/applicants")
 class ApplicantRestController(
     private val applicantService: ApplicantService,
+    private val applicantVerificationService: ApplicantVerificationService,
     private val mailService: MailService
 ) {
     @PostMapping("/register")
     fun generateToken(@RequestBody @Valid applicantInformation: ApplicantInformation): ResponseEntity<ApiResponse<String>> {
-        val token = applicantService.generateToken(applicantInformation)
+        val token = applicantVerificationService.generateToken(applicantInformation)
         return ResponseEntity.ok().body(ApiResponse.success(token))
     }
 
     @PostMapping("/login")
     fun generateToken(@RequestBody @Valid request: VerifyApplicantRequest): ResponseEntity<ApiResponse<String>> {
-        val token = applicantService.generateTokenByLogin(request)
+        val token = applicantVerificationService.generateTokenByLogin(request)
         return ResponseEntity.ok().body(ApiResponse.success(token))
     }
 

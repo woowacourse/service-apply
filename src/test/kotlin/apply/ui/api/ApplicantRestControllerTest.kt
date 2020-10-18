@@ -2,13 +2,14 @@ package apply.ui.api
 
 import apply.application.ApplicantInformation
 import apply.application.ApplicantService
+import apply.application.ApplicantVerificationService
 import apply.application.EditPasswordRequest
 import apply.application.ResetPasswordRequest
 import apply.application.VerifyApplicantRequest
 import apply.application.mail.MailService
+import apply.domain.applicant.ApplicantValidateException
 import apply.domain.applicant.Gender
 import apply.domain.applicant.Password
-import apply.domain.applicant.exception.ApplicantValidateException
 import apply.security.JwtTokenProvider
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.BeforeEach
@@ -66,6 +67,9 @@ internal class ApplicantRestControllerTest(
     private lateinit var applicantService: ApplicantService
 
     @MockBean
+    private lateinit var applicantVerifyService: ApplicantVerificationService
+
+    @MockBean
     private lateinit var mailService: MailService
 
     @MockBean
@@ -117,7 +121,7 @@ internal class ApplicantRestControllerTest(
 
     @Test
     fun `유효한 지원자 생성 및 검증 요청에 대하여 응답으로 토큰이 반환된다`() {
-        given(applicantService.generateToken(applicantRequest))
+        given(applicantVerifyService.generateToken(applicantRequest))
             .willReturn(VALID_TOKEN)
 
         mockMvc.post("/api/applicants/register") {
@@ -132,7 +136,7 @@ internal class ApplicantRestControllerTest(
     @Test
     fun `기존 지원자 정보와 일치하지 않는 지원자 생성 및 검증 요청에 대하여 unauthorized 응답을 받는다`() {
         given(
-            applicantService.generateToken(invalidApplicantRequest)
+            applicantVerifyService.generateToken(invalidApplicantRequest)
         ).willThrow(ApplicantValidateException())
 
         mockMvc.post("/api/applicants/register") {
@@ -147,7 +151,7 @@ internal class ApplicantRestControllerTest(
     @Test
     fun `올바른 지원자 로그인 요청에 응답으로 Token을 반환한다`() {
         given(
-            applicantService.generateTokenByLogin(applicantLoginRequest)
+            applicantVerifyService.generateTokenByLogin(applicantLoginRequest)
         ).willReturn(VALID_TOKEN)
 
         mockMvc.post("/api/applicants/login") {
@@ -162,7 +166,7 @@ internal class ApplicantRestControllerTest(
     @Test
     fun `잘못된 지원자 로그인 요청에 응답으로 Unauthorized와 메시지를 반환한다`() {
         given(
-            applicantService.generateTokenByLogin(invalidApplicantLoginRequest)
+            applicantVerifyService.generateTokenByLogin(invalidApplicantLoginRequest)
         ).willThrow(ApplicantValidateException())
 
         mockMvc.post("/api/applicants/login") {
