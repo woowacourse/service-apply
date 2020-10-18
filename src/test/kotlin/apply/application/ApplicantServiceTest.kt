@@ -1,31 +1,34 @@
 package apply.application
 
+import apply.BIRTHDAY
+import apply.EMAIL
+import apply.NAME
+import apply.RANDOM_PASSWORD_TEXT
+import apply.createApplicant
+import apply.createApplicationForm
 import apply.domain.applicant.Applicant
 import apply.domain.applicant.ApplicantRepository
 import apply.domain.applicant.ApplicantValidateException
 import apply.domain.applicant.Gender
 import apply.domain.applicant.Password
-import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.Cheater
 import apply.domain.cheater.CheaterRepository
-import apply.domain.recruitmentitem.Answer
-import apply.domain.recruitmentitem.Answers
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
+import io.mockk.slot
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.extension.ExtendWith
 import support.createLocalDate
-import support.createLocalDateTime
 
 private const val APPLICANT_ID = 1L
-private const val RANDOM_PASSWORD = "nEw_p@ssw0rd"
 
 @ExtendWith(MockKExtension::class)
 internal class ApplicantServiceTest {
@@ -43,22 +46,6 @@ internal class ApplicantServiceTest {
 
     private lateinit var applicantService: ApplicantService
 
-    private val applicationForm = ApplicationForm(
-        referenceUrl = "",
-        submitted = true,
-        createdDateTime = createLocalDateTime(2019, 10, 25, 10),
-        modifiedDateTime = createLocalDateTime(2019, 11, 5, 10),
-        submittedDateTime = createLocalDateTime(2019, 11, 5, 10, 10, 10),
-        recruitmentId = 1L,
-        applicantId = 1L,
-        answers = Answers(
-            mutableListOf(
-                Answer("고객에게 가치를 전달하고 싶습니다.", 1L),
-                Answer("도전, 끈기", 2L)
-            )
-        )
-    )
-
     private val validApplicantRequest = RegisterApplicantRequest(
         name = "지원자",
         email = "test@email.com",
@@ -67,15 +54,6 @@ internal class ApplicantServiceTest {
         birthday = createLocalDate(1995, 2, 2),
         password = Password("password")
     )
-
-    private val validApplicantPasswordFindRequest = ResetPasswordRequest(
-        name = validApplicantRequest.name,
-        email = validApplicantRequest.email,
-        birthday = validApplicantRequest.birthday
-    )
-
-    private val inValidApplicantPasswordFindRequest =
-        validApplicantPasswordFindRequest.copy(birthday = createLocalDate(1995, 4, 4))
 
     private val validEditPasswordRequest = EditPasswordRequest(
         password = Password("password"),
@@ -87,8 +65,6 @@ internal class ApplicantServiceTest {
     private val applicant: Applicant =
         Applicant(validApplicantRequest.information, validApplicantRequest.password, APPLICANT_ID)
 
-    private val applicantResponses = listOf(ApplicantResponse(applicant, true, applicationForm))
-
     @BeforeEach
     internal fun setUp() {
         applicantService =
@@ -97,31 +73,50 @@ internal class ApplicantServiceTest {
 
     @Test
     fun `지원자 정보와 부정 행위자 여부를 함께 제공한다`() {
-        every { applicationFormRepository.findByRecruitmentIdAndSubmittedTrue(any()) } returns listOf(applicationForm)
-        every { applicantRepository.findAllById(any()) } returns listOf(applicant)
+        slot<Long>().also { slot ->
+            every { applicationFormRepository.findByRecruitmentIdAndSubmittedTrue(capture(slot)) } answers {
+                listOf(createApplicationForm(recruitmentId = slot.captured))
+            }
+        }
         every { cheaterRepository.findAll() } returns listOf(Cheater(1L))
+        slot<Iterable<Long>>().also { slot ->
+            every { applicantRepository.findAllById(capture(slot)) } answers {
+                slot.captured.map { createApplicant(id = it) }
+            }
+        }
 
-        val founds = applicantService.findAllByRecruitmentIdAndSubmittedTrue(1L)
+        val actual = applicantService.findAllByRecruitmentIdAndSubmittedTrue(1L)
 
-        assertAll(
-            { assertThat(founds).usingElementComparatorIgnoringFields("isCheater").isEqualTo(applicantResponses) },
-            { assertThat(founds[0].isCheater).isEqualTo(true) }
-        )
+        assertThat(actual).hasSize(1)
+        assertThat(actual[0].isCheater).isTrue()
     }
 
-    @Test
-    fun `지원자의 비밀번호를 초기화한다`() {
-        every { applicantRepository.findByEmail(validApplicantPasswordFindRequest.email) } returns applicant
-        every { passwordGenerator.generate() } returns RANDOM_PASSWORD
-        assertThat(applicantService.resetPassword(validApplicantPasswordFindRequest)).isEqualTo(RANDOM_PASSWORD)
-    }
+    @DisplayName("지원자의 비밀번호는")
+    @Nested
+    inner class ResetPassword {
+        private lateinit var request: ResetPasswordRequest
 
-    @Test
-    fun `비밀번호를 초기화를 위한 검증 데이터가 올바르지 않을시 예외가 발생한다`() {
-        every { applicantRepository.findByEmail(inValidApplicantPasswordFindRequest.email) } returns applicant
-        every { passwordGenerator.generate() } returns RANDOM_PASSWORD
-        assertThatThrownBy { applicantService.resetPassword(inValidApplicantPasswordFindRequest) }
-            .isInstanceOf(ApplicantValidateException::class.java)
+        @BeforeEach
+        internal fun setUp() {
+            every { applicantRepository.findByEmail(EMAIL) } returns createApplicant()
+            every { passwordGenerator.generate() } returns RANDOM_PASSWORD_TEXT
+        }
+
+        fun subject(): String {
+            return applicantService.resetPassword(request)
+        }
+
+        @Test
+        fun `만약 개인정보가 일치한다면 초기화한다`() {
+            request = ResetPasswordRequest(NAME, EMAIL, BIRTHDAY)
+            assertThat(subject()).isEqualTo(RANDOM_PASSWORD_TEXT)
+        }
+
+        @Test
+        fun `만약 개인정보가 일치하지 않는다면 예외가 발생한다`() {
+            request = ResetPasswordRequest(NAME, EMAIL, createLocalDate(1995, 4, 4))
+            assertThatThrownBy { subject() }.isInstanceOf(ApplicantValidateException::class.java)
+        }
     }
 
     @Test
