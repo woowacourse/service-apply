@@ -4,7 +4,7 @@ import apply.application.ApplicantInformation
 import apply.application.ApplicantService
 import apply.application.ApplicantVerifyInformation
 import apply.application.EditPasswordRequest
-import apply.application.MailService
+import apply.application.mail.MailService
 import apply.application.ResetPasswordRequest
 import apply.domain.applicant.Gender
 import apply.domain.applicant.Password
