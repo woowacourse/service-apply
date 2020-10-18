@@ -1,6 +1,6 @@
 package apply.ui.admin.selections
 
-import apply.application.ApplicantResponse
+import apply.application.AllRelevantApplicantResponse
 import apply.application.ApplicantService
 import apply.application.EvaluationService
 import apply.application.EvaluationTargetResponse
@@ -90,7 +90,7 @@ class SelectionView(
     private fun mapTabAndGrid(keyword: String): Map<Tab, Component> {
         val tabsToGrids = LinkedHashMap<Tab, Component>()
 
-        val applicantResponses = applicantService.findByRecruitmentIdAndKeyword(recruitmentId, keyword)
+        val applicantResponses = applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId, keyword)
         tabsToGrids[Tab("전체 지원자")] = createTotalApplicantsGrid(applicantResponses)
 
         evaluations = evaluationService.findAllByRecruitmentId(recruitmentId)
@@ -102,13 +102,13 @@ class SelectionView(
         return tabsToGrids
     }
 
-    private fun createTotalApplicantsGrid(applicants: List<ApplicantResponse>): Component {
-        return Grid<ApplicantResponse>(10).apply {
-            addSortableColumn("이름", ApplicantResponse::name)
-            addSortableColumn("이메일", ApplicantResponse::email)
-            addSortableColumn("전화번호", ApplicantResponse::phoneNumber)
+    private fun createTotalApplicantsGrid(applicants: List<AllRelevantApplicantResponse>): Component {
+        return Grid<AllRelevantApplicantResponse>(10).apply {
+            addSortableColumn("이름", AllRelevantApplicantResponse::name)
+            addSortableColumn("이메일", AllRelevantApplicantResponse::email)
+            addSortableColumn("전화번호", AllRelevantApplicantResponse::phoneNumber)
             addSortableColumn("성별") { it.gender.title }
-            addSortableDateColumn("생년월일", ApplicantResponse::birthday)
+            addSortableDateColumn("생년월일", AllRelevantApplicantResponse::birthday)
             addSortableDateTimeColumn("지원 일시") { it.applicationForm.submittedDateTime }
             addSortableColumn("부정 행위자") { if (it.isCheater) "O" else "X" }
             addColumn(createButtonRenderer()).apply { isAutoWidth = true }
@@ -116,8 +116,8 @@ class SelectionView(
         }
     }
 
-    private fun createButtonRenderer(): Renderer<ApplicantResponse> {
-        return ComponentRenderer<Component, ApplicantResponse> { applicant ->
+    private fun createButtonRenderer(): Renderer<AllRelevantApplicantResponse> {
+        return ComponentRenderer<Component, AllRelevantApplicantResponse> { applicant ->
             createPrimarySmallButton("지원서") {
                 val dialog = Dialog()
                 dialog.add(*createRecruitmentItems(applicant.applicationForm))

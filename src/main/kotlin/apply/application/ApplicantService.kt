@@ -19,12 +19,16 @@ class ApplicantService(
     private val cheaterRepository: CheaterRepository,
     private val passwordGenerator: PasswordGenerator
 ) {
-    fun findByRecruitmentIdAndKeyword(recruitmentId: Long, keyword: String): List<ApplicantResponse> {
+    fun getByEmail(email: String): Applicant {
+        return applicantRepository.findByEmail(email) ?: throw IllegalArgumentException("지원자가 존재하지 않습니다. email: $email")
+    }
+
+    fun findAllByRecruitmentIdAndKeyword(recruitmentId: Long, keyword: String): List<AllRelevantApplicantResponse> {
         return findAllByRecruitmentIdAndSubmittedTrue(recruitmentId)
             .filter { it.name.contains(keyword) || it.email.contains(keyword) }
     }
 
-    fun findAllByRecruitmentIdAndSubmittedTrue(recruitmentId: Long): List<ApplicantResponse> {
+    fun findAllByRecruitmentIdAndSubmittedTrue(recruitmentId: Long): List<AllRelevantApplicantResponse> {
         val applicationForms = applicationFormRepository
             .findByRecruitmentIdAndSubmittedTrue(recruitmentId)
             .associateBy { it.applicantId }
@@ -32,21 +36,23 @@ class ApplicantService(
 
         return applicantRepository
             .findAllById(applicationForms.keys)
-            .map { ApplicantResponse(it, cheaterApplicantIds.contains(it.id), applicationForms.getValue(it.id)) }
+            .map {
+                AllRelevantApplicantResponse(
+                    it,
+                    cheaterApplicantIds.contains(it.id),
+                    applicationForms.getValue(it.id)
+                )
+            }
     }
 
-    fun findByNameOrEmail(keyword: String): List<ApplicantBasicResponse> {
+    fun findByNameOrEmail(keyword: String): List<ApplicantResponse> {
         return applicantRepository
             .findByInformationNameContainingOrInformationEmailContaining(keyword, keyword)
-            .map(::ApplicantBasicResponse)
-    }
-
-    fun getByEmail(email: String): Applicant {
-        return applicantRepository.findByEmail(email) ?: throw IllegalArgumentException("email=$email 인 유저가 존재하지 않습니다")
+            .map(::ApplicantResponse)
     }
 
     fun resetPassword(request: ResetPasswordRequest): String {
-        val applicant = applicantRepository.findByEmail(request.email)!!
+        val applicant = getByEmail(request.email)
         val password = passwordGenerator.generate()
         applicant.resetPassword(request.name, request.birthday, password)
         return password

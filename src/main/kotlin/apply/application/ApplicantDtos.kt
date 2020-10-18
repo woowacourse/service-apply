@@ -10,7 +10,7 @@ import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
-data class ApplicantBasicResponse(
+data class ApplicantResponse(
     val id: Long,
     val name: String,
     val email: String,
@@ -28,7 +28,7 @@ data class ApplicantBasicResponse(
     )
 }
 
-data class ApplicantResponse(
+data class AllRelevantApplicantResponse(
     val id: Long,
     val name: String,
     val email: String,
