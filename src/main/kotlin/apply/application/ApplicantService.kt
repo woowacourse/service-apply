@@ -52,16 +52,11 @@ class ApplicantService(
         return jwtTokenProvider.createToken(applicant.email)
     }
 
-    fun generateTokenByLogin(applicantVerifyInformation: ApplicantVerifyInformation): String {
-        return when (
-            applicantRepository.existsByEmailAndPassword(
-                applicantVerifyInformation.email,
-                applicantVerifyInformation.password
-            )
-        ) {
-            true -> jwtTokenProvider.createToken(applicantVerifyInformation.email)
-            else -> throw ApplicantValidateException()
+    fun generateTokenByLogin(request: VerifyApplicantRequest): String {
+        if (!applicantRepository.existsByEmailAndPassword(request.email, request.password)) {
+            throw ApplicantValidateException()
         }
+        return jwtTokenProvider.createToken(request.email)
     }
 
     fun resetPassword(request: ResetPasswordRequest): String {

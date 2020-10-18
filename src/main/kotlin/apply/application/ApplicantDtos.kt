@@ -82,7 +82,7 @@ data class ApplicantInformation(
     )
 }
 
-data class ApplicantVerifyInformation(
+data class VerifyApplicantRequest(
     @field:NotNull
     @field:Email
     val email: String,

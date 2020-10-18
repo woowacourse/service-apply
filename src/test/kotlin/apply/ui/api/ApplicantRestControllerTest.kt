@@ -2,10 +2,10 @@ package apply.ui.api
 
 import apply.application.ApplicantInformation
 import apply.application.ApplicantService
-import apply.application.ApplicantVerifyInformation
 import apply.application.EditPasswordRequest
-import apply.application.mail.MailService
 import apply.application.ResetPasswordRequest
+import apply.application.VerifyApplicantRequest
+import apply.application.mail.MailService
 import apply.domain.applicant.Gender
 import apply.domain.applicant.Password
 import apply.domain.applicant.exception.ApplicantValidateException
@@ -47,7 +47,7 @@ private fun ApplicantInformation.withPlainPassword(password: String): Map<String
     )
 }
 
-private fun ApplicantVerifyInformation.withPlainPassword(password: String): Map<String, Any?> {
+private fun VerifyApplicantRequest.withPlainPassword(password: String): Map<String, Any?> {
     return mapOf("email" to email, "password" to password)
 }
 
@@ -82,7 +82,7 @@ internal class ApplicantRestControllerTest(
         password = Password(PASSWORD)
     )
 
-    private val applicantLoginRequest = ApplicantVerifyInformation(
+    private val applicantLoginRequest = VerifyApplicantRequest(
         email = applicantRequest.email,
         password = applicantRequest.password
     )

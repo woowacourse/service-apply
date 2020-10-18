@@ -2,10 +2,10 @@ package apply.ui.api
 
 import apply.application.ApplicantInformation
 import apply.application.ApplicantService
-import apply.application.ApplicantVerifyInformation
 import apply.application.EditPasswordRequest
-import apply.application.mail.MailService
 import apply.application.ResetPasswordRequest
+import apply.application.VerifyApplicantRequest
+import apply.application.mail.MailService
 import apply.domain.applicant.Applicant
 import apply.security.LoginApplicant
 import org.springframework.http.ResponseEntity
@@ -28,8 +28,8 @@ class ApplicantRestController(
     }
 
     @PostMapping("/login")
-    fun generateToken(@RequestBody @Valid applicantVerifyInformation: ApplicantVerifyInformation): ResponseEntity<ApiResponse<String>> {
-        val token = applicantService.generateTokenByLogin(applicantVerifyInformation)
+    fun generateToken(@RequestBody @Valid request: VerifyApplicantRequest): ResponseEntity<ApiResponse<String>> {
+        val token = applicantService.generateTokenByLogin(request)
         return ResponseEntity.ok().body(ApiResponse.success(token))
     }
 

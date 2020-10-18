@@ -75,7 +75,7 @@ internal class ApplicantServiceTest {
         password = Password("password")
     )
 
-    private val validApplicantLoginRequest = ApplicantVerifyInformation(
+    private val validApplicantLoginRequest = VerifyApplicantRequest(
         email = validApplicantRequest.email,
         password = validApplicantRequest.password
     )
