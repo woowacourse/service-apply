@@ -24,8 +24,8 @@ class ApplicantRestController(
     private val mailService: MailService
 ) {
     @PostMapping("/register")
-    fun generateToken(@RequestBody @Valid registerApplicantRequest: RegisterApplicantRequest): ResponseEntity<ApiResponse<String>> {
-        val token = applicantVerificationService.generateToken(registerApplicantRequest)
+    fun generateToken(@RequestBody @Valid request: RegisterApplicantRequest): ResponseEntity<ApiResponse<String>> {
+        val token = applicantVerificationService.generateToken(request)
         return ResponseEntity.ok().body(ApiResponse.success(token))
     }
 
@@ -36,20 +36,18 @@ class ApplicantRestController(
     }
 
     @PostMapping("/reset-password")
-    fun resetPassword(@RequestBody @Valid resetPasswordRequest: ResetPasswordRequest): ResponseEntity<Unit> {
-        val newPassword = applicantService.resetPassword(resetPasswordRequest)
-        mailService.sendPasswordResetMail(resetPasswordRequest, newPassword)
-
+    fun resetPassword(@RequestBody @Valid request: ResetPasswordRequest): ResponseEntity<Unit> {
+        val newPassword = applicantService.resetPassword(request)
+        mailService.sendPasswordResetMail(request, newPassword)
         return ResponseEntity.noContent().build()
     }
 
     @PostMapping("/edit-password")
     fun editPassword(
-        @RequestBody @Valid editPasswordRequest: EditPasswordRequest,
+        @RequestBody @Valid request: EditPasswordRequest,
         @LoginApplicant applicant: Applicant
     ): ResponseEntity<Unit> {
-        applicantService.editPassword(applicant, editPasswordRequest)
-
+        applicantService.editPassword(applicant, request)
         return ResponseEntity.noContent().build()
     }
 }
