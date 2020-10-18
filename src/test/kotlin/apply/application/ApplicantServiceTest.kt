@@ -1,9 +1,9 @@
 package apply.application
 
 import apply.domain.applicant.ApplicantRepository
+import apply.domain.applicant.ApplicantValidateException
 import apply.domain.applicant.Gender
 import apply.domain.applicant.Password
-import apply.domain.applicant.exception.ApplicantValidateException
 import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.Cheater

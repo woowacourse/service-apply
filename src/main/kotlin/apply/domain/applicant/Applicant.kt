@@ -1,7 +1,6 @@
 package apply.domain.applicant
 
 import apply.application.ApplicantInformation
-import apply.domain.applicant.exception.ApplicantValidateException
 import java.time.LocalDate
 import javax.persistence.AttributeOverride
 import javax.persistence.Column

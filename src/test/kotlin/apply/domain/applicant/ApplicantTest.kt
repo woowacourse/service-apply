@@ -1,7 +1,6 @@
 package apply.domain.applicant
 
 import apply.application.ApplicantInformation
-import apply.domain.applicant.exception.ApplicantValidateException
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
