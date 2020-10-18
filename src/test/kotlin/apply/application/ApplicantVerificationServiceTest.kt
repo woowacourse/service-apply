@@ -5,28 +5,33 @@ import apply.domain.applicant.ApplicantValidateException
 import apply.domain.applicant.Gender
 import apply.domain.applicant.Password
 import apply.security.JwtTokenProvider
-import org.assertj.core.api.Assertions
+import io.mockk.every
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.ArgumentMatchers
-import org.mockito.BDDMockito
-import org.mockito.Mock
-import org.mockito.junit.jupiter.MockitoExtension
 import support.createLocalDate
 
 private const val VALID_TOKEN = "SOME_VALID_TOKEN"
 private const val APPLICANT_ID = 1L
 
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockKExtension::class)
 internal class ApplicantVerificationServiceTest {
-    @Mock
+    @MockK
     private lateinit var applicantRepository: ApplicantRepository
 
-    @Mock
+    @MockK
     private lateinit var jwtTokenProvider: JwtTokenProvider
 
     private lateinit var applicantVerificationService: ApplicantVerificationService
+
+    @BeforeEach
+    internal fun setUp() {
+        applicantVerificationService = ApplicantVerificationService(applicantRepository, jwtTokenProvider)
+    }
 
     private val validApplicantRequest = ApplicantInformation(
         name = "지원자",
@@ -48,69 +53,52 @@ internal class ApplicantVerificationServiceTest {
 
     private val applicant = validApplicantRequest.toEntity(APPLICANT_ID)
 
-    @BeforeEach
-    internal fun setUp() {
-        applicantVerificationService = ApplicantVerificationService(applicantRepository, jwtTokenProvider)
-    }
-
     @Test
     fun `지원자가 이미 존재하고 검증에 성공하면 유효한 토큰을 반환한다`() {
-        BDDMockito.given(applicantRepository.findByEmail(validApplicantRequest.email)).willReturn(applicant)
-        BDDMockito.given(jwtTokenProvider.createToken(validApplicantRequest.email)).willReturn(VALID_TOKEN)
-
-        Assertions.assertThat(applicantVerificationService.generateToken(validApplicantRequest)).isEqualTo(VALID_TOKEN)
+        every { applicantRepository.findByEmail("test@email.com") } returns applicant
+        every { jwtTokenProvider.createToken("test@email.com") } returns VALID_TOKEN
+        assertThat(applicantVerificationService.generateToken(validApplicantRequest)).isEqualTo(VALID_TOKEN)
     }
 
     @Test
     fun `지원자가 이미 존재하고 필드 값 동등성 검증에 실패하면 예외가 발생한다`() {
-        BDDMockito.given(applicantRepository.findByEmail(inValidApplicantRequest.email)).willReturn(applicant)
-
-        Assertions.assertThatThrownBy {
+        every { applicantRepository.findByEmail(inValidApplicantRequest.email) } returns applicant
+        assertThatThrownBy {
             applicantVerificationService.generateToken(inValidApplicantRequest)
         }.isInstanceOf(ApplicantValidateException::class.java)
-            .hasMessage("요청 정보가 기존 지원자 정보와 일치하지 않습니다")
     }
 
     @Test
     fun `지원자가 존재하지 않으면 지원자를 저장한 뒤, 유효한 토큰을 반환한다`() {
-        BDDMockito.given(applicantRepository.findByEmail(validApplicantRequest.email)).willReturn(null)
-        BDDMockito.given(jwtTokenProvider.createToken(validApplicantRequest.email)).willReturn(VALID_TOKEN)
-        BDDMockito.given(
-            applicantRepository.save(
-                ArgumentMatchers.refEq(
-                    validApplicantRequest.toEntity()
-                )
-            )
-        ).willReturn(applicant)
-
-        Assertions.assertThat(applicantVerificationService.generateToken(validApplicantRequest)).isEqualTo(VALID_TOKEN)
+        every { applicantRepository.findByEmail(validApplicantRequest.email) } returns null
+        every { jwtTokenProvider.createToken(validApplicantRequest.email) } returns VALID_TOKEN
+        every { applicantRepository.save(nrefEq(validApplicantRequest.toEntity())) } returns applicant
+        assertThat(applicantVerificationService.generateToken(validApplicantRequest)).isEqualTo(VALID_TOKEN)
     }
 
     @Test
     fun `(로그인) 지원자가 존재할시, 유효한 토큰을 반환한다`() {
-        BDDMockito.given(
+        every {
             applicantRepository.existsByEmailAndPassword(
                 validApplicantLoginRequest.email,
                 validApplicantLoginRequest.password
             )
-        ).willReturn(true)
-        BDDMockito.given(jwtTokenProvider.createToken(validApplicantLoginRequest.email)).willReturn(VALID_TOKEN)
-
-        Assertions.assertThat(applicantVerificationService.generateTokenByLogin(validApplicantLoginRequest))
+        } returns true
+        every { jwtTokenProvider.createToken(validApplicantRequest.email) } returns VALID_TOKEN
+        assertThat(applicantVerificationService.generateTokenByLogin(validApplicantLoginRequest))
             .isEqualTo(VALID_TOKEN)
     }
 
     @Test
     fun `(로그인) 지원자가 존재하지 않을시, 예외가 발생한다`() {
-        BDDMockito.given(
+        every {
             applicantRepository.existsByEmailAndPassword(
                 inValidApplicantLoginRequest.email,
                 inValidApplicantLoginRequest.password
             )
-        ).willReturn(false)
+        } returns false
 
-        Assertions.assertThatThrownBy { applicantVerificationService.generateTokenByLogin(inValidApplicantLoginRequest) }
+        assertThatThrownBy { applicantVerificationService.generateTokenByLogin(inValidApplicantLoginRequest) }
             .isInstanceOf(ApplicantValidateException::class.java)
-            .hasMessage("요청 정보가 기존 지원자 정보와 일치하지 않습니다")
     }
 }
