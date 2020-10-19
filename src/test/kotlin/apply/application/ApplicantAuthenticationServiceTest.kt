@@ -17,11 +17,11 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(MockKExtension::class)
@@ -60,7 +60,7 @@ internal class ApplicantAuthenticationServiceTest {
         fun `지원자가 존재하지만 인증에 실패하면 예외가 발생한다`() {
             every { applicantRepository.findByEmail(any()) } answers { createApplicant() }
             request = RegisterApplicantRequest("가짜 이름", EMAIL, PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD)
-            assertThatThrownBy { subject() }.isInstanceOf(ApplicantAuthenticationException::class.java)
+            assertThrows<ApplicantAuthenticationException> { subject() }
         }
 
         @Test
@@ -92,14 +92,14 @@ internal class ApplicantAuthenticationServiceTest {
         fun `지원자가 존재하지만 인증에 실패하면 예외가 발생한다`() {
             every { applicantRepository.findByEmail(any()) } answers { createApplicant() }
             request = AuthenticateApplicantRequest(EMAIL, WRONG_PASSWORD)
-            assertThatThrownBy { subject() }.isInstanceOf(ApplicantAuthenticationException::class.java)
+            assertThrows<ApplicantAuthenticationException> { subject() }
         }
 
         @Test
         fun `지원자가 존재하지 않다면 예외가 발생한다`() {
             every { applicantRepository.findByEmail(any()) } answers { null }
             request = AuthenticateApplicantRequest(EMAIL, PASSWORD)
-            assertThatThrownBy { subject() }.isInstanceOf(ApplicantAuthenticationException::class.java)
+            assertThrows<ApplicantAuthenticationException> { subject() }
         }
     }
 }

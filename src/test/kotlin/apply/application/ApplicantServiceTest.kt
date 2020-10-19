@@ -7,8 +7,8 @@ import apply.PASSWORD
 import apply.RANDOM_PASSWORD_TEXT
 import apply.createApplicant
 import apply.createApplicationForm
-import apply.domain.applicant.ApplicantRepository
 import apply.domain.applicant.ApplicantAuthenticationException
+import apply.domain.applicant.ApplicantRepository
 import apply.domain.applicant.Password
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.Cheater
@@ -18,12 +18,12 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.slot
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import support.createLocalDate
 
@@ -97,7 +97,7 @@ internal class ApplicantServiceTest {
         @Test
         fun `만약 개인정보가 일치하지 않는다면 예외가 발생한다`() {
             request = ResetPasswordRequest(NAME, EMAIL, createLocalDate(1995, 4, 4))
-            assertThatThrownBy { subject() }.isInstanceOf(ApplicantAuthenticationException::class.java)
+            assertThrows<ApplicantAuthenticationException> { subject() }
         }
     }
 
@@ -126,7 +126,7 @@ internal class ApplicantServiceTest {
         @Test
         fun `만약 기존 비밀번호가 일치하지 않다면 예외가 발생한다`() {
             request = EditPasswordRequest(Password("wrong_password"), Password("new_password"))
-            assertThatThrownBy { subject() }.isInstanceOf(ApplicantAuthenticationException::class.java)
+            assertThrows<ApplicantAuthenticationException> { subject() }
         }
     }
 }
