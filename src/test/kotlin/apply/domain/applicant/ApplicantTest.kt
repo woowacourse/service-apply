@@ -1,49 +1,40 @@
 package apply.domain.applicant
 
-import org.assertj.core.api.Assertions.assertThat
+import apply.PASSWORD
+import apply.WRONG_PASSWORD
+import apply.createApplicant
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.CsvSource
-import support.createLocalDate
 
 internal class ApplicantTest {
-    private lateinit var information: ApplicantInformation
     private lateinit var applicant: Applicant
 
     @BeforeEach
     internal fun setUp() {
-        information = ApplicantInformation(
-            "홍길동1",
-            "a@email.com",
-            "010-0000-0000",
-            Gender.MALE,
-            createLocalDate(2020, 4, 17)
-        )
-        applicant = Applicant(information, Password("password"))
+        applicant = createApplicant()
     }
 
     @Test
     fun `지원자의 개인정보가 요청받은 개인정보와 일치하는지 확인한다`() {
-        assertDoesNotThrow { applicant.verify(Password("password"), information) }
+        assertDoesNotThrow { applicant.authenticate(createApplicant()) }
     }
 
     @Test
     fun `지원자의 개인정보가 요청받은 개인정보와 다를 경우 예외가 발생한다`() {
-        val invalidApplicantInformation = information.copy(name = "다른 이름")
-
-        assertThatThrownBy { applicant.verify(Password("password"), invalidApplicantInformation) }
-            .isInstanceOf(ApplicantValidateException::class.java)
-            .hasMessage("요청 정보가 기존 지원자 정보와 일치하지 않습니다")
+        assertThatThrownBy { applicant.authenticate(createApplicant(name = "다른 이름")) }
+            .isInstanceOf(ApplicantAuthenticationException::class.java)
     }
 
-    @ParameterizedTest
-    @CsvSource("password,true", "wrongPassword,false")
-    fun `지원자의 기존 비밀번호와 다른 비밀번호와의 일치 여부를 확인한다`(password: String, expected: Boolean) {
-        val samePassword = Password(password)
+    @Test
+    fun `지원자의 비밀번호와 일치하는지 확인한다`() {
+        assertDoesNotThrow { applicant.authenticate(PASSWORD) }
+    }
 
-        assertThat(applicant.samePassword(samePassword)).isEqualTo(expected)
+    @Test
+    fun `지원자의 비밀번호와 다를 경우 예외가 발생한다`() {
+        assertThatThrownBy { applicant.authenticate(WRONG_PASSWORD) }
+            .isInstanceOf(ApplicantAuthenticationException::class.java)
     }
 }

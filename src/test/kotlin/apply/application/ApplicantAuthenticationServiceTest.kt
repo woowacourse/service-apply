@@ -1,8 +1,7 @@
 package apply.application
 
-import apply.domain.applicant.Applicant
 import apply.domain.applicant.ApplicantRepository
-import apply.domain.applicant.ApplicantValidateException
+import apply.domain.applicant.ApplicantAuthenticationException
 import apply.domain.applicant.Gender
 import apply.domain.applicant.Password
 import apply.security.JwtTokenProvider
@@ -20,18 +19,18 @@ private const val VALID_TOKEN = "SOME_VALID_TOKEN"
 private const val APPLICANT_ID = 1L
 
 @ExtendWith(MockKExtension::class)
-internal class ApplicantVerificationServiceTest {
+internal class ApplicantAuthenticationServiceTest {
     @MockK
     private lateinit var applicantRepository: ApplicantRepository
 
     @MockK
     private lateinit var jwtTokenProvider: JwtTokenProvider
 
-    private lateinit var applicantVerificationService: ApplicantVerificationService
+    private lateinit var applicantAuthenticationService: ApplicantAuthenticationService
 
     @BeforeEach
     internal fun setUp() {
-        applicantVerificationService = ApplicantVerificationService(applicantRepository, jwtTokenProvider)
+        applicantAuthenticationService = ApplicantAuthenticationService(applicantRepository, jwtTokenProvider)
     }
 
     private val validApplicantRequest = RegisterApplicantRequest(
@@ -43,7 +42,7 @@ internal class ApplicantVerificationServiceTest {
         password = Password("password")
     )
 
-    private val validApplicantLoginRequest = VerifyApplicantRequest(
+    private val validApplicantLoginRequest = AuthenticateApplicantRequest(
         email = validApplicantRequest.email,
         password = validApplicantRequest.password
     )
@@ -52,21 +51,21 @@ internal class ApplicantVerificationServiceTest {
 
     private val inValidApplicantLoginRequest = validApplicantLoginRequest.copy(password = Password("invalid_password"))
 
-    private val applicant = Applicant(validApplicantRequest.information, validApplicantRequest.password, APPLICANT_ID)
+    private val applicant = validApplicantRequest.toEntity()
 
     @Test
     fun `지원자가 이미 존재하고 검증에 성공하면 유효한 토큰을 반환한다`() {
         every { applicantRepository.findByEmail("test@email.com") } returns applicant
         every { jwtTokenProvider.createToken("test@email.com") } returns VALID_TOKEN
-        assertThat(applicantVerificationService.generateToken(validApplicantRequest)).isEqualTo(VALID_TOKEN)
+        assertThat(applicantAuthenticationService.generateToken(validApplicantRequest)).isEqualTo(VALID_TOKEN)
     }
 
     @Test
     fun `지원자가 이미 존재하고 필드 값 동등성 검증에 실패하면 예외가 발생한다`() {
         every { applicantRepository.findByEmail(inValidApplicantRequest.email) } returns applicant
         assertThatThrownBy {
-            applicantVerificationService.generateToken(inValidApplicantRequest)
-        }.isInstanceOf(ApplicantValidateException::class.java)
+            applicantAuthenticationService.generateToken(inValidApplicantRequest)
+        }.isInstanceOf(ApplicantAuthenticationException::class.java)
     }
 
     @Test
@@ -74,21 +73,21 @@ internal class ApplicantVerificationServiceTest {
         every { applicantRepository.findByEmail(validApplicantRequest.email) } returns null
         every { jwtTokenProvider.createToken(validApplicantRequest.email) } returns VALID_TOKEN
         every { applicantRepository.save(nrefEq(validApplicantRequest.toEntity())) } returns applicant
-        assertThat(applicantVerificationService.generateToken(validApplicantRequest)).isEqualTo(VALID_TOKEN)
+        assertThat(applicantAuthenticationService.generateToken(validApplicantRequest)).isEqualTo(VALID_TOKEN)
     }
 
     @Test
     fun `(로그인) 지원자가 존재할시, 유효한 토큰을 반환한다`() {
         every { applicantRepository.findByEmail(validApplicantLoginRequest.email) } returns applicant
         every { jwtTokenProvider.createToken(validApplicantRequest.email) } returns VALID_TOKEN
-        assertThat(applicantVerificationService.generateTokenByLogin(validApplicantLoginRequest))
+        assertThat(applicantAuthenticationService.generateTokenByLogin(validApplicantLoginRequest))
             .isEqualTo(VALID_TOKEN)
     }
 
     @Test
     fun `(로그인) 지원자가 존재하지 않을시, 예외가 발생한다`() {
         every { applicantRepository.findByEmail(inValidApplicantLoginRequest.email) } returns applicant
-        assertThatThrownBy { applicantVerificationService.generateTokenByLogin(inValidApplicantLoginRequest) }
-            .isInstanceOf(ApplicantValidateException::class.java)
+        assertThatThrownBy { applicantAuthenticationService.generateTokenByLogin(inValidApplicantLoginRequest) }
+            .isInstanceOf(ApplicantAuthenticationException::class.java)
     }
 }

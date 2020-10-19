@@ -2,12 +2,12 @@ package apply.ui.api
 
 import apply.application.RegisterApplicantRequest
 import apply.application.ApplicantService
-import apply.application.ApplicantVerificationService
+import apply.application.ApplicantAuthenticationService
 import apply.application.EditPasswordRequest
 import apply.application.ResetPasswordRequest
-import apply.application.VerifyApplicantRequest
+import apply.application.AuthenticateApplicantRequest
 import apply.application.mail.MailService
-import apply.domain.applicant.ApplicantValidateException
+import apply.domain.applicant.ApplicantAuthenticationException
 import apply.domain.applicant.Gender
 import apply.domain.applicant.Password
 import apply.security.JwtTokenProvider
@@ -48,7 +48,7 @@ private fun RegisterApplicantRequest.withPlainPassword(password: String): Map<St
     )
 }
 
-private fun VerifyApplicantRequest.withPlainPassword(password: String): Map<String, Any?> {
+private fun AuthenticateApplicantRequest.withPlainPassword(password: String): Map<String, Any?> {
     return mapOf("email" to email, "password" to password)
 }
 
@@ -67,7 +67,7 @@ internal class ApplicantRestControllerTest(
     private lateinit var applicantService: ApplicantService
 
     @MockBean
-    private lateinit var applicantVerifyService: ApplicantVerificationService
+    private lateinit var applicantVerifyService: ApplicantAuthenticationService
 
     @MockBean
     private lateinit var mailService: MailService
@@ -86,7 +86,7 @@ internal class ApplicantRestControllerTest(
         password = Password(PASSWORD)
     )
 
-    private val applicantLoginRequest = VerifyApplicantRequest(
+    private val applicantLoginRequest = AuthenticateApplicantRequest(
         email = applicantRequest.email,
         password = applicantRequest.password
     )
@@ -137,7 +137,7 @@ internal class ApplicantRestControllerTest(
     fun `기존 지원자 정보와 일치하지 않는 지원자 생성 및 검증 요청에 대하여 unauthorized 응답을 받는다`() {
         given(
             applicantVerifyService.generateToken(invalidApplicantRequest)
-        ).willThrow(ApplicantValidateException())
+        ).willThrow(ApplicantAuthenticationException())
 
         mockMvc.post("/api/applicants/register") {
             content = objectMapper.writeValueAsBytes(invalidApplicantRequest.withPlainPassword(INVALID_PASSWORD))
@@ -167,7 +167,7 @@ internal class ApplicantRestControllerTest(
     fun `잘못된 지원자 로그인 요청에 응답으로 Unauthorized와 메시지를 반환한다`() {
         given(
             applicantVerifyService.generateTokenByLogin(invalidApplicantLoginRequest)
-        ).willThrow(ApplicantValidateException())
+        ).willThrow(ApplicantAuthenticationException())
 
         mockMvc.post("/api/applicants/login") {
             content = objectMapper.writeValueAsBytes(invalidApplicantLoginRequest.withPlainPassword(INVALID_PASSWORD))
@@ -198,7 +198,7 @@ internal class ApplicantRestControllerTest(
     fun `잘못된 비밀번호 찾기 요청에 응답으로 Unauthorized를 반환한다`() {
         given(
             applicantService.resetPassword(inValidApplicantPasswordFindRequest)
-        ).willThrow(ApplicantValidateException())
+        ).willThrow(ApplicantAuthenticationException())
 
         mockMvc.post("/api/applicants/reset-password") {
             content = objectMapper.writeValueAsBytes(inValidApplicantPasswordFindRequest)
@@ -230,7 +230,7 @@ internal class ApplicantRestControllerTest(
         given(jwtTokenProvider.getSubject("valid_token")).willReturn(applicantRequest.email)
         given(applicantService.getByEmail(applicantRequest.email)).willReturn(applicantRequest.toEntity())
         given(applicantService.editPassword(applicantRequest.toEntity(), inValidEditPasswordRequest))
-            .willThrow(ApplicantValidateException())
+            .willThrow(ApplicantAuthenticationException())
 
         mockMvc.post("/api/applicants/edit-password") {
             content = objectMapper.writeValueAsBytes(inValidEditPasswordRequest)

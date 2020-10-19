@@ -1,30 +1,28 @@
 package apply.application
 
 import apply.domain.applicant.ApplicantRepository
-import apply.domain.applicant.ApplicantValidateException
+import apply.domain.applicant.ApplicantAuthenticationException
 import apply.security.JwtTokenProvider
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Transactional
 @Service
-class ApplicantVerificationService(
+class ApplicantAuthenticationService(
     private val applicantRepository: ApplicantRepository,
     private val jwtTokenProvider: JwtTokenProvider
 ) {
     fun generateToken(request: RegisterApplicantRequest): String {
         val applicant = applicantRepository.findByEmail(request.email)
-            ?.also { it.verify(request.password, request.information) }
+            ?.also { it.authenticate(request.toEntity()) }
             ?: applicantRepository.save(request.toEntity())
-
         return jwtTokenProvider.createToken(applicant.email)
     }
 
-    fun generateTokenByLogin(request: VerifyApplicantRequest): String {
-        val applicant = applicantRepository.findByEmail(request.email)!!
-        if (!applicant.samePassword(request.password)) {
-            throw ApplicantValidateException()
-        }
-        return jwtTokenProvider.createToken(request.email)
+    fun generateTokenByLogin(request: AuthenticateApplicantRequest): String {
+        val applicant = applicantRepository.findByEmail(request.email)
+            ?.also { it.authenticate(request.password) }
+            ?: throw ApplicantAuthenticationException()
+        return jwtTokenProvider.createToken(applicant.email)
     }
 }

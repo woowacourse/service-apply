@@ -44,25 +44,28 @@ class Applicant(
         ApplicantInformation(name, email, phoneNumber, gender, birthday), password, id
     )
 
-    fun verify(password: Password, information: ApplicantInformation) {
-        if (!samePassword(password) || this.information != information) {
-            throw ApplicantValidateException()
-        }
+    fun authenticate(applicant: Applicant) {
+        authenticate(applicant.password)
+        identify(this.information == applicant.information)
     }
 
-    fun changePassword(password: Password, newPassword: Password) {
-        if (!samePassword(password)) {
-            throw ApplicantValidateException()
-        }
+    fun authenticate(password: Password) {
+        identify(this.password == password)
+    }
+
+    fun changePassword(oldPassword: Password, newPassword: Password) {
+        authenticate(oldPassword)
         this.password = newPassword
     }
 
-    fun samePassword(password: Password): Boolean = this.password == password
-
     fun resetPassword(name: String, birthday: LocalDate, password: String) {
-        if (!information.same(name, birthday)) {
-            throw ApplicantValidateException()
-        }
+        identify(information.same(name, birthday))
         this.password = Password(password)
+    }
+
+    private inline fun identify(value: Boolean) {
+        if (!value) {
+            throw ApplicantAuthenticationException()
+        }
     }
 }

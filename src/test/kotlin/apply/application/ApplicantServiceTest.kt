@@ -8,7 +8,7 @@ import apply.RANDOM_PASSWORD_TEXT
 import apply.createApplicant
 import apply.createApplicationForm
 import apply.domain.applicant.ApplicantRepository
-import apply.domain.applicant.ApplicantValidateException
+import apply.domain.applicant.ApplicantAuthenticationException
 import apply.domain.applicant.Password
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.Cheater
@@ -97,7 +97,7 @@ internal class ApplicantServiceTest {
         @Test
         fun `만약 개인정보가 일치하지 않는다면 예외가 발생한다`() {
             request = ResetPasswordRequest(NAME, EMAIL, createLocalDate(1995, 4, 4))
-            assertThatThrownBy { subject() }.isInstanceOf(ApplicantValidateException::class.java)
+            assertThatThrownBy { subject() }.isInstanceOf(ApplicantAuthenticationException::class.java)
         }
     }
 
@@ -126,7 +126,7 @@ internal class ApplicantServiceTest {
         @Test
         fun `만약 기존 비밀번호가 일치하지 않다면 예외가 발생한다`() {
             request = EditPasswordRequest(Password("wrong_password"), Password("new_password"))
-            assertThatThrownBy { subject() }.isInstanceOf(ApplicantValidateException::class.java)
+            assertThatThrownBy { subject() }.isInstanceOf(ApplicantAuthenticationException::class.java)
         }
     }
 }

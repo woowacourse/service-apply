@@ -2,10 +2,10 @@ package apply.ui.api
 
 import apply.application.RegisterApplicantRequest
 import apply.application.ApplicantService
-import apply.application.ApplicantVerificationService
+import apply.application.ApplicantAuthenticationService
 import apply.application.EditPasswordRequest
 import apply.application.ResetPasswordRequest
-import apply.application.VerifyApplicantRequest
+import apply.application.AuthenticateApplicantRequest
 import apply.application.mail.MailService
 import apply.domain.applicant.Applicant
 import apply.security.LoginApplicant
@@ -20,18 +20,18 @@ import javax.validation.Valid
 @RequestMapping("/api/applicants")
 class ApplicantRestController(
     private val applicantService: ApplicantService,
-    private val applicantVerificationService: ApplicantVerificationService,
+    private val applicantAuthenticationService: ApplicantAuthenticationService,
     private val mailService: MailService
 ) {
     @PostMapping("/register")
     fun generateToken(@RequestBody @Valid request: RegisterApplicantRequest): ResponseEntity<ApiResponse<String>> {
-        val token = applicantVerificationService.generateToken(request)
+        val token = applicantAuthenticationService.generateToken(request)
         return ResponseEntity.ok().body(ApiResponse.success(token))
     }
 
     @PostMapping("/login")
-    fun generateToken(@RequestBody @Valid request: VerifyApplicantRequest): ResponseEntity<ApiResponse<String>> {
-        val token = applicantVerificationService.generateTokenByLogin(request)
+    fun generateToken(@RequestBody @Valid request: AuthenticateApplicantRequest): ResponseEntity<ApiResponse<String>> {
+        val token = applicantAuthenticationService.generateTokenByLogin(request)
         return ResponseEntity.ok().body(ApiResponse.success(token))
     }
 
