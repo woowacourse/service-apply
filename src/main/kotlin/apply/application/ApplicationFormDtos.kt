@@ -24,7 +24,6 @@ data class UpdateApplicationFormRequest(
 )
 
 data class AnswerRequest(
-    @field:Size(min = 1)
     val contents: String,
 
     @field:NotNull

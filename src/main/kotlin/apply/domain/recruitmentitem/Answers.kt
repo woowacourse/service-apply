@@ -8,4 +8,6 @@ import javax.persistence.FetchType
 class Answers(
     @ElementCollection(fetch = FetchType.EAGER)
     val items: MutableList<Answer> = mutableListOf()
-)
+) {
+    fun checkAllNotBlank() = items.all { it.contents.isNotBlank() }
+}

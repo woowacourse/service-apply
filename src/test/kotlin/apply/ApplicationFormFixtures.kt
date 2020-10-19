@@ -1,8 +1,11 @@
 package apply
 
+import apply.application.AnswerRequest
 import apply.domain.applicationform.ApplicationForm
 import apply.domain.recruitmentitem.Answer
 import apply.domain.recruitmentitem.Answers
+
+private const val LONG_LENGTH = 2000
 
 fun createApplicationForm(
     applicantId: Long = 1L,
@@ -27,6 +30,26 @@ fun createAnswer(
     recruitmentItemId: Long = 1L
 ): Answer {
     return Answer(contents, recruitmentItemId)
+}
+
+fun createAnswerRequest(
+    contents: String = "책임감",
+    recruitmentItemId: Long = 1L
+): AnswerRequest {
+    return AnswerRequest(contents, recruitmentItemId)
+}
+
+fun createExcessOfLengthAnswerRequest(
+    contents: String = createLongString(),
+    recruitmentItemId: Long = 1L
+): AnswerRequest {
+    return AnswerRequest(contents, recruitmentItemId)
+}
+
+private fun createLongString(): String {
+    val builder: StringBuilder = StringBuilder()
+    repeat(LONG_LENGTH) { count -> builder.append(count) }
+    return builder.toString()
 }
 
 fun createApplicationForms(

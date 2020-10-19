@@ -5,6 +5,7 @@ import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitmentitem.Answer
 import apply.domain.recruitmentitem.Answers
+import apply.domain.recruitmentitem.RecruitmentItemRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import support.createLocalDateTime
@@ -15,7 +16,8 @@ import javax.transaction.Transactional
 @Service
 class ApplicationFormService(
     private val applicationFormRepository: ApplicationFormRepository,
-    private val recruitmentRepository: RecruitmentRepository
+    private val recruitmentRepository: RecruitmentRepository,
+    private val recruitmentItemRepository: RecruitmentItemRepository
 ) {
 
     fun findAllByRecruitmentId(recruitmentId: Long): List<ApplicationForm> =
@@ -48,6 +50,7 @@ class ApplicationFormService(
                 )
             }.toMutableList()
         )
+        checkRecruitmentItem(request.recruitmentId, answers)
         applicationForm.update(request.referenceUrl, answers)
         if (request.submitted) {
             require(!applicationFormRepository.existsByApplicantIdAndSubmittedTrue(applicantId)) {
@@ -69,6 +72,21 @@ class ApplicationFormService(
         }
         check(recruitment.isRecruiting) {
             "지원 불가능한 모집입니다."
+        }
+    }
+
+    private fun checkRecruitmentItem(recruitmentId: Long, answers: Answers) {
+        val recruitmentItems = recruitmentItemRepository.findByRecruitmentIdOrderByPosition(recruitmentId)
+        require(answers.checkAllNotBlank() && (recruitmentItems.size == answers.items.size)) {
+            "작성하지 않은 문항이 존재합니다."
+        }
+        require(
+            recruitmentItems.all { recruitmentItem ->
+                answers.items.find { recruitmentItem.id == it.recruitmentItemId }
+                    .let { recruitmentItem.maximumLength >= it!!.contents.length }
+            }
+        ) {
+            "유효하지 않은 문항이 존재합니다."
         }
     }
 

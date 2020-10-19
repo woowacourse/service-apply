@@ -1,12 +1,17 @@
 package apply.application
 
+import apply.createAnswerRequest
 import apply.createApplicationForm
 import apply.createApplicationForms
+import apply.createExcessOfLengthAnswerRequest
 import apply.createRecruitment
+import apply.createRecruitmentItem
 import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentRepository
+import apply.domain.recruitmentitem.RecruitmentItem
+import apply.domain.recruitmentitem.RecruitmentItemRepository
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
@@ -30,6 +35,9 @@ class ApplicationFormServiceTest {
     private lateinit var recruimentRepository: RecruitmentRepository
 
     @MockK
+    private lateinit var recruitmentItemRepository: RecruitmentItemRepository
+
+    @MockK
     private lateinit var applicantService: ApplicantService
 
     private lateinit var applicationFormService: ApplicationFormService
@@ -44,13 +52,14 @@ class ApplicationFormServiceTest {
     private lateinit var updateApplicationFormRequestWithPassword: UpdateApplicationFormRequest
 
     private lateinit var recruitment: Recruitment
+    private lateinit var recruitmentItems: List<RecruitmentItem>
     private lateinit var recruitmentNotRecruiting: Recruitment
     private lateinit var recruitmentHidden: Recruitment
 
     @BeforeEach
     internal fun setUp() {
         this.applicationFormService =
-            ApplicationFormService(applicationFormRepository, recruimentRepository)
+            ApplicationFormService(applicationFormRepository, recruimentRepository, recruitmentItemRepository)
 
         applicationForm1 = createApplicationForm()
 
@@ -78,6 +87,19 @@ class ApplicationFormServiceTest {
             referenceUrl = applicationForm1.referenceUrl,
             submitted = false,
             answers = applicationForm1.answers.items.map { AnswerRequest(it.contents, it.recruitmentItemId) }
+        )
+
+        recruitmentItems = listOf(
+            createRecruitmentItem(
+                recruitmentId = applicationForm1.recruitmentId,
+                position = 1,
+                id = 1L
+            ),
+            createRecruitmentItem(
+                recruitmentId = applicationForm1.recruitmentId,
+                position = 2,
+                id = 2L
+            )
         )
 
         updateApplicationFormRequestWithPassword = UpdateApplicationFormRequest(
@@ -181,6 +203,7 @@ class ApplicationFormServiceTest {
     fun `지원서를 수정한다`() {
         every { recruimentRepository.findByIdOrNull(any()) } returns recruitment
         every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns applicationForm1
+        every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns recruitmentItems
 
         assertDoesNotThrow { applicationFormService.update(1L, updateApplicationFormRequest) }
     }
@@ -216,6 +239,7 @@ class ApplicationFormServiceTest {
                 any()
             )
         } returns applicationFormSubmitted
+        every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns recruitmentItems
 
         assertThrows<IllegalStateException> { applicationFormService.update(3L, updateApplicationFormRequest) }
     }
@@ -225,11 +249,47 @@ class ApplicationFormServiceTest {
         every { recruimentRepository.findByIdOrNull(any()) } returns recruitment
         every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns applicationForm1
         every { applicationFormRepository.existsByApplicantIdAndSubmittedTrue(any()) } returns true
+        every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns recruitmentItems
 
         assertThrows<IllegalArgumentException> {
             applicationFormService.update(
                 1L,
                 UpdateApplicationFormRequest(recruitmentId = 1L, submitted = true)
+            )
+        }
+    }
+
+    @Test
+    fun `작성하지 않은 문항이 존재하는 경우 제출할 수 없다`() {
+        every { recruimentRepository.findByIdOrNull(any()) } returns recruitment
+        every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns applicationForm1
+        every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns recruitmentItems
+
+        assertThrows<IllegalArgumentException> {
+            applicationFormService.update(
+                1L,
+                UpdateApplicationFormRequest(recruitmentId = 1L, submitted = false)
+            )
+        }
+    }
+
+    @Test
+    fun `유효하지 않은 문항이 존재하는 경우 제출할 수 없다`() {
+        every { recruimentRepository.findByIdOrNull(any()) } returns recruitment
+        every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns applicationForm1
+        every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns recruitmentItems
+
+        assertThrows<IllegalArgumentException> {
+            applicationFormService.update(
+                1L,
+                UpdateApplicationFormRequest(
+                    recruitmentId = 1L,
+                    submitted = false,
+                    answers = listOf(
+                        createExcessOfLengthAnswerRequest(recruitmentItemId = 1L),
+                        createAnswerRequest(recruitmentItemId = 2L)
+                    )
+                )
             )
         }
     }
