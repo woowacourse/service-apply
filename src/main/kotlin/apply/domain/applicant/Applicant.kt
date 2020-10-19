@@ -1,60 +1,71 @@
 package apply.domain.applicant
 
-import apply.application.ApplicantInformation
-import apply.domain.applicant.exception.ApplicantValidateException
+import support.domain.BaseEntity
 import java.time.LocalDate
 import javax.persistence.AttributeOverride
 import javax.persistence.Column
 import javax.persistence.Embedded
 import javax.persistence.Entity
-import javax.persistence.EnumType
-import javax.persistence.Enumerated
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
 
 @Entity
 class Applicant(
-    @Column(nullable = false)
-    val name: String,
-
-    @Column(nullable = false)
-    val email: String,
-
-    @Column(nullable = false)
-    val phoneNumber: String,
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    val gender: Gender,
-
-    @Column(nullable = false)
-    val birthday: LocalDate,
+    @Embedded
+    val information: ApplicantInformation,
 
     @AttributeOverride(name = "value", column = Column(name = "password", nullable = false))
     @Embedded
     var password: Password,
+    id: Long = 0L
+) : BaseEntity(id) {
+    @Transient
+    val name: String = information.name
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0L
-) {
-    fun validate(targetInformation: ApplicantInformation) {
-        if (getInformation() != targetInformation) {
-            throw ApplicantValidateException()
+    @Transient
+    val email: String = information.email
+
+    @Transient
+    val phoneNumber: String = information.phoneNumber
+
+    @Transient
+    val gender: Gender = information.gender
+
+    @Transient
+    val birthday: LocalDate = information.birthday
+
+    constructor(
+        name: String,
+        email: String,
+        phoneNumber: String,
+        gender: Gender,
+        birthday: LocalDate,
+        password: Password,
+        id: Long = 0L
+    ) : this(
+        ApplicantInformation(name, email, phoneNumber, gender, birthday), password, id
+    )
+
+    fun authenticate(applicant: Applicant) {
+        authenticate(applicant.password)
+        identify(this.information == applicant.information)
+    }
+
+    fun authenticate(password: Password) {
+        identify(this.password == password)
+    }
+
+    fun changePassword(oldPassword: Password, newPassword: Password) {
+        authenticate(oldPassword)
+        this.password = newPassword
+    }
+
+    fun resetPassword(name: String, birthday: LocalDate, password: String) {
+        identify(information.same(name, birthday))
+        this.password = Password(password)
+    }
+
+    private inline fun identify(value: Boolean) {
+        if (!value) {
+            throw ApplicantAuthenticationException()
         }
     }
-
-    fun isSamePassword(password: Password): Boolean {
-        return this.password == password
-    }
-
-    private fun getInformation() = ApplicantInformation(
-        name = name,
-        email = email,
-        phoneNumber = phoneNumber,
-        gender = gender,
-        birthday = birthday,
-        password = password
-    )
 }

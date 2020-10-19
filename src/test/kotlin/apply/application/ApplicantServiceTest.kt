@@ -1,232 +1,132 @@
 package apply.application
 
+import apply.BIRTHDAY
+import apply.EMAIL
+import apply.NAME
+import apply.PASSWORD
+import apply.RANDOM_PASSWORD_TEXT
+import apply.WRONG_PASSWORD
+import apply.createApplicant
+import apply.createApplicationForm
+import apply.domain.applicant.ApplicantAuthenticationException
 import apply.domain.applicant.ApplicantRepository
-import apply.domain.applicant.Gender
 import apply.domain.applicant.Password
-import apply.domain.applicant.exception.ApplicantValidateException
-import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.Cheater
 import apply.domain.cheater.CheaterRepository
-import apply.domain.recruitmentitem.Answer
-import apply.domain.recruitmentitem.Answers
-import apply.security.JwtTokenProvider
+import io.mockk.every
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
+import io.mockk.slot
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertDoesNotThrow
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.ArgumentMatchers.anyLong
-import org.mockito.ArgumentMatchers.anySet
-import org.mockito.ArgumentMatchers.refEq
-import org.mockito.BDDMockito.given
-import org.mockito.Mock
-import org.mockito.junit.jupiter.MockitoExtension
-import support.createLocalDate
-import support.createLocalDateTime
 
-private const val VALID_TOKEN = "SOME_VALID_TOKEN"
-private const val APPLICANT_ID = 1L
-private const val RANDOM_PASSWORD = "nEw_p@ssw0rd"
-
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockKExtension::class)
 internal class ApplicantServiceTest {
-    @Mock
+    @MockK
     private lateinit var applicationFormRepository: ApplicationFormRepository
 
-    @Mock
+    @MockK
     private lateinit var applicantRepository: ApplicantRepository
 
-    @Mock
+    @MockK
     private lateinit var cheaterRepository: CheaterRepository
 
-    @Mock
-    private lateinit var jwtTokenProvider: JwtTokenProvider
-
-    @Mock
+    @MockK
     private lateinit var passwordGenerator: PasswordGenerator
 
     private lateinit var applicantService: ApplicantService
 
-    private val applicationForm = ApplicationForm(
-        referenceUrl = "",
-        submitted = true,
-        createdDateTime = createLocalDateTime(2019, 10, 25, 10),
-        modifiedDateTime = createLocalDateTime(2019, 11, 5, 10),
-        submittedDateTime = createLocalDateTime(2019, 11, 5, 10, 10, 10),
-        recruitmentId = 1L,
-        applicantId = 1L,
-        answers = Answers(
-            mutableListOf(
-                Answer("고객에게 가치를 전달하고 싶습니다.", 1L),
-                Answer("도전, 끈기", 2L)
-            )
-        )
-    )
-
-    private val validApplicantRequest = ApplicantInformation(
-        name = "지원자",
-        email = "test@email.com",
-        phoneNumber = "010-0000-0000",
-        gender = Gender.MALE,
-        birthday = createLocalDate(1995, 2, 2),
-        password = Password("password")
-    )
-
-    private val validApplicantLoginRequest = ApplicantVerifyInformation(
-        email = validApplicantRequest.email,
-        password = validApplicantRequest.password
-    )
-
-    private val validApplicantPasswordFindRequest = ResetPasswordRequest(
-        name = validApplicantRequest.name,
-        email = validApplicantRequest.email,
-        birthday = validApplicantRequest.birthday
-    )
-
-    private val inValidApplicantRequest = validApplicantRequest.copy(password = Password("invalid_password"))
-
-    private val inValidApplicantLoginRequest = validApplicantLoginRequest.copy(password = Password("invalid_password"))
-
-    private val inValidApplicantPasswordFindRequest =
-        validApplicantPasswordFindRequest.copy(birthday = createLocalDate(1995, 4, 4))
-
-    private val validEditPasswordRequest = EditPasswordRequest(
-        password = Password("password"),
-        newPassword = Password("NEW_PASSWORD")
-    )
-
-    private val inValidEditPasswordRequest = validEditPasswordRequest.copy(password = Password("wrongPassword"))
-
-    private val applicant = validApplicantRequest.toEntity(APPLICANT_ID)
-
-    private val applicantResponses = listOf(ApplicantResponse(applicant, true, applicationForm))
-
     @BeforeEach
     internal fun setUp() {
-        applicantService =
-            ApplicantService(
-                applicationFormRepository,
-                applicantRepository,
-                cheaterRepository,
-                jwtTokenProvider,
-                passwordGenerator
-            )
+        applicantService = ApplicantService(
+            applicationFormRepository,
+            applicantRepository,
+            cheaterRepository,
+            passwordGenerator
+        )
     }
 
     @Test
     fun `지원자 정보와 부정 행위자 여부를 함께 제공한다`() {
-        given(applicationFormRepository.findByRecruitmentIdAndSubmittedTrue(anyLong())).willReturn(
-            listOf(
-                applicationForm
-            )
-        )
-        given(applicantRepository.findAllById(anySet())).willReturn(listOf(applicant))
-        given(cheaterRepository.findAll()).willReturn(listOf(Cheater(1L)))
+        slot<Long>().also { slot ->
+            every { applicationFormRepository.findByRecruitmentIdAndSubmittedTrue(capture(slot)) } answers {
+                listOf(createApplicationForm(recruitmentId = slot.captured))
+            }
+        }
+        every { cheaterRepository.findAll() } returns listOf(Cheater(1L))
+        slot<Iterable<Long>>().also { slot ->
+            every { applicantRepository.findAllById(capture(slot)) } answers {
+                slot.captured.map { createApplicant(id = it) }
+            }
+        }
 
-        val founds = applicantService.findAllByRecruitmentIdAndSubmittedTrue(1L)
+        val actual = applicantService.findAllByRecruitmentIdAndSubmittedTrue(1L)
 
-        assertAll(
-            { assertThat(founds).usingElementComparatorIgnoringFields("isCheater").isEqualTo(applicantResponses) },
-            { assertThat(founds[0].isCheater).isEqualTo(true) }
-        )
+        assertThat(actual).hasSize(1)
+        assertThat(actual[0].isCheater).isTrue()
     }
 
-    @Test
-    fun `지원자가 이미 존재하고 검증에 성공하면 유효한 토큰을 반환한다`() {
-        given(applicantRepository.findByEmail(validApplicantRequest.email)).willReturn(applicant)
-        given(jwtTokenProvider.createToken(validApplicantRequest.email)).willReturn(VALID_TOKEN)
+    @DisplayName("비밀번호 초기화는")
+    @Nested
+    inner class ResetPassword {
+        private lateinit var request: ResetPasswordRequest
 
-        assertThat(applicantService.generateToken(validApplicantRequest)).isEqualTo(VALID_TOKEN)
+        @BeforeEach
+        internal fun setUp() {
+            every { applicantRepository.findByEmail(EMAIL) } returns createApplicant()
+            every { passwordGenerator.generate() } returns RANDOM_PASSWORD_TEXT
+        }
+
+        fun subject(): String {
+            return applicantService.resetPassword(request)
+        }
+
+        @Test
+        fun `만약 개인정보가 일치한다면 초기화한다`() {
+            request = ResetPasswordRequest(NAME, EMAIL, BIRTHDAY)
+            assertThat(subject()).isEqualTo(RANDOM_PASSWORD_TEXT)
+        }
+
+        @Test
+        fun `만약 개인정보가 일치하지 않는다면 예외가 발생한다`() {
+            request = ResetPasswordRequest("가짜 이름", EMAIL, BIRTHDAY)
+            assertThrows<ApplicantAuthenticationException> { subject() }
+        }
     }
 
-    @Test
-    fun `지원자가 이미 존재하고 필드 값 동등성 검증에 실패하면 예외가 발생한다`() {
-        given(applicantRepository.findByEmail(inValidApplicantRequest.email)).willReturn(applicant)
+    @DisplayName("비밀번호 변경은")
+    @Nested
+    inner class EditPassword {
+        private lateinit var request: EditPasswordRequest
 
-        assertThatThrownBy {
-            applicantService.generateToken(inValidApplicantRequest)
-        }.isInstanceOf(ApplicantValidateException::class.java)
-            .hasMessage("요청 정보가 기존 지원자 정보와 일치하지 않습니다")
-    }
+        @BeforeEach
+        internal fun setUp() {
+            slot<Long>().also { slot ->
+                every { applicantRepository.getOne(capture(slot)) } answers { createApplicant(id = slot.captured) }
+            }
+        }
 
-    @Test
-    fun `지원자가 존재하지 않으면 지원자를 저장한 뒤, 유효한 토큰을 반환한다`() {
-        given(applicantRepository.findByEmail(validApplicantRequest.email)).willReturn(null)
-        given(jwtTokenProvider.createToken(validApplicantRequest.email)).willReturn(VALID_TOKEN)
-        given(
-            applicantRepository.save(
-                refEq(
-                    validApplicantRequest.toEntity()
-                )
-            )
-        ).willReturn(applicant)
+        fun subject() {
+            applicantService.editPassword(1L, request)
+        }
 
-        assertThat(applicantService.generateToken(validApplicantRequest)).isEqualTo(VALID_TOKEN)
-    }
+        @Test
+        fun `만약 기존 비밀번호가 일치한다면 변경한다`() {
+            request = EditPasswordRequest(PASSWORD, Password("new_password"))
+            assertDoesNotThrow { subject() }
+        }
 
-    @Test
-    fun `(로그인) 지원자가 존재할시, 유효한 토큰을 반환한다`() {
-        given(
-            applicantRepository.existsByEmailAndPassword(
-                validApplicantLoginRequest.email,
-                validApplicantLoginRequest.password
-            )
-        ).willReturn(true)
-        given(jwtTokenProvider.createToken(validApplicantLoginRequest.email)).willReturn(VALID_TOKEN)
-
-        assertThat(applicantService.generateTokenByLogin(validApplicantLoginRequest)).isEqualTo(VALID_TOKEN)
-    }
-
-    @Test
-    fun `(로그인) 지원자가 존재하지 않을시, 예외가 발생한다`() {
-        given(
-            applicantRepository.existsByEmailAndPassword(
-                inValidApplicantLoginRequest.email,
-                inValidApplicantLoginRequest.password
-            )
-        ).willReturn(false)
-
-        assertThatThrownBy { applicantService.generateTokenByLogin(inValidApplicantLoginRequest) }
-            .isInstanceOf(ApplicantValidateException::class.java)
-            .hasMessage("요청 정보가 기존 지원자 정보와 일치하지 않습니다")
-    }
-
-    @Test
-    fun `지원자의 비밀번호를 초기화한다`() {
-        given(
-            applicantRepository.findByNameAndEmailAndBirthday(
-                validApplicantPasswordFindRequest.name,
-                validApplicantPasswordFindRequest.email,
-                validApplicantPasswordFindRequest.birthday
-            )
-        ).willReturn(applicant)
-
-        given(passwordGenerator.generate()).willReturn(RANDOM_PASSWORD)
-
-        assertThat(applicantService.resetPassword(validApplicantPasswordFindRequest)).isEqualTo(RANDOM_PASSWORD)
-    }
-
-    @Test
-    fun `비밀번호를 초기화를 위한 검증 데이터가 올바르지 않을시 예외가 발생한다`() {
-        assertThatThrownBy { applicantService.resetPassword(inValidApplicantPasswordFindRequest) }
-            .isInstanceOf(ApplicantValidateException::class.java)
-            .hasMessage("요청 정보가 기존 지원자 정보와 일치하지 않습니다")
-    }
-
-    @Test
-    fun `지원자의 비밀번호를 수정한다`() {
-        given(applicantRepository.save(applicant)).willReturn(applicant)
-
-        assertDoesNotThrow { applicantService.editPassword(applicant, validEditPasswordRequest) }
-    }
-
-    @Test
-    fun `비밀번호 수정시 기존 비밀번호를 다르게 입력했을경우 예외가 발생한다`() {
-        assertThatThrownBy { applicantService.editPassword(applicant, inValidEditPasswordRequest) }
-            .isInstanceOf(ApplicantValidateException::class.java)
-            .hasMessage("요청 정보가 기존 지원자 정보와 일치하지 않습니다")
+        @Test
+        fun `만약 기존 비밀번호가 일치하지 않다면 예외가 발생한다`() {
+            request = EditPasswordRequest(WRONG_PASSWORD, Password("new_password"))
+            assertThrows<ApplicantAuthenticationException> { subject() }
+        }
     }
 }
