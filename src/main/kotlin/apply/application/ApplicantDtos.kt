@@ -27,14 +27,14 @@ data class ApplicantResponse(
     )
 }
 
-data class AllRelevantApplicantResponse(
+data class ApplicantAndFormResponse(
     val id: Long,
     val name: String,
     val email: String,
     val phoneNumber: String,
     val gender: Gender,
     val birthday: LocalDate,
-    var isCheater: Boolean,
+    val isCheater: Boolean,
     val applicationForm: ApplicationForm
 ) {
     constructor(applicant: Applicant, isCheater: Boolean, applicationForm: ApplicationForm) : this(

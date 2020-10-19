@@ -213,7 +213,7 @@ internal class ApplicantRestControllerTest(
         given(jwtTokenProvider.isValidToken("valid_token")).willReturn(true)
         given(jwtTokenProvider.getSubject("valid_token")).willReturn(applicantRequest.email)
         given(applicantService.getByEmail(applicantRequest.email)).willReturn(applicantRequest.toEntity())
-        willDoNothing().given(applicantService).editPassword(applicantRequest.toEntity(), validEditPasswordRequest)
+        willDoNothing().given(applicantService).editPassword(applicantRequest.toEntity().id, validEditPasswordRequest)
 
         mockMvc.post("/api/applicants/edit-password") {
             content = objectMapper.writeValueAsBytes(validEditPasswordRequest)
@@ -229,7 +229,7 @@ internal class ApplicantRestControllerTest(
         given(jwtTokenProvider.isValidToken("valid_token")).willReturn(true)
         given(jwtTokenProvider.getSubject("valid_token")).willReturn(applicantRequest.email)
         given(applicantService.getByEmail(applicantRequest.email)).willReturn(applicantRequest.toEntity())
-        given(applicantService.editPassword(applicantRequest.toEntity(), inValidEditPasswordRequest))
+        given(applicantService.editPassword(applicantRequest.toEntity().id, inValidEditPasswordRequest))
             .willThrow(ApplicantAuthenticationException())
 
         mockMvc.post("/api/applicants/edit-password") {

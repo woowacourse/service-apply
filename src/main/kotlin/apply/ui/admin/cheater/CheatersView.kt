@@ -43,7 +43,7 @@ class CheatersView(
         return HorizontalLayout(
             createSearchBar {
                 container.removeAll()
-                val founds = applicantService.findByNameOrEmail(it)
+                val founds = applicantService.findAllByKeyword(it)
                 if (founds.isNotEmpty()) {
                     val select = createSelectApplicant(founds)
                     container.add(

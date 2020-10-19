@@ -4,6 +4,7 @@ import apply.domain.applicant.Applicant
 import apply.domain.applicant.ApplicantRepository
 import apply.domain.applicant.Gender
 import apply.domain.applicant.Password
+import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.CheaterRepository
 import org.springframework.stereotype.Service
@@ -23,43 +24,37 @@ class ApplicantService(
         return applicantRepository.findByEmail(email) ?: throw IllegalArgumentException("지원자가 존재하지 않습니다. email: $email")
     }
 
-    fun findAllByRecruitmentIdAndKeyword(recruitmentId: Long, keyword: String): List<AllRelevantApplicantResponse> {
-        return findAllByRecruitmentIdAndSubmittedTrue(recruitmentId)
-            .filter { it.name.contains(keyword) || it.email.contains(keyword) }
-    }
-
-    fun findAllByRecruitmentIdAndSubmittedTrue(recruitmentId: Long): List<AllRelevantApplicantResponse> {
-        val applicationForms = applicationFormRepository
+    fun findAllByRecruitmentIdAndKeyword(recruitmentId: Long, keyword: String): List<ApplicantAndFormResponse> {
+        return applicationFormRepository
             .findByRecruitmentIdAndSubmittedTrue(recruitmentId)
             .associateBy { it.applicantId }
-        val cheaterApplicantIds = cheaterRepository.findAll().map { it.applicantId }
-
-        return applicantRepository
-            .findAllById(applicationForms.keys)
-            .map {
-                AllRelevantApplicantResponse(
-                    it,
-                    cheaterApplicantIds.contains(it.id),
-                    applicationForms.getValue(it.id)
-                )
-            }
+            .findAndMapResponse { applicantRepository.findAllByKeyword(keyword) }
     }
 
-    fun findByNameOrEmail(keyword: String): List<ApplicantResponse> {
-        return applicantRepository
-            .findByInformationNameContainingOrInformationEmailContaining(keyword, keyword)
-            .map(::ApplicantResponse)
+    fun findAllByRecruitmentIdAndSubmittedTrue(recruitmentId: Long): List<ApplicantAndFormResponse> {
+        return applicationFormRepository
+            .findByRecruitmentIdAndSubmittedTrue(recruitmentId)
+            .associateBy { it.applicantId }
+            .run { findAndMapResponse { applicantRepository.findAllById(keys) } }
+    }
+
+    private fun Map<Long, ApplicationForm>.findAndMapResponse(finder: () -> List<Applicant>): List<ApplicantAndFormResponse> {
+        val cheaterApplicantIds = cheaterRepository.findAll().map { it.applicantId }
+        return finder().map { ApplicantAndFormResponse(it, cheaterApplicantIds.contains(it.id), getValue(it.id)) }
+    }
+
+    fun findAllByKeyword(keyword: String): List<ApplicantResponse> {
+        return applicantRepository.findAllByKeyword(keyword).map(::ApplicantResponse)
     }
 
     fun resetPassword(request: ResetPasswordRequest): String {
-        val applicant = getByEmail(request.email)
-        val password = passwordGenerator.generate()
-        applicant.resetPassword(request.name, request.birthday, password)
-        return password
+        return passwordGenerator.generate().also {
+            getByEmail(request.email).resetPassword(request.name, request.birthday, it)
+        }
     }
 
-    fun editPassword(applicant: Applicant, request: EditPasswordRequest) {
-        applicantRepository.getOne(applicant.id).apply {
+    fun editPassword(id: Long, request: EditPasswordRequest) {
+        applicantRepository.getOne(id).apply {
             changePassword(request.password, request.newPassword)
         }
     }

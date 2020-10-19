@@ -47,7 +47,7 @@ class ApplicantRestController(
         @RequestBody @Valid request: EditPasswordRequest,
         @LoginApplicant applicant: Applicant
     ): ResponseEntity<Unit> {
-        applicantService.editPassword(applicant, request)
+        applicantService.editPassword(applicant.id, request)
         return ResponseEntity.noContent().build()
     }
 }

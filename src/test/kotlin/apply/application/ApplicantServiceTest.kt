@@ -5,6 +5,7 @@ import apply.EMAIL
 import apply.NAME
 import apply.PASSWORD
 import apply.RANDOM_PASSWORD_TEXT
+import apply.WRONG_PASSWORD
 import apply.createApplicant
 import apply.createApplicationForm
 import apply.domain.applicant.ApplicantAuthenticationException
@@ -114,7 +115,7 @@ internal class ApplicantServiceTest {
         }
 
         fun subject() {
-            applicantService.editPassword(createApplicant(), request)
+            applicantService.editPassword(1L, request)
         }
 
         @Test
@@ -125,7 +126,7 @@ internal class ApplicantServiceTest {
 
         @Test
         fun `만약 기존 비밀번호가 일치하지 않다면 예외가 발생한다`() {
-            request = EditPasswordRequest(Password("wrong_password"), Password("new_password"))
+            request = EditPasswordRequest(WRONG_PASSWORD, Password("new_password"))
             assertThrows<ApplicantAuthenticationException> { subject() }
         }
     }

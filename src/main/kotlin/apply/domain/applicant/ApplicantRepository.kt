@@ -5,8 +5,9 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 
 interface ApplicantRepository : JpaRepository<Applicant, Long> {
-    fun findByInformationNameContainingOrInformationEmailContaining(name: String, email: String): List<Applicant>
+    @Query("select a from Applicant a where a.information.name like %:keyword% or a.information.email like %:keyword%")
+    fun findAllByKeyword(@Param("keyword") keyword: String): List<Applicant>
 
-    @Query("SELECT a FROM Applicant a WHERE a.information.email = :email")
+    @Query("select a from Applicant a where a.information.email = :email")
     fun findByEmail(@Param("email") email: String): Applicant?
 }
