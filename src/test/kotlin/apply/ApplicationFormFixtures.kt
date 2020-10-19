@@ -75,6 +75,6 @@ fun createApplicationForms(
             )
         )
     )
-): MutableList<ApplicationForm> {
-    return mutableListOf(applicationForm1, applicationForm2)
+): List<ApplicationForm> {
+    return listOf(applicationForm1, applicationForm2)
 }

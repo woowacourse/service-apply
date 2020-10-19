@@ -32,7 +32,7 @@ class ApplicationFormServiceTest {
     private lateinit var applicationFormRepository: ApplicationFormRepository
 
     @MockK
-    private lateinit var recruimentRepository: RecruitmentRepository
+    private lateinit var recruitmentRepository: RecruitmentRepository
 
     @MockK
     private lateinit var recruitmentItemRepository: RecruitmentItemRepository
@@ -59,7 +59,7 @@ class ApplicationFormServiceTest {
     @BeforeEach
     internal fun setUp() {
         this.applicationFormService =
-            ApplicationFormService(applicationFormRepository, recruimentRepository, recruitmentItemRepository)
+            ApplicationFormService(applicationFormRepository, recruitmentRepository, recruitmentItemRepository)
 
         applicationForm1 = createApplicationForm()
 
@@ -177,7 +177,7 @@ class ApplicationFormServiceTest {
 
     @Test
     fun `지원서를 생성한다`() {
-        every { recruimentRepository.findByIdOrNull(any()) } returns recruitment
+        every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
         every { applicationFormRepository.existsByRecruitmentIdAndApplicantId(any(), any()) } returns false
         every { applicationFormRepository.save(any<ApplicationForm>()) } returns mockk()
 
@@ -186,7 +186,7 @@ class ApplicationFormServiceTest {
 
     @Test
     fun `지원서가 있는 경우 지원할 수 없다`() {
-        every { recruimentRepository.findByIdOrNull(any()) } returns recruitment
+        every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
         every { applicationFormRepository.existsByRecruitmentIdAndApplicantId(any(), any()) } returns true
 
         assertThrows<IllegalArgumentException> { applicationFormService.create(1L, createApplicationFormRequest) }
@@ -194,14 +194,14 @@ class ApplicationFormServiceTest {
 
     @Test
     fun `모집이 없는 경우 지원할 수 없다`() {
-        every { recruimentRepository.findByIdOrNull(any()) } returns null
+        every { recruitmentRepository.findByIdOrNull(any()) } returns null
 
         assertThrows<IllegalArgumentException> { applicationFormService.create(1L, createApplicationFormRequest) }
     }
 
     @Test
     fun `지원서를 수정한다`() {
-        every { recruimentRepository.findByIdOrNull(any()) } returns recruitment
+        every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
         every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns applicationForm1
         every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns recruitmentItems
 
@@ -210,7 +210,7 @@ class ApplicationFormServiceTest {
 
     @Test
     fun `지원서가 없는 경우 수정할 수 없다`() {
-        every { recruimentRepository.findByIdOrNull(any()) } returns recruitment
+        every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
         every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns null
 
         assertThrows<IllegalArgumentException> { applicationFormService.update(1L, updateApplicationFormRequest) }
@@ -218,21 +218,21 @@ class ApplicationFormServiceTest {
 
     @Test
     fun `모집이 없는 경우 지원서를 수정할 수 없다`() {
-        every { recruimentRepository.findByIdOrNull(any()) } returns null
+        every { recruitmentRepository.findByIdOrNull(any()) } returns null
 
         assertThrows<IllegalArgumentException> { applicationFormService.update(1L, updateApplicationFormRequest) }
     }
 
     @Test
     fun `모집중이 아닌 지원서를 수정할 수 없다`() {
-        every { recruimentRepository.findByIdOrNull(any()) } returns recruitmentNotRecruiting
+        every { recruitmentRepository.findByIdOrNull(any()) } returns recruitmentNotRecruiting
 
         assertThrows<IllegalStateException> { applicationFormService.update(1L, updateApplicationFormRequest) }
     }
 
     @Test
     fun `제출한 지원서를 수정할 수 없다`() {
-        every { recruimentRepository.findByIdOrNull(any()) } returns recruitment
+        every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
         every {
             applicationFormRepository.findByRecruitmentIdAndApplicantId(
                 any(),
@@ -246,7 +246,7 @@ class ApplicationFormServiceTest {
 
     @Test
     fun `단 하나의 지원서만 제출할 수 있다`() {
-        every { recruimentRepository.findByIdOrNull(any()) } returns recruitment
+        every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
         every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns applicationForm1
         every { applicationFormRepository.existsByApplicantIdAndSubmittedTrue(any()) } returns true
         every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns recruitmentItems
