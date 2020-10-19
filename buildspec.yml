@@ -11,7 +11,7 @@ phases:
       - mv ./build/libs/*.jar ./
 artifacts:
   files:
-    - ./build/libs/*.jar
+    - ./*.jar
     - ./.ebextensions/**/*
 cache:
   paths:
