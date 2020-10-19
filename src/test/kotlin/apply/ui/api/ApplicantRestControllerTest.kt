@@ -67,7 +67,7 @@ internal class ApplicantRestControllerTest(
     private lateinit var applicantService: ApplicantService
 
     @MockBean
-    private lateinit var applicantVerifyService: ApplicantAuthenticationService
+    private lateinit var applicantAuthenticationService: ApplicantAuthenticationService
 
     @MockBean
     private lateinit var mailService: MailService
@@ -121,7 +121,7 @@ internal class ApplicantRestControllerTest(
 
     @Test
     fun `유효한 지원자 생성 및 검증 요청에 대하여 응답으로 토큰이 반환된다`() {
-        given(applicantVerifyService.generateToken(applicantRequest))
+        given(applicantAuthenticationService.generateToken(applicantRequest))
             .willReturn(VALID_TOKEN)
 
         mockMvc.post("/api/applicants/register") {
@@ -136,7 +136,7 @@ internal class ApplicantRestControllerTest(
     @Test
     fun `기존 지원자 정보와 일치하지 않는 지원자 생성 및 검증 요청에 대하여 unauthorized 응답을 받는다`() {
         given(
-            applicantVerifyService.generateToken(invalidApplicantRequest)
+            applicantAuthenticationService.generateToken(invalidApplicantRequest)
         ).willThrow(ApplicantAuthenticationException())
 
         mockMvc.post("/api/applicants/register") {
@@ -151,7 +151,7 @@ internal class ApplicantRestControllerTest(
     @Test
     fun `올바른 지원자 로그인 요청에 응답으로 Token을 반환한다`() {
         given(
-            applicantVerifyService.generateTokenByLogin(applicantLoginRequest)
+            applicantAuthenticationService.generateTokenByLogin(applicantLoginRequest)
         ).willReturn(VALID_TOKEN)
 
         mockMvc.post("/api/applicants/login") {
@@ -166,7 +166,7 @@ internal class ApplicantRestControllerTest(
     @Test
     fun `잘못된 지원자 로그인 요청에 응답으로 Unauthorized와 메시지를 반환한다`() {
         given(
-            applicantVerifyService.generateTokenByLogin(invalidApplicantLoginRequest)
+            applicantAuthenticationService.generateTokenByLogin(invalidApplicantLoginRequest)
         ).willThrow(ApplicantAuthenticationException())
 
         mockMvc.post("/api/applicants/login") {
