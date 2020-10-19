@@ -8,13 +8,11 @@ phases:
   post_build:
     commands:
       - echo $(basename ./build/libs/*.jar)
-      - pwd
+      - mv ./build/libs/*.jar ./
 artifacts:
   files:
     - ./build/libs/*.jar
-    - ./appspec.yml
-    - ./scripts/**
-  discard-paths: yes
+    - ./.ebextensions/**/*
 cache:
   paths:
     - /root/.gradle/caches/**/*
