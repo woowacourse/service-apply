@@ -114,11 +114,6 @@ export default {
       if (e.response.data.message === ALREADY_REGISTER) {
         alert("이미 신청서를 작성했습니다. 로그인 페이지로 이동합니다.")
         this.$router.replace("/login")
-      } else if (
-        e.response.data.message === NOT_COMPLETED_ANSWER ||
-        e.response.data.message === INVALID_ANSWER
-      ) {
-        alert(e.response.data.message)
       } else {
         alert(e.response.data.message)
         this.$router.replace("/")
@@ -204,10 +199,17 @@ export default {
         try {
           await this.save(true)
           alert("정상적으로 제출되었습니다.")
-        } catch (e) {
-          alert(e.response.data.message)
-        } finally {
           this.$router.replace("/")
+        } catch (e) {
+          if (
+            e.response.data.message === NOT_COMPLETED_ANSWER ||
+            e.response.data.message === INVALID_ANSWER
+          ) {
+            alert(e.response.data.message)
+          } else {
+            alert(e.response.data.message)
+            this.$router.replace("/")
+          }
         }
       }
     },
