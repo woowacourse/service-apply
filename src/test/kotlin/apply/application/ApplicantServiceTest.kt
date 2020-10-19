@@ -26,7 +26,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
-import support.createLocalDate
 
 @ExtendWith(MockKExtension::class)
 internal class ApplicantServiceTest {
@@ -97,7 +96,7 @@ internal class ApplicantServiceTest {
 
         @Test
         fun `만약 개인정보가 일치하지 않는다면 예외가 발생한다`() {
-            request = ResetPasswordRequest(NAME, EMAIL, createLocalDate(1995, 4, 4))
+            request = ResetPasswordRequest("가짜 이름", EMAIL, BIRTHDAY)
             assertThrows<ApplicantAuthenticationException> { subject() }
         }
     }
