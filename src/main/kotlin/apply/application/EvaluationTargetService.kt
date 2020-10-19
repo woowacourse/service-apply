@@ -34,10 +34,10 @@ class EvaluationTargetService(
 
     fun findAllByEvaluationIdAndKeyword(
         evaluationId: Long,
-        keyWord: String = ""
+        keyword: String = ""
     ): List<EvaluationTargetResponse> {
         val evaluationTargets = findAllByEvaluationId(evaluationId)
-        val applicants = applicantRepository.findAllByKeyword(keyWord)
+        val applicants = applicantRepository.findAllByKeyword(keyword)
 
         return evaluationTargets
             .filter { applicants.any { applicant -> applicant.id == it.applicantId } }

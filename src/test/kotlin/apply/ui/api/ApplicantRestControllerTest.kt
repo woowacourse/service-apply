@@ -134,7 +134,7 @@ internal class ApplicantRestControllerTest(
     }
 
     @Test
-    fun `기존 지원자 정보와 일치하지 않는 지원자 생성 및 검증 요청에 대하여 unauthorized 응답을 받는다`() {
+    fun `기존 지원자 정보와 일치하지 않는 지원자 생성 및 검증 요청에 응답으로 Unauthorized를 반환한다`() {
         given(
             applicantAuthenticationService.generateToken(invalidApplicantRequest)
         ).willThrow(ApplicantAuthenticationException())
