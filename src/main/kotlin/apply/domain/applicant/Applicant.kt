@@ -17,20 +17,20 @@ class Applicant(
     var password: Password,
     id: Long = 0L
 ) : BaseEntity(id) {
-    @Transient
-    val name: String = information.name
+    val name: String
+        get() = information.name
 
-    @Transient
-    val email: String = information.email
+    val email: String
+        get() = information.email
 
-    @Transient
-    val phoneNumber: String = information.phoneNumber
+    val phoneNumber: String
+        get() = information.phoneNumber
 
-    @Transient
-    val gender: Gender = information.gender
+    val gender: Gender
+        get() = information.gender
 
-    @Transient
-    val birthday: LocalDate = information.birthday
+    val birthday: LocalDate
+        get() = information.birthday
 
     constructor(
         name: String,
