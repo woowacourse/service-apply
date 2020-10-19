@@ -261,21 +261,21 @@ class ApplicationFormServiceTest {
 
     @Test
     fun `작성하지 않은 문항이 존재하는 경우 제출할 수 없다`() {
-        every { recruimentRepository.findByIdOrNull(any()) } returns recruitment
+        every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
         every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns applicationForm1
         every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns recruitmentItems
 
         assertThrows<IllegalArgumentException> {
             applicationFormService.update(
                 1L,
-                UpdateApplicationFormRequest(recruitmentId = 1L, submitted = false)
+                UpdateApplicationFormRequest(recruitmentId = 1L, submitted = true)
             )
         }
     }
 
     @Test
     fun `유효하지 않은 문항이 존재하는 경우 제출할 수 없다`() {
-        every { recruimentRepository.findByIdOrNull(any()) } returns recruitment
+        every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
         every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns applicationForm1
         every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns recruitmentItems
 
@@ -284,7 +284,7 @@ class ApplicationFormServiceTest {
                 1L,
                 UpdateApplicationFormRequest(
                     recruitmentId = 1L,
-                    submitted = false,
+                    submitted = true,
                     answers = listOf(
                         createExcessOfLengthAnswerRequest(recruitmentItemId = 1L),
                         createAnswerRequest(recruitmentItemId = 2L)

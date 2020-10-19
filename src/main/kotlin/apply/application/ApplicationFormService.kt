@@ -50,7 +50,9 @@ class ApplicationFormService(
                 )
             }.toMutableList()
         )
-        checkRecruitmentItem(request.recruitmentId, answers)
+        if (request.submitted) {
+            checkRecruitmentItem(request.recruitmentId, answers)
+        }
         applicationForm.update(request.referenceUrl, answers)
         if (request.submitted) {
             require(!applicationFormRepository.existsByApplicantIdAndSubmittedTrue(applicantId)) {
