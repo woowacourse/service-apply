@@ -37,3 +37,8 @@ webpack.generated.js
 target
 out
 pnpmfile.js
+
+### Docker ###
+docker/db/mysql/data/
+docker/db/mysql/init/*
+!docker/db/mysql/init/init.sql
