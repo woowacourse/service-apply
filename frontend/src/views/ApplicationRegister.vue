@@ -199,7 +199,6 @@ export default {
         try {
           await this.save(true)
           alert("정상적으로 제출되었습니다.")
-          this.$router.replace("/")
         } catch (e) {
           alert(e.response.data.message)
         } finally {
