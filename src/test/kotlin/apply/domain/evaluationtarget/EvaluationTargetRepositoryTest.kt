@@ -5,14 +5,11 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import org.springframework.test.context.TestConstructor
+import support.test.BaseDataJpaTest
 
-@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-@DataJpaTest
 class EvaluationTargetRepositoryTest(
     private val evaluationTargetRepository: EvaluationTargetRepository
-) {
+) : BaseDataJpaTest() {
     companion object {
         private const val EVALUATION_ID = 1L
     }

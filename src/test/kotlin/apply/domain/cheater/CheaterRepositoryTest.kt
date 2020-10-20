@@ -7,15 +7,12 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import org.springframework.test.context.TestConstructor
 import support.createLocalDate
+import support.test.BaseDataJpaTest
 
-@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-@DataJpaTest
 internal class CheaterRepositoryTest(
     private val cheaterRepository: CheaterRepository
-) {
+) : BaseDataJpaTest() {
     private val cheater = Applicant(
         id = 1L,
         name = "홍길동1",

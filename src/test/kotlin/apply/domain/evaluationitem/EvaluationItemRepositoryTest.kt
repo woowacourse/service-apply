@@ -5,14 +5,11 @@ import apply.createEvaluationItem
 import apply.domain.evaluationItem.EvaluationItemRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import org.springframework.test.context.TestConstructor
+import support.test.BaseDataJpaTest
 
-@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-@DataJpaTest
 internal class EvaluationItemRepositoryTest(
     private val evaluationItemRepository: EvaluationItemRepository
-) {
+) : BaseDataJpaTest() {
     @Test
     fun `평가의 id로 평가 항목들을 Position의 오름차순으로 조회한다`() {
         val evaluationItems = listOf(

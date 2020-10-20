@@ -5,13 +5,10 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import org.springframework.test.context.TestConstructor
 import support.createLocalDate
+import support.test.BaseDataJpaTest
 
-@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-@DataJpaTest
-internal class ApplicantRepositoryTest(private val applicantRepository: ApplicantRepository) {
+internal class ApplicantRepositoryTest(private val applicantRepository: ApplicantRepository) : BaseDataJpaTest() {
     @BeforeEach
     internal fun setUp() {
         val applicants = listOf(

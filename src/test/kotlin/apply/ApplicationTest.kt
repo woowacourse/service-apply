@@ -1,10 +1,9 @@
 package apply
 
 import org.junit.jupiter.api.Test
-import org.springframework.boot.test.context.SpringBootTest
+import support.test.BaseSpringBootTest
 
-@SpringBootTest
-class ApplicationTest {
+class ApplicationTest : BaseSpringBootTest() {
     @Test
     fun name() {
     }

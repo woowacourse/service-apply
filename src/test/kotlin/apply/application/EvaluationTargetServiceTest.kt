@@ -35,18 +35,15 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.data.repository.findByIdOrNull
-import org.springframework.test.context.TestConstructor
 import support.createLocalDate
 import support.createLocalDateTime
+import support.test.BaseDataJpaTest
 
 @ExtendWith(MockKExtension::class)
-@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-@DataJpaTest
 class EvaluationTargetServiceTest(
     private val evaluationTargetRepository: EvaluationTargetRepository
-) {
+) : BaseDataJpaTest() {
     @MockK
     private lateinit var evaluationRepository: EvaluationRepository
 
