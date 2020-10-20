@@ -65,7 +65,7 @@ import RecruitCard from "@/components/RecruitCard"
 import * as RecruitmentApi from "@/api/recruitments"
 import * as ApplicationFormsApi from "@/api/application-forms"
 import { parseLocalDateTime } from "@/utils/date"
-import { ALREADY_REGISTER, INVALID_ANSWER, NOT_COMPLETED_ANSWER } from "@/views/constants"
+import { ALREADY_REGISTER } from "@/views/constants"
 
 export default {
   props: {
@@ -201,15 +201,9 @@ export default {
           alert("정상적으로 제출되었습니다.")
           this.$router.replace("/")
         } catch (e) {
-          if (
-            e.response.data.message === NOT_COMPLETED_ANSWER ||
-            e.response.data.message === INVALID_ANSWER
-          ) {
-            alert(e.response.data.message)
-          } else {
-            alert(e.response.data.message)
-            this.$router.replace("/")
-          }
+          alert(e.response.data.message)
+        } finally {
+          this.$router.replace("/")
         }
       }
     },

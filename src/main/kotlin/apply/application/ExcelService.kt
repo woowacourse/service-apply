@@ -32,7 +32,7 @@ class ExcelService(
                 it.birthday.toString(),
                 it.applicationForm.submittedDateTime.toString(),
                 it.isCheater.toText(),
-                *it.applicationForm.answers.items.map { item -> item.contents }.toTypedArray()
+                *it.applicationForm.applicationFormAnswers.items.map { item -> item.contents }.toTypedArray()
             )
         }
         return excelGenerator.generateBy(headerTitles, excelRows)

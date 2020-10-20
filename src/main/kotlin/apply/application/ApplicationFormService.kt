@@ -3,8 +3,8 @@ package apply.application
 import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.recruitment.RecruitmentRepository
-import apply.domain.recruitmentitem.Answer
-import apply.domain.recruitmentitem.Answers
+import apply.domain.applicationform.ApplicationFormAnswer
+import apply.domain.applicationform.ApplicationFormAnswers
 import apply.domain.recruitmentitem.RecruitmentItemRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -41,23 +41,18 @@ class ApplicationFormService(
 
     fun update(applicantId: Long, request: UpdateApplicationFormRequest) {
         checkRecruitment(request.recruitmentId)
+        validateRequest(request, applicantId)
         val applicationForm = getByRecruitmentIdAndApplicantId(request.recruitmentId, applicantId)
-        val answers = Answers(
+        val answers = ApplicationFormAnswers(
             request.answers.map {
-                Answer(
+                ApplicationFormAnswer(
                     it.contents,
                     it.recruitmentItemId
                 )
             }.toMutableList()
         )
-        if (request.submitted) {
-            checkRecruitmentItem(request.recruitmentId, answers)
-        }
         applicationForm.update(request.referenceUrl, answers)
         if (request.submitted) {
-            require(!applicationFormRepository.existsByApplicantIdAndSubmittedTrue(applicantId)) {
-                "이미 제출 완료한 지원서가 존재하여 제출할 수 없습니다."
-            }
             applicationForm.submit()
         }
     }
@@ -77,15 +72,19 @@ class ApplicationFormService(
         }
     }
 
-    private fun checkRecruitmentItem(recruitmentId: Long, answers: Answers) {
-        val recruitmentItems = recruitmentItemRepository.findByRecruitmentIdOrderByPosition(recruitmentId)
-        require(answers.checkAllNotBlank() && (recruitmentItems.size == answers.items.size)) {
-            "작성하지 않은 문항이 존재합니다."
+    private fun validateRequest(request: UpdateApplicationFormRequest, applicantId: Long) {
+        val recruitmentItems = recruitmentItemRepository.findByRecruitmentIdOrderByPosition(request.recruitmentId)
+        if (request.submitted) {
+            require(!applicationFormRepository.existsByApplicantIdAndSubmittedTrue(applicantId)) {
+                "이미 제출 완료한 지원서가 존재하여 제출할 수 없습니다."
+            }
+            require(request.answers.all { it.contents.isNotBlank() } && (recruitmentItems.size == request.answers.size)) {
+                "작성하지 않은 문항이 존재합니다."
+            }
         }
         require(
-            recruitmentItems.all { recruitmentItem ->
-                answers.items.find { recruitmentItem.id == it.recruitmentItemId }
-                    .let { recruitmentItem.maximumLength >= it!!.contents.length }
+            request.answers.all { answer ->
+                recruitmentItems.first { answer.recruitmentItemId == it.id }.maximumLength >= answer.contents.length
             }
         ) {
             "유효하지 않은 문항이 존재합니다."
@@ -106,10 +105,10 @@ class ApplicationFormService(
                 submittedDateTime = createLocalDateTime(2019, 11, 5, 10, 10, 10),
                 recruitmentId = 1L,
                 applicantId = 1L,
-                answers = Answers(
+                applicationFormAnswers = ApplicationFormAnswers(
                     mutableListOf(
-                        Answer("고객에게 가치를 전달하고 싶습니다.", 1L),
-                        Answer("도전, 끈기", 2L)
+                        ApplicationFormAnswer("고객에게 가치를 전달하고 싶습니다.", 1L),
+                        ApplicationFormAnswer("도전, 끈기", 2L)
                     )
                 )
             ),
@@ -121,10 +120,10 @@ class ApplicationFormService(
                 submittedDateTime = createLocalDateTime(2019, 11, 5, 10, 10, 10),
                 recruitmentId = 1L,
                 applicantId = 2L,
-                answers = Answers(
+                applicationFormAnswers = ApplicationFormAnswers(
                     mutableListOf(
-                        Answer("스타트업을 하고 싶습니다.", 1L),
-                        Answer("책임감", 2L)
+                        ApplicationFormAnswer("스타트업을 하고 싶습니다.", 1L),
+                        ApplicationFormAnswer("책임감", 2L)
                     )
                 )
             ),
@@ -136,10 +135,10 @@ class ApplicationFormService(
                 submittedDateTime = createLocalDateTime(2019, 11, 6, 10, 10, 10),
                 recruitmentId = 1L,
                 applicantId = 3L,
-                answers = Answers(
+                applicationFormAnswers = ApplicationFormAnswers(
                     mutableListOf(
-                        Answer("바딘을 배우고 싶습니다.", 1L),
-                        Answer("건강", 2L)
+                        ApplicationFormAnswer("바딘을 배우고 싶습니다.", 1L),
+                        ApplicationFormAnswer("건강", 2L)
                     )
                 )
             ),
@@ -151,10 +150,10 @@ class ApplicationFormService(
                 submittedDateTime = createLocalDateTime(2019, 11, 6, 10, 10, 10),
                 recruitmentId = 1L,
                 applicantId = 4L,
-                answers = Answers(
+                applicationFormAnswers = ApplicationFormAnswers(
                     mutableListOf(
-                        Answer("코딩 교육을 하고 싶습니다.", 1L),
-                        Answer("사랑", 2L)
+                        ApplicationFormAnswer("코딩 교육을 하고 싶습니다.", 1L),
+                        ApplicationFormAnswer("사랑", 2L)
                     )
                 )
             )

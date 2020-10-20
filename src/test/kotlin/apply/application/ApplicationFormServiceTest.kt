@@ -74,7 +74,7 @@ class ApplicationFormServiceTest {
             recruitmentId = applicationForm1.recruitmentId,
             referenceUrl = applicationForm1.referenceUrl,
             submitted = applicationForm1.submitted,
-            answers = applicationForm1.answers.items.map { AnswerResponse(it.contents, it.recruitmentItemId) },
+            answers = applicationForm1.applicationFormAnswers.items.map { AnswerResponse(it.contents, it.recruitmentItemId) },
             createdDateTime = applicationForm1.createdDateTime,
             modifiedDateTime = applicationForm1.modifiedDateTime,
             submittedDateTime = applicationForm1.submittedDateTime
@@ -86,7 +86,7 @@ class ApplicationFormServiceTest {
             recruitmentId = applicationForm1.recruitmentId,
             referenceUrl = applicationForm1.referenceUrl,
             submitted = false,
-            answers = applicationForm1.answers.items.map { AnswerRequest(it.contents, it.recruitmentItemId) }
+            answers = applicationForm1.applicationFormAnswers.items.map { AnswerRequest(it.contents, it.recruitmentItemId) }
         )
 
         recruitmentItems = listOf(
@@ -106,7 +106,7 @@ class ApplicationFormServiceTest {
             recruitmentId = applicationForm1.recruitmentId,
             referenceUrl = applicationForm1.referenceUrl,
             submitted = false,
-            answers = applicationForm1.answers.items.map { AnswerRequest(it.contents, it.recruitmentItemId) }
+            answers = applicationForm1.applicationFormAnswers.items.map { AnswerRequest(it.contents, it.recruitmentItemId) }
         )
 
         recruitment = createRecruitment(hidden = false)
@@ -212,6 +212,8 @@ class ApplicationFormServiceTest {
     fun `지원서가 없는 경우 수정할 수 없다`() {
         every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
         every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns null
+        every { applicationFormRepository.existsByApplicantIdAndSubmittedTrue(any()) } returns true
+        every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns recruitmentItems
 
         assertThrows<IllegalArgumentException> { applicationFormService.update(1L, updateApplicationFormRequest) }
     }
@@ -262,6 +264,7 @@ class ApplicationFormServiceTest {
     @Test
     fun `작성하지 않은 문항이 존재하는 경우 제출할 수 없다`() {
         every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
+        every { applicationFormRepository.existsByApplicantIdAndSubmittedTrue(any()) } returns true
         every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns applicationForm1
         every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns recruitmentItems
 
@@ -276,6 +279,7 @@ class ApplicationFormServiceTest {
     @Test
     fun `유효하지 않은 문항이 존재하는 경우 제출할 수 없다`() {
         every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
+        every { applicationFormRepository.existsByApplicantIdAndSubmittedTrue(any()) } returns true
         every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns applicationForm1
         every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns recruitmentItems
 
