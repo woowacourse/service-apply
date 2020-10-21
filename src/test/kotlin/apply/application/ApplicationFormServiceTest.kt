@@ -321,6 +321,6 @@ class ApplicationFormServiceTest {
                 )
             )
         }.message
-        assertThat(message).isEqualTo("모집 문항의 최대 글자수를 초과하였습니다.")
+        assertThat(message).isEqualTo("모집 문항의 최대 글자 수를 초과하였습니다.")
     }
 }

@@ -87,7 +87,7 @@ class ApplicationFormService(
                 recruitmentItems.first { answer.recruitmentItemId == it.id }.maximumLength >= answer.contents.length
             }
         ) {
-            "모집 문항의 최대 글자수를 초과하였습니다."
+            "모집 문항의 최대 글자 수를 초과하였습니다."
         }
     }
 
