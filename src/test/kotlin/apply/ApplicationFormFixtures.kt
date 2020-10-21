@@ -5,8 +5,6 @@ import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormAnswer
 import apply.domain.applicationform.ApplicationFormAnswers
 
-private const val EXCESS_LENGTH = 2000
-
 fun createApplicationForm(
     applicantId: Long = 1L,
     recruitmentId: Long = 1L,
@@ -39,8 +37,8 @@ fun createAnswerRequest(
     return AnswerRequest(contents, recruitmentItemId)
 }
 
-fun createExcessOfLengthAnswerRequest(
-    contents: String = "*".repeat(EXCESS_LENGTH),
+fun createExceededAnswerRequest(
+    contents: String = "*".repeat(MAXIMUM_LENGTH + 1),
     recruitmentItemId: Long = 1L
 ): AnswerRequest {
     return AnswerRequest(contents, recruitmentItemId)

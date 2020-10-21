@@ -3,7 +3,7 @@ package apply.application
 import apply.createAnswerRequest
 import apply.createApplicationForm
 import apply.createApplicationForms
-import apply.createExcessOfLengthAnswerRequest
+import apply.createExceededAnswerRequest
 import apply.createRecruitment
 import apply.createRecruitmentItem
 import apply.domain.applicationform.ApplicationForm
@@ -315,12 +315,12 @@ class ApplicationFormServiceTest {
                     recruitmentId = 1L,
                     submitted = true,
                     answers = listOf(
-                        createExcessOfLengthAnswerRequest(recruitmentItemId = 1L),
+                        createExceededAnswerRequest(recruitmentItemId = 1L),
                         createAnswerRequest(recruitmentItemId = 2L)
                     )
                 )
             )
         }.message
-        assertThat(message).isEqualTo("유효하지 않은 문항이 존재합니다.")
+        assertThat(message).isEqualTo("모집 문항의 최대 글자수를 초과하였습니다.")
     }
 }
