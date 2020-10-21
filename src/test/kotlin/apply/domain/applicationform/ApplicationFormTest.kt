@@ -1,7 +1,5 @@
 package apply.domain.applicationform
 
-import apply.domain.recruitmentitem.Answer
-import apply.domain.recruitmentitem.Answers
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatIllegalStateException
 import org.junit.jupiter.api.BeforeEach
@@ -17,13 +15,13 @@ internal class ApplicationFormTest {
             applicantId = 1L,
             recruitmentId = 1L,
             referenceUrl = "http://example.com",
-            answers = Answers(
+            answers = ApplicationFormAnswers(
                 mutableListOf(
-                    Answer(
+                    ApplicationFormAnswer(
                         "스타트업을 하고 싶습니다.",
                         1L
                     ),
-                    Answer(
+                    ApplicationFormAnswer(
                         "책임감",
                         2L
                     )
@@ -47,13 +45,13 @@ internal class ApplicationFormTest {
     fun `지원서의 업데이트를 테스트한다`() {
         applicationForm.update(
             "http://h2f.kr",
-            Answers(
+            ApplicationFormAnswers(
                 mutableListOf(
-                    Answer(
+                    ApplicationFormAnswer(
                         "대기업에 취직하고 싶습니다.",
                         1L
                     ),
-                    Answer(
+                    ApplicationFormAnswer(
                         "책임감",
                         2L
                     )
@@ -75,13 +73,13 @@ internal class ApplicationFormTest {
         assertThatIllegalStateException().isThrownBy {
             applicationForm.update(
                 "http://h2f.kr",
-                Answers(
+                ApplicationFormAnswers(
                     mutableListOf(
-                        Answer(
+                        ApplicationFormAnswer(
                             "스타트업을 하고 싶습니다.",
                             1L
                         ),
-                        Answer(
+                        ApplicationFormAnswer(
                             "책임감",
                             2L
                         )

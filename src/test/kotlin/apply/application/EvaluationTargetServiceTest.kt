@@ -25,25 +25,20 @@ import apply.domain.evaluationtarget.EvaluationStatus.PASS
 import apply.domain.evaluationtarget.EvaluationStatus.WAITING
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
-import apply.domain.recruitmentitem.Answer
-import apply.domain.recruitmentitem.Answers
+import apply.domain.applicationform.ApplicationFormAnswer
+import apply.domain.applicationform.ApplicationFormAnswers
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
-import io.mockk.junit5.MockKExtension
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
-import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.data.repository.findByIdOrNull
-import org.springframework.test.context.TestConstructor
 import support.createLocalDate
 import support.createLocalDateTime
+import support.test.RepositoryTest
 
-@ExtendWith(MockKExtension::class)
-@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-@DataJpaTest
+@RepositoryTest
 class EvaluationTargetServiceTest(
     private val evaluationTargetRepository: EvaluationTargetRepository
 ) {
@@ -355,10 +350,10 @@ class EvaluationTargetServiceTest(
             createdDateTime = createLocalDateTime(2019, 10, 25, 10),
             modifiedDateTime = createLocalDateTime(2019, 11, 5, 10),
             submittedDateTime = createLocalDateTime(2019, 11, 5, 10),
-            answers = Answers(
+            applicationFormAnswers = ApplicationFormAnswers(
                 mutableListOf(
-                    Answer("${id}의 1번 답", 1L),
-                    Answer("${id}의 2번 답", 2L)
+                    ApplicationFormAnswer("${id}의 1번 답", 1L),
+                    ApplicationFormAnswer("${id}의 2번 답", 2L)
                 )
             ),
             id = id

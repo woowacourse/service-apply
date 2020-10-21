@@ -1,32 +1,47 @@
 package apply
 
+import apply.application.AnswerRequest
 import apply.domain.applicationform.ApplicationForm
-import apply.domain.recruitmentitem.Answer
-import apply.domain.recruitmentitem.Answers
+import apply.domain.applicationform.ApplicationFormAnswer
+import apply.domain.applicationform.ApplicationFormAnswers
 
 fun createApplicationForm(
     applicantId: Long = 1L,
     recruitmentId: Long = 1L,
     referenceUrl: String = "http://example.com",
-    answers: Answers = createAnswers()
+    applicationFormAnswers: ApplicationFormAnswers = createApplicationFormAnswers()
 ): ApplicationForm {
-    return ApplicationForm(applicantId, recruitmentId, referenceUrl, answers)
+    return ApplicationForm(applicantId, recruitmentId, referenceUrl, applicationFormAnswers)
 }
 
-fun createAnswers(
-    answers: MutableList<Answer> = mutableListOf(
-        createAnswer(),
-        createAnswer("책임감", 2L)
+fun createApplicationFormAnswers(
+    applicationFormAnswers: MutableList<ApplicationFormAnswer> = mutableListOf(
+        createApplicationFormAnswer(),
+        createApplicationFormAnswer("책임감", 2L)
     )
-): Answers {
-    return Answers(answers)
+): ApplicationFormAnswers {
+    return ApplicationFormAnswers(applicationFormAnswers)
 }
 
-fun createAnswer(
+fun createApplicationFormAnswer(
     contents: String = "스타트업을 하고 싶습니다.",
     recruitmentItemId: Long = 1L
-): Answer {
-    return Answer(contents, recruitmentItemId)
+): ApplicationFormAnswer {
+    return ApplicationFormAnswer(contents, recruitmentItemId)
+}
+
+fun createAnswerRequest(
+    contents: String = "책임감",
+    recruitmentItemId: Long = 1L
+): AnswerRequest {
+    return AnswerRequest(contents, recruitmentItemId)
+}
+
+fun createExceededAnswerRequest(
+    contents: String = "*".repeat(MAXIMUM_LENGTH + 1),
+    recruitmentItemId: Long = 1L
+): AnswerRequest {
+    return AnswerRequest(contents, recruitmentItemId)
 }
 
 fun createApplicationForms(
@@ -34,10 +49,10 @@ fun createApplicationForms(
         applicantId = 1L,
         recruitmentId = 1L,
         referenceUrl = "http://example.com",
-        answers = Answers(
+        answers = ApplicationFormAnswers(
             mutableListOf(
-                Answer("스타트업을 하고 싶습니다.", 1L),
-                Answer("책임감", 2L)
+                ApplicationFormAnswer("스타트업을 하고 싶습니다.", 1L),
+                ApplicationFormAnswer("책임감", 2L)
             )
         )
     ),
@@ -45,10 +60,10 @@ fun createApplicationForms(
         applicantId = 1L,
         recruitmentId = 2L,
         referenceUrl = "http://example2.com",
-        answers = Answers(
+        answers = ApplicationFormAnswers(
             mutableListOf(
-                Answer("대기업에 취직하고 싶습니다.", 1L),
-                Answer("신중함", 2L)
+                ApplicationFormAnswer("대기업에 취직하고 싶습니다.", 1L),
+                ApplicationFormAnswer("신중함", 2L)
             )
         )
     )

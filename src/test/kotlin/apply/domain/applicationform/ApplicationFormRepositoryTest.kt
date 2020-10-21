@@ -5,11 +5,9 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import org.springframework.test.context.TestConstructor
+import support.test.RepositoryTest
 
-@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-@DataJpaTest
+@RepositoryTest
 class ApplicationFormRepositoryTest(
     private val applicationFormRepository: ApplicationFormRepository
 ) {
