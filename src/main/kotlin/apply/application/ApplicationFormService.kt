@@ -1,10 +1,10 @@
 package apply.application
 
 import apply.domain.applicationform.ApplicationForm
-import apply.domain.applicationform.ApplicationFormRepository
-import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.applicationform.ApplicationFormAnswer
 import apply.domain.applicationform.ApplicationFormAnswers
+import apply.domain.applicationform.ApplicationFormRepository
+import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitmentitem.RecruitmentItemRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -23,9 +23,14 @@ class ApplicationFormService(
     fun findAllByRecruitmentId(recruitmentId: Long): List<ApplicationForm> =
         applicationFormRepository.findByRecruitmentId(recruitmentId)
 
-    fun getByRecruitmentIdAndApplicantId(recruitmentId: Long, applicantId: Long): ApplicationForm =
-        applicationFormRepository.findByRecruitmentIdAndApplicantId(recruitmentId, applicantId)
+    private fun getByRecruitmentIdAndApplicantId(recruitmentId: Long, applicantId: Long): ApplicationForm {
+        val applicationForm = applicationFormRepository.findByRecruitmentIdAndApplicantId(recruitmentId, applicantId)
             ?: throw IllegalArgumentException("해당하는 지원서가 없습니다.")
+        check(!applicationForm.submitted) {
+            "이미 제출한 지원서는 열람할 수 없습니다."
+        }
+        return applicationForm
+    }
 
     fun getAllByApplicantId(applicantId: Long): List<MyApplicationFormResponse> =
         applicationFormRepository.findAllByApplicantId(applicantId).map(::MyApplicationFormResponse)

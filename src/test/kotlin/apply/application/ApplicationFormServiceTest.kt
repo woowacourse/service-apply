@@ -130,13 +130,6 @@ class ApplicationFormServiceTest {
     }
 
     @Test
-    fun `지원자 아이디와 모집 아이디로 지원서를 불러온다`() {
-        every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns applicationForm1
-
-        assertThat(applicationFormService.getByRecruitmentIdAndApplicantId(1L, 1L)).isEqualTo(applicationForm1)
-    }
-
-    @Test
     fun `지원서가 있으면 지원서를 불러온다`() {
         every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns applicationForm1
 
@@ -250,23 +243,21 @@ class ApplicationFormServiceTest {
     }
 
     @Test
-    fun `제출한 지원서를 수정할 수 없다`() {
-        every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
+    fun `제출한 지원서를 열람할 수 없다`() {
         every {
             applicationFormRepository.findByRecruitmentIdAndApplicantId(
                 any(),
                 any()
             )
         } returns applicationFormSubmitted
-        every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns recruitmentItems
 
         val message = assertThrows<IllegalStateException> {
-            applicationFormService.update(
+            applicationFormService.findForm(
                 3L,
-                updateApplicationFormRequest
+                1L
             )
         }.message
-        assertThat(message).isEqualTo("이미 제출된 지원서입니다. 수정할 수 없습니다.")
+        assertThat(message).isEqualTo("이미 제출한 지원서는 열람할 수 없습니다.")
     }
 
     @Test
