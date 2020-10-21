@@ -8,8 +8,7 @@
 .box {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  max-width: 800px;
+  width: 800px;
   padding: 20px;
   margin: 15px;
   border-radius: 3px;
@@ -19,6 +18,7 @@
 
 @media screen and (max-width: 800px) {
   .box {
+    width: 100vw;
     margin: 0;
   }
 }

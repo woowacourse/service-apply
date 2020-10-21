@@ -9,7 +9,7 @@ import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
-data class ApplicantBasicResponse(
+data class ApplicantResponse(
     val id: Long,
     val name: String,
     val email: String,
@@ -27,14 +27,14 @@ data class ApplicantBasicResponse(
     )
 }
 
-data class ApplicantResponse(
+data class ApplicantAndFormResponse(
     val id: Long,
     val name: String,
     val email: String,
     val phoneNumber: String,
     val gender: Gender,
     val birthday: LocalDate,
-    var isCheater: Boolean,
+    val isCheater: Boolean,
     val applicationForm: ApplicationForm
 ) {
     constructor(applicant: Applicant, isCheater: Boolean, applicationForm: ApplicationForm) : this(
@@ -49,7 +49,7 @@ data class ApplicantResponse(
     )
 }
 
-data class ApplicantInformation(
+data class RegisterApplicantRequest(
     @field:NotBlank
     val name: String,
 
@@ -69,29 +69,15 @@ data class ApplicantInformation(
     @field:NotNull
     val password: Password
 ) {
-    fun toEntity() = toEntity(0L)
-
-    fun toEntity(id: Long) = Applicant(
-        id = id,
-        name = name,
-        email = email,
-        phoneNumber = phoneNumber,
-        gender = gender,
-        birthday = birthday,
-        password = password
-    )
+    fun toEntity(): Applicant {
+        return Applicant(name, email, phoneNumber, gender, birthday, password)
+    }
 }
 
-data class ApplicantVerifyInformation(
-    @field:NotBlank
-    val name: String,
-
+data class AuthenticateApplicantRequest(
     @field:NotNull
     @field:Email
     val email: String,
-
-    @field:NotNull
-    val birthday: LocalDate,
 
     @field:NotNull
     val password: Password

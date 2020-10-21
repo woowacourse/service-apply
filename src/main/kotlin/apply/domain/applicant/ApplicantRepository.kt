@@ -1,23 +1,13 @@
 package apply.domain.applicant
 
 import org.springframework.data.jpa.repository.JpaRepository
-import java.time.LocalDate
+import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
 
 interface ApplicantRepository : JpaRepository<Applicant, Long> {
-    fun findByNameContainingOrEmailContaining(name: String, email: String): List<Applicant>
+    @Query("select a from Applicant a where a.information.name like %:keyword% or a.information.email like %:keyword%")
+    fun findAllByKeyword(@Param("keyword") keyword: String): List<Applicant>
 
-    fun findByEmail(email: String): Applicant?
-
-    fun findByNameAndEmailAndBirthday(
-        name: String,
-        email: String,
-        birthDay: LocalDate
-    ): Applicant?
-
-    fun existsByNameAndEmailAndBirthdayAndPassword(
-        name: String,
-        email: String,
-        birthDay: LocalDate,
-        password: Password
-    ): Boolean
+    @Query("select a from Applicant a where a.information.email = :email")
+    fun findByEmail(@Param("email") email: String): Applicant?
 }

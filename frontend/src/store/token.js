@@ -1,6 +1,7 @@
 import * as Api from "@/api"
 
 export const token = {
+  namespaced: true,
   state: () => ({ value: "" }),
   mutations: {
     setToken(state, token) {
@@ -8,33 +9,18 @@ export const token = {
     },
   },
   actions: {
-    async fetchRegister({ commit }, { name, phoneNumber, email, password, birthday, gender }) {
-      const { data: token } = await Api.fetchRegister({
-        name,
-        phoneNumber,
-        email,
-        password,
-        birthday,
-        gender,
-      })
-
+    async fetchRegister({ commit }, payload) {
+      const { data: token } = await Api.fetchRegister(payload)
       commit("setToken", token)
     },
 
-    async login({ commit }, { name, email, birthday, password }) {
-      const { data: token } = await Api.fetchLogin({ name, email, birthday, password })
-
+    async fetchLogin({ commit }, payload) {
+      const { data: token } = await Api.fetchLogin(payload)
       commit("setToken", token)
     },
 
     resetToken({ commit }) {
       commit("setToken", "")
-    },
-  },
-
-  getters: {
-    token: state => {
-      return state.value
     },
   },
 }

@@ -45,8 +45,8 @@ internal class EvaluationServiceTest {
         evaluationService = EvaluationService(evaluationRepository, evaluationItemRepository, recruitmentRepository)
 
         recruitments = listOf(
-            createRecruitment(canRecruit = false),
-            createRecruitment(canRecruit = true)
+            createRecruitment(recruitable = false),
+            createRecruitment(recruitable = true)
         )
 
         preCourseEvaluation = createEvaluation(title = EVALUATION_TITLE1, beforeEvaluationId = 0L, id = 1L)

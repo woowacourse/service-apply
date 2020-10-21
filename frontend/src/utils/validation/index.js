@@ -2,7 +2,7 @@ import Vue from "vue"
 import { ValidationProvider, extend, ValidationObserver } from "vee-validate"
 import * as name from "./name"
 import * as email from "./email"
-import * as required from "./reqruied"
+import * as required from "./required"
 import * as birth from "./birth"
 import * as password from "./password"
 import * as phoneNumber from "./phoneNumber"
@@ -54,9 +54,9 @@ extend("password", {
   message: password.MESSAGE,
 })
 
-extend("rePassword", {
+extend("confirmed", {
   params: ["target"],
-  validate: (v, { target }) => v === target,
+  validate: (value, { target }) => value === target,
   message: "비밀번호가 일치하지 않습니다.",
 })
 

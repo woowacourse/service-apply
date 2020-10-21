@@ -37,9 +37,11 @@ dependencies {
     implementation("org.apache.poi:poi-ooxml:4.1.2")
     implementation("dev.mett.vaadin:tooltip:1.7.0")
     implementation("org.vaadin.klaudeta:grid-pagination:2.0.9")
+    implementation("com.amazonaws:aws-java-sdk-ses:1.11.880")
     compileOnly("io.jsonwebtoken:jjwt-api:0.11.2")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.2")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.2")
+    runtimeOnly("mysql:mysql-connector-java")
     runtimeOnly("com.h2database:h2")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")

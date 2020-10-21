@@ -5,12 +5,10 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import org.springframework.test.context.TestConstructor
 import support.createLocalDate
+import support.test.RepositoryTest
 
-@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-@DataJpaTest
+@RepositoryTest
 internal class ApplicantRepositoryTest(private val applicantRepository: ApplicantRepository) {
     @BeforeEach
     internal fun setUp() {
@@ -46,7 +44,7 @@ internal class ApplicantRepositoryTest(private val applicantRepository: Applican
     @ParameterizedTest
     @CsvSource("홍,3", "a@,1", "'',3", "4,0")
     fun `이름 또는 이메일에 검색 키워드가 포함되는 지원자들을 모두 조회한다`(keyword: String, expectedSize: Int) {
-        val result = applicantRepository.findByNameContainingOrEmailContaining(keyword, keyword)
+        val result = applicantRepository.findAllByKeyword(keyword)
         assertThat(result).hasSize(expectedSize)
     }
 

@@ -1,8 +1,8 @@
 <template>
   <div class="application-register">
-    <RecruitCard :recruitment="recruitment" />
+    <RecruitCard class="recruit-card" :recruitment="recruitment" />
     <ValidationObserver v-slot="{ handleSubmit, passed }">
-      <Form @submit.prevent="handleSubmit(submit)">
+      <Form class="application-form" @submit.prevent="handleSubmit(submit)">
         <h1>지원서 작성</h1>
         <p class="autosave-indicator" v-if="isEditing">
           임시 저장되었습니다. ({{ modifiedDateTime }})
@@ -31,28 +31,27 @@
             name="url"
             type="url"
             :description="
-              `블로그, GitHub, 포트폴리오 주소 등을 입력해 주세요.
-                <span style='font-size: 15px'>(여러 개가 있는 경우 Notion, Google 문서 등을 사용하여 하나로 묶어 주세요)</span>`
+              `자신을 드러낼 수 있는 개인 블로그, GitHub, 포트폴리오 주소 등이 있다면 입력해 주세요.
+              <div style='margin-top: 4px; font-size: 14px; color: #555'>여러 개가 있는 경우 Notion, Google 문서 등을 사용하여 하나로 묶어 주세요.</div>`
             "
             label="URL"
-            placeholder="ex) https://woowacourse.github.io/javable/"
+            placeholder="ex) https://woowacourse.github.io/javable"
           />
           <p class="rule-field">{{ errors[0] }}</p>
         </ValidationProvider>
-        <ValidationProvider rules="required" v-slot="{ errors }">
+        <ValidationProvider rules="required">
           <Field>
-            <Label>지원서 작성 내용 사실 확인</Label>
+            <Label required>지원서 작성 내용 사실 확인</Label>
             <Description>
               기재한 사실 중 허위사실이 발견되는 즉시, 교육 대상자에서 제외되며 향후 지원도
               불가능합니다.
             </Description>
             <CheckBox v-model="factCheck" label="동의합니다." />
           </Field>
-          <p class="rule-field">{{ errors[0] }}</p>
         </ValidationProvider>
         <template v-slot:actions>
           <Button @click="reset" value="초기화" />
-          <Button @click="saveTemp" :disabled="!passed" value="임시 저장" />
+          <Button @click="saveTemp" value="임시 저장" />
           <Button type="submit" :disabled="!passed" value="제출" />
         </template>
       </Form>
@@ -93,8 +92,11 @@ export default {
     isEditing() {
       return this.status === "edit"
     },
+    token() {
+      return this.$store.state.token.value
+    },
     recruitment() {
-      return this.$store.state.recruitments.items.find(v => v.id === this.recruitmentId)
+      return this.$store.getters["recruitments/findById"](this.recruitmentId)
     },
   },
   async created() {
@@ -104,7 +106,7 @@ export default {
         await this.fetchApplicationForm()
       } else {
         await ApplicationFormsApi.createForm({
-          token: this.$store.getters["token"],
+          token: this.token,
           recruitmentId: this.recruitmentId,
         })
       }
@@ -134,7 +136,7 @@ export default {
     async fetchApplicationForm() {
       try {
         const { data } = await ApplicationFormsApi.fetchForm({
-          token: this.$store.getters["token"],
+          token: this.token,
           recruitmentId: this.recruitmentId,
         })
         this.fillForm(data)
@@ -164,7 +166,7 @@ export default {
         this.referenceUrl = ""
       }
     },
-    save(isSubmitted) {
+    save(submitted) {
       const applicationForm = {
         recruitmentId: this.recruitmentId,
         referenceUrl: this.referenceUrl,
@@ -172,10 +174,10 @@ export default {
           contents: item.contents,
           recruitmentItemId: item.id,
         })),
-        isSubmitted,
+        submitted,
       }
       return ApplicationFormsApi.updateForm({
-        token: this.$store.getters["token"],
+        token: this.token,
         data: applicationForm,
       })
     },
@@ -212,8 +214,19 @@ export default {
 .application-register {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+}
+
+.recruit-card,
+.application-form {
+  width: 800px;
+}
+
+@media screen and (max-width: 800px) {
+  .recruit-card,
+  .application-form {
+    width: 100vw;
+  }
 }
 
 .rule-field {

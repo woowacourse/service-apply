@@ -9,10 +9,10 @@ import java.time.LocalDateTime
 internal class RecruitmentStatusTest {
     @ValueSource(booleans = [true, false])
     @ParameterizedTest
-    fun `시작 일시 전이면 모집 예정`(canRecruit: Boolean) {
+    fun `시작 일시 전이면 모집 예정`(recruitable: Boolean) {
         val tomorrow = LocalDateTime.now().plusDays(1L)
         val period = RecruitmentPeriod(startDateTime = tomorrow, endDateTime = tomorrow)
-        val status = RecruitmentStatus.of(period, canRecruit)
+        val status = RecruitmentStatus.of(period, recruitable)
         assertThat(status).isEqualTo(RecruitmentStatus.RECRUITABLE)
     }
 
@@ -36,10 +36,10 @@ internal class RecruitmentStatusTest {
 
     @ValueSource(booleans = [true, false])
     @ParameterizedTest
-    fun `종료 일시가 지나면 모집 종료`(canRecruit: Boolean) {
+    fun `종료 일시가 지나면 모집 종료`(recruitable: Boolean) {
         val yesterday = LocalDateTime.now().minusDays(1L)
         val period = RecruitmentPeriod(startDateTime = yesterday, endDateTime = yesterday)
-        val status = RecruitmentStatus.of(period, canRecruit)
+        val status = RecruitmentStatus.of(period, recruitable)
         assertThat(status).isEqualTo(RecruitmentStatus.ENDED)
     }
 }
