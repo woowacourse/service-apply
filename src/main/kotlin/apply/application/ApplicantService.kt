@@ -38,9 +38,9 @@ class ApplicantService(
             .run { match { applicantRepository.findAllById(keys) } }
     }
 
-    private fun Map<Long, ApplicationForm>.match(source: () -> List<Applicant>): List<ApplicantAndFormResponse> {
+    private fun Map<Long, ApplicationForm>.match(supplier: () -> List<Applicant>): List<ApplicantAndFormResponse> {
         val cheaterApplicantIds = cheaterRepository.findAll().map { it.applicantId }
-        return source()
+        return supplier()
             .filter { containsKey(it.id) }
             .map { ApplicantAndFormResponse(it, cheaterApplicantIds.contains(it.id), getValue(it.id)) }
     }
