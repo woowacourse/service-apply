@@ -24,7 +24,6 @@ class LoginView : VerticalLayout(), BeforeEnterObserver {
     }
 
     override fun beforeEnter(beforeEnterEvent: BeforeEnterEvent) {
-        // inform the user about an authentication error
         if (beforeEnterEvent.location
             .queryParameters
             .parameters
