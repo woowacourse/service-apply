@@ -15,7 +15,7 @@ internal class ApplicationFormTest {
             applicantId = 1L,
             recruitmentId = 1L,
             referenceUrl = "http://example.com",
-            applicationFormAnswers = ApplicationFormAnswers(
+            answers = ApplicationFormAnswers(
                 mutableListOf(
                     ApplicationFormAnswer(
                         "스타트업을 하고 싶습니다.",
@@ -36,8 +36,8 @@ internal class ApplicationFormTest {
             { assertThat(applicationForm.submitted).isFalse() },
             { assertThat(applicationForm.applicantId).isEqualTo(1L) },
             { assertThat(applicationForm.referenceUrl).isEqualTo("http://example.com") },
-            { assertThat(applicationForm.applicationFormAnswers.items[0].contents).isEqualTo("스타트업을 하고 싶습니다.") },
-            { assertThat(applicationForm.applicationFormAnswers.items[1].contents).isEqualTo("책임감") }
+            { assertThat(applicationForm.answers.items[0].contents).isEqualTo("스타트업을 하고 싶습니다.") },
+            { assertThat(applicationForm.answers.items[1].contents).isEqualTo("책임감") }
         )
     }
 
@@ -60,7 +60,7 @@ internal class ApplicationFormTest {
         )
         assertAll(
             { assertThat(applicationForm.referenceUrl).isEqualTo("http://h2f.kr") },
-            { assertThat(applicationForm.applicationFormAnswers.items[0].contents).isEqualTo("대기업에 취직하고 싶습니다.") }
+            { assertThat(applicationForm.answers.items[0].contents).isEqualTo("대기업에 취직하고 싶습니다.") }
         )
     }
 

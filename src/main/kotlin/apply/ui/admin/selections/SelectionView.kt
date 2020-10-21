@@ -201,7 +201,7 @@ class SelectionView(
     }
 
     private fun createRecruitmentItems(applicationForm: ApplicationForm): Array<Component> {
-        val answers = applicationForm.applicationFormAnswers
+        val answers = applicationForm.answers
             .items
             .map { it.recruitmentItemId to it.contents }
             .toMap()

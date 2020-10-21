@@ -74,7 +74,7 @@ class ApplicationFormServiceTest {
             recruitmentId = applicationForm1.recruitmentId,
             referenceUrl = applicationForm1.referenceUrl,
             submitted = applicationForm1.submitted,
-            answers = applicationForm1.applicationFormAnswers.items.map { AnswerResponse(it.contents, it.recruitmentItemId) },
+            answers = applicationForm1.answers.items.map { AnswerResponse(it.contents, it.recruitmentItemId) },
             createdDateTime = applicationForm1.createdDateTime,
             modifiedDateTime = applicationForm1.modifiedDateTime,
             submittedDateTime = applicationForm1.submittedDateTime
@@ -86,7 +86,7 @@ class ApplicationFormServiceTest {
             recruitmentId = applicationForm1.recruitmentId,
             referenceUrl = applicationForm1.referenceUrl,
             submitted = false,
-            answers = applicationForm1.applicationFormAnswers.items.map { AnswerRequest(it.contents, it.recruitmentItemId) }
+            answers = applicationForm1.answers.items.map { AnswerRequest(it.contents, it.recruitmentItemId) }
         )
 
         recruitmentItems = listOf(
@@ -106,7 +106,7 @@ class ApplicationFormServiceTest {
             recruitmentId = applicationForm1.recruitmentId,
             referenceUrl = applicationForm1.referenceUrl,
             submitted = false,
-            answers = applicationForm1.applicationFormAnswers.items.map { AnswerRequest(it.contents, it.recruitmentItemId) }
+            answers = applicationForm1.answers.items.map { AnswerRequest(it.contents, it.recruitmentItemId) }
         )
 
         recruitment = createRecruitment(hidden = false)
@@ -148,7 +148,8 @@ class ApplicationFormServiceTest {
     fun `지원서가 없으면 예외를 던진다`() {
         every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns null
 
-        assertThrows<IllegalArgumentException> { applicationFormService.findForm(1L, 1L) }
+        val message = assertThrows<IllegalArgumentException> { applicationFormService.findForm(1L, 1L) }.message
+        assertThat(message).isEqualTo("해당하는 지원서가 없습니다.")
     }
 
     @Test
@@ -189,14 +190,26 @@ class ApplicationFormServiceTest {
         every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
         every { applicationFormRepository.existsByRecruitmentIdAndApplicantId(any(), any()) } returns true
 
-        assertThrows<IllegalArgumentException> { applicationFormService.create(1L, createApplicationFormRequest) }
+        val message = assertThrows<IllegalArgumentException> {
+            applicationFormService.create(
+                1L,
+                createApplicationFormRequest
+            )
+        }.message
+        assertThat(message).isEqualTo("이미 지원한 이력이 있습니다.")
     }
 
     @Test
     fun `모집이 없는 경우 지원할 수 없다`() {
         every { recruitmentRepository.findByIdOrNull(any()) } returns null
 
-        assertThrows<IllegalArgumentException> { applicationFormService.create(1L, createApplicationFormRequest) }
+        val message = assertThrows<IllegalArgumentException> {
+            applicationFormService.create(
+                1L,
+                createApplicationFormRequest
+            )
+        }.message
+        assertThat(message).isEqualTo("지원하는 모집이 존재하지 않습니다.")
     }
 
     @Test
@@ -211,25 +224,30 @@ class ApplicationFormServiceTest {
     @Test
     fun `지원서가 없는 경우 수정할 수 없다`() {
         every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
-        every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns null
-        every { applicationFormRepository.existsByApplicantIdAndSubmittedTrue(any()) } returns true
         every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns recruitmentItems
+        every { applicationFormRepository.existsByApplicantIdAndSubmittedTrue(any()) } returns false
+        every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns null
 
-        assertThrows<IllegalArgumentException> { applicationFormService.update(1L, updateApplicationFormRequest) }
-    }
-
-    @Test
-    fun `모집이 없는 경우 지원서를 수정할 수 없다`() {
-        every { recruitmentRepository.findByIdOrNull(any()) } returns null
-
-        assertThrows<IllegalArgumentException> { applicationFormService.update(1L, updateApplicationFormRequest) }
+        val message = assertThrows<IllegalArgumentException> {
+            applicationFormService.update(
+                1L,
+                updateApplicationFormRequest
+            )
+        }.message
+        assertThat(message).isEqualTo("해당하는 지원서가 없습니다.")
     }
 
     @Test
     fun `모집중이 아닌 지원서를 수정할 수 없다`() {
         every { recruitmentRepository.findByIdOrNull(any()) } returns recruitmentNotRecruiting
 
-        assertThrows<IllegalStateException> { applicationFormService.update(1L, updateApplicationFormRequest) }
+        val message = assertThrows<IllegalStateException> {
+            applicationFormService.update(
+                1L,
+                updateApplicationFormRequest
+            )
+        }.message
+        assertThat(message).isEqualTo("지원 불가능한 모집입니다.")
     }
 
     @Test
@@ -243,47 +261,55 @@ class ApplicationFormServiceTest {
         } returns applicationFormSubmitted
         every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns recruitmentItems
 
-        assertThrows<IllegalStateException> { applicationFormService.update(3L, updateApplicationFormRequest) }
+        val message = assertThrows<IllegalStateException> {
+            applicationFormService.update(
+                3L,
+                updateApplicationFormRequest
+            )
+        }.message
+        assertThat(message).isEqualTo("이미 제출된 지원서입니다. 수정할 수 없습니다.")
     }
 
     @Test
     fun `단 하나의 지원서만 제출할 수 있다`() {
         every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
-        every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns applicationForm1
-        every { applicationFormRepository.existsByApplicantIdAndSubmittedTrue(any()) } returns true
         every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns recruitmentItems
+        every { applicationFormRepository.existsByApplicantIdAndSubmittedTrue(any()) } returns true
+        every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns applicationForm1
 
-        assertThrows<IllegalArgumentException> {
+        val message = assertThrows<IllegalArgumentException> {
             applicationFormService.update(
                 1L,
                 UpdateApplicationFormRequest(recruitmentId = 1L, submitted = true)
             )
-        }
+        }.message
+        assertThat(message).isEqualTo("이미 제출 완료한 지원서가 존재하여 제출할 수 없습니다.")
     }
 
     @Test
     fun `작성하지 않은 문항이 존재하는 경우 제출할 수 없다`() {
         every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
-        every { applicationFormRepository.existsByApplicantIdAndSubmittedTrue(any()) } returns true
-        every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns applicationForm1
         every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns recruitmentItems
+        every { applicationFormRepository.existsByApplicantIdAndSubmittedTrue(any()) } returns false
+        every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns applicationForm1
 
-        assertThrows<IllegalArgumentException> {
+        val message = assertThrows<IllegalArgumentException> {
             applicationFormService.update(
                 1L,
                 UpdateApplicationFormRequest(recruitmentId = 1L, submitted = true)
             )
-        }
+        }.message
+        assertThat(message).isEqualTo("작성하지 않은 문항이 존재합니다.")
     }
 
     @Test
     fun `유효하지 않은 문항이 존재하는 경우 제출할 수 없다`() {
         every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
-        every { applicationFormRepository.existsByApplicantIdAndSubmittedTrue(any()) } returns true
-        every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns applicationForm1
         every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns recruitmentItems
+        every { applicationFormRepository.existsByApplicantIdAndSubmittedTrue(any()) } returns false
+        every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns applicationForm1
 
-        assertThrows<IllegalArgumentException> {
+        val message = assertThrows<IllegalArgumentException> {
             applicationFormService.update(
                 1L,
                 UpdateApplicationFormRequest(
@@ -295,6 +321,7 @@ class ApplicationFormServiceTest {
                     )
                 )
             )
-        }
+        }.message
+        assertThat(message).isEqualTo("유효하지 않은 문항이 존재합니다.")
     }
 }

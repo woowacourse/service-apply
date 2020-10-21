@@ -5,7 +5,7 @@ import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormAnswer
 import apply.domain.applicationform.ApplicationFormAnswers
 
-private const val LONG_LENGTH = 2000
+private const val EXCESS_LENGTH = 2000
 
 fun createApplicationForm(
     applicantId: Long = 1L,
@@ -40,7 +40,7 @@ fun createAnswerRequest(
 }
 
 fun createExcessOfLengthAnswerRequest(
-    contents: String = "*".repeat(LONG_LENGTH),
+    contents: String = "*".repeat(EXCESS_LENGTH),
     recruitmentItemId: Long = 1L
 ): AnswerRequest {
     return AnswerRequest(contents, recruitmentItemId)
@@ -51,7 +51,7 @@ fun createApplicationForms(
         applicantId = 1L,
         recruitmentId = 1L,
         referenceUrl = "http://example.com",
-        applicationFormAnswers = ApplicationFormAnswers(
+        answers = ApplicationFormAnswers(
             mutableListOf(
                 ApplicationFormAnswer("스타트업을 하고 싶습니다.", 1L),
                 ApplicationFormAnswer("책임감", 2L)
@@ -62,7 +62,7 @@ fun createApplicationForms(
         applicantId = 1L,
         recruitmentId = 2L,
         referenceUrl = "http://example2.com",
-        applicationFormAnswers = ApplicationFormAnswers(
+        answers = ApplicationFormAnswers(
             mutableListOf(
                 ApplicationFormAnswer("대기업에 취직하고 싶습니다.", 1L),
                 ApplicationFormAnswer("신중함", 2L)

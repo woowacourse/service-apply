@@ -17,7 +17,7 @@ class ApplicationForm(
     var referenceUrl: String,
 
     @Embedded
-    var applicationFormAnswers: ApplicationFormAnswers,
+    var answers: ApplicationFormAnswers,
     id: Long = 0L
 ) : BaseEntity(id) {
     @Column(nullable = false)
@@ -76,7 +76,7 @@ class ApplicationForm(
         }
         this.referenceUrl = referenceUrl
         this.modifiedDateTime = LocalDateTime.now()
-        this.applicationFormAnswers = applicationFormAnswers
+        this.answers = applicationFormAnswers
     }
 
     fun submit() {

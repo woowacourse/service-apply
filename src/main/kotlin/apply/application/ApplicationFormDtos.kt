@@ -45,7 +45,7 @@ data class ApplicationFormResponse(
         applicationForm.recruitmentId,
         applicationForm.referenceUrl,
         applicationForm.submitted,
-        applicationForm.applicationFormAnswers.items.map(::AnswerResponse),
+        applicationForm.answers.items.map(::AnswerResponse),
         applicationForm.createdDateTime,
         applicationForm.modifiedDateTime,
         applicationForm.submittedDateTime
