@@ -7,13 +7,13 @@ create table applicant (
     phone_number varchar(255) not null,
     password varchar(255) not null,
     primary key (id)
-) engine=InnoDB;
+) engine=InnoDB default charset=utf8mb4;
 
 create table application_form_answers (
     application_form_id bigint not null,
     contents longtext,
     recruitment_item_id bigint not null
-) engine=InnoDB;
+) engine=InnoDB default charset=utf8mb4;
 
 create table application_form (
     id bigint not null auto_increment,
@@ -25,14 +25,14 @@ create table application_form (
     submitted bit not null,
     submitted_date_time datetime(6),
     primary key (id)
-) engine=InnoDB;
+) engine=InnoDB default charset=utf8mb4;
 
 create table cheater (
     id bigint not null auto_increment,
     applicant_id bigint not null,
     created_date_time datetime(6) not null,
     primary key (id)
-) engine=InnoDB;
+) engine=InnoDB default charset=utf8mb4;
 
 create table evaluation (
     id bigint not null auto_increment,
@@ -41,13 +41,13 @@ create table evaluation (
     recruitment_id bigint not null,
     title varchar(255) not null,
     primary key (id)
-) engine=InnoDB;
+) engine=InnoDB default charset=utf8mb4;
 
 create table evaluation_target_answers (
     evaluation_target_id bigint not null,
     evaluation_item_id bigint not null,
     score integer not null
-) engine=InnoDB;
+) engine=InnoDB default charset=utf8mb4;
 
 create table evaluation_item (
     id bigint not null auto_increment,
@@ -57,7 +57,7 @@ create table evaluation_item (
     position integer not null,
     title varchar(255) not null,
     primary key (id)
-) engine=InnoDB;
+) engine=InnoDB default charset=utf8mb4;
 
 create table evaluation_target (
     id bigint not null auto_increment,
@@ -67,7 +67,7 @@ create table evaluation_target (
     evaluation_status varchar(255) not null,
     note varchar(255),
     primary key (id)
-) engine=InnoDB;
+) engine=InnoDB default charset=utf8mb4;
 
 create table recruitment (
     id bigint not null auto_increment,
@@ -77,7 +77,7 @@ create table recruitment (
     recruitable bit not null,
     title varchar(255) not null,
     primary key (id)
-) engine=InnoDB;
+) engine=InnoDB default charset=utf8mb4;
 
 create table recruitment_item (
     id bigint not null auto_increment,
@@ -87,7 +87,7 @@ create table recruitment_item (
     recruitment_id bigint not null,
     title varchar(255) not null,
     primary key (id)
-) engine=InnoDB;
+) engine=InnoDB default charset=utf8mb4;
 
 alter table applicant
     add constraint UK_6iduje2h6ggdlnmevw2mvolfx unique (email);
