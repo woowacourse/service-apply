@@ -28,19 +28,21 @@ class ApplicantService(
         return applicationFormRepository
             .findByRecruitmentIdAndSubmittedTrue(recruitmentId)
             .associateBy { it.applicantId }
-            .findAndMapResponse { applicantRepository.findAllByKeyword(keyword) }
+            .match { applicantRepository.findAllByKeyword(keyword) }
     }
 
     fun findAllByRecruitmentIdAndSubmittedTrue(recruitmentId: Long): List<ApplicantAndFormResponse> {
         return applicationFormRepository
             .findByRecruitmentIdAndSubmittedTrue(recruitmentId)
             .associateBy { it.applicantId }
-            .run { findAndMapResponse { applicantRepository.findAllById(keys) } }
+            .run { match { applicantRepository.findAllById(keys) } }
     }
 
-    private fun Map<Long, ApplicationForm>.findAndMapResponse(finder: () -> List<Applicant>): List<ApplicantAndFormResponse> {
+    private fun Map<Long, ApplicationForm>.match(source: () -> List<Applicant>): List<ApplicantAndFormResponse> {
         val cheaterApplicantIds = cheaterRepository.findAll().map { it.applicantId }
-        return finder().map { ApplicantAndFormResponse(it, cheaterApplicantIds.contains(it.id), getValue(it.id)) }
+        return source()
+            .filter { containsKey(it.id) }
+            .map { ApplicantAndFormResponse(it, cheaterApplicantIds.contains(it.id), getValue(it.id)) }
     }
 
     fun findAllByKeyword(keyword: String): List<ApplicantResponse> {
