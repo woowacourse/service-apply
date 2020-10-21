@@ -5,8 +5,10 @@ import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluationItem.EvaluationItem
 import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.recruitment.RecruitmentRepository
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import support.toSort
 import javax.transaction.Transactional
 
 @Transactional
@@ -42,8 +44,21 @@ class EvaluationService(
             .filterNot { excludedItemIds.contains(it.id) }
     }
 
-    fun findAll(): List<Evaluation> {
-        return evaluationRepository.findAll()
+    fun findAll(offset: Int, limit: Int, orders: Map<String, String>): List<EvaluationResponse> {
+        val page = offset / limit
+        return evaluationRepository.findAll(PageRequest.of(page, limit, orders.toSort()))
+            .content
+            .map {
+                EvaluationResponse(
+                    it.id,
+                    it.title,
+                    it.description,
+                    recruitmentRepository.getOne(it.recruitmentId).title,
+                    it.recruitmentId,
+                    findById(it.beforeEvaluationId)?.title ?: "이전 평가 없음",
+                    it.beforeEvaluationId
+                )
+            }
     }
 
     fun findAllByRecruitmentId(recruitmentId: Long): List<Evaluation> {
@@ -75,18 +90,8 @@ class EvaluationService(
         return findAllByRecruitmentId(id).map { EvaluationSelectData(it) }
     }
 
-    fun findAllWithRecruitment(): List<EvaluationResponse> {
-        return findAll().map {
-            EvaluationResponse(
-                it.id,
-                it.title,
-                it.description,
-                recruitmentRepository.getOne(it.recruitmentId).title,
-                it.recruitmentId,
-                findById(it.beforeEvaluationId)?.title ?: "이전 평가 없음",
-                it.beforeEvaluationId
-            )
-        }
+    fun count(): Long {
+        return evaluationRepository.count()
     }
 
     fun deleteById(id: Long) {

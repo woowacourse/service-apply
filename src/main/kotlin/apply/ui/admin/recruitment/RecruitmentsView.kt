@@ -47,7 +47,7 @@ class RecruitmentsView(private val recruitmentService: RecruitmentService) : Ver
         return PaginatedGrid<Recruitment>().apply {
             addBackEndSortableColumn("모집명", "title", Recruitment::title)
             addNormalColumn("상태") { it.status.toText() }
-            addBackEndSortableColumn("공개 여부", "isHidden") { it.hidden.toText() }
+            addBackEndSortableColumn("공개 여부", "hidden") { it.hidden.toText() }
             addBackEndSortableDateTimeColumn("시작일시", "period.startDateTime", Recruitment::startDateTime)
             addBackEndSortableDateTimeColumn("종료일시", "period.endDateTime", Recruitment::endDateTime)
             addNormalColumn(createButtonRenderer())
