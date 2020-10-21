@@ -1,7 +1,7 @@
 package apply.application
 
 import apply.domain.applicationform.ApplicationForm
-import apply.domain.recruitmentitem.Answer
+import apply.domain.applicationform.ApplicationFormAnswer
 import java.time.LocalDateTime
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
@@ -24,7 +24,6 @@ data class UpdateApplicationFormRequest(
 )
 
 data class AnswerRequest(
-    @field:Size(min = 1)
     val contents: String,
 
     @field:NotNull
@@ -57,7 +56,7 @@ data class AnswerResponse(
     val contents: String,
     val recruitmentItemId: Long
 ) {
-    constructor(answer: Answer) : this(answer.contents, answer.recruitmentItemId)
+    constructor(applicationFormAnswer: ApplicationFormAnswer) : this(applicationFormAnswer.contents, applicationFormAnswer.recruitmentItemId)
 }
 
 data class MyApplicationFormResponse(
