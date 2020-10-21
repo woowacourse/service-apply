@@ -27,7 +27,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
 import org.springframework.web.filter.CharacterEncodingFilter
 import support.createLocalDate
-import support.test.BaseTest
+import support.test.TestEnvironment
 
 @WebMvcTest(
     controllers = [ApplicationFormRestController::class],
@@ -36,9 +36,10 @@ import support.test.BaseTest
         ComponentScan.Filter(type = FilterType.REGEX, pattern = ["apply.config.*"])
     ]
 )
+@TestEnvironment
 internal class ApplicationFormRestControllerTest(
     private val objectMapper: ObjectMapper
-) : BaseTest() {
+) {
     @MockkBean
     private lateinit var applicationFormService: ApplicationFormService
 

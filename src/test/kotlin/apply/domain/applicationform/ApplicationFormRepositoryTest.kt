@@ -5,11 +5,12 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
-import support.test.BaseDataJpaTest
+import support.test.RepositoryTest
 
+@RepositoryTest
 class ApplicationFormRepositoryTest(
     private val applicationFormRepository: ApplicationFormRepository
-) : BaseDataJpaTest() {
+) {
     @BeforeEach
     internal fun setUp() {
         val applicationForm = createApplicationForm()

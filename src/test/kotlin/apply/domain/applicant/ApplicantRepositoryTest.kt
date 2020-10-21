@@ -6,9 +6,10 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import support.createLocalDate
-import support.test.BaseDataJpaTest
+import support.test.RepositoryTest
 
-internal class ApplicantRepositoryTest(private val applicantRepository: ApplicantRepository) : BaseDataJpaTest() {
+@RepositoryTest
+internal class ApplicantRepositoryTest(private val applicantRepository: ApplicantRepository) {
     @BeforeEach
     internal fun setUp() {
         val applicants = listOf(

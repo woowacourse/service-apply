@@ -29,21 +29,19 @@ import apply.domain.recruitmentitem.Answer
 import apply.domain.recruitmentitem.Answers
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
-import io.mockk.junit5.MockKExtension
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
-import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.data.repository.findByIdOrNull
 import support.createLocalDate
 import support.createLocalDateTime
-import support.test.BaseDataJpaTest
+import support.test.RepositoryTest
 
-@ExtendWith(MockKExtension::class)
+@RepositoryTest
 class EvaluationTargetServiceTest(
     private val evaluationTargetRepository: EvaluationTargetRepository
-) : BaseDataJpaTest() {
+) {
     @MockK
     private lateinit var evaluationRepository: EvaluationRepository
 

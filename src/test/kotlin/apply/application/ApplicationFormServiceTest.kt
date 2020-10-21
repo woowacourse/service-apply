@@ -9,7 +9,6 @@ import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentRepository
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
-import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -17,11 +16,11 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
-import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.data.repository.findByIdOrNull
+import support.test.UnitTest
 import java.time.LocalDateTime
 
-@ExtendWith(MockKExtension::class)
+@UnitTest
 class ApplicationFormServiceTest {
     @MockK
     private lateinit var applicationFormRepository: ApplicationFormRepository

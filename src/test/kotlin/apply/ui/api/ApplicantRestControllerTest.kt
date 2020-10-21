@@ -30,7 +30,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
 import org.springframework.web.filter.CharacterEncodingFilter
 import support.createLocalDate
-import support.test.BaseTest
+import support.test.TestEnvironment
 
 private const val VALID_TOKEN = "SOME_VALID_TOKEN"
 private const val RANDOM_PASSWORD = "nEw_p@ssw0rd"
@@ -59,9 +59,10 @@ private fun AuthenticateApplicantRequest.withPlainPassword(password: String): Ma
         ComponentScan.Filter(type = FilterType.REGEX, pattern = ["apply.config.*"])
     ]
 )
+@TestEnvironment
 internal class ApplicantRestControllerTest(
     private val objectMapper: ObjectMapper
-) : BaseTest() {
+) {
     @MockBean
     private lateinit var applicantService: ApplicantService
 

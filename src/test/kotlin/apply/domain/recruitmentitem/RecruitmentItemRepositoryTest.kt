@@ -3,11 +3,12 @@ package apply.domain.recruitmentitem
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
-import support.test.BaseDataJpaTest
+import support.test.RepositoryTest
 
+@RepositoryTest
 internal class RecruitmentItemRepositoryTest(
     private val recruitmentItemRepository: RecruitmentItemRepository
-) : BaseDataJpaTest() {
+) {
     companion object {
         private const val RECRUITMENT_ID = 1L
         private const val DIFFERENT_RECRUITMENT_ID = 2L

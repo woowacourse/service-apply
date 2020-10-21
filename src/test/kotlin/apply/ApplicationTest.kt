@@ -1,9 +1,10 @@
 package apply
 
 import org.junit.jupiter.api.Test
-import support.test.BaseSpringBootTest
+import support.test.IntegrationTest
 
-class ApplicationTest : BaseSpringBootTest() {
+@IntegrationTest
+class ApplicationTest {
     @Test
     fun name() {
     }

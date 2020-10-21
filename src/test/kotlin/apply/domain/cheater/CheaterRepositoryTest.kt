@@ -8,11 +8,12 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import support.createLocalDate
-import support.test.BaseDataJpaTest
+import support.test.RepositoryTest
 
+@RepositoryTest
 internal class CheaterRepositoryTest(
     private val cheaterRepository: CheaterRepository
-) : BaseDataJpaTest() {
+) {
     private val cheater = Applicant(
         id = 1L,
         name = "홍길동1",

@@ -5,11 +5,12 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
-import support.test.BaseDataJpaTest
+import support.test.RepositoryTest
 
+@RepositoryTest
 class EvaluationTargetRepositoryTest(
     private val evaluationTargetRepository: EvaluationTargetRepository
-) : BaseDataJpaTest() {
+) {
     companion object {
         private const val EVALUATION_ID = 1L
     }
