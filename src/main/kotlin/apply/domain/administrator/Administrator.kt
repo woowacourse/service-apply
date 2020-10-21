@@ -4,11 +4,15 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import support.domain.BaseEntity
+import javax.persistence.Column
 import javax.persistence.Entity
 
 @Entity
 class Administrator(
+    @Column(unique = true, nullable = true)
     private val name: String,
+
+    @Column(nullable = true)
     private val password: String,
     id: Long
 ) : BaseEntity(id), UserDetails {
