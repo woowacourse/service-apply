@@ -23,15 +23,6 @@ class ApplicationFormService(
     fun findAllByRecruitmentId(recruitmentId: Long): List<ApplicationForm> =
         applicationFormRepository.findByRecruitmentId(recruitmentId)
 
-    private fun getByRecruitmentIdAndApplicantId(recruitmentId: Long, applicantId: Long): ApplicationForm {
-        val applicationForm = applicationFormRepository.findByRecruitmentIdAndApplicantId(recruitmentId, applicantId)
-            ?: throw IllegalArgumentException("해당하는 지원서가 없습니다.")
-        check(!applicationForm.submitted) {
-            "이미 제출한 지원서는 열람할 수 없습니다."
-        }
-        return applicationForm
-    }
-
     fun getAllByApplicantId(applicantId: Long): List<MyApplicationFormResponse> =
         applicationFormRepository.findAllByApplicantId(applicantId).map(::MyApplicationFormResponse)
 
@@ -75,6 +66,15 @@ class ApplicationFormService(
         check(recruitment.isRecruiting) {
             "지원 불가능한 모집입니다."
         }
+    }
+
+    private fun getByRecruitmentIdAndApplicantId(recruitmentId: Long, applicantId: Long): ApplicationForm {
+        val applicationForm = applicationFormRepository.findByRecruitmentIdAndApplicantId(recruitmentId, applicantId)
+            ?: throw IllegalArgumentException("해당하는 지원서가 없습니다.")
+        check(!applicationForm.submitted) {
+            "이미 제출한 지원서는 열람할 수 없습니다."
+        }
+        return applicationForm
     }
 
     private fun validateRequest(request: UpdateApplicationFormRequest, applicantId: Long) {
