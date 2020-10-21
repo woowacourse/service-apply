@@ -15,16 +15,15 @@ import apply.domain.applicant.ApplicantRepository
 import apply.security.JwtTokenProvider
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
-import io.mockk.junit5.MockKExtension
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.junit.jupiter.api.extension.ExtendWith
+import support.test.UnitTest
 
-@ExtendWith(MockKExtension::class)
+@UnitTest
 internal class ApplicantAuthenticationServiceTest {
     @MockK
     private lateinit var applicantRepository: ApplicantRepository

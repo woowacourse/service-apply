@@ -3,12 +3,10 @@ package apply.domain.recruitmentitem
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
+import support.test.RepositoryTest
 
-@DataJpaTest
+@RepositoryTest
 internal class RecruitmentItemRepositoryTest(
-    @Autowired
     private val recruitmentItemRepository: RecruitmentItemRepository
 ) {
     companion object {

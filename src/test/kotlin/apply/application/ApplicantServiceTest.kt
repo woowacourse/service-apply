@@ -16,7 +16,6 @@ import apply.domain.cheater.Cheater
 import apply.domain.cheater.CheaterRepository
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
-import io.mockk.junit5.MockKExtension
 import io.mockk.slot
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -25,9 +24,9 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
-import org.junit.jupiter.api.extension.ExtendWith
+import support.test.UnitTest
 
-@ExtendWith(MockKExtension::class)
+@UnitTest
 internal class ApplicantServiceTest {
     @MockK
     private lateinit var applicationFormRepository: ApplicationFormRepository
