@@ -12,8 +12,7 @@ import org.springframework.stereotype.Component
 class ConfigureUIServiceInitListener : VaadinServiceInitListener {
     override fun serviceInit(event: ServiceInitEvent) {
         event.source.addUIInitListener { uiEvent: UIInitEvent ->
-            val ui = uiEvent.ui
-            ui.addBeforeEnterListener { event: BeforeEnterEvent -> authenticateNavigation(event) }
+            uiEvent.ui.addBeforeEnterListener { event: BeforeEnterEvent -> authenticateNavigation(event) }
         }
     }
 
