@@ -2,4 +2,4 @@ const REGEX = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+(
 
 export const isValid = v => v === "" || REGEX.test(v)
 
-export const MESSAGE = "정확한 url을 입력해주세요."
+export const MESSAGE = "정확한 URL을 입력해 주세요."

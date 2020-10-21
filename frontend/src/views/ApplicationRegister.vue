@@ -19,7 +19,7 @@
             type="textarea"
             :label="`${index + 1}. ${item.title}`"
             :description="item.description"
-            placeholder="내용을 입력해주세요."
+            placeholder="내용을 입력해 주세요."
             :max-length="item.maximumLength"
             required
           />

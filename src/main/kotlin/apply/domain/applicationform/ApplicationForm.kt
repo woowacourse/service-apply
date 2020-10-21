@@ -1,13 +1,10 @@
 package apply.domain.applicationform
 
-import apply.domain.recruitmentitem.Answers
+import support.domain.BaseEntity
 import java.time.LocalDateTime
 import javax.persistence.Column
 import javax.persistence.Embedded
 import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
 
 @Entity
 class ApplicationForm(
@@ -20,12 +17,9 @@ class ApplicationForm(
     var referenceUrl: String,
 
     @Embedded
-    var answers: Answers,
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0L
-) {
+    var answers: ApplicationFormAnswers,
+    id: Long = 0L
+) : BaseEntity(id) {
     @Column(nullable = false)
     var submitted: Boolean = false
 
@@ -41,18 +35,18 @@ class ApplicationForm(
     constructor(
         applicantId: Long,
         recruitmentId: Long
-    ) : this(applicantId, recruitmentId, "", Answers())
+    ) : this(applicantId, recruitmentId, "", ApplicationFormAnswers())
 
     constructor(
         applicantId: Long,
         recruitmentId: Long,
         referenceUrl: String,
-        answers: Answers,
+        applicationFormAnswers: ApplicationFormAnswers,
         submitted: Boolean,
         createdDateTime: LocalDateTime,
         modifiedDateTime: LocalDateTime,
         submittedDateTime: LocalDateTime?
-    ) : this(applicantId, recruitmentId, referenceUrl, answers) {
+    ) : this(applicantId, recruitmentId, referenceUrl, applicationFormAnswers) {
         this.submitted = submitted
         this.createdDateTime = createdDateTime
         this.modifiedDateTime = modifiedDateTime
@@ -67,22 +61,22 @@ class ApplicationForm(
         createdDateTime: LocalDateTime,
         modifiedDateTime: LocalDateTime,
         submittedDateTime: LocalDateTime,
-        answers: Answers,
+        applicationFormAnswers: ApplicationFormAnswers,
         id: Long
-    ) : this(applicantId, recruitmentId, referenceUrl, answers, id) {
+    ) : this(applicantId, recruitmentId, referenceUrl, applicationFormAnswers, id) {
         this.submitted = submitted
         this.createdDateTime = createdDateTime
         this.modifiedDateTime = modifiedDateTime
         this.submittedDateTime = submittedDateTime
     }
 
-    fun update(referenceUrl: String, answers: Answers) {
+    fun update(referenceUrl: String, applicationFormAnswers: ApplicationFormAnswers) {
         check(!this.submitted) {
             "이미 제출된 지원서입니다. 수정할 수 없습니다."
         }
         this.referenceUrl = referenceUrl
         this.modifiedDateTime = LocalDateTime.now()
-        this.answers = answers
+        this.answers = applicationFormAnswers
     }
 
     fun submit() {
