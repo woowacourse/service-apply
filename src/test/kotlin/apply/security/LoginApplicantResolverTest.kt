@@ -6,21 +6,20 @@ import apply.domain.applicant.Gender
 import apply.domain.applicant.Password
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
-import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import org.springframework.core.MethodParameter
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.web.context.request.NativeWebRequest
 import support.createLocalDate
+import support.test.UnitTest
 
-@ExtendWith(MockKExtension::class)
+@UnitTest
 internal class LoginApplicantResolverTest {
     @MockK
     private lateinit var applicantService: ApplicantService

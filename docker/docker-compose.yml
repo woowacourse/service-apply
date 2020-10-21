@@ -1,0 +1,19 @@
+version: "3.8"
+services:
+  db:
+    image: library/mysql:5.7
+    container_name: apply-db
+    restart: always
+    ports:
+      - 53306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: apply
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      TZ: Asia/Seoul
+    volumes:
+      - ./db/mysql/data:/var/lib/mysql
+      - ./db/mysql/config:/etc/mysql/conf.d
+      - ./db/mysql/init:/docker-entrypoint-initdb.d
+    command: ["mysqld", "--character-set-server=utf8mb4", "--collation-server=utf8mb4_general_ci"]

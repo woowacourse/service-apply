@@ -1,11 +1,11 @@
 package apply.ui.api
 
-import apply.application.RegisterApplicantRequest
-import apply.application.ApplicantService
 import apply.application.ApplicantAuthenticationService
-import apply.application.EditPasswordRequest
-import apply.application.ResetPasswordRequest
+import apply.application.ApplicantService
 import apply.application.AuthenticateApplicantRequest
+import apply.application.EditPasswordRequest
+import apply.application.RegisterApplicantRequest
+import apply.application.ResetPasswordRequest
 import apply.application.mail.MailService
 import apply.domain.applicant.ApplicantAuthenticationException
 import apply.domain.applicant.Gender
@@ -22,7 +22,6 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.MediaType
-import org.springframework.test.context.TestConstructor
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.post
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
@@ -31,6 +30,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
 import org.springframework.web.filter.CharacterEncodingFilter
 import support.createLocalDate
+import support.test.TestEnvironment
 
 private const val VALID_TOKEN = "SOME_VALID_TOKEN"
 private const val RANDOM_PASSWORD = "nEw_p@ssw0rd"
@@ -52,7 +52,6 @@ private fun AuthenticateApplicantRequest.withPlainPassword(password: String): Ma
     return mapOf("email" to email, "password" to password)
 }
 
-@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @WebMvcTest(
     controllers = [ApplicantRestController::class],
     includeFilters = [
@@ -60,6 +59,7 @@ private fun AuthenticateApplicantRequest.withPlainPassword(password: String): Ma
         ComponentScan.Filter(type = FilterType.REGEX, pattern = ["apply.config.*"])
     ]
 )
+@TestEnvironment
 internal class ApplicantRestControllerTest(
     private val objectMapper: ObjectMapper
 ) {

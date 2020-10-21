@@ -19,7 +19,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
 import org.springframework.http.HttpHeaders.AUTHORIZATION
-import org.springframework.test.context.TestConstructor
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
@@ -28,8 +27,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
 import org.springframework.web.filter.CharacterEncodingFilter
 import support.createLocalDate
+import support.test.TestEnvironment
 
-@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @WebMvcTest(
     controllers = [ApplicationFormRestController::class],
     includeFilters = [
@@ -37,6 +36,7 @@ import support.createLocalDate
         ComponentScan.Filter(type = FilterType.REGEX, pattern = ["apply.config.*"])
     ]
 )
+@TestEnvironment
 internal class ApplicationFormRestControllerTest(
     private val objectMapper: ObjectMapper
 ) {
