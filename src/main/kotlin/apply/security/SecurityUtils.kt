@@ -1,6 +1,6 @@
 package apply.security
 
-import com.vaadin.flow.server.ServletHelper
+import com.vaadin.flow.server.HandlerHelper
 import com.vaadin.flow.shared.ApplicationConstants
 import org.springframework.security.authentication.AnonymousAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
@@ -11,8 +11,8 @@ object SecurityUtils {
     fun isFrameworkInternalRequest(request: HttpServletRequest): Boolean {
         val parameterValue = request.getParameter(ApplicationConstants.REQUEST_TYPE_PARAMETER)
         return (
-            parameterValue != null && Stream.of(*ServletHelper.RequestType.values())
-                .anyMatch { r: ServletHelper.RequestType -> r.identifier == parameterValue }
+            parameterValue != null && Stream.of(*HandlerHelper.RequestType.values())
+                .anyMatch { r: HandlerHelper.RequestType -> r.identifier == parameterValue }
             )
     }
 
