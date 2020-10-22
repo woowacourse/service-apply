@@ -1,10 +1,10 @@
 package apply.application
 
 import apply.domain.applicationform.ApplicationForm
-import apply.domain.applicationform.ApplicationFormRepository
-import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.applicationform.ApplicationFormAnswer
 import apply.domain.applicationform.ApplicationFormAnswers
+import apply.domain.applicationform.ApplicationFormRepository
+import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitmentitem.RecruitmentItemRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -19,17 +19,6 @@ class ApplicationFormService(
     private val recruitmentRepository: RecruitmentRepository,
     private val recruitmentItemRepository: RecruitmentItemRepository
 ) {
-
-    fun findAllByRecruitmentId(recruitmentId: Long): List<ApplicationForm> =
-        applicationFormRepository.findByRecruitmentId(recruitmentId)
-
-    fun getByRecruitmentIdAndApplicantId(recruitmentId: Long, applicantId: Long): ApplicationForm =
-        applicationFormRepository.findByRecruitmentIdAndApplicantId(recruitmentId, applicantId)
-            ?: throw IllegalArgumentException("해당하는 지원서가 없습니다.")
-
-    fun getAllByApplicantId(applicantId: Long): List<MyApplicationFormResponse> =
-        applicationFormRepository.findAllByApplicantId(applicantId).map(::MyApplicationFormResponse)
-
     fun create(applicantId: Long, request: CreateApplicationFormRequest) {
         checkRecruitment(request.recruitmentId)
         require(!applicationFormRepository.existsByRecruitmentIdAndApplicantId(request.recruitmentId, applicantId)) {
@@ -42,7 +31,7 @@ class ApplicationFormService(
     fun update(applicantId: Long, request: UpdateApplicationFormRequest) {
         checkRecruitment(request.recruitmentId)
         validateRequest(request, applicantId)
-        val applicationForm = getByRecruitmentIdAndApplicantId(request.recruitmentId, applicantId)
+        val applicationForm = findByRecruitmentIdAndApplicantId(request.recruitmentId, applicantId)
         val answers = ApplicationFormAnswers(
             request.answers.map {
                 ApplicationFormAnswer(
@@ -57,10 +46,20 @@ class ApplicationFormService(
         }
     }
 
-    fun findForm(applicantId: Long, recruitmentId: Long): ApplicationFormResponse {
-        val applicationForm = getByRecruitmentIdAndApplicantId(recruitmentId, applicantId)
+    fun getMyApplicationForms(applicantId: Long): List<MyApplicationFormResponse> =
+        applicationFormRepository.findAllByApplicantId(applicantId).map(::MyApplicationFormResponse)
+
+    fun getApplicationForm(applicantId: Long, recruitmentId: Long): ApplicationFormResponse {
+        val applicationForm = findByRecruitmentIdAndApplicantId(recruitmentId, applicantId)
+        check(!applicationForm.submitted) {
+            "이미 제출한 지원서는 열람할 수 없습니다."
+        }
         return ApplicationFormResponse(applicationForm)
     }
+
+    private fun findByRecruitmentIdAndApplicantId(recruitmentId: Long, applicantId: Long): ApplicationForm =
+        applicationFormRepository.findByRecruitmentIdAndApplicantId(recruitmentId, applicantId)
+            ?: throw IllegalArgumentException("해당하는 지원서가 없습니다.")
 
     private fun checkRecruitment(recruitmentId: Long) {
         val recruitment = recruitmentRepository.findByIdOrNull(recruitmentId)
