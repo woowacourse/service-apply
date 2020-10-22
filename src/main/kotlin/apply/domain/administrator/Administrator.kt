@@ -16,31 +16,18 @@ class Administrator(
     private val password: String,
     id: Long
 ) : BaseEntity(id), UserDetails {
-    override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
-        return mutableListOf(SimpleGrantedAuthority("ADMIN"))
-    }
+    override fun getAuthorities(): MutableCollection<out GrantedAuthority> =
+        mutableListOf(SimpleGrantedAuthority("ADMIN"))
 
-    override fun getPassword(): String {
-        return this.password
-    }
+    override fun getPassword(): String = password
 
-    override fun getUsername(): String {
-        return this.name
-    }
+    override fun getUsername(): String = name
 
-    override fun isAccountNonExpired(): Boolean {
-        return true
-    }
+    override fun isAccountNonExpired(): Boolean = true
 
-    override fun isAccountNonLocked(): Boolean {
-        return true
-    }
+    override fun isAccountNonLocked(): Boolean = true
 
-    override fun isCredentialsNonExpired(): Boolean {
-        return true
-    }
+    override fun isCredentialsNonExpired(): Boolean = true
 
-    override fun isEnabled(): Boolean {
-        return true
-    }
+    override fun isEnabled(): Boolean = true
 }
