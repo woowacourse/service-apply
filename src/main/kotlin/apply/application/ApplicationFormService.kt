@@ -31,7 +31,7 @@ class ApplicationFormService(
     fun update(applicantId: Long, request: UpdateApplicationFormRequest) {
         checkRecruitment(request.recruitmentId)
         validateRequest(request, applicantId)
-        val applicationForm = findByRecruitmentIdAndApplicationId(request.recruitmentId, applicantId)
+        val applicationForm = findByRecruitmentIdAndApplicantId(request.recruitmentId, applicantId)
         val answers = ApplicationFormAnswers(
             request.answers.map {
                 ApplicationFormAnswer(
@@ -50,14 +50,14 @@ class ApplicationFormService(
         applicationFormRepository.findAllByApplicantId(applicantId).map(::MyApplicationFormResponse)
 
     fun getApplicationForm(applicantId: Long, recruitmentId: Long): ApplicationFormResponse {
-        val applicationForm = findByRecruitmentIdAndApplicationId(recruitmentId, applicantId)
+        val applicationForm = findByRecruitmentIdAndApplicantId(recruitmentId, applicantId)
         check(!applicationForm.submitted) {
             "이미 제출한 지원서는 열람할 수 없습니다."
         }
         return ApplicationFormResponse(applicationForm)
     }
 
-    private fun findByRecruitmentIdAndApplicationId(recruitmentId: Long, applicantId: Long): ApplicationForm =
+    private fun findByRecruitmentIdAndApplicantId(recruitmentId: Long, applicantId: Long): ApplicationForm =
         applicationFormRepository.findByRecruitmentIdAndApplicantId(recruitmentId, applicantId)
             ?: throw IllegalArgumentException("해당하는 지원서가 없습니다.")
 
