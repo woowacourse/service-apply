@@ -13,6 +13,7 @@ artifacts:
   files:
     - ./*.jar
     - ./.ebextensions/**/*
+    - ./.platform/**/*
 cache:
   paths:
     - /root/.gradle/caches/**/*
