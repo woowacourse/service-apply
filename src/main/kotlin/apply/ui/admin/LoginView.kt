@@ -9,7 +9,7 @@ import com.vaadin.flow.router.BeforeEnterObserver
 import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 
-@Route(value = "login")
+@Route(value = "admin/login")
 @PageTitle("관리자 로그인")
 class LoginView : VerticalLayout(), BeforeEnterObserver {
     val login = LoginForm()
@@ -18,7 +18,7 @@ class LoginView : VerticalLayout(), BeforeEnterObserver {
         setSizeFull()
         alignItems = FlexComponent.Alignment.CENTER
         justifyContentMode = FlexComponent.JustifyContentMode.CENTER
-        login.action = "login"
+        login.action = "admin/login"
         add(H1("우아한테크코스"), login)
     }
 

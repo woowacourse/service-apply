@@ -17,10 +17,10 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
             .antMatchers("/admin/**").authenticated()
             .anyRequest().permitAll()
             .and()
-            .formLogin().loginPage("/login").permitAll()
-            .loginProcessingUrl("/login")
+            .formLogin().loginPage("/admin/login").permitAll()
+            .loginProcessingUrl("/admin/login")
             .defaultSuccessUrl("/admin")
-            .failureUrl("/login?error")
-            .and().logout().logoutSuccessUrl("/login")
+            .failureUrl("/admin/login?error")
+            .and().logout().logoutSuccessUrl("/admin/login")
     }
 }
