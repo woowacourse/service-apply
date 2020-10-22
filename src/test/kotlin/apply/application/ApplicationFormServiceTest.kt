@@ -123,14 +123,15 @@ class ApplicationFormServiceTest {
     fun `지원서가 있으면 지원서를 불러온다`() {
         every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns applicationForm1
 
-        assertThat(applicationFormService.findForm(1L, 1L)).isEqualTo(applicationFormResponse)
+        assertThat(applicationFormService.getApplicationForm(1L, 1L)).isEqualTo(applicationFormResponse)
     }
 
     @Test
     fun `지원서가 없으면 예외를 던진다`() {
         every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns null
 
-        val message = assertThrows<IllegalArgumentException> { applicationFormService.findForm(1L, 1L) }.message
+        val message =
+            assertThrows<IllegalArgumentException> { applicationFormService.getApplicationForm(1L, 1L) }.message
         assertThat(message).isEqualTo("해당하는 지원서가 없습니다.")
     }
 
@@ -138,7 +139,7 @@ class ApplicationFormServiceTest {
     fun `지원자가 자신의 지원서를 모두 불러온다`() {
         every { applicationFormRepository.findAllByApplicantId(1L) } returns applicationForms
 
-        val expected = applicationFormService.getAllByApplicantId(1L)
+        val expected = applicationFormService.getMyApplicationForms(1L)
 
         assertAll(
             { assertThat(expected).isNotNull },
@@ -150,7 +151,7 @@ class ApplicationFormServiceTest {
     fun `지원자가 지원한 지원서가 없으면 빈 리스트를 불러온다`() {
         every { applicationFormRepository.findAllByApplicantId(1L) } returns emptyList()
 
-        val expected = applicationFormService.getAllByApplicantId(1L)
+        val expected = applicationFormService.getMyApplicationForms(1L)
 
         assertAll(
             { assertThat(expected).isNotNull },
@@ -242,9 +243,9 @@ class ApplicationFormServiceTest {
         } returns applicationFormSubmitted
 
         val message = assertThrows<IllegalStateException> {
-            applicationFormService.findForm(
-                3L,
-                1L
+            applicationFormService.getApplicationForm(
+                applicantId = 3L,
+                recruitmentId = 1L
             )
         }.message
         assertThat(message).isEqualTo("이미 제출한 지원서는 열람할 수 없습니다.")
