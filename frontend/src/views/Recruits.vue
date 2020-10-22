@@ -120,6 +120,8 @@ export default {
   list-style: none;
   margin: 0;
   padding: 10px;
+  overflow-x: auto;
+  white-space: nowrap;
 }
 
 .tab-item {
