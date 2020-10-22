@@ -19,10 +19,6 @@ class ApplicationFormService(
     private val recruitmentRepository: RecruitmentRepository,
     private val recruitmentItemRepository: RecruitmentItemRepository
 ) {
-
-    fun findAllByRecruitmentId(recruitmentId: Long): List<ApplicationForm> =
-        applicationFormRepository.findByRecruitmentId(recruitmentId)
-
     fun getAllByApplicantId(applicantId: Long): List<MyApplicationFormResponse> =
         applicationFormRepository.findAllByApplicantId(applicantId).map(::MyApplicationFormResponse)
 

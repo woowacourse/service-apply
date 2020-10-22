@@ -120,16 +120,6 @@ class ApplicationFormServiceTest {
     }
 
     @Test
-    fun `특정 모집의 지원서를 모두 불러온다`() {
-        every { applicationFormRepository.findByRecruitmentId(any()) } returns arrayListOf(
-            applicationForm1,
-            applicationForm2
-        )
-
-        assertThat(applicationFormService.findAllByRecruitmentId(1L)).hasSize(2)
-    }
-
-    @Test
     fun `지원서가 있으면 지원서를 불러온다`() {
         every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns applicationForm1
 
