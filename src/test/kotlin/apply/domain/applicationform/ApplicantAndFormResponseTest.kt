@@ -198,4 +198,18 @@ class ApplicantAndFormResponseTest(
         assertThat(result[3]).usingRecursiveComparison()
             .isEqualTo(ApplicantAndFormResponse(applicants[2], true, applicationForms[2]))
     }
+
+    @Test
+    fun `모집 id와 검색어로 검색한 지원자 정보의 갯수를 센다`() {
+        val applicants = listOf(
+            createApplicant(id = 1L, name = "이름1", email = "AAA@AAa.com"),
+            createApplicant(id = 2L, name = "이름2", email = "BBB@BBB.com"),
+            createApplicant(id = 3L, name = "이름3", email = "CCC@CCC.com"),
+            createApplicant(id = 4L, name = "검색 안됨", email = "DDD@DDD.com")
+        )
+        applicantRepository.saveAll(applicants)
+
+        val result = applicationFormRepository.countByRecruitmentIdAndKeyword(2L, "이름")
+        assertThat(result).isEqualTo(3)
+    }
 }

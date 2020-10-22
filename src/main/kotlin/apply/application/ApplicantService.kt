@@ -64,4 +64,8 @@ class ApplicantService(
             changePassword(request.password, request.newPassword)
         }
     }
+
+    fun count(recruitmentId: Long, keyword: String): Long {
+        return applicationFormRepository.countByRecruitmentIdAndKeyword(recruitmentId, keyword)
+    }
 }

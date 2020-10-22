@@ -24,6 +24,15 @@ interface ApplicationFormRepository : JpaRepository<ApplicationForm, Long> {
         pageable: Pageable
     ): Page<ApplicantAndFormResponse>
 
+    @Query(
+        """
+        select count(a) from Applicant a inner join ApplicationForm f on a.id = f.applicantId
+        where f.recruitmentId = :recruitmentId and f.submitted = true
+            and (a.information.name like %:keyword% or a.information.email like %:keyword%)
+        """
+    )
+    fun countByRecruitmentIdAndKeyword(recruitmentId: Long, keyword: String): Long
+
     fun findByRecruitmentIdAndApplicantId(recruitmentId: Long, applicantId: Long): ApplicationForm?
 
     fun findAllByApplicantId(applicantId: Long): List<ApplicationForm>
