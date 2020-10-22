@@ -12,7 +12,6 @@ import com.vaadin.flow.router.Route
 @Route(value = "login")
 @PageTitle("관리자 로그인")
 class LoginView : VerticalLayout(), BeforeEnterObserver {
-
     val login = LoginForm()
 
     init {
