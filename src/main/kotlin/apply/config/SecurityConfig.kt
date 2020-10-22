@@ -19,6 +19,7 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
             .and()
             .formLogin().loginPage("/login").permitAll()
             .loginProcessingUrl("/login")
+            .defaultSuccessUrl("/admin")
             .failureUrl("/login?error")
             .and().logout().logoutSuccessUrl("/login")
     }
