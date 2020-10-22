@@ -24,7 +24,7 @@ class ApplicationFormRestController(
 ) {
     @GetMapping("/me")
     fun getMyApplicationForms(@LoginApplicant applicant: Applicant): ResponseEntity<ApiResponse<List<MyApplicationFormResponse>>> {
-        val form = applicationFormService.getAllByApplicantId(applicant.id)
+        val form = applicationFormService.getMyApplicationForms(applicant.id)
         return ResponseEntity.ok().body(ApiResponse.success(form))
     }
 
@@ -33,7 +33,7 @@ class ApplicationFormRestController(
         @RequestParam("recruitmentId") recruitment: Long,
         @LoginApplicant applicant: Applicant
     ): ResponseEntity<ApiResponse<ApplicationFormResponse>> {
-        val form = applicationFormService.findForm(applicant.id, recruitment)
+        val form = applicationFormService.getApplicationForm(applicant.id, recruitment)
         return ResponseEntity.ok().body(ApiResponse.success(form))
     }
 

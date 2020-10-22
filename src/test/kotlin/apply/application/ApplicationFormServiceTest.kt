@@ -120,34 +120,18 @@ class ApplicationFormServiceTest {
     }
 
     @Test
-    fun `특정 모집의 지원서를 모두 불러온다`() {
-        every { applicationFormRepository.findByRecruitmentId(any()) } returns arrayListOf(
-            applicationForm1,
-            applicationForm2
-        )
-
-        assertThat(applicationFormService.findAllByRecruitmentId(1L)).hasSize(2)
-    }
-
-    @Test
-    fun `지원자 아이디와 모집 아이디로 지원서를 불러온다`() {
-        every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns applicationForm1
-
-        assertThat(applicationFormService.getByRecruitmentIdAndApplicantId(1L, 1L)).isEqualTo(applicationForm1)
-    }
-
-    @Test
     fun `지원서가 있으면 지원서를 불러온다`() {
         every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns applicationForm1
 
-        assertThat(applicationFormService.findForm(1L, 1L)).isEqualTo(applicationFormResponse)
+        assertThat(applicationFormService.getApplicationForm(1L, 1L)).isEqualTo(applicationFormResponse)
     }
 
     @Test
     fun `지원서가 없으면 예외를 던진다`() {
         every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns null
 
-        val message = assertThrows<IllegalArgumentException> { applicationFormService.findForm(1L, 1L) }.message
+        val message =
+            assertThrows<IllegalArgumentException> { applicationFormService.getApplicationForm(1L, 1L) }.message
         assertThat(message).isEqualTo("해당하는 지원서가 없습니다.")
     }
 
@@ -155,7 +139,7 @@ class ApplicationFormServiceTest {
     fun `지원자가 자신의 지원서를 모두 불러온다`() {
         every { applicationFormRepository.findAllByApplicantId(1L) } returns applicationForms
 
-        val expected = applicationFormService.getAllByApplicantId(1L)
+        val expected = applicationFormService.getMyApplicationForms(1L)
 
         assertAll(
             { assertThat(expected).isNotNull },
@@ -167,7 +151,7 @@ class ApplicationFormServiceTest {
     fun `지원자가 지원한 지원서가 없으면 빈 리스트를 불러온다`() {
         every { applicationFormRepository.findAllByApplicantId(1L) } returns emptyList()
 
-        val expected = applicationFormService.getAllByApplicantId(1L)
+        val expected = applicationFormService.getMyApplicationForms(1L)
 
         assertAll(
             { assertThat(expected).isNotNull },
@@ -250,23 +234,21 @@ class ApplicationFormServiceTest {
     }
 
     @Test
-    fun `제출한 지원서를 수정할 수 없다`() {
-        every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
+    fun `제출한 지원서를 열람할 수 없다`() {
         every {
             applicationFormRepository.findByRecruitmentIdAndApplicantId(
                 any(),
                 any()
             )
         } returns applicationFormSubmitted
-        every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns recruitmentItems
 
         val message = assertThrows<IllegalStateException> {
-            applicationFormService.update(
-                3L,
-                updateApplicationFormRequest
+            applicationFormService.getApplicationForm(
+                applicantId = 3L,
+                recruitmentId = 1L
             )
         }.message
-        assertThat(message).isEqualTo("이미 제출된 지원서입니다. 수정할 수 없습니다.")
+        assertThat(message).isEqualTo("이미 제출한 지원서는 열람할 수 없습니다.")
     }
 
     @Test
