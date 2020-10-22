@@ -25,7 +25,6 @@ class ApplicationFormRepositoryTest(
 
         assertAll(
             { assertThat(form.referenceUrl).isEqualTo("http://example.com") },
-            { assertThat(form.id).isEqualTo(1L) },
             { assertThat(form.answers.items[0].contents).isEqualTo("스타트업을 하고 싶습니다.") },
             { assertThat(form.answers.items[1].contents).isEqualTo("책임감") }
         )

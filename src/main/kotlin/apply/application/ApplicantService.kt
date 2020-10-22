@@ -5,8 +5,10 @@ import apply.domain.applicant.ApplicantRepository
 import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.CheaterRepository
+import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import support.toSort
 
 @Transactional
 @Service
@@ -20,11 +22,17 @@ class ApplicantService(
         return applicantRepository.findByEmail(email) ?: throw IllegalArgumentException("지원자가 존재하지 않습니다. email: $email")
     }
 
-    fun findAllByRecruitmentIdAndKeyword(recruitmentId: Long, keyword: String): List<ApplicantAndFormResponse> {
+    fun findAllByRecruitmentIdAndKeyword(
+        recruitmentId: Long,
+        keyword: String,
+        offset: Int,
+        limit: Int,
+        orders: Map<String, String>
+    ): List<ApplicantAndFormResponse> {
+        val page = offset / limit
         return applicationFormRepository
-            .findByRecruitmentIdAndSubmittedTrue(recruitmentId)
-            .associateBy { it.applicantId }
-            .match { applicantRepository.findAllByKeyword(keyword) }
+            .findByRecruitmentIdAndKeyword(recruitmentId, keyword, PageRequest.of(page, limit, orders.toSort()))
+            .content
     }
 
     fun findAllByRecruitmentIdAndSubmittedTrue(recruitmentId: Long): List<ApplicantAndFormResponse> {

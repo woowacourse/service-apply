@@ -79,8 +79,12 @@ class ApplicationForm(
         this.answers = applicationFormAnswers
     }
 
+    fun submit(submittedDateTime: LocalDateTime) {
+        this.submitted = true
+        this.submittedDateTime = submittedDateTime
+    }
+
     fun submit() {
-        submitted = true
-        submittedDateTime = LocalDateTime.now()
+        submit(LocalDateTime.now())
     }
 }

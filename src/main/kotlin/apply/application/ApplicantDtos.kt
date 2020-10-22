@@ -4,6 +4,7 @@ import apply.domain.applicant.Applicant
 import apply.domain.applicant.Gender
 import apply.domain.applicant.Password
 import apply.domain.applicationform.ApplicationForm
+import apply.domain.cheater.Cheater
 import java.time.LocalDate
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
@@ -46,6 +47,10 @@ data class ApplicantAndFormResponse(
         applicant.birthday,
         isCheater,
         applicationForm
+    )
+
+    constructor(applicant: Applicant, cheater: Cheater?, applicationForm: ApplicationForm) : this(
+        applicant, cheater !== null, applicationForm
     )
 }
 

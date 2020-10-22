@@ -24,21 +24,25 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.tabs.Tab
 import com.vaadin.flow.component.tabs.Tabs
 import com.vaadin.flow.component.textfield.TextArea
+import com.vaadin.flow.data.provider.DataProvider
 import com.vaadin.flow.data.renderer.ComponentRenderer
 import com.vaadin.flow.data.renderer.Renderer
 import com.vaadin.flow.router.BeforeEvent
 import com.vaadin.flow.router.HasUrlParameter
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.router.WildcardParameter
+import org.vaadin.klaudeta.PaginatedGrid
+import support.views.addBackEndSortableColumn
+import support.views.addBackEndSortableDateColumn
+import support.views.addBackEndSortableDateTimeColumn
 import support.views.addInMemorySortableColumn
-import support.views.addInMemorySortableDateColumn
-import support.views.addInMemorySortableDateTimeColumn
 import support.views.createNormalButton
 import support.views.createPrimaryButton
 import support.views.createPrimarySmallButton
 import support.views.createSearchBar
 import support.views.createSuccessButton
 import support.views.downloadFile
+import support.views.toMap
 
 @Route(value = "admin/selections", layout = BaseLayout::class)
 class SelectionView(
@@ -90,8 +94,7 @@ class SelectionView(
     private fun mapTabAndGrid(keyword: String): Map<Tab, Component> {
         val tabsToGrids = LinkedHashMap<Tab, Component>()
 
-        val applicantResponses = applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId, keyword)
-        tabsToGrids[Tab("전체 지원자")] = createTotalApplicantsGrid(applicantResponses)
+        tabsToGrids[Tab("전체 지원자")] = createTotalApplicantsGrid(keyword)
 
         evaluations = evaluationService.findAllByRecruitmentId(recruitmentId)
         for (evaluation in evaluations) {
@@ -102,19 +105,30 @@ class SelectionView(
         return tabsToGrids
     }
 
-    private fun createTotalApplicantsGrid(applicants: List<ApplicantAndFormResponse>): Component {
-        return Grid<ApplicantAndFormResponse>(10).apply {
-            addInMemorySortableColumn("이름", ApplicantAndFormResponse::name)
-            addInMemorySortableColumn("이메일", ApplicantAndFormResponse::email)
-            addInMemorySortableColumn("전화번호", ApplicantAndFormResponse::phoneNumber)
-            addInMemorySortableColumn("성별") { it.gender.title }
-            addInMemorySortableDateColumn("생년월일", ApplicantAndFormResponse::birthday)
-            addInMemorySortableDateTimeColumn("지원 일시") {
-                it.applicationForm.submittedDateTime
-            }
-            addInMemorySortableColumn("부정 행위자") { if (it.isCheater) "O" else "X" }
+    private fun createTotalApplicantsGrid(keyword: String): Component {
+        return PaginatedGrid<ApplicantAndFormResponse>().apply {
+            addBackEndSortableColumn("이름", "information.name", ApplicantAndFormResponse::name)
+            addBackEndSortableColumn("이메일", "information.email", ApplicantAndFormResponse::email)
+            addBackEndSortableColumn("전화번호", "information.phoneNumber", ApplicantAndFormResponse::phoneNumber)
+            addBackEndSortableColumn("성별", "information.gender.title") { it.gender.title }
+            addBackEndSortableDateColumn("생년월일", "information.birthday", ApplicantAndFormResponse::birthday)
+            addBackEndSortableDateTimeColumn("지원 일시", "f.submittedDateTime") { it.applicationForm.submittedDateTime }
+            addBackEndSortableColumn("부정 행위자", "c.id") { if (it.isCheater) "O" else "X" }
             addColumn(createButtonRenderer()).apply { isAutoWidth = true }
-            setItems(applicants)
+            pageSize = 10
+            isMultiSort = true
+            dataProvider = DataProvider.fromCallbacks(
+                { query ->
+                    applicantService.findAllByRecruitmentIdAndKeyword(
+                        recruitmentId,
+                        keyword,
+                        query.offset,
+                        query.limit,
+                        query.sortOrders.toMap()
+                    ).stream()
+                },
+                { evaluationService.count().toInt() }
+            )
         }
     }
 
