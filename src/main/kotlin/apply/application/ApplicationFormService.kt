@@ -8,8 +8,6 @@ import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitmentitem.RecruitmentItemRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
-import support.createLocalDateTime
-import javax.annotation.PostConstruct
 import javax.transaction.Transactional
 
 @Transactional
@@ -88,75 +86,5 @@ class ApplicationFormService(
         ) {
             "모집 문항의 최대 글자 수를 초과하였습니다."
         }
-    }
-
-    @PostConstruct
-    private fun populateDummy() {
-        if (applicationFormRepository.count() != 0L) {
-            return
-        }
-        val applicationForms = listOf(
-            ApplicationForm(
-                referenceUrl = "",
-                submitted = true,
-                createdDateTime = createLocalDateTime(2019, 10, 25, 10),
-                modifiedDateTime = createLocalDateTime(2019, 11, 5, 10),
-                submittedDateTime = createLocalDateTime(2019, 11, 5, 10, 10, 10),
-                recruitmentId = 1L,
-                applicantId = 1L,
-                applicationFormAnswers = ApplicationFormAnswers(
-                    mutableListOf(
-                        ApplicationFormAnswer("고객에게 가치를 전달하고 싶습니다.", 1L),
-                        ApplicationFormAnswer("도전, 끈기", 2L)
-                    )
-                )
-            ),
-            ApplicationForm(
-                referenceUrl = "https://www.google.com",
-                submitted = true,
-                createdDateTime = createLocalDateTime(2019, 10, 25, 10),
-                modifiedDateTime = createLocalDateTime(2019, 11, 5, 10),
-                submittedDateTime = createLocalDateTime(2019, 11, 5, 10, 10, 10),
-                recruitmentId = 1L,
-                applicantId = 2L,
-                applicationFormAnswers = ApplicationFormAnswers(
-                    mutableListOf(
-                        ApplicationFormAnswer("스타트업을 하고 싶습니다.", 1L),
-                        ApplicationFormAnswer("책임감", 2L)
-                    )
-                )
-            ),
-            ApplicationForm(
-                referenceUrl = "https://www.google.com",
-                submitted = false,
-                createdDateTime = createLocalDateTime(2019, 10, 25, 10),
-                modifiedDateTime = createLocalDateTime(2019, 11, 6, 10),
-                submittedDateTime = createLocalDateTime(2019, 11, 6, 10, 10, 10),
-                recruitmentId = 1L,
-                applicantId = 3L,
-                applicationFormAnswers = ApplicationFormAnswers(
-                    mutableListOf(
-                        ApplicationFormAnswer("바딘을 배우고 싶습니다.", 1L),
-                        ApplicationFormAnswer("건강", 2L)
-                    )
-                )
-            ),
-            ApplicationForm(
-                referenceUrl = "https://www.google.com",
-                submitted = false,
-                createdDateTime = createLocalDateTime(2019, 10, 25, 10),
-                modifiedDateTime = createLocalDateTime(2019, 11, 6, 10),
-                submittedDateTime = createLocalDateTime(2019, 11, 6, 10, 10, 10),
-                recruitmentId = 1L,
-                applicantId = 4L,
-                applicationFormAnswers = ApplicationFormAnswers(
-                    mutableListOf(
-                        ApplicationFormAnswer("코딩 교육을 하고 싶습니다.", 1L),
-                        ApplicationFormAnswer("사랑", 2L)
-                    )
-                )
-            )
-        )
-        applicationFormRepository.saveAll(applicationForms)
     }
 }
