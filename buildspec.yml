@@ -1,0 +1,20 @@
+version: 0.2
+phases:
+  build:
+    commands:
+      - echo Build Starting on `date`
+      - chmod +x ./gradlew
+      - ./gradlew clean build -Pvaadin.productionMode -x test
+  post_build:
+    commands:
+      - echo $(basename ./build/libs/*.jar)
+      - mv ./build/libs/*.jar ./
+artifacts:
+  files:
+    - ./*.jar
+    - ./.ebextensions/**/*
+    - ./.platform/**/*
+cache:
+  paths:
+    - /root/.gradle/caches/**/*
+    - '**/node_modules/**/*'
