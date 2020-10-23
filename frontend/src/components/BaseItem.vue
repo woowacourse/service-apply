@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { parseLocalDateTime } from "@/utils/date"
+import moment from "moment"
 
 export default {
   props: {
@@ -23,10 +23,10 @@ export default {
   },
   computed: {
     start() {
-      return parseLocalDateTime(new Date(this.startDateTime))
+      return moment(this.startDateTime).format("YYYY-MM-DD HH:mm:ss")
     },
     end() {
-      return parseLocalDateTime(new Date(this.endDateTime))
+      return moment(this.endDateTime).format("YYYY-MM-DD HH:mm:ss")
     },
   },
 }
