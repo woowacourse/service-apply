@@ -11,13 +11,10 @@ import javax.persistence.Entity
 class Administrator(
     @Column(unique = true)
     private val name: String,
-
-    @Column
     private val password: String,
     id: Long
 ) : BaseEntity(id), UserDetails {
-    override fun getAuthorities(): MutableCollection<out GrantedAuthority> =
-        mutableListOf(SimpleGrantedAuthority("ADMIN"))
+    override fun getAuthorities(): List<GrantedAuthority> = listOf(SimpleGrantedAuthority("ADMIN"))
 
     override fun getPassword(): String = password
 
