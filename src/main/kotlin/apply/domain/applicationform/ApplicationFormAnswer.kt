@@ -1,11 +1,11 @@
-package apply.domain.recruitmentitem
+package apply.domain.applicationform
 
 import javax.persistence.Column
 import javax.persistence.Embeddable
 import javax.persistence.Lob
 
 @Embeddable
-class Answer(
+class ApplicationFormAnswer(
     @Lob
     val contents: String,
 

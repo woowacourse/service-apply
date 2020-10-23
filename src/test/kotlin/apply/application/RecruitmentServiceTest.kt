@@ -11,16 +11,15 @@ import apply.domain.recruitmentitem.RecruitmentItemRepository
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
-import io.mockk.junit5.MockKExtension
 import io.mockk.just
 import io.mockk.slot
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
+import support.test.UnitTest
 
-@ExtendWith(MockKExtension::class)
+@UnitTest
 internal class RecruitmentServiceTest {
     @MockK
     lateinit var recruitmentRepository: RecruitmentRepository

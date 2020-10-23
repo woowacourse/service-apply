@@ -98,7 +98,8 @@ export default BirthField
 .year,
 .month,
 .day {
-  width: 100%;
+  min-width: 0;
+  flex: 1;
 }
 
 .month {

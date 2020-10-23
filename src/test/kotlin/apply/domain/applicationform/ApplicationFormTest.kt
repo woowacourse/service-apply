@@ -1,94 +1,52 @@
 package apply.domain.applicationform
 
-import apply.domain.recruitmentitem.Answer
-import apply.domain.recruitmentitem.Answers
+import apply.createApplicationForm
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatIllegalStateException
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
+import org.junit.jupiter.api.assertThrows
 
 internal class ApplicationFormTest {
-    private lateinit var applicationForm: ApplicationForm
-
-    @BeforeEach
-    internal fun setUp() {
-        applicationForm = ApplicationForm(
-            applicantId = 1L,
-            recruitmentId = 1L,
-            referenceUrl = "http://example.com",
-            answers = Answers(
-                mutableListOf(
-                    Answer(
-                        "스타트업을 하고 싶습니다.",
-                        1L
-                    ),
-                    Answer(
-                        "책임감",
-                        2L
-                    )
-                )
-            )
-        )
-    }
-
     @Test
-    fun `지원서가 잘 만들어졌는지 테스트한다`() {
-        assertAll(
-            { assertThat(applicationForm.submitted).isFalse() },
-            { assertThat(applicationForm.applicantId).isEqualTo(1L) },
-            { assertThat(applicationForm.referenceUrl).isEqualTo("http://example.com") },
-            { assertThat(applicationForm.answers.items[0].contents).isEqualTo("스타트업을 하고 싶습니다.") },
-            { assertThat(applicationForm.answers.items[1].contents).isEqualTo("책임감") }
-        )
-    }
-
-    @Test
-    fun `지원서의 업데이트를 테스트한다`() {
-        applicationForm.update(
-            "http://h2f.kr",
-            Answers(
-                mutableListOf(
-                    Answer(
-                        "대기업에 취직하고 싶습니다.",
-                        1L
-                    ),
-                    Answer(
-                        "책임감",
-                        2L
-                    )
-                )
-            )
-        )
-        assertAll(
-            { assertThat(applicationForm.referenceUrl).isEqualTo("http://h2f.kr") },
-            { assertThat(applicationForm.answers.items[0].contents).isEqualTo("대기업에 취직하고 싶습니다.") }
-        )
-    }
-
-    @Test
-    fun `지원서의 제출을 테스트한다`() {
-        applicationForm.submit()
-
-        assertThat(applicationForm.submitted).isTrue()
-
-        assertThatIllegalStateException().isThrownBy {
-            applicationForm.update(
-                "http://h2f.kr",
-                Answers(
+    fun `지원서를 수정한다`() {
+        val applicationForm = createApplicationForm(referenceUrl = "https://example.com").apply {
+            update(
+                referenceUrl = "https://example2.com",
+                applicationFormAnswers = ApplicationFormAnswers(
                     mutableListOf(
-                        Answer(
-                            "스타트업을 하고 싶습니다.",
-                            1L
-                        ),
-                        Answer(
-                            "책임감",
-                            2L
-                        )
+                        ApplicationFormAnswer("수정된 답변 1", 1L)
                     )
                 )
             )
         }
-            .withMessageContaining("이미 제출된")
+
+        assertAll(
+            { assertThat(applicationForm.referenceUrl).isEqualTo("https://example2.com") },
+            { assertThat(applicationForm.answers.items[0].contents).isEqualTo("수정된 답변 1") }
+        )
+    }
+
+    @Test
+    fun `지원서를 제출한다`() {
+        val applicationForm = createApplicationForm().apply { submit() }
+
+        assertThat(applicationForm.submitted).isTrue()
+        assertThat(applicationForm.submittedDateTime).isNotNull()
+    }
+
+    @Test
+    fun `제출한 지원서를 수정할 수 없다`() {
+        val applicationForm = createApplicationForm().apply { submit() }
+
+        assertThrows<IllegalStateException> {
+            applicationForm.update(
+                referenceUrl = "https://example2.com",
+                applicationFormAnswers = ApplicationFormAnswers(
+                    mutableListOf(
+                        ApplicationFormAnswer("수정된 답변 1", 1L)
+                    )
+                )
+            )
+        }
     }
 }

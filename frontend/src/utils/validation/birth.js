@@ -6,6 +6,6 @@ export const isYearValid = v => YEAR_REGEX.test(v)
 export const isMonthValid = v => MONTH_REGEX.test(v)
 export const isDayValid = v => DAY_REGEX.test(v)
 
-export const YEAR_MESSAGE = "태어난 년도를 정확하게 입력해 주세요."
+export const YEAR_MESSAGE = "태어난 년도 4자리를 정확하게 입력해 주세요."
 export const MONTH_MESSAGE = "태어난 월을 정확하게 입력해 주세요."
 export const DAY_MESSAGE = "태어난 일을 정확하게 입력해 주세요."

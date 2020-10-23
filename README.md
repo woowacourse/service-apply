@@ -9,4 +9,6 @@
 mkdir .git/hooks
 ./gradlew addKtlintCheckGitPreCommitHook
 ./gradlew clean vaadinPrepareFrontend
+cd docker
+docker-compose up -d
 ```

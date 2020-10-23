@@ -2,4 +2,4 @@ const REGEX = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)
 
 export const isValid = v => REGEX.test(v)
 
-export const MESSAGE = "정확한 이메일 양식으로 채워주세요"
+export const MESSAGE = "정확한 이메일 양식을 입력해 주세요."

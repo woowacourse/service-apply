@@ -5,11 +5,9 @@ import apply.createEvaluationItem
 import apply.domain.evaluationItem.EvaluationItemRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import org.springframework.test.context.TestConstructor
+import support.test.RepositoryTest
 
-@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-@DataJpaTest
+@RepositoryTest
 internal class EvaluationItemRepositoryTest(
     private val evaluationItemRepository: EvaluationItemRepository
 ) {
