@@ -64,8 +64,8 @@ import { Button, CheckBox, Field, Form, TextField, Label, Description } from "@/
 import RecruitCard from "@/components/RecruitCard"
 import * as RecruitmentApi from "@/api/recruitments"
 import * as ApplicationFormsApi from "@/api/application-forms"
-import { parseLocalDateTime } from "@/utils/date"
 import { ALREADY_REGISTER } from "@/views/constants"
+import moment from "moment"
 
 export default {
   props: {
@@ -146,7 +146,7 @@ export default {
       }
     },
     fillForm(applicationForm) {
-      this.modifiedDateTime = parseLocalDateTime(new Date(applicationForm.modifiedDateTime))
+      this.modifiedDateTime = moment(applicationForm.modifiedDateTime).format("YYYY-MM-DD HH:mm:ss")
       this.referenceUrl = applicationForm.referenceUrl
       this.recruitmentItems = this.recruitmentItems.map(recruitmentItem => ({
         ...recruitmentItem,
