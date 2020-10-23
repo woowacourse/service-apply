@@ -63,7 +63,7 @@ class Applicant(
         this.password = Password(password)
     }
 
-    private inline fun identify(value: Boolean) {
+    private fun identify(value: Boolean) {
         if (!value) {
             throw ApplicantAuthenticationException()
         }
