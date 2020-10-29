@@ -8,10 +8,12 @@ import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.evaluationtarget.EvaluationAnswer
 import apply.domain.evaluationtarget.EvaluationAnswers
+import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import javax.annotation.PostConstruct
 import javax.transaction.Transactional
 
 @Transactional
@@ -139,5 +141,35 @@ class EvaluationTargetService(
             evaluationAnswers = EvaluationAnswers(evaluationAnswers),
             note = request.note
         )
+    }
+
+    @PostConstruct
+    private fun populateDummy() {
+        if (evaluationTargetRepository.count() != 0L) {
+            return
+        }
+        val evaluationTargets = listOf(
+            EvaluationTarget(
+                id = 1L,
+                evaluationId = 1L,
+                administratorId = 1L,
+                applicantId = 1L
+            ),
+            EvaluationTarget(
+                evaluationId = 1L,
+                administratorId = 1L,
+                applicantId = 2L
+            ).apply {
+                evaluationAnswers.add(EvaluationAnswer(score = 2, evaluationItemId = 1L))
+                evaluationAnswers.add(EvaluationAnswer(score = 1, evaluationItemId = 2L))
+                evaluationStatus = EvaluationStatus.PASS
+            },
+            EvaluationTarget(
+                evaluationId = 2L,
+                administratorId = 1L,
+                applicantId = 2L
+            )
+        )
+        evaluationTargetRepository.saveAll(evaluationTargets)
     }
 }

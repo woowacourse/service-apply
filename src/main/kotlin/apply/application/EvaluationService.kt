@@ -7,6 +7,7 @@ import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.recruitment.RecruitmentRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import javax.annotation.PostConstruct
 import javax.transaction.Transactional
 
 @Transactional
@@ -99,5 +100,35 @@ class EvaluationService(
         evaluationRepository.findAll()
             .filter { it.hasSameBeforeEvaluationWith(id) }
             .forEach { it.resetBeforeEvaluation() }
+    }
+
+    @PostConstruct
+    private fun populateDummy() {
+        if (evaluationRepository.count() != 0L) {
+            return
+        }
+        val evaluations = listOf(
+            Evaluation(
+                title = "프리코스 대상자 선발",
+                description = "[리뷰 절차]\n" +
+                    "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
+                recruitmentId = 1L
+            ),
+            Evaluation(
+                title = "1주차 - 숫자야구게임",
+                description = "[리뷰 절차]\n" +
+                    "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
+                recruitmentId = 1L,
+                beforeEvaluationId = 1L
+            ),
+            Evaluation(
+                title = "2주차 - 자동차경주게임 ",
+                description = "[리뷰 절차]\n" +
+                    "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
+                recruitmentId = 1L,
+                beforeEvaluationId = 2L
+            )
+        )
+        evaluationRepository.saveAll(evaluations)
     }
 }
