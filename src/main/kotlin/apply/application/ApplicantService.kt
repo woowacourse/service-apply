@@ -49,6 +49,10 @@ class ApplicantService(
         return applicantRepository.findAllByKeyword(keyword).map(::ApplicantResponse)
     }
 
+    fun findAllByRecruitmentId(recruitmentId: Long): List<ApplicantResponse> {
+        return applicantRepository.findAllByRecruitmentId(recruitmentId).map(::ApplicantResponse)
+    }
+
     fun resetPassword(request: ResetPasswordRequest): String {
         return passwordGenerator.generate().also {
             getByEmail(request.email).resetPassword(request.name, request.birthday, it)
