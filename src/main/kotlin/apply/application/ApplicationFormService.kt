@@ -157,6 +157,27 @@ class ApplicationFormService(
                 )
             )
         )
+        val applicantionFormss = mutableListOf<ApplicationForm>()
+        for (i in 1..1000) {
+            applicantionFormss.add(
+                ApplicationForm(
+                    referenceUrl = "https://www.google.com",
+                    submitted = listOf(true, false).shuffled().take(1)[0],
+                    createdDateTime = createLocalDateTime(2019, 10, 25, 10).minusDays(i.toLong()),
+                    modifiedDateTime = createLocalDateTime(2019, 11, 6, 10).minusDays(i.toLong()),
+                    submittedDateTime = createLocalDateTime(2019, 11, 6, 10, 10, 10).minusDays(i.toLong()),
+                    recruitmentId = 1L,
+                    applicantId = 4L + i.toLong(),
+                    applicationFormAnswers = ApplicationFormAnswers(
+                        mutableListOf(
+                            ApplicationFormAnswer("코딩 교육을 하고 싶습니다.", 1L),
+                            ApplicationFormAnswer("사랑", 2L)
+                        )
+                    )
+                )
+            )
+        }
         applicationFormRepository.saveAll(applicationForms)
+        applicationFormRepository.saveAll(applicantionFormss)
     }
 }

@@ -12,6 +12,7 @@ import com.vaadin.flow.component.html.H1
 import com.vaadin.flow.component.icon.Icon
 import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.orderedlayout.FlexComponent
+import com.vaadin.flow.component.orderedlayout.FlexLayout
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup
 import com.vaadin.flow.component.select.Select
@@ -66,6 +67,27 @@ fun createSearchBar(eventListener: (name: String) -> Unit): Div {
             Button(Icon(VaadinIcon.SEARCH)) { eventListener(textField.value) }
         )
     )
+}
+
+fun createTextBox(text: String, fontSize: Int = 16, fontWeight: String = "500"): Div {
+    return Div(Text(text)).apply {
+        element.style.set("margin", "0")
+        element.style.set("font-size", "${fontSize}px")
+        element.style.set("font-weight", fontWeight)
+    }
+}
+
+fun createCard(
+    vararg components: Component,
+    direction: FlexLayout.FlexDirection = FlexLayout.FlexDirection.ROW
+): FlexLayout {
+    return FlexLayout(*components).apply {
+        element.style.set("margin", "5px")
+        element.style.set("padding", "20px 15px")
+        element.style.set("background-color", "#fff")
+        element.style.set("box-shadow", "1px 1px 3px #ddd")
+        setFlexDirection(direction)
+    }
 }
 
 class Title(val value: H1) : HorizontalLayout(), HasText {

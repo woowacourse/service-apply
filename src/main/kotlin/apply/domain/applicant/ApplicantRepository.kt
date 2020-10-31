@@ -10,7 +10,4 @@ interface ApplicantRepository : JpaRepository<Applicant, Long> {
 
     @Query("select a from Applicant a where a.information.email = :email")
     fun findByEmail(@Param("email") email: String): Applicant?
-
-    @Query("select a from Applicant a inner join ApplicationForm f on a.id = f.applicantId where f.recruitmentId = :recruitmentId")
-    fun findAllByRecruitmentId(recruitmentId: Long): List<Applicant>
 }

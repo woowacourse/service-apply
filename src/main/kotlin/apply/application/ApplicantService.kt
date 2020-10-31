@@ -49,8 +49,11 @@ class ApplicantService(
         return applicantRepository.findAllByKeyword(keyword).map(::ApplicantResponse)
     }
 
-    fun findAllByRecruitmentId(recruitmentId: Long): List<ApplicantResponse> {
-        return applicantRepository.findAllByRecruitmentId(recruitmentId).map(::ApplicantResponse)
+    fun findAllByRecruitmentId(recruitmentId: Long): List<ApplicantAndFormResponse> {
+        return applicationFormRepository
+            .findByRecruitmentId(recruitmentId)
+            .associateBy { it.applicantId }
+            .run { match { applicantRepository.findAllById(keys) } }
     }
 
     fun resetPassword(request: ResetPasswordRequest): String {
@@ -104,6 +107,20 @@ class ApplicantService(
                 password = Password("password")
             )
         )
+        val applicantss = mutableListOf<Applicant>()
+        for (i in 1..1000) {
+            applicantss.add(
+                Applicant(
+                    name = "홍길동$i",
+                    email = "ss$i@email.com",
+                    phoneNumber = "010-0000-0000",
+                    gender = listOf(Gender.MALE, Gender.FEMALE).shuffled().take(1)[0],
+                    birthday = createLocalDate(2020, 1, 1).minusDays(i.toLong()),
+                    password = Password("password")
+                )
+            )
+        }
         applicantRepository.saveAll(applicants)
+        applicantRepository.saveAll(applicantss)
     }
 }
