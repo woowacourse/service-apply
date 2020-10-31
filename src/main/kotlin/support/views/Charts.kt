@@ -31,10 +31,11 @@ fun createChart(
     }
 }
 
+@JvmName("createChart1")
 fun createChart(
     title: String,
     type: Type,
-    series: Series<*>,
+    series: List<Series<*>>,
     labels: Set<String>,
     legendPosition: Position = Position.right,
     showToolbar: Boolean = false,
@@ -43,7 +44,7 @@ fun createChart(
     return createCard(
         createTextBox(title, 24, "bold"),
         createChart(type, labels, legendPosition, showToolbar, enableDataLabels)
-            .apply { setSeries(series) },
+            .apply { setSeries(*series.toTypedArray()) },
         direction = FlexLayout.FlexDirection.COLUMN
     ).apply {
         justifyContentMode = FlexComponent.JustifyContentMode.CENTER
@@ -68,6 +69,7 @@ private fun createChart(
         setDataLabels(DataLabels().apply { enabled = enableDataLabels })
         setLabels(*labels.toTypedArray())
         setLegend(Legend().apply { position = legendPosition })
+        setColors("#008FFB", "#00E396", "#FEB019", "#FF4560", "#775DD0")
     }.apply {
         width = "480px"
         height = "480px"

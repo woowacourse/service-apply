@@ -66,7 +66,7 @@ class DashBoardView(
         return createChart(
             title = "나이",
             type = Type.bar,
-            series = Series("지원자", *birthdayGroup.values.toTypedArray()),
+            series = listOf(Series("지원자", *birthdayGroup.values.toTypedArray())),
             labels = birthdayGroup.keys
         )
     }
