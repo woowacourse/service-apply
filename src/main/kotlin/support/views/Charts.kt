@@ -15,7 +15,7 @@ fun createChart(
     title: String,
     type: Type,
     series: List<Double>,
-    labels: Set<String>,
+    labels: Collection<String>,
     legendPosition: Position = Position.right,
     showToolbar: Boolean = false,
     enableDataLabels: Boolean = false
@@ -36,7 +36,7 @@ fun createChart(
     title: String,
     type: Type,
     series: List<Series<*>>,
-    labels: Set<String>,
+    labels: Collection<String>,
     legendPosition: Position = Position.right,
     showToolbar: Boolean = false,
     enableDataLabels: Boolean = false
@@ -53,8 +53,8 @@ fun createChart(
 }
 
 private fun createChart(
-    type: Type,
-    labels: Set<String>,
+    chartType: Type,
+    labels: Collection<String>,
     legendPosition: Position,
     showToolbar: Boolean,
     enableDataLabels: Boolean
@@ -62,8 +62,8 @@ private fun createChart(
     return ApexCharts().apply {
         setChart(
             Chart().apply {
-                this.type = type
-                this.toolbar = Toolbar().apply { show = showToolbar }
+                type = chartType
+                toolbar = Toolbar().apply { show = showToolbar }
             }
         )
         setDataLabels(DataLabels().apply { enabled = enableDataLabels })

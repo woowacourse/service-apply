@@ -40,18 +40,23 @@ class DashBoardView(
     }
 
     private fun createContent(): Component {
-        val applicants = applicantService.findAllByRecruitmentId(recruitmentId)
-        val submittedApplicants = applicants.filter { it.applicationForm.submitted }
+        val totalApplicants = applicantService.findAllByRecruitmentId(recruitmentId)
+        val submittedApplicants = totalApplicants.filter { it.applicationForm.submitted }
 
         return FlexLayout(
-            createStatistics(applicants, "지원서"),
-            createStatistics(submittedApplicants, "제출한 사람")
+            createStatistics(totalApplicants, "지원서", false),
+            createStatistics(submittedApplicants, "제출한 사람", true)
         )
     }
 
-    private fun createStatistics(applicants: List<ApplicantAndFormResponse>, description: String): FlexLayout {
+    private fun createStatistics(
+        applicants: List<ApplicantAndFormResponse>,
+        description: String,
+        isSubmitted: Boolean
+    ): FlexLayout {
         return FlexLayout(
             createSummary("${applicants.count()}명", description, Icon(VaadinIcon.TAG)),
+            if (isSubmitted) createSubmittedDateApplicant(applicants) else createDateApplicant(applicants),
             createYearApplicant(applicants),
             createGenderApplicant(applicants)
         ).apply {
@@ -60,8 +65,36 @@ class DashBoardView(
         }
     }
 
+    private fun createDateApplicant(applicants: List<ApplicantAndFormResponse>): Component {
+        val dateGroup = applicants.groupingBy { it.applicationForm.createdDateTime.toLocalDate() }
+            .eachCount()
+            .toSortedMap()
+
+        return createChart(
+            title = "지원서 생성 날짜",
+            type = Type.line,
+            series = listOf(Series("지원자", *dateGroup.values.toTypedArray())),
+            labels = dateGroup.keys.map { it.toString() }
+        )
+    }
+
+    private fun createSubmittedDateApplicant(applicants: List<ApplicantAndFormResponse>): Component {
+        val submittedDateGroup = applicants.groupingBy { it.applicationForm.submittedDateTime!!.toLocalDate() }
+            .eachCount()
+            .toSortedMap()
+
+        return createChart(
+            title = "제출 날짜",
+            type = Type.line,
+            series = listOf(Series("지원자", *submittedDateGroup.values.toTypedArray())),
+            labels = submittedDateGroup.keys.map { it.toString() }
+        )
+    }
+
     private fun createYearApplicant(applicants: List<ApplicantAndFormResponse>): Component {
-        val birthdayGroup = applicants.groupingBy { it.birthday.year.toString() }.eachCount()
+        val birthdayGroup = applicants.groupingBy { it.birthday.year.toString() }
+            .eachCount()
+            .toSortedMap()
 
         return createChart(
             title = "나이",
@@ -72,7 +105,8 @@ class DashBoardView(
     }
 
     private fun createGenderApplicant(applicants: List<ApplicantAndFormResponse>): Component {
-        val genderGroup = applicants.groupingBy { it.gender.title }.eachCount()
+        val genderGroup = applicants.groupingBy { it.gender.title }
+            .eachCount()
 
         return createChart(
             title = "성비",
