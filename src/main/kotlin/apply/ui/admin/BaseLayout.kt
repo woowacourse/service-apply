@@ -1,7 +1,7 @@
 package apply.ui.admin
 
 import apply.ui.admin.cheater.CheatersView
-import apply.ui.admin.dashboard.DashBoardView
+import apply.ui.admin.dashboard.MainView
 import apply.ui.admin.evaluation.EvaluationsView
 import apply.ui.admin.recruitment.RecruitmentsView
 import apply.ui.admin.selections.SelectionsView
@@ -23,11 +23,11 @@ import com.vaadin.flow.theme.lumo.Lumo
 @Theme(value = Lumo::class)
 class BaseLayout : AppLayout() {
     private val route: Map<String, Class<out Component>> = mapOf(
+        "대시보드" to MainView::class.java,
         "모집 관리" to RecruitmentsView::class.java,
         "평가 관리" to EvaluationsView::class.java,
         "선발 과정" to SelectionsView::class.java,
-        "부정 행위자" to CheatersView::class.java,
-        "대시보드" to DashBoardView::class.java
+        "부정 행위자" to CheatersView::class.java
     )
 
     init {
