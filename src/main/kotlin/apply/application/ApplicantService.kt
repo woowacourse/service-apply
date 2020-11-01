@@ -120,6 +120,16 @@ class ApplicantService(
                 )
             )
         }
+        applicantss.add(
+            Applicant(
+                name = "홍길동9999",
+                email = "ssasd@email.com",
+                phoneNumber = "010-0000-0000",
+                gender = listOf(Gender.MALE, Gender.FEMALE).shuffled().take(1)[0],
+                birthday = createLocalDate(2021, 1, 1),
+                password = Password("password")
+            )
+        )
         applicantRepository.saveAll(applicants)
         applicantRepository.saveAll(applicantss)
     }

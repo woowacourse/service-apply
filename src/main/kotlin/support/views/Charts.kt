@@ -14,27 +14,6 @@ import com.vaadin.flow.component.orderedlayout.FlexLayout
 fun createChart(
     title: String,
     type: Type,
-    series: List<Double>,
-    labels: Collection<String>,
-    legendPosition: Position = Position.right,
-    showToolbar: Boolean = false,
-    enableDataLabels: Boolean = false
-): FlexLayout {
-    return createCard(
-        createTextBox(title, 24, "bold"),
-        createChart(type, labels, legendPosition, showToolbar, enableDataLabels)
-            .apply { setSeries(*series.toTypedArray()) },
-        direction = FlexLayout.FlexDirection.COLUMN
-    ).apply {
-        justifyContentMode = FlexComponent.JustifyContentMode.CENTER
-        alignItems = FlexComponent.Alignment.CENTER
-    }
-}
-
-@JvmName("createChart1")
-fun createChart(
-    title: String,
-    type: Type,
     series: List<Series<*>>,
     labels: Collection<String>,
     legendPosition: Position = Position.right,
@@ -69,10 +48,10 @@ private fun createChart(
         setDataLabels(DataLabels().apply { enabled = enableDataLabels })
         setLabels(*labels.toTypedArray())
         setLegend(Legend().apply { position = legendPosition })
-        setColors("#008FFB", "#00E396", "#FEB019", "#FF4560", "#775DD0")
+        setColors(Colors.SKYBLUE.color, Colors.PINK.color, Colors.PRIMARY.color, Colors.EMERALD.color, Colors.PURPLE.color)
     }.apply {
         width = "480px"
-        height = "480px"
+        height = "240px"
         element.style.set("display", "flex")
         element.style.set("justify-content", "center")
         element.style.set("align-items", "center")

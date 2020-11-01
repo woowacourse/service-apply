@@ -177,6 +177,23 @@ class ApplicationFormService(
                 )
             )
         }
+        applicantionFormss.add(
+            ApplicationForm(
+                referenceUrl = "https://www.google.com",
+                submitted = false,
+                createdDateTime = createLocalDateTime(2019, 10, 22, 10),
+                modifiedDateTime = createLocalDateTime(2019, 11, 6, 10),
+                submittedDateTime = createLocalDateTime(2019, 11, 6, 10, 10, 10),
+                recruitmentId = 1L,
+                applicantId = 1005L,
+                applicationFormAnswers = ApplicationFormAnswers(
+                    mutableListOf(
+                        ApplicationFormAnswer("코딩 교육을 하고 싶습니다.", 1L),
+                        ApplicationFormAnswer("사랑", 2L)
+                    )
+                )
+            )
+        )
         applicationFormRepository.saveAll(applicationForms)
         applicationFormRepository.saveAll(applicantionFormss)
     }

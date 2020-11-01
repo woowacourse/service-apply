@@ -36,7 +36,7 @@ class DashBoardsView(
     private fun createButton(recruitment: Recruitment): Component {
         return HorizontalLayout(
             createNormalButton(recruitment.title) {
-                UI.getCurrent().navigate(DashBoardView::class.java, recruitment.id)
+                UI.getCurrent().navigate(DashBoardView::class.java)
             }
         ).apply {
             setSizeFull()
