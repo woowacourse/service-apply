@@ -85,15 +85,15 @@ fun createCard(
     return FlexLayout(*components).apply {
         element.style.set("margin", "5px")
         element.style.set("padding", "20px 15px")
-        element.style.set("background-color", "#fff")
-        element.style.set("box-shadow", "1px 1px 3px #ddd")
+        element.style.set("background-color", Colors.BLACK.color)
+        element.style.set("box-shadow", "1px 1px 3px ${Colors.GRAY2.color}")
         setFlexDirection(direction)
     }
 }
 
 fun createHorizontalDivider(ratio: Int): Div {
     return Div().apply {
-        element.style.set("background-color", "#DDDEE2")
+        element.style.set("background-color", Colors.GRAY2.color)
         element.style.set("flex", ratio.toString())
         height = "2px"
     }

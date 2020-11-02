@@ -32,7 +32,7 @@ class MainView(
                 add(createTitle(it.id), createContent(it.id))
             }
         setFlexDirection(FlexDirection.COLUMN)
-        element.style.set("background-color", "#f1f2f6")
+        element.style.set("background-color", Colors.GRAY.color)
     }
 
     private fun createTitle(recruitmentId: Long): Component {
