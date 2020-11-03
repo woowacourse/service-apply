@@ -7,20 +7,22 @@ import apply.application.CheaterService
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
-import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.html.H1
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.select.Select
+import com.vaadin.flow.data.provider.DataProvider
 import com.vaadin.flow.data.renderer.ComponentRenderer
 import com.vaadin.flow.data.renderer.Renderer
 import com.vaadin.flow.router.Route
-import support.views.addInMemorySortableColumn
-import support.views.addInMemorySortableDateTimeColumn
+import org.vaadin.klaudeta.PaginatedGrid
+import support.views.addBackEndSortableColumn
+import support.views.addBackEndSortableDateTimeColumn
 import support.views.createDeleteButtonWithDialog
 import support.views.createPrimaryButton
 import support.views.createSearchBar
+import support.views.toMap
 
 @Route(value = "admin/cheaters", layout = BaseLayout::class)
 class CheatersView(
@@ -66,13 +68,24 @@ class CheatersView(
         }
     }
 
-    private fun createCheaterGrid(): Grid<CheaterResponse> {
-        return Grid<CheaterResponse>(10).apply {
-            addInMemorySortableColumn("이름") { it.applicant.name }
-            addInMemorySortableColumn("이메일") { it.applicant.email }
-            addInMemorySortableDateTimeColumn("등록일", CheaterResponse::createdDateTime)
+    private fun createCheaterGrid(): PaginatedGrid<CheaterResponse> {
+        return PaginatedGrid<CheaterResponse>().apply {
+            addBackEndSortableColumn("이름", "information.name") { it.applicant.name }
+            addBackEndSortableColumn("이메일", "information.email") { it.applicant.email }
+            addBackEndSortableDateTimeColumn("등록일", "c.createdDateTime", CheaterResponse::createdDateTime)
             addColumn(createDeleteButtonRenderer()).apply { isAutoWidth = true }
-            setItems(cheaterService.findAll())
+            pageSize = 10
+            isMultiSort = true
+            dataProvider = DataProvider.fromCallbacks(
+                { query ->
+                    cheaterService.findAll(
+                        query.offset,
+                        query.limit,
+                        query.sortOrders.toMap()
+                    ).stream()
+                },
+                { cheaterService.count().toInt() }
+            )
         }
     }
 
