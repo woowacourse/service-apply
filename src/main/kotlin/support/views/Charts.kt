@@ -31,6 +31,27 @@ fun createChart(
     }
 }
 
+@JvmName("createChart1")
+fun createChart(
+    title: String,
+    type: Type,
+    series: Collection<Double>,
+    labels: Collection<String>,
+    legendPosition: Position = Position.right,
+    showToolbar: Boolean = false,
+    enableDataLabels: Boolean = false
+): FlexLayout {
+    return createCard(
+        createTextBox(title, 24, "bold"),
+        createChart(type, labels, legendPosition, showToolbar, enableDataLabels)
+            .apply { setSeries(*series.toTypedArray()) },
+        direction = FlexLayout.FlexDirection.COLUMN
+    ).apply {
+        justifyContentMode = FlexComponent.JustifyContentMode.CENTER
+        alignItems = FlexComponent.Alignment.CENTER
+    }
+}
+
 private fun createChart(
     chartType: Type,
     labels: Collection<String>,
