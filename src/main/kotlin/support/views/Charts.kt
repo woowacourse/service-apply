@@ -69,7 +69,7 @@ private fun createChart(
         setDataLabels(DataLabels().apply { enabled = enableDataLabels })
         setLabels(*labels.toTypedArray())
         setLegend(Legend().apply { position = legendPosition })
-        setColors(Colors.SKYBLUE.color, Colors.PINK.color, Colors.PRIMARY.color, Colors.EMERALD.color, Colors.PURPLE.color)
+        setColors(Color.SKYBLUE.hex, Color.PINK.hex, Color.PRIMARY.hex, Color.EMERALD.hex, Color.PURPLE.hex)
     }.apply {
         width = "480px"
         height = "240px"

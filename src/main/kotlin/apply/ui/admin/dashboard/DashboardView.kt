@@ -14,7 +14,7 @@ import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.FlexLayout
 import com.vaadin.flow.router.Route
-import support.views.Colors
+import support.views.Color
 import support.views.createCard
 import support.views.createChart
 import support.views.createHorizontalDivider
@@ -26,7 +26,7 @@ import java.util.SortedMap
 import java.util.SortedSet
 
 @Route(value = "admin", layout = BaseLayout::class)
-class MainView(
+class DashboardView(
     private val recruitmentService: RecruitmentService,
     private val applicantService: ApplicantService
 ) : FlexLayout() {
@@ -36,7 +36,7 @@ class MainView(
                 add(createTitle(it.id), createContent(it.id))
             }
         setFlexDirection(FlexDirection.COLUMN)
-        element.style.set("background-color", Colors.GRAY.color)
+        element.style.set("background-color", Color.GRAY.hex)
     }
 
     private fun createTitle(recruitmentId: Long): Component {
@@ -44,7 +44,7 @@ class MainView(
             createHorizontalDivider(1),
             H2(recruitmentService.getById(recruitmentId).title).apply {
                 element.style.set("margin", "0 5px")
-                element.style.set("color", Colors.PRIMARY.color)
+                element.style.set("color", Color.PRIMARY.hex)
             },
             createHorizontalDivider(5)
         ).apply {
@@ -59,9 +59,9 @@ class MainView(
 
         return FlexLayout(
             FlexLayout(
-                createSummary("${submittedApplicants.count()}명", "지원자", Icon(VaadinIcon.TAG), Colors.PINK)
+                createSummary("${submittedApplicants.count()}명", "지원자", Icon(VaadinIcon.TAG), Color.PINK)
                     .apply { element.style.set("flex", "1") },
-                createSummary("${totalApplicants.count()}명", "가제출자", Icon(VaadinIcon.TAG), Colors.SKYBLUE)
+                createSummary("${totalApplicants.count()}명", "가제출자", Icon(VaadinIcon.TAG), Color.SKYBLUE)
                     .apply { element.style.set("flex", "1") }
             ),
             createStatistics(totalApplicants, submittedApplicants)
@@ -136,10 +136,10 @@ class MainView(
         )
     }
 
-    private fun createSummary(content: String, description: String, icon: Icon, color: Colors): Component {
+    private fun createSummary(content: String, description: String, icon: Icon, color: Color): Component {
         icon.apply {
             setSize("32px")
-            setColor(color.color)
+            setColor(color.hex)
             element.style.set("padding", "0 48px 0 0")
         }
         val contents = FlexLayout(

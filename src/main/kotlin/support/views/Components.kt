@@ -69,12 +69,12 @@ fun createSearchBar(eventListener: (name: String) -> Unit): Div {
     )
 }
 
-fun createTextBox(text: String, fontSize: Int = 16, fontWeight: String = "500", color: Colors = Colors.PRIMARY): Div {
+fun createTextBox(text: String, fontSize: Int = 16, fontWeight: String = "500", color: Color = Color.PRIMARY): Div {
     return Div(Text(text)).apply {
         element.style.set("margin", "0")
         element.style.set("font-size", "${fontSize}px")
         element.style.set("font-weight", fontWeight)
-        element.style.set("color", color.color)
+        element.style.set("color", color.hex)
     }
 }
 
@@ -85,15 +85,15 @@ fun createCard(
     return FlexLayout(*components).apply {
         element.style.set("margin", "5px")
         element.style.set("padding", "20px 15px")
-        element.style.set("background-color", Colors.BLACK.color)
-        element.style.set("box-shadow", "1px 1px 3px ${Colors.GRAY2.color}")
+        element.style.set("background-color", Color.BLACK.hex)
+        element.style.set("box-shadow", "1px 1px 3px ${Color.GRAY2.hex}")
         setFlexDirection(direction)
     }
 }
 
 fun createHorizontalDivider(ratio: Int): Div {
     return Div().apply {
-        element.style.set("background-color", Colors.GRAY2.color)
+        element.style.set("background-color", Color.GRAY2.hex)
         element.style.set("flex", ratio.toString())
         height = "2px"
     }
