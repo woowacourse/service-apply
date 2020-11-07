@@ -25,35 +25,32 @@ class ApplicantService(
     }
 
     fun findAllByRecruitmentIdAndKeyword(recruitmentId: Long, keyword: String): List<ApplicantAndFormResponse> {
-        return applicationFormRepository
-            .findByRecruitmentIdAndSubmittedTrue(recruitmentId)
-            .associateBy { it.applicantId }
-            .match { applicantRepository.findAllByKeyword(keyword) }
+        return applicationFormRepository.findByRecruitmentIdAndSubmittedTrue(recruitmentId)
+            .joinOnApplicantId(applicantRepository.findAllByKeyword(keyword))
     }
 
     fun findAllByRecruitmentIdAndSubmittedTrue(recruitmentId: Long): List<ApplicantAndFormResponse> {
-        return applicationFormRepository
-            .findByRecruitmentIdAndSubmittedTrue(recruitmentId)
-            .associateBy { it.applicantId }
-            .run { match { applicantRepository.findAllById(keys) } }
+        return applicationFormRepository.findByRecruitmentIdAndSubmittedTrue(recruitmentId)
+            .run { joinOnApplicantId(applicantRepository.findAllById(applicantIds())) }
     }
 
-    private fun Map<Long, ApplicationForm>.match(supplier: () -> List<Applicant>): List<ApplicantAndFormResponse> {
-        val cheaterApplicantIds = cheaterRepository.findAll().map { it.applicantId }
-        return supplier()
-            .filter { containsKey(it.id) }
-            .map { ApplicantAndFormResponse(it, cheaterApplicantIds.contains(it.id), getValue(it.id)) }
+    private fun List<ApplicationForm>.joinOnApplicantId(applicants: List<Applicant>): List<ApplicantAndFormResponse> {
+        val applicantForms = associateBy { it.applicantId }
+        val cheaters = cheaterRepository.findAll().map { it.applicantId }
+        return applicants
+            .filter { applicantForms.containsKey(it.id) }
+            .map { ApplicantAndFormResponse(it, cheaters.contains(it.id), applicantForms.getValue(it.id)) }
     }
+
+    private fun List<ApplicationForm>.applicantIds() = map { it.applicantId }
 
     fun findAllByKeyword(keyword: String): List<ApplicantResponse> {
         return applicantRepository.findAllByKeyword(keyword).map(::ApplicantResponse)
     }
 
     fun findAllByRecruitmentId(recruitmentId: Long): List<ApplicantAndFormResponse> {
-        return applicationFormRepository
-            .findByRecruitmentId(recruitmentId)
-            .associateBy { it.applicantId }
-            .run { match { applicantRepository.findAllById(keys) } }
+        return applicationFormRepository.findByRecruitmentId(recruitmentId)
+            .run { joinOnApplicantId(applicantRepository.findAllById(applicantIds())) }
     }
 
     fun resetPassword(request: ResetPasswordRequest): String {
