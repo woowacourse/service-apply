@@ -2,11 +2,15 @@ package apply.application
 
 import apply.domain.applicant.Applicant
 import apply.domain.applicant.ApplicantRepository
+import apply.domain.applicant.Gender
+import apply.domain.applicant.Password
 import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.CheaterRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import support.createLocalDate
+import javax.annotation.PostConstruct
 
 @Transactional
 @Service
@@ -21,28 +25,32 @@ class ApplicantService(
     }
 
     fun findAllByRecruitmentIdAndKeyword(recruitmentId: Long, keyword: String): List<ApplicantAndFormResponse> {
-        return applicationFormRepository
-            .findByRecruitmentIdAndSubmittedTrue(recruitmentId)
-            .associateBy { it.applicantId }
-            .match { applicantRepository.findAllByKeyword(keyword) }
+        return applicationFormRepository.findByRecruitmentIdAndSubmittedTrue(recruitmentId)
+            .joinOnApplicantId(applicantRepository.findAllByKeyword(keyword))
     }
 
     fun findAllByRecruitmentIdAndSubmittedTrue(recruitmentId: Long): List<ApplicantAndFormResponse> {
-        return applicationFormRepository
-            .findByRecruitmentIdAndSubmittedTrue(recruitmentId)
-            .associateBy { it.applicantId }
-            .run { match { applicantRepository.findAllById(keys) } }
+        return applicationFormRepository.findByRecruitmentIdAndSubmittedTrue(recruitmentId)
+            .run { joinOnApplicantId(applicantRepository.findAllById(applicantIds())) }
     }
 
-    private fun Map<Long, ApplicationForm>.match(supplier: () -> List<Applicant>): List<ApplicantAndFormResponse> {
-        val cheaterApplicantIds = cheaterRepository.findAll().map { it.applicantId }
-        return supplier()
-            .filter { containsKey(it.id) }
-            .map { ApplicantAndFormResponse(it, cheaterApplicantIds.contains(it.id), getValue(it.id)) }
+    private fun List<ApplicationForm>.joinOnApplicantId(applicants: List<Applicant>): List<ApplicantAndFormResponse> {
+        val applicantForms = associateBy { it.applicantId }
+        val cheaters = cheaterRepository.findAll().map { it.applicantId }
+        return applicants
+            .filter { applicantForms.containsKey(it.id) }
+            .map { ApplicantAndFormResponse(it, cheaters.contains(it.id), applicantForms.getValue(it.id)) }
     }
+
+    private fun List<ApplicationForm>.applicantIds() = map { it.applicantId }
 
     fun findAllByKeyword(keyword: String): List<ApplicantResponse> {
         return applicantRepository.findAllByKeyword(keyword).map(::ApplicantResponse)
+    }
+
+    fun findAllByRecruitmentId(recruitmentId: Long): List<ApplicantAndFormResponse> {
+        return applicationFormRepository.findByRecruitmentId(recruitmentId)
+            .run { joinOnApplicantId(applicantRepository.findAllById(applicantIds())) }
     }
 
     fun resetPassword(request: ResetPasswordRequest): String {
@@ -55,5 +63,71 @@ class ApplicantService(
         applicantRepository.getOne(id).apply {
             changePassword(request.password, request.newPassword)
         }
+    }
+
+    @PostConstruct
+    private fun populateDummy() {
+        if (applicantRepository.count() != 0L) {
+            return
+        }
+        val applicants = listOf(
+            Applicant(
+                name = "홍길동",
+                email = "a@email.com",
+                phoneNumber = "010-0000-0000",
+                gender = Gender.MALE,
+                birthday = createLocalDate(2020, 4, 17),
+                password = Password("password")
+            ),
+            Applicant(
+                name = "홍길동2",
+                email = "b@email.com",
+                phoneNumber = "010-0000-0000",
+                gender = Gender.FEMALE,
+                birthday = createLocalDate(2020, 5, 5),
+                password = Password("password")
+            ),
+            Applicant(
+                name = "홍길동3",
+                email = "c@email.com",
+                phoneNumber = "010-0000-0000",
+                gender = Gender.MALE,
+                birthday = createLocalDate(2020, 1, 1),
+                password = Password("password")
+            ),
+            Applicant(
+                name = "홍길동4",
+                email = "d@email.com",
+                phoneNumber = "010-0000-0000",
+                gender = Gender.MALE,
+                birthday = createLocalDate(2020, 1, 1),
+                password = Password("password")
+            )
+        )
+        val applicantss = mutableListOf<Applicant>()
+        for (i in 1..1000) {
+            applicantss.add(
+                Applicant(
+                    name = "홍길동$i",
+                    email = "ss$i@email.com",
+                    phoneNumber = "010-0000-0000",
+                    gender = listOf(Gender.MALE, Gender.FEMALE).shuffled().take(1)[0],
+                    birthday = createLocalDate(2020, 1, 1).minusDays(i.toLong()),
+                    password = Password("password")
+                )
+            )
+        }
+        applicantss.add(
+            Applicant(
+                name = "홍길동9999",
+                email = "ssasd@email.com",
+                phoneNumber = "010-0000-0000",
+                gender = listOf(Gender.MALE, Gender.FEMALE).shuffled().take(1)[0],
+                birthday = createLocalDate(2021, 1, 1),
+                password = Password("password")
+            )
+        )
+        applicantRepository.saveAll(applicants)
+        applicantRepository.saveAll(applicantss)
     }
 }

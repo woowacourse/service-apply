@@ -40,7 +40,9 @@
       "@vaadin/vaadin-lumo-styles": "1.6.0",
       "@vaadin/vaadin-material-styles": "1.3.2",
       "retry": "0.12.0",
-      "tippy.js": "6.2.3"
+      "tippy.js": "6.2.3",
+      "apexcharts": "3.20.2",
+      "onecolor": "3.1.0"
     },
     "devDependencies": {
       "webpack-babel-multi-target-plugin": "2.3.3",
@@ -53,7 +55,7 @@
       "webpack-merge": "4.2.2",
       "webpack-dev-server": "3.10.3"
     },
-    "hash": "39677ce41acd26da72d7ef1b33d0a74048fd1f288f4597559e62c7fe00451158"
+    "hash": "66601e9130aa29c03d6c52ef92d2284ca7a7aa5a2ff300786b9d70b274b47b71"
   },
   "dependencies": {
     "lit-element": "^2.2.1",
@@ -93,7 +95,9 @@
     "@vaadin/vaadin-lumo-styles": "1.6.0",
     "@vaadin/vaadin-material-styles": "1.3.2",
     "retry": "0.12.0",
-    "tippy.js": "6.2.3"
+    "tippy.js": "6.2.3",
+    "apexcharts": "3.20.2",
+    "onecolor": "3.1.0"
   },
   "devDependencies": {
     "webpack-babel-multi-target-plugin": "2.3.3",

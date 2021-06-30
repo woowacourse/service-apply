@@ -12,6 +12,7 @@ import com.vaadin.flow.component.html.H1
 import com.vaadin.flow.component.icon.Icon
 import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.orderedlayout.FlexComponent
+import com.vaadin.flow.component.orderedlayout.FlexLayout
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup
 import com.vaadin.flow.component.select.Select
@@ -66,6 +67,36 @@ fun createSearchBar(eventListener: (name: String) -> Unit): Div {
             Button(Icon(VaadinIcon.SEARCH)) { eventListener(textField.value) }
         )
     )
+}
+
+fun createTextBox(text: String, fontSize: Int = 16, fontWeight: String = "500", color: Color = Color.PRIMARY): Div {
+    return Div(Text(text)).apply {
+        element.style.set("margin", "0")
+        element.style.set("font-size", "${fontSize}px")
+        element.style.set("font-weight", fontWeight)
+        element.style.set("color", color.hex)
+    }
+}
+
+fun createCard(
+    vararg components: Component,
+    direction: FlexLayout.FlexDirection = FlexLayout.FlexDirection.ROW
+): FlexLayout {
+    return FlexLayout(*components).apply {
+        element.style.set("margin", "5px")
+        element.style.set("padding", "20px 15px")
+        element.style.set("background-color", Color.BLACK.hex)
+        element.style.set("box-shadow", "1px 1px 3px ${Color.GRAY2.hex}")
+        setFlexDirection(direction)
+    }
+}
+
+fun createHorizontalDivider(ratio: Int): Div {
+    return Div().apply {
+        element.style.set("background-color", Color.GRAY2.hex)
+        element.style.set("flex", ratio.toString())
+        height = "2px"
+    }
 }
 
 class Title(val value: H1) : HorizontalLayout(), HasText {
