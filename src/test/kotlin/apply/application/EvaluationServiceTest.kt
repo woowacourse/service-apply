@@ -13,14 +13,12 @@ import apply.domain.recruitment.RecruitmentRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.willDoNothing
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
-import java.util.Optional
 
 @ExtendWith(MockitoExtension::class)
 internal class EvaluationServiceTest {
@@ -56,26 +54,6 @@ internal class EvaluationServiceTest {
         secondEvaluation = createEvaluation(title = EVALUATION_TITLE3, beforeEvaluationId = 2L, id = 3L)
 
         evaluations = listOf(preCourseEvaluation, firstEvaluation, secondEvaluation)
-    }
-
-    @Test
-    fun `평가와 모집 정보를 함께 제공한다`() {
-        given(evaluationRepository.findAll()).willReturn(evaluations)
-        given(recruitmentRepository.getOne(anyLong())).willReturn(recruitments[0])
-        given(evaluationRepository.findById(1L)).willReturn(Optional.of(evaluations[0]))
-        given(evaluationRepository.findById(2L)).willReturn(Optional.of(evaluations[1]))
-
-        val findAllWithRecruitment = evaluationService.findAllWithRecruitment()
-
-        assertAll(
-            { assertThat(2L).isEqualTo(findAllWithRecruitment[1].id) },
-            { assertThat(firstEvaluation.title).isEqualTo(findAllWithRecruitment[1].title) },
-            { assertThat(firstEvaluation.description).isEqualTo(findAllWithRecruitment[1].description) },
-            { assertThat(recruitments[0].title).isEqualTo(findAllWithRecruitment[1].recruitmentTitle) },
-            { assertThat(firstEvaluation.recruitmentId).isEqualTo(findAllWithRecruitment[1].recruitmentId) },
-            { assertThat(preCourseEvaluation.title).isEqualTo(findAllWithRecruitment[1].beforeEvaluationTitle) },
-            { assertThat(preCourseEvaluation.id).isEqualTo(findAllWithRecruitment[1].beforeEvaluationId) }
-        )
     }
 
     @Test

@@ -1,22 +1,32 @@
 package apply.application
 
-import apply.domain.applicant.ApplicantRepository
 import apply.domain.cheater.Cheater
 import apply.domain.cheater.CheaterRepository
-import org.springframework.data.repository.findByIdOrNull
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import support.toSort
 
 @Transactional
 @Service
 class CheaterService(
-    private val applicantRepository: ApplicantRepository,
     private val cheaterRepository: CheaterRepository
 ) {
-    fun findAll(): List<CheaterResponse> = cheaterRepository.findAll().map {
-        val applicant = applicantRepository.findByIdOrNull(it.applicantId)!!
-        CheaterResponse(it, applicant)
+    fun findAll(
+        offset: Int,
+        limit: Int,
+        orders: Map<String, String>
+    ): Page<CheaterResponse> {
+        val page = offset / limit
+        return cheaterRepository.findAllByPage(PageRequest.of(page, limit, orders.toSort()))
     }
+
+    fun count() = cheaterRepository.count()
+    //     cheaterRepository.findAll().map {
+    //     val applicant = applicantRepository.findByIdOrNull(it.applicantId)!!
+    //     CheaterResponse(it, applicant)
+    // }
 
     fun save(applicantId: Long) {
         require(!cheaterRepository.existsByApplicantId(applicantId)) {

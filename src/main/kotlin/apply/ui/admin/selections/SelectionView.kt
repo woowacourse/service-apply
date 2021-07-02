@@ -14,7 +14,6 @@ import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.dialog.Dialog
-import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.html.Div
 import com.vaadin.flow.component.html.H1
 import com.vaadin.flow.component.html.H4
@@ -24,21 +23,25 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.tabs.Tab
 import com.vaadin.flow.component.tabs.Tabs
 import com.vaadin.flow.component.textfield.TextArea
+import com.vaadin.flow.data.provider.DataProvider
 import com.vaadin.flow.data.renderer.ComponentRenderer
 import com.vaadin.flow.data.renderer.Renderer
 import com.vaadin.flow.router.BeforeEvent
 import com.vaadin.flow.router.HasUrlParameter
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.router.WildcardParameter
-import support.views.addSortableColumn
-import support.views.addSortableDateColumn
-import support.views.addSortableDateTimeColumn
+import org.vaadin.klaudeta.PaginatedGrid
+import support.views.addBackEndSortableColumn
+import support.views.addBackEndSortableDateColumn
+import support.views.addBackEndSortableDateTimeColumn
+import support.views.addNormalColumn
 import support.views.createNormalButton
 import support.views.createPrimaryButton
 import support.views.createPrimarySmallButton
 import support.views.createSearchBar
 import support.views.createSuccessButton
 import support.views.downloadFile
+import support.views.toMap
 
 @Route(value = "admin/selections", layout = BaseLayout::class)
 class SelectionView(
@@ -62,7 +65,7 @@ class SelectionView(
     }
 
     private fun createContent(keyword: String = ""): Component {
-        val tabsToGrids: Map<Tab, Component> = mapTabAndGrid(keyword)
+        val tabsToGrids: Map<Tab, PaginatedGrid<*>> = mapTabAndGrid(keyword)
         val (tabs, grids) = createTabComponents(tabsToGrids)
 
         val menu = HorizontalLayout(
@@ -87,32 +90,42 @@ class SelectionView(
         return VerticalLayout(menu, grids).apply { setWidthFull() }
     }
 
-    private fun mapTabAndGrid(keyword: String): Map<Tab, Component> {
-        val tabsToGrids = LinkedHashMap<Tab, Component>()
+    private fun mapTabAndGrid(keyword: String): Map<Tab, PaginatedGrid<*>> {
+        val tabsToGrids = LinkedHashMap<Tab, PaginatedGrid<*>>()
 
-        val applicantResponses = applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId, keyword)
-        tabsToGrids[Tab("전체 지원자")] = createTotalApplicantsGrid(applicantResponses)
+        tabsToGrids[Tab("전체 지원자")] = createTotalApplicantsGrid(keyword)
 
         evaluations = evaluationService.findAllByRecruitmentId(recruitmentId)
         for (evaluation in evaluations) {
-            val evaluationTargetResponses =
-                evaluationTargetService.findAllByEvaluationIdAndKeyword(evaluation.id, keyword)
-            tabsToGrids[Tab(evaluation.title)] = createEvaluationTargetsGrid(evaluationTargetResponses)
+            tabsToGrids[Tab(evaluation.title)] = createEvaluationTargetsGrid(evaluation.id, keyword)
         }
         return tabsToGrids
     }
 
-    private fun createTotalApplicantsGrid(applicants: List<ApplicantAndFormResponse>): Component {
-        return Grid<ApplicantAndFormResponse>(10).apply {
-            addSortableColumn("이름", ApplicantAndFormResponse::name)
-            addSortableColumn("이메일", ApplicantAndFormResponse::email)
-            addSortableColumn("전화번호", ApplicantAndFormResponse::phoneNumber)
-            addSortableColumn("성별") { it.gender.title }
-            addSortableDateColumn("생년월일", ApplicantAndFormResponse::birthday)
-            addSortableDateTimeColumn("지원 일시") { it.applicationForm.submittedDateTime }
-            addSortableColumn("부정 행위자") { if (it.isCheater) "O" else "X" }
+    private fun createTotalApplicantsGrid(keyword: String): PaginatedGrid<ApplicantAndFormResponse> {
+        return PaginatedGrid<ApplicantAndFormResponse>().apply {
+            addBackEndSortableColumn("이름", "information.name", ApplicantAndFormResponse::name)
+            addBackEndSortableColumn("이메일", "information.email", ApplicantAndFormResponse::email)
+            addBackEndSortableColumn("전화번호", "information.phoneNumber", ApplicantAndFormResponse::phoneNumber)
+            addBackEndSortableColumn("성별", "information.gender") { it.gender.title }
+            addBackEndSortableDateColumn("생년월일", "information.birthday", ApplicantAndFormResponse::birthday)
+            addBackEndSortableDateTimeColumn("지원 일시", "f.submittedDateTime") { it.applicationForm.submittedDateTime }
+            addBackEndSortableColumn("부정 행위자", "c.id") { if (it.isCheater) "O" else "X" }
             addColumn(createButtonRenderer()).apply { isAutoWidth = true }
-            setItems(applicants)
+            pageSize = 10
+            isMultiSort = true
+            dataProvider = DataProvider.fromCallbacks(
+                { query ->
+                    applicantService.findAllByRecruitmentIdAndKeyword(
+                        recruitmentId,
+                        keyword,
+                        query.offset,
+                        query.limit,
+                        query.sortOrders.toMap()
+                    ).stream()
+                },
+                { applicantService.count(recruitmentId, keyword).toInt() }
+            )
         }
     }
 
@@ -128,15 +141,31 @@ class SelectionView(
         }
     }
 
-    private fun createEvaluationTargetsGrid(evaluationTargets: List<EvaluationTargetResponse>): Component {
-        return Grid<EvaluationTargetResponse>(10).apply {
-            addSortableColumn("이름", EvaluationTargetResponse::name)
-            addSortableColumn("이메일", EvaluationTargetResponse::email)
-            addSortableColumn("합계", EvaluationTargetResponse::totalScore)
-            addSortableColumn("평가 상태", EvaluationTargetResponse::evaluationStatus)
-            addSortableColumn("평가자", EvaluationTargetResponse::administratorId)
+    private fun createEvaluationTargetsGrid(
+        evaluationId: Long,
+        keyword: String
+    ): PaginatedGrid<EvaluationTargetResponse> {
+        return PaginatedGrid<EvaluationTargetResponse>().apply {
+            addBackEndSortableColumn("이름", "information.name", EvaluationTargetResponse::name)
+            addBackEndSortableColumn("이메일", "information.email", EvaluationTargetResponse::email)
+            addNormalColumn("합계", EvaluationTargetResponse::totalScore)
+            addBackEndSortableColumn("평가 상태", "t.evaluationStatus", EvaluationTargetResponse::evaluationStatus)
+            addBackEndSortableColumn("평가자", "t.administratorId", EvaluationTargetResponse::administratorId)
             addColumn(createEvaluationButtonRenderer()).apply { isAutoWidth = true }
-            setItems(evaluationTargets)
+            pageSize = 10
+            isMultiSort = true
+            dataProvider = DataProvider.fromCallbacks(
+                { query ->
+                    evaluationTargetService.findAllByEvaluationIdAndKeyword(
+                        evaluationId,
+                        keyword,
+                        query.offset,
+                        query.limit,
+                        query.sortOrders.toMap()
+                    ).stream()
+                },
+                { evaluationTargetService.count(evaluationId, keyword).toInt() }
+            )
         }
     }
 
@@ -155,16 +184,14 @@ class SelectionView(
         }
     }
 
-    private fun createTabComponents(tabsToGrids: Map<Tab, Component>): Pair<Tabs, Div> {
+    private fun createTabComponents(tabsToGrids: Map<Tab, PaginatedGrid<*>>): Pair<Tabs, Div> {
         val tabs = Tabs().apply {
             add(*(tabsToGrids.keys).toTypedArray())
             addSelectedChangeListener {
-                tabsToGrids.forEach { (tab, grid) ->
-                    grid.isVisible = (tab == selectedTab)
-                }
+                tabsToGrids.forEach { (tab, grid) -> grid.setVisibility(tab == selectedTab) }
             }
             setWidthFull()
-            tabsToGrids.forEach { (tab, grid) -> grid.isVisible = (tab == selectedTab) }
+            tabsToGrids.forEach { (tab, grid) -> grid.setVisibility(tab == selectedTab) }
             selectedIndex = selectedTabIndex
             tabs = this
         }
@@ -172,6 +199,11 @@ class SelectionView(
         val grids = Div(*tabsToGrids.values.toTypedArray()).apply { setWidthFull() }
 
         return tabs to grids
+    }
+
+    private fun PaginatedGrid<*>.setVisibility(visible: Boolean) {
+        isVisible = visible
+        setPaginationVisibility(visible)
     }
 
     private fun createLoadButton(tabs: Tabs): Button {

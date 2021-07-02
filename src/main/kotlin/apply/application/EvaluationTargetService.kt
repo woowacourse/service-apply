@@ -10,8 +10,10 @@ import apply.domain.evaluationtarget.EvaluationAnswer
 import apply.domain.evaluationtarget.EvaluationAnswers
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import support.toSort
 import javax.transaction.Transactional
 
 @Transactional
@@ -30,10 +32,7 @@ class EvaluationTargetService(
     fun findAllByEvaluationId(evaluationId: Long): List<EvaluationTarget> =
         evaluationTargetRepository.findAllByEvaluationId(evaluationId)
 
-    fun findAllByEvaluationIdAndKeyword(
-        evaluationId: Long,
-        keyword: String = ""
-    ): List<EvaluationTargetResponse> {
+    fun findAllByEvaluationIdAndKeyword(evaluationId: Long, keyword: String = ""): List<EvaluationTargetResponse> {
         val evaluationTargets = findAllByEvaluationId(evaluationId)
         val applicants = applicantRepository.findAllByKeyword(keyword)
 
@@ -52,6 +51,25 @@ class EvaluationTargetService(
                     it.evaluationAnswers
                 )
             }
+    }
+
+    fun findAllByEvaluationIdAndKeyword(
+        evaluationId: Long,
+        keyword: String = "",
+        offset: Int,
+        limit: Int,
+        orders: Map<String, String>
+    ): List<EvaluationTargetResponse> {
+        val page = offset / limit
+        return evaluationTargetRepository.findByEvaluationIdAndKeyword(
+            evaluationId,
+            keyword,
+            PageRequest.of(page, limit, orders.toSort())
+        ).content
+    }
+
+    fun count(evaluationId: Long, keyword: String): Long {
+        return evaluationTargetRepository.countByEvaluationIdAndKeyword(evaluationId, keyword)
     }
 
     fun load(evaluationId: Long) {
