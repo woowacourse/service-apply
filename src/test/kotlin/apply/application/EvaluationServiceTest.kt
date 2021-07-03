@@ -10,15 +10,14 @@ import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentRepository
+import io.mockk.Runs
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.just
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
-import org.mockito.ArgumentMatchers.anyLong
-import org.mockito.BDDMockito.given
-import org.mockito.BDDMockito.willDoNothing
 import support.test.UnitTest
 import java.util.Optional
 
@@ -80,8 +79,8 @@ internal class EvaluationServiceTest {
 
     @Test
     fun `삭제된 평가를 이전 평가로 가지는 평가의 이전 평가를 초기화한다`() {
-        given(evaluationRepository.findAll()).willReturn(evaluations)
-        willDoNothing().given(evaluationRepository).deleteById(anyLong())
+        every { evaluationRepository.findAll() } answers { evaluations }
+        every { evaluationRepository.deleteById(ofType(Long::class)) } just Runs
 
         evaluationService.deleteById(2L)
 
@@ -95,8 +94,9 @@ internal class EvaluationServiceTest {
         val evaluationsWithDuplicatedBeforeEvaluationId: List<Evaluation> =
             listOf(*evaluations.toTypedArray(), thirdEvaluation)
 
-        given(evaluationRepository.findAll()).willReturn(evaluationsWithDuplicatedBeforeEvaluationId)
-        willDoNothing().given(evaluationRepository).deleteById(anyLong())
+        every { evaluationRepository.findAll() } answers { evaluationsWithDuplicatedBeforeEvaluationId }
+        every { evaluationRepository.deleteById(ofType(Long::class)) } just Runs
+
 
         evaluationService.deleteById(2L)
 
