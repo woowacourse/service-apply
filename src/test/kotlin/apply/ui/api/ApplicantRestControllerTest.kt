@@ -1,12 +1,16 @@
 package apply.ui.api
 
+import apply.application.ApplicantAndFormResponse
 import apply.application.ApplicantAuthenticationService
+import apply.application.ApplicantResponse
 import apply.application.ApplicantService
 import apply.application.AuthenticateApplicantRequest
 import apply.application.EditPasswordRequest
 import apply.application.RegisterApplicantRequest
 import apply.application.ResetPasswordRequest
 import apply.application.mail.MailService
+import apply.createApplicant
+import apply.createApplicationForms
 import apply.domain.applicant.ApplicantAuthenticationException
 import apply.domain.applicant.Gender
 import apply.domain.applicant.Password
@@ -23,6 +27,7 @@ import org.springframework.context.annotation.FilterType
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder
@@ -238,6 +243,81 @@ internal class ApplicantRestControllerTest(
             header(AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isNoContent }
+        }
+    }
+
+    @Test
+    fun `특정 모집 id와 지원자에 대한 키워드(이름 or 이메일)로 지원자들을 찾는다`() {
+        val recruitmentId = 1L
+        val keyword = "로키"
+        val expected = listOf(
+            ApplicantAndFormResponse(
+                createApplicant(name = "로키"), false,
+                createApplicationForms()[0]
+            ),
+            ApplicantAndFormResponse(
+                createApplicant(name = "아마찌"), false,
+                createApplicationForms()[1]
+            )
+        )
+
+        given(applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId, keyword))
+            .willReturn(expected)
+
+        mockMvc.get(
+            "/api/applicants/{keyword}/recruitments/{recruitmentId}",
+            keyword, recruitmentId
+        ) {
+        }.andExpect {
+            status { isOk }
+        }
+    }
+
+    // findAllByRecruitmentIdAndSubmittedTrue
+    @Test
+    fun `특정 모집 id에 지원완료한 지원자들을 조회`() {
+        val recruitmentId = 1L
+        val expected = listOf(
+            ApplicantAndFormResponse(
+                createApplicant(name = "로키"), false,
+                createApplicationForms()[0]
+            ),
+            ApplicantAndFormResponse(
+                createApplicant(name = "아마찌"), false,
+                createApplicationForms()[1]
+            )
+        )
+
+        given(applicantService.findAllByRecruitmentIdAndSubmittedTrue(recruitmentId))
+            .willReturn(expected)
+
+        mockMvc.get(
+            "/api/applicants/recruitments/{recruitmentId}",
+            recruitmentId
+        ) {
+        }.andExpect {
+            status { isOk }
+        }
+    }
+
+    // findAllByKeyword
+    @Test
+    fun `키워드(이름 or 이메일)로 지원자들을 조회`() {
+        val keyword = "아마찌"
+        val expected = listOf(
+            ApplicantResponse(createApplicant("아마찌")),
+            ApplicantResponse(createApplicant("로키"))
+        )
+
+        given(applicantService.findAllByKeyword(keyword))
+            .willReturn(expected)
+
+        mockMvc.get(
+            "/api/applicants/{keyword}",
+            keyword
+        ) {
+        }.andExpect {
+            status { isOk }
         }
     }
 }
