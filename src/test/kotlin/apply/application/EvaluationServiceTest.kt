@@ -10,27 +10,27 @@ import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentRepository
+import io.mockk.every
+import io.mockk.impl.annotations.MockK
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
-import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.willDoNothing
-import org.mockito.Mock
-import org.mockito.junit.jupiter.MockitoExtension
+import support.test.UnitTest
 import java.util.Optional
 
-@ExtendWith(MockitoExtension::class)
+@UnitTest
 internal class EvaluationServiceTest {
-    @Mock
+    @MockK
     private lateinit var recruitmentRepository: RecruitmentRepository
 
-    @Mock
+    @MockK
     private lateinit var evaluationRepository: EvaluationRepository
 
-    @Mock
+    @MockK
     private lateinit var evaluationItemRepository: EvaluationItemRepository
 
     private lateinit var evaluationService: EvaluationService
@@ -60,10 +60,10 @@ internal class EvaluationServiceTest {
 
     @Test
     fun `평가와 모집 정보를 함께 제공한다`() {
-        given(evaluationRepository.findAll()).willReturn(evaluations)
-        given(recruitmentRepository.getOne(anyLong())).willReturn(recruitments[0])
-        given(evaluationRepository.findById(1L)).willReturn(Optional.of(evaluations[0]))
-        given(evaluationRepository.findById(2L)).willReturn(Optional.of(evaluations[1]))
+        every { evaluationRepository.findAll() } answers { evaluations }
+        every { recruitmentRepository.getOne(ofType(Long::class)) } answers { recruitments[0] }
+        every { evaluationRepository.findById(1L) } answers { Optional.of(evaluations[0]) }
+        every { evaluationRepository.findById(2L) } answers { Optional.of(evaluations[1]) }
 
         val findAllWithRecruitment = evaluationService.findAllWithRecruitment()
 
