@@ -13,6 +13,8 @@ import apply.domain.applicant.ApplicantRepository
 import apply.domain.applicant.Gender
 import apply.domain.applicant.Password
 import apply.domain.applicationform.ApplicationForm
+import apply.domain.applicationform.ApplicationFormAnswer
+import apply.domain.applicationform.ApplicationFormAnswers
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.Cheater
 import apply.domain.cheater.CheaterRepository
@@ -25,8 +27,6 @@ import apply.domain.evaluationtarget.EvaluationStatus.PASS
 import apply.domain.evaluationtarget.EvaluationStatus.WAITING
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
-import apply.domain.applicationform.ApplicationFormAnswer
-import apply.domain.applicationform.ApplicationFormAnswers
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import org.assertj.core.api.Assertions.assertThat
