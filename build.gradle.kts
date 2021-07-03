@@ -8,6 +8,7 @@ plugins {
     kotlin("plugin.jpa") version "1.3.72"
     id("org.jlleitschuh.gradle.ktlint") version "9.3.0"
     id("com.vaadin") version "0.8.0"
+    id("org.asciidoctor.convert") version "1.5.9.2"
 }
 
 group = "io.github.woowacourse"
@@ -47,6 +48,8 @@ dependencies {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }
     testImplementation("com.ninja-squad:springmockk:2.0.3")
+    testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
+    asciidoctor("org.springframework.restdocs:spring-restdocs-asciidoctor")
 }
 
 dependencyManagement {
@@ -54,6 +57,8 @@ dependencyManagement {
         mavenBom("com.vaadin:vaadin-bom:${property("vaadinVersion")}")
     }
 }
+
+val snippetsDir = file("build/generated-snippets")
 
 tasks {
     withType<Test> {
@@ -68,5 +73,34 @@ tasks {
     ktlint {
         verbose.set(true)
         disabledRules.addAll("import-ordering")
+    }
+}
+
+ext {
+    set("snippetsDir", file("build/generated-snippets"))
+}
+
+tasks.test {
+    outputs.dir(snippetsDir)
+    useJUnitPlatform()
+}
+
+tasks.asciidoctor {
+    inputs.dir(snippetsDir)
+    dependsOn(tasks.test)
+    doFirst {
+        println("=====start asciidoctor")
+        // asciidoctor 실행전 기존에 생성된 API 문서 삭제
+        delete(file("src/main/resources/static/docs"))
+    }
+    doLast {
+        println("=====finish asciidoctor")
+    }
+}
+
+tasks.bootJar {
+    dependsOn(tasks.asciidoctor)
+    from("$snippetsDir/html5") {
+        into("static/docs")
     }
 }

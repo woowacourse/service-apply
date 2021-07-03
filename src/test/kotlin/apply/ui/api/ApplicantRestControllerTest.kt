@@ -26,6 +26,16 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.MediaType
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
+import org.springframework.restdocs.operation.preprocess.OperationRequestPreprocessor
+import org.springframework.restdocs.operation.preprocess.OperationResponsePreprocessor
+import org.springframework.restdocs.operation.preprocess.Preprocessors
+import org.springframework.restdocs.payload.JsonFieldType
+import org.springframework.restdocs.payload.PayloadDocumentation
+import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
+import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
+import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
+import org.springframework.restdocs.request.RequestDocumentation.pathParameters
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
@@ -250,6 +260,7 @@ internal class ApplicantRestControllerTest(
     fun `특정 모집 id와 지원자에 대한 키워드(이름 or 이메일)로 지원자들을 찾는다`() {
         val recruitmentId = 1L
         val keyword = "로키"
+
         val expected = listOf(
             ApplicantAndFormResponse(
                 createApplicant(name = "로키"), false,
@@ -271,6 +282,22 @@ internal class ApplicantRestControllerTest(
         }.andExpect {
             status { isOk }
         }
+            .andDo { print() }
+            .andDo {
+                document(
+                    "applicant-findAllByRecruitmentIdAndKeyword",
+                    getDocumentRequest(),
+                    getDocumentResponse(),
+                    pathParameters(
+                        parameterWithName("keyword").description("지원자 정보(이름, 이메일)"),
+                        parameterWithName("recruitmentId").description("모집 ID")
+                    ),
+                    responseFields(
+                        fieldWithPath("[]").description("지원자 목록")
+                    )
+                        .andWithPrefix("[].", FIELD_DESCRIPTORS)
+                )
+            }
     }
 
     // findAllByRecruitmentIdAndSubmittedTrue
@@ -319,5 +346,32 @@ internal class ApplicantRestControllerTest(
         }.andExpect {
             status { isOk }
         }
+    }
+
+    private fun getDocumentRequest(): OperationRequestPreprocessor {
+        return Preprocessors.preprocessRequest(
+            Preprocessors.modifyUris()
+                .scheme("https")
+                .host("woowa") // TODO 호스트 변경
+                .removePort(),
+            Preprocessors.prettyPrint()
+        )
+    }
+
+    private fun getDocumentResponse(): OperationResponsePreprocessor {
+        return Preprocessors.preprocessResponse(Preprocessors.prettyPrint())
+    }
+
+    companion object {
+        val FIELD_DESCRIPTORS = listOf(
+            PayloadDocumentation.fieldWithPath("id").type(JsonFieldType.NUMBER).description("ID"),
+            PayloadDocumentation.fieldWithPath("name").type(JsonFieldType.STRING).description("이름"),
+            PayloadDocumentation.fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
+            PayloadDocumentation.fieldWithPath("phoneNumber").type(JsonFieldType.STRING).description("전화번호"),
+            PayloadDocumentation.fieldWithPath("gender").type(JsonFieldType.STRING).description("성별"),
+            PayloadDocumentation.fieldWithPath("birthday").type(JsonFieldType.STRING).description("생년월일"),
+            PayloadDocumentation.fieldWithPath("isCheater").type(JsonFieldType.BOOLEAN).description("부정행위여부"),
+            PayloadDocumentation.fieldWithPath("applicationForm").type(JsonFieldType.ARRAY).description("부정행위여부")
+        )
     }
 }
