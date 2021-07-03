@@ -1,12 +1,13 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+    val kotlinVersion = "1.5.10"
     id("org.springframework.boot") version "2.3.3.RELEASE"
     id("io.spring.dependency-management") version "1.0.10.RELEASE"
-    kotlin("jvm") version "1.3.72"
-    kotlin("plugin.spring") version "1.3.72"
-    kotlin("plugin.jpa") version "1.3.72"
-    id("org.jlleitschuh.gradle.ktlint") version "9.3.0"
+    kotlin("jvm") version kotlinVersion
+    kotlin("plugin.spring") version kotlinVersion
+    kotlin("plugin.jpa") version kotlinVersion
+    id("org.jlleitschuh.gradle.ktlint") version "10.1.0"
     id("com.vaadin") version "0.8.0"
     id("org.asciidoctor.convert") version "1.5.9.2"
 }
@@ -35,7 +36,6 @@ dependencies {
     implementation("com.vaadin:vaadin-spring-boot-starter")
     implementation("org.flywaydb:flyway-core")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.apache.poi:poi-ooxml:4.1.2")
     implementation("dev.mett.vaadin:tooltip:1.7.0")
     implementation("com.amazonaws:aws-java-sdk-ses:1.11.880")
