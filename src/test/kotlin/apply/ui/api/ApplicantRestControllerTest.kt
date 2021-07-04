@@ -9,6 +9,7 @@ import apply.application.EditPasswordRequest
 import apply.application.RegisterApplicantRequest
 import apply.application.ResetPasswordRequest
 import apply.application.mail.MailService
+import apply.config.RestDocsConfiguration
 import apply.createApplicant
 import apply.createApplicationForms
 import apply.domain.applicant.ApplicantAuthenticationException
@@ -22,11 +23,11 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.willDoNothing
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
+import org.springframework.context.annotation.Import
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.MediaType
 import org.springframework.restdocs.RestDocumentationContextProvider
@@ -79,8 +80,8 @@ private fun AuthenticateApplicantRequest.withPlainPassword(password: String): Ma
         ComponentScan.Filter(type = FilterType.REGEX, pattern = ["apply.config.*"])
     ]
 )
-@AutoConfigureRestDocs
-// @AutoConfigureMockMvc
+// @AutoConfigureRestDocs
+@Import(RestDocsConfiguration::class)
 @ExtendWith(RestDocumentationExtension::class, SpringExtension::class)
 @TestEnvironment
 internal class ApplicantRestControllerTest(
@@ -297,7 +298,6 @@ internal class ApplicantRestControllerTest(
         mockMvc.get(
             "/api/applicants/{keyword}/recruitments/{recruitmentId}",
             keyword, recruitmentId,
-            charset("utf-8")
         )
             .andExpect {
                 status { isOk }
@@ -309,32 +309,44 @@ internal class ApplicantRestControllerTest(
                         "applicant-findAllByRecruitmentIdAndKeyword",
                         getDocumentRequest(),
                         getDocumentResponse(),
+                        // relaxedResponseFields(
                         responseFields(
-                            fieldWithPath("body.[]").description("지원자 목록")
+                            fieldWithPath("message").description("응답 메시지"),
+                            fieldWithPath("body.[]").description("지원자 목록"),
                         )
                             .andWithPrefix("body.[].", FIELD_DESCRIPTORS)
+                            .andWithPrefix("body.[].applicationForm.", APPLICATION_FORM_FIELD_DESCRIPTORS)
                     )
                 )
             }
     }
 
-    @Test
-    fun `문서_특정 모집 id와 지원자에 대한 키워드(이름 or 이메일)로 지원자들을 찾는다`() {
-        `특정 모집 id와 지원자에 대한 키워드(이름 or 이메일)로 지원자들을 찾는다`()
-        // .andDo {
-        //     print()
-        //     handle(
-        //         document(
-        //             "applicant-findAllByRecruitmentIdAndKeyword",
-        //             getDocumentRequest(),
-        //             getDocumentResponse(),
-        //             responseFields(
-        //                 fieldWithPath("body.[]").description("지원자 목록")
-        //             )
-        //                 .andWithPrefix("body.[].", FIELD_DESCRIPTORS)
-        //         )
-        //     )
-        // }
+    companion object {
+        val FIELD_DESCRIPTORS = listOf(
+            fieldWithPath("id").type(JsonFieldType.NUMBER).description("ID"),
+            fieldWithPath("name").type(JsonFieldType.STRING).description("이름"),
+            fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
+            fieldWithPath("phoneNumber").type(JsonFieldType.STRING).description("전화번호"),
+            fieldWithPath("gender").type(JsonFieldType.STRING).description("성별"),
+            fieldWithPath("birthday").type(JsonFieldType.STRING).description("생년월일"),
+            fieldWithPath("isCheater").type(JsonFieldType.BOOLEAN).description("부정행위여부"),
+            fieldWithPath("applicationForm").type(JsonFieldType.OBJECT).description("지원서")
+        )
+
+        val APPLICATION_FORM_FIELD_DESCRIPTORS = listOf(
+            fieldWithPath("id").type(JsonFieldType.NUMBER).description("지원서 식별번호"),
+            fieldWithPath("submitted").type(JsonFieldType.BOOLEAN).description("지원서 제출 여부"),
+            fieldWithPath("createdDateTime").type(JsonFieldType.STRING).description("지원서 생성 날짜"),
+            fieldWithPath("modifiedDateTime").type(JsonFieldType.STRING).description("지원서 수정 날짜"),
+            fieldWithPath("submittedDateTime").type(JsonFieldType.NULL).description("지원서 제출 날짜"), // todo: 임시로 타입 NULL로 지정
+            fieldWithPath("applicantId").type(JsonFieldType.NUMBER).description("지원자 식별번호"),
+            fieldWithPath("recruitmentId").type(JsonFieldType.NUMBER).description("모집 식별번호"),
+            fieldWithPath("referenceUrl").type(JsonFieldType.STRING).description("참조 URL"),
+            fieldWithPath("answers").type(JsonFieldType.OBJECT).description("지원서 질문문항"),
+            fieldWithPath("answers.items").type(JsonFieldType.ARRAY).description("지원서 질문문항들"),
+            fieldWithPath("answers.items.[].contents").type(JsonFieldType.STRING).description("지원서 질문문항 질문내용"),
+            fieldWithPath("answers.items.[].recruitmentItemId").type(JsonFieldType.NUMBER).description("지원서 질문문항 식별번호"),
+        )
     }
 
     // findAllByRecruitmentIdAndSubmittedTrue
@@ -397,18 +409,5 @@ internal class ApplicantRestControllerTest(
 
     private fun getDocumentResponse(): OperationResponsePreprocessor {
         return Preprocessors.preprocessResponse(Preprocessors.prettyPrint())
-    }
-
-    companion object {
-        val FIELD_DESCRIPTORS = listOf(
-            fieldWithPath("id").type(JsonFieldType.NUMBER).description("ID"),
-            fieldWithPath("name").type(JsonFieldType.STRING).description("이름"),
-            fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
-            fieldWithPath("phoneNumber").type(JsonFieldType.STRING).description("전화번호"),
-            fieldWithPath("gender").type(JsonFieldType.STRING).description("성별"),
-            fieldWithPath("birthday").type(JsonFieldType.STRING).description("생년월일"),
-            fieldWithPath("isCheater").type(JsonFieldType.BOOLEAN).description("부정행위여부"),
-            fieldWithPath("applicationForm").type(JsonFieldType.ARRAY).description("부정행위여부")
-        )
     }
 }
