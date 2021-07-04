@@ -18,25 +18,30 @@ import apply.security.JwtTokenProvider
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.willDoNothing
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.MediaType
+import org.springframework.restdocs.RestDocumentationContextProvider
+import org.springframework.restdocs.RestDocumentationExtension
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration
 import org.springframework.restdocs.operation.preprocess.OperationRequestPreprocessor
 import org.springframework.restdocs.operation.preprocess.OperationResponsePreprocessor
 import org.springframework.restdocs.operation.preprocess.Preprocessors
 import org.springframework.restdocs.payload.JsonFieldType
-import org.springframework.restdocs.payload.PayloadDocumentation
 import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
-import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
-import org.springframework.restdocs.request.RequestDocumentation.pathParameters
+import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.ResultActionsDsl
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
@@ -74,6 +79,9 @@ private fun AuthenticateApplicantRequest.withPlainPassword(password: String): Ma
         ComponentScan.Filter(type = FilterType.REGEX, pattern = ["apply.config.*"])
     ]
 )
+@AutoConfigureRestDocs
+// @AutoConfigureMockMvc
+@ExtendWith(RestDocumentationExtension::class, SpringExtension::class)
 @TestEnvironment
 internal class ApplicantRestControllerTest(
     private val objectMapper: ObjectMapper
@@ -90,6 +98,7 @@ internal class ApplicantRestControllerTest(
     @MockBean
     private lateinit var jwtTokenProvider: JwtTokenProvider
 
+    @Autowired
     private lateinit var mockMvc: MockMvc
 
     private val applicantRequest = RegisterApplicantRequest(
@@ -127,25 +136,36 @@ internal class ApplicantRestControllerTest(
     private val inValidEditPasswordRequest = validEditPasswordRequest.copy(password = Password("wrongPassword"))
 
     @BeforeEach
-    internal fun setUp(webApplicationContext: WebApplicationContext) {
+    internal fun setUp(
+        webApplicationContext: WebApplicationContext,
+        restDocumentationContextProvider: RestDocumentationContextProvider
+    ) {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
             .addFilter<DefaultMockMvcBuilder>(CharacterEncodingFilter("UTF-8", true))
             .alwaysDo<DefaultMockMvcBuilder>(MockMvcResultHandlers.print())
+            .apply<DefaultMockMvcBuilder>(documentationConfiguration(restDocumentationContextProvider))
             .build()
     }
 
     @Test
-    fun `유효한 지원자 생성 및 검증 요청에 대하여 응답으로 토큰이 반환된다`() {
+    fun `유효한 지원자 생성 및 검증 요청에 대하여 응답으로 토큰이 반환된다`(): ResultActionsDsl {
         given(applicantAuthenticationService.generateToken(applicantRequest))
             .willReturn(VALID_TOKEN)
 
-        mockMvc.post("/api/applicants/register") {
+        val andReturn = mockMvc.post("/api/applicants/register") {
             content = objectMapper.writeValueAsBytes(applicantRequest.withPlainPassword(PASSWORD))
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isOk }
             content { json(objectMapper.writeValueAsString(ApiResponse.success(VALID_TOKEN))) }
         }
+        return andReturn
+    }
+
+    @Test
+    fun name() {
+        val resultActionsDsl = `유효한 지원자 생성 및 검증 요청에 대하여 응답으로 토큰이 반환된다`()
+        resultActionsDsl.andDo { }
     }
 
     @Test
@@ -258,9 +278,6 @@ internal class ApplicantRestControllerTest(
 
     @Test
     fun `특정 모집 id와 지원자에 대한 키워드(이름 or 이메일)로 지원자들을 찾는다`() {
-        val recruitmentId = 1L
-        val keyword = "로키"
-
         val expected = listOf(
             ApplicantAndFormResponse(
                 createApplicant(name = "로키"), false,
@@ -271,33 +288,53 @@ internal class ApplicantRestControllerTest(
                 createApplicationForms()[1]
             )
         )
+        val recruitmentId = expected[0].applicationForm.recruitmentId
+        val keyword = expected[0].name
 
         given(applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId, keyword))
             .willReturn(expected)
 
         mockMvc.get(
             "/api/applicants/{keyword}/recruitments/{recruitmentId}",
-            keyword, recruitmentId
-        ) {
-        }.andExpect {
-            status { isOk }
-        }
-            .andDo { print() }
-            .andDo {
-                document(
-                    "applicant-findAllByRecruitmentIdAndKeyword",
-                    getDocumentRequest(),
-                    getDocumentResponse(),
-                    pathParameters(
-                        parameterWithName("keyword").description("지원자 정보(이름, 이메일)"),
-                        parameterWithName("recruitmentId").description("모집 ID")
-                    ),
-                    responseFields(
-                        fieldWithPath("[]").description("지원자 목록")
+            keyword, recruitmentId,
+            charset("utf-8")
+        )
+            .andExpect {
+                status { isOk }
+                content { json(objectMapper.writeValueAsString(ApiResponse.success(expected))) }
+            }.andDo {
+                print()
+                handle(
+                    document(
+                        "applicant-findAllByRecruitmentIdAndKeyword",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        responseFields(
+                            fieldWithPath("body.[]").description("지원자 목록")
+                        )
+                            .andWithPrefix("body.[].", FIELD_DESCRIPTORS)
                     )
-                        .andWithPrefix("[].", FIELD_DESCRIPTORS)
                 )
             }
+    }
+
+    @Test
+    fun `문서_특정 모집 id와 지원자에 대한 키워드(이름 or 이메일)로 지원자들을 찾는다`() {
+        `특정 모집 id와 지원자에 대한 키워드(이름 or 이메일)로 지원자들을 찾는다`()
+        // .andDo {
+        //     print()
+        //     handle(
+        //         document(
+        //             "applicant-findAllByRecruitmentIdAndKeyword",
+        //             getDocumentRequest(),
+        //             getDocumentResponse(),
+        //             responseFields(
+        //                 fieldWithPath("body.[]").description("지원자 목록")
+        //             )
+        //                 .andWithPrefix("body.[].", FIELD_DESCRIPTORS)
+        //         )
+        //     )
+        // }
     }
 
     // findAllByRecruitmentIdAndSubmittedTrue
@@ -364,14 +401,14 @@ internal class ApplicantRestControllerTest(
 
     companion object {
         val FIELD_DESCRIPTORS = listOf(
-            PayloadDocumentation.fieldWithPath("id").type(JsonFieldType.NUMBER).description("ID"),
-            PayloadDocumentation.fieldWithPath("name").type(JsonFieldType.STRING).description("이름"),
-            PayloadDocumentation.fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
-            PayloadDocumentation.fieldWithPath("phoneNumber").type(JsonFieldType.STRING).description("전화번호"),
-            PayloadDocumentation.fieldWithPath("gender").type(JsonFieldType.STRING).description("성별"),
-            PayloadDocumentation.fieldWithPath("birthday").type(JsonFieldType.STRING).description("생년월일"),
-            PayloadDocumentation.fieldWithPath("isCheater").type(JsonFieldType.BOOLEAN).description("부정행위여부"),
-            PayloadDocumentation.fieldWithPath("applicationForm").type(JsonFieldType.ARRAY).description("부정행위여부")
+            fieldWithPath("id").type(JsonFieldType.NUMBER).description("ID"),
+            fieldWithPath("name").type(JsonFieldType.STRING).description("이름"),
+            fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
+            fieldWithPath("phoneNumber").type(JsonFieldType.STRING).description("전화번호"),
+            fieldWithPath("gender").type(JsonFieldType.STRING).description("성별"),
+            fieldWithPath("birthday").type(JsonFieldType.STRING).description("생년월일"),
+            fieldWithPath("isCheater").type(JsonFieldType.BOOLEAN).description("부정행위여부"),
+            fieldWithPath("applicationForm").type(JsonFieldType.ARRAY).description("부정행위여부")
         )
     }
 }
