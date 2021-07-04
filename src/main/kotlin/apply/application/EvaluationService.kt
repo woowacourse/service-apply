@@ -89,10 +89,10 @@ class EvaluationService(
         }
     }
 
-    fun deleteById(id: Long) {
-        evaluationRepository.deleteById(id)
+    fun deleteById(evaluationId: Long) {
+        evaluationRepository.deleteById(evaluationId)
 
-        resetBeforeEvaluationContain(id)
+        resetBeforeEvaluationContain(evaluationId)
     }
 
     private fun resetBeforeEvaluationContain(id: Long) {
