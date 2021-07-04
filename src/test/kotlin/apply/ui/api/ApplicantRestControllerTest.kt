@@ -22,7 +22,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.willDoNothing
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.ComponentScan
@@ -80,7 +79,6 @@ private fun AuthenticateApplicantRequest.withPlainPassword(password: String): Ma
         ComponentScan.Filter(type = FilterType.REGEX, pattern = ["apply.config.*"])
     ]
 )
-// @AutoConfigureRestDocs
 @Import(RestDocsConfiguration::class)
 @ExtendWith(RestDocumentationExtension::class, SpringExtension::class)
 @TestEnvironment
@@ -99,7 +97,6 @@ internal class ApplicantRestControllerTest(
     @MockBean
     private lateinit var jwtTokenProvider: JwtTokenProvider
 
-    @Autowired
     private lateinit var mockMvc: MockMvc
 
     private val applicantRequest = RegisterApplicantRequest(
