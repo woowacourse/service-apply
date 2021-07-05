@@ -54,7 +54,7 @@ class RecruitmentRestController(
         return ResponseEntity.ok(ApiResponse.success(recruitmentService.getById(id)))
     }
 
-    @GetMapping("/not-ended/{id}")
+    @GetMapping("{id}/data/not-ended/")
     fun getNotEndedDataById(@PathVariable id: Long): ResponseEntity<ApiResponse<RecruitmentData>> {
         return ResponseEntity.ok(ApiResponse.success(recruitmentService.getNotEndedDataById(id)))
     }

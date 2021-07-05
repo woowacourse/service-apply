@@ -75,11 +75,15 @@ internal class RecruitmentRestControllerTest(
 
     private val recruitmentId = 1L
 
-    private val recruitmentResponse = RecruitmentResponse(createRecruitment())
+    val recruitment = createRecruitment()
+
+    private val recruitmentResponse = RecruitmentResponse(recruitment)
 
     private val recruitmentItems = listOf(createRecruitmentItem())
 
     private val recruitmentData = createRecruitmentData(recruitmentItems = listOf(createRecruitmentItemData()))
+
+    private val recruitments = listOf(recruitment)
 
     @BeforeEach
     internal fun setUp(
@@ -183,19 +187,71 @@ internal class RecruitmentRestControllerTest(
     }
 
     @Test
-    fun findAllRecruitments() {
+    fun `모든 지원을 가져온다`() {
+        every { recruitmentService.findAll() } answers { recruitments }
+
+        mockMvc.perform(
+            RestDocumentationRequestBuilders.get(
+                "/api/recruitments/list",
+            )
+        ).andExpect(status().isOk)
+            .andExpect(
+                content().json(
+                    objectMapper.writeValueAsString(
+                        ApiResponse.success(recruitments)
+                    )
+                )
+            )
     }
 
     @Test
-    fun deleteById() {
+    fun `모집 id로 모집을 삭제한다`() {
+        every { recruitmentService.deleteById(recruitmentId) } returns Unit
+
+        mockMvc.perform(
+            RestDocumentationRequestBuilders.delete(
+                "/api/recruitments/{id}",
+                recruitmentId
+            )
+        ).andExpect(status().isOk)
     }
 
     @Test
-    fun getById() {
+    fun `모집 id로 모집을 가져온다`() {
+        every { recruitmentService.getById(recruitmentId) } answers { recruitment }
+
+        mockMvc.perform(
+            RestDocumentationRequestBuilders.get(
+                "/api/recruitments/{id}",
+                recruitmentId
+            )
+        ).andExpect(status().isOk)
+            .andExpect(
+                content().json(
+                    objectMapper.writeValueAsString(
+                        ApiResponse.success(recruitment)
+                    )
+                )
+            )
     }
 
     @Test
-    fun getNotEndedDataById() {
+    fun `모집 id로 종료되지 않은 모집 데이터를 가져온다`() {
+        every { recruitmentService.getNotEndedDataById(recruitmentId) } answers { recruitmentData }
+
+        mockMvc.perform(
+            RestDocumentationRequestBuilders.get(
+                "/api/recruitments/{id}/data/not-ended/",
+                recruitmentId
+            )
+        ).andExpect(status().isOk)
+            .andExpect(
+                content().json(
+                    objectMapper.writeValueAsString(
+                        ApiResponse.success(recruitmentData)
+                    )
+                )
+            )
     }
 
     private fun getDocumentRequest(): OperationRequestPreprocessor {
