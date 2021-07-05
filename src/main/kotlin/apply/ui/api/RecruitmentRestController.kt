@@ -22,7 +22,7 @@ class RecruitmentRestController(
     private val recruitmentItemService: RecruitmentItemService
 ) {
     @GetMapping
-    fun findAll(): ResponseEntity<ApiResponse<List<RecruitmentResponse>>> {
+    fun findAllNotHidden(): ResponseEntity<ApiResponse<List<RecruitmentResponse>>> {
         return ResponseEntity.ok().body(ApiResponse.success(recruitmentService.findAllNotHidden()))
     }
 
@@ -38,7 +38,7 @@ class RecruitmentRestController(
         return ResponseEntity.ok().build()
     }
 
-    @GetMapping
+    @GetMapping("/list")
     fun findAllRecruitments(): ResponseEntity<ApiResponse<List<Recruitment>>> {
         return ResponseEntity.ok(ApiResponse.success(recruitmentService.findAll()))
     }
