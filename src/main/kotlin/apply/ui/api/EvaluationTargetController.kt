@@ -4,7 +4,6 @@ import apply.application.EvaluationTargetData
 import apply.application.EvaluationTargetResponse
 import apply.application.EvaluationTargetService
 import apply.application.GradeEvaluationResponse
-import apply.domain.evaluationtarget.EvaluationTarget
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
@@ -15,25 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/api/evaluations")
+@RequestMapping("/api")
 class EvaluationTargetController(
     private val evaluationTargetService: EvaluationTargetService
 ) {
-    @GetMapping("/targets/{id}")
-    fun getById(@PathVariable id: Long): ResponseEntity<EvaluationTarget> {
-        val evaluationTargets = evaluationTargetService.getById(id)
-        return ResponseEntity.ok(evaluationTargets)
-    }
-
-    @GetMapping("/{evaluationId}/targets")
-    fun findAllByEvaluationId(
-        @PathVariable evaluationId: Long
-    ): ResponseEntity<ApiResponse<List<EvaluationTarget>>> {
-        val evaluationTargets = evaluationTargetService.findAllByEvaluationId(evaluationId)
-        return ResponseEntity.ok(ApiResponse.success(evaluationTargets))
-    }
-
-    @GetMapping("/{evaluationId}/targets/{keyword}")
+    @GetMapping("/evaluations/{evaluationId}/targets/{keyword}")
     fun findAllByEvaluationIdAndKeyword(
         @PathVariable evaluationId: Long,
         @PathVariable keyword: String
@@ -43,19 +28,19 @@ class EvaluationTargetController(
         return ResponseEntity.ok(ApiResponse.success(evaluationTargets))
     }
 
-    @PostMapping("{evaluationId}/targets")
+    @PostMapping("/evaluations/{evaluationId}/targets")
     fun load(@PathVariable evaluationId: Long): ResponseEntity<Unit> {
         evaluationTargetService.load(evaluationId)
         return ResponseEntity.ok().build()
     }
 
-    @GetMapping("/targets/{targetId}")
+    @GetMapping("/evaluations/targets/{targetId}")
     fun getGradeEvaluation(@PathVariable targetId: Long): ResponseEntity<ApiResponse<GradeEvaluationResponse>> {
         val gradeEvaluation = evaluationTargetService.getGradeEvaluation(targetId)
         return ResponseEntity.ok(ApiResponse.success(gradeEvaluation))
     }
 
-    @PatchMapping("-targets/{evaluationTargetId}")
+    @PatchMapping("/evaluations-targets/{evaluationTargetId}")
     fun grade(
         @PathVariable evaluationTargetId: Long,
         @RequestBody request: EvaluationTargetData
