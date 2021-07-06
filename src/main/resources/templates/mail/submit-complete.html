@@ -1,0 +1,23 @@
+<div
+  style="width: 100%;max-width: 512px;padding: 20px;margin: 15px;border-radius: 3px;background: #f1f2f6;box-shadow: 0 0 7px rgba(0, 0, 0, 0.05);"
+>
+  <img
+    src="https://woowacourse.github.io/img/logo_full_dark.26e30197.png"
+    style="width: 200px"
+    alt="logo"
+  />
+  <h3><span th:text="${name}"></span>님, 지원이 완료되었습니다.</h3>
+  <div>
+    <br />
+    <div style="text-align: center">
+      <a th:href="${url}+'/recruits'" target="_blank">
+        <button
+          style="cursor: pointer;outline: none;border: 0;background: #0078ff;color: #fff;border-radius: 3px;padding: 10px;min-width:
+80px; min-height: 28px; margin: 5px;"
+        >
+          내 지원서 보기
+        </button>
+      </a>
+    </div>
+  </div>
+</div>
