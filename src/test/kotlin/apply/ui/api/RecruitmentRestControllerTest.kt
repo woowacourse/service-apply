@@ -258,7 +258,7 @@ internal class RecruitmentRestControllerTest(
         return Preprocessors.preprocessRequest(
             Preprocessors.modifyUris()
                 .scheme("https")
-                .host("woowa") // TODO 호스트 변경
+                .host("woowa")
                 .removePort(),
             Preprocessors.prettyPrint()
         )

@@ -55,27 +55,11 @@ class ApplicantRestController(
         return ResponseEntity.noContent().build()
     }
 
-    // todo: jason에게 검토받기
-    // @GetMapping("/{keyword}/recruitments/{recruitmentId}")
-    // fun findAllByRecruitmentIdAndKeyword(
-    //     @RequestParam(value = "recruitmentId") recruitmentId: Long,
-    //     @RequestParam(value = "keyword") keyword: String?
-    // ): ResponseEntity<ApiResponse<List<ApplicantAndFormResponse>>> {
-    //     if (keyword != null) {
-    //         val applicants = applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId, keyword)
-    //         return ResponseEntity.ok(ApiResponse.success(applicants))
-    //     }
-    //
-    //     val applicants = applicantService.findAllByRecruitmentIdAndSubmittedTrue(recruitmentId)
-    //     return ResponseEntity.ok(ApiResponse.success(applicants))
-    // }
-
     @GetMapping("/{keyword}/recruitments/{recruitmentId}")
     fun findAllByRecruitmentIdAndKeyword(
         @PathVariable(value = "keyword") keyword: String,
         @PathVariable(value = "recruitmentId") recruitmentId: Long
     ): ResponseEntity<ApiResponse<List<ApplicantAndFormResponse>>> {
-        // 지원서 아이디로 지원자를 찾아 근데 지원자 키워드는 이메일이나 이름임// 지원자 이름이나 이메일과 지원서 아이디로 지원자를 찾는다.
         val applicants = applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId, keyword)
         return ResponseEntity.ok(ApiResponse.success(applicants))
     }
