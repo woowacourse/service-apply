@@ -21,7 +21,7 @@ class ExcelRestController(
 ) {
     @GetMapping("/recruitments/{recruitmentId}/excel")
     fun createApplicantExcel(@PathVariable("recruitmentId") recruitmentId: Long): ResponseEntity<InputStreamResource> {
-        val excel = excelService.createApplicantExcel(recruitmentId) // return type: ByteArrayInputStream
+        val excel = excelService.createApplicantExcel(recruitmentId)
         val recruitment = recruitmentService.getById(recruitmentId)
         val headers = HttpHeaders().apply {
             contentDisposition = ContentDisposition.builder("attatchment")
