@@ -10,12 +10,12 @@ import apply.config.RestDocsConfiguration
 import apply.createEvaluation
 import apply.createRecruitment
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.ninjasquad.springmockk.MockkBean
+import io.mockk.every
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.BDDMockito.given
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
 import org.springframework.context.annotation.Import
@@ -46,13 +46,13 @@ import support.test.TestEnvironment
 @ExtendWith(RestDocumentationExtension::class, SpringExtension::class)
 @TestEnvironment
 internal class EvaluationRestControllerTest(
-    private val objectMapper: ObjectMapper
+    private val objectMapper: ObjectMapper,
 ) {
 
-    @MockBean
+    @MockkBean
     private lateinit var applicantService: ApplicantService
 
-    @MockBean
+    @MockkBean
     private lateinit var evaluationService: EvaluationService
 
     private lateinit var mockMvc: MockMvc
@@ -60,7 +60,7 @@ internal class EvaluationRestControllerTest(
     @BeforeEach
     internal fun setUp(
         webApplicationContext: WebApplicationContext,
-        restDocumentationContextProvider: RestDocumentationContextProvider
+        restDocumentationContextProvider: RestDocumentationContextProvider,
     ) {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
             .addFilter<DefaultMockMvcBuilder>(CharacterEncodingFilter("UTF-8", true))
@@ -77,6 +77,8 @@ internal class EvaluationRestControllerTest(
     internal fun `평가를 추가한다`() {
         val evaluationData = EvaluationData(createEvaluation(), createRecruitment(), null, emptyList())
 
+        every { evaluationService.save(evaluationData) } returns Unit
+
         mockMvc.post("/api/evaluations") {
             content = objectMapper.writeValueAsBytes(evaluationData)
             contentType = MediaType.APPLICATION_JSON
@@ -89,7 +91,7 @@ internal class EvaluationRestControllerTest(
     @Test
     internal fun `모든 모집 선택 정보를 조회한다`() {
         val expected = listOf(RecruitmentSelectData("평가1", 1L), RecruitmentSelectData("평가2", 2L))
-        given(evaluationService.findAllRecruitmentSelectData()).willReturn(expected)
+        every { evaluationService.findAllRecruitmentSelectData() } returns expected
 
         mockMvc.get("/api/evaluations/recruitments")
             .andExpect {
@@ -101,7 +103,7 @@ internal class EvaluationRestControllerTest(
     @Test
     internal fun `특정 평가를 조회한다`() {
         val evaluationData = EvaluationData(id = 1L)
-        given(evaluationService.getDataById(evaluationData.id)).willReturn(evaluationData)
+        every { evaluationService.getDataById(evaluationData.id) } returns evaluationData
 
         mockMvc.get("/api/evaluations/{evaluationId}", evaluationData.id)
             .andExpect {
@@ -112,9 +114,11 @@ internal class EvaluationRestControllerTest(
 
     @Test
     internal fun `특정 모집의 모든 평가 정보들을 조회한다`() {
-        val expected = listOf(EvaluationSelectData(), EvaluationSelectData()) // todo: 데이터 채워넣기...
-        given(evaluationService.getAllSelectDataByRecruitmentId(1L))
-            .willReturn(expected)
+        val expected = listOf(
+            EvaluationSelectData("평가 항목 제목1", 1L),
+            EvaluationSelectData("평가 항목 제목2", 2L)
+        )
+        every { evaluationService.getAllSelectDataByRecruitmentId(1L) } returns expected
 
         mockMvc.get("/api/evaluations/info") {
             param("recruitmentId", "1")
@@ -131,7 +135,7 @@ internal class EvaluationRestControllerTest(
             EvaluationResponse(1L, "평가1", "평가1 설명", "우테코 3기 백엔드", 4L, "", 2L),
             EvaluationResponse(2L, "평가2", "평가2 설명", "우테코 3기 프론트", 5L, "", 2L),
         )
-        given(evaluationService.findAllWithRecruitment()).willReturn(expected)
+        every { evaluationService.findAllWithRecruitment() } returns expected
 
         mockMvc.get("/api/evaluations")
             .andExpect {
@@ -143,6 +147,8 @@ internal class EvaluationRestControllerTest(
     @Test
     internal fun `평가를 삭제한다`() {
         val evaluationId = 1L
+        every { evaluationService.deleteById(evaluationId) } returns Unit
+
         mockMvc.delete("/api/evaluations/{evaluationId}", evaluationId)
             .andExpect {
                 status { isOk }
