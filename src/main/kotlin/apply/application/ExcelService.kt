@@ -22,7 +22,7 @@ class ExcelService(
         val applicants = applicantService.findAllByRecruitmentIdAndSubmittedTrue(recruitmentId)
         val titles =
             recruitmentItemRepository.findByRecruitmentIdOrderByPosition(recruitmentId).map { it.title }.toTypedArray()
-        val headerTitles = arrayOf("이름", "이메일", "전화번호", "성별", "생년월일", "지원 일시", "부정 행위자", *titles)
+        val headerTitles = arrayOf("이름", "이메일", "전화번호", "성별", "생년월일", "지원 일시", "부정 행위자", "포트폴리오 URL", *titles)
         val excelRows = applicants.map {
             ExcelRow(
                 it.name,
@@ -32,6 +32,7 @@ class ExcelService(
                 it.birthday.toString(),
                 it.applicationForm.submittedDateTime.toString(),
                 it.isCheater.toText(),
+                it.applicationForm.referenceUrl,
                 *it.applicationForm.answers.items.map { item -> item.contents }.toTypedArray()
             )
         }
