@@ -17,13 +17,33 @@ class ApplicationFormService(
     private val recruitmentRepository: RecruitmentRepository,
     private val recruitmentItemRepository: RecruitmentItemRepository
 ) {
-    fun create(applicantId: Long, request: CreateApplicationFormRequest) {
+    fun create_backup(applicantId: Long, request: CreateApplicationFormRequest) {
         checkRecruitment(request.recruitmentId)
         require(!applicationFormRepository.existsByRecruitmentIdAndApplicantId(request.recruitmentId, applicantId)) {
             "이미 지원한 이력이 있습니다."
         }
+
         val applicationForm = ApplicationForm(applicantId, request.recruitmentId)
         applicationFormRepository.save(applicationForm)
+    }
+
+    fun create(applicantId: Long, request: CreateApplicationFormRequest) {
+        checkRecruitment(request.recruitmentId)
+
+        val applicantRecruitment = recruitmentRepository.findByIdOrNull(request.recruitmentId)
+            ?: throw IllegalArgumentException("해당하는 지원서가 없습니다.")
+
+        if (applicantRecruitment.term != null) {
+            applicationFormRepository.findAllByApplicantId(applicantId).map {
+                recruitmentRepository.findTermById(it.recruitmentId)
+            }.forEach {
+                require(it != applicantRecruitment.term) {
+                    "해당 기수에 이미 지원한 이력이 있습니다."
+                }
+            }
+        }
+
+        applicationFormRepository.save(ApplicationForm(applicantId, request.recruitmentId))
     }
 
     fun update(applicantId: Long, request: UpdateApplicationFormRequest) {

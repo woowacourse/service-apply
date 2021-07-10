@@ -11,6 +11,8 @@ class Recruitment(
     @Column(nullable = false)
     var title: String,
 
+    var term: Long?,
+
     @Embedded
     var period: RecruitmentPeriod,
     recruitable: Boolean = false,
@@ -47,5 +49,15 @@ class Recruitment(
         recruitable: Boolean = false,
         hidden: Boolean = true,
         id: Long = 0L
-    ) : this(title, RecruitmentPeriod(startDateTime, endDateTime), recruitable, hidden, id)
+    ) : this(title, null, RecruitmentPeriod(startDateTime, endDateTime), recruitable, hidden, id)
+
+    constructor(
+        title: String,
+        term: Long?,
+        startDateTime: LocalDateTime,
+        endDateTime: LocalDateTime,
+        recruitable: Boolean = false,
+        hidden: Boolean = true,
+        id: Long = 0L
+    ) : this(title, term, RecruitmentPeriod(startDateTime, endDateTime), recruitable, hidden, id)
 }

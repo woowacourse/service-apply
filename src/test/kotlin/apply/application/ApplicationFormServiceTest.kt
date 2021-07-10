@@ -55,6 +55,8 @@ class ApplicationFormServiceTest {
     private lateinit var recruitmentNotRecruiting: Recruitment
     private lateinit var recruitmentHidden: Recruitment
 
+    private val applicantId: Long = 1L
+
     @BeforeEach
     internal fun setUp() {
         this.applicationFormService =
@@ -79,7 +81,7 @@ class ApplicationFormServiceTest {
             submittedDateTime = applicationForm1.submittedDateTime
         )
 
-        createApplicationFormRequest = CreateApplicationFormRequest(1L)
+        createApplicationFormRequest = CreateApplicationFormRequest(applicantId)
 
         updateApplicationFormRequest = UpdateApplicationFormRequest(
             recruitmentId = applicationForm1.recruitmentId,
@@ -119,11 +121,82 @@ class ApplicationFormServiceTest {
         recruitmentHidden = createRecruitment()
     }
 
+    // @Test
+    // fun `지원서가 있는 경우 지원할 수 없다`() {
+    //     every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
+    //     every { applicationFormRepository.existsByRecruitmentIdAndApplicantId(any(), any()) } returns true
+    //
+    //     val message = assertThrows<IllegalArgumentException> {
+    //         applicationFormService.create(
+    //             1L,
+    //             createApplicationFormRequest
+    //         )
+    //     }.message
+    //     assertThat(message).isEqualTo("이미 지원한 이력이 있습니다.")
+    // }
+
+    // XXX :: mock 정보를 함수로 빼도 될까
+
+    @Test
+    fun `지원 내역이 없는 경우, 지원 가능하다`() {
+        every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
+        every { applicationFormRepository.findAllByApplicantId(applicantId) }.returns(listOf())
+        every { applicationFormRepository.save(any()) } returns mockk()
+
+        assertDoesNotThrow { applicationFormService.create(applicantId, createApplicationFormRequest) }
+    }
+
+    @Test
+    fun `기수가 같은 지원 내역이 없는 경우, 지원 가능하다`() {
+        val recruitmentOld = createRecruitment(title = "3기 백엔드 모집", term = 3L, id = 1L)
+        val recruitmentNew = createRecruitment(title = "4기 백엔드 모집", term = 4L, id = 2L)
+
+        assertDoesNotThrow { createApplicantFormWithHistory(recruitmentOld, recruitmentNew) }
+    }
+
+    @Test
+    fun `기수가 같은 지원 내역이 이미 있는 경우 지원할 수 없다`() {
+        val recruitmentOld = createRecruitment(title = "4기 백엔드 모집", term = 4L, id = 1L)
+        val recruitmentNew = createRecruitment(title = "4기 프론트엔드 모집", term = 4L, id = 2L)
+
+        val message = assertThrows<IllegalArgumentException> {
+            createApplicantFormWithHistory(recruitmentNew, recruitmentOld)
+        }.message
+
+        assertThat(message).isEqualTo("해당 기수에 이미 지원한 이력이 있습니다.")
+    }
+
+    @Test
+    fun `모집에 기수 정보가 없는 경우에는 이전 지원 내역과 상관없이 지원 가능하다`() {
+        val recruitmentOld = createRecruitment(title = "4기 백엔드 모집", id = 1L)
+        val recruitmentNew = createRecruitment(title = "4기 프론트엔드 모집", id = 2L)
+
+        assertDoesNotThrow { createApplicantFormWithHistory(recruitmentOld, recruitmentNew) }
+    }
+
+    private fun createApplicantFormWithHistory(recruitmentOld: Recruitment, recruitmentNew: Recruitment) {
+        every { recruitmentRepository.findByIdOrNull(recruitmentNew.id) } returns recruitmentNew
+        every { recruitmentRepository.findByIdOrNull(recruitmentOld.id) } returns recruitmentOld
+
+        every { applicationFormRepository.findAllByApplicantId(applicantId) }.returns(
+            listOf(
+                ApplicationForm(applicantId, recruitmentOld.id)
+            )
+        )
+
+        every { recruitmentRepository.findTermById(recruitmentNew.id) } returns recruitmentNew.term
+        every { recruitmentRepository.findTermById(recruitmentOld.id) } returns recruitmentOld.term
+
+        every { applicationFormRepository.save(any()) } returns mockk()
+
+        applicationFormService.create(applicantId, CreateApplicationFormRequest(recruitmentNew.id))
+    }
+
     @Test
     fun `지원서가 있으면 지원서를 불러온다`() {
         every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns applicationForm1
 
-        assertThat(applicationFormService.getApplicationForm(1L, 1L)).isEqualTo(applicationFormResponse)
+        assertThat(applicationFormService.getApplicationForm(applicantId, 1L)).isEqualTo(applicationFormResponse)
     }
 
     @Test
@@ -137,9 +210,9 @@ class ApplicationFormServiceTest {
 
     @Test
     fun `지원자가 자신의 지원서를 모두 불러온다`() {
-        every { applicationFormRepository.findAllByApplicantId(1L) } returns applicationForms
+        every { applicationFormRepository.findAllByApplicantId(applicantId) } returns applicationForms
 
-        val expected = applicationFormService.getMyApplicationForms(1L)
+        val expected = applicationFormService.getMyApplicationForms(applicantId)
 
         assertAll(
             { assertThat(expected).isNotNull },
@@ -149,9 +222,9 @@ class ApplicationFormServiceTest {
 
     @Test
     fun `지원자가 지원한 지원서가 없으면 빈 리스트를 불러온다`() {
-        every { applicationFormRepository.findAllByApplicantId(1L) } returns emptyList()
+        every { applicationFormRepository.findAllByApplicantId(applicantId) } returns emptyList()
 
-        val expected = applicationFormService.getMyApplicationForms(1L)
+        val expected = applicationFormService.getMyApplicationForms(applicantId)
 
         assertAll(
             { assertThat(expected).isNotNull },
@@ -165,21 +238,7 @@ class ApplicationFormServiceTest {
         every { applicationFormRepository.existsByRecruitmentIdAndApplicantId(any(), any()) } returns false
         every { applicationFormRepository.save(any<ApplicationForm>()) } returns mockk()
 
-        assertDoesNotThrow { applicationFormService.create(1L, createApplicationFormRequest) }
-    }
-
-    @Test
-    fun `지원서가 있는 경우 지원할 수 없다`() {
-        every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
-        every { applicationFormRepository.existsByRecruitmentIdAndApplicantId(any(), any()) } returns true
-
-        val message = assertThrows<IllegalArgumentException> {
-            applicationFormService.create(
-                1L,
-                createApplicationFormRequest
-            )
-        }.message
-        assertThat(message).isEqualTo("이미 지원한 이력이 있습니다.")
+        assertDoesNotThrow { applicationFormService.create(applicantId, createApplicationFormRequest) }
     }
 
     @Test
@@ -188,7 +247,7 @@ class ApplicationFormServiceTest {
 
         val message = assertThrows<IllegalArgumentException> {
             applicationFormService.create(
-                1L,
+                applicantId,
                 createApplicationFormRequest
             )
         }.message
@@ -201,7 +260,7 @@ class ApplicationFormServiceTest {
         every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns applicationForm1
         every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns recruitmentItems
 
-        assertDoesNotThrow { applicationFormService.update(1L, updateApplicationFormRequest) }
+        assertDoesNotThrow { applicationFormService.update(applicantId, updateApplicationFormRequest) }
     }
 
     @Test
@@ -213,7 +272,7 @@ class ApplicationFormServiceTest {
 
         val message = assertThrows<IllegalArgumentException> {
             applicationFormService.update(
-                1L,
+                applicantId,
                 updateApplicationFormRequest
             )
         }.message
@@ -226,7 +285,7 @@ class ApplicationFormServiceTest {
 
         val message = assertThrows<IllegalStateException> {
             applicationFormService.update(
-                1L,
+                applicantId,
                 updateApplicationFormRequest
             )
         }.message
@@ -260,7 +319,7 @@ class ApplicationFormServiceTest {
 
         val message = assertThrows<IllegalArgumentException> {
             applicationFormService.update(
-                1L,
+                applicantId,
                 UpdateApplicationFormRequest(recruitmentId = 1L, submitted = true)
             )
         }.message
@@ -276,7 +335,7 @@ class ApplicationFormServiceTest {
 
         val message = assertThrows<IllegalArgumentException> {
             applicationFormService.update(
-                1L,
+                applicantId,
                 UpdateApplicationFormRequest(recruitmentId = 1L, submitted = true)
             )
         }.message
@@ -292,7 +351,7 @@ class ApplicationFormServiceTest {
 
         val message = assertThrows<IllegalArgumentException> {
             applicationFormService.update(
-                1L,
+                applicantId,
                 UpdateApplicationFormRequest(
                     recruitmentId = 1L,
                     submitted = true,

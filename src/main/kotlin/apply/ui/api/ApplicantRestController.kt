@@ -1,11 +1,11 @@
 package apply.ui.api
 
-import apply.application.RegisterApplicantRequest
-import apply.application.ApplicantService
 import apply.application.ApplicantAuthenticationService
-import apply.application.EditPasswordRequest
-import apply.application.ResetPasswordRequest
+import apply.application.ApplicantService
 import apply.application.AuthenticateApplicantRequest
+import apply.application.EditPasswordRequest
+import apply.application.RegisterApplicantRequest
+import apply.application.ResetPasswordRequest
 import apply.application.mail.MailService
 import apply.domain.applicant.Applicant
 import apply.security.LoginApplicant
