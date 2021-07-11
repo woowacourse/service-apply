@@ -19,12 +19,12 @@ class ExcelRestController(
     private val recruitmentService: RecruitmentService,
     private val evaluationService: EvaluationService,
 ) {
-    @GetMapping("/recruitments/{recruitmentId}/excel")
+    @GetMapping("/recruitments/{recruitmentId}/applicants/excel")
     fun createApplicantExcel(@PathVariable("recruitmentId") recruitmentId: Long): ResponseEntity<InputStreamResource> {
         val excel = excelService.createApplicantExcel(recruitmentId)
         val recruitment = recruitmentService.getById(recruitmentId)
         val headers = HttpHeaders().apply {
-            contentDisposition = ContentDisposition.builder("attatchment")
+            contentDisposition = ContentDisposition.builder("attachment")
                 .filename("${recruitment.title}.xlsx")
                 .build()
         }
@@ -34,12 +34,12 @@ class ExcelRestController(
             .body(InputStreamResource((excel)))
     }
 
-    @GetMapping("/evaluations/{evaluationId}/excel")
+    @GetMapping("/evaluations/{evaluationId}/targets/excel")
     fun createTargetExcel(@PathVariable("evaluationId") evaluationId: Long): ResponseEntity<InputStreamResource> {
         val excel = excelService.createTargetExcel(evaluationId)
         val evaluation = evaluationService.findById(evaluationId)
         val headers = HttpHeaders().apply {
-            contentDisposition = ContentDisposition.builder("attatchment")
+            contentDisposition = ContentDisposition.builder("attachment")
                 .filename("${evaluation?.title}.xlsx")
                 .build()
         }
