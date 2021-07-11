@@ -5,7 +5,6 @@ import apply.application.EvaluationData
 import apply.application.EvaluationResponse
 import apply.application.EvaluationSelectData
 import apply.application.EvaluationService
-import apply.application.RecruitmentSelectData
 import apply.config.RestDocsConfiguration
 import apply.createEvaluation
 import apply.createRecruitment
@@ -89,18 +88,6 @@ internal class EvaluationRestControllerTest(
     }
 
     @Test
-    internal fun `모든 모집 선택 정보를 조회한다`() {
-        val expected = listOf(RecruitmentSelectData("평가1", 1L), RecruitmentSelectData("평가2", 2L))
-        every { evaluationService.findAllRecruitmentSelectData() } returns expected
-
-        mockMvc.get("/api/evaluations/recruitments")
-            .andExpect {
-                status { isOk }
-                content { json(objectMapper.writeValueAsString(ApiResponse.success(expected))) }
-            }
-    }
-
-    @Test
     internal fun `특정 평가를 조회한다`() {
         val evaluationData = EvaluationData(id = 1L)
         every { evaluationService.getDataById(evaluationData.id) } returns evaluationData
@@ -114,15 +101,14 @@ internal class EvaluationRestControllerTest(
 
     @Test
     internal fun `특정 모집의 모든 평가 정보들을 조회한다`() {
+        val recruitmentId = 1L
         val expected = listOf(
             EvaluationSelectData("평가 항목 제목1", 1L),
             EvaluationSelectData("평가 항목 제목2", 2L)
         )
-        every { evaluationService.getAllSelectDataByRecruitmentId(1L) } returns expected
+        every { evaluationService.getAllSelectDataByRecruitmentId(recruitmentId) } returns expected
 
-        mockMvc.get("/api/evaluations/info") {
-            param("recruitmentId", "1")
-        }
+        mockMvc.get("/api/recruitments/{recruitmentId}/evaluations", recruitmentId)
             .andExpect {
                 status { isOk }
                 content { json(objectMapper.writeValueAsString(ApiResponse.success(expected))) }
