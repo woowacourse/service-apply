@@ -72,10 +72,10 @@ internal class EvaluationTargetControllerTest(
 
     private lateinit var mockMvc: MockMvc
 
+    private val recruitmentId = 1L
     private val evaluationId = 1L
-    private val keyword = "아마찌"
     private val targetId = 1L
-    private val evaluationTargetId = 1L
+    private val keyword = "아마찌"
     private val updatedScore = 5
     private val updatedStatus = EvaluationStatus.PASS
     private val updatedNote = "특이 사항(수정)"
@@ -124,7 +124,10 @@ internal class EvaluationTargetControllerTest(
 
         mockMvc.perform(
             RestDocumentationRequestBuilders.get(
-                "/api/evaluations/{evaluationId}/targets/{keyword}", evaluationId, keyword
+                "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/{keyword}",
+                recruitmentId,
+                evaluationId,
+                keyword
             )
         ).andExpect(status().isOk)
             .andExpect(
@@ -140,6 +143,7 @@ internal class EvaluationTargetControllerTest(
                     getDocumentRequest(),
                     getDocumentResponse(),
                     pathParameters(
+                        parameterWithName("recruitmentId").description("모집 ID"),
                         parameterWithName("evaluationId").description("평가 ID"),
                         parameterWithName("keyword").description("키워드(이름, 이메일)")
                     ),
@@ -156,9 +160,9 @@ internal class EvaluationTargetControllerTest(
         every { evaluationTargetService.load(evaluationId) } returns Unit
 
         mockMvc.perform(
-            RestDocumentationRequestBuilders.post(
-                "/api/evaluations/{evaluationId}/targets",
-                evaluationId,
+            RestDocumentationRequestBuilders.put(
+                "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/renew",
+                recruitmentId, evaluationId,
             )
         ).andExpect(status().isOk)
             .andDo(
@@ -167,6 +171,7 @@ internal class EvaluationTargetControllerTest(
                     getDocumentRequest(),
                     getDocumentResponse(),
                     pathParameters(
+                        parameterWithName("recruitmentId").description("모집 ID"),
                         parameterWithName("evaluationId").description("평가 ID"),
                     ),
                 )
@@ -179,7 +184,10 @@ internal class EvaluationTargetControllerTest(
 
         mockMvc.perform(
             RestDocumentationRequestBuilders.get(
-                "/api/evaluations/targets/{targetId}", targetId
+                "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/{targetId}/grade",
+                recruitmentId,
+                evaluationId,
+                targetId
             )
         ).andExpect(status().isOk)
             .andExpect(
@@ -195,6 +203,8 @@ internal class EvaluationTargetControllerTest(
                     getDocumentRequest(),
                     getDocumentResponse(),
                     pathParameters(
+                        parameterWithName("recruitmentId").description("모집 ID"),
+                        parameterWithName("evaluationId").description("평가 ID"),
                         parameterWithName("targetId").description("평가 대상자 ID"),
                     ),
                     responseFields(
@@ -226,11 +236,14 @@ internal class EvaluationTargetControllerTest(
 
     @Test
     fun `평가 완료 후 점수를 매긴다`() {
-        every { evaluationTargetService.grade(evaluationTargetId, gradeEvaluationRequest) } returns Unit
+        every { evaluationTargetService.grade(targetId, gradeEvaluationRequest) } returns Unit
 
         mockMvc.perform(
             RestDocumentationRequestBuilders.patch(
-                "/api/evaluations-targets/{evaluationTargetId}", evaluationTargetId
+                "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/{targetId}/grade",
+                recruitmentId,
+                evaluationId,
+                targetId
             ).header("Content-Type", "application/json")
                 .content(
                     objectMapper.writeValueAsString(
@@ -244,7 +257,9 @@ internal class EvaluationTargetControllerTest(
                     getDocumentRequest(),
                     getDocumentResponse(),
                     pathParameters(
-                        parameterWithName("evaluationTargetId").description("평가 대상자 ID"),
+                        parameterWithName("recruitmentId").description("모집 ID"),
+                        parameterWithName("evaluationId").description("평가 ID"),
+                        parameterWithName("targetId").description("평가 대상자 ID"),
                     ),
                     requestFields(
                         fieldWithPath("evaluationItemScores").type(JsonFieldType.ARRAY)
@@ -266,7 +281,7 @@ internal class EvaluationTargetControllerTest(
         return Preprocessors.preprocessRequest(
             Preprocessors.modifyUris()
                 .scheme("https")
-                .host("woowa") // TODO 호스트 변경
+                .host("woowa")
                 .removePort(),
             Preprocessors.prettyPrint()
         )

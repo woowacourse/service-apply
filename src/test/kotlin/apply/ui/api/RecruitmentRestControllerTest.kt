@@ -187,24 +187,6 @@ internal class RecruitmentRestControllerTest(
     }
 
     @Test
-    fun `모든 지원을 가져온다`() {
-        every { recruitmentService.findAll() } answers { recruitments }
-
-        mockMvc.perform(
-            RestDocumentationRequestBuilders.get(
-                "/api/recruitments/list",
-            )
-        ).andExpect(status().isOk)
-            .andExpect(
-                content().json(
-                    objectMapper.writeValueAsString(
-                        ApiResponse.success(recruitments)
-                    )
-                )
-            )
-    }
-
-    @Test
     fun `모집 id로 모집을 삭제한다`() {
         every { recruitmentService.deleteById(recruitmentId) } returns Unit
 
@@ -230,25 +212,6 @@ internal class RecruitmentRestControllerTest(
                 content().json(
                     objectMapper.writeValueAsString(
                         ApiResponse.success(recruitment)
-                    )
-                )
-            )
-    }
-
-    @Test
-    fun `모집 id로 종료되지 않은 모집 데이터를 가져온다`() {
-        every { recruitmentService.getNotEndedDataById(recruitmentId) } answers { recruitmentData }
-
-        mockMvc.perform(
-            RestDocumentationRequestBuilders.get(
-                "/api/recruitments/{id}/data/not-ended/",
-                recruitmentId
-            )
-        ).andExpect(status().isOk)
-            .andExpect(
-                content().json(
-                    objectMapper.writeValueAsString(
-                        ApiResponse.success(recruitmentData)
                     )
                 )
             )

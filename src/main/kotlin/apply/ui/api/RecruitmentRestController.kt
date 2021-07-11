@@ -38,11 +38,6 @@ class RecruitmentRestController(
         return ResponseEntity.ok().build()
     }
 
-    @GetMapping("/list")
-    fun findAllRecruitments(): ResponseEntity<ApiResponse<List<Recruitment>>> {
-        return ResponseEntity.ok(ApiResponse.success(recruitmentService.findAll()))
-    }
-
     @DeleteMapping("/{id}")
     fun deleteById(@PathVariable id: Long): ResponseEntity<Unit> {
         recruitmentService.deleteById(id)
@@ -52,10 +47,5 @@ class RecruitmentRestController(
     @GetMapping("/{id}")
     fun getById(@PathVariable id: Long): ResponseEntity<ApiResponse<Recruitment>> {
         return ResponseEntity.ok(ApiResponse.success(recruitmentService.getById(id)))
-    }
-
-    @GetMapping("{id}/data/not-ended/")
-    fun getNotEndedDataById(@PathVariable id: Long): ResponseEntity<ApiResponse<RecruitmentData>> {
-        return ResponseEntity.ok(ApiResponse.success(recruitmentService.getNotEndedDataById(id)))
     }
 }
