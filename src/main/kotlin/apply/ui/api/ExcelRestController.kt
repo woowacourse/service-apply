@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/recruitments/{recruitmentId}")
 class ExcelRestController(
     private val excelService: ExcelService,
     private val recruitmentService: RecruitmentService,
     private val evaluationService: EvaluationService,
 ) {
-    @GetMapping("/recruitments/{recruitmentId}/applicants/excel")
+    @GetMapping("/applicants/excel")
     fun createApplicantExcel(@PathVariable("recruitmentId") recruitmentId: Long): ResponseEntity<InputStreamResource> {
         val excel = excelService.createApplicantExcel(recruitmentId)
         val recruitment = recruitmentService.getById(recruitmentId)
@@ -35,7 +35,10 @@ class ExcelRestController(
     }
 
     @GetMapping("/evaluations/{evaluationId}/targets/excel")
-    fun createTargetExcel(@PathVariable("evaluationId") evaluationId: Long): ResponseEntity<InputStreamResource> {
+    fun createTargetExcel(
+        @PathVariable("recruitmentId") recruitmentId: Long,
+        @PathVariable("evaluationId") evaluationId: Long,
+    ): ResponseEntity<InputStreamResource> {
         val excel = excelService.createTargetExcel(evaluationId)
         val evaluation = evaluationService.findById(evaluationId)
         val headers = HttpHeaders().apply {
