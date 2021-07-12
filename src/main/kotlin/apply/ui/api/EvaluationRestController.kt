@@ -2,7 +2,6 @@ package apply.ui.api
 
 import apply.application.EvaluationData
 import apply.application.EvaluationResponse
-import apply.application.EvaluationSelectData
 import apply.application.EvaluationService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/api/recruitments/{/recruitmentId}/evaluations")
+@RequestMapping("/api/recruitments/{recruitmentId}/evaluations")
 class EvaluationRestController(
     private val evaluationService: EvaluationService,
 ) {
@@ -35,12 +34,6 @@ class EvaluationRestController(
     ): ResponseEntity<ApiResponse<EvaluationData>> {
         val evaluationData = evaluationService.getDataById(evaluationId)
         return ResponseEntity.ok(ApiResponse.success(evaluationData))
-    }
-
-    @GetMapping
-    fun getAllSelectDataByRecruitmentId(@PathVariable("recruitmentId") recruitmentId: Long): ResponseEntity<ApiResponse<List<EvaluationSelectData>>> {
-        val evaluationDatas = evaluationService.getAllSelectDataByRecruitmentId(recruitmentId)
-        return ResponseEntity.ok(ApiResponse.success(evaluationDatas))
     }
 
     @GetMapping
