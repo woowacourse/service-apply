@@ -14,37 +14,46 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/recruitments/{/recruitmentId}/evaluations")
 class EvaluationRestController(
-    private val evaluationService: EvaluationService
+    private val evaluationService: EvaluationService,
 ) {
 
-    @PostMapping("/evaluations")
-    fun createEvaluation(@RequestBody evaluationData: EvaluationData): ResponseEntity<Unit> {
+    @PostMapping
+    fun createEvaluation(
+        @PathVariable("recruitmentId") recruitmentId: Long,
+        @RequestBody evaluationData: EvaluationData,
+    ): ResponseEntity<Unit> {
         evaluationService.save(evaluationData)
         return ResponseEntity.ok().body(Unit)
     }
 
-    @GetMapping("/evaluations/{evaluationId}")
-    fun getDataById(@PathVariable("evaluationId") evaluationId: Long): ResponseEntity<ApiResponse<EvaluationData>> {
+    @GetMapping("{evaluationId}")
+    fun getDataById(
+        @PathVariable("recruitmentId") recruitmentId: Long,
+        @PathVariable("evaluationId") evaluationId: Long,
+    ): ResponseEntity<ApiResponse<EvaluationData>> {
         val evaluationData = evaluationService.getDataById(evaluationId)
         return ResponseEntity.ok(ApiResponse.success(evaluationData))
     }
 
-    @GetMapping("/recruitments/{recruitmentId}/evaluations")
+    @GetMapping
     fun getAllSelectDataByRecruitmentId(@PathVariable("recruitmentId") recruitmentId: Long): ResponseEntity<ApiResponse<List<EvaluationSelectData>>> {
         val evaluationDatas = evaluationService.getAllSelectDataByRecruitmentId(recruitmentId)
         return ResponseEntity.ok(ApiResponse.success(evaluationDatas))
     }
 
-    @GetMapping("/evaluations")
-    fun findAllWithRecruitment(): ResponseEntity<ApiResponse<List<EvaluationResponse>>> {
+    @GetMapping
+    fun findAllWithRecruitment(@PathVariable("recruitmentId") recruitmentId: Long): ResponseEntity<ApiResponse<List<EvaluationResponse>>> {
         val evaluationResponses = evaluationService.findAllWithRecruitment()
         return ResponseEntity.ok(ApiResponse.success(evaluationResponses))
     }
 
-    @DeleteMapping("/evaluations/{evaluationId}")
-    fun deleteById(@PathVariable("evaluationId") evaluationId: Long): ResponseEntity<Unit> {
+    @DeleteMapping("/{evaluationId}")
+    fun deleteById(
+        @PathVariable("recruitmentId") recruitmentId: Long,
+        @PathVariable("evaluationId") evaluationId: Long,
+    ): ResponseEntity<Unit> {
         evaluationService.deleteById(evaluationId)
         return ResponseEntity.ok().body(Unit)
     }
