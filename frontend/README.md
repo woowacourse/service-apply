@@ -1,24 +1,10 @@
-# client
+# apply - frontend
 
-## Project setup
-```
-npm install
-```
+## 퀵 스타트
 
-### Compiles and hot-reloads for development
 ```
-npm run serve
-```
+// 위치: service-apply/frontend
 
-### Compiles and minifies for production
+yarn
+yarn start
 ```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
