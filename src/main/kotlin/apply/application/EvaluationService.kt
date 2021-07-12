@@ -14,7 +14,7 @@ import javax.transaction.Transactional
 class EvaluationService(
     private val evaluationRepository: EvaluationRepository,
     private val evaluationItemRepository: EvaluationItemRepository,
-    private val recruitmentRepository: RecruitmentRepository
+    private val recruitmentRepository: RecruitmentRepository,
 ) {
     fun save(request: EvaluationData) {
         val evaluation = evaluationRepository.save(
@@ -50,7 +50,7 @@ class EvaluationService(
         return evaluationRepository.findAllByRecruitmentId(recruitmentId)
     }
 
-    private fun findById(id: Long): Evaluation? {
+    fun findById(id: Long): Evaluation? {
         if (id == 0L) return null
 
         return evaluationRepository.findByIdOrNull(id) ?: throw IllegalArgumentException("해당 id의 평가를 찾을 수 없습니다.")
@@ -89,10 +89,10 @@ class EvaluationService(
         }
     }
 
-    fun deleteById(id: Long) {
-        evaluationRepository.deleteById(id)
+    fun deleteById(evaluationId: Long) {
+        evaluationRepository.deleteById(evaluationId)
 
-        resetBeforeEvaluationContain(id)
+        resetBeforeEvaluationContain(evaluationId)
     }
 
     private fun resetBeforeEvaluationContain(id: Long) {
