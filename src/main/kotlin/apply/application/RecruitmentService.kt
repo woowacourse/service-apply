@@ -14,11 +14,11 @@ class RecruitmentService(
     private val recruitmentRepository: RecruitmentRepository,
     private val recruitmentItemRepository: RecruitmentItemRepository
 ) {
-    // TODO :: RecruitmentData term 뚫기
     fun save(request: RecruitmentData) {
         val recruitment = recruitmentRepository.save(
             Recruitment(
                 request.title,
+                request.term,
                 request.startDateTime,
                 request.endDateTime,
                 request.recruitable,

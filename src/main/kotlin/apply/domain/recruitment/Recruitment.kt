@@ -12,7 +12,7 @@ class Recruitment(
     var title: String,
 
     @Column(updatable = false)
-    val term: Long?,
+    val term: Long? = null,
 
     @Embedded
     var period: RecruitmentPeriod,

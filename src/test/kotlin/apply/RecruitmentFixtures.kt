@@ -50,6 +50,7 @@ fun createRecruitmentItem(
 
 fun createRecruitmentData(
     title: String = RECRUITMENT_TITLE,
+    term: Long? = null,
     startDateTime: LocalDateTime = START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
     recruitable: Boolean = false,
@@ -57,7 +58,7 @@ fun createRecruitmentData(
     recruitmentItems: List<RecruitmentItemData> = emptyList(),
     id: Long = 0L
 ): RecruitmentData {
-    return RecruitmentData(title, startDateTime, endDateTime, recruitable, hidden, recruitmentItems, id)
+    return RecruitmentData(title, term, startDateTime, endDateTime, recruitable, hidden, recruitmentItems, id)
 }
 
 fun createRecruitmentItemData(

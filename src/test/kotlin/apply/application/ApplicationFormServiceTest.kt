@@ -121,22 +121,6 @@ class ApplicationFormServiceTest {
         recruitmentHidden = createRecruitment()
     }
 
-    // @Test
-    // fun `지원서가 있는 경우 지원할 수 없다`() {
-    //     every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
-    //     every { applicationFormRepository.existsByRecruitmentIdAndApplicantId(any(), any()) } returns true
-    //
-    //     val message = assertThrows<IllegalArgumentException> {
-    //         applicationFormService.create(
-    //             1L,
-    //             createApplicationFormRequest
-    //         )
-    //     }.message
-    //     assertThat(message).isEqualTo("이미 지원한 이력이 있습니다.")
-    // }
-
-    // XXX :: mock 정보를 함수로 빼도 될까
-
     @Test
     fun `지원 내역이 없는 경우, 지원 가능하다`() {
         every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment

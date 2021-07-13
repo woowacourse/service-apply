@@ -5,16 +5,14 @@ import apply.domain.recruitment.RecruitmentStatus
 import apply.domain.recruitmentitem.RecruitmentItem
 import java.time.LocalDateTime
 import javax.validation.Valid
-import javax.validation.constraints.Max
-import javax.validation.constraints.Min
-import javax.validation.constraints.NotBlank
-import javax.validation.constraints.NotNull
-import javax.validation.constraints.Size
+import javax.validation.constraints.*
 
 data class RecruitmentData(
     @field:NotBlank
     @field:Size(min = 1, max = 31)
     var title: String = "",
+
+    var term: Long? = null,
 
     @field:NotNull
     var startDateTime: LocalDateTime = LocalDateTime.MIN,
@@ -35,6 +33,7 @@ data class RecruitmentData(
 ) {
     constructor(recruitment: Recruitment, recruitmentItems: List<RecruitmentItem>) : this(
         recruitment.title,
+        recruitment.term,
         recruitment.startDateTime,
         recruitment.endDateTime,
         recruitment.recruitable,
@@ -75,6 +74,7 @@ data class RecruitmentItemData(
 data class RecruitmentResponse(
     val id: Long,
     val title: String,
+    val term: Long?,
     val recruitable: Boolean,
     val hidden: Boolean,
     val startDateTime: LocalDateTime,
@@ -84,6 +84,7 @@ data class RecruitmentResponse(
     constructor(recruitment: Recruitment) : this(
         recruitment.id,
         recruitment.title,
+        recruitment.term,
         recruitment.recruitable,
         recruitment.hidden,
         recruitment.startDateTime,
