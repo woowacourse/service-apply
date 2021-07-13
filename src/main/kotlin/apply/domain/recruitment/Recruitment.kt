@@ -61,4 +61,6 @@ class Recruitment(
         hidden: Boolean = true,
         id: Long = 0L
     ) : this(title, term, RecruitmentPeriod(startDateTime, endDateTime), recruitable, hidden, id)
+
+    fun isTerm(term:Long?): Boolean = this.term == term
 }

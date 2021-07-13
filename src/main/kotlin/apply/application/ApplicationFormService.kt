@@ -17,21 +17,24 @@ class ApplicationFormService(
     private val recruitmentRepository: RecruitmentRepository,
     private val recruitmentItemRepository: RecruitmentItemRepository
 ) {
+
     fun create(applicantId: Long, request: CreateApplicationFormRequest) {
         checkRecruitment(request.recruitmentId)
-
-        val applicantRecruitment = recruitmentRepository.findByIdOrNull(request.recruitmentId)
-            ?: throw IllegalArgumentException("해당하는 지원서가 없습니다.")
-
-        if (applicantRecruitment.term != null) {
-            applicationFormRepository.findAllByApplicantId(applicantId).map {
-                recruitmentRepository.findTermById(it.recruitmentId)
-            }.forEach {
-                require(it != applicantRecruitment.term) { "해당 기수에 이미 지원한 이력이 있습니다." }
-            }
-        }
-
+        checkAppliedAlready(applicantId, request.recruitmentId)
         applicationFormRepository.save(ApplicationForm(applicantId, request.recruitmentId))
+    }
+
+    private fun checkAppliedAlready(applicantId: Long, recruitmentId: Long) {
+        val recruitment = recruitmentRepository.findByIdOrNull(recruitmentId)
+            ?: throw IllegalArgumentException("해당하는 모집이 없습니다.")
+
+        if (recruitment.term != null) {
+            val histories: List<ApplicationForm> = applicationFormRepository.findAllByApplicantId(applicantId)
+            val isUserAppliedBefore: Boolean = histories.any {
+                recruitmentRepository.existsByIdAndTerm(it.recruitmentId, recruitment.term)
+            }
+            require(!isUserAppliedBefore) { "해당 기수에 이미 지원한 이력이 있습니다." }
+        }
     }
 
     fun update(applicantId: Long, request: UpdateApplicationFormRequest) {
