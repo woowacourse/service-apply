@@ -11,7 +11,8 @@ class Recruitment(
     @Column(nullable = false)
     var title: String,
 
-    var term: Long?,
+    @Column(updatable = false)
+    val term: Long?,
 
     @Embedded
     var period: RecruitmentPeriod,
