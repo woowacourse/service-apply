@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/recruitments/{recruitmentId}")
-class ExcelRestController(
+class ExcelController(
     private val excelService: ExcelService,
     private val recruitmentService: RecruitmentService,
     private val evaluationService: EvaluationService,
