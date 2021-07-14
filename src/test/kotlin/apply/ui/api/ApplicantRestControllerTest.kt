@@ -215,12 +215,12 @@ internal class ApplicantRestControllerTest(
         every { jwtTokenProvider.isValidToken("valid_token") } answers { true }
         every { jwtTokenProvider.getSubject("valid_token") } answers { applicantRequest.email }
         every { applicantService.getByEmail(applicantRequest.email) } answers { applicantRequest.toEntity() }
-        every { applicantService.editPassword(ofType(Long::class), eq(inValidEditPasswordRequest)) } just Runs
+        every { applicantService.editPassword(ofType(Long::class), eq(validEditPasswordRequest)) } just Runs
 
-        val inValidEditPasswordRequest: HashMap<String, String> = createInValidEditPasswordRequest()
+        val validEditPasswordRequest = createValidEditPasswordRequest()
 
         mockMvc.post("/api/applicants/edit-password") {
-            content = objectMapper.writeValueAsBytes(inValidEditPasswordRequest)
+            content = objectMapper.writeValueAsBytes(validEditPasswordRequest)
             contentType = MediaType.APPLICATION_JSON
             header(AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
@@ -237,7 +237,7 @@ internal class ApplicantRestControllerTest(
             applicantService.editPassword(ofType(Long::class), eq(inValidEditPasswordRequest))
         } throws ApplicantAuthenticationException()
 
-        val inValidEditPasswordRequest: HashMap<String, String> = createInValidEditPasswordRequest()
+        val inValidEditPasswordRequest = createInValidEditPasswordRequest()
 
         mockMvc.post("/api/applicants/edit-password") {
             content = objectMapper.writeValueAsString(inValidEditPasswordRequest)
@@ -248,10 +248,17 @@ internal class ApplicantRestControllerTest(
         }
     }
 
-    private fun createInValidEditPasswordRequest(): HashMap<String, String> {
-        val inValidEditPasswordRequest: HashMap<String, String> = HashMap()
-        inValidEditPasswordRequest["password"] = WRONG_PASSWORD
-        inValidEditPasswordRequest["newPassword"] = NEW_PASSWORD
-        return inValidEditPasswordRequest
+    private fun createValidEditPasswordRequest(): Map<String, String> {
+        return mapOf(
+            "password" to PASSWORD,
+            "newPassword" to NEW_PASSWORD
+        )
+    }
+
+    private fun createInValidEditPasswordRequest(): Map<String, String> {
+        return mapOf(
+            "password" to WRONG_PASSWORD,
+            "newPassword" to NEW_PASSWORD
+        )
     }
 }
