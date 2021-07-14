@@ -10,16 +10,12 @@ import apply.domain.applicant.Applicant
 import apply.domain.applicant.Gender
 import apply.domain.applicant.Password
 import apply.security.JwtTokenProvider
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.context.annotation.ComponentScan
-import org.springframework.context.annotation.FilterType
 import org.springframework.http.HttpHeaders.AUTHORIZATION
-import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder
@@ -27,19 +23,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
 import org.springframework.web.filter.CharacterEncodingFilter
 import support.createLocalDate
-import support.test.TestEnvironment
 
 @WebMvcTest(
-    controllers = [ApplicationFormRestController::class],
-    includeFilters = [
-        ComponentScan.Filter(type = FilterType.REGEX, pattern = ["apply.security.*"]),
-        ComponentScan.Filter(type = FilterType.REGEX, pattern = ["apply.config.*"])
-    ]
+    controllers = [ApplicationFormRestController::class]
 )
-@TestEnvironment
-internal class ApplicationFormRestControllerTest(
-    private val objectMapper: ObjectMapper
-) {
+internal class ApplicationFormRestControllerTest : RestControllerTest() {
     @MockkBean
     private lateinit var applicationFormService: ApplicationFormService
 
@@ -48,7 +36,6 @@ internal class ApplicationFormRestControllerTest(
 
     @MockkBean
     private lateinit var applicantService: ApplicantService
-    private lateinit var mockMvc: MockMvc
 
     private val applicant = Applicant(
         name = "홍길동1",

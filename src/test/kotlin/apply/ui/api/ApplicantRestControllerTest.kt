@@ -11,18 +11,14 @@ import apply.domain.applicant.ApplicantAuthenticationException
 import apply.domain.applicant.Gender
 import apply.domain.applicant.Password
 import apply.security.JwtTokenProvider
-import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.willDoNothing
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.context.annotation.ComponentScan
-import org.springframework.context.annotation.FilterType
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.MediaType
-import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.post
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder
@@ -53,16 +49,10 @@ private fun AuthenticateApplicantRequest.withPlainPassword(password: String): Ma
 }
 
 @WebMvcTest(
-    controllers = [ApplicantRestController::class],
-    includeFilters = [
-        ComponentScan.Filter(type = FilterType.REGEX, pattern = ["apply.security.*"]),
-        ComponentScan.Filter(type = FilterType.REGEX, pattern = ["apply.config.*"])
-    ]
+    controllers = [ApplicantRestController::class]
 )
 @TestEnvironment
-internal class ApplicantRestControllerTest(
-    private val objectMapper: ObjectMapper
-) {
+internal class ApplicantRestControllerTest : RestControllerTest() {
     @MockBean
     private lateinit var applicantService: ApplicantService
 
@@ -74,8 +64,6 @@ internal class ApplicantRestControllerTest(
 
     @MockBean
     private lateinit var jwtTokenProvider: JwtTokenProvider
-
-    private lateinit var mockMvc: MockMvc
 
     private val applicantRequest = RegisterApplicantRequest(
         name = "지원자",

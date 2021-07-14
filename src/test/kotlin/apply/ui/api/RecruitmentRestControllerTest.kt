@@ -4,60 +4,30 @@ import apply.application.ApplicantService
 import apply.application.RecruitmentItemService
 import apply.application.RecruitmentResponse
 import apply.application.RecruitmentService
-import apply.config.RestDocsConfiguration
 import apply.createRecruitment
 import apply.createRecruitmentData
 import apply.createRecruitmentItem
 import apply.createRecruitmentItemData
 import apply.security.JwtTokenProvider
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.context.annotation.ComponentScan
-import org.springframework.context.annotation.FilterType
-import org.springframework.context.annotation.Import
-import org.springframework.restdocs.RestDocumentationContextProvider
-import org.springframework.restdocs.RestDocumentationExtension
-import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders
-import org.springframework.restdocs.operation.preprocess.OperationRequestPreprocessor
-import org.springframework.restdocs.operation.preprocess.OperationResponsePreprocessor
-import org.springframework.restdocs.operation.preprocess.Preprocessors
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import org.springframework.restdocs.payload.PayloadDocumentation.requestFields
 import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import org.springframework.restdocs.request.RequestDocumentation
 import org.springframework.restdocs.request.RequestDocumentation.pathParameters
-import org.springframework.test.context.junit.jupiter.SpringExtension
-import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder
-import org.springframework.test.web.servlet.setup.MockMvcBuilders
-import org.springframework.web.context.WebApplicationContext
-import org.springframework.web.filter.CharacterEncodingFilter
-import support.test.TestEnvironment
 
 @WebMvcTest(
-    controllers = [RecruitmentRestController::class],
-    includeFilters = [
-        ComponentScan.Filter(type = FilterType.REGEX, pattern = ["apply.security.*"]),
-        ComponentScan.Filter(type = FilterType.REGEX, pattern = ["apply.config.*"])
-    ]
+    controllers = [RecruitmentRestController::class]
 )
-@Import(RestDocsConfiguration::class)
-@ExtendWith(RestDocumentationExtension::class, SpringExtension::class)
-@TestEnvironment
-internal class RecruitmentRestControllerTest(
-    private val objectMapper: ObjectMapper
-) {
+internal class RecruitmentRestControllerTest : RestControllerTest() {
 
     @MockkBean
     private lateinit var jwtTokenProvider: JwtTokenProvider
@@ -71,11 +41,9 @@ internal class RecruitmentRestControllerTest(
     @MockkBean
     private lateinit var recruitmentItemService: RecruitmentItemService
 
-    private lateinit var mockMvc: MockMvc
-
     private val recruitmentId = 1L
 
-    val recruitment = createRecruitment()
+    private val recruitment = createRecruitment()
 
     private val recruitmentResponse = RecruitmentResponse(recruitment)
 
@@ -84,22 +52,6 @@ internal class RecruitmentRestControllerTest(
     private val recruitmentData = createRecruitmentData(recruitmentItems = listOf(createRecruitmentItemData()))
 
     private val recruitments = listOf(recruitment)
-
-    @BeforeEach
-    internal fun setUp(
-        webApplicationContext: WebApplicationContext,
-        restDocumentationContextProvider: RestDocumentationContextProvider
-    ) {
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-            .addFilter<DefaultMockMvcBuilder>(CharacterEncodingFilter("UTF-8", true))
-            .alwaysDo<DefaultMockMvcBuilder>(MockMvcResultHandlers.print())
-            .apply<DefaultMockMvcBuilder>(
-                MockMvcRestDocumentation.documentationConfiguration(
-                    restDocumentationContextProvider
-                )
-            )
-            .build()
-    }
 
     @Test
     fun `공개된 지원서 목록을 가져온다`() {
@@ -215,20 +167,6 @@ internal class RecruitmentRestControllerTest(
                     )
                 )
             )
-    }
-
-    private fun getDocumentRequest(): OperationRequestPreprocessor {
-        return Preprocessors.preprocessRequest(
-            Preprocessors.modifyUris()
-                .scheme("https")
-                .host("woowa")
-                .removePort(),
-            Preprocessors.prettyPrint()
-        )
-    }
-
-    private fun getDocumentResponse(): OperationResponsePreprocessor {
-        return Preprocessors.preprocessResponse(Preprocessors.prettyPrint())
     }
 
     companion object {
