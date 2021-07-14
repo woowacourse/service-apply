@@ -23,7 +23,7 @@ class EvaluationRestController(
         @RequestBody evaluationData: EvaluationData,
     ): ResponseEntity<Unit> {
         evaluationService.save(evaluationData)
-        return ResponseEntity.ok().body(Unit)
+        return ResponseEntity.ok().build()
     }
 
     @GetMapping("/{evaluationId}")
@@ -47,6 +47,6 @@ class EvaluationRestController(
         @PathVariable evaluationId: Long,
     ): ResponseEntity<Unit> {
         evaluationService.deleteById(evaluationId)
-        return ResponseEntity.ok().body(Unit)
+        return ResponseEntity.ok().build()
     }
 }
