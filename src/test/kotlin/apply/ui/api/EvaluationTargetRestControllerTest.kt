@@ -92,8 +92,6 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
             .andDo(
                 document(
                     "evaluation-target-findAllByEvaluationIdAndKeyword",
-                    getDocumentRequest(),
-                    getDocumentResponse(),
                     pathParameters(
                         parameterWithName("recruitmentId").description("모집 ID"),
                         parameterWithName("evaluationId").description("평가 ID"),
@@ -120,8 +118,6 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
             .andDo(
                 document(
                     "evaluation-target-load",
-                    getDocumentRequest(),
-                    getDocumentResponse(),
                     pathParameters(
                         parameterWithName("recruitmentId").description("모집 ID"),
                         parameterWithName("evaluationId").description("평가 ID"),
@@ -152,8 +148,6 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
             .andDo(
                 document(
                     "evaluation-target-getGradeEvaluation",
-                    getDocumentRequest(),
-                    getDocumentResponse(),
                     pathParameters(
                         parameterWithName("recruitmentId").description("모집 ID"),
                         parameterWithName("evaluationId").description("평가 ID"),
@@ -206,8 +200,6 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
             .andDo(
                 document(
                     "evaluationtarget-grade",
-                    getDocumentRequest(),
-                    getDocumentResponse(),
                     pathParameters(
                         parameterWithName("recruitmentId").description("모집 ID"),
                         parameterWithName("evaluationId").description("평가 ID"),

@@ -9,9 +9,6 @@ import org.springframework.context.annotation.Import
 import org.springframework.restdocs.RestDocumentationContextProvider
 import org.springframework.restdocs.RestDocumentationExtension
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation
-import org.springframework.restdocs.operation.preprocess.OperationRequestPreprocessor
-import org.springframework.restdocs.operation.preprocess.OperationResponsePreprocessor
-import org.springframework.restdocs.operation.preprocess.Preprocessors
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder
@@ -44,19 +41,5 @@ abstract class RestControllerTest {
                 )
             )
             .build()
-    }
-
-    fun getDocumentRequest(): OperationRequestPreprocessor {
-        return Preprocessors.preprocessRequest(
-            Preprocessors.modifyUris()
-                .scheme("https")
-                .host("woowa")
-                .removePort(),
-            Preprocessors.prettyPrint()
-        )
-    }
-
-    fun getDocumentResponse(): OperationResponsePreprocessor {
-        return Preprocessors.preprocessResponse(Preprocessors.prettyPrint())
     }
 }

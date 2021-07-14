@@ -19,7 +19,7 @@ import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import org.springframework.restdocs.payload.PayloadDocumentation.requestFields
 import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
-import org.springframework.restdocs.request.RequestDocumentation
+import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
 import org.springframework.restdocs.request.RequestDocumentation.pathParameters
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -65,8 +65,6 @@ internal class RecruitmentRestControllerTest : RestControllerTest() {
             .andDo(
                 document(
                     "recruitment-findAllNotHidden",
-                    getDocumentRequest(),
-                    getDocumentResponse(),
                     responseFields(
                         fieldWithPath("message").description("응답 메시지"),
                         fieldWithPath("body.[]").description("모집 목록"),
@@ -95,10 +93,8 @@ internal class RecruitmentRestControllerTest : RestControllerTest() {
             .andDo(
                 document(
                     "recruitments-findItemsById",
-                    getDocumentRequest(),
-                    getDocumentResponse(),
                     pathParameters(
-                        RequestDocumentation.parameterWithName("id").description("모집 ID"),
+                        parameterWithName("id").description("모집 ID"),
                     ),
                     responseFields(
                         fieldWithPath("message").description("응답 메시지"),
@@ -123,8 +119,6 @@ internal class RecruitmentRestControllerTest : RestControllerTest() {
             .andDo(
                 document(
                     "recruitments-save",
-                    getDocumentRequest(),
-                    getDocumentResponse(),
                     requestFields(
                         fieldWithPath("title").type(JsonFieldType.STRING).description("모집 TITLE"),
                         fieldWithPath("startDateTime").type(JsonFieldType.STRING).description("모집 시작일"),
