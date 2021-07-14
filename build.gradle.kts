@@ -48,8 +48,8 @@ dependencies {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }
     testImplementation("com.ninja-squad:springmockk:2.0.3")
-    asciidoctor("org.springframework.restdocs:spring-restdocs-asciidoctor:2.0.5.RELEASE")
-    testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc:2.0.5.RELEASE")
+    asciidoctor("org.springframework.restdocs:spring-restdocs-asciidoctor")
+    testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
 }
 
 dependencyManagement {
@@ -57,6 +57,7 @@ dependencyManagement {
         mavenBom("com.vaadin:vaadin-bom:${property("vaadinVersion")}")
     }
 }
+
 val snippetsDir by extra { file("build/generated-snippets") }
 
 tasks {
@@ -77,12 +78,10 @@ tasks {
         useJUnitPlatform()
         outputs.dir(snippetsDir)
     }
-
     asciidoctor {
         inputs.dir(snippetsDir)
         dependsOn(test)
     }
-
     bootJar {
         dependsOn(asciidoctor)
         from("$snippetsDir/html5") {
