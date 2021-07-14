@@ -97,7 +97,6 @@ internal class EvaluationServiceTest {
         every { evaluationRepository.findAll() } answers { evaluationsWithDuplicatedBeforeEvaluationId }
         every { evaluationRepository.deleteById(ofType(Long::class)) } just Runs
 
-
         evaluationService.deleteById(2L)
 
         assertThat(0L).isEqualTo(evaluationsWithDuplicatedBeforeEvaluationId[2].beforeEvaluationId)
