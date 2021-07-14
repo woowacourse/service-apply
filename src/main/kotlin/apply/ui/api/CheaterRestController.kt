@@ -29,7 +29,7 @@ class CheaterRestController(
     }
 
     @DeleteMapping("/{cheaterId}")
-    fun deleteById(@PathVariable("cheaterId") cheaterId: Long): ResponseEntity<Unit> {
+    fun deleteById(@PathVariable cheaterId: Long): ResponseEntity<Unit> {
         cheaterService.deleteById(cheaterId)
         return ResponseEntity.ok().build()
     }

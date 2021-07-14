@@ -26,8 +26,8 @@ class RecruitmentRestController(
         return ResponseEntity.ok().body(ApiResponse.success(recruitmentService.findAllNotHidden()))
     }
 
-    @GetMapping("/{id}/items")
-    fun findItemsById(@PathVariable("id") recruitmentId: Long): ResponseEntity<ApiResponse<List<RecruitmentItem>>> {
+    @GetMapping("/{recruitmentId}/items")
+    fun findItemsById(@PathVariable recruitmentId: Long): ResponseEntity<ApiResponse<List<RecruitmentItem>>> {
         return ResponseEntity.ok()
             .body(ApiResponse.success(recruitmentItemService.findByRecruitmentIdOrderByPosition(recruitmentId)))
     }
@@ -38,14 +38,14 @@ class RecruitmentRestController(
         return ResponseEntity.ok().build()
     }
 
-    @DeleteMapping("/{id}")
-    fun deleteById(@PathVariable id: Long): ResponseEntity<Unit> {
-        recruitmentService.deleteById(id)
+    @DeleteMapping("/{recruitmentId}")
+    fun deleteById(@PathVariable recruitmentId: Long): ResponseEntity<Unit> {
+        recruitmentService.deleteById(recruitmentId)
         return ResponseEntity.ok().build()
     }
 
-    @GetMapping("/{id}")
-    fun getById(@PathVariable id: Long): ResponseEntity<ApiResponse<Recruitment>> {
-        return ResponseEntity.ok(ApiResponse.success(recruitmentService.getById(id)))
+    @GetMapping("/{recruitmentId}")
+    fun getById(@PathVariable recruitmentId: Long): ResponseEntity<ApiResponse<Recruitment>> {
+        return ResponseEntity.ok(ApiResponse.success(recruitmentService.getById(recruitmentId)))
     }
 }

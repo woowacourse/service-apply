@@ -19,7 +19,7 @@ class EvaluationRestController(
 ) {
     @PostMapping
     fun createEvaluation(
-        @PathVariable("recruitmentId") recruitmentId: Long,
+        @PathVariable recruitmentId: Long,
         @RequestBody evaluationData: EvaluationData,
     ): ResponseEntity<Unit> {
         evaluationService.save(evaluationData)
@@ -28,23 +28,23 @@ class EvaluationRestController(
 
     @GetMapping("/{evaluationId}")
     fun getDataById(
-        @PathVariable("recruitmentId") recruitmentId: Long,
-        @PathVariable("evaluationId") evaluationId: Long,
+        @PathVariable recruitmentId: Long,
+        @PathVariable evaluationId: Long,
     ): ResponseEntity<ApiResponse<EvaluationData>> {
         val evaluationData = evaluationService.getDataById(evaluationId)
         return ResponseEntity.ok(ApiResponse.success(evaluationData))
     }
 
     @GetMapping
-    fun findAllWithRecruitment(@PathVariable("recruitmentId") recruitmentId: Long): ResponseEntity<ApiResponse<List<EvaluationResponse>>> {
+    fun findAllWithRecruitment(@PathVariable recruitmentId: Long): ResponseEntity<ApiResponse<List<EvaluationResponse>>> {
         val evaluationResponses = evaluationService.findAllWithRecruitment()
         return ResponseEntity.ok(ApiResponse.success(evaluationResponses))
     }
 
     @DeleteMapping("/{evaluationId}")
     fun deleteById(
-        @PathVariable("recruitmentId") recruitmentId: Long,
-        @PathVariable("evaluationId") evaluationId: Long,
+        @PathVariable recruitmentId: Long,
+        @PathVariable evaluationId: Long,
     ): ResponseEntity<Unit> {
         evaluationService.deleteById(evaluationId)
         return ResponseEntity.ok().body(Unit)

@@ -57,8 +57,8 @@ class ApplicantRestController(
 
     @GetMapping("/{keyword}/recruitments/{recruitmentId}")
     fun findAllByRecruitmentIdAndKeyword(
-        @PathVariable(value = "keyword") keyword: String,
-        @PathVariable(value = "recruitmentId") recruitmentId: Long
+        @PathVariable keyword: String,
+        @PathVariable recruitmentId: Long
     ): ResponseEntity<ApiResponse<List<ApplicantAndFormResponse>>> {
         val applicants = applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId, keyword)
         return ResponseEntity.ok(ApiResponse.success(applicants))
@@ -66,7 +66,7 @@ class ApplicantRestController(
 
     @GetMapping("/recruitments/{recruitmentId}")
     fun findAllByRecruitmentIdAndSubmittedTrue(
-        @PathVariable("recruitmentId", required = true) recruitmentId: Long
+        @PathVariable recruitmentId: Long
     ): ResponseEntity<ApiResponse<List<ApplicantAndFormResponse>>> {
         val applicants = applicantService.findAllByRecruitmentIdAndSubmittedTrue(recruitmentId)
         return ResponseEntity.ok(ApiResponse.success(applicants))
@@ -74,7 +74,7 @@ class ApplicantRestController(
 
     @GetMapping("/{keyword}")
     fun findAllByKeyword(
-        @PathVariable(value = "keyword", required = true) keyword: String
+        @PathVariable keyword: String
     ): ResponseEntity<ApiResponse<List<ApplicantResponse>>> {
         val applicants = applicantService.findAllByKeyword(keyword)
         return ResponseEntity.ok(ApiResponse.success(applicants))

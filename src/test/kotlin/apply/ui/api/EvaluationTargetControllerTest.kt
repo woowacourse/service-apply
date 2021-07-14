@@ -37,7 +37,6 @@ import org.springframework.restdocs.payload.PayloadDocumentation.requestFields
 import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
 import org.springframework.restdocs.request.RequestDocumentation.pathParameters
-import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
@@ -56,7 +55,7 @@ import support.test.TestEnvironment
     ]
 )
 @Import(RestDocsConfiguration::class)
-@ExtendWith(RestDocumentationExtension::class, SpringExtension::class)
+@ExtendWith(RestDocumentationExtension::class)
 @TestEnvironment
 internal class EvaluationTargetControllerTest(
     private val objectMapper: ObjectMapper

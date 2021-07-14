@@ -20,7 +20,7 @@ class ExcelController(
     private val evaluationService: EvaluationService,
 ) {
     @GetMapping("/applicants/excel")
-    fun createApplicantExcel(@PathVariable("recruitmentId") recruitmentId: Long): ResponseEntity<InputStreamResource> {
+    fun createApplicantExcel(@PathVariable recruitmentId: Long): ResponseEntity<InputStreamResource> {
         val excel = excelService.createApplicantExcel(recruitmentId)
         val recruitment = recruitmentService.getById(recruitmentId)
         val headers = HttpHeaders().apply {
@@ -36,8 +36,8 @@ class ExcelController(
 
     @GetMapping("/evaluations/{evaluationId}/targets/excel")
     fun createTargetExcel(
-        @PathVariable("recruitmentId") recruitmentId: Long,
-        @PathVariable("evaluationId") evaluationId: Long,
+        @PathVariable recruitmentId: Long,
+        @PathVariable evaluationId: Long,
     ): ResponseEntity<InputStreamResource> {
         val excel = excelService.createTargetExcel(evaluationId)
         val evaluation = evaluationService.findById(evaluationId)
