@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController
 class EvaluationRestController(
     private val evaluationService: EvaluationService,
 ) {
-
     @PostMapping
     fun createEvaluation(
         @PathVariable("recruitmentId") recruitmentId: Long,

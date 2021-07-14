@@ -14,7 +14,7 @@ import javax.transaction.Transactional
 class EvaluationService(
     private val evaluationRepository: EvaluationRepository,
     private val evaluationItemRepository: EvaluationItemRepository,
-    private val recruitmentRepository: RecruitmentRepository,
+    private val recruitmentRepository: RecruitmentRepository
 ) {
     fun save(request: EvaluationData) {
         val evaluation = evaluationRepository.save(

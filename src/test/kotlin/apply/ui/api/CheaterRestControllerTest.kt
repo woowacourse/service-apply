@@ -45,7 +45,6 @@ import support.test.TestEnvironment
 internal class CheaterRestControllerTest(
     private val objectMapper: ObjectMapper,
 ) {
-
     @MockkBean
     private lateinit var applicantService: ApplicantService // todo: 이 객체를 MockBean으로 주입해야하는 이유 찾기
 
