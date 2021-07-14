@@ -48,7 +48,7 @@ import org.springframework.web.filter.CharacterEncodingFilter
 import support.test.TestEnvironment
 
 @WebMvcTest(
-    controllers = [EvaluationTargetController::class],
+    controllers = [EvaluationTargetRestController::class],
     includeFilters = [
         ComponentScan.Filter(type = FilterType.REGEX, pattern = ["apply.security.*"]),
         ComponentScan.Filter(type = FilterType.REGEX, pattern = ["apply.config.*"])
@@ -57,7 +57,7 @@ import support.test.TestEnvironment
 @Import(RestDocsConfiguration::class)
 @ExtendWith(RestDocumentationExtension::class)
 @TestEnvironment
-internal class EvaluationTargetControllerTest(
+internal class EvaluationTargetRestControllerTest(
     private val objectMapper: ObjectMapper
 ) {
     @MockkBean

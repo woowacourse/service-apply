@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets")
-class EvaluationTargetController(
+class EvaluationTargetRestController(
     private val evaluationTargetService: EvaluationTargetService
 ) {
     @GetMapping("/{keyword}")
