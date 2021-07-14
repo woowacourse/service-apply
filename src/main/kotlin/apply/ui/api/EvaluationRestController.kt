@@ -27,7 +27,7 @@ class EvaluationRestController(
         return ResponseEntity.ok().body(Unit)
     }
 
-    @GetMapping("{evaluationId}")
+    @GetMapping("/{evaluationId}")
     fun getDataById(
         @PathVariable("recruitmentId") recruitmentId: Long,
         @PathVariable("evaluationId") evaluationId: Long,
