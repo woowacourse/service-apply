@@ -1,6 +1,11 @@
 package apply.application
 
-import apply.*
+import apply.createAnswerRequest
+import apply.createApplicationForm
+import apply.createApplicationForms
+import apply.createExceededAnswerRequest
+import apply.createRecruitment
+import apply.createRecruitmentItem
 import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.recruitment.Recruitment
@@ -11,7 +16,11 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertAll
+import org.junit.jupiter.api.assertDoesNotThrow
+import org.junit.jupiter.api.assertThrows
 import org.springframework.data.repository.findByIdOrNull
 import support.test.UnitTest
 import java.time.LocalDateTime
@@ -173,7 +182,7 @@ class ApplicationFormServiceTest {
 
     @Test
     fun `기존 지원 내역이 없는 경우, 지원 가능하다`() {
-        val histories: List<Recruitment> = listOf()
+        val histories: List<Recruitment> = emptyList()
         val applyRecruitment: Recruitment = createRecruitment(title = "4기 프론트엔드 모집", 4L, id = 4L)
 
         assertDoesNotThrow { createApplicantFormWithHistory(histories, applyRecruitment) }
@@ -223,12 +232,12 @@ class ApplicationFormServiceTest {
         every { recruitmentRepository.findByIdOrNull(applyRecruitment.id) } returns applyRecruitment
 
         every { applicationFormRepository.findAllByApplicantId(applicantId) } returns
-                histories.map { ApplicationForm(applicantId, it.id) }
+            histories.map { ApplicationForm(applicantId, it.id) }
 
         histories.forEach {
             if (applyRecruitment.term != null) {
                 every { recruitmentRepository.existsByIdAndTerm(it.id, applyRecruitment.term!!) } returns
-                        histories.any { it.term == applyRecruitment.term }
+                    histories.any { it.term == applyRecruitment.term }
             }
         }
 
@@ -291,22 +300,6 @@ class ApplicationFormServiceTest {
             )
         }.message
         assertThat(message).isEqualTo("이미 제출한 지원서는 열람할 수 없습니다.")
-    }
-
-    @Test
-    fun `단 하나의 지원서만 제출할 수 있다`() {
-        every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
-        every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns recruitmentItems
-        every { applicationFormRepository.existsByApplicantIdAndSubmittedTrue(any()) } returns true
-        every { applicationFormRepository.findByRecruitmentIdAndApplicantId(any(), any()) } returns applicationForm1
-
-        val message = assertThrows<IllegalArgumentException> {
-            applicationFormService.update(
-                applicantId,
-                UpdateApplicationFormRequest(recruitmentId = 1L, submitted = true)
-            )
-        }.message
-        assertThat(message).isEqualTo("이미 제출 완료한 지원서가 존재하여 제출할 수 없습니다.")
     }
 
     @Test

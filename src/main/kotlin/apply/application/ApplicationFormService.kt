@@ -4,6 +4,7 @@ import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormAnswer
 import apply.domain.applicationform.ApplicationFormAnswers
 import apply.domain.applicationform.ApplicationFormRepository
+import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitmentitem.RecruitmentItemRepository
 import org.springframework.data.repository.findByIdOrNull
@@ -19,18 +20,15 @@ class ApplicationFormService(
 ) {
 
     fun create(applicantId: Long, request: CreateApplicationFormRequest) {
-        checkRecruitment(request.recruitmentId)
-        checkAppliedAlready(applicantId, request.recruitmentId)
-        applicationFormRepository.save(ApplicationForm(applicantId, request.recruitmentId))
+        val recruitment = findApplicableRecruitment(request.recruitmentId)
+        checkAppliedAlready(applicantId, recruitment)
+        applicationFormRepository.save(ApplicationForm(applicantId, recruitment.id))
     }
 
-    private fun checkAppliedAlready(applicantId: Long, recruitmentId: Long) {
-        val recruitment = recruitmentRepository.findByIdOrNull(recruitmentId)
-            ?: throw IllegalArgumentException("해당하는 모집이 없습니다.")
-
+    private fun checkAppliedAlready(applicantId: Long, recruitment: Recruitment) {
         if (recruitment.term != null) {
             val histories: List<ApplicationForm> = applicationFormRepository.findAllByApplicantId(applicantId)
-            val isUserAppliedBefore: Boolean = histories.any {
+            val isUserAppliedBefore = histories.any {
                 recruitmentRepository.existsByIdAndTerm(it.recruitmentId, recruitment.term)
             }
             require(!isUserAppliedBefore) { "해당 기수에 이미 지원한 이력이 있습니다." }
@@ -38,18 +36,17 @@ class ApplicationFormService(
     }
 
     fun update(applicantId: Long, request: UpdateApplicationFormRequest) {
-        checkRecruitment(request.recruitmentId)
-        validateRequest(request, applicantId)
-        val applicationForm = findByRecruitmentIdAndApplicantId(request.recruitmentId, applicantId)
+        val recruitment = findApplicableRecruitment(request.recruitmentId)
+        validateRequest(request)
+
+        val applicationForm = findByRecruitmentIdAndApplicantId(recruitment.id, applicantId)
         val answers = ApplicationFormAnswers(
             request.answers.map {
-                ApplicationFormAnswer(
-                    it.contents,
-                    it.recruitmentItemId
-                )
+                ApplicationFormAnswer(it.contents, it.recruitmentItemId)
             }.toMutableList()
         )
         applicationForm.update(request.referenceUrl, answers)
+
         if (request.submitted) {
             applicationForm.submit()
         }
@@ -70,7 +67,7 @@ class ApplicationFormService(
         applicationFormRepository.findByRecruitmentIdAndApplicantId(recruitmentId, applicantId)
             ?: throw IllegalArgumentException("해당하는 지원서가 없습니다.")
 
-    private fun checkRecruitment(recruitmentId: Long) {
+    private fun findApplicableRecruitment(recruitmentId: Long): Recruitment {
         val recruitment = recruitmentRepository.findByIdOrNull(recruitmentId)
         requireNotNull(recruitment) {
             "지원하는 모집이 존재하지 않습니다."
@@ -78,14 +75,12 @@ class ApplicationFormService(
         check(recruitment.isRecruiting) {
             "지원 불가능한 모집입니다."
         }
+        return recruitment
     }
 
-    private fun validateRequest(request: UpdateApplicationFormRequest, applicantId: Long) {
+    private fun validateRequest(request: UpdateApplicationFormRequest) {
         val recruitmentItems = recruitmentItemRepository.findByRecruitmentIdOrderByPosition(request.recruitmentId)
         if (request.submitted) {
-            require(!applicationFormRepository.existsByApplicantIdAndSubmittedTrue(applicantId)) {
-                "이미 제출 완료한 지원서가 존재하여 제출할 수 없습니다."
-            }
             require(request.answers.all { it.contents.isNotBlank() } && (recruitmentItems.size == request.answers.size)) {
                 "작성하지 않은 문항이 존재합니다."
             }
