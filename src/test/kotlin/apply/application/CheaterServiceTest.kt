@@ -27,14 +27,14 @@ internal class CheaterServiceTest {
 
     @Test
     fun `부정 행위자를 추가한다`() {
-        every { cheaterRepository.existsByApplicantId(ofType(Long::class)) } answers { false }
-        every { cheaterRepository.save(ofType(Cheater::class)) } answers { Cheater(1L) }
+        every { cheaterRepository.existsByApplicantId(any()) } returns false
+        every { cheaterRepository.save(any()) } returns Cheater(1L)
         assertDoesNotThrow { cheaterService.save(1L) }
     }
 
     @Test
     fun `이미 등록된 부정 행위자를 추가하는 경우 예외를 던진다`() {
-        every { cheaterRepository.existsByApplicantId(ofType(Long::class)) } answers { true }
+        every { cheaterRepository.existsByApplicantId(any()) } returns true
         assertThrows<IllegalArgumentException> { cheaterService.save(1L) }
     }
 }
