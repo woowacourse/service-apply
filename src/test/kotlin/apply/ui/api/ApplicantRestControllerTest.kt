@@ -217,10 +217,10 @@ internal class ApplicantRestControllerTest(
         every { applicantService.getByEmail(applicantRequest.email) } returns applicantRequest.toEntity()
         every { applicantService.editPassword(any(), eq(validEditPasswordRequest)) } just Runs
 
-        val validEditPasswordRequest = createValidEditPasswordRequest()
+        val actualValidEditPasswordRequest = createValidEditPasswordRequest()
 
         mockMvc.post("/api/applicants/edit-password") {
-            content = objectMapper.writeValueAsBytes(validEditPasswordRequest)
+            content = objectMapper.writeValueAsBytes(actualValidEditPasswordRequest)
             contentType = MediaType.APPLICATION_JSON
             header(AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
@@ -237,10 +237,10 @@ internal class ApplicantRestControllerTest(
             applicantService.editPassword(any(), eq(inValidEditPasswordRequest))
         } throws ApplicantAuthenticationException()
 
-        val inValidEditPasswordRequest = createInValidEditPasswordRequest()
+        val actualInValidEditPasswordRequest = createInValidEditPasswordRequest()
 
         mockMvc.post("/api/applicants/edit-password") {
-            content = objectMapper.writeValueAsBytes(inValidEditPasswordRequest)
+            content = objectMapper.writeValueAsBytes(actualInValidEditPasswordRequest)
             contentType = MediaType.APPLICATION_JSON
             header(AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
