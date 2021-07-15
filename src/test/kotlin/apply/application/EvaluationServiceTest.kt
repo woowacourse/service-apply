@@ -59,10 +59,10 @@ internal class EvaluationServiceTest {
 
     @Test
     fun `평가와 모집 정보를 함께 제공한다`() {
-        every { evaluationRepository.findAll() } answers { evaluations }
-        every { recruitmentRepository.getOne(ofType(Long::class)) } answers { recruitments[0] }
-        every { evaluationRepository.findById(1L) } answers { Optional.of(evaluations[0]) }
-        every { evaluationRepository.findById(2L) } answers { Optional.of(evaluations[1]) }
+        every { evaluationRepository.findAll() } returns evaluations
+        every { recruitmentRepository.getOne(any()) } returns recruitments[0]
+        every { evaluationRepository.findById(1L) } returns Optional.of(evaluations[0])
+        every { evaluationRepository.findById(2L) } returns Optional.of(evaluations[1])
 
         val findAllWithRecruitment = evaluationService.findAllWithRecruitment()
 
@@ -79,8 +79,8 @@ internal class EvaluationServiceTest {
 
     @Test
     fun `삭제된 평가를 이전 평가로 가지는 평가의 이전 평가를 초기화한다`() {
-        every { evaluationRepository.findAll() } answers { evaluations }
-        every { evaluationRepository.deleteById(ofType(Long::class)) } just Runs
+        every { evaluationRepository.findAll() } returns evaluations
+        every { evaluationRepository.deleteById(any()) } just Runs
 
         evaluationService.deleteById(2L)
 
@@ -94,8 +94,8 @@ internal class EvaluationServiceTest {
         val evaluationsWithDuplicatedBeforeEvaluationId: List<Evaluation> =
             listOf(*evaluations.toTypedArray(), thirdEvaluation)
 
-        every { evaluationRepository.findAll() } answers { evaluationsWithDuplicatedBeforeEvaluationId }
-        every { evaluationRepository.deleteById(ofType(Long::class)) } just Runs
+        every { evaluationRepository.findAll() } returns evaluationsWithDuplicatedBeforeEvaluationId
+        every { evaluationRepository.deleteById(any()) } just Runs
 
         evaluationService.deleteById(2L)
 
