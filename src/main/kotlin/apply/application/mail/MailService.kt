@@ -45,7 +45,7 @@ class MailService(
         mailSender.send(
             applicant.email,
             "${applicant.name}님, 지원이 완료되었습니다.",
-            templateEngine.process("mail/submit-complete", context)
+            templateEngine.process("mail/submission-complete", context)
         )
     }
 }
