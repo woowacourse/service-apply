@@ -124,7 +124,7 @@ internal class ApplicantRestControllerTest(
 
     @Test
     fun `유효한 지원자 생성 및 검증 요청에 대하여 응답으로 토큰이 반환된다`() {
-        every { applicantAuthenticationService.generateToken(applicantRequest) } answers { VALID_TOKEN }
+        every { applicantAuthenticationService.generateToken(applicantRequest) } returns VALID_TOKEN
 
         mockMvc.post("/api/applicants/register") {
             content = objectMapper.writeValueAsBytes(applicantRequest.withPlainPassword(PASSWORD))
@@ -154,7 +154,7 @@ internal class ApplicantRestControllerTest(
     fun `올바른 지원자 로그인 요청에 응답으로 Token을 반환한다`() {
         every {
             applicantAuthenticationService.generateTokenByLogin(applicantLoginRequest)
-        } answers { VALID_TOKEN }
+        } returns VALID_TOKEN
 
         mockMvc.post("/api/applicants/login") {
             content = objectMapper.writeValueAsBytes(applicantLoginRequest.withPlainPassword(PASSWORD))
@@ -184,7 +184,7 @@ internal class ApplicantRestControllerTest(
     fun `올바른 비밀번호 찾기 요청에 응답으로 NoContent를 반환한다`() {
         every {
             applicantService.resetPassword(applicantPasswordFindRequest)
-        } answers { RANDOM_PASSWORD }
+        } returns RANDOM_PASSWORD
 
         every { mailService.sendPasswordResetMail(applicantPasswordFindRequest, RANDOM_PASSWORD) } just Runs
 
@@ -212,10 +212,10 @@ internal class ApplicantRestControllerTest(
 
     @Test
     fun `올바른 비밀번호 변경 요청에 응답으로 NoContent를 반환한다`() {
-        every { jwtTokenProvider.isValidToken("valid_token") } answers { true }
-        every { jwtTokenProvider.getSubject("valid_token") } answers { applicantRequest.email }
-        every { applicantService.getByEmail(applicantRequest.email) } answers { applicantRequest.toEntity() }
-        every { applicantService.editPassword(ofType(Long::class), eq(validEditPasswordRequest)) } just Runs
+        every { jwtTokenProvider.isValidToken("valid_token") } returns true
+        every { jwtTokenProvider.getSubject("valid_token") } returns applicantRequest.email
+        every { applicantService.getByEmail(applicantRequest.email) } returns applicantRequest.toEntity()
+        every { applicantService.editPassword(any(), eq(validEditPasswordRequest)) } just Runs
 
         val validEditPasswordRequest = createValidEditPasswordRequest()
 
@@ -230,17 +230,17 @@ internal class ApplicantRestControllerTest(
 
     @Test
     fun `잘못된 비밀번호 변경 요청에 응답으로 Unauthorized를 반환한다`() {
-        every { jwtTokenProvider.isValidToken("valid_token") } answers { true }
-        every { jwtTokenProvider.getSubject("valid_token") } answers { applicantRequest.email }
-        every { applicantService.getByEmail(applicantRequest.email) } answers { applicantRequest.toEntity() }
+        every { jwtTokenProvider.isValidToken("valid_token") } returns true
+        every { jwtTokenProvider.getSubject("valid_token") } returns applicantRequest.email
+        every { applicantService.getByEmail(applicantRequest.email) } returns applicantRequest.toEntity()
         every {
-            applicantService.editPassword(ofType(Long::class), eq(inValidEditPasswordRequest))
+            applicantService.editPassword(any(), eq(inValidEditPasswordRequest))
         } throws ApplicantAuthenticationException()
 
         val inValidEditPasswordRequest = createInValidEditPasswordRequest()
 
         mockMvc.post("/api/applicants/edit-password") {
-            content = objectMapper.writeValueAsString(inValidEditPasswordRequest)
+            content = objectMapper.writeValueAsBytes(inValidEditPasswordRequest)
             contentType = MediaType.APPLICATION_JSON
             header(AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
