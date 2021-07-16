@@ -18,7 +18,6 @@ class ApplicationFormService(
     private val recruitmentRepository: RecruitmentRepository,
     private val recruitmentItemRepository: RecruitmentItemRepository
 ) {
-
     fun create(applicantId: Long, request: CreateApplicationFormRequest) {
         val recruitment = findApplicableRecruitment(request.recruitmentId)
         checkAppliedAlready(applicantId, recruitment)
@@ -38,7 +37,6 @@ class ApplicationFormService(
     fun update(applicantId: Long, request: UpdateApplicationFormRequest) {
         val recruitment = findApplicableRecruitment(request.recruitmentId)
         validateRequest(request)
-
         val applicationForm = findByRecruitmentIdAndApplicantId(recruitment.id, applicantId)
         val answers = ApplicationFormAnswers(
             request.answers.map {
@@ -46,7 +44,6 @@ class ApplicationFormService(
             }.toMutableList()
         )
         applicationForm.update(request.referenceUrl, answers)
-
         if (request.submitted) {
             applicationForm.submit()
         }
