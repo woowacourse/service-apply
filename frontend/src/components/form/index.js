@@ -1,4 +1,5 @@
 export { default as Field } from './Field/Field';
+export { default as Form } from './Form/Form';
 export { default as Label } from './Label/Label';
 export { default as Button } from './Button/Button';
 export { default as Description } from './Description/Description';
