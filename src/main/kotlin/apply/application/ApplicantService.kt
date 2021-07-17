@@ -32,10 +32,8 @@ class ApplicantService(
             applicantRepository.findAllById(applicationFormMap.keys)
         }
         val cheaterApplicantIds = cheaterRepository.findAll().map { it.applicantId }
-        return applicationFormMap.run {
-            applicants.filter { containsKey(it.id) }
-                .map { ApplicantAndFormResponse(it, cheaterApplicantIds.contains(it.id), getValue(it.id)) }
-        }
+        return applicants.filter { applicationFormMap.containsKey(it.id) }
+            .map { ApplicantAndFormResponse(it, cheaterApplicantIds.contains(it.id), applicationFormMap.getValue(it.id)) }
     }
 
     fun findAllByKeyword(keyword: String): List<ApplicantResponse> {
