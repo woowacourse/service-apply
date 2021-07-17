@@ -22,19 +22,19 @@ import org.springframework.web.bind.annotation.RestController
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("/api/recruitments/{recruitmentId}/application-forms")
+@RequestMapping("/api/recruitments/{recruitmentId}")
 class ApplicationFormRestController(
     private val applicationFormService: ApplicationFormService,
     private val applicantService: ApplicantService,
     private val mailService: MailService
 ) {
-    @GetMapping("/me")
+    @GetMapping("/application-forms/me")
     fun getMyApplicationForms(@PathVariable recruitmentId: Long, @LoginApplicant applicant: Applicant): ResponseEntity<ApiResponse<List<MyApplicationFormResponse>>> {
         val form = applicationFormService.getMyApplicationForms(applicant.id)
         return ResponseEntity.ok().body(ApiResponse.success(form))
     }
 
-    @GetMapping
+    @GetMapping("/application-forms")
     fun getForm(
         @PathVariable recruitmentId: Long,
         @LoginApplicant applicant: Applicant
@@ -43,7 +43,7 @@ class ApplicationFormRestController(
         return ResponseEntity.ok().body(ApiResponse.success(form))
     }
 
-    @PostMapping
+    @PostMapping("/application-forms")
     fun create(
         @PathVariable recruitmentId: Long,
         @RequestBody @Valid request: CreateApplicationFormRequest,
@@ -53,7 +53,7 @@ class ApplicationFormRestController(
         return ResponseEntity.ok().build()
     }
 
-    @PatchMapping
+    @PatchMapping("/application-forms")
     fun update(
         @PathVariable recruitmentId: Long,
         @RequestBody @Valid request: UpdateApplicationFormRequest,
@@ -64,7 +64,7 @@ class ApplicationFormRestController(
         return ResponseEntity.ok().build()
     }
 
-    @GetMapping("/applicants")
+    @GetMapping("/application-forms-and-applicants")
     fun findAllByRecruitmentIdAndKeyword(
         @PathVariable recruitmentId: Long,
         @RequestParam keyword: String?

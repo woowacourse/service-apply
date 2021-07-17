@@ -113,7 +113,7 @@ internal class ApplicationFormRestControllerTest : RestControllerTest() {
         } returns applicantAndFormFindByApplicantKeywordResponses
 
         mockMvc.get(
-            "/api/recruitments/{recruitmentId}/application-forms/applicants",
+            "/api/recruitments/{recruitmentId}/application-forms-and-applicants",
             recruitmentId
         ) {
             contentType = MediaType.APPLICATION_JSON
@@ -146,7 +146,7 @@ internal class ApplicationFormRestControllerTest : RestControllerTest() {
         } returns applicantAndFormResponses
 
         mockMvc.get(
-            "/api/recruitments/{recruitmentId}/application-forms/applicants",
+            "/api/recruitments/{recruitmentId}/application-forms-and-applicants",
             recruitmentId
         ) {
             contentType = MediaType.APPLICATION_JSON
