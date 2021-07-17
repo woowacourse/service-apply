@@ -4,6 +4,7 @@ import apply.config.RestDocsConfiguration
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Import
 import org.springframework.restdocs.RestDocumentationContextProvider
 import org.springframework.restdocs.RestDocumentationExtension
@@ -19,9 +20,9 @@ import support.test.TestEnvironment
 @Import(RestDocsConfiguration::class)
 @ExtendWith(RestDocumentationExtension::class)
 @TestEnvironment
-abstract class RestControllerTest(
-    private val objectMapper: ObjectMapper
-) {
+abstract class RestControllerTest {
+    @Autowired
+    lateinit var objectMapper: ObjectMapper
 
     lateinit var mockMvc: MockMvc
 

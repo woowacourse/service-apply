@@ -12,7 +12,6 @@ import apply.createEvaluationItem
 import apply.domain.evaluationtarget.EvaluationAnswers
 import apply.domain.evaluationtarget.EvaluationStatus
 import apply.security.JwtTokenProvider
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import org.junit.jupiter.api.Test
@@ -31,9 +30,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 @WebMvcTest(
     controllers = [EvaluationTargetRestController::class]
 )
-internal class EvaluationTargetRestControllerTest(
-    private val objectMapper: ObjectMapper
-) : RestControllerTest(objectMapper) {
+internal class EvaluationTargetRestControllerTest : RestControllerTest() {
     @MockkBean
     private lateinit var jwtTokenProvider: JwtTokenProvider
 
