@@ -29,39 +29,38 @@ internal class CheaterRestControllerTest : RestControllerTest() {
     @MockkBean
     private lateinit var cheaterService: CheaterService
 
+    private val cheaterResponses = listOf(
+        CheaterResponse(
+            Cheater(
+                1L,
+                createLocalDateTime(2021, 10, 9, 10, 0, 0, 0)
+            ),
+            createApplicant(name = "로키")
+        ),
+        CheaterResponse(
+            Cheater(
+                2L,
+                createLocalDateTime(2021, 10, 10, 10, 0, 0, 0)
+            ),
+            createApplicant(name = "아마찌")
+        )
+    )
+
+    val cheatedApplicant = createApplicant(id = 1L, name = "로키")
+
     @Test
     fun `모든 부정행위자를 찾는다`() {
-        val expected = listOf(
-            CheaterResponse(
-                Cheater(
-                    1L,
-                    createLocalDateTime(2021, 10, 9, 10, 0, 0, 0)
-                ),
-                createApplicant(name = "로키")
-            ),
-            CheaterResponse(
-                Cheater(
-                    2L,
-                    createLocalDateTime(2021, 10, 10, 10, 0, 0, 0)
-                ),
-                createApplicant(name = "아마찌")
-            )
-        )
-
-        every { cheaterService.findAll() }.answers { expected }
+        every { cheaterService.findAll() } returns cheaterResponses
 
         mockMvc.get("/api/cheaters")
             .andExpect {
                 status { isOk }
-                content { json(objectMapper.writeValueAsString(ApiResponse.success(expected))) }
+                content { json(objectMapper.writeValueAsString(ApiResponse.success(cheaterResponses))) }
             }
     }
 
     @Test
     internal fun `부정행위자를 추가한다`() {
-        // given
-        val cheatedApplicant = createApplicant(id = 1L, name = "로키")
-
         every { cheaterService.save(cheatedApplicant.id) } returns Unit
 
         mockMvc.post("/api/cheaters") {
@@ -74,8 +73,6 @@ internal class CheaterRestControllerTest : RestControllerTest() {
 
     @Test
     internal fun `부정행위자를 삭제한다`() {
-        val cheatedApplicant = createApplicant(id = 1L, name = "로키")
-
         every { cheaterService.deleteById(cheatedApplicant.id) } returns Unit
 
         mockMvc.delete("/api/cheaters/{applicantId}", cheatedApplicant.id)
