@@ -80,7 +80,7 @@ internal class ApplicantServiceTest {
 
         @Test
         fun `지원자 정보와 부정 행위자 여부를 함께 제공한다`() {
-            val actual = applicantService.findAllByRecruitmentIdAndSubmittedTrueAndKeyword(1L, null)
+            val actual = applicantService.findAllByRecruitmentIdAndKeyword(1L, null)
 
             assertThat(actual).hasSize(1)
             assertThat(actual[0].isCheater).isTrue
@@ -88,7 +88,7 @@ internal class ApplicantServiceTest {
 
         @Test
         fun `키워드로 찾은 지원자 정보와 부정 행위자 여부를 함께 제공한다`() {
-            val actual = applicantService.findAllByRecruitmentIdAndSubmittedTrueAndKeyword(1L, "amazzi")
+            val actual = applicantService.findAllByRecruitmentIdAndKeyword(1L, "amazzi")
 
             assertThat(actual).hasSize(1)
             assertThat(actual[0].isCheater).isTrue
@@ -109,7 +109,7 @@ internal class ApplicantServiceTest {
             }
         }
 
-        val actual = applicantService.findAllByRecruitmentIdAndSubmittedTrueAndKeyword(1L, null)
+        val actual = applicantService.findAllByRecruitmentIdAndKeyword(1L, null)
 
         assertThat(actual).hasSize(1)
         assertThat(actual[0].isCheater).isTrue()

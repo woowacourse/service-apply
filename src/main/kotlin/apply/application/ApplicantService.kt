@@ -19,7 +19,7 @@ class ApplicantService(
         return applicantRepository.findByEmail(email) ?: throw IllegalArgumentException("지원자가 존재하지 않습니다. email: $email")
     }
 
-    fun findAllByRecruitmentIdAndSubmittedTrueAndKeyword(
+    fun findAllByRecruitmentIdAndKeyword(
         recruitmentId: Long,
         keyword: String?
     ): List<ApplicantAndFormResponse> {

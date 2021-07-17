@@ -90,7 +90,7 @@ class SelectionView(
     private fun mapTabAndGrid(keyword: String): Map<Tab, Component> {
         val tabsToGrids = LinkedHashMap<Tab, Component>()
 
-        val applicantResponses = applicantService.findAllByRecruitmentIdAndSubmittedTrueAndKeyword(recruitmentId, keyword)
+        val applicantResponses = applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId, keyword)
         tabsToGrids[Tab("전체 지원자")] = createTotalApplicantsGrid(applicantResponses)
 
         evaluations = evaluationService.findAllByRecruitmentId(recruitmentId)

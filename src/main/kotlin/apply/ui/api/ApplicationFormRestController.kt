@@ -69,7 +69,7 @@ class ApplicationFormRestController(
         @PathVariable recruitmentId: Long,
         @RequestParam keyword: String?
     ): ResponseEntity<ApiResponse<List<ApplicantAndFormResponse>>> {
-        val applicants = applicantService.findAllByRecruitmentIdAndSubmittedTrueAndKeyword(recruitmentId, keyword)
+        val applicants = applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId, keyword)
         return ResponseEntity.ok(ApiResponse.success(applicants))
     }
 }

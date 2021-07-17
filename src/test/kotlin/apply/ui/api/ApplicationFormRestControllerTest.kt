@@ -106,7 +106,7 @@ internal class ApplicationFormRestControllerTest : RestControllerTest() {
         val recruitmentId = applicantAndFormResponses[0].applicationForm.recruitmentId
 
         every {
-            applicantService.findAllByRecruitmentIdAndSubmittedTrueAndKeyword(
+            applicantService.findAllByRecruitmentIdAndKeyword(
                 recruitmentId,
                 applicantKeyword
             )
@@ -139,7 +139,7 @@ internal class ApplicationFormRestControllerTest : RestControllerTest() {
         val recruitmentId = applicantAndFormResponses[0].applicationForm.recruitmentId
 
         every {
-            applicantService.findAllByRecruitmentIdAndSubmittedTrueAndKeyword(
+            applicantService.findAllByRecruitmentIdAndKeyword(
                 recruitmentId,
                 null
             )
