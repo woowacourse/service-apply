@@ -9,6 +9,7 @@ import apply.createRecruitmentData
 import apply.createRecruitmentItem
 import apply.createRecruitmentItemData
 import apply.security.JwtTokenProvider
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import org.junit.jupiter.api.Test
@@ -27,7 +28,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 @WebMvcTest(
     controllers = [RecruitmentRestController::class]
 )
-internal class RecruitmentRestControllerTest : RestControllerTest() {
+internal class RecruitmentRestControllerTest(
+    private val objectMapper: ObjectMapper
+) : RestControllerTest(objectMapper) {
 
     @MockkBean
     private lateinit var jwtTokenProvider: JwtTokenProvider

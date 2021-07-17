@@ -11,6 +11,7 @@ import apply.domain.applicant.ApplicantAuthenticationException
 import apply.domain.applicant.Gender
 import apply.domain.applicant.Password
 import apply.security.JwtTokenProvider
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
 import io.mockk.every
@@ -55,7 +56,9 @@ private fun AuthenticateApplicantRequest.withPlainPassword(password: String): Ma
     controllers = [ApplicantRestController::class]
 )
 @TestEnvironment
-internal class ApplicantRestControllerTest : RestControllerTest() {
+internal class ApplicantRestControllerTest(
+    private val objectMapper: ObjectMapper
+) : RestControllerTest(objectMapper) {
     @MockkBean
     private lateinit var applicantService: ApplicantService
 

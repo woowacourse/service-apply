@@ -11,6 +11,7 @@ import apply.domain.applicant.Applicant
 import apply.domain.applicant.Gender
 import apply.domain.applicant.Password
 import apply.security.JwtTokenProvider
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import org.junit.jupiter.api.BeforeEach
@@ -28,7 +29,9 @@ import support.createLocalDate
 @WebMvcTest(
     controllers = [ApplicationFormRestController::class]
 )
-internal class ApplicationFormRestControllerTest : RestControllerTest() {
+internal class ApplicationFormRestControllerTest(
+    private val objectMapper: ObjectMapper
+) : RestControllerTest(objectMapper) {
     @MockkBean
     private lateinit var applicationFormService: ApplicationFormService
 

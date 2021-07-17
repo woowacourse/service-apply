@@ -5,6 +5,7 @@ import apply.application.CheaterResponse
 import apply.application.CheaterService
 import apply.createApplicant
 import apply.domain.cheater.Cheater
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import org.junit.jupiter.api.Test
@@ -22,7 +23,9 @@ import support.createLocalDateTime
         ComponentScan.Filter(type = FilterType.REGEX, pattern = ["apply.security.*"])
     ]
 )
-internal class CheaterRestControllerTest : RestControllerTest() {
+internal class CheaterRestControllerTest(
+    private val objectMapper: ObjectMapper
+) : RestControllerTest(objectMapper) {
     @MockkBean
     private lateinit var applicantService: ApplicantService
 

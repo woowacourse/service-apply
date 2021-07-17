@@ -6,6 +6,7 @@ import apply.application.EvaluationResponse
 import apply.application.EvaluationService
 import apply.createEvaluation
 import apply.createRecruitment
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import org.junit.jupiter.api.Test
@@ -23,7 +24,9 @@ import org.springframework.test.web.servlet.post
         ComponentScan.Filter(type = FilterType.REGEX, pattern = ["apply.security.*"])
     ]
 )
-internal class EvaluationRestControllerTest : RestControllerTest() {
+internal class EvaluationRestControllerTest(
+    private val objectMapper: ObjectMapper
+) : RestControllerTest(objectMapper) {
 
     @MockkBean
     private lateinit var applicantService: ApplicantService
