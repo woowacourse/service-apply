@@ -15,17 +15,11 @@ import apply.domain.applicant.Password
 import apply.security.JwtTokenProvider
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.get
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers
-import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder
-import org.springframework.test.web.servlet.setup.MockMvcBuilders
-import org.springframework.web.context.WebApplicationContext
-import org.springframework.web.filter.CharacterEncodingFilter
 import support.createLocalDate
 
 @WebMvcTest(
@@ -76,14 +70,6 @@ internal class ApplicationFormRestControllerTest : RestControllerTest() {
     )
 
     private val applicantAndFormFindByApplicantKeywordResponses = listOf(applicantAndFormResponses[1])
-
-    @BeforeEach
-    internal fun setUp(webApplicationContext: WebApplicationContext) {
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-            .addFilter<DefaultMockMvcBuilder>(CharacterEncodingFilter("UTF-8", true))
-            .alwaysDo<DefaultMockMvcBuilder>(MockMvcResultHandlers.print())
-            .build()
-    }
 
     @Test
     fun `올바른 지원서 요청에 정상적으로 응답한다`() {

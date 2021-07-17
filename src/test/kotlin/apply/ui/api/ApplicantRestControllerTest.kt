@@ -17,18 +17,12 @@ import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers
-import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder
-import org.springframework.test.web.servlet.setup.MockMvcBuilders
-import org.springframework.web.context.WebApplicationContext
-import org.springframework.web.filter.CharacterEncodingFilter
 import support.createLocalDate
 import support.test.TestEnvironment
 
@@ -111,14 +105,6 @@ internal class ApplicantRestControllerTest : RestControllerTest() {
         ApplicantResponse(createApplicant("아마찌")),
         ApplicantResponse(createApplicant("로키"))
     )
-
-    @BeforeEach
-    internal fun setUp(webApplicationContext: WebApplicationContext) {
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-            .addFilter<DefaultMockMvcBuilder>(CharacterEncodingFilter("UTF-8", true))
-            .alwaysDo<DefaultMockMvcBuilder>(MockMvcResultHandlers.print())
-            .build()
-    }
 
     @Test
     fun `유효한 지원자 생성 및 검증 요청에 대하여 응답으로 토큰이 반환된다`() {
