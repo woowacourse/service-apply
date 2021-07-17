@@ -5,7 +5,7 @@ import './Radio.css';
 
 const Radio = ({ label, required, ...props }) => {
   return (
-    <Label className="radio-label" required={required}>
+    <Label className="radio-label">
       <input type="radio" required={required} {...props} />
       {label}
     </Label>
