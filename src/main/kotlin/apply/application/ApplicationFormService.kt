@@ -15,7 +15,7 @@ import javax.transaction.Transactional
 class ApplicationFormService(
     private val applicationFormRepository: ApplicationFormRepository,
     private val recruitmentRepository: RecruitmentRepository,
-    private val recruitmentItemRepository: RecruitmentItemRepository
+    private val recruitmentItemRepository: RecruitmentItemRepository,
 ) {
     fun create(applicantId: Long, request: CreateApplicationFormRequest) {
         checkRecruitment(request.recruitmentId)

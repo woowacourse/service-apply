@@ -1,6 +1,5 @@
 package apply.ui.api
 
-import apply.application.ApplicantAndFormResponse
 import apply.application.ApplicantAuthenticationService
 import apply.application.ApplicantResponse
 import apply.application.ApplicantService
@@ -10,7 +9,6 @@ import apply.application.RegisterApplicantRequest
 import apply.application.ResetPasswordRequest
 import apply.application.mail.MailService
 import apply.createApplicant
-import apply.createApplicationForms
 import apply.domain.applicant.ApplicantAuthenticationException
 import apply.domain.applicant.Gender
 import apply.domain.applicant.Password
@@ -111,19 +109,6 @@ internal class ApplicantRestControllerTest(
     private val inValidEditPasswordRequest = validEditPasswordRequest.copy(password = Password(WRONG_PASSWORD))
 
     private val applicantKeyword = "아마찌"
-
-    private val applicantAndFormResponses = listOf(
-        ApplicantAndFormResponse(
-            createApplicant(name = "로키"), false,
-            createApplicationForms()[0]
-        ),
-        ApplicantAndFormResponse(
-            createApplicant(name = applicantKeyword), false,
-            createApplicationForms()[1]
-        )
-    )
-
-    private val applicantAndFormFindByApplicantKeywordResponses = listOf(applicantAndFormResponses[1])
 
     private val applicantResponses = listOf(
         ApplicantResponse(createApplicant("아마찌")),
@@ -265,63 +250,7 @@ internal class ApplicantRestControllerTest(
     }
 
     @Test
-    fun `특정 모집 id와 지원자에 대한 키워드(이름 or 이메일)로 지원서 정보들을 조회한다`() {
-        val recruitmentId = applicantAndFormResponses[0].applicationForm.recruitmentId
-
-        every {
-            applicantService.findAllByRecruitmentIdAndSubmittedTrueAndKeyword(
-                recruitmentId,
-                applicantKeyword
-            )
-        } returns applicantAndFormFindByApplicantKeywordResponses
-
-        mockMvc.get(
-            "/api/recruitments/{recruitmentId}/application-forms",
-            recruitmentId
-        ) {
-            contentType = MediaType.APPLICATION_JSON
-            header(AUTHORIZATION, "Bearer valid_token")
-            param("applicantKeyword", applicantKeyword)
-        }
-            .andExpect {
-                status { isOk }
-                content {
-                    json(
-                        objectMapper.writeValueAsString(
-                            ApiResponse.success(
-                                applicantAndFormFindByApplicantKeywordResponses
-                            )
-                        )
-                    )
-                }
-            }
-    }
-
-    @Test
-    fun `특정 모집 id에 지원완료한 지원서 정보들을 조회한다`() {
-        val recruitmentId = applicantAndFormResponses[0].applicationForm.recruitmentId
-
-        every {
-            applicantService.findAllByRecruitmentIdAndSubmittedTrueAndKeyword(
-                recruitmentId,
-                null
-            )
-        } returns applicantAndFormResponses
-
-        mockMvc.get(
-            "/api/recruitments/{recruitmentId}/application-forms",
-            recruitmentId
-        ) {
-            contentType = MediaType.APPLICATION_JSON
-            header(AUTHORIZATION, "Bearer valid_token")
-        }.andExpect {
-            status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(applicantAndFormResponses))) }
-        }
-    }
-
-    @Test
-    fun `키워드(이름 or 이메일)로 지원서 정보들을 조회한다`() {
+    fun `키워드(이름 or 이메일)로 지원자들을 조회한다`() {
         every { applicantService.findAllByKeyword(applicantKeyword) } returns applicantResponses
 
         mockMvc.get(
