@@ -2,6 +2,7 @@ export { default as Field } from './Field/Field';
 export { default as Form } from './Form/Form';
 export { default as Label } from './Label/Label';
 export { default as Radio } from './Radio/Radio';
+export { default as CheckBox } from './CheckBox/CheckBox';
 export { default as Button } from './Button/Button';
 export { default as Description } from './Description/Description';
 export { default as TextInput } from './TextInput/TextInput';
