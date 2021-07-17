@@ -2,7 +2,6 @@ package apply.application
 
 import apply.domain.applicant.Applicant
 import apply.domain.applicant.ApplicantRepository
-import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.CheaterRepository
 import org.springframework.stereotype.Service
@@ -20,23 +19,23 @@ class ApplicantService(
         return applicantRepository.findByEmail(email) ?: throw IllegalArgumentException("지원자가 존재하지 않습니다. email: $email")
     }
 
-    fun findAllByRecruitmentIdAndSubmittedTrueAndKeyword(recruitmentId: Long, keyword: String?): List<ApplicantAndFormResponse> {
+    fun findAllByRecruitmentIdAndSubmittedTrueAndKeyword(
+        recruitmentId: Long,
+        keyword: String?
+    ): List<ApplicantAndFormResponse> {
         val applicationFormMap = applicationFormRepository
             .findByRecruitmentIdAndSubmittedTrue(recruitmentId)
             .associateBy { it.applicantId }
-        if (keyword != null) {
-            return applicationFormMap
-                .match { applicantRepository.findAllByKeyword(keyword) }
+        val applicants = if (keyword != null) {
+            applicantRepository.findAllByKeyword(keyword)
+        } else {
+            applicantRepository.findAllById(applicationFormMap.keys)
         }
-        return applicationFormMap
-            .run { match { applicantRepository.findAllById(keys) } }
-    }
-
-    private fun Map<Long, ApplicationForm>.match(supplier: () -> List<Applicant>): List<ApplicantAndFormResponse> {
         val cheaterApplicantIds = cheaterRepository.findAll().map { it.applicantId }
-        return supplier()
-            .filter { containsKey(it.id) }
-            .map { ApplicantAndFormResponse(it, cheaterApplicantIds.contains(it.id), getValue(it.id)) }
+        return applicationFormMap.run {
+            applicants.filter { containsKey(it.id) }
+                .map { ApplicantAndFormResponse(it, cheaterApplicantIds.contains(it.id), getValue(it.id)) }
+        }
     }
 
     fun findAllByKeyword(keyword: String): List<ApplicantResponse> {
