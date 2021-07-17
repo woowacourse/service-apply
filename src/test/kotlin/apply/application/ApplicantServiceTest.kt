@@ -52,6 +52,49 @@ internal class ApplicantServiceTest {
         )
     }
 
+    @Nested
+    inner class Find {
+        @BeforeEach
+        internal fun setUp() {
+            val applicantId = 1L
+
+            slot<Long>().also { slot ->
+                every { applicationFormRepository.findByRecruitmentIdAndSubmittedTrue(capture(slot)) } answers {
+                    listOf(createApplicationForm(recruitmentId = slot.captured))
+                }
+            }
+
+            every { cheaterRepository.findAll() } returns listOf(Cheater(applicantId))
+            slot<Iterable<Long>>().also { slot ->
+                every { applicantRepository.findAllById(capture(slot)) } answers {
+                    slot.captured.map { createApplicant(id = it) }
+                }
+            }
+
+            slot<String>().also { slot ->
+                every { applicantRepository.findAllByKeyword(capture(slot)) } answers {
+                    listOf(createApplicant(name = slot.captured, id = applicantId))
+                }
+            }
+        }
+
+        @Test
+        fun `지원자 정보와 부정 행위자 여부를 함께 제공한다`() {
+            val actual = applicantService.findAllByRecruitmentIdAndSubmittedTrueAndKeyword(1L, null)
+
+            assertThat(actual).hasSize(1)
+            assertThat(actual[0].isCheater).isTrue
+        }
+
+        @Test
+        fun `키워드로 찾은 지원자 정보와 부정 행위자 여부를 함께 제공한다`() {
+            val actual = applicantService.findAllByRecruitmentIdAndSubmittedTrueAndKeyword(1L, "amazzi")
+
+            assertThat(actual).hasSize(1)
+            assertThat(actual[0].isCheater).isTrue
+        }
+    }
+
     @Test
     fun `지원자 정보와 부정 행위자 여부를 함께 제공한다`() {
         slot<Long>().also { slot ->
@@ -66,7 +109,7 @@ internal class ApplicantServiceTest {
             }
         }
 
-        val actual = applicantService.findAllByRecruitmentIdAndSubmittedTrue(1L)
+        val actual = applicantService.findAllByRecruitmentIdAndSubmittedTrueAndKeyword(1L, null)
 
         assertThat(actual).hasSize(1)
         assertThat(actual[0].isCheater).isTrue()

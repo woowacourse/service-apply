@@ -265,11 +265,11 @@ internal class ApplicantRestControllerTest(
     }
 
     @Test
-    fun `특정 모집 id와 지원자에 대한 키워드(이름 or 이메일)로 지원자들을 조회한다`() {
+    fun `특정 모집 id와 지원자에 대한 키워드(이름 or 이메일)로 지원서 정보들을 조회한다`() {
         val recruitmentId = applicantAndFormResponses[0].applicationForm.recruitmentId
 
         every {
-            applicantService.findAllByRecruitmentIdAndKeyword(
+            applicantService.findAllByRecruitmentIdAndSubmittedTrueAndKeyword(
                 recruitmentId,
                 applicantKeyword
             )
@@ -298,11 +298,11 @@ internal class ApplicantRestControllerTest(
     }
 
     @Test
-    fun `특정 모집 id에 지원완료한 지원자들을 조회한다`() {
+    fun `특정 모집 id에 지원완료한 지원서 정보들을 조회한다`() {
         val recruitmentId = applicantAndFormResponses[0].applicationForm.recruitmentId
 
         every {
-            applicantService.findAllByRecruitmentIdAndKeyword(
+            applicantService.findAllByRecruitmentIdAndSubmittedTrueAndKeyword(
                 recruitmentId,
                 null
             )
@@ -321,7 +321,7 @@ internal class ApplicantRestControllerTest(
     }
 
     @Test
-    fun `키워드(이름 or 이메일)로 지원자들을 조회한다`() {
+    fun `키워드(이름 or 이메일)로 지원서 정보들을 조회한다`() {
         every { applicantService.findAllByKeyword(applicantKeyword) } returns applicantResponses
 
         mockMvc.get(

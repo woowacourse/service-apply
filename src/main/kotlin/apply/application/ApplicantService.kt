@@ -20,20 +20,15 @@ class ApplicantService(
         return applicantRepository.findByEmail(email) ?: throw IllegalArgumentException("지원자가 존재하지 않습니다. email: $email")
     }
 
-    fun findAllByRecruitmentIdAndKeyword(recruitmentId: Long, keyword: String?): List<ApplicantAndFormResponse> {
-        if (keyword != null) {
-            return applicationFormRepository
-                .findByRecruitmentIdAndSubmittedTrue(recruitmentId)
-                .associateBy { it.applicantId }
-                .match { applicantRepository.findAllByKeyword(keyword) }
-        }
-        return findAllByRecruitmentIdAndSubmittedTrue(recruitmentId)
-    }
-
-    fun findAllByRecruitmentIdAndSubmittedTrue(recruitmentId: Long): List<ApplicantAndFormResponse> {
-        return applicationFormRepository
+    fun findAllByRecruitmentIdAndSubmittedTrueAndKeyword(recruitmentId: Long, keyword: String?): List<ApplicantAndFormResponse> {
+        val applicationFormMap = applicationFormRepository
             .findByRecruitmentIdAndSubmittedTrue(recruitmentId)
             .associateBy { it.applicantId }
+        if (keyword != null) {
+            return applicationFormMap
+                .match { applicantRepository.findAllByKeyword(keyword) }
+        }
+        return applicationFormMap
             .run { match { applicantRepository.findAllById(keys) } }
     }
 
