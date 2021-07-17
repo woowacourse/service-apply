@@ -4,6 +4,7 @@ import apply.application.ApplicantService
 import apply.application.ApplicationFormResponse
 import apply.application.ApplicationFormService
 import apply.application.MyApplicationFormResponse
+import apply.application.mail.MailService
 import apply.createApplicationForm
 import apply.createApplicationForms
 import apply.domain.applicant.Applicant
@@ -30,6 +31,9 @@ import support.createLocalDate
 internal class ApplicationFormRestControllerTest : RestControllerTest() {
     @MockkBean
     private lateinit var applicationFormService: ApplicationFormService
+
+    @MockkBean
+    private lateinit var mailService: MailService
 
     @MockkBean
     private lateinit var jwtTokenProvider: JwtTokenProvider
