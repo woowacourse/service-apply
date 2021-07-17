@@ -17,36 +17,37 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("/api/applicants")
+@RequestMapping("/api")
 class ApplicantRestController(
     private val applicantService: ApplicantService,
     private val applicantAuthenticationService: ApplicantAuthenticationService,
     private val mailService: MailService
 ) {
-    @PostMapping("/register")
+    @PostMapping("/applicants/register")
     fun generateToken(@RequestBody @Valid request: RegisterApplicantRequest): ResponseEntity<ApiResponse<String>> {
         val token = applicantAuthenticationService.generateToken(request)
         return ResponseEntity.ok().body(ApiResponse.success(token))
     }
 
-    @PostMapping("/login")
+    @PostMapping("/applicants/login")
     fun generateToken(@RequestBody @Valid request: AuthenticateApplicantRequest): ResponseEntity<ApiResponse<String>> {
         val token = applicantAuthenticationService.generateTokenByLogin(request)
         return ResponseEntity.ok().body(ApiResponse.success(token))
     }
 
-    @PostMapping("/reset-password")
+    @PostMapping("/applicants/reset-password")
     fun resetPassword(@RequestBody @Valid request: ResetPasswordRequest): ResponseEntity<Unit> {
         val newPassword = applicantService.resetPassword(request)
         mailService.sendPasswordResetMail(request, newPassword)
         return ResponseEntity.noContent().build()
     }
 
-    @PostMapping("/edit-password")
+    @PostMapping("/applicants/edit-password")
     fun editPassword(
         @RequestBody @Valid request: EditPasswordRequest,
         @LoginApplicant applicant: Applicant
@@ -55,26 +56,18 @@ class ApplicantRestController(
         return ResponseEntity.noContent().build()
     }
 
-    @GetMapping("/{keyword}/recruitments/{recruitmentId}")
+    @GetMapping("/recruitments/{recruitmentId}/application-forms")
     fun findAllByRecruitmentIdAndKeyword(
-        @PathVariable keyword: String,
-        @PathVariable recruitmentId: Long
+        @PathVariable recruitmentId: Long,
+        @RequestParam applicantKeyword: String?
     ): ResponseEntity<ApiResponse<List<ApplicantAndFormResponse>>> {
-        val applicants = applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId, keyword)
+        val applicants = applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId, applicantKeyword)
         return ResponseEntity.ok(ApiResponse.success(applicants))
     }
 
-    @GetMapping("/recruitments/{recruitmentId}")
-    fun findAllByRecruitmentIdAndSubmittedTrue(
-        @PathVariable recruitmentId: Long
-    ): ResponseEntity<ApiResponse<List<ApplicantAndFormResponse>>> {
-        val applicants = applicantService.findAllByRecruitmentIdAndSubmittedTrue(recruitmentId)
-        return ResponseEntity.ok(ApiResponse.success(applicants))
-    }
-
-    @GetMapping("/{keyword}")
+    @GetMapping("/applicants")
     fun findAllByKeyword(
-        @PathVariable keyword: String
+        @RequestParam keyword: String
     ): ResponseEntity<ApiResponse<List<ApplicantResponse>>> {
         val applicants = applicantService.findAllByKeyword(keyword)
         return ResponseEntity.ok(ApiResponse.success(applicants))
