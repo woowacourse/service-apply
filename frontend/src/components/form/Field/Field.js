@@ -3,17 +3,9 @@ import PropTypes from 'prop-types';
 import './Field.css';
 
 const Field = ({ children, className }) => {
-  const getClassName = () => {
-    const classList = ['field'];
-
-    if (className) {
-      classList.push(className);
-    }
-
-    return classList.join(' ');
-  };
-
-  return <div className={getClassName()}>{children}</div>;
+  return (
+    <div className={className ? `${className} field` : 'field'}>{children}</div>
+  );
 };
 
 Field.propTypes = {

@@ -2,14 +2,22 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './TextInput.css';
 
-const TextInput = ({ type, readOnly, value, maxLength }) => {
+const TextInput = ({
+  className,
+  type,
+  readOnly,
+  value,
+  maxLength,
+  ...props
+}) => {
   if (type === 'textarea') {
     return (
       <textarea
         value={value}
         maxLength={maxLength}
-        className="text-input"
+        className={className ? `${className} text-input` : 'text-input'}
         readOnly={readOnly}
+        {...props}
       />
     );
   }
@@ -19,13 +27,15 @@ const TextInput = ({ type, readOnly, value, maxLength }) => {
       type={type}
       value={value}
       maxLength={maxLength}
-      className="text-input"
+      className={className ? `${className} text-input` : 'text-input'}
       readOnly={readOnly}
+      {...props}
     />
   );
 };
 
 TextInput.propTypes = {
+  className: PropTypes.string,
   type: PropTypes.oneOf(['text', 'email', 'password', 'textarea', 'url']),
   readOnly: PropTypes.bool,
   value: PropTypes.string,

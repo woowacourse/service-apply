@@ -1,0 +1,16 @@
+.birth {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.year,
+.month,
+.day {
+  min-width: 0;
+  flex: 1;
+}
+
+.month {
+  margin: 0 15px;
+}

@@ -7,3 +7,4 @@ export { default as Description } from './Description/Description';
 export { default as TextInput } from './TextInput/TextInput';
 export { default as TextField } from './TextField/TextField';
 export { default as GenderField } from './GenderField/GenderField';
+export { default as BirthField } from './BirthField/BirthField';
