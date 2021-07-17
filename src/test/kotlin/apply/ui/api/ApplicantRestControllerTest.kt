@@ -1,12 +1,16 @@
 package apply.ui.api
 
+import apply.application.ApplicantAndFormResponse
 import apply.application.ApplicantAuthenticationService
+import apply.application.ApplicantResponse
 import apply.application.ApplicantService
 import apply.application.AuthenticateApplicantRequest
 import apply.application.EditPasswordRequest
 import apply.application.RegisterApplicantRequest
 import apply.application.ResetPasswordRequest
 import apply.application.mail.MailService
+import apply.createApplicant
+import apply.createApplicationForms
 import apply.domain.applicant.ApplicantAuthenticationException
 import apply.domain.applicant.Gender
 import apply.domain.applicant.Password
@@ -21,6 +25,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.MediaType
+import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder
@@ -104,6 +109,26 @@ internal class ApplicantRestControllerTest(
     )
 
     private val inValidEditPasswordRequest = validEditPasswordRequest.copy(password = Password(WRONG_PASSWORD))
+
+    private val applicantKeyword = "아마찌"
+
+    private val applicantAndFormResponses = listOf(
+        ApplicantAndFormResponse(
+            createApplicant(name = "로키"), false,
+            createApplicationForms()[0]
+        ),
+        ApplicantAndFormResponse(
+            createApplicant(name = applicantKeyword), false,
+            createApplicationForms()[1]
+        )
+    )
+
+    private val applicantAndFormFindByApplicantKeywordResponses = listOf(applicantAndFormResponses[1])
+
+    private val applicantResponses = listOf(
+        ApplicantResponse(createApplicant("아마찌")),
+        ApplicantResponse(createApplicant("로키"))
+    )
 
     @BeforeEach
     internal fun setUp(webApplicationContext: WebApplicationContext) {
@@ -236,6 +261,79 @@ internal class ApplicantRestControllerTest(
             header(AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isUnauthorized }
+        }
+    }
+
+    @Test
+    fun `특정 모집 id와 지원자에 대한 키워드(이름 or 이메일)로 지원자들을 조회한다`() {
+        val recruitmentId = applicantAndFormResponses[0].applicationForm.recruitmentId
+
+        every {
+            applicantService.findAllByRecruitmentIdAndKeyword(
+                recruitmentId,
+                applicantKeyword
+            )
+        } returns applicantAndFormFindByApplicantKeywordResponses
+
+        mockMvc.get(
+            "/api/recruitments/{recruitmentId}/application-forms",
+            recruitmentId
+        ) {
+            contentType = MediaType.APPLICATION_JSON
+            header(AUTHORIZATION, "Bearer valid_token")
+            param("applicantKeyword", applicantKeyword)
+        }
+            .andExpect {
+                status { isOk }
+                content {
+                    json(
+                        objectMapper.writeValueAsString(
+                            ApiResponse.success(
+                                applicantAndFormFindByApplicantKeywordResponses
+                            )
+                        )
+                    )
+                }
+            }
+    }
+
+    @Test
+    fun `특정 모집 id에 지원완료한 지원자들을 조회한다`() {
+        val recruitmentId = applicantAndFormResponses[0].applicationForm.recruitmentId
+
+        every {
+            applicantService.findAllByRecruitmentIdAndKeyword(
+                recruitmentId,
+                null
+            )
+        } returns applicantAndFormResponses
+
+        mockMvc.get(
+            "/api/recruitments/{recruitmentId}/application-forms",
+            recruitmentId
+        ) {
+            contentType = MediaType.APPLICATION_JSON
+            header(AUTHORIZATION, "Bearer valid_token")
+        }.andExpect {
+            status { isOk }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(applicantAndFormResponses))) }
+        }
+    }
+
+    @Test
+    fun `키워드(이름 or 이메일)로 지원자들을 조회한다`() {
+        every { applicantService.findAllByKeyword(applicantKeyword) } returns applicantResponses
+
+        mockMvc.get(
+            "/api/applicants",
+            applicantKeyword
+        ) {
+            contentType = MediaType.APPLICATION_JSON
+            header(AUTHORIZATION, "Bearer valid_token")
+            param("keyword", applicantKeyword)
+        }.andExpect {
+            status { isOk }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(applicantResponses))) }
         }
     }
 
