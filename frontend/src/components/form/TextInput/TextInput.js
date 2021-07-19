@@ -43,7 +43,10 @@ TextInput.propTypes = {
 };
 
 TextInput.defaultProps = {
+  className: '',
   type: 'text',
+  readOnly: false,
+  value: '',
   maxLength: 0,
 };
 

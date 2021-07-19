@@ -10,7 +10,7 @@ const Form = ({ children, actions, footer, ...props }) => {
       <footer>
         <a className="logo" href="#">
           <img
-            src={process.env.PUBLIC_URL + 'assets/logo/logo_full_dark.png'}
+            src={process.env.PUBLIC_URL + '/assets/logo/logo_full_dark.png'}
             alt="우아한테크코스 로고"
           />
         </a>
@@ -22,8 +22,13 @@ const Form = ({ children, actions, footer, ...props }) => {
 
 Form.propTypes = {
   children: PropTypes.node.isRequired,
-  actions: PropTypes.node.isRequired,
+  actions: PropTypes.node,
   footer: PropTypes.node,
+};
+
+Form.defaultProps = {
+  actions: null,
+  footer: null,
 };
 
 export default Form;

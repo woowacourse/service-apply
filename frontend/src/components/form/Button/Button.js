@@ -22,6 +22,7 @@ Button.propTypes = {
 
 Button.defaultProps = {
   type: 'button',
+  cancel: false,
 };
 
 export default Button;

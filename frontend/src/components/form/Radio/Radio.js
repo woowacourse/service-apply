@@ -17,4 +17,9 @@ Radio.propTypes = {
   required: PropTypes.bool,
 };
 
+Radio.defaultProps = {
+  label: '',
+  required: false,
+};
+
 export default Radio;

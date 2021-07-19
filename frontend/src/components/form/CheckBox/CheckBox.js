@@ -17,4 +17,9 @@ CheckBox.propTypes = {
   required: PropTypes.bool,
 };
 
+CheckBox.defaultProps = {
+  label: '',
+  required: false,
+};
+
 export default CheckBox;

@@ -21,4 +21,9 @@ SummaryCheckField.propTypes = {
   required: PropTypes.bool,
 };
 
+SummaryCheckField.defaultProps = {
+  label: '',
+  required: false,
+};
+
 export default SummaryCheckField;

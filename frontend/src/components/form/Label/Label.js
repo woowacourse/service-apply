@@ -26,4 +26,9 @@ Label.propTypes = {
   required: PropTypes.bool,
 };
 
+Label.defaultProps = {
+  className: '',
+  required: false,
+};
+
 export default Label;

@@ -45,4 +45,12 @@ TextField.propTypes = {
   maxLength: PropTypes.number,
 };
 
+TextField.defaultProps = {
+  label: '',
+  value: '',
+  required: false,
+  description: '',
+  maxLength: 100,
+};
+
 export default TextField;

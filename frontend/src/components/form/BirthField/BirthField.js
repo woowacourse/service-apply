@@ -43,4 +43,8 @@ BirthField.propTypes = {
   required: PropTypes.bool,
 };
 
+BirthField.defaultProps = {
+  required: false,
+};
+
 export default BirthField;

@@ -10,13 +10,14 @@ input[type='radio'] {
   -moz-appearance: none;
   appearance: none;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
 }
 
 input[type='radio']::before {
   content: '';
-  display: flex;
-  justify-content: center;
-  align-items: center;
   width: 20px;
   height: 20px;
   border-radius: 20px;
