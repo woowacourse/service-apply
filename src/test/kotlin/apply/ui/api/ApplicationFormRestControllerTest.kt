@@ -78,7 +78,8 @@ internal class ApplicationFormRestControllerTest : RestControllerTest() {
         every { applicantService.getByEmail(applicant.email) } returns applicant
         every { applicationFormService.getApplicationForm(applicant.id, recruitmentId) } returns applicationFormResponse
 
-        mockMvc.get("/api/recruitments/{recruitmentId}/application-forms", recruitmentId) {
+        mockMvc.get("/api/application-forms") {
+            param("recruitmentId", applicant.id.toString())
             header(AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isOk }
@@ -93,7 +94,7 @@ internal class ApplicationFormRestControllerTest : RestControllerTest() {
         every { applicantService.getByEmail(applicant.email) } returns applicant
         every { applicationFormService.getMyApplicationForms(applicant.id) } returns myApplicationFormResponses
 
-        mockMvc.get("/api/recruitments/{recruitmentId}/application-forms/me", recruitmentId) {
+        mockMvc.get("/api/application-forms/me") {
             header(AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isOk }
@@ -112,10 +113,7 @@ internal class ApplicationFormRestControllerTest : RestControllerTest() {
             )
         } returns applicantAndFormFindByApplicantKeywordResponses
 
-        mockMvc.get(
-            "/api/recruitments/{recruitmentId}/application-forms-and-applicants",
-            recruitmentId
-        ) {
+        mockMvc.get("/api/recruitments/{recruitmentId}/application-forms", recruitmentId) {
             contentType = MediaType.APPLICATION_JSON
             header(AUTHORIZATION, "Bearer valid_token")
             param("keyword", applicantKeyword)
@@ -139,15 +137,11 @@ internal class ApplicationFormRestControllerTest : RestControllerTest() {
         val recruitmentId = applicantAndFormResponses[0].applicationForm.recruitmentId
 
         every {
-            applicantService.findAllByRecruitmentIdAndKeyword(
-                recruitmentId,
-                null
-            )
+            applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId, null)
         } returns applicantAndFormResponses
 
         mockMvc.get(
-            "/api/recruitments/{recruitmentId}/application-forms-and-applicants",
-            recruitmentId
+            "/api/recruitments/{recruitmentId}/application-forms", recruitmentId
         ) {
             contentType = MediaType.APPLICATION_JSON
             header(AUTHORIZATION, "Bearer valid_token")

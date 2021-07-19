@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("/api/recruitments/{recruitmentId}")
+@RequestMapping("/api")
 class ApplicationFormRestController(
     private val applicationFormService: ApplicationFormService,
     private val applicantService: ApplicantService,
@@ -30,7 +30,6 @@ class ApplicationFormRestController(
 ) {
     @GetMapping("/application-forms/me")
     fun getMyApplicationForms(
-        @PathVariable recruitmentId: Long,
         @LoginApplicant applicant: Applicant
     ): ResponseEntity<ApiResponse<List<MyApplicationFormResponse>>> {
         val form = applicationFormService.getMyApplicationForms(applicant.id)
@@ -39,7 +38,7 @@ class ApplicationFormRestController(
 
     @GetMapping("/application-forms")
     fun getForm(
-        @PathVariable recruitmentId: Long,
+        @RequestParam recruitmentId: Long,
         @LoginApplicant applicant: Applicant
     ): ResponseEntity<ApiResponse<ApplicationFormResponse>> {
         val form = applicationFormService.getApplicationForm(applicant.id, recruitmentId)
@@ -58,7 +57,6 @@ class ApplicationFormRestController(
 
     @PatchMapping("/application-forms")
     fun update(
-        @PathVariable recruitmentId: Long,
         @RequestBody @Valid request: UpdateApplicationFormRequest,
         @LoginApplicant applicant: Applicant
     ): ResponseEntity<Unit> {
@@ -67,7 +65,7 @@ class ApplicationFormRestController(
         return ResponseEntity.ok().build()
     }
 
-    @GetMapping("/application-forms-and-applicants")
+    @GetMapping("/recruitments/{recruitmentId}/application-forms")
     fun findAllByRecruitmentIdAndKeyword(
         @PathVariable recruitmentId: Long,
         @RequestParam keyword: String?
