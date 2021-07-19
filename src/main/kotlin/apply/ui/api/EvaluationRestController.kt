@@ -20,7 +20,7 @@ class EvaluationRestController(
     @PostMapping
     fun createEvaluation(
         @PathVariable recruitmentId: Long,
-        @RequestBody evaluationData: EvaluationData,
+        @RequestBody evaluationData: EvaluationData
     ): ResponseEntity<Unit> {
         evaluationService.save(evaluationData)
         return ResponseEntity.ok().build()
@@ -29,7 +29,7 @@ class EvaluationRestController(
     @GetMapping("/{evaluationId}")
     fun getDataById(
         @PathVariable recruitmentId: Long,
-        @PathVariable evaluationId: Long,
+        @PathVariable evaluationId: Long
     ): ResponseEntity<ApiResponse<EvaluationData>> {
         val evaluationData = evaluationService.getDataById(evaluationId)
         return ResponseEntity.ok(ApiResponse.success(evaluationData))
@@ -44,7 +44,7 @@ class EvaluationRestController(
     @DeleteMapping("/{evaluationId}")
     fun deleteById(
         @PathVariable recruitmentId: Long,
-        @PathVariable evaluationId: Long,
+        @PathVariable evaluationId: Long
     ): ResponseEntity<Unit> {
         evaluationService.deleteById(evaluationId)
         return ResponseEntity.ok().build()

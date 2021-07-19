@@ -28,7 +28,6 @@ class ExcelController(
                 .filename("${recruitment.title}.xlsx")
                 .build()
         }
-
         return ResponseEntity.ok()
             .headers(headers)
             .body(InputStreamResource((excel)))
@@ -46,7 +45,6 @@ class ExcelController(
                 .filename("${evaluation?.title}.xlsx")
                 .build()
         }
-
         return ResponseEntity.ok()
             .headers(headers)
             .body(InputStreamResource((excel)))

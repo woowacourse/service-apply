@@ -191,7 +191,7 @@ internal class RecruitmentRestControllerTest : RestControllerTest() {
             fieldWithPath("hidden").type(JsonFieldType.BOOLEAN).description("HIDDEN"),
             fieldWithPath("startDateTime").type(JsonFieldType.STRING).description("모집 시작일"),
             fieldWithPath("endDateTime").type(JsonFieldType.STRING).description("모집 마감일"),
-            fieldWithPath("status").type(JsonFieldType.STRING).description("모집 상태"),
+            fieldWithPath("status").type(JsonFieldType.STRING).description("모집 상태")
         )
 
         val RECRUITMENT_ITEM_FIELD_DESCRIPTORS = listOf(
@@ -200,7 +200,7 @@ internal class RecruitmentRestControllerTest : RestControllerTest() {
             fieldWithPath("position").type(JsonFieldType.NUMBER).description("모집 항목 POSITION"),
             fieldWithPath("maximumLength").type(JsonFieldType.NUMBER).description("모집 항목 최대 길이"),
             fieldWithPath("description").type(JsonFieldType.STRING).description("모집 설명"),
-            fieldWithPath("id").type(JsonFieldType.NUMBER).description("모집 항목 ID"),
+            fieldWithPath("id").type(JsonFieldType.NUMBER).description("모집 항목 ID")
         )
 
         val RECRUITMENT_ITEM_DATA_FIELD_DESCRIPTORS = listOf(
@@ -208,7 +208,7 @@ internal class RecruitmentRestControllerTest : RestControllerTest() {
             fieldWithPath("position").type(JsonFieldType.NUMBER).description("모집 항목 POSITION"),
             fieldWithPath("maximumLength").type(JsonFieldType.NUMBER).description("모집 항목 최대 길이"),
             fieldWithPath("description").type(JsonFieldType.STRING).description("모집 설명"),
-            fieldWithPath("id").type(JsonFieldType.NUMBER).description("모집 항목 ID"),
+            fieldWithPath("id").type(JsonFieldType.NUMBER).description("모집 항목 ID")
         )
     }
 }

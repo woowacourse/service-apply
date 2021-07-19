@@ -24,6 +24,7 @@ import org.springframework.restdocs.payload.PayloadDocumentation.requestFields
 import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
 import org.springframework.restdocs.request.RequestDocumentation.pathParameters
+import org.springframework.restdocs.request.RequestDocumentation.requestParameters
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
@@ -58,7 +59,7 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
         evaluationStatus = EvaluationStatus.PASS,
         administratorId = 1L,
         note = NOTE,
-        answers = EvaluationAnswers(mutableListOf()),
+        answers = EvaluationAnswers(mutableListOf())
     )
 
     private val gradeEvaluationResponse: GradeEvaluationResponse = GradeEvaluationResponse(
@@ -76,11 +77,10 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
 
         mockMvc.perform(
             RestDocumentationRequestBuilders.get(
-                "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/{keyword}",
+                "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets",
                 recruitmentId,
                 evaluationId,
-                keyword
-            )
+            ).param("keyword", keyword)
         ).andExpect(status().isOk)
             .andExpect(
                 content().json(
@@ -94,12 +94,14 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
                     "evaluation-target-findAllByEvaluationIdAndKeyword",
                     pathParameters(
                         parameterWithName("recruitmentId").description("모집 ID"),
-                        parameterWithName("evaluationId").description("평가 ID"),
+                        parameterWithName("evaluationId").description("평가 ID")
+                    ),
+                    requestParameters(
                         parameterWithName("keyword").description("키워드(이름, 이메일)")
                     ),
                     responseFields(
                         fieldWithPath("message").description("응답 메시지"),
-                        fieldWithPath("body.[]").description("평가 대상자 목록"),
+                        fieldWithPath("body.[]").description("평가 대상자 목록")
                     ).andWithPrefix("body.[].", EVALUATION_TARGET_FIELD_DESCRIPTORS)
                 )
             )
@@ -120,8 +122,8 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
                     "evaluation-target-load",
                     pathParameters(
                         parameterWithName("recruitmentId").description("모집 ID"),
-                        parameterWithName("evaluationId").description("평가 ID"),
-                    ),
+                        parameterWithName("evaluationId").description("평가 ID")
+                    )
                 )
             )
     }
@@ -151,7 +153,7 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
                     pathParameters(
                         parameterWithName("recruitmentId").description("모집 ID"),
                         parameterWithName("evaluationId").description("평가 ID"),
-                        parameterWithName("targetId").description("평가 대상자 ID"),
+                        parameterWithName("targetId").description("평가 대상자 ID")
                     ),
                     responseFields(
                         fieldWithPath("message").description("응답 메시지"),
@@ -174,7 +176,7 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
                             .description("평가 항목 POSITION"),
                         fieldWithPath("body.evaluationItems.[].evaluationId").type(JsonFieldType.NUMBER)
                             .description("평가 ID"),
-                        fieldWithPath("body.evaluationItems.[].id").type(JsonFieldType.NUMBER).description("평가 항목 ID"),
+                        fieldWithPath("body.evaluationItems.[].id").type(JsonFieldType.NUMBER).description("평가 항목 ID")
                     )
                 )
             )
@@ -203,7 +205,7 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
                     pathParameters(
                         parameterWithName("recruitmentId").description("모집 ID"),
                         parameterWithName("evaluationId").description("평가 ID"),
-                        parameterWithName("targetId").description("평가 대상자 ID"),
+                        parameterWithName("targetId").description("평가 대상자 ID")
                     ),
                     requestFields(
                         fieldWithPath("evaluationItemScores").type(JsonFieldType.ARRAY)
@@ -215,7 +217,7 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
                         fieldWithPath("note").type(JsonFieldType.STRING)
                             .description("평가 특이 사항"),
                         fieldWithPath("evaluationStatus").type(JsonFieldType.STRING)
-                            .description("평가 상태"),
+                            .description("평가 상태")
                     )
                 )
             )
@@ -230,7 +232,7 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
             fieldWithPath("evaluationStatus").type(JsonFieldType.STRING).description("평가 상태"),
             fieldWithPath("administratorId").type(JsonFieldType.NUMBER).description("평가자 ID"),
             fieldWithPath("note").type(JsonFieldType.STRING).description("평가 특이 사항"),
-            fieldWithPath("answers").type(JsonFieldType.ARRAY).description("평가 대답") // TODO 확인 필요
+            fieldWithPath("answers").type(JsonFieldType.ARRAY).description("평가 대답")
         )
     }
 }

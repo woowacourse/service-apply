@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -18,11 +19,11 @@ import org.springframework.web.bind.annotation.RestController
 class EvaluationTargetRestController(
     private val evaluationTargetService: EvaluationTargetService
 ) {
-    @GetMapping("/{keyword}")
+    @GetMapping
     fun findAllByEvaluationIdAndKeyword(
         @PathVariable recruitmentId: Long,
         @PathVariable evaluationId: Long,
-        @PathVariable keyword: String,
+        @RequestParam keyword: String
     ): ResponseEntity<ApiResponse<List<EvaluationTargetResponse>>> {
         val evaluationTargets =
             evaluationTargetService.findAllByEvaluationIdAndKeyword(evaluationId, keyword)
