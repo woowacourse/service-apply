@@ -59,7 +59,9 @@ dependencyManagement {
     }
 }
 
-val snippetsDir by extra { file("build/generated-snippets") }
+val snippetsDir by extra {
+    file("build/generated-snippets")
+}
 
 tasks {
     withType<Test> {

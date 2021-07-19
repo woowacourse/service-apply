@@ -29,7 +29,10 @@ class ApplicationFormRestController(
     private val mailService: MailService
 ) {
     @GetMapping("/application-forms/me")
-    fun getMyApplicationForms(@PathVariable recruitmentId: Long, @LoginApplicant applicant: Applicant): ResponseEntity<ApiResponse<List<MyApplicationFormResponse>>> {
+    fun getMyApplicationForms(
+        @PathVariable recruitmentId: Long,
+        @LoginApplicant applicant: Applicant
+    ): ResponseEntity<ApiResponse<List<MyApplicationFormResponse>>> {
         val form = applicationFormService.getMyApplicationForms(applicant.id)
         return ResponseEntity.ok().body(ApiResponse.success(form))
     }

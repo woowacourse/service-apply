@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/recruitments/{recruitmentId}/evaluations")
 class EvaluationRestController(
-    private val evaluationService: EvaluationService,
+    private val evaluationService: EvaluationService
 ) {
     @PostMapping
     fun createEvaluation(

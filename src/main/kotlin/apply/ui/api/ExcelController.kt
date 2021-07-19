@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController
 class ExcelController(
     private val excelService: ExcelService,
     private val recruitmentService: RecruitmentService,
-    private val evaluationService: EvaluationService,
+    private val evaluationService: EvaluationService
 ) {
     @GetMapping("/applicants/excel")
     fun createApplicantExcel(@PathVariable recruitmentId: Long): ResponseEntity<InputStreamResource> {
@@ -37,7 +37,7 @@ class ExcelController(
     @GetMapping("/evaluations/{evaluationId}/targets/excel")
     fun createTargetExcel(
         @PathVariable recruitmentId: Long,
-        @PathVariable evaluationId: Long,
+        @PathVariable evaluationId: Long
     ): ResponseEntity<InputStreamResource> {
         val excel = excelService.createTargetExcel(evaluationId)
         val evaluation = evaluationService.findById(evaluationId)
