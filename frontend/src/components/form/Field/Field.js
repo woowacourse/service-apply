@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import './Field.css';
 
 const Field = ({ children, className }) => {
-  return (
-    <div className={className ? `${className} field` : 'field'}>{children}</div>
-  );
+  return <div className={classNames('field', className)}>{children}</div>;
 };
 
 Field.propTypes = {

@@ -5,7 +5,7 @@ import './CheckBox.css';
 
 const CheckBox = ({ label, required, ...props }) => {
   return (
-    <Label className="checkbox">
+    <Label className="checkbox" required={required}>
       <input type="checkbox" required={required} {...props} />
       {label}
     </Label>
