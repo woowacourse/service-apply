@@ -1,17 +1,18 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 import "./BaseItem.css";
 
-const BaseItem = ({ title, start, end }) => {
+const BaseItem = ({ title, startDateTime, endDateTime }) => {
   return (
-    <div class="base-item">
-      <div class="title">{title}</div>
-      <div class="period">
-        <span class="ti-calendar"></span>
-        <div class="date">
-          <span class="start">{start}</span>
-          <span class="between"></span>
-          <span calss="end">{end}</span>
+    <div className="base-item">
+      <div className="title">{title}</div>
+      <div className="period">
+        <span className="ti-calendar"></span>
+        <div className="date">
+          <span className="start">{startDateTime}</span>
+          <span className="between"></span>
+          <span className="end">{endDateTime}</span>
         </div>
       </div>
     </div>
@@ -19,3 +20,9 @@ const BaseItem = ({ title, start, end }) => {
 };
 
 export default BaseItem;
+
+BaseItem.propTypes = {
+  title: PropTypes.string.isRequired,
+  startDateTime: PropTypes.string.isRequired,
+  endDateTime: PropTypes.string.isRequired,
+};

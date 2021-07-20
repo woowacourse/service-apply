@@ -12,6 +12,6 @@ export const Default = Template.bind({});
 
 Default.args = {
   title: "제목",
-  start: "2021-07-20",
-  end: "2021-07-20",
+  startDateTime: "2021-07-20",
+  endDateTime: "2021-07-20",
 };

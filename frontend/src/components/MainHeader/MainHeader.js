@@ -5,13 +5,13 @@ import "./MainHeader.css";
 
 const MainHeader = () => {
   return (
-    <div class="main-header">
-      <header class="header">
-        <nav class="nav">
+    <div className="main-header">
+      <header className="header">
+        <nav className="nav">
           <Link to="/recruits">
-            <img class="logo" src="/assets/logo/logo_full_dark.png" />
+            <img className="logo" src="/assets/logo/logo_full_dark.png" />
           </Link>
-          <h3 class="title">
+          <h3 className="title">
             <Link to="/recruits">지원하기</Link>
           </h3>
         </nav>

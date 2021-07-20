@@ -1,5 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
+import PropTypes from "prop-types";
 
 import CommonItem from "../CommonItem/CommonItem";
 
@@ -24,10 +25,15 @@ const ApplicationFormItem = ({ recruitment, submitted }) => {
     <CommonItem
       recruitment={recruitment}
       buttonLabel={buttonLabel}
-      submittable={submittable}
+      activeButton={submittable}
       goPage={goApplicationFormsEditPage}
     />
   );
 };
 
 export default ApplicationFormItem;
+
+ApplicationFormItem.propTypes = {
+  recruitment: PropTypes.object.isRequired,
+  submitted: PropTypes.bool.isRequired,
+};

@@ -1,5 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
+import PropTypes from "prop-types";
 
 import CommonItem from "../CommonItem/CommonItem";
 
@@ -28,7 +29,7 @@ const RecruitItem = ({ recruitment }) => {
   return (
     <CommonItem
       recruitment={recruitment}
-      isRecruiting={isRecruiting}
+      activeButton={isRecruiting}
       buttonLabel={buttonLabel}
       goPage={goApplicantsNewPage}
     />
@@ -36,3 +37,7 @@ const RecruitItem = ({ recruitment }) => {
 };
 
 export default RecruitItem;
+
+RecruitItem.propTypes = {
+  recruitment: PropTypes.object.isRequired,
+};

@@ -12,7 +12,10 @@ export const Default = Template.bind({});
 
 Default.args = {
   recruitment: {
+    id: "1",
+    title: "title",
     status: "RECRUITING",
-    id: 1,
+    startDateTime: "2021-07-21",
+    endDateTime: "2021-07-21",
   },
 };
