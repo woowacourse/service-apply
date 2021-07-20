@@ -1,0 +1,15 @@
+.summary {
+  overflow-y: auto;
+  background: #fff;
+  outline: none;
+  margin: 0;
+  padding: 12px;
+  max-height: 140px;
+  border: 1px solid #ced6e0;
+  border-radius: 3px;
+  transition-duration: 0.5s;
+}
+
+.summary:focus {
+  border: 1px solid #1e90ff;
+}

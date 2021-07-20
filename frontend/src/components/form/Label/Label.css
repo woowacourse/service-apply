@@ -1,0 +1,13 @@
+.label {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  color: #2c3e50;
+  margin: 5px 0;
+}
+
+.required::after {
+  content: '*';
+  margin: 0 3px;
+  color: #1e90ff;
+}
