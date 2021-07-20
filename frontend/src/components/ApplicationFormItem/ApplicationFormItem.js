@@ -1,6 +1,7 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { CommonItem } from "../CommonItem/CommonItem";
+
+import CommonItem from "../CommonItem/CommonItem";
 
 const ApplicationFormItem = ({ recruitment, submitted }) => {
   const history = useHistory();

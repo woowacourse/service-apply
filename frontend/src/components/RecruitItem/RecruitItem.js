@@ -1,12 +1,9 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 
-const RecruitItem = ({
-  recruitment,
-  buttonLabel,
-  isRecruiting,
-  goApplicantsNewPage,
-}) => {
+import CommonItem from "../CommonItem/CommonItem";
+
+const RecruitItem = ({ recruitment }) => {
   const history = useHistory();
 
   const isRecruiting = recruitment.status === "RECRUITING";
@@ -23,7 +20,7 @@ const RecruitItem = ({
     history.push({
       pathname: `/applicants/new`,
       state: {
-        recruitmentId,
+        recruitment: recruitment.Id,
       },
     });
   };
