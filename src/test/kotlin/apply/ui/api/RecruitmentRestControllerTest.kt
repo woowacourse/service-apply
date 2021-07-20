@@ -21,7 +21,6 @@ import org.springframework.restdocs.payload.PayloadDocumentation.requestFields
 import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
 import org.springframework.restdocs.request.RequestDocumentation.pathParameters
-import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
@@ -165,7 +164,6 @@ internal class RecruitmentRestControllerTest : RestControllerTest() {
 
     @Test
     fun `종료되지 않은 모집 정보를 가져온다`() {
-        val recruitmentData = createRecruitmentData()
         every { recruitmentService.getNotEndedDataById(recruitmentId) } returns recruitmentData
 
         mockMvc.perform(
@@ -178,6 +176,24 @@ internal class RecruitmentRestControllerTest : RestControllerTest() {
                 content().json(
                     objectMapper.writeValueAsString(
                         ApiResponse.success(recruitmentData)
+                    )
+                )
+            )
+    }
+
+    @Test
+    fun `전체 모집 정보를 가져온다`() {
+        every { recruitmentService.findAll() } returns recruitments
+
+        mockMvc.perform(
+            RestDocumentationRequestBuilders.get(
+                "/api/recruitments/all"
+            )
+        ).andExpect(status().isOk)
+            .andExpect(
+                content().json(
+                    objectMapper.writeValueAsString(
+                        ApiResponse.success(recruitments)
                     )
                 )
             )

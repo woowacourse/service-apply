@@ -41,7 +41,7 @@ class RecruitmentService(
             .filterNot { excludedItemIds.contains(it.id) }
     }
 
-    fun findAll(): List<Recruitment> { // todo: 해당 부분은 추후 권한에 따라 다르게 조회하도록 변경
+    fun findAll(): List<Recruitment> {
         return recruitmentRepository.findAll()
     }
 

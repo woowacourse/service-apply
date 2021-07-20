@@ -26,6 +26,11 @@ class RecruitmentRestController(
         return ResponseEntity.ok().body(ApiResponse.success(recruitmentService.findAllNotHidden()))
     }
 
+    @GetMapping("/all")
+    fun findAll(): ResponseEntity<ApiResponse<List<Recruitment>>> {
+        return ResponseEntity.ok(ApiResponse.success(recruitmentService.findAll()))
+    }
+
     @GetMapping("/{recruitmentId}/items")
     fun findItemsById(@PathVariable recruitmentId: Long): ResponseEntity<ApiResponse<List<RecruitmentItem>>> {
         return ResponseEntity.ok()
