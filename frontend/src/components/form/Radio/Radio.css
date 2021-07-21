@@ -5,7 +5,7 @@
   margin-right: 10px;
 }
 
-input[type='radio'] {
+input[type="radio"] {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -16,8 +16,8 @@ input[type='radio'] {
   margin: 0;
 }
 
-input[type='radio']::before {
-  content: '';
+input[type="radio"]::before {
+  content: "";
   width: 20px;
   height: 20px;
   border-radius: 20px;
@@ -27,7 +27,7 @@ input[type='radio']::before {
   transition-duration: 0.2s;
 }
 
-input[type='radio']:checked::before {
+input[type="radio"]:checked::before {
   background: #0078ff;
   border: 3px solid #d8e0ea;
   color: #fff;

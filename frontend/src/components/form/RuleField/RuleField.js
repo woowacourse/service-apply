@@ -1,6 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import './RuleField.css';
+import React from "react";
+import PropTypes from "prop-types";
+import "./RuleField.css";
 
 const RuleField = ({ rules, target }) => {
   const result = rules.reduce((prev, curr) => prev && curr(target), true);

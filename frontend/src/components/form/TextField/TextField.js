@@ -1,10 +1,10 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Field from '../Field/Field';
-import Label from '../Label/Label';
-import Description from '../Description/Description';
-import TextInput from '../TextInput/TextInput';
-import './TextField.css';
+import React from "react";
+import PropTypes from "prop-types";
+import Field from "../Field/Field";
+import Label from "../Label/Label";
+import Description from "../Description/Description";
+import TextInput from "../TextInput/TextInput";
+import "./TextField.css";
 
 const TextField = ({
   required,
@@ -46,10 +46,10 @@ TextField.propTypes = {
 };
 
 TextField.defaultProps = {
-  label: '',
-  value: '',
+  label: "",
+  value: "",
   required: false,
-  description: '',
+  description: "",
   maxLength: 100,
 };
 

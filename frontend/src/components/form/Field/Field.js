@@ -1,10 +1,10 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
-import './Field.css';
+import React from "react";
+import PropTypes from "prop-types";
+import classNames from "classnames";
+import "./Field.css";
 
 const Field = ({ children, className }) => {
-  return <div className={classNames('field', className)}>{children}</div>;
+  return <div className={classNames("field", className)}>{children}</div>;
 };
 
 Field.propTypes = {
@@ -13,7 +13,7 @@ Field.propTypes = {
 };
 
 Field.defaultProps = {
-  className: '',
+  className: "",
 };
 
 export default Field;

@@ -1,8 +1,8 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Field from '../Field/Field';
-import CheckBox from '../CheckBox/CheckBox';
-import './SummaryCheckField.css';
+import React from "react";
+import PropTypes from "prop-types";
+import Field from "../Field/Field";
+import CheckBox from "../CheckBox/CheckBox";
+import "./SummaryCheckField.css";
 
 const SummaryCheckField = ({ children, label, required, ...props }) => {
   return (
@@ -22,7 +22,7 @@ SummaryCheckField.propTypes = {
 };
 
 SummaryCheckField.defaultProps = {
-  label: '',
+  label: "",
   required: false,
 };
 

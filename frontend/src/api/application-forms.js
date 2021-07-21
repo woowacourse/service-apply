@@ -1,14 +1,14 @@
-import axios from "axios"
-import "./interceptor"
+import axios from "axios";
+import "./interceptor";
 
-const BASE_URL = "/api/application-forms"
+const BASE_URL = "/api/application-forms";
 
-export const fetchMyApplicationForms = token =>
+export const fetchMyApplicationForms = (token) =>
   axios.get(`${BASE_URL}/me`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
-  })
+  });
 
 export const fetchForm = ({ token, recruitmentId }) =>
   axios.get(`${BASE_URL}`, {
@@ -18,7 +18,7 @@ export const fetchForm = ({ token, recruitmentId }) =>
     params: {
       recruitmentId,
     },
-  })
+  });
 
 export const createForm = ({ token, recruitmentId }) =>
   axios.post(
@@ -28,12 +28,12 @@ export const createForm = ({ token, recruitmentId }) =>
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    },
-  )
+    }
+  );
 
 export const updateForm = ({ token, data }) =>
   axios.patch(`${BASE_URL}`, data, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
-  })
+  });

@@ -1,8 +1,8 @@
-import React from 'react';
-import GenderField from './GenderField';
+import React from "react";
+import GenderField from "./GenderField";
 
 export default {
-  title: 'form/GenderField',
+  title: "form/GenderField",
   component: GenderField,
 };
 

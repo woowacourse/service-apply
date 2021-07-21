@@ -1,11 +1,11 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import './Label.css';
-import classNames from 'classnames';
+import React from "react";
+import PropTypes from "prop-types";
+import "./Label.css";
+import classNames from "classnames";
 
 const Label = ({ children, className, required }) => {
   return (
-    <label className={classNames('label', className, { required })}>
+    <label className={classNames("label", className, { required })}>
       {children}
     </label>
   );
@@ -18,7 +18,7 @@ Label.propTypes = {
 };
 
 Label.defaultProps = {
-  className: '',
+  className: "",
   required: false,
 };
 

@@ -1,6 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import './Form.css';
+import React from "react";
+import PropTypes from "prop-types";
+import "./Form.css";
 
 const Form = ({ children, actions, footer, ...props }) => {
   return (
@@ -10,7 +10,7 @@ const Form = ({ children, actions, footer, ...props }) => {
       <footer>
         <a className="logo" href="#">
           <img
-            src={process.env.PUBLIC_URL + '/assets/logo/logo_full_dark.png'}
+            src={process.env.PUBLIC_URL + "/assets/logo/logo_full_dark.png"}
             alt="우아한테크코스 로고"
           />
         </a>
