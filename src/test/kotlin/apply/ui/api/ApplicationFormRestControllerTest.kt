@@ -4,6 +4,7 @@ import apply.application.ApplicantService
 import apply.application.ApplicationFormResponse
 import apply.application.ApplicationFormService
 import apply.application.MyApplicationFormResponse
+import apply.application.mail.MailService
 import apply.createApplicationForm
 import apply.createApplicationForms
 import apply.domain.applicant.Applicant
@@ -45,6 +46,9 @@ internal class ApplicationFormRestControllerTest(
 
     @MockkBean
     private lateinit var jwtTokenProvider: JwtTokenProvider
+
+    @MockkBean
+    private lateinit var mailService: MailService
 
     @MockkBean
     private lateinit var applicantService: ApplicantService
