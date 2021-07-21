@@ -26,6 +26,7 @@ class ApplicantRestController(
     @PostMapping("/register")
     fun generateToken(@RequestBody @Valid request: RegisterApplicantRequest): ResponseEntity<ApiResponse<String>> {
         val token = applicantAuthenticationService.generateToken(request)
+        mailService.sendAuthenticationMail(request)
         return ResponseEntity.ok().body(ApiResponse.success(token))
     }
 
