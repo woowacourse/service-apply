@@ -7,7 +7,7 @@
 }
 
 .required::after {
-  content: '*';
+  content: "*";
   margin: 0 3px;
   color: #1e90ff;
 }

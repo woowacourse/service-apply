@@ -1,7 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Label from '../Label/Label';
-import './Radio.css';
+import React from "react";
+import PropTypes from "prop-types";
+import Label from "../Label/Label";
+import "./Radio.css";
 
 const Radio = ({ label, required, ...props }) => {
   return (
@@ -18,7 +18,7 @@ Radio.propTypes = {
 };
 
 Radio.defaultProps = {
-  label: '',
+  label: "",
   required: false,
 };
 

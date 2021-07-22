@@ -1,9 +1,9 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Field from '../Field/Field';
-import Label from '../Label/Label';
-import TextInput from '../TextInput/TextInput';
-import './BirthField.css';
+import React from "react";
+import PropTypes from "prop-types";
+import Field from "../Field/Field";
+import Label from "../Label/Label";
+import TextInput from "../TextInput/TextInput";
+import "./BirthField.css";
 
 const BirthField = ({ required }) => {
   return (

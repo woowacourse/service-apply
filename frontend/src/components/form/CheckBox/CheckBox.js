@@ -1,7 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Label from '../Label/Label';
-import './CheckBox.css';
+import React from "react";
+import PropTypes from "prop-types";
+import Label from "../Label/Label";
+import "./CheckBox.css";
 
 const CheckBox = ({ label, required, ...props }) => {
   return (
@@ -18,7 +18,7 @@ CheckBox.propTypes = {
 };
 
 CheckBox.defaultProps = {
-  label: '',
+  label: "",
   required: false,
 };
 
