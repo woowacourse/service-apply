@@ -1,10 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import "./Box.css";
+import styles from "./Box.module.css";
 
 const Box = ({ children }) => {
-  return <div className="box">{children}</div>;
+  return <div className={styles.box}>{children}</div>;
 };
 
 export default Box;

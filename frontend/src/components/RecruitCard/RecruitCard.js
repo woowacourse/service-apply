@@ -4,11 +4,11 @@ import PropTypes from "prop-types";
 import BaseItem from "../BaseItem/BaseItem";
 import Box from "../Box/Box";
 
-import "./RecruitCard.css";
+import styles from "./RecruitCard.module.css";
 
 const RecruitCard = ({ title, startDateTime, endDateTime }) => {
   return (
-    <Box className="recruit-card">
+    <Box className={styles["recruit-card"]}>
       <BaseItem
         title={title}
         startDateTime={startDateTime}

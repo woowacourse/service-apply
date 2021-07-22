@@ -5,11 +5,11 @@ import BaseItem from "../BaseItem/BaseItem";
 
 import { Button } from "../form";
 
-import "./CommonItem.css";
+import styles from "./CommonItem.module.css";
 
 const CommonItem = ({ buttonLabel, activeButton, recruitment, goPage }) => {
   return (
-    <div className="common-item">
+    <div className={styles["common-item"]}>
       <BaseItem
         title={recruitment.title}
         startDateTime={recruitment.startDateTime}

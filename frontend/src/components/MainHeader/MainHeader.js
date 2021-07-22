@@ -1,17 +1,20 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import "./MainHeader.css";
+import styles from "./MainHeader.module.css";
 
 const MainHeader = () => {
   return (
-    <div className="main-header">
-      <header className="header">
-        <nav className="nav">
+    <div className={styles["main-header"]}>
+      <header className={styles.header}>
+        <nav className={styles.nav}>
           <Link to="/recruits">
-            <img className="logo" src="/assets/logo/logo_full_dark.png" />
+            <img
+              className={styles.logo}
+              src="/assets/logo/logo_full_dark.png"
+            />
           </Link>
-          <h3 className="title">
+          <h3 className={styles.title}>
             <Link to="/recruits">지원하기</Link>
           </h3>
         </nav>
