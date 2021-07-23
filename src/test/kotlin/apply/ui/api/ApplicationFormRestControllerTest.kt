@@ -137,7 +137,7 @@ internal class ApplicationFormRestControllerTest : RestControllerTest() {
         val recruitmentId = applicantAndFormResponses[0].applicationForm.recruitmentId
 
         every {
-            applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId, null)
+            applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId)
         } returns applicantAndFormResponses
 
         mockMvc.get(

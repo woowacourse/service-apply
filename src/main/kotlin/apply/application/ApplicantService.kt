@@ -21,7 +21,7 @@ class ApplicantService(
 
     fun findAllByRecruitmentIdAndKeyword(
         recruitmentId: Long,
-        keyword: String?
+        keyword: String? = null
     ): List<ApplicantAndFormResponse> {
         val formsByApplicantId = applicationFormRepository
             .findByRecruitmentIdAndSubmittedTrue(recruitmentId)
