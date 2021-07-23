@@ -47,7 +47,6 @@ class ApplicationFormRestController(
 
     @PostMapping("/application-forms")
     fun create(
-        @PathVariable recruitmentId: Long,
         @RequestBody @Valid request: CreateApplicationFormRequest,
         @LoginApplicant applicant: Applicant
     ): ResponseEntity<Unit> {
