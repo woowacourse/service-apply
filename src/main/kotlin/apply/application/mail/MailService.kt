@@ -56,7 +56,8 @@ class MailService(
             setVariables(
                 mapOf(
                     "name" to request.name,
-                    "url" to applicationProperties.url + "/api"
+                    // TODO: url 정확한 주소가 필요
+                    "url" to "http://localhost:8080/api/applicants/authenticate-email?email=${request.email}"
                 )
             )
         }

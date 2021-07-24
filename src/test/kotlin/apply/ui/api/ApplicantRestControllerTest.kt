@@ -20,7 +20,6 @@ import io.mockk.just
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.mock.mockito.SpyBean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
 import org.springframework.http.HttpHeaders.AUTHORIZATION
@@ -43,6 +42,7 @@ private const val PASSWORD = "password"
 private const val INVALID_PASSWORD = "invalid_password"
 private const val WRONG_PASSWORD = "wrongPassword"
 private const val NEW_PASSWORD = "NEW_PASSWORD"
+private const val REDIRECTION_URL = "redirection_url"
 
 private fun RegisterApplicantRequest.withPlainPassword(password: String): Map<String, Any?> {
     return mapOf(
@@ -83,7 +83,7 @@ internal class ApplicantRestControllerTest(
     @MockkBean
     private lateinit var jwtTokenProvider: JwtTokenProvider
 
-    @SpyBean
+    @MockkBean
     private lateinit var applicationProperties: ApplicationProperties
 
     private lateinit var mockMvc: MockMvc
@@ -260,10 +260,11 @@ internal class ApplicantRestControllerTest(
     @Test
     fun `이메일 인증 요청이 수행되면 지원 플랫폼으로 리다이렉트된다`() {
         every { applicantService.authenticateApplicant(applicantRequest.email) } returns Unit
+        every { applicationProperties.url } returns REDIRECTION_URL
 
-        mockMvc.get("/api/applicants/authenticate-email/{email}", applicantRequest.email) {
+        mockMvc.get("/api/applicants/authenticate-email") {
+            param("email", applicantRequest.email)
         }.andExpect {
-            // redirectedUrl("https://apply.techcourse.woowahan.com")
             status { isMovedPermanently }
         }
     }

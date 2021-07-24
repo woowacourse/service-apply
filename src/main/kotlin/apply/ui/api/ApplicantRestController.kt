@@ -1,22 +1,22 @@
 package apply.ui.api
 
-import apply.application.RegisterApplicantRequest
-import apply.application.ApplicantService
 import apply.application.ApplicantAuthenticationService
+import apply.application.ApplicantService
 import apply.application.ApplicationProperties
-import apply.application.EditPasswordRequest
-import apply.application.ResetPasswordRequest
 import apply.application.AuthenticateApplicantRequest
+import apply.application.EditPasswordRequest
+import apply.application.RegisterApplicantRequest
+import apply.application.ResetPasswordRequest
 import apply.application.mail.MailService
 import apply.domain.applicant.Applicant
 import apply.security.LoginApplicant
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import javax.validation.Valid
 
@@ -57,15 +57,11 @@ class ApplicantRestController(
         return ResponseEntity.noContent().build()
     }
 
-    @GetMapping("/authenticate-email/{email}")
+    @GetMapping("/authenticate-email")
     fun authenticateEmail(
-        @PathVariable email: String,
-        // response: HttpServletResponse
+        @RequestParam email: String,
     ): ResponseEntity<Unit> {
         applicantService.authenticateApplicant(email)
-        // response.sendRedirect(applicationProperties.url)
-        // val header = HttpHeaders()
-        // header.set("Location", applicationProperties.url)
         return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).header("Location", applicationProperties.url).build()
     }
 }

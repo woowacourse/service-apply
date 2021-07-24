@@ -60,6 +60,5 @@ class ApplicantService(
     fun authenticateApplicant(email: String) {
         val applicant = getByEmail(email)
         applicant.authenticateEmail()
-        // applicantRepository.save(applicant)
     }
 }
