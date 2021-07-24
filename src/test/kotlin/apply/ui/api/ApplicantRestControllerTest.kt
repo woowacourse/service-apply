@@ -133,6 +133,7 @@ internal class ApplicantRestControllerTest(
     @Test
     fun `유효한 지원자 생성 및 검증 요청에 대하여 응답으로 토큰이 반환된다`() {
         every { applicantAuthenticationService.generateToken(applicantRequest) } returns VALID_TOKEN
+        every { mailService.sendAuthenticationMail(applicantRequest) } returns Unit
 
         mockMvc.post("/api/applicants/register") {
             content = objectMapper.writeValueAsBytes(applicantRequest.withPlainPassword(PASSWORD))
