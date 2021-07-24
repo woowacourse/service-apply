@@ -2,6 +2,7 @@ package apply.ui.api
 
 import apply.application.ApplicantAuthenticationService
 import apply.application.ApplicantService
+import apply.application.ApplicationProperties
 import apply.application.AuthenticateApplicantRequest
 import apply.application.EditPasswordRequest
 import apply.application.RegisterApplicantRequest
@@ -19,11 +20,14 @@ import io.mockk.just
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.boot.test.mock.mockito.SpyBean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.MediaType
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder
@@ -55,6 +59,7 @@ private fun AuthenticateApplicantRequest.withPlainPassword(password: String): Ma
     return mapOf("email" to email, "password" to password)
 }
 
+@ActiveProfiles("test")
 @WebMvcTest(
     controllers = [ApplicantRestController::class],
     includeFilters = [
@@ -77,6 +82,9 @@ internal class ApplicantRestControllerTest(
 
     @MockkBean
     private lateinit var jwtTokenProvider: JwtTokenProvider
+
+    @SpyBean
+    private lateinit var applicationProperties: ApplicationProperties
 
     private lateinit var mockMvc: MockMvc
 
@@ -245,6 +253,18 @@ internal class ApplicantRestControllerTest(
             header(AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isUnauthorized }
+        }
+    }
+
+    // todo
+    @Test
+    fun `이메일 인증 요청이 수행되면 지원 플랫폼으로 리다이렉트된다`() {
+        every { applicantService.authenticateApplicant(applicantRequest.email) } returns Unit
+
+        mockMvc.get("/api/applicants/authenticate-email/{email}", applicantRequest.email) {
+        }.andExpect {
+            // redirectedUrl("https://apply.techcourse.woowahan.com")
+            status { isMovedPermanently }
         }
     }
 

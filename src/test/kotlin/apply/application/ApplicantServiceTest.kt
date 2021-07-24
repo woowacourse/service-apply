@@ -128,4 +128,14 @@ internal class ApplicantServiceTest {
             assertThrows<ApplicantAuthenticationException> { subject() }
         }
     }
+
+    @Test
+    fun `인증된 사용자로 변경한다`() {
+        val applicant = createApplicant()
+        every { applicantRepository.findByEmail(applicant.email) } returns applicant
+
+        applicantService.authenticateApplicant(applicant.email)
+
+        assertThat(applicant.authenticated).isTrue()
+    }
 }
