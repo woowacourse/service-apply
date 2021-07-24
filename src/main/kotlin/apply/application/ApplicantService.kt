@@ -56,4 +56,10 @@ class ApplicantService(
             changePassword(request.password, request.newPassword)
         }
     }
+
+    fun authenticateApplicant(email: String) {
+        val applicant = getByEmail(email)
+        applicant.authenticateEmail()
+        applicantRepository.save(applicant)
+    }
 }

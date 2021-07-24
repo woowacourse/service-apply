@@ -15,7 +15,8 @@ class Applicant(
     @AttributeOverride(name = "value", column = Column(name = "password", nullable = false))
     @Embedded
     var password: Password,
-    id: Long = 0L
+    id: Long = 0L,
+    authenticated: Boolean = false
 ) : BaseEntity(id) {
     val name: String
         get() = information.name
@@ -31,6 +32,10 @@ class Applicant(
 
     val birthday: LocalDate
         get() = information.birthday
+
+    @Column(nullable = false)
+    var authenticated: Boolean = authenticated
+        private set
 
     constructor(
         name: String,
@@ -67,5 +72,9 @@ class Applicant(
         if (!value) {
             throw ApplicantAuthenticationException()
         }
+    }
+
+    fun authenticateEmail() {
+        authenticated = true
     }
 }

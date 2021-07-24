@@ -3,6 +3,7 @@ package apply.ui.api
 import apply.application.RegisterApplicantRequest
 import apply.application.ApplicantService
 import apply.application.ApplicantAuthenticationService
+import apply.application.ApplicationProperties
 import apply.application.EditPasswordRequest
 import apply.application.ResetPasswordRequest
 import apply.application.AuthenticateApplicantRequest
@@ -10,10 +11,13 @@ import apply.application.mail.MailService
 import apply.domain.applicant.Applicant
 import apply.security.LoginApplicant
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import javax.servlet.http.HttpServletResponse
 import javax.validation.Valid
 
 @RestController
@@ -21,7 +25,8 @@ import javax.validation.Valid
 class ApplicantRestController(
     private val applicantService: ApplicantService,
     private val applicantAuthenticationService: ApplicantAuthenticationService,
-    private val mailService: MailService
+    private val mailService: MailService,
+    private val applicationProperties: ApplicationProperties,
 ) {
     @PostMapping("/register")
     fun generateToken(@RequestBody @Valid request: RegisterApplicantRequest): ResponseEntity<ApiResponse<String>> {
@@ -50,5 +55,14 @@ class ApplicantRestController(
     ): ResponseEntity<Unit> {
         applicantService.editPassword(applicant.id, request)
         return ResponseEntity.noContent().build()
+    }
+
+    @GetMapping("/authenticate-email/{email}")
+    fun authenticateEmail(
+        @PathVariable email: String,
+        response: HttpServletResponse
+    ) {
+        applicantService.authenticateApplicant(email)
+        response.sendRedirect(applicationProperties.url)
     }
 }

@@ -24,8 +24,6 @@ data class ApplicantInformation(
     @Column(nullable = false)
     val birthday: LocalDate,
 
-    @Column(nullable = false)
-    val authenticated: Boolean = false
 ) {
     fun same(name: String, birthday: LocalDate): Boolean {
         return this.name == name && this.birthday == birthday
