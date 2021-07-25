@@ -51,13 +51,15 @@ class MailService(
     }
 
     @Async
-    fun sendAuthenticationMail(request: RegisterApplicantRequest) {
+    fun sendAuthenticationMail(request: RegisterApplicantRequest, authenticateCode: String) {
         val context = Context().apply {
             setVariables(
                 mapOf(
                     "name" to request.name,
-                    // TODO: url 정확한 주소가 필요
-                    "url" to "http://localhost:8080/api/applicants/authenticate-email?email=${request.email}"
+                    // TODO: 차후 연결될 프론트 주소가 필요
+                    "url" to "${applicationProperties.url}/api/applicants/authenticate-email?" +
+                        "email=${request.email}&" +
+                        "authenticateCode=$authenticateCode"
                 )
             )
         }

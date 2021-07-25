@@ -133,7 +133,8 @@ internal class ApplicantRestControllerTest(
     @Test
     fun `유효한 지원자 생성 및 검증 요청에 대하여 응답으로 토큰이 반환된다`() {
         every { applicantAuthenticationService.generateToken(applicantRequest) } returns VALID_TOKEN
-        every { mailService.sendAuthenticationMail(applicantRequest) } returns Unit
+        every { mailService.sendAuthenticationMail(applicantRequest, any()) } returns Unit
+        every { applicantService.getByEmail(applicantRequest.email) } returns applicantRequest.toEntity()
 
         mockMvc.post("/api/applicants/register") {
             content = objectMapper.writeValueAsBytes(applicantRequest.withPlainPassword(PASSWORD))
@@ -257,10 +258,9 @@ internal class ApplicantRestControllerTest(
         }
     }
 
-    // todo
     @Test
     fun `이메일 인증 요청이 수행되면 지원 플랫폼으로 리다이렉트된다`() {
-        every { applicantService.authenticateApplicant(applicantRequest.email) } returns Unit
+        every { applicantService.authenticateApplicant(applicantRequest.email, any()) } returns Unit
         every { applicationProperties.url } returns REDIRECTION_URL
 
         mockMvc.get("/api/applicants/authenticate-email") {

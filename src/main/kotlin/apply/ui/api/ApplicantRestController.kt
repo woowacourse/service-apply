@@ -31,7 +31,8 @@ class ApplicantRestController(
     @PostMapping("/register")
     fun generateToken(@RequestBody @Valid request: RegisterApplicantRequest): ResponseEntity<ApiResponse<String>> {
         val token = applicantAuthenticationService.generateToken(request)
-        mailService.sendAuthenticationMail(request)
+        val applicant = applicantService.getByEmail(request.email)
+        mailService.sendAuthenticationMail(request, applicant.authenticateCode)
         return ResponseEntity.ok().body(ApiResponse.success(token))
     }
 
@@ -60,8 +61,9 @@ class ApplicantRestController(
     @GetMapping("/authenticate-email")
     fun authenticateEmail(
         @RequestParam email: String,
+        @RequestParam authenticateCode: String
     ): ResponseEntity<Unit> {
-        applicantService.authenticateApplicant(email)
+        applicantService.authenticateApplicant(email, authenticateCode)
         return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).header("Location", applicationProperties.url).build()
     }
 }

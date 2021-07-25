@@ -2,6 +2,7 @@ package apply.domain.applicant
 
 import support.domain.BaseEntity
 import java.time.LocalDate
+import java.util.UUID
 import javax.persistence.AttributeOverride
 import javax.persistence.Column
 import javax.persistence.Embedded
@@ -36,6 +37,9 @@ class Applicant(
     @Column(nullable = false)
     var authenticated: Boolean = authenticated
         private set
+
+    @Column(nullable = false)
+    val authenticateCode: String = UUID.randomUUID().toString().take(8)
 
     constructor(
         name: String,
@@ -74,7 +78,10 @@ class Applicant(
         }
     }
 
-    fun authenticateEmail() {
+    fun authenticateEmail(authenticateCode: String) {
+        if (this.authenticateCode != authenticateCode) {
+            throw ApplicantAuthenticationException()
+        }
         authenticated = true
     }
 }

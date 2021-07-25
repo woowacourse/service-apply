@@ -57,8 +57,8 @@ class ApplicantService(
         }
     }
 
-    fun authenticateApplicant(email: String) {
+    fun authenticateApplicant(email: String, authenticateCode: String) {
         val applicant = getByEmail(email)
-        applicant.authenticateEmail()
+        applicant.authenticateEmail(authenticateCode)
     }
 }
