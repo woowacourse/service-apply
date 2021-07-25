@@ -12,6 +12,7 @@ const MainHeader = () => {
             <img
               className={styles.logo}
               src="/assets/logo/logo_full_dark.png"
+              alt="우아한테크코스 로고"
             />
           </Link>
           <h3 className={styles.title}>

@@ -15,6 +15,7 @@ const MainFooter = () => {
             <img
               className={styles.logo}
               src="/assets/logo/logo_full_white.png"
+              alt="우아한테크코스 로고"
             />
           </a>
         </div>
