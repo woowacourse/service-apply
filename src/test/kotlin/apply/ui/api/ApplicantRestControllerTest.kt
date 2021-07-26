@@ -1,35 +1,28 @@
 package apply.ui.api
 
 import apply.application.ApplicantAuthenticationService
+import apply.application.ApplicantResponse
 import apply.application.ApplicantService
 import apply.application.AuthenticateApplicantRequest
 import apply.application.EditPasswordRequest
 import apply.application.RegisterApplicantRequest
 import apply.application.ResetPasswordRequest
 import apply.application.mail.MailService
+import apply.createApplicant
 import apply.domain.applicant.ApplicantAuthenticationException
 import apply.domain.applicant.Gender
 import apply.domain.applicant.Password
 import apply.security.JwtTokenProvider
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.context.annotation.ComponentScan
-import org.springframework.context.annotation.FilterType
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.MediaType
-import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers
-import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder
-import org.springframework.test.web.servlet.setup.MockMvcBuilders
-import org.springframework.web.context.WebApplicationContext
-import org.springframework.web.filter.CharacterEncodingFilter
 import support.createLocalDate
 import support.test.TestEnvironment
 
@@ -56,16 +49,10 @@ private fun AuthenticateApplicantRequest.withPlainPassword(password: String): Ma
 }
 
 @WebMvcTest(
-    controllers = [ApplicantRestController::class],
-    includeFilters = [
-        ComponentScan.Filter(type = FilterType.REGEX, pattern = ["apply.security.*"]),
-        ComponentScan.Filter(type = FilterType.REGEX, pattern = ["apply.config.*"])
-    ]
+    controllers = [ApplicantRestController::class]
 )
 @TestEnvironment
-internal class ApplicantRestControllerTest(
-    private val objectMapper: ObjectMapper
-) {
+internal class ApplicantRestControllerTest : RestControllerTest() {
     @MockkBean
     private lateinit var applicantService: ApplicantService
 
@@ -77,8 +64,6 @@ internal class ApplicantRestControllerTest(
 
     @MockkBean
     private lateinit var jwtTokenProvider: JwtTokenProvider
-
-    private lateinit var mockMvc: MockMvc
 
     private val applicantRequest = RegisterApplicantRequest(
         name = "지원자",
@@ -114,13 +99,12 @@ internal class ApplicantRestControllerTest(
 
     private val inValidEditPasswordRequest = validEditPasswordRequest.copy(password = Password(WRONG_PASSWORD))
 
-    @BeforeEach
-    internal fun setUp(webApplicationContext: WebApplicationContext) {
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-            .addFilter<DefaultMockMvcBuilder>(CharacterEncodingFilter("UTF-8", true))
-            .alwaysDo<DefaultMockMvcBuilder>(MockMvcResultHandlers.print())
-            .build()
-    }
+    private val applicantKeyword = "아마찌"
+
+    private val applicantResponses = listOf(
+        ApplicantResponse(createApplicant("아마찌")),
+        ApplicantResponse(createApplicant("로키"))
+    )
 
     @Test
     fun `유효한 지원자 생성 및 검증 요청에 대하여 응답으로 토큰이 반환된다`() {
@@ -245,6 +229,23 @@ internal class ApplicantRestControllerTest(
             header(AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isUnauthorized }
+        }
+    }
+
+    @Test
+    fun `키워드(이름 or 이메일)로 지원자들을 조회한다`() {
+        every { applicantService.findAllByKeyword(applicantKeyword) } returns applicantResponses
+
+        mockMvc.get(
+            "/api/applicants",
+            applicantKeyword
+        ) {
+            contentType = MediaType.APPLICATION_JSON
+            header(AUTHORIZATION, "Bearer valid_token")
+            param("keyword", applicantKeyword)
+        }.andExpect {
+            status { isOk }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(applicantResponses))) }
         }
     }
 
