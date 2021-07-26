@@ -1,7 +1,7 @@
 package apply.application
 
-import apply.domain.applicant.ApplicantRepository
 import apply.domain.applicant.ApplicantAuthenticationException
+import apply.domain.applicant.ApplicantRepository
 import apply.security.JwtTokenProvider
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

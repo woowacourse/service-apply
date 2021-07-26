@@ -50,7 +50,7 @@ class EvaluationService(
         return evaluationRepository.findAllByRecruitmentId(recruitmentId)
     }
 
-    private fun findById(id: Long): Evaluation? {
+    fun findById(id: Long): Evaluation? {
         if (id == 0L) return null
 
         return evaluationRepository.findByIdOrNull(id) ?: throw IllegalArgumentException("해당 id의 평가를 찾을 수 없습니다.")
