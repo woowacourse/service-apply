@@ -48,15 +48,17 @@ const Login = () => {
   };
 
   const handleChange = ({ target: { name, value } }) => {
-    if (!validator[name](value)) {
+    const isValid = validator[name](value);
+
+    if (isValid) {
       setErrorMessage((errorMessage) => ({
         ...errorMessage,
-        [name]: message[name],
+        [name]: "",
       }));
     } else {
       setErrorMessage((errorMessage) => ({
         ...errorMessage,
-        [name]: "",
+        [name]: message[name],
       }));
     }
 
@@ -65,8 +67,8 @@ const Login = () => {
 
   return (
     <div className={styles.Login}>
-      Login
       <Form onSubmit={handleSubmit}>
+        <h1>내 지원서 보기</h1>
         <TextField
           v-model="email"
           name="email"
@@ -91,7 +93,9 @@ const Login = () => {
         <Button onClick={() => history.goBack()}>이전</Button>
         <Button type="submit">확인</Button>
       </Form>
-      <Link className={styles["find-password"]}>비밀번호 찾기</Link>
+      <Link to="/find" className={styles["find-password"]}>
+        비밀번호 찾기
+      </Link>
     </div>
   );
 };
