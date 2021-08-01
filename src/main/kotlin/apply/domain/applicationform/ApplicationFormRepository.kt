@@ -12,4 +12,6 @@ interface ApplicationFormRepository : JpaRepository<ApplicationForm, Long> {
     fun existsByRecruitmentIdAndApplicantId(recruitmentId: Long, applicantId: Long): Boolean
 
     fun existsByApplicantIdAndSubmittedTrue(applicantId: Long): Boolean
+
+    fun existsByRecruitmentId(recruitmentId: Long): Boolean
 }
