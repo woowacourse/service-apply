@@ -32,6 +32,10 @@ const Login = () => {
 
   const history = useHistory();
 
+  const disabled =
+    Object.values(value).filter(Boolean).length < 2 ||
+    Object.values(errorMessage).filter(Boolean).length > 0;
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -91,7 +95,9 @@ const Login = () => {
         />
         <p className={styles["rule-field"]}>{errorMessage.password}</p>
         <Button onClick={() => history.goBack()}>이전</Button>
-        <Button type="submit">확인</Button>
+        <Button type="submit" disabled={disabled}>
+          확인
+        </Button>
       </Form>
       <Link to="/find" className={styles["find-password"]}>
         비밀번호 찾기
