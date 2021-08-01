@@ -1,6 +1,9 @@
 package apply.application
 
 import apply.domain.applicationform.ApplicationFormRepository
+import apply.domain.evaluation.Evaluation
+import apply.domain.evaluation.EvaluationRepository
+import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitmentitem.RecruitmentItem
@@ -14,7 +17,9 @@ import org.springframework.transaction.annotation.Transactional
 class RecruitmentService(
     private val recruitmentRepository: RecruitmentRepository,
     private val recruitmentItemRepository: RecruitmentItemRepository,
-    private val applicationFormRepository: ApplicationFormRepository
+    private val applicationFormRepository: ApplicationFormRepository,
+    private val evaluationRepository: EvaluationRepository,
+    private val evaluationItemRepository: EvaluationItemRepository
 ) {
     fun save(request: RecruitmentData) {
         val recruitment = recruitmentRepository.save(
@@ -53,9 +58,29 @@ class RecruitmentService(
 
     fun deleteById(id: Long) {
         val recruitment = getById(id)
+        validateDeletable(recruitment, id)
+        recruitmentItemRepository.deleteAll(findRecruitmentItemsToDelete(id))
+        val evaluations = evaluationRepository.findAllByRecruitmentId(id)
+        deleteEvaluationItems(evaluations)
+        evaluationRepository.deleteAll(evaluations)
+        recruitmentRepository.delete(recruitment)
+    }
+
+    private fun deleteEvaluationItems(evaluations: List<Evaluation>) {
+        evaluations.forEach {
+            evaluationItemRepository.deleteAll(findEvaluationItemsToDelete(it))
+        }
+    }
+
+    private fun findEvaluationItemsToDelete(evaluation: Evaluation) =
+        evaluationItemRepository.findAllByEvaluationId(evaluation.id)
+
+    private fun findRecruitmentItemsToDelete(id: Long): List<RecruitmentItem> =
+        recruitmentItemRepository.findAllByRecruitmentId(id)
+
+    private fun validateDeletable(recruitment: Recruitment, id: Long) {
         check(!recruitment.recruitable)
         check(!applicationFormRepository.existsByRecruitmentId(id))
-        recruitmentRepository.delete(recruitment)
     }
 
     fun getById(id: Long): Recruitment =

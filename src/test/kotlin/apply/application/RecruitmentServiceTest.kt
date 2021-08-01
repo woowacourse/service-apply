@@ -48,7 +48,14 @@ internal class RecruitmentServiceTest {
 
     @BeforeEach
     internal fun setUp() {
-        recruitmentService = RecruitmentService(recruitmentRepository, recruitmentItemRepository, applicationFormRepository)
+        recruitmentService =
+            RecruitmentService(
+                recruitmentRepository,
+                recruitmentItemRepository,
+                applicationFormRepository,
+                evaluationRepository,
+                evaluationItemRepository
+            )
     }
 
     @Nested
@@ -158,21 +165,19 @@ internal class RecruitmentServiceTest {
         fun `모집 삭제 시 평가, 평가 항목, 모집 항목을 함께 삭제한다`() {
             every { recruitmentRepository.findByIdOrNull(1L) } returns createRecruitment(id = 1L, recruitable = false)
             every { applicationFormRepository.existsByRecruitmentId(1L) } returns false
-            every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(1L) } returns listOf(
+            every { recruitmentItemRepository.findAllByRecruitmentId(1L) } returns listOf(
                 createRecruitmentItem(recruitmentId = 1L, id = 2L)
             )
             every { evaluationRepository.findAllByRecruitmentId(1L) } returns listOf(
-                createEvaluation(
-                    recruitmentId = 1L,
-                    id = 3L
-                )
+                createEvaluation(recruitmentId = 1L, id = 3L)
             )
-            every { evaluationItemRepository.findByEvaluationIdOrderByPosition(2L) } returns listOf(
-                createEvaluationItem(
-                    evaluationId = 3L,
-                    id = 4L
-                )
+            every { evaluationItemRepository.findAllByEvaluationId(3L) } returns listOf(
+                createEvaluationItem(evaluationId = 3L, id = 4L)
             )
+            every { recruitmentRepository.delete(createRecruitment(id = 1L)) } just Runs
+            every { recruitmentItemRepository.deleteAll(listOf(createRecruitmentItem(id = 2L))) } just Runs
+            every { evaluationRepository.deleteAll(listOf(createEvaluation(id = 3L))) } just Runs
+            every { evaluationItemRepository.deleteAll(listOf(createEvaluationItem(id = 4L))) } just Runs
 
             recruitmentService.deleteById(1L)
 
