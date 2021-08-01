@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.data.repository.findByIdOrNull
 import support.test.UnitTest
+import java.lang.IllegalStateException
 
 @UnitTest
 internal class RecruitmentServiceTest {
@@ -47,7 +48,7 @@ internal class RecruitmentServiceTest {
 
     @BeforeEach
     internal fun setUp() {
-        recruitmentService = RecruitmentService(recruitmentRepository, recruitmentItemRepository)
+        recruitmentService = RecruitmentService(recruitmentRepository, recruitmentItemRepository, applicationFormRepository)
     }
 
     @Nested
@@ -150,7 +151,7 @@ internal class RecruitmentServiceTest {
             every { recruitmentRepository.findByIdOrNull(1L) } returns createRecruitment(id = 1L, recruitable = false)
             every { applicationFormRepository.existsByRecruitmentId(1L) } returns true
 
-            assertThrows<IllegalArgumentException> { recruitmentService.deleteById(1L) }
+            assertThrows<IllegalStateException> { recruitmentService.deleteById(1L) }
         }
 
         @Test

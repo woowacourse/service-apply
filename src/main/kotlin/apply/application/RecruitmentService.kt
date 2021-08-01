@@ -1,5 +1,6 @@
 package apply.application
 
+import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitmentitem.RecruitmentItem
@@ -12,7 +13,8 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class RecruitmentService(
     private val recruitmentRepository: RecruitmentRepository,
-    private val recruitmentItemRepository: RecruitmentItemRepository
+    private val recruitmentItemRepository: RecruitmentItemRepository,
+    private val applicationFormRepository: ApplicationFormRepository
 ) {
     fun save(request: RecruitmentData) {
         val recruitment = recruitmentRepository.save(
@@ -52,6 +54,7 @@ class RecruitmentService(
     fun deleteById(id: Long) {
         val recruitment = getById(id)
         check(!recruitment.recruitable)
+        check(!applicationFormRepository.existsByRecruitmentId(id))
         recruitmentRepository.delete(recruitment)
     }
 
