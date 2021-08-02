@@ -1,11 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
-import "./Button.css";
+import styles from "./Button.module.css";
 
 const Button = ({ children, type, cancel, ...props }) => {
   return (
     <button
-      className={cancel ? "button cancel" : "button"}
+      className={cancel ? styles["button cancel"] : styles.button}
       type={type}
       {...props}
     >

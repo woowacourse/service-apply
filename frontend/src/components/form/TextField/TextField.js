@@ -4,7 +4,7 @@ import Field from "../Field/Field";
 import Label from "../Label/Label";
 import Description from "../Description/Description";
 import TextInput from "../TextInput/TextInput";
-import "./TextField.css";
+import styles from "./TextField.module.css";
 
 const TextField = ({
   required,
@@ -15,14 +15,14 @@ const TextField = ({
   ...props
 }) => {
   return (
-    <Field className="text-field">
-      <label className="text-field">
+    <Field className={styles["text-field"]}>
+      <label className={styles["text-field"]}>
         <div>
           <Label required={required}>{label}</Label>
         </div>
         {description && <Description>{description}</Description>}
         {maxLength > 0 && (
-          <div className="length-limit">
+          <div className={styles["length-limit"]}>
             {value.length} / {maxLength}
           </div>
         )}

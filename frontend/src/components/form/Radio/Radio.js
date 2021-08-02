@@ -1,11 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Label from "../Label/Label";
-import "./Radio.css";
+import styles from "./Radio.module.css";
 
 const Radio = ({ label, required, ...props }) => {
   return (
-    <Label className="radio-label">
+    <Label className={styles["radio-label"]}>
       <input type="radio" required={required} {...props} />
       {label}
     </Label>

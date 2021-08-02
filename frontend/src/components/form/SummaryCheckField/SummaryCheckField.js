@@ -2,14 +2,14 @@ import React from "react";
 import PropTypes from "prop-types";
 import Field from "../Field/Field";
 import CheckBox from "../CheckBox/CheckBox";
-import "./SummaryCheckField.css";
+import styles from "./SummaryCheckField.module.css";
 
 const SummaryCheckField = ({ children, label, required, ...props }) => {
   return (
     <Field>
       <CheckBox label={label} required={required} {...props} />
-      <div className="summary" tabIndex="-1">
-        <div className="text">{children}</div>
+      <div className={styles.summary} tabIndex="-1">
+        <div className={styles.text}>{children}</div>
       </div>
     </Field>
   );

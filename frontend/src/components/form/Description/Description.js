@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
-import "./Description.css";
+import styles from "./Description.module.css";
 
 const Description = ({ children }) => {
-  return <div className="description">{children}</div>;
+  return <div className={styles.description}>{children}</div>;
 };
 
 Description.propTypes = {

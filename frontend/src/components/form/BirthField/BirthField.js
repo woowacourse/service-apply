@@ -3,15 +3,15 @@ import PropTypes from "prop-types";
 import Field from "../Field/Field";
 import Label from "../Label/Label";
 import TextInput from "../TextInput/TextInput";
-import "./BirthField.css";
+import styles from "./BirthField.module.css";
 
 const BirthField = ({ required, value, onChange }) => {
   return (
-    <Field className="birth-field">
+    <Field className={styles["birth-field"]}>
       <Label for="year" required={required}>
         생년월일
       </Label>
-      <div className="birth">
+      <div className={styles.birth}>
         <TextInput
           className="year"
           id="year"
@@ -24,7 +24,7 @@ const BirthField = ({ required, value, onChange }) => {
           onChange={onChange}
         />
         <TextInput
-          className="month"
+          className={styles.month}
           name="month"
           type="text"
           value={value.month}
@@ -34,7 +34,7 @@ const BirthField = ({ required, value, onChange }) => {
           onChange={onChange}
         />
         <TextInput
-          className="day"
+          className={styles.day}
           name="day"
           type="text"
           value={value.day}

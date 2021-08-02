@@ -1,11 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
-import "./Label.css";
 import classNames from "classnames";
+import styles from "./Label.module.css";
 
 const Label = ({ children, className, required }) => {
   return (
-    <label className={classNames("label", className, { required })}>
+    <label className={classNames(styles.label, className, { required })}>
       {children}
     </label>
   );
