@@ -4,7 +4,7 @@ import axios from "axios";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import MainHeader from "./components/MainHeader/MainHeader";
 import MainFooter from "./components/MainFooter/MainFooter";
-import Recruits from "./pages/Recruits";
+import Recruits from "./pages/Recruits/Recruits";
 import ApplicantRegister from "./pages/ApplicantRegister";
 import ApplicationRegister from "./pages/ApplicationRegister";
 import Login from "./pages/Login/Login";

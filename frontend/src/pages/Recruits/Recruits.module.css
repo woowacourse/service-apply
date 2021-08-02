@@ -1,0 +1,40 @@
+.recruits {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  user-select: none;
+}
+
+.tab-list {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 10px;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.tab-item {
+  margin-right: 15px;
+  font-weight: bold;
+}
+
+.tab-item.active {
+  color: #333;
+}
+
+.tab-item a {
+  text-decoration: none;
+  color: #aaa;
+}
+
+.tab-item a.active {
+  color: #333;
+}
+
+.tab-item.edit-password {
+  display: flex;
+  justify-content: flex-end;
+  flex: 1;
+  margin: 0;
+}
