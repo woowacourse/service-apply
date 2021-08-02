@@ -10,27 +10,26 @@ import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentRepository
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.impl.annotations.MockK
+import io.mockk.just
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
-import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.ArgumentMatchers.anyLong
-import org.mockito.BDDMockito.given
-import org.mockito.BDDMockito.willDoNothing
-import org.mockito.Mock
-import org.mockito.junit.jupiter.MockitoExtension
+import support.test.UnitTest
 import java.util.Optional
 
-@ExtendWith(MockitoExtension::class)
+@UnitTest
 internal class EvaluationServiceTest {
-    @Mock
+    @MockK
     private lateinit var recruitmentRepository: RecruitmentRepository
 
-    @Mock
+    @MockK
     private lateinit var evaluationRepository: EvaluationRepository
 
-    @Mock
+    @MockK
     private lateinit var evaluationItemRepository: EvaluationItemRepository
 
     private lateinit var evaluationService: EvaluationService
@@ -60,10 +59,10 @@ internal class EvaluationServiceTest {
 
     @Test
     fun `평가와 모집 정보를 함께 제공한다`() {
-        given(evaluationRepository.findAll()).willReturn(evaluations)
-        given(recruitmentRepository.getOne(anyLong())).willReturn(recruitments[0])
-        given(evaluationRepository.findById(1L)).willReturn(Optional.of(evaluations[0]))
-        given(evaluationRepository.findById(2L)).willReturn(Optional.of(evaluations[1]))
+        every { evaluationRepository.findAll() } returns evaluations
+        every { recruitmentRepository.getOne(any()) } returns recruitments[0]
+        every { evaluationRepository.findById(1L) } returns Optional.of(evaluations[0])
+        every { evaluationRepository.findById(2L) } returns Optional.of(evaluations[1])
 
         val findAllWithRecruitment = evaluationService.findAllWithRecruitment()
 
@@ -80,8 +79,8 @@ internal class EvaluationServiceTest {
 
     @Test
     fun `삭제된 평가를 이전 평가로 가지는 평가의 이전 평가를 초기화한다`() {
-        given(evaluationRepository.findAll()).willReturn(evaluations)
-        willDoNothing().given(evaluationRepository).deleteById(anyLong())
+        every { evaluationRepository.findAll() } returns evaluations
+        every { evaluationRepository.deleteById(any()) } just Runs
 
         evaluationService.deleteById(2L)
 
@@ -95,8 +94,8 @@ internal class EvaluationServiceTest {
         val evaluationsWithDuplicatedBeforeEvaluationId: List<Evaluation> =
             listOf(*evaluations.toTypedArray(), thirdEvaluation)
 
-        given(evaluationRepository.findAll()).willReturn(evaluationsWithDuplicatedBeforeEvaluationId)
-        willDoNothing().given(evaluationRepository).deleteById(anyLong())
+        every { evaluationRepository.findAll() } returns evaluationsWithDuplicatedBeforeEvaluationId
+        every { evaluationRepository.deleteById(any()) } just Runs
 
         evaluationService.deleteById(2L)
 

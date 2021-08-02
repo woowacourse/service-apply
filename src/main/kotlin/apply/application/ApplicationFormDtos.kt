@@ -56,7 +56,10 @@ data class AnswerResponse(
     val contents: String,
     val recruitmentItemId: Long
 ) {
-    constructor(applicationFormAnswer: ApplicationFormAnswer) : this(applicationFormAnswer.contents, applicationFormAnswer.recruitmentItemId)
+    constructor(applicationFormAnswer: ApplicationFormAnswer) : this(
+        applicationFormAnswer.contents,
+        applicationFormAnswer.recruitmentItemId
+    )
 }
 
 data class MyApplicationFormResponse(

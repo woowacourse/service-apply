@@ -9,6 +9,7 @@ plugins {
     kotlin("plugin.jpa") version kotlinVersion
     id("org.jlleitschuh.gradle.ktlint") version "10.1.0"
     id("com.vaadin") version "0.8.0"
+    id("org.asciidoctor.convert") version "2.4.0"
 }
 
 group = "io.github.woowacourse"
@@ -45,14 +46,21 @@ dependencies {
     runtimeOnly("com.h2database:h2")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
+        exclude(group = "org.mockito")
     }
     testImplementation("com.ninja-squad:springmockk:2.0.3")
+    asciidoctor("org.springframework.restdocs:spring-restdocs-asciidoctor")
+    testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
 }
 
 dependencyManagement {
     imports {
         mavenBom("com.vaadin:vaadin-bom:${property("vaadinVersion")}")
     }
+}
+
+val snippetsDir by extra {
+    file("build/generated-snippets")
 }
 
 tasks {
@@ -68,5 +76,19 @@ tasks {
     ktlint {
         verbose.set(true)
         disabledRules.addAll("import-ordering")
+    }
+    test {
+        useJUnitPlatform()
+        outputs.dir(snippetsDir)
+    }
+    asciidoctor {
+        inputs.dir(snippetsDir)
+        dependsOn(test)
+    }
+    bootJar {
+        dependsOn(asciidoctor)
+        from("$snippetsDir/html5") {
+            into("static/docs")
+        }
     }
 }
