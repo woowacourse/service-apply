@@ -1,11 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
+import classNames from "classnames";
 import styles from "./Button.module.css";
 
 const Button = ({ children, type, cancel, ...props }) => {
   return (
     <button
-      className={cancel ? styles["button cancel"] : styles.button}
+      className={classNames([styles.button], { [styles.cancel]: cancel })}
       type={type}
       {...props}
     >

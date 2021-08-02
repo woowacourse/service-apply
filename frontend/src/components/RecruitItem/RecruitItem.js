@@ -21,7 +21,7 @@ const RecruitItem = ({ recruitment }) => {
     history.push({
       pathname: `/applicants/new`,
       state: {
-        recruitment: recruitment.Id,
+        recruitmentId: recruitment.id,
       },
     });
   };
