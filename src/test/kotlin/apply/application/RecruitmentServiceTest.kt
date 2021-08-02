@@ -175,16 +175,16 @@ internal class RecruitmentServiceTest {
                 createEvaluationItem(evaluationId = 3L, id = 4L)
             )
             every { recruitmentRepository.delete(createRecruitment(id = 1L)) } just Runs
-            every { recruitmentItemRepository.deleteAll(listOf(createRecruitmentItem(id = 2L))) } just Runs
-            every { evaluationRepository.deleteAll(listOf(createEvaluation(id = 3L))) } just Runs
-            every { evaluationItemRepository.deleteAll(listOf(createEvaluationItem(id = 4L))) } just Runs
+            every { recruitmentItemRepository.deleteInBatch(listOf(createRecruitmentItem(id = 2L))) } just Runs
+            every { evaluationRepository.deleteInBatch(listOf(createEvaluation(id = 3L))) } just Runs
+            every { evaluationItemRepository.deleteInBatch(listOf(createEvaluationItem(id = 4L))) } just Runs
 
             recruitmentService.deleteById(1L)
 
             verify { recruitmentRepository.delete(createRecruitment(id = 1L)) }
-            verify { recruitmentItemRepository.deleteAll(listOf(createRecruitmentItem(id = 2L))) }
-            verify { evaluationRepository.deleteAll(listOf(createEvaluation(id = 3L))) }
-            verify { evaluationItemRepository.deleteAll(listOf(createEvaluationItem(id = 4L))) }
+            verify { recruitmentItemRepository.deleteInBatch(listOf(createRecruitmentItem(id = 2L))) }
+            verify { evaluationRepository.deleteInBatch(listOf(createEvaluation(id = 3L))) }
+            verify { evaluationItemRepository.deleteInBatch(listOf(createEvaluationItem(id = 4L))) }
         }
     }
 }

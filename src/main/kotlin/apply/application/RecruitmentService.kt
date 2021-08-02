@@ -33,7 +33,7 @@ class RecruitmentService(
             )
         )
         recruitmentItemRepository.deleteAll(
-            findRecruitmentItemsToDelete(request.id, request.recruitmentItems.map { it.id })
+            findRecruitmentItems(request.id, request.recruitmentItems.map { it.id })
         )
         recruitmentItemRepository.saveAll(
             request.recruitmentItems.map {
@@ -42,7 +42,7 @@ class RecruitmentService(
         )
     }
 
-    private fun findRecruitmentItemsToDelete(recruitmentId: Long, excludedItemIds: List<Long>): List<RecruitmentItem> {
+    private fun findRecruitmentItems(recruitmentId: Long, excludedItemIds: List<Long>): List<RecruitmentItem> {
         return recruitmentItemRepository
             .findByRecruitmentIdOrderByPosition(recruitmentId)
             .filterNot { excludedItemIds.contains(it.id) }
@@ -58,29 +58,30 @@ class RecruitmentService(
 
     fun deleteById(id: Long) {
         val recruitment = getById(id)
-        validateDeletable(recruitment, id)
-        recruitmentItemRepository.deleteAll(findRecruitmentItemsToDelete(id))
+        validateDeletable(recruitment)
+        recruitmentItemRepository.deleteInBatch(findRecruitmentItems(id))
         val evaluations = evaluationRepository.findAllByRecruitmentId(id)
         deleteEvaluationItems(evaluations)
-        evaluationRepository.deleteAll(evaluations)
+        evaluationRepository.deleteInBatch(evaluations)
         recruitmentRepository.delete(recruitment)
     }
 
     private fun deleteEvaluationItems(evaluations: List<Evaluation>) {
         evaluations.forEach {
-            evaluationItemRepository.deleteAll(findEvaluationItemsToDelete(it))
+            val findAllByEvaluationId = findAllEvaluationItems(it)
+            evaluationItemRepository.deleteInBatch(findAllByEvaluationId)
         }
     }
 
-    private fun findEvaluationItemsToDelete(evaluation: Evaluation) =
+    private fun findAllEvaluationItems(evaluation: Evaluation) =
         evaluationItemRepository.findAllByEvaluationId(evaluation.id)
 
-    private fun findRecruitmentItemsToDelete(id: Long): List<RecruitmentItem> =
+    private fun findRecruitmentItems(id: Long): List<RecruitmentItem> =
         recruitmentItemRepository.findAllByRecruitmentId(id)
 
-    private fun validateDeletable(recruitment: Recruitment, id: Long) {
+    private fun validateDeletable(recruitment: Recruitment) {
         check(!recruitment.recruitable)
-        check(!applicationFormRepository.existsByRecruitmentId(id))
+        check(!applicationFormRepository.existsByRecruitmentId(recruitment.id))
     }
 
     fun getById(id: Long): Recruitment =
