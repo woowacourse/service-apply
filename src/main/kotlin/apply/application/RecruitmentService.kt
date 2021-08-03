@@ -4,6 +4,7 @@ import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitmentitem.RecruitmentItem
 import apply.domain.recruitmentitem.RecruitmentItemRepository
+import apply.domain.term.Term
 import apply.domain.term.TermRepository
 import apply.domain.term.getById
 import org.springframework.data.repository.findByIdOrNull
@@ -72,8 +73,7 @@ class RecruitmentService(
     }
 
     fun findAllTermSelectData(): List<TermSelectData> {
-        return termRepository.findAll()
-            .map(::TermSelectData)
-            .sortedBy { it.name }
+        return listOf(TermSelectData(Term.SINGLE)) +
+            termRepository.findAll().map(::TermSelectData).sortedBy { it.name }
     }
 }

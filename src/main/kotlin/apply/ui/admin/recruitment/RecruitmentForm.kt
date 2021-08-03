@@ -35,11 +35,7 @@ class RecruitmentForm() : BindingIdentityFormLayout<RecruitmentData>(Recruitment
     }
 
     constructor(terms: List<TermSelectData>) : this() {
-        term.setItems(
-            terms.toMutableList().apply {
-                add(0, TermSelectData("단독 모집"))
-            }
-        )
+        term.setItems(terms)
     }
 
     constructor(
