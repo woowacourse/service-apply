@@ -31,9 +31,6 @@ const App = () => {
             <Route path="/applicants/new" exact>
               <ApplicantRegister />
             </Route>
-            <Route path="/application-forms/new" exact>
-              <ApplicationRegister />
-            </Route>
             <Route path="/login" exact>
               <Login />
             </Route>
@@ -43,13 +40,16 @@ const App = () => {
             <Route path="/find/result" exact>
               <PasswordFindResult />
             </Route>
-            <PrivateRoute
-              path="/application-forms/edit"
+            {/* <PrivateRoute
+              path="/application-forms/:status"
               isAuthenticated={token !== ""}
               exact
             >
               <ApplicationRegister />
-            </PrivateRoute>
+            </PrivateRoute> */}
+            <Route path="/application-forms/:status" exact>
+              <ApplicationRegister />
+            </Route>
             <PrivateRoute path="/edit" isAuthenticated={token !== ""} exact>
               <PasswordEdit />
             </PrivateRoute>

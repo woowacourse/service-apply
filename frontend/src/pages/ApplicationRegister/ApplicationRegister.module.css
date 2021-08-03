@@ -1,0 +1,45 @@
+.application-register {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.recruit-card,
+.application-form {
+  width: 800px;
+}
+
+.rule-field {
+  margin-left: 8px;
+  font-size: 12px;
+  color: #ff0000;
+}
+
+.autosave-indicator {
+  color: darkred;
+}
+
+.description {
+  margin-top: 4px;
+  font-size: 14px;
+  color: #555;
+}
+
+.button-wrapper {
+  display: flex;
+  justify-content: stretch;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.button-wrapper button {
+  flex-grow: 1;
+  margin: 0;
+}
+
+@media screen and (max-width: 800px) {
+  .recruit-card,
+  .application-form {
+    width: 100vw;
+  }
+}
