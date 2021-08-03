@@ -40,13 +40,13 @@ const App = () => {
             <Route path="/find/result" exact>
               <PasswordFindResult />
             </Route>
-            {/* <PrivateRoute
+            <PrivateRoute
               path="/application-forms/:status"
               isAuthenticated={token !== ""}
               exact
             >
               <ApplicationRegister />
-            </PrivateRoute> */}
+            </PrivateRoute>
             <Route path="/application-forms/:status" exact>
               <ApplicationRegister />
             </Route>

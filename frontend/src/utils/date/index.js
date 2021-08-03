@@ -9,6 +9,16 @@ export const formatDateTime = (value) => {
   const minute = value.getMinutes();
   const second = value.getSeconds();
 
+  if (
+    isNaN(year) ||
+    isNaN(month) ||
+    isNaN(date) ||
+    isNaN(hour) ||
+    isNaN(minute) ||
+    isNaN(second)
+  )
+    return value;
+
   return `${year}-${String(month).padStart(2, "0")}-${String(date).padStart(
     2,
     "0"
