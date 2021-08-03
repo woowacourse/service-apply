@@ -5,6 +5,7 @@ import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitmentitem.RecruitmentItem
 import apply.domain.recruitmentitem.RecruitmentItemRepository
 import apply.domain.term.TermRepository
+import apply.domain.term.getById
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -46,12 +47,12 @@ class RecruitmentService(
 
     fun findAll(): List<RecruitmentResponse> {
         return recruitmentRepository.findAll()
-            .map { RecruitmentResponse(it, termRepository.findByIdOrNull(it.termId)) }
+            .map { RecruitmentResponse(it, termRepository.getById(it.termId)) }
     }
 
     fun findAllNotHidden(): List<RecruitmentResponse> {
         return recruitmentRepository.findAllByHiddenFalse()
-            .map { RecruitmentResponse(it, termRepository.findByIdOrNull(it.termId)) }
+            .map { RecruitmentResponse(it, termRepository.getById(it.termId)) }
     }
 
     fun deleteById(id: Long) {
@@ -65,7 +66,7 @@ class RecruitmentService(
 
     fun getNotEndedDataById(id: Long): RecruitmentData {
         val recruitment = getById(id)
-        val term = termRepository.findByIdOrNull(recruitment.termId)
+        val term = termRepository.getById(recruitment.termId)
         val recruitmentItems = recruitmentItemRepository.findByRecruitmentIdOrderByPosition(recruitment.id)
         return RecruitmentData(recruitment, term, recruitmentItems)
     }

@@ -46,9 +46,9 @@ data class RecruitmentData(
     var recruitmentItems: List<RecruitmentItemData> = emptyList(),
     var id: Long = 0L
 ) {
-    constructor(recruitment: Recruitment, term: Term?, recruitmentItems: List<RecruitmentItem>) : this(
+    constructor(recruitment: Recruitment, term: Term, recruitmentItems: List<RecruitmentItem>) : this(
         recruitment.title,
-        TermSelectData(term ?: Term("단독 모집")),
+        TermSelectData(term),
         recruitment.startDateTime,
         recruitment.endDateTime,
         recruitment.recruitable,
@@ -96,10 +96,10 @@ data class RecruitmentResponse(
     val endDateTime: LocalDateTime,
     val status: RecruitmentStatus
 ) {
-    constructor(recruitment: Recruitment, term: Term?) : this(
+    constructor(recruitment: Recruitment, term: Term) : this(
         recruitment.id,
         recruitment.title,
-        TermResponse(term ?: Term("단독 모집")),
+        TermResponse(term),
         recruitment.recruitable,
         recruitment.hidden,
         recruitment.startDateTime,

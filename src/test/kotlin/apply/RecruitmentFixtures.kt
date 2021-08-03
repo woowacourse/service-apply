@@ -22,12 +22,12 @@ fun createRecruitment(
     title: String = RECRUITMENT_TITLE,
     startDateTime: LocalDateTime = START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
-    term: Long? = null,
+    termId: Long? = null,
     recruitable: Boolean = true,
     hidden: Boolean = true,
     id: Long = 0L
 ): Recruitment {
-    return Recruitment(title, startDateTime, endDateTime, term, recruitable, hidden, id)
+    return Recruitment(title, startDateTime, endDateTime, termId, recruitable, hidden, id)
 }
 
 fun createRecruitmentItem(

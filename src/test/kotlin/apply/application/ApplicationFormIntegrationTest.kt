@@ -23,14 +23,14 @@ class ApplicationFormIntegrationTest(
 ) {
     @Test
     fun `아직 지원하지 않은 경우 단독 모집에 지원 가능하다`() {
-        val recruitment = recruitmentRepository.save(createRecruitment(term = null, recruitable = true))
+        val recruitment = recruitmentRepository.save(createRecruitment(termId = null, recruitable = true))
         val applicant = applicantRepository.save(createApplicant())
         assertDoesNotThrow { applicationFormService.create(applicant.id, CreateApplicationFormRequest(recruitment.id)) }
     }
 
     @Test
     fun `이미 지원한 지원에는 중복으로 지원할 수 없다`() {
-        val recruitment = recruitmentRepository.save(createRecruitment(term = null, recruitable = true))
+        val recruitment = recruitmentRepository.save(createRecruitment(termId = null, recruitable = true))
         val applicant = applicantRepository.save(createApplicant())
         applicationFormRepository.save(
             createApplicationForm(
@@ -48,7 +48,7 @@ class ApplicationFormIntegrationTest(
     @Test
     fun `동일한 기수의 다른 모집에 지원할 수 없다`() {
         val applicant = applicantRepository.save(createApplicant())
-        val appliedRecruitment = recruitmentRepository.save(createRecruitment(term = 1L))
+        val appliedRecruitment = recruitmentRepository.save(createRecruitment(termId = 1L))
         applicationFormRepository.save(
             createApplicationForm(
                 applicant.id,
@@ -57,7 +57,7 @@ class ApplicationFormIntegrationTest(
                 submittedDateTime = LocalDateTime.now()
             )
         )
-        val recruitment = recruitmentRepository.save(createRecruitment(term = 1L, recruitable = true))
+        val recruitment = recruitmentRepository.save(createRecruitment(termId = 1L, recruitable = true))
         assertThrows<DuplicateApplicationException> {
             applicationFormService.create(applicant.id, CreateApplicationFormRequest(recruitment.id))
         }
