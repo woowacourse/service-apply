@@ -9,7 +9,7 @@ import java.time.LocalDateTime
 fun createApplicationForm(
     applicantId: Long = 1L,
     recruitmentId: Long = 1L,
-    referenceUrl: String = "http://example.com",
+    referenceUrl: String = "https://example.com",
     applicationFormAnswers: ApplicationFormAnswers = createApplicationFormAnswers(),
     submitted: Boolean = false,
     submittedDateTime: LocalDateTime? = null

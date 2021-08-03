@@ -13,60 +13,47 @@ class ApplicationForm(
 
     @Column(nullable = false)
     val recruitmentId: Long,
+    referenceUrl: String = "",
+    answers: ApplicationFormAnswers = ApplicationFormAnswers(),
+    submitted: Boolean = false,
+    submittedDateTime: LocalDateTime? = null,
 
-    var referenceUrl: String,
-
-    @Embedded
-    var answers: ApplicationFormAnswers,
+    @Column(nullable = false)
+    val createdDateTime: LocalDateTime = LocalDateTime.now(),
+    modifiedDateTime: LocalDateTime = LocalDateTime.now(),
     id: Long = 0L
 ) : BaseEntity(id) {
-    @Column(nullable = false)
-    var submitted: Boolean = false
+    var referenceUrl: String = referenceUrl
+        private set
+
+    @Embedded
+    var answers: ApplicationFormAnswers = answers
+        private set
 
     @Column(nullable = false)
-    var createdDateTime: LocalDateTime = LocalDateTime.now()
-
-    @Column(nullable = false)
-    var modifiedDateTime: LocalDateTime = LocalDateTime.now()
+    var submitted: Boolean = submitted
+        private set
 
     @Column
-    var submittedDateTime: LocalDateTime? = null
+    var submittedDateTime: LocalDateTime? = submittedDateTime
+        private set
+
+    @Column(nullable = false)
+    var modifiedDateTime: LocalDateTime = modifiedDateTime
+        private set
+
+    init {
+        if (submitted) {
+            requireNotNull(submittedDateTime)
+        }
+    }
 
     constructor(
         applicantId: Long,
         recruitmentId: Long,
         applicationValidator: ApplicationValidator
-    ) : this(applicantId, recruitmentId, "", ApplicationFormAnswers()) {
+    ) : this(applicantId, recruitmentId) {
         applicationValidator.validate(applicantId, recruitmentId)
-    }
-
-    constructor(
-        applicantId: Long,
-        recruitmentId: Long,
-        referenceUrl: String,
-        submitted: Boolean,
-        createdDateTime: LocalDateTime,
-        modifiedDateTime: LocalDateTime,
-        submittedDateTime: LocalDateTime,
-        applicationFormAnswers: ApplicationFormAnswers,
-        id: Long
-    ) : this(applicantId, recruitmentId, referenceUrl, applicationFormAnswers, id) {
-        this.submitted = submitted
-        this.createdDateTime = createdDateTime
-        this.modifiedDateTime = modifiedDateTime
-        this.submittedDateTime = submittedDateTime
-    }
-
-    constructor(
-        applicantId: Long,
-        recruitmentId: Long,
-        referenceUrl: String,
-        applicationFormAnswers: ApplicationFormAnswers,
-        submitted: Boolean,
-        submittedDateTime: LocalDateTime?
-    ) : this(applicantId, recruitmentId, referenceUrl, applicationFormAnswers) {
-        this.submitted = submitted
-        this.submittedDateTime = submittedDateTime
     }
 
     fun update(referenceUrl: String, applicationFormAnswers: ApplicationFormAnswers) {

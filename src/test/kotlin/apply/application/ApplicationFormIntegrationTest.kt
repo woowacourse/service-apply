@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import support.test.IntegrationTest
+import java.time.LocalDateTime
 
 @IntegrationTest
 class ApplicationFormIntegrationTest(
@@ -31,7 +32,14 @@ class ApplicationFormIntegrationTest(
     fun `이미 지원한 지원에는 중복으로 지원할 수 없다`() {
         val recruitment = recruitmentRepository.save(createRecruitment(term = null, recruitable = true))
         val applicant = applicantRepository.save(createApplicant())
-        applicationFormRepository.save(createApplicationForm(applicant.id, recruitment.id, submitted = true))
+        applicationFormRepository.save(
+            createApplicationForm(
+                applicant.id,
+                recruitment.id,
+                submitted = true,
+                submittedDateTime = LocalDateTime.now()
+            )
+        )
         assertThrows<DuplicateApplicationException> {
             applicationFormService.create(applicant.id, CreateApplicationFormRequest(recruitment.id))
         }
@@ -41,7 +49,14 @@ class ApplicationFormIntegrationTest(
     fun `동일한 기수의 다른 모집에 지원할 수 없다`() {
         val applicant = applicantRepository.save(createApplicant())
         val appliedRecruitment = recruitmentRepository.save(createRecruitment(term = 1L))
-        applicationFormRepository.save(createApplicationForm(applicant.id, appliedRecruitment.id, submitted = true))
+        applicationFormRepository.save(
+            createApplicationForm(
+                applicant.id,
+                appliedRecruitment.id,
+                submitted = true,
+                submittedDateTime = LocalDateTime.now()
+            )
+        )
         val recruitment = recruitmentRepository.save(createRecruitment(term = 1L, recruitable = true))
         assertThrows<DuplicateApplicationException> {
             applicationFormService.create(applicant.id, CreateApplicationFormRequest(recruitment.id))
