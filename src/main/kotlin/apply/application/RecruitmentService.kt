@@ -73,7 +73,7 @@ class RecruitmentService(
     }
 
     fun findAllTermSelectData(): List<TermSelectData> {
-        return listOf(TermSelectData(Term.SINGLE)) +
-            termRepository.findAll().map(::TermSelectData).sortedBy { it.name }
+        val terms = listOf(Term.SINGLE) + termRepository.findAll().sortedBy { it.name }
+        return terms.map(::TermSelectData)
     }
 }
