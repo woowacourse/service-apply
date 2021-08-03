@@ -43,6 +43,9 @@ class Recruitment(
     val isRecruiting: Boolean
         get() = status == RecruitmentStatus.RECRUITING
 
+    val single: Boolean
+        get() = termId == 0L
+
     constructor(
         title: String,
         startDateTime: LocalDateTime,
