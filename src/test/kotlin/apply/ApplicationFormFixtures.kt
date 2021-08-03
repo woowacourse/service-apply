@@ -4,14 +4,24 @@ import apply.application.AnswerRequest
 import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormAnswer
 import apply.domain.applicationform.ApplicationFormAnswers
+import java.time.LocalDateTime
 
 fun createApplicationForm(
     applicantId: Long = 1L,
     recruitmentId: Long = 1L,
     referenceUrl: String = "http://example.com",
-    applicationFormAnswers: ApplicationFormAnswers = createApplicationFormAnswers()
+    applicationFormAnswers: ApplicationFormAnswers = createApplicationFormAnswers(),
+    submitted: Boolean = false,
+    submittedDateTime: LocalDateTime? = null
 ): ApplicationForm {
-    return ApplicationForm(applicantId, recruitmentId, referenceUrl, applicationFormAnswers)
+    return ApplicationForm(
+        applicantId,
+        recruitmentId,
+        referenceUrl,
+        applicationFormAnswers,
+        submitted,
+        submittedDateTime
+    )
 }
 
 fun createApplicationFormAnswers(

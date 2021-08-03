@@ -4,6 +4,7 @@ import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormAnswer
 import apply.domain.applicationform.ApplicationFormAnswers
 import apply.domain.applicationform.ApplicationFormRepository
+import apply.domain.applicationform.ApplicationValidator
 import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitmentitem.RecruitmentItemRepository
@@ -16,22 +17,12 @@ import javax.transaction.Transactional
 class ApplicationFormService(
     private val applicationFormRepository: ApplicationFormRepository,
     private val recruitmentRepository: RecruitmentRepository,
-    private val recruitmentItemRepository: RecruitmentItemRepository
+    private val recruitmentItemRepository: RecruitmentItemRepository,
+    private val applicationValidator: ApplicationValidator
 ) {
     fun create(applicantId: Long, request: CreateApplicationFormRequest) {
         val recruitment = findApplicableRecruitment(request.recruitmentId)
-        checkAppliedAlready(applicantId, recruitment)
-        applicationFormRepository.save(ApplicationForm(applicantId, recruitment.id))
-    }
-
-    private fun checkAppliedAlready(applicantId: Long, recruitment: Recruitment) {
-        if (recruitment.term != null) {
-            val histories: List<ApplicationForm> = applicationFormRepository.findAllByApplicantId(applicantId)
-            val isUserAppliedBefore = histories.any {
-                recruitmentRepository.existsByIdAndTerm(it.recruitmentId, recruitment.term)
-            }
-            require(!isUserAppliedBefore) { "해당 기수에 이미 지원한 이력이 있습니다." }
-        }
+        applicationFormRepository.save(ApplicationForm(applicantId, recruitment.id, applicationValidator))
     }
 
     fun update(applicantId: Long, request: UpdateApplicationFormRequest) {

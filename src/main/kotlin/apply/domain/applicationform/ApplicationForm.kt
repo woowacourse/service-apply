@@ -34,23 +34,10 @@ class ApplicationForm(
 
     constructor(
         applicantId: Long,
-        recruitmentId: Long
-    ) : this(applicantId, recruitmentId, "", ApplicationFormAnswers())
-
-    constructor(
-        applicantId: Long,
         recruitmentId: Long,
-        referenceUrl: String,
-        applicationFormAnswers: ApplicationFormAnswers,
-        submitted: Boolean,
-        createdDateTime: LocalDateTime,
-        modifiedDateTime: LocalDateTime,
-        submittedDateTime: LocalDateTime?
-    ) : this(applicantId, recruitmentId, referenceUrl, applicationFormAnswers) {
-        this.submitted = submitted
-        this.createdDateTime = createdDateTime
-        this.modifiedDateTime = modifiedDateTime
-        this.submittedDateTime = submittedDateTime
+        applicationValidator: ApplicationValidator
+    ) : this(applicantId, recruitmentId, "", ApplicationFormAnswers()) {
+        applicationValidator.validate(applicantId, recruitmentId)
     }
 
     constructor(
@@ -67,6 +54,18 @@ class ApplicationForm(
         this.submitted = submitted
         this.createdDateTime = createdDateTime
         this.modifiedDateTime = modifiedDateTime
+        this.submittedDateTime = submittedDateTime
+    }
+
+    constructor(
+        applicantId: Long,
+        recruitmentId: Long,
+        referenceUrl: String,
+        applicationFormAnswers: ApplicationFormAnswers,
+        submitted: Boolean,
+        submittedDateTime: LocalDateTime?
+    ) : this(applicantId, recruitmentId, referenceUrl, applicationFormAnswers) {
+        this.submitted = submitted
         this.submittedDateTime = submittedDateTime
     }
 

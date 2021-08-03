@@ -8,12 +8,15 @@ import apply.createRecruitment
 import apply.createRecruitmentItem
 import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormRepository
+import apply.domain.applicationform.ApplicationValidator
 import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitmentitem.RecruitmentItem
 import apply.domain.recruitmentitem.RecruitmentItemRepository
+import io.mockk.Runs
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.just
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -36,6 +39,9 @@ class ApplicationFormServiceTest {
     @MockK
     private lateinit var recruitmentItemRepository: RecruitmentItemRepository
 
+    @MockK
+    private lateinit var applicationValidator: ApplicationValidator
+
     private lateinit var applicationFormService: ApplicationFormService
 
     private lateinit var applicationForm1: ApplicationForm
@@ -56,8 +62,12 @@ class ApplicationFormServiceTest {
 
     @BeforeEach
     internal fun setUp() {
-        this.applicationFormService =
-            ApplicationFormService(applicationFormRepository, recruitmentRepository, recruitmentItemRepository)
+        this.applicationFormService = ApplicationFormService(
+            applicationFormRepository,
+            recruitmentRepository,
+            recruitmentItemRepository,
+            applicationValidator
+        )
 
         applicationForm1 = createApplicationForm()
 
@@ -163,6 +173,7 @@ class ApplicationFormServiceTest {
         every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
         every { applicationFormRepository.existsByRecruitmentIdAndApplicantId(any(), any()) } returns false
         every { applicationFormRepository.save(any<ApplicationForm>()) } returns mockk()
+        every { applicationValidator.validate(any(), any()) } just Runs
 
         assertDoesNotThrow { applicationFormService.create(applicantId, createApplicationFormRequest) }
     }
@@ -178,72 +189,6 @@ class ApplicationFormServiceTest {
             )
         }.message
         assertThat(message).isEqualTo("지원하는 모집이 존재하지 않습니다.")
-    }
-
-    @Test
-    fun `기존 지원 내역이 없는 경우, 지원 가능하다`() {
-        val histories: List<Recruitment> = emptyList()
-        val applyRecruitment: Recruitment = createRecruitment(title = "4기 프론트엔드 모집", 4L, id = 4L)
-
-        assertDoesNotThrow { createApplicantFormWithHistory(histories, applyRecruitment) }
-    }
-
-    @Test
-    fun `기수가 같은 지원 내역이 없는 경우, 지원 가능하다`() {
-        val histories: List<Recruitment> = listOf(
-            createRecruitment(title = "3기 프론트 모집", 3L, id = 1L),
-            createRecruitment(title = "2기 백엔드 모집", 2L, id = 2L),
-            createRecruitment(title = "1기 프론트 모집", null, id = 3L)
-        )
-        val applyRecruitment: Recruitment = createRecruitment(title = "4기 프론트엔드 모집", 4L, id = 4L)
-
-        assertDoesNotThrow { createApplicantFormWithHistory(histories, applyRecruitment) }
-    }
-
-    @Test
-    fun `기수가 같은 지원 내역이 이미 있는 경우 지원할 수 없다`() {
-        val histories: List<Recruitment> = listOf(
-            createRecruitment(title = "4기 백엔드 모집", 4L, id = 1L),
-            createRecruitment(title = "3기 백엔드 모집", 3L, id = 2L),
-            createRecruitment(title = "2기 프론트 모집", null, id = 3L)
-        )
-        val applyRecruitment: Recruitment = createRecruitment(title = "4기 프론트엔드 모집", 4L, id = 4L)
-
-        val message = assertThrows<IllegalArgumentException> {
-            createApplicantFormWithHistory(histories, applyRecruitment)
-        }.message
-
-        assertThat(message).isEqualTo("해당 기수에 이미 지원한 이력이 있습니다.")
-    }
-
-    @Test
-    fun `모집에 기수 정보가 없는 경우에는 이전 지원 내역과 상관없이 지원 가능하다`() {
-        val histories: List<Recruitment> = listOf(
-            createRecruitment(title = "4기 백엔드 모집", 4L, id = 1L),
-            createRecruitment(title = "3기 백엔드 모집", 3L, id = 2L),
-            createRecruitment(title = "2기 프론트 모집", null, id = 3L)
-        )
-        val applyRecruitment: Recruitment = createRecruitment(title = "추가 모집", term = null, id = 2L)
-
-        assertDoesNotThrow { createApplicantFormWithHistory(histories, applyRecruitment) }
-    }
-
-    private fun createApplicantFormWithHistory(histories: List<Recruitment>, applyRecruitment: Recruitment) {
-        every { recruitmentRepository.findByIdOrNull(applyRecruitment.id) } returns applyRecruitment
-
-        every { applicationFormRepository.findAllByApplicantId(applicantId) } returns
-            histories.map { ApplicationForm(applicantId, it.id) }
-
-        histories.forEach {
-            if (applyRecruitment.term != null) {
-                every { recruitmentRepository.existsByIdAndTerm(it.id, applyRecruitment.term!!) } returns
-                    histories.any { it.term == applyRecruitment.term }
-            }
-        }
-
-        every { applicationFormRepository.save(any()) } returns mockk()
-
-        applicationFormService.create(applicantId, CreateApplicationFormRequest(applyRecruitment.id))
     }
 
     @Test

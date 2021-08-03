@@ -9,8 +9,8 @@ import apply.ui.admin.recruitment.RecruitmentItemForm
 import java.time.LocalDateTime
 
 private const val RECRUITMENT_TITLE: String = "웹 백엔드 3기"
-private val START_DATE_TIME: LocalDateTime = LocalDateTime.MIN
-private val END_DATE_TIME: LocalDateTime = LocalDateTime.MAX
+private val START_DATE_TIME: LocalDateTime = LocalDateTime.now().minusYears(1)
+private val END_DATE_TIME: LocalDateTime = LocalDateTime.now().plusYears(1)
 
 private const val RECRUITMENT_ITEM_TITLE: String = "프로그래밍 학습 과정과 현재 자신이 생각하는 역량은?"
 private const val POSITION: Int = 1
@@ -20,13 +20,14 @@ private const val DESCRIPTION: String =
 
 fun createRecruitment(
     title: String = RECRUITMENT_TITLE,
+    term: Long? = null,
     startDateTime: LocalDateTime = START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
     recruitable: Boolean = true,
     hidden: Boolean = true,
     id: Long = 0L
 ): Recruitment {
-    return Recruitment(title, startDateTime, endDateTime, recruitable, hidden, id)
+    return Recruitment(title, term, startDateTime, endDateTime, recruitable, hidden, id)
 }
 
 fun createRecruitment(

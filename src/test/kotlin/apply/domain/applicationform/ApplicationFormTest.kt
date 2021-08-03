@@ -4,9 +4,24 @@ import apply.createApplicationForm
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
+import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 
 internal class ApplicationFormTest {
+    @Test
+    fun `지원서가 지원 정책을 충족하는 경우 생성한다`() {
+        assertDoesNotThrow {
+            ApplicationForm(1L, 1L) { _, _ -> }
+        }
+    }
+
+    @Test
+    fun `지원서가 지원 정책에 맞지 않으면 생성할 수 없다`() {
+        assertThrows<DuplicateApplicationException> {
+            ApplicationForm(1L, 1L) { _, _ -> throw DuplicateApplicationException() }
+        }
+    }
+
     @Test
     fun `지원서를 수정한다`() {
         val applicationForm = createApplicationForm(referenceUrl = "https://example.com").apply {
