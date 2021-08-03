@@ -85,6 +85,7 @@ class RecruitmentForm() : BindingIdentityFormLayout<RecruitmentData>(Recruitment
 
     override fun fill(data: RecruitmentData) {
         fillDefault(data)
+        term.isReadOnly = true
         data.recruitmentItems.forEach { addRecruitmentItemForm(it) }
     }
 }
