@@ -3,6 +3,7 @@ package apply.application
 import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentStatus
 import apply.domain.recruitmentitem.RecruitmentItem
+import apply.domain.term.Term
 import java.time.LocalDateTime
 import javax.validation.Valid
 import javax.validation.constraints.Max
@@ -11,12 +12,22 @@ import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
+data class TermSelectData(
+    @field:NotBlank
+    @field:Size(min = 1, max = 31)
+    var name: String = "",
+    var id: Long = 0L
+) {
+    constructor(term: Term) : this(term.name, term.id)
+}
+
 data class RecruitmentData(
     @field:NotBlank
     @field:Size(min = 1, max = 31)
     var title: String = "",
 
-    var term: Long? = null,
+    @field:NotNull
+    var term: TermSelectData = TermSelectData(),
 
     @field:NotNull
     var startDateTime: LocalDateTime = LocalDateTime.MIN,
@@ -35,9 +46,9 @@ data class RecruitmentData(
     var recruitmentItems: List<RecruitmentItemData> = emptyList(),
     var id: Long = 0L
 ) {
-    constructor(recruitment: Recruitment, recruitmentItems: List<RecruitmentItem>) : this(
+    constructor(recruitment: Recruitment, term: Term?, recruitmentItems: List<RecruitmentItem>) : this(
         recruitment.title,
-        recruitment.term,
+        TermSelectData(term ?: Term("단독 모집")),
         recruitment.startDateTime,
         recruitment.endDateTime,
         recruitment.recruitable,
@@ -88,7 +99,7 @@ data class RecruitmentResponse(
     constructor(recruitment: Recruitment) : this(
         recruitment.id,
         recruitment.title,
-        recruitment.term,
+        recruitment.termId,
         recruitment.recruitable,
         recruitment.hidden,
         recruitment.startDateTime,
