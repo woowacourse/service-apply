@@ -9,6 +9,5 @@ fun RecruitmentRepository.getById(recruitmentId: Long): Recruitment {
 
 interface RecruitmentRepository : JpaRepository<Recruitment, Long> {
     fun findAllByHiddenFalse(): List<Recruitment>
-    fun existsByIdAndTerm(recruitmentId: Long, term: Long): Boolean
-    fun findAllByTerm(term: Long): List<Recruitment>
+    fun findAllByTermId(termId: Long): List<Recruitment>
 }

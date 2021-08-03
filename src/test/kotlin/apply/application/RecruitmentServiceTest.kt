@@ -41,7 +41,7 @@ internal class RecruitmentServiceTest {
             slot<Recruitment>().also { slot ->
                 every { recruitmentRepository.save(capture(slot)) } answers {
                     slot.captured.run {
-                        Recruitment(title, null, period, recruitable, hidden, id)
+                        Recruitment(title, period, null, recruitable, hidden, id)
                     }
                 }
             }

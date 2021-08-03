@@ -26,8 +26,8 @@ class DuplicateApplicationValidator(
 
     private fun List<Long>.hasSameTerm(recruitmentId: Long): Boolean {
         val recruitment = recruitmentRepository.getById(recruitmentId)
-        val term = recruitment.term ?: return false
-        val recruitmentIds = recruitmentRepository.findAllByTerm(term).map { it.id }
+        val termId = recruitment.termId ?: return false
+        val recruitmentIds = recruitmentRepository.findAllByTermId(termId).map { it.id }
         return intersect(recruitmentIds).isNotEmpty()
     }
 }

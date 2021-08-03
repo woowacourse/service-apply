@@ -11,11 +11,11 @@ class Recruitment(
     @Column(nullable = false)
     var title: String,
 
-    @Column(updatable = false)
-    val term: Long? = null,
-
     @Embedded
     var period: RecruitmentPeriod,
+
+    @Column(updatable = false)
+    val termId: Long? = null,
     recruitable: Boolean = false,
     hidden: Boolean = true,
     id: Long
@@ -47,9 +47,9 @@ class Recruitment(
         title: String,
         startDateTime: LocalDateTime,
         endDateTime: LocalDateTime,
-        term: Long? = null,
+        termId: Long? = null,
         recruitable: Boolean = false,
         hidden: Boolean = true,
         id: Long = 0L
-    ) : this(title, term, RecruitmentPeriod(startDateTime, endDateTime), recruitable, hidden, id)
+    ) : this(title, RecruitmentPeriod(startDateTime, endDateTime), termId, recruitable, hidden, id)
 }
