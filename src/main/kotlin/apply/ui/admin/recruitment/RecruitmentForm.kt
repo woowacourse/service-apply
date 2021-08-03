@@ -44,12 +44,14 @@ class RecruitmentForm() : BindingIdentityFormLayout<RecruitmentData>(Recruitment
 
     constructor(
         title: String,
+        term: TermSelectData,
         startDateTime: LocalDateTime,
         endDateTime: LocalDateTime,
         recruitable: Boolean,
         hidden: Boolean
     ) : this() {
         this.title.value = title
+        this.term.value = term
         this.startDateTime.value = startDateTime
         this.endDateTime.value = endDateTime
         this.recruitable.value = recruitable

@@ -14,8 +14,8 @@ class Recruitment(
     @Embedded
     var period: RecruitmentPeriod,
 
-    @Column(updatable = false)
-    val termId: Long? = null,
+    @Column(nullable = false, updatable = false)
+    val termId: Long = 0L,
     recruitable: Boolean = false,
     hidden: Boolean = true,
     id: Long
@@ -47,7 +47,7 @@ class Recruitment(
         title: String,
         startDateTime: LocalDateTime,
         endDateTime: LocalDateTime,
-        termId: Long? = null,
+        termId: Long = 0L,
         recruitable: Boolean = false,
         hidden: Boolean = true,
         id: Long = 0L

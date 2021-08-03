@@ -7,4 +7,4 @@ create table term
   default charset = utf8mb4;
 
 alter table recruitment
-    add term_id bigint after title;
+    add term_id bigint default 0 after title;
