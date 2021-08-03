@@ -89,21 +89,28 @@ data class RecruitmentItemData(
 data class RecruitmentResponse(
     val id: Long,
     val title: String,
-    val term: Long?,
+    val term: TermResponse,
     val recruitable: Boolean,
     val hidden: Boolean,
     val startDateTime: LocalDateTime,
     val endDateTime: LocalDateTime,
     val status: RecruitmentStatus
 ) {
-    constructor(recruitment: Recruitment) : this(
+    constructor(recruitment: Recruitment, term: Term?) : this(
         recruitment.id,
         recruitment.title,
-        recruitment.termId,
+        TermResponse(term ?: Term("단독 모집")),
         recruitment.recruitable,
         recruitment.hidden,
         recruitment.startDateTime,
         recruitment.endDateTime,
         recruitment.status
     )
+}
+
+data class TermResponse(
+    val id: Long,
+    val name: String
+) {
+    constructor(term: Term) : this(term.id, term.name)
 }

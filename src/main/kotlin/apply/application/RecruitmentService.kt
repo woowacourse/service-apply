@@ -44,12 +44,14 @@ class RecruitmentService(
             .filterNot { excludedItemIds.contains(it.id) }
     }
 
-    fun findAll(): List<Recruitment> {
+    fun findAll(): List<RecruitmentResponse> {
         return recruitmentRepository.findAll()
+            .map { RecruitmentResponse(it, termRepository.findByIdOrNull(it.termId)) }
     }
 
     fun findAllNotHidden(): List<RecruitmentResponse> {
-        return recruitmentRepository.findAllByHiddenFalse().map(::RecruitmentResponse)
+        return recruitmentRepository.findAllByHiddenFalse()
+            .map { RecruitmentResponse(it, termRepository.findByIdOrNull(it.termId)) }
     }
 
     fun deleteById(id: Long) {
