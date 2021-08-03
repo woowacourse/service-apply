@@ -47,16 +47,7 @@ class Recruitment(
         title: String,
         startDateTime: LocalDateTime,
         endDateTime: LocalDateTime,
-        recruitable: Boolean = false,
-        hidden: Boolean = true,
-        id: Long = 0L
-    ) : this(title, null, RecruitmentPeriod(startDateTime, endDateTime), recruitable, hidden, id)
-
-    constructor(
-        title: String,
-        term: Long?,
-        startDateTime: LocalDateTime,
-        endDateTime: LocalDateTime,
+        term: Long? = null,
         recruitable: Boolean = false,
         hidden: Boolean = true,
         id: Long = 0L

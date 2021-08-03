@@ -18,9 +18,9 @@ class RecruitmentService(
         val recruitment = recruitmentRepository.save(
             Recruitment(
                 request.title,
-                request.term,
                 request.startDateTime,
                 request.endDateTime,
+                request.term,
                 request.recruitable,
                 request.hidden,
                 request.id

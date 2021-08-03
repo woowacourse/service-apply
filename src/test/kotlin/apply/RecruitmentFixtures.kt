@@ -20,22 +20,14 @@ private const val DESCRIPTION: String =
 
 fun createRecruitment(
     title: String = RECRUITMENT_TITLE,
-    term: Long? = null,
     startDateTime: LocalDateTime = START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
+    term: Long? = null,
     recruitable: Boolean = true,
     hidden: Boolean = true,
     id: Long = 0L
 ): Recruitment {
-    return Recruitment(title, term, startDateTime, endDateTime, recruitable, hidden, id)
-}
-
-fun createRecruitment(
-    title: String = RECRUITMENT_TITLE,
-    term: Long?,
-    id: Long = 0L
-): Recruitment {
-    return Recruitment(title, term, START_DATE_TIME, END_DATE_TIME, true, true, id)
+    return Recruitment(title, startDateTime, endDateTime, term, recruitable, hidden, id)
 }
 
 fun createRecruitmentItem(
