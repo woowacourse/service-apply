@@ -9,7 +9,7 @@ import {
   MESSAGE as PASSWORD_MESSAGE,
 } from "../../utils/validation/password";
 import useTokenContext from "../../hooks/useTokenContext";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { fetchPasswordEdit } from "../../api";
 
 const validator = {
@@ -87,11 +87,11 @@ const PasswordEdit = () => {
       <Form onSubmit={handleSubmit}>
         <h1>비밀번호 변경</h1>
         <TextField
-          v-model="password"
           name="password"
           type="password"
           label="기존 비밀번호"
           value={value.password}
+          maxLength={20}
           placeholder="기존 비밀번호를 입력해 주세요"
           onChange={handleChange}
           required
@@ -102,6 +102,7 @@ const PasswordEdit = () => {
           type="password"
           label="새 비밀번호"
           value={value.newPassword}
+          maxLength={20}
           placeholder="비밀번호를 입력해 주세요"
           onChange={handleChange}
           required
@@ -112,15 +113,20 @@ const PasswordEdit = () => {
           type="password"
           label="비밀번호 확인"
           value={value.reNewPassword}
+          maxLength={20}
           placeholder="비밀번호를 다시 한 번 입력해 주세요"
           onChange={handleChange}
           required
         />
         <p className={styles["rule-field"]}>{errorMessage.reNewPassword}</p>
-        <Button onClick={() => history.goBack()}>이전</Button>
-        <Button disabled={disabled} type="submit">
-          확인
-        </Button>
+        <div className={styles.buttons}>
+          <Button cancel onClick={() => history.goBack()}>
+            이전
+          </Button>
+          <Button disabled={disabled} type="submit">
+            확인
+          </Button>
+        </div>
       </Form>
     </div>
   );
