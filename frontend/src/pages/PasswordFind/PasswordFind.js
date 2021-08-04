@@ -116,10 +116,14 @@ const PasswordFind = () => {
         <p className={styles["rule-field"]}>
           {errorMessage.year || errorMessage.month || errorMessage.day}
         </p>
-        <Button onClick={() => history.goBack()}>이전</Button>
-        <Button disabled={disabled} type="submit">
-          확인
-        </Button>
+        <div className={styles.buttons}>
+          <Button cancel onClick={() => history.goBack()}>
+            이전
+          </Button>
+          <Button disabled={disabled} type="submit">
+            확인
+          </Button>
+        </div>
       </Form>
       <Link to="/find" className={styles["find-password"]}>
         비밀번호 찾기
