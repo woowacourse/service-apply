@@ -74,7 +74,6 @@ const Login = () => {
       <Form onSubmit={handleSubmit}>
         <h1>내 지원서 보기</h1>
         <TextField
-          v-model="email"
           name="email"
           type="email"
           label="이메일"
@@ -89,15 +88,20 @@ const Login = () => {
           type="password"
           label="비밀번호"
           value={value.password}
+          maxLength={20}
           placeholder="비밀번호를 입력해 주세요."
           onChange={handleChange}
           required
         />
         <p className={styles["rule-field"]}>{errorMessage.password}</p>
-        <Button onClick={() => history.goBack()}>이전</Button>
-        <Button type="submit" disabled={disabled}>
-          확인
-        </Button>
+        <div className={styles.buttons}>
+          <Button cancel onClick={() => history.goBack()}>
+            이전
+          </Button>
+          <Button type="submit" disabled={disabled}>
+            확인
+          </Button>
+        </div>
       </Form>
       <Link to="/find" className={styles["find-password"]}>
         비밀번호 찾기

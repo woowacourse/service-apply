@@ -17,3 +17,11 @@
   color: #2c3e50;
   margin-right: 5px;
 }
+
+.buttons {
+  display: flex;
+}
+
+.buttons > button {
+  width: 50%;
+}
