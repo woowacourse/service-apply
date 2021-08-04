@@ -20,7 +20,7 @@ const PasswordFindResult = () => {
         <div>
           임시 비밀번호가 <strong>{email}</strong> 으로 발송되었습니다.
         </div>
-        <Button type="button" onClick={() => history.goBack()}>
+        <Button type="button" onClick={() => history.push("/")}>
           돌아가기
         </Button>
       </Form>
