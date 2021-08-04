@@ -70,7 +70,7 @@ const Login = () => {
   };
 
   return (
-    <div className={styles.Login}>
+    <div className={styles.login}>
       <Form onSubmit={handleSubmit}>
         <h1>내 지원서 보기</h1>
         <TextField
