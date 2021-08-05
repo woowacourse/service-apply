@@ -27,7 +27,7 @@ class RecruitmentRestController(
     }
 
     @GetMapping("/all")
-    fun findAll(): ResponseEntity<ApiResponse<List<Recruitment>>> {
+    fun findAll(): ResponseEntity<ApiResponse<List<RecruitmentResponse>>> {
         return ResponseEntity.ok(ApiResponse.success(recruitmentService.findAll()))
     }
 

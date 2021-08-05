@@ -3,6 +3,7 @@ package apply.application
 import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentStatus
 import apply.domain.recruitmentitem.RecruitmentItem
+import apply.domain.term.Term
 import java.time.LocalDateTime
 import javax.validation.Valid
 import javax.validation.constraints.Max
@@ -11,10 +12,22 @@ import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
+data class TermSelectData(
+    @field:NotBlank
+    @field:Size(min = 1, max = 31)
+    var name: String = "",
+    var id: Long = 0L
+) {
+    constructor(term: Term) : this(term.name, term.id)
+}
+
 data class RecruitmentData(
     @field:NotBlank
     @field:Size(min = 1, max = 31)
     var title: String = "",
+
+    @field:NotNull
+    var term: TermSelectData = TermSelectData(),
 
     @field:NotNull
     var startDateTime: LocalDateTime = LocalDateTime.MIN,
@@ -33,8 +46,9 @@ data class RecruitmentData(
     var recruitmentItems: List<RecruitmentItemData> = emptyList(),
     var id: Long = 0L
 ) {
-    constructor(recruitment: Recruitment, recruitmentItems: List<RecruitmentItem>) : this(
+    constructor(recruitment: Recruitment, term: Term, recruitmentItems: List<RecruitmentItem>) : this(
         recruitment.title,
+        TermSelectData(term),
         recruitment.startDateTime,
         recruitment.endDateTime,
         recruitment.recruitable,
@@ -75,19 +89,28 @@ data class RecruitmentItemData(
 data class RecruitmentResponse(
     val id: Long,
     val title: String,
+    val term: TermResponse,
     val recruitable: Boolean,
     val hidden: Boolean,
     val startDateTime: LocalDateTime,
     val endDateTime: LocalDateTime,
     val status: RecruitmentStatus
 ) {
-    constructor(recruitment: Recruitment) : this(
+    constructor(recruitment: Recruitment, term: Term) : this(
         recruitment.id,
         recruitment.title,
+        TermResponse(term),
         recruitment.recruitable,
         recruitment.hidden,
         recruitment.startDateTime,
         recruitment.endDateTime,
         recruitment.status
     )
+}
+
+data class TermResponse(
+    val id: Long,
+    val name: String
+) {
+    constructor(term: Term) : this(term.id, term.name)
 }

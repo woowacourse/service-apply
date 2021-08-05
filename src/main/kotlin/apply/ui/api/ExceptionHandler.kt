@@ -1,6 +1,7 @@
 package apply.ui.api
 
 import apply.domain.applicant.ApplicantAuthenticationException
+import apply.domain.applicationform.DuplicateApplicationException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -28,6 +29,13 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
     fun handleNotFoundException(exception: EntityNotFoundException): ResponseEntity<ApiResponse<Unit>> {
         logger.error("message", exception)
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(ApiResponse.error(exception.message))
+    }
+
+    @ExceptionHandler(DuplicateApplicationException::class)
+    fun handleConflictException(exception: DuplicateApplicationException): ResponseEntity<ApiResponse<Unit>> {
+        logger.error("message", exception)
+        return ResponseEntity.status(HttpStatus.CONFLICT)
             .body(ApiResponse.error(exception.message))
     }
 

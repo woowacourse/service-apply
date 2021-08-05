@@ -24,7 +24,7 @@ class RecruitmentsFormView(
     private val recruitmentService: RecruitmentService
 ) : VerticalLayout(), HasUrlParameter<String> {
     private val title: Title = Title()
-    private val recruitmentForm: RecruitmentForm = RecruitmentForm()
+    private val recruitmentForm: RecruitmentForm = RecruitmentForm(recruitmentService.findAllTermSelectData())
     private val submitButton: Button = createSubmitButton()
 
     init {

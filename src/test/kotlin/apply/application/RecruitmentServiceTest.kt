@@ -8,6 +8,7 @@ import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitmentitem.RecruitmentItem
 import apply.domain.recruitmentitem.RecruitmentItemRepository
+import apply.domain.term.TermRepository
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
@@ -27,11 +28,14 @@ internal class RecruitmentServiceTest {
     @MockK
     private lateinit var recruitmentItemRepository: RecruitmentItemRepository
 
+    @MockK
+    private lateinit var termRepository: TermRepository
+
     private lateinit var recruitmentService: RecruitmentService
 
     @BeforeEach
     internal fun setUp() {
-        recruitmentService = RecruitmentService(recruitmentRepository, recruitmentItemRepository)
+        recruitmentService = RecruitmentService(recruitmentRepository, recruitmentItemRepository, termRepository)
     }
 
     @Nested
@@ -41,7 +45,7 @@ internal class RecruitmentServiceTest {
             slot<Recruitment>().also { slot ->
                 every { recruitmentRepository.save(capture(slot)) } answers {
                     slot.captured.run {
-                        Recruitment(title, period, recruitable, hidden, id)
+                        Recruitment(title, period, 0L, recruitable, hidden, id)
                     }
                 }
             }

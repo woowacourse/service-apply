@@ -13,6 +13,9 @@ class Recruitment(
 
     @Embedded
     var period: RecruitmentPeriod,
+
+    @Column(nullable = false, updatable = false)
+    val termId: Long = 0L,
     recruitable: Boolean = false,
     hidden: Boolean = true,
     id: Long
@@ -40,12 +43,16 @@ class Recruitment(
     val isRecruiting: Boolean
         get() = status == RecruitmentStatus.RECRUITING
 
+    val single: Boolean
+        get() = termId == 0L
+
     constructor(
         title: String,
         startDateTime: LocalDateTime,
         endDateTime: LocalDateTime,
+        termId: Long = 0L,
         recruitable: Boolean = false,
         hidden: Boolean = true,
         id: Long = 0L
-    ) : this(title, RecruitmentPeriod(startDateTime, endDateTime), recruitable, hidden, id)
+    ) : this(title, RecruitmentPeriod(startDateTime, endDateTime), termId, recruitable, hidden, id)
 }
