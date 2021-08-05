@@ -22,6 +22,9 @@ class ApplicationFormService(
 ) {
     fun create(applicantId: Long, request: CreateApplicationFormRequest) {
         val recruitment = findApplicableRecruitment(request.recruitmentId)
+        check(!applicationFormRepository.existsByRecruitmentIdAndApplicantId(recruitment.id, applicantId)) {
+            "이미 작성 중인 지원서가 있습니다."
+        }
         applicationFormRepository.save(ApplicationForm(applicantId, recruitment.id, applicationValidator))
     }
 
