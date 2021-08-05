@@ -3,7 +3,6 @@ package apply.ui.api
 import apply.application.ApplicantAuthenticationService
 import apply.application.ApplicantResponse
 import apply.application.ApplicantService
-import apply.application.ApplicationProperties
 import apply.application.AuthenticateApplicantRequest
 import apply.application.EditPasswordRequest
 import apply.application.RegisterApplicantRequest
@@ -27,7 +26,6 @@ class ApplicantRestController(
     private val applicantService: ApplicantService,
     private val applicantAuthenticationService: ApplicantAuthenticationService,
     private val mailService: MailService,
-    private val applicationProperties: ApplicationProperties,
 ) {
     @PostMapping("/register")
     fun generateToken(@RequestBody @Valid request: RegisterApplicantRequest): ResponseEntity<ApiResponse<String>> {
@@ -64,7 +62,7 @@ class ApplicantRestController(
         @RequestParam email: String,
         @RequestParam authenticateCode: String
     ): ResponseEntity<Unit> {
-        applicantService.authenticateApplicant(email, authenticateCode)
+        applicantAuthenticationService.authenticateEmail(email, authenticateCode)
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
     }
 

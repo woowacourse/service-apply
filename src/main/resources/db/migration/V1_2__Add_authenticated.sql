@@ -1,4 +1,5 @@
 alter table applicant
-    add authenticated boolean;
+    add authenticated boolean not null;
+
 alter table applicant
-    add authenticate_code varchar(255);
+    add authenticate_code varchar(255) not null;

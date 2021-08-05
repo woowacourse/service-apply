@@ -56,7 +56,6 @@ class MailService(
             setVariables(
                 mapOf(
                     "name" to request.name,
-                    // TODO: 차후 연결될 프론트 주소가 필요
                     "url" to "${applicationProperties.url}/api/applicants/authenticate-email?" +
                         "email=${request.email}&" +
                         "authenticateCode=$authenticateCode"

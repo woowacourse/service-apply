@@ -79,9 +79,10 @@ class Applicant(
     }
 
     fun authenticateEmail(authenticateCode: String) {
-        if (this.authenticateCode != authenticateCode) {
-            throw ApplicantAuthenticationException()
+        if (this.authenticated) {
+            throw ApplicantAuthenticationException("이미 이메일이 인증된 지원자 입니다.")
         }
+        identify(this.authenticateCode == authenticateCode)
         authenticated = true
     }
 }
