@@ -40,7 +40,7 @@ class ApplicationFormIntegrationTest(
                 submittedDateTime = LocalDateTime.now()
             )
         )
-        assertThrows<DuplicateApplicationException> {
+        assertThrows<IllegalStateException> {
             applicationFormService.create(applicant.id, CreateApplicationFormRequest(recruitment.id))
         }
     }

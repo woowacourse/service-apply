@@ -12,16 +12,9 @@ class DuplicateApplicationValidator(
     override fun validate(applicantId: Long, recruitmentId: Long) {
         val appliedRecruitmentIds = applicationFormRepository.findAllByApplicantIdAndSubmittedTrue(applicantId)
             .map { it.recruitmentId }
-        if (recruitmentId.alreadyApplied(appliedRecruitmentIds)) {
-            throw DuplicateApplicationException("이미 지원한 모집입니다.")
-        }
         if (appliedRecruitmentIds.hasSameTerm(recruitmentId)) {
             throw DuplicateApplicationException("같은 기수의 다른 모집에 지원했습니다.")
         }
-    }
-
-    private fun Long.alreadyApplied(recruitmentIds: List<Long>): Boolean {
-        return recruitmentIds.contains(this)
     }
 
     private fun List<Long>.hasSameTerm(recruitmentId: Long): Boolean {
