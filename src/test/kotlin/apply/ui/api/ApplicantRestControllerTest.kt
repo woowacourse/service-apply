@@ -240,14 +240,14 @@ internal class ApplicantRestControllerTest : RestControllerTest() {
     }
 
     @Test
-    fun `이메일 인증 요청이 수행되면 지원 플랫폼으로 리다이렉트된다`() {
+    fun `이메일 인증 요청에 응답으로 NoContent를 반환한다`() {
         every { applicantService.authenticateApplicant(applicantRequest.email, any()) } returns Unit
-        every { applicationProperties.url } returns REDIRECTION_URL
 
-        mockMvc.get("/api/applicants/authenticate-email") {
+        mockMvc.post("/api/applicants/authenticate-email") {
             param("email", applicantRequest.email)
+            param("authenticateCode", "code")
         }.andExpect {
-            status { isMovedPermanently }
+            status { isNoContent }
         }
     }
 

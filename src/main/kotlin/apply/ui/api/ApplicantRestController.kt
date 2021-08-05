@@ -59,13 +59,13 @@ class ApplicantRestController(
         return ResponseEntity.noContent().build()
     }
 
-    @GetMapping("/authenticate-email")
+    @PostMapping("/authenticate-email")
     fun authenticateEmail(
         @RequestParam email: String,
         @RequestParam authenticateCode: String
     ): ResponseEntity<Unit> {
         applicantService.authenticateApplicant(email, authenticateCode)
-        return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).header("Location", applicationProperties.url).build()
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
     }
 
     @GetMapping
