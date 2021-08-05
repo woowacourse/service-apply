@@ -1,7 +1,7 @@
 package apply.ui.admin.selections
 
+import apply.application.RecruitmentResponse
 import apply.application.RecruitmentService
-import apply.domain.recruitment.Recruitment
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
@@ -33,7 +33,7 @@ class SelectionsView(private val recruitmentService: RecruitmentService) : Verti
             .toTypedArray()
     }
 
-    private fun createButton(recruitment: Recruitment): Component {
+    private fun createButton(recruitment: RecruitmentResponse): Component {
         return HorizontalLayout(
             createNormalButton(recruitment.title) {
                 UI.getCurrent().navigate(SelectionView::class.java, recruitment.id)
