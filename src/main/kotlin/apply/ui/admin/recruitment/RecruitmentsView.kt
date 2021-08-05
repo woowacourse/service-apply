@@ -1,7 +1,7 @@
 package apply.ui.admin.recruitment
 
+import apply.application.RecruitmentResponse
 import apply.application.RecruitmentService
-import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentStatus
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
@@ -48,35 +48,36 @@ class RecruitmentsView(private val recruitmentService: RecruitmentService) : Ver
     }
 
     private fun createGrid(): Component {
-        return Grid<Recruitment>(10).apply {
-            addSortableColumn("모집명", Recruitment::title)
+        return Grid<RecruitmentResponse>(10).apply {
+            addSortableColumn("모집명", RecruitmentResponse::title)
+            addSortableColumn("기수") { it.term.name }
             addSortableColumn("상태") { it.status.toText() }
             addSortableColumn("공개 여부") { it.hidden.toText() }
-            addSortableDateTimeColumn("시작일시", Recruitment::startDateTime)
-            addSortableDateTimeColumn("종료일시", Recruitment::endDateTime)
+            addSortableDateTimeColumn("시작일시", RecruitmentResponse::startDateTime)
+            addSortableDateTimeColumn("종료일시", RecruitmentResponse::endDateTime)
             addColumn(createButtonRenderer()).apply { isAutoWidth = true }
             setItems(recruitmentService.findAll())
         }
     }
 
-    private fun createButtonRenderer(): Renderer<Recruitment> {
-        return ComponentRenderer<Component, Recruitment> { it -> createButtons(it) }
+    private fun createButtonRenderer(): Renderer<RecruitmentResponse> {
+        return ComponentRenderer<Component, RecruitmentResponse> { it -> createButtons(it) }
     }
 
-    private fun createButtons(recruitment: Recruitment): Component {
+    private fun createButtons(recruitment: RecruitmentResponse): Component {
         return HorizontalLayout(
             createEditButton(recruitment),
             createDeleteButton(recruitment).apply { isEnabled = !recruitment.recruitable }
         )
     }
 
-    private fun createEditButton(recruitment: Recruitment): Component {
+    private fun createEditButton(recruitment: RecruitmentResponse): Component {
         return createPrimarySmallButton("수정") {
             UI.getCurrent().navigate(RecruitmentsFormView::class.java, "${recruitment.id}/$EDIT_VALUE")
         }
     }
 
-    private fun createDeleteButton(recruitment: Recruitment): Button {
+    private fun createDeleteButton(recruitment: RecruitmentResponse): Button {
         return createDeleteButtonWithDialog("모집을 삭제하시겠습니까?") {
             recruitmentService.deleteById(recruitment.id)
         }

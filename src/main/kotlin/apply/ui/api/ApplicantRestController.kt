@@ -1,9 +1,8 @@
 package apply.ui.api
 
-import apply.application.ApplicantAuthenticationService
+import apply.application.RegisterApplicantRequest
 import apply.application.ApplicantService
-import apply.application.ApplicationProperties
-import apply.application.AuthenticateApplicantRequest
+import apply.application.ApplicantAuthenticationService
 import apply.application.EditPasswordRequest
 import apply.application.RegisterApplicantRequest
 import apply.application.ResetPasswordRequest
@@ -65,5 +64,13 @@ class ApplicantRestController(
     ): ResponseEntity<Unit> {
         applicantService.authenticateApplicant(email, authenticateCode)
         return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).header("Location", applicationProperties.url).build()
+    }
+
+    @GetMapping
+    fun findAllByKeyword(
+        @RequestParam keyword: String
+    ): ResponseEntity<ApiResponse<List<ApplicantResponse>>> {
+        val applicants = applicantService.findAllByKeyword(keyword)
+        return ResponseEntity.ok(ApiResponse.success(applicants))
     }
 }
