@@ -72,7 +72,8 @@ class ApplicationForm(
         this.answers = applicationFormAnswers
     }
 
-    fun submit() {
+    fun submit(applicationValidator: ApplicationValidator) {
+        applicationValidator.validate(applicantId, recruitmentId)
         submitted = true
         submittedDateTime = LocalDateTime.now()
     }

@@ -63,6 +63,43 @@ class ApplicationFormIntegrationTest(
         }
     }
 
+    @Test
+    fun `동일한 기수의 다른 모집에 임시 저장되어 있어도 지원서를 제출할 수 있다`() {
+        val applicant = applicantRepository.save(createApplicant())
+        val appliedRecruitment = recruitmentRepository.save(createRecruitment(termId = 1L))
+        applicationFormRepository.save(createApplicationForm(applicant.id, appliedRecruitment.id, submitted = false))
+        val recruitment = recruitmentRepository.save(createRecruitment(termId = 1L, recruitable = true))
+        applicationFormRepository.save(createApplicationForm(applicant.id, recruitment.id, submitted = false))
+        assertDoesNotThrow {
+            applicationFormService.update(
+                applicant.id,
+                UpdateApplicationFormRequest(recruitmentId = recruitment.id, submitted = true)
+            )
+        }
+    }
+
+    @Test
+    fun `동일한 기수의 다른 모집에 이미 지원서를 제출한 경우에는 지원서를 제출할 수 없다`() {
+        val applicant = applicantRepository.save(createApplicant())
+        val appliedRecruitment = recruitmentRepository.save(createRecruitment(termId = 1L))
+        applicationFormRepository.save(
+            createApplicationForm(
+                applicant.id,
+                appliedRecruitment.id,
+                submitted = true,
+                submittedDateTime = LocalDateTime.now()
+            )
+        )
+        val recruitment = recruitmentRepository.save(createRecruitment(termId = 1L, recruitable = true))
+        applicationFormRepository.save(createApplicationForm(applicant.id, recruitment.id, submitted = false))
+        assertThrows<DuplicateApplicationException> {
+            applicationFormService.update(
+                applicant.id,
+                UpdateApplicationFormRequest(recruitmentId = recruitment.id, submitted = true)
+            )
+        }
+    }
+
     @AfterEach
     internal fun tearDown() {
         applicantRepository.deleteAll()

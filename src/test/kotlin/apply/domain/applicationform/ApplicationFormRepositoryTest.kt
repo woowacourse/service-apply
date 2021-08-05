@@ -1,6 +1,7 @@
 package apply.domain.applicationform
 
 import apply.createApplicationForm
+import apply.pass
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -14,7 +15,7 @@ class ApplicationFormRepositoryTest(
     @BeforeEach
     internal fun setUp() {
         val applicationForm = createApplicationForm()
-        val submittedApplicationForm = createApplicationForm(recruitmentId = 2L).apply { submit() }
+        val submittedApplicationForm = createApplicationForm(recruitmentId = 2L).apply { submit(pass) }
 
         applicationFormRepository.saveAll(listOf(applicationForm, submittedApplicationForm))
     }

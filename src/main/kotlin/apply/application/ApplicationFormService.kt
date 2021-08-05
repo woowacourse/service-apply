@@ -36,7 +36,7 @@ class ApplicationFormService(
         )
         applicationForm.update(request.referenceUrl, answers)
         if (request.submitted) {
-            applicationForm.submit()
+            applicationForm.submit(applicationValidator)
         }
     }
 
