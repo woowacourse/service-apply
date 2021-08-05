@@ -5,7 +5,14 @@ import java.time.LocalDateTime
 import javax.persistence.Column
 import javax.persistence.Embedded
 import javax.persistence.Entity
+import javax.persistence.Table
+import javax.persistence.UniqueConstraint
 
+@Table(
+    uniqueConstraints = [
+        UniqueConstraint(name = "uk_application_form", columnNames = ["recruitmentId", "applicantId"])
+    ]
+)
 @Entity
 class ApplicationForm(
     @Column(nullable = false)

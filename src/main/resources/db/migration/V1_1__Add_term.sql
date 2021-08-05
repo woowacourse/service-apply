@@ -8,3 +8,6 @@ create table term
 
 alter table recruitment
     add term_id bigint default 0 after title;
+
+alter table application_form
+    add constraint uk_application_form unique (recruitment_id, applicant_id);
