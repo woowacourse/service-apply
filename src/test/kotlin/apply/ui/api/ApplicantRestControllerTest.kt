@@ -22,8 +22,6 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.MediaType
-import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 import support.createLocalDate
@@ -71,8 +69,6 @@ internal class ApplicantRestControllerTest : RestControllerTest() {
 
     @MockkBean
     private lateinit var applicationProperties: ApplicationProperties
-
-    private lateinit var mockMvc: MockMvc
 
     private val applicantRequest = RegisterApplicantRequest(
         name = "지원자",
