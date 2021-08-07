@@ -91,7 +91,6 @@ const PasswordEdit = () => {
           type="password"
           label="기존 비밀번호"
           value={value.password}
-          maxLength={20}
           placeholder="기존 비밀번호를 입력해 주세요"
           onChange={handleChange}
           required
@@ -102,7 +101,6 @@ const PasswordEdit = () => {
           type="password"
           label="새 비밀번호"
           value={value.newPassword}
-          maxLength={20}
           placeholder="비밀번호를 입력해 주세요"
           onChange={handleChange}
           required
@@ -113,7 +111,6 @@ const PasswordEdit = () => {
           type="password"
           label="비밀번호 확인"
           value={value.reNewPassword}
-          maxLength={20}
           placeholder="비밀번호를 다시 한 번 입력해 주세요"
           onChange={handleChange}
           required
