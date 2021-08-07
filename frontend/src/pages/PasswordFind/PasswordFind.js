@@ -125,9 +125,6 @@ const PasswordFind = () => {
           </Button>
         </div>
       </Form>
-      <Link to="/find" className={styles["find-password"]}>
-        비밀번호 찾기
-      </Link>
     </div>
   );
 };
