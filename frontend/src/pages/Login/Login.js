@@ -88,7 +88,6 @@ const Login = () => {
           type="password"
           label="비밀번호"
           value={value.password}
-          maxLength={20}
           placeholder="비밀번호를 입력해 주세요."
           onChange={handleChange}
           required
