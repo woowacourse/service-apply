@@ -3,10 +3,12 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 import styles from "./Button.module.css";
 
-const Button = ({ children, type, cancel, ...props }) => {
+const Button = ({ children, type, cancel, className, ...props }) => {
   return (
     <button
-      className={classNames([styles.button], { [styles.cancel]: cancel })}
+      className={classNames([styles.button], className, {
+        [styles.cancel]: cancel,
+      })}
       type={type}
       {...props}
     >
@@ -19,6 +21,7 @@ Button.propTypes = {
   children: PropTypes.node.isRequired,
   type: PropTypes.oneOf(["button", "submit", "reset"]),
   cancel: PropTypes.bool,
+  className: PropTypes.string,
 };
 
 Button.defaultProps = {
