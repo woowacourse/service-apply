@@ -3,7 +3,7 @@ import "./interceptor";
 
 const BASE_URL = "/api/applicants";
 
-export const postRegister = ({
+export const fetchRegister = ({
   name,
   phoneNumber,
   email,

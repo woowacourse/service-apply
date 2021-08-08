@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useHistory, useLocation } from "react-router";
-import { postRegister } from "../../api/applicants";
 import {
   BirthField,
   Button,
@@ -12,6 +11,7 @@ import {
 import RecruitCard from "../../components/RecruitCard/RecruitCard";
 import { POLICY_SUMMARY } from "../../constants/policySummary";
 import useRecruitmentContext from "../../hooks/useRecruitmentContext";
+import useTokenContext from "../../hooks/useTokenContext";
 import { formatLocalDate } from "../../utils/date";
 import {
   DAY_ERROR_MESSAGE,
@@ -41,6 +41,7 @@ const ApplicantRegister = () => {
   const history = useHistory();
 
   const { recruitmentId } = location.state;
+  const { postRegister } = useTokenContext();
   const { recruitment } = useRecruitmentContext();
 
   const curRecruitment = recruitment.findById(recruitmentId);
@@ -251,7 +252,7 @@ const ApplicantRegister = () => {
       return value[key];
     });
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     const { target } = event;
@@ -269,7 +270,7 @@ const ApplicantRegister = () => {
     };
 
     try {
-      postRegister(data);
+      await postRegister(data);
 
       history.push({
         pathname: "/application-forms/new",
