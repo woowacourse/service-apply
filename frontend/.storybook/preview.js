@@ -1,6 +1,7 @@
 import { MemoryRouter } from "react-router-dom";
 
-import RecruitmentProvider from "../src/provider/RecruitmentProvider";
+import { RecruitmentContext } from "../src/hooks/useRecruitmentContext";
+import { recruitmentFilter } from "../src/provider/RecruitmentProvider";
 import TokenProvider from "../src/provider/TokenProvider";
 
 export const parameters = {
@@ -13,14 +14,48 @@ export const parameters = {
   },
 };
 
+const recruitmentDummy = [
+  {
+    id: 1,
+    title: "지원할 제목",
+    recruitable: true,
+    hidden: false,
+    startDateTime: "2020-10-05T10:00:00",
+    endDateTime: "2020-11-05T10:00:00",
+    status: "ENDED",
+  },
+  {
+    id: 2,
+    title: "웹 백엔드 2기",
+    recruitable: true,
+    hidden: false,
+    startDateTime: "2019-10-25T10:00:00",
+    endDateTime: "2019-11-05T10:00:00",
+    status: "ENDED",
+  },
+  {
+    id: 4,
+    title: "웹 프론트엔드 3기",
+    recruitable: true,
+    hidden: false,
+    startDateTime: "2020-10-25T15:00:00",
+    endDateTime: "2021-11-30T10:00:00",
+    status: "RECRUITING",
+  },
+];
+
 export const decorators = [
   (Story) => (
-    <RecruitmentProvider>
+    <RecruitmentContext.Provider
+      value={{
+        recruitment: recruitmentFilter(recruitmentDummy),
+      }}
+    >
       <TokenProvider>
         <MemoryRouter>
           <Story />
         </MemoryRouter>
       </TokenProvider>
-    </RecruitmentProvider>
+    </RecruitmentContext.Provider>
   ),
 ];
