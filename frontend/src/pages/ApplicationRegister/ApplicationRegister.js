@@ -56,7 +56,7 @@ const ApplicationRegister = () => {
     try {
       const { data } = await Api.fetchItems(recruitmentId);
 
-      setRecruitmentItems(data.body.recruitmentItems);
+      setRecruitmentItems(data.recruitmentItems);
 
       reset(recruitmentItems);
     } catch (e) {
