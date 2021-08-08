@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useHistory, useLocation } from "react-router";
-import { fetchRegister } from "../../api/applicants";
+import { postRegister } from "../../api/applicants";
 import {
   BirthField,
   Button,
@@ -269,7 +269,7 @@ const ApplicantRegister = () => {
     };
 
     try {
-      fetchRegister(data);
+      postRegister(data);
 
       history.push({
         pathname: "/application-forms/new",
