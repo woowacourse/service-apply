@@ -5,7 +5,11 @@ import styles from "./Label.module.css";
 
 const Label = ({ children, className, required }) => {
   return (
-    <label className={classNames(styles.label, className, { required })}>
+    <label
+      className={classNames(styles.label, className, {
+        [styles.required]: required,
+      })}
+    >
       {children}
     </label>
   );
