@@ -5,20 +5,15 @@ import classNames from "classnames";
 import BaseItem from "../BaseItem/BaseItem";
 import Box from "../Box/Box";
 
-import { formatDateTime } from "../../utils/date";
-
 import styles from "./RecruitCard.module.css";
 
 const RecruitCard = ({ title, startDateTime, endDateTime, className }) => {
-  const formattedStartDateTime = formatDateTime(new Date(startDateTime));
-  const formattedEndDateTime = formatDateTime(new Date(endDateTime));
-
   return (
     <Box className={classNames(styles["recruit-card"], className)}>
       <BaseItem
         title={title}
-        startDateTime={formattedStartDateTime}
-        endDateTime={formattedEndDateTime}
+        startDateTime={startDateTime}
+        endDateTime={endDateTime}
       />
     </Box>
   );
