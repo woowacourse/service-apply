@@ -24,21 +24,31 @@ const RecruitmentProvider = ({ children }) => {
   const [recruitments, setRecruitments] = useState([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const { data: recruitments } = await Api.fetchRecruitments();
+    try {
+      const fetchData = async () => {
+        const { data: recruitments } = await Api.fetchRecruitments();
 
-      setRecruitments(recruitments.sort((a, b) => b.id - a.id));
-    };
+        setRecruitments(recruitments.sort((a, b) => b.id - a.id));
+      };
 
-    fetchData();
+      fetchData();
+    } catch (e) {
+      console.error(e);
+      setRecruitments([]);
+    }
   }, []);
 
   const fetchMyApplicationForms = async (payload) => {
-    const { data: myApplicationForms } = await Api.fetchMyApplicationForms(
-      payload
-    );
+    try {
+      const { data: myApplicationForms } = await Api.fetchMyApplicationForms(
+        payload
+      );
 
-    return myApplicationForms;
+      return myApplicationForms;
+    } catch (e) {
+      console.error(e);
+      return [];
+    }
   };
 
   return (
