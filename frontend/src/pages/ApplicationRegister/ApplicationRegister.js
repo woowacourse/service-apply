@@ -23,7 +23,9 @@ const ApplicationRegister = () => {
   const { token } = useTokenContext();
   const { status } = useParams();
 
-  const recruitmentId = location.search.recruitmentId ?? "";
+  const recruitmentId = location.search.recruitmentId
+    ? location.search.recruitmentId
+    : "";
 
   const { recruitment: recruitmentApi } = useRecruitmentContext();
   const recruitment = recruitmentApi.findById(recruitmentId) ?? {
@@ -200,7 +202,7 @@ const ApplicationRegister = () => {
         }
       }
     })();
-  }, []);
+  });
 
   return (
     <div className={styles["application-register"]}>
