@@ -44,7 +44,7 @@ const ApplicantRegister = () => {
   const { postRegister } = useTokenContext();
   const { recruitment } = useRecruitmentContext();
 
-  const curRecruitment = recruitment.findById(recruitmentId);
+  const currentRecruitment = recruitment.findById(recruitmentId);
 
   const [value, setValue] = useState({
     policy: false,
@@ -285,9 +285,9 @@ const ApplicantRegister = () => {
   return (
     <div className={styles["applicant-register"]}>
       <RecruitCard
-        title={curRecruitment.title}
-        startDateTime={curRecruitment.startDateTime}
-        endDateTime={curRecruitment.endDateTime}
+        title={currentRecruitment.title}
+        startDateTime={currentRecruitment.startDateTime}
+        endDateTime={currentRecruitment.endDateTime}
       />
       <Form onSubmit={handleSubmit}>
         <h2>지원자 정보</h2>
