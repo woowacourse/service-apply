@@ -3,6 +3,7 @@ import { MemoryRouter } from "react-router-dom";
 import { RecruitmentContext } from "../src/hooks/useRecruitmentContext";
 import { recruitmentFilter } from "../src/provider/RecruitmentProvider";
 import TokenProvider from "../src/provider/TokenProvider";
+import "../src/App.css";
 
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
@@ -34,7 +35,7 @@ const recruitmentDummy = [
     status: "ENDED",
   },
   {
-    id: 4,
+    id: 3,
     title: "웹 프론트엔드 3기",
     recruitable: true,
     hidden: false,
