@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { RecruitmentContext } from "../hooks/useRecruitmentContext";
 import * as Api from "../api";
+import { RECRUITMENT_STATUS } from "../constants/recruitment";
 
 const RecruitmentProvider = ({ children }) => {
   const [recruitments, setRecruitments] = useState([]);
@@ -17,11 +18,18 @@ const RecruitmentProvider = ({ children }) => {
 
   const recruitmentFilter = {
     all: recruitments,
-    recruitable: recruitments.filter(({ status }) => status === "RECRUITABLE"),
-    recruiting: recruitments.filter(({ status }) =>
-      ["RECRUITING", "UNRECRUITABLE"].includes(status)
+    recruitable: recruitments.filter(
+      ({ status }) => status === RECRUITMENT_STATUS.RECRUITABLE
     ),
-    ended: recruitments.filter(({ status }) => status === "ENDED"),
+    recruiting: recruitments.filter(({ status }) =>
+      [
+        RECRUITMENT_STATUS.RECRUITING,
+        RECRUITMENT_STATUS.UNRECRUITABLE,
+      ].includes(status)
+    ),
+    ended: recruitments.filter(
+      ({ status }) => status === RECRUITMENT_STATUS.ENDED
+    ),
     findById: (recruitmentId) =>
       recruitments.find(({ id }) => id === recruitmentId),
   };
