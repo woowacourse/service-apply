@@ -15,6 +15,17 @@ const RecruitmentProvider = ({ children }) => {
     fetchData();
   }, []);
 
+  const recruitmentFilter = {
+    all: recruitments,
+    recruitable: recruitments.filter(({ status }) => status === "RECRUITABLE"),
+    recruiting: recruitments.filter(({ status }) =>
+      ["RECRUITING", "UNRECRUITABLE"].includes(status)
+    ),
+    ended: recruitments.filter(({ status }) => status === "ENDED"),
+    findById: (recruitmentId) =>
+      recruitments.find(({ id }) => id === recruitmentId),
+  };
+
   const fetchMyApplicationForms = async (payload) => {
     const { data: myApplicationForms } = await Api.fetchMyApplicationForms(
       payload
@@ -25,7 +36,7 @@ const RecruitmentProvider = ({ children }) => {
 
   return (
     <RecruitmentContext.Provider
-      value={{ recruitments, fetchMyApplicationForms }}
+      value={{ recruitment: recruitmentFilter, fetchMyApplicationForms }}
     >
       {children}
     </RecruitmentContext.Provider>
