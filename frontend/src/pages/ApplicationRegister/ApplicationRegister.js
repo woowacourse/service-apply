@@ -152,8 +152,6 @@ const ApplicationRegister = () => {
           "/application-forms/edit?recruitmentId=" + recruitmentId
         );
       }
-
-      await fetchApplicationForm();
     } catch (e) {
       alert(e.response.data.message);
       history.replace("/");
