@@ -9,7 +9,7 @@ import ApplicantRegister from "./pages/ApplicantRegister";
 import ApplicationRegister from "./pages/ApplicationRegister";
 import Login from "./pages/Login/Login";
 import PasswordFind from "./pages/PasswordFind";
-import PasswordEdit from "./pages/PasswordEdit";
+import PasswordEdit from "./pages/PasswordEdit/PasswordEdit";
 import PasswordFindResult from "./pages/PasswordFindResult";
 import useTokenContext from "./hooks/useTokenContext";
 import "./App.css";
