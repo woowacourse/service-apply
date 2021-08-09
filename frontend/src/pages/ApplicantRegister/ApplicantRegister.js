@@ -12,7 +12,6 @@ import RecruitCard from "../../components/RecruitCard/RecruitCard";
 import { POLICY_SUMMARY } from "../../constants/policySummary";
 import useRecruitmentContext from "../../hooks/useRecruitmentContext";
 import useTokenContext from "../../hooks/useTokenContext";
-import { formatLocalDate } from "../../utils/date";
 import {
   DAY_ERROR_MESSAGE,
   isValidDay,
@@ -262,11 +261,11 @@ const ApplicantRegister = () => {
       email: target.email.value,
       password: target.password.value,
       gender: target.gender.value.toUpperCase(),
-      birthday: formatLocalDate({
-        year: target.year.value,
-        month: target.month.value,
-        day: target.day.value,
-      }),
+      birthday: new Date(
+        target.year.value,
+        target.month.value,
+        target.day.value
+      ),
     };
 
     try {
@@ -275,6 +274,7 @@ const ApplicantRegister = () => {
       history.push({
         pathname: "/application-forms/new",
         search: `?recruitmentId=${recruitmentId}`,
+        state: { currentRecruitment },
       });
     } catch (e) {
       alert("이미 신청서를 작성했습니다. 로그인 페이지로 이동합니다.");
@@ -284,11 +284,13 @@ const ApplicantRegister = () => {
 
   return (
     <div className={styles["applicant-register"]}>
-      <RecruitCard
-        title={currentRecruitment.title}
-        startDateTime={currentRecruitment.startDateTime}
-        endDateTime={currentRecruitment.endDateTime}
-      />
+      {currentRecruitment && (
+        <RecruitCard
+          title={currentRecruitment.title}
+          startDateTime={currentRecruitment.startDateTime}
+          endDateTime={currentRecruitment.endDateTime}
+        />
+      )}
       <Form onSubmit={handleSubmit}>
         <h2>지원자 정보</h2>
         <div>

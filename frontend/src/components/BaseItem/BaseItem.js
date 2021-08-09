@@ -7,11 +7,12 @@ import styles from "./BaseItem.module.css";
 
 const BaseItem = ({ title, startDateTime, endDateTime }) => {
   const formattedStartDateTime = useMemo(
-    () => formatDateTime(new Date(startDateTime)),
+    () => (startDateTime ? formatDateTime(new Date(startDateTime)) : ""),
     [startDateTime]
   );
+
   const formattedEndDateTime = useMemo(
-    () => formatDateTime(new Date(endDateTime)),
+    () => (endDateTime ? formatDateTime(new Date(endDateTime)) : ""),
     [endDateTime]
   );
 

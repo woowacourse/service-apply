@@ -6,7 +6,7 @@ import { RECRUITMENT_STATUS } from "../../constants/recruitment";
 
 import CommonItem from "../CommonItem/CommonItem";
 
-const ApplicationFormItem = ({ recruitment, submitted }) => {
+const ApplicationFormItem = ({ recruitment, submitted, className }) => {
   const history = useHistory();
 
   const submittable =
@@ -26,6 +26,7 @@ const ApplicationFormItem = ({ recruitment, submitted }) => {
 
   return (
     <CommonItem
+      className={className}
       recruitment={recruitment}
       buttonLabel={buttonLabel}
       activeButton={submittable}
@@ -39,4 +40,5 @@ export default ApplicationFormItem;
 ApplicationFormItem.propTypes = {
   recruitment: PropTypes.object.isRequired,
   submitted: PropTypes.bool.isRequired,
+  className: PropTypes.string,
 };

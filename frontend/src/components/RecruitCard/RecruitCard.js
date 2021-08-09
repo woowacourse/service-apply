@@ -22,7 +22,13 @@ const RecruitCard = ({ title, startDateTime, endDateTime, className }) => {
 export default RecruitCard;
 
 RecruitCard.propTypes = {
-  title: PropTypes.string.isRequired,
-  startDateTime: PropTypes.string.isRequired,
-  endDateTime: PropTypes.string.isRequired,
+  title: PropTypes.string,
+  startDateTime: PropTypes.string,
+  endDateTime: PropTypes.string,
+};
+
+RecruitCard.defaultProps = {
+  title: "",
+  startDateTime: "",
+  endDateTime: "",
 };

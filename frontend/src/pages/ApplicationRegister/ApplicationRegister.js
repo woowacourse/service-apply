@@ -15,6 +15,7 @@ import { ALREADY_REGISTER } from "../../constants/messages";
 import useRecruitmentContext from "../../hooks/useRecruitmentContext";
 import useTokenContext from "../../hooks/useTokenContext";
 import { formatDateTime } from "../../utils/date";
+import parseQuery from "../../utils/route/query";
 import styles from "./ApplicationRegister.module.css";
 
 const ApplicationRegister = () => {
@@ -23,28 +24,48 @@ const ApplicationRegister = () => {
   const { token } = useTokenContext();
   const { status } = useParams();
 
-  const recruitmentId = location.search.recruitmentId
-    ? location.search.recruitmentId
-    : "";
-
-  const { recruitment: recruitmentApi } = useRecruitmentContext();
-  const recruitment = recruitmentApi.findById(recruitmentId) ?? {
-    title: "",
-    startDateTime: "",
-    endDateTime: "",
-  };
+  const { recruitmentId } = parseQuery(location.search);
+  const { recruitment } = useRecruitmentContext();
+  const currentRecruitment = recruitment.findById(Number(recruitmentId));
 
   const [recruitmentItems, setRecruitmentItems] = useState([]);
   const [formData, setFormData] = useState({
     factCheck: false,
     referenceUrl: "",
-    modifiedDateTime: null,
+    modifiedDateTime: "",
   });
   const [answer, setAnswer] = useState({});
   const [errorMessage, setErrorMessage] = useState({});
 
   const completedForm =
     Object.keys(answer).every((id) => answer[id] !== "") && formData.factCheck;
+
+  useEffect(() => {
+    const init = async () => {
+      try {
+        await fetchRecruitmentItems();
+
+        if (status === "edit") {
+          await fetchApplicationForm();
+        } else {
+          await Api.createForm({
+            token,
+            recruitmentId,
+          });
+        }
+      } catch (error) {
+        if (error.response.data.message === ALREADY_REGISTER) {
+          alert("이미 신청서를 작성했습니다. 로그인 페이지로 이동합니다.");
+          history.replace("/login");
+        } else {
+          alert(error.response.data.message);
+          history.replace("/");
+        }
+      }
+    };
+
+    init();
+  }, [recruitment, recruitmentId]);
 
   const reset = (recruitmentItems) => {
     const initValue = {};
@@ -58,9 +79,7 @@ const ApplicationRegister = () => {
     try {
       const { data } = await Api.fetchItems(recruitmentId);
 
-      setRecruitmentItems(data.recruitmentItems);
-
-      reset(recruitmentItems);
+      setRecruitmentItems(data);
     } catch (e) {
       alert(e.response.data.message);
       history.replace("/");
@@ -91,7 +110,7 @@ const ApplicationRegister = () => {
         recruitmentId,
       });
 
-      fillForm(data.body);
+      fillForm(data);
     } catch (e) {
       alert(e.response.data.message);
       history.replace("/");
@@ -111,11 +130,11 @@ const ApplicationRegister = () => {
 
   const onReset = () => {
     if (window.confirm("정말 초기화하시겠습니까?")) {
-      setFormData({
+      setFormData((prev) => ({
+        ...prev,
         factCheck: false,
         referenceUrl: "",
-        modifiedDateTime: null,
-      });
+      }));
 
       reset(recruitmentItems);
     }
@@ -140,6 +159,11 @@ const ApplicationRegister = () => {
         answers,
       },
     });
+
+    setFormData((prev) => ({
+      ...prev,
+      modifiedDateTime: formatDateTime(new Date()),
+    }));
   };
 
   const onSaveTemp = async () => {
@@ -177,39 +201,16 @@ const ApplicationRegister = () => {
     }
   };
 
-  useEffect(() => {
-    (async () => {
-      try {
-        await fetchRecruitmentItems();
-
-        if (status === "edit") {
-          await fetchApplicationForm();
-        } else {
-          await Api.createForm({
-            token,
-            recruitmentId,
-          });
-        }
-      } catch (error) {
-        if (error.response.data.message === ALREADY_REGISTER) {
-          alert("이미 신청서를 작성했습니다. 로그인 페이지로 이동합니다.");
-          history.replace("/login");
-        } else {
-          alert(error.response.data.message);
-          history.replace("/");
-        }
-      }
-    })();
-  });
-
   return (
     <div className={styles["application-register"]}>
-      <RecruitCard
-        className={styles["recruit-card"]}
-        title={recruitment.title}
-        startDateTime={recruitment.startDateTime}
-        endDateTime={recruitment.endDateTime}
-      />
+      {currentRecruitment && (
+        <RecruitCard
+          className={styles["recruit-card"]}
+          title={currentRecruitment.title}
+          startDateTime={currentRecruitment.startDateTime}
+          endDateTime={currentRecruitment.endDateTime}
+        />
+      )}
       <Form className={styles["application-form"]} onSubmit={onSubmit}>
         <h2>지원서 작성</h2>
         {status === "edit" && (
