@@ -50,7 +50,6 @@ TextField.defaultProps = {
   value: "",
   required: false,
   description: "",
-  maxLength: 100,
 };
 
 export default TextField;

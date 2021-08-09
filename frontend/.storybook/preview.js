@@ -1,5 +1,8 @@
 import { MemoryRouter } from "react-router-dom";
 
+import RecruitmentProvider from "../src/provider/RecruitmentProvider";
+import TokenProvider from "../src/provider/TokenProvider";
+
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
   controls: {
@@ -12,8 +15,12 @@ export const parameters = {
 
 export const decorators = [
   (Story) => (
-    <MemoryRouter>
-      <Story />
-    </MemoryRouter>
+    <RecruitmentProvider>
+      <TokenProvider>
+        <MemoryRouter>
+          <Story />
+        </MemoryRouter>
+      </TokenProvider>
+    </RecruitmentProvider>
   ),
 ];
