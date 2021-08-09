@@ -8,7 +8,7 @@ import Recruits from "./pages/Recruits";
 import ApplicantRegister from "./pages/ApplicantRegister";
 import ApplicationRegister from "./pages/ApplicationRegister";
 import Login from "./pages/Login/Login";
-import PasswordFind from "./pages/PasswordFind";
+import PasswordFind from "./pages/PasswordFind/PasswordFind";
 import PasswordEdit from "./pages/PasswordEdit/PasswordEdit";
 import PasswordFindResult from "./pages/PasswordFindResult";
 import useTokenContext from "./hooks/useTokenContext";
