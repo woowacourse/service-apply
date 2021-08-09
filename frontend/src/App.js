@@ -10,7 +10,7 @@ import ApplicationRegister from "./pages/ApplicationRegister";
 import Login from "./pages/Login/Login";
 import PasswordFind from "./pages/PasswordFind/PasswordFind";
 import PasswordEdit from "./pages/PasswordEdit/PasswordEdit";
-import PasswordFindResult from "./pages/PasswordFindResult";
+import PasswordFindResult from "./pages/PasswordFindResult/PasswordFindResult";
 import useTokenContext from "./hooks/useTokenContext";
 import "./App.css";
 
