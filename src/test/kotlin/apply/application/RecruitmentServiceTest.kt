@@ -14,10 +14,8 @@ import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitmentitem.RecruitmentItem
 import apply.domain.recruitmentitem.RecruitmentItemRepository
 import apply.domain.term.TermRepository
-import io.mockk.Runs
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
-import io.mockk.just
 import io.mockk.slot
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
@@ -73,7 +71,7 @@ internal class RecruitmentServiceTest {
                     }
                 }
             }
-            every { recruitmentItemRepository.deleteAll(any()) } just Runs
+            every { recruitmentItemRepository.deleteAll(any()) } returns Unit
             slot<List<RecruitmentItem>>().also { slot ->
                 every { recruitmentItemRepository.saveAll(capture(slot)) } answers {
                     slot.captured.run {
@@ -178,10 +176,10 @@ internal class RecruitmentServiceTest {
             every { evaluationItemRepository.findAllByEvaluationId(3L) } returns listOf(
                 createEvaluationItem(evaluationId = 3L, id = 4L)
             )
-            every { recruitmentRepository.delete(createRecruitment(id = 1L)) } just Runs
-            every { recruitmentItemRepository.deleteInBatch(listOf(createRecruitmentItem(id = 2L))) } just Runs
-            every { evaluationRepository.deleteInBatch(listOf(createEvaluation(id = 3L))) } just Runs
-            every { evaluationItemRepository.deleteInBatch(listOf(createEvaluationItem(id = 4L))) } just Runs
+            every { recruitmentRepository.delete(createRecruitment(id = 1L)) } returns Unit
+            every { recruitmentItemRepository.deleteInBatch(listOf(createRecruitmentItem(id = 2L))) } returns Unit
+            every { evaluationRepository.deleteInBatch(listOf(createEvaluation(id = 3L))) } returns Unit
+            every { evaluationItemRepository.deleteInBatch(listOf(createEvaluationItem(id = 4L))) } returns Unit
 
             recruitmentService.deleteById(1L)
 
