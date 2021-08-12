@@ -26,7 +26,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.data.repository.findByIdOrNull
 import support.test.UnitTest
-import java.lang.IllegalStateException
 
 @UnitTest
 internal class RecruitmentServiceTest {
@@ -44,9 +43,10 @@ internal class RecruitmentServiceTest {
 
     @MockK
     private lateinit var evaluationItemRepository: EvaluationItemRepository
-  
+
+    @MockK
     private lateinit var termRepository: TermRepository
-  
+
     private lateinit var recruitmentService: RecruitmentService
 
     @BeforeEach
