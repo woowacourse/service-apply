@@ -4,14 +4,29 @@ import apply.application.AnswerRequest
 import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormAnswer
 import apply.domain.applicationform.ApplicationFormAnswers
+import apply.domain.applicationform.ApplicationValidator
+import apply.domain.applicationform.DuplicateApplicationException
+import java.time.LocalDateTime
+
+val pass: ApplicationValidator = ApplicationValidator { _, _ -> }
+val fail: ApplicationValidator = ApplicationValidator { _, _ -> throw DuplicateApplicationException() }
 
 fun createApplicationForm(
     applicantId: Long = 1L,
     recruitmentId: Long = 1L,
-    referenceUrl: String = "http://example.com",
-    applicationFormAnswers: ApplicationFormAnswers = createApplicationFormAnswers()
+    referenceUrl: String = "https://example.com",
+    applicationFormAnswers: ApplicationFormAnswers = createApplicationFormAnswers(),
+    submitted: Boolean = false,
+    submittedDateTime: LocalDateTime? = null
 ): ApplicationForm {
-    return ApplicationForm(applicantId, recruitmentId, referenceUrl, applicationFormAnswers)
+    return ApplicationForm(
+        applicantId,
+        recruitmentId,
+        referenceUrl,
+        applicationFormAnswers,
+        submitted,
+        submittedDateTime
+    )
 }
 
 fun createApplicationFormAnswers(

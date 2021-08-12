@@ -350,7 +350,7 @@ class EvaluationTargetServiceTest(
             createdDateTime = createLocalDateTime(2019, 10, 25, 10),
             modifiedDateTime = createLocalDateTime(2019, 11, 5, 10),
             submittedDateTime = createLocalDateTime(2019, 11, 5, 10),
-            applicationFormAnswers = ApplicationFormAnswers(
+            answers = ApplicationFormAnswers(
                 mutableListOf(
                     ApplicationFormAnswer("${id}의 1번 답", 1L),
                     ApplicationFormAnswer("${id}의 2번 답", 2L)

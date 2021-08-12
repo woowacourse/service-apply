@@ -8,6 +8,7 @@ import apply.createRecruitment
 import apply.createRecruitmentData
 import apply.createRecruitmentItem
 import apply.createRecruitmentItemData
+import apply.domain.term.Term
 import apply.security.JwtTokenProvider
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
@@ -44,13 +45,11 @@ internal class RecruitmentRestControllerTest : RestControllerTest() {
 
     private val recruitment = createRecruitment()
 
-    private val recruitmentResponse = RecruitmentResponse(recruitment)
+    private val recruitmentResponse = RecruitmentResponse(recruitment, Term.SINGLE)
 
     private val recruitmentItems = listOf(createRecruitmentItem())
 
     private val recruitmentData = createRecruitmentData(recruitmentItems = listOf(createRecruitmentItemData()))
-
-    private val recruitments = listOf(recruitment)
 
     @Test
     fun `공개된 지원서 목록을 가져온다`() {
@@ -120,6 +119,8 @@ internal class RecruitmentRestControllerTest : RestControllerTest() {
                     "recruitments-save",
                     requestFields(
                         fieldWithPath("title").type(JsonFieldType.STRING).description("모집 TITLE"),
+                        fieldWithPath("term.id").type(JsonFieldType.NUMBER).description("기수 ID"),
+                        fieldWithPath("term.name").type(JsonFieldType.STRING).description("기수 이름"),
                         fieldWithPath("startDateTime").type(JsonFieldType.STRING).description("모집 시작일"),
                         fieldWithPath("endDateTime").type(JsonFieldType.STRING).description("모집 마감일"),
                         fieldWithPath("recruitable").type(JsonFieldType.BOOLEAN).description("모집 가능 여부"),
@@ -183,7 +184,7 @@ internal class RecruitmentRestControllerTest : RestControllerTest() {
 
     @Test
     fun `전체 모집 정보를 가져온다`() {
-        every { recruitmentService.findAll() } returns recruitments
+        every { recruitmentService.findAll() } returns listOf(recruitmentResponse)
 
         mockMvc.perform(
             RestDocumentationRequestBuilders.get(
@@ -193,7 +194,7 @@ internal class RecruitmentRestControllerTest : RestControllerTest() {
             .andExpect(
                 content().json(
                     objectMapper.writeValueAsString(
-                        ApiResponse.success(recruitments)
+                        ApiResponse.success(listOf(recruitmentResponse))
                     )
                 )
             )
@@ -203,6 +204,8 @@ internal class RecruitmentRestControllerTest : RestControllerTest() {
         val RECRUITMENT_FIELD_DESCRIPTORS = listOf(
             fieldWithPath("id").type(JsonFieldType.NUMBER).description("ID"),
             fieldWithPath("title").type(JsonFieldType.STRING).description("모집 TITLE"),
+            fieldWithPath("term.id").type(JsonFieldType.NUMBER).description("기수 ID"),
+            fieldWithPath("term.name").type(JsonFieldType.STRING).description("기수 이름"),
             fieldWithPath("recruitable").type(JsonFieldType.BOOLEAN).description("모집 가능 여부"),
             fieldWithPath("hidden").type(JsonFieldType.BOOLEAN).description("HIDDEN"),
             fieldWithPath("startDateTime").type(JsonFieldType.STRING).description("모집 시작일"),
@@ -220,7 +223,7 @@ internal class RecruitmentRestControllerTest : RestControllerTest() {
         )
 
         val RECRUITMENT_ITEM_DATA_FIELD_DESCRIPTORS = listOf(
-            fieldWithPath("title").type(JsonFieldType.STRING).description("모잡 TITLE"),
+            fieldWithPath("title").type(JsonFieldType.STRING).description("모집 TITLE"),
             fieldWithPath("position").type(JsonFieldType.NUMBER).description("모집 항목 POSITION"),
             fieldWithPath("maximumLength").type(JsonFieldType.NUMBER).description("모집 항목 최대 길이"),
             fieldWithPath("description").type(JsonFieldType.STRING).description("모집 설명"),

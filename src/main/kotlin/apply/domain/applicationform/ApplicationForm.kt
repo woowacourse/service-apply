@@ -5,7 +5,14 @@ import java.time.LocalDateTime
 import javax.persistence.Column
 import javax.persistence.Embedded
 import javax.persistence.Entity
+import javax.persistence.Table
+import javax.persistence.UniqueConstraint
 
+@Table(
+    uniqueConstraints = [
+        UniqueConstraint(name = "uk_application_form", columnNames = ["recruitmentId", "applicantId"])
+    ]
+)
 @Entity
 class ApplicationForm(
     @Column(nullable = false)
@@ -13,61 +20,47 @@ class ApplicationForm(
 
     @Column(nullable = false)
     val recruitmentId: Long,
+    referenceUrl: String = "",
+    answers: ApplicationFormAnswers = ApplicationFormAnswers(),
+    submitted: Boolean = false,
+    submittedDateTime: LocalDateTime? = null,
 
-    var referenceUrl: String,
-
-    @Embedded
-    var answers: ApplicationFormAnswers,
+    @Column(nullable = false)
+    val createdDateTime: LocalDateTime = LocalDateTime.now(),
+    modifiedDateTime: LocalDateTime = LocalDateTime.now(),
     id: Long = 0L
 ) : BaseEntity(id) {
-    @Column(nullable = false)
-    var submitted: Boolean = false
+    var referenceUrl: String = referenceUrl
+        private set
+
+    @Embedded
+    var answers: ApplicationFormAnswers = answers
+        private set
 
     @Column(nullable = false)
-    var createdDateTime: LocalDateTime = LocalDateTime.now()
-
-    @Column(nullable = false)
-    var modifiedDateTime: LocalDateTime = LocalDateTime.now()
+    var submitted: Boolean = submitted
+        private set
 
     @Column
-    var submittedDateTime: LocalDateTime? = null
+    var submittedDateTime: LocalDateTime? = submittedDateTime
+        private set
 
-    constructor(
-        applicantId: Long,
-        recruitmentId: Long
-    ) : this(applicantId, recruitmentId, "", ApplicationFormAnswers())
+    @Column(nullable = false)
+    var modifiedDateTime: LocalDateTime = modifiedDateTime
+        private set
 
-    constructor(
-        applicantId: Long,
-        recruitmentId: Long,
-        referenceUrl: String,
-        applicationFormAnswers: ApplicationFormAnswers,
-        submitted: Boolean,
-        createdDateTime: LocalDateTime,
-        modifiedDateTime: LocalDateTime,
-        submittedDateTime: LocalDateTime?
-    ) : this(applicantId, recruitmentId, referenceUrl, applicationFormAnswers) {
-        this.submitted = submitted
-        this.createdDateTime = createdDateTime
-        this.modifiedDateTime = modifiedDateTime
-        this.submittedDateTime = submittedDateTime
+    init {
+        if (submitted) {
+            requireNotNull(submittedDateTime)
+        }
     }
 
     constructor(
         applicantId: Long,
         recruitmentId: Long,
-        referenceUrl: String,
-        submitted: Boolean,
-        createdDateTime: LocalDateTime,
-        modifiedDateTime: LocalDateTime,
-        submittedDateTime: LocalDateTime,
-        applicationFormAnswers: ApplicationFormAnswers,
-        id: Long
-    ) : this(applicantId, recruitmentId, referenceUrl, applicationFormAnswers, id) {
-        this.submitted = submitted
-        this.createdDateTime = createdDateTime
-        this.modifiedDateTime = modifiedDateTime
-        this.submittedDateTime = submittedDateTime
+        applicationValidator: ApplicationValidator
+    ) : this(applicantId, recruitmentId) {
+        applicationValidator.validate(applicantId, recruitmentId)
     }
 
     fun update(referenceUrl: String, applicationFormAnswers: ApplicationFormAnswers) {
@@ -79,7 +72,8 @@ class ApplicationForm(
         this.answers = applicationFormAnswers
     }
 
-    fun submit() {
+    fun submit(applicationValidator: ApplicationValidator) {
+        applicationValidator.validate(applicantId, recruitmentId)
         submitted = true
         submittedDateTime = LocalDateTime.now()
     }

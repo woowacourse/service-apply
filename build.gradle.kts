@@ -10,6 +10,7 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint") version "10.1.0"
     id("com.vaadin") version "0.8.0"
     id("org.asciidoctor.convert") version "2.4.0"
+    id("org.flywaydb.flyway") version "7.12.0"
 }
 
 group = "io.github.woowacourse"
@@ -76,6 +77,11 @@ tasks {
     ktlint {
         verbose.set(true)
         disabledRules.addAll("import-ordering")
+    }
+    flyway {
+        url = "jdbc:mysql://localhost:53306/apply?characterEncoding=UTF-8&serverTimezone=UTC"
+        user = "user"
+        password = "password"
     }
     test {
         useJUnitPlatform()
