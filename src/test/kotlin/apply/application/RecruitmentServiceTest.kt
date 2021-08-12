@@ -155,38 +155,39 @@ internal class RecruitmentServiceTest {
             verify { recruitmentItemRepository.saveAll(mutableListOf()) }
         }
 
-        @Test
-        fun `지원서가 존재하는 모집을 삭제하는 경우 예외를 던진다`() {
-            every { recruitmentRepository.findByIdOrNull(1L) } returns createRecruitment(id = 1L, recruitable = false)
-            every { applicationFormRepository.existsByRecruitmentId(1L) } returns true
+    }
 
-            assertThrows<IllegalStateException> { recruitmentService.deleteById(1L) }
-        }
+    @Test
+    fun `지원서가 존재하는 모집을 삭제하는 경우 예외를 던진다`() {
+        every { recruitmentRepository.findByIdOrNull(1L) } returns createRecruitment(id = 1L, recruitable = false)
+        every { applicationFormRepository.existsByRecruitmentId(1L) } returns true
 
-        @Test
-        fun `모집 삭제 시 평가, 평가 항목, 모집 항목을 함께 삭제한다`() {
-            every { recruitmentRepository.findByIdOrNull(1L) } returns createRecruitment(id = 1L, recruitable = false)
-            every { applicationFormRepository.existsByRecruitmentId(1L) } returns false
-            every { recruitmentItemRepository.findAllByRecruitmentId(1L) } returns listOf(
-                createRecruitmentItem(recruitmentId = 1L, id = 2L)
-            )
-            every { evaluationRepository.findAllByRecruitmentId(1L) } returns listOf(
-                createEvaluation(recruitmentId = 1L, id = 3L)
-            )
-            every { evaluationItemRepository.findAllByEvaluationId(3L) } returns listOf(
-                createEvaluationItem(evaluationId = 3L, id = 4L)
-            )
-            every { recruitmentRepository.delete(createRecruitment(id = 1L)) } returns Unit
-            every { recruitmentItemRepository.deleteInBatch(listOf(createRecruitmentItem(id = 2L))) } returns Unit
-            every { evaluationRepository.deleteInBatch(listOf(createEvaluation(id = 3L))) } returns Unit
-            every { evaluationItemRepository.deleteInBatch(listOf(createEvaluationItem(id = 4L))) } returns Unit
+        assertThrows<IllegalStateException> { recruitmentService.deleteById(1L) }
+    }
 
-            recruitmentService.deleteById(1L)
+    @Test
+    fun `모집 삭제 시 평가, 평가 항목, 모집 항목을 함께 삭제한다`() {
+        every { recruitmentRepository.findByIdOrNull(1L) } returns createRecruitment(id = 1L, recruitable = false)
+        every { applicationFormRepository.existsByRecruitmentId(1L) } returns false
+        every { recruitmentItemRepository.findAllByRecruitmentId(1L) } returns listOf(
+            createRecruitmentItem(recruitmentId = 1L, id = 2L)
+        )
+        every { evaluationRepository.findAllByRecruitmentId(1L) } returns listOf(
+            createEvaluation(recruitmentId = 1L, id = 3L)
+        )
+        every { evaluationItemRepository.findAllByEvaluationId(3L) } returns listOf(
+            createEvaluationItem(evaluationId = 3L, id = 4L)
+        )
+        every { recruitmentRepository.delete(createRecruitment(id = 1L)) } returns Unit
+        every { recruitmentItemRepository.deleteInBatch(listOf(createRecruitmentItem(id = 2L))) } returns Unit
+        every { evaluationRepository.deleteInBatch(listOf(createEvaluation(id = 3L))) } returns Unit
+        every { evaluationItemRepository.deleteInBatch(listOf(createEvaluationItem(id = 4L))) } returns Unit
 
-            verify { recruitmentRepository.delete(createRecruitment(id = 1L)) }
-            verify { recruitmentItemRepository.deleteInBatch(listOf(createRecruitmentItem(id = 2L))) }
-            verify { evaluationRepository.deleteInBatch(listOf(createEvaluation(id = 3L))) }
-            verify { evaluationItemRepository.deleteInBatch(listOf(createEvaluationItem(id = 4L))) }
-        }
+        recruitmentService.deleteById(1L)
+
+        verify { recruitmentRepository.delete(createRecruitment(id = 1L)) }
+        verify { recruitmentItemRepository.deleteInBatch(listOf(createRecruitmentItem(id = 2L))) }
+        verify { evaluationRepository.deleteInBatch(listOf(createEvaluation(id = 3L))) }
+        verify { evaluationItemRepository.deleteInBatch(listOf(createEvaluationItem(id = 4L))) }
     }
 }
