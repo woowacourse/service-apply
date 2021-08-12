@@ -3,6 +3,7 @@ package apply.application
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.evaluation.Evaluation
 import apply.domain.evaluation.EvaluationRepository
+import apply.domain.evaluationItem.EvaluationItem
 import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentRepository
@@ -80,7 +81,7 @@ class RecruitmentService(
         }
     }
 
-    private fun findAllEvaluationItems(evaluation: Evaluation) =
+    private fun findAllEvaluationItems(evaluation: Evaluation): List<EvaluationItem> =
         evaluationItemRepository.findAllByEvaluationId(evaluation.id)
 
     private fun findRecruitmentItems(id: Long): List<RecruitmentItem> =
