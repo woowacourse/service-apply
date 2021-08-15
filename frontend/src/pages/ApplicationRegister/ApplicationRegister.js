@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, useLocation, useParams } from "react-router";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import * as Api from "../../api";
 import {
   Button,
@@ -54,6 +54,7 @@ const ApplicationRegister = () => {
           });
         }
       } catch (error) {
+        console.log(error);
         if (
           error.response.data.message === ERROR_MESSAGE.API.ALREADY_REGISTER
         ) {
@@ -220,24 +221,25 @@ const ApplicationRegister = () => {
             {`임시 저장되었습니다. (${formData.modifiedDateTime})`}
           </p>
         )}
-        {recruitmentItems.map((item, index) => (
-          <div key={item.id}>
-            <TextField
-              name="recruitment-item"
-              type="textarea"
-              label={`${index + 1}. ${item.title}`}
-              description={item.description}
-              placeholder="내용을 입력해 주세요."
-              maxLength={item.maximumLength}
-              onChange={onChangeAnswer(item.id)}
-              value={answer[item.id] ?? ""}
-              required
-            />
-            <p className={styles["rule-field"]}>
-              {errorMessage[item.id] ?? ""}
-            </p>
-          </div>
-        ))}
+        {recruitmentItems.length !== 0 &&
+          recruitmentItems.map((item, index) => (
+            <div key={item.id}>
+              <TextField
+                name="recruitment-item"
+                type="textarea"
+                label={`${index + 1}. ${item.title}`}
+                description={item.description}
+                placeholder="내용을 입력해 주세요."
+                maxLength={item.maximumLength}
+                onChange={onChangeAnswer(item.id)}
+                value={answer[item.id] ?? ""}
+                required
+              />
+              <p className={styles["rule-field"]}>
+                {errorMessage[item.id] ?? ""}
+              </p>
+            </div>
+          ))}
         <TextField
           name="url"
           type="url"

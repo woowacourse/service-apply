@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory, useLocation } from "react-router";
+import { useHistory, useLocation } from "react-router-dom";
 import {
   BirthField,
   Button,
@@ -9,7 +9,7 @@ import {
   TextField,
 } from "../../components/form";
 import RecruitCard from "../../components/RecruitCard/RecruitCard";
-import { ERROR_MESSAGE } from '../../constants/messages';
+import { ERROR_MESSAGE } from "../../constants/messages";
 import { POLICY_SUMMARY } from "../../constants/policySummary";
 import useRecruitmentContext from "../../hooks/useRecruitmentContext";
 import useTokenContext from "../../hooks/useTokenContext";
@@ -75,7 +75,10 @@ const ApplicantRegister = () => {
       return;
     }
 
-    setErrorMessage((prev) => ({ ...prev, name: ERROR_MESSAGE.VALIDATION.NAME }));
+    setErrorMessage((prev) => ({
+      ...prev,
+      name: ERROR_MESSAGE.VALIDATION.NAME,
+    }));
   };
 
   const onChangeEmail = ({ target }) => {
@@ -87,7 +90,10 @@ const ApplicantRegister = () => {
       return;
     }
 
-    setErrorMessage((prev) => ({ ...prev, email: ERROR_MESSAGE.VALIDATION.EMAIL }));
+    setErrorMessage((prev) => ({
+      ...prev,
+      email: ERROR_MESSAGE.VALIDATION.EMAIL,
+    }));
   };
 
   const onChangePhoneNumber = ({ target }) => {
