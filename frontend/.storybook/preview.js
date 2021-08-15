@@ -8,7 +8,7 @@ import { recruitmentFilter } from "../src/provider/RecruitmentProvider";
 import TokenProvider from "../src/provider/TokenProvider";
 import "../src/App.css";
 
-export const API_BASE_URL = process.env.API_BASE_URL;
+export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 axios.defaults.baseURL = API_BASE_URL;
 
 initializeWorker();
