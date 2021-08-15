@@ -33,10 +33,16 @@ const Recruits = () => {
         return;
       }
 
-      const data = await fetchMyApplicationForms(token);
-      setMyApplication(data);
+      const myApplicationFormData = await fetchMyApplicationForms(token);
+      const myRecruits = myApplicationFormData.map(
+        ({ recruitmentId, submitted }) => ({
+          ...recruitment.findById(recruitmentId),
+          submitted,
+        })
+      );
+      setMyApplication(myRecruits);
     })();
-  }, [selectedTab, fetchMyApplicationForms, token, history]);
+  }, [selectedTab, recruitment, fetchMyApplicationForms, token, history]);
 
   return (
     <div className={styles.recruits}>
@@ -64,7 +70,8 @@ const Recruits = () => {
           )}
         </ul>
         {selectedTab === "applied"
-          ? myApplication.map((recruitment) => (
+          ? myApplication.length !== 0 &&
+            myApplication.map((recruitment) => (
               <ApplicationFormItem
                 className={styles["application-forms"]}
                 key={recruitment.id}
