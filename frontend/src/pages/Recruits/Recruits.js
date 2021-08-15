@@ -60,7 +60,9 @@ const Recruits = () => {
             <li key={name} className={styles["tab-item"]}>
               <Link
                 to={`/recruits?status=${name}`}
-                className={classNames({ active: name === selectedTab })}
+                className={classNames({
+                  [styles.active]: name === selectedTab,
+                })}
               >
                 {label}
               </Link>
