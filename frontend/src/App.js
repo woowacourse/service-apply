@@ -11,12 +11,9 @@ import Login from "./pages/Login/Login";
 import PasswordFind from "./pages/PasswordFind/PasswordFind";
 import PasswordEdit from "./pages/PasswordEdit/PasswordEdit";
 import PasswordFindResult from "./pages/PasswordFindResult/PasswordFindResult";
-import useTokenContext from "./hooks/useTokenContext";
 import "./App.css";
 
 const App = () => {
-  const { token } = useTokenContext();
-
   return (
     <>
       <BrowserRouter>
@@ -38,17 +35,13 @@ const App = () => {
             <Route path="/find/result" exact>
               <PasswordFindResult />
             </Route>
-            <PrivateRoute
-              path="/application-forms/:status"
-              isAuthenticated={token !== ""}
-              exact
-            >
+            <PrivateRoute path="/application-forms/:status" exact>
               <ApplicationRegister />
             </PrivateRoute>
             <Route path="/application-forms/:status" exact>
               <ApplicationRegister />
             </Route>
-            <PrivateRoute path="/edit" isAuthenticated={token !== ""} exact>
+            <PrivateRoute path="/edit" exact>
               <PasswordEdit />
             </PrivateRoute>
           </Switch>
