@@ -71,7 +71,14 @@ const Login = () => {
 
   return (
     <div className={styles.login}>
-      <Form onSubmit={handleSubmit}>
+      <Form
+        onSubmit={handleSubmit}
+        footer={
+          <Link to="/find" className={styles["find-password"]}>
+            비밀번호 찾기
+          </Link>
+        }
+      >
         <h1>내 지원서 보기</h1>
         <TextField
           name="email"
@@ -102,9 +109,6 @@ const Login = () => {
           </Button>
         </div>
       </Form>
-      <Link to="/find" className={styles["find-password"]}>
-        비밀번호 찾기
-      </Link>
     </div>
   );
 };
