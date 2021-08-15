@@ -79,7 +79,7 @@ const Login = () => {
           </Link>
         }
       >
-        <h1>내 지원서 보기</h1>
+        <h2>내 지원서 보기</h2>
         <TextField
           name="email"
           type="email"

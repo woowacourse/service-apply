@@ -89,7 +89,7 @@ const PasswordFind = () => {
   return (
     <div className={styles["password-find"]}>
       <Form onSubmit={handleSubmit}>
-        <h1>비밀번호 찾기</h1>
+        <h2>비밀번호 찾기</h2>
         <TextField
           name="name"
           type="text"

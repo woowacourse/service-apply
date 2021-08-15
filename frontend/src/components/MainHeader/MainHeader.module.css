@@ -29,6 +29,8 @@
 
 .title {
   font-size: 22px;
+  display: flex;
+  align-items: center;
 }
 
 a {
