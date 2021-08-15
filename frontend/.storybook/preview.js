@@ -1,9 +1,16 @@
 import { MemoryRouter } from "react-router-dom";
-
+import { addDecorator } from "@storybook/react";
+import { initializeWorker, mswDecorator } from "msw-storybook-addon";
+import axios from "axios";
 import { RecruitmentContext } from "../src/hooks/useRecruitmentContext";
 import { recruitmentFilter } from "../src/provider/RecruitmentProvider";
 import TokenProvider from "../src/provider/TokenProvider";
 import "../src/App.css";
+
+axios.defaults.baseURL = "http://localhost:8080";
+
+initializeWorker();
+addDecorator(mswDecorator);
 
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
