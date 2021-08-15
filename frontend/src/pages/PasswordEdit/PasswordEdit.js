@@ -35,7 +35,7 @@ const PasswordEdit = () => {
     newPassword: "",
     rePassword: "",
   });
-  const { resetToken } = useTokenContext();
+  const { token, resetToken } = useTokenContext();
 
   const history = useHistory();
 
@@ -48,7 +48,7 @@ const PasswordEdit = () => {
 
     try {
       await fetchPasswordEdit({
-        token: value.token,
+        token,
         password: value.password,
         newPassword: value.newPassword,
       });
