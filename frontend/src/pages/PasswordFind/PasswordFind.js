@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import Form from "../../components/form/Form/Form";
 import TextField from "../../components/form/TextField/TextField";
@@ -34,7 +34,13 @@ const message = {
 };
 
 const PasswordFind = () => {
-  const [value, setValue] = useState({});
+  const [value, setValue] = useState({
+    name: "",
+    email: "",
+    year: "",
+    month: "",
+    day: "",
+  });
   const [errorMessage, setErrorMessage] = useState({});
 
   const history = useHistory();

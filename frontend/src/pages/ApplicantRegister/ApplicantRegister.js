@@ -24,6 +24,18 @@ import { isValidPassword } from "../../utils/validation/password";
 import { isValidPhoneNumber } from "../../utils/validation/phoneNumber";
 import styles from "./ApplicantRegister.module.css";
 
+const validator = {
+  year: isValidYear,
+  month: isValidMonth,
+  day: isValidDay,
+};
+
+const message = {
+  year: ERROR_MESSAGE.VALIDATION.YEAR,
+  month: ERROR_MESSAGE.VALIDATION.MONTH,
+  day: ERROR_MESSAGE.VALIDATION.DAY,
+};
+
 const ApplicantRegister = () => {
   const location = useLocation();
   const history = useHistory();
@@ -150,16 +162,16 @@ const ApplicantRegister = () => {
     setErrorMessage((prev) => ({ ...prev, rePassword: "" }));
   };
 
-  const onChangeYear = ({ target }) => {
+  const onChangeBirthday = ({ target: { name, value } }) => {
     setValue((prev) => ({
       ...prev,
-      birthday: { ...prev.birthday, year: target.value },
+      birthday: { ...prev.birthday, [name]: value },
     }));
 
-    if (isValidYear(target.value)) {
+    if (validator[name](value)) {
       setErrorMessage((prev) => ({
         ...prev,
-        birthday: { ...prev.birthday, year: "" },
+        birthday: { ...prev.birthday, [name]: "" },
       }));
 
       return;
@@ -169,55 +181,7 @@ const ApplicantRegister = () => {
       ...prev,
       birthday: {
         ...prev.birthday,
-        year: ERROR_MESSAGE.VALIDATION.YEAR,
-      },
-    }));
-  };
-
-  const onChangeMonth = ({ target }) => {
-    setValue((prev) => ({
-      ...prev,
-      birthday: { ...prev.birthday, month: target.value },
-    }));
-
-    if (isValidMonth(target.value)) {
-      setErrorMessage((prev) => ({
-        ...prev,
-        birthday: { ...prev.birthday, month: "" },
-      }));
-
-      return;
-    }
-
-    setErrorMessage((prev) => ({
-      ...prev,
-      birthday: {
-        ...prev.birthday,
-        month: ERROR_MESSAGE.VALIDATION.MONTH,
-      },
-    }));
-  };
-
-  const onChangeDay = ({ target }) => {
-    setValue((prev) => ({
-      ...prev,
-      birthday: { ...prev.birthday, day: target.value },
-    }));
-
-    if (isValidDay(target.value)) {
-      setErrorMessage((prev) => ({
-        ...prev,
-        birthday: { ...prev.birthday, day: "" },
-      }));
-
-      return;
-    }
-
-    setErrorMessage((prev) => ({
-      ...prev,
-      birthday: {
-        ...prev.birthday,
-        day: ERROR_MESSAGE.VALIDATION.DAY,
+        [name]: message[name],
       },
     }));
   };
@@ -360,12 +324,8 @@ const ApplicantRegister = () => {
         </div>
         <div>
           <BirthField
-            year={value.birthday.year}
-            month={value.birthday.month}
-            day={value.birthday.day}
-            onChangeYear={onChangeYear}
-            onChangeMonth={onChangeMonth}
-            onChangeDay={onChangeDay}
+            value={value.birthday}
+            onChange={onChangeBirthday}
             required
           />
           <p className={styles["rule-field"]}>

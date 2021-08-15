@@ -5,15 +5,7 @@ import Label from "../Label/Label";
 import TextInput from "../TextInput/TextInput";
 import styles from "./BirthField.module.css";
 
-const BirthField = ({
-  required,
-  year,
-  month,
-  day,
-  onChangeYear,
-  onChangeMonth,
-  onChangeDay,
-}) => {
+const BirthField = ({ required, value, onChange }) => {
   return (
     <Field className={styles["birth-field"]}>
       <Label for="year" required={required}>
@@ -26,8 +18,8 @@ const BirthField = ({
           name="year"
           type="text"
           placeholder="YYYY"
-          onChange={onChangeYear}
-          value={year}
+          onChange={onChange}
+          value={value.year}
           required={required}
         />
         <TextInput
@@ -35,8 +27,8 @@ const BirthField = ({
           name="month"
           type="text"
           placeholder="MM"
-          onChange={onChangeMonth}
-          value={month}
+          onChange={onChange}
+          value={value.month}
           required={required}
         />
         <TextInput
@@ -44,8 +36,8 @@ const BirthField = ({
           name="day"
           type="text"
           placeholder="DD"
-          onChange={onChangeDay}
-          value={day}
+          onChange={onChange}
+          value={value.day}
           required={required}
         />
       </div>
@@ -55,12 +47,12 @@ const BirthField = ({
 
 BirthField.propTypes = {
   required: PropTypes.bool,
-  year: PropTypes.string.isRequired,
-  month: PropTypes.string.isRequired,
-  day: PropTypes.string.isRequired,
-  onChangeYear: PropTypes.func.isRequired,
-  onChangeMonth: PropTypes.func.isRequired,
-  onChangeDay: PropTypes.func.isRequired,
+  value: PropTypes.shape({
+    year: PropTypes.string.isRequired,
+    month: PropTypes.string.isRequired,
+    day: PropTypes.string.isRequired,
+  }).isRequired,
+  onChange: PropTypes.func.isRequired,
 };
 
 BirthField.defaultProps = {
