@@ -9,30 +9,19 @@ import {
   TextField,
 } from "../../components/form";
 import RecruitCard from "../../components/RecruitCard/RecruitCard";
+import { ERROR_MESSAGE } from '../../constants/messages';
 import { POLICY_SUMMARY } from "../../constants/policySummary";
 import useRecruitmentContext from "../../hooks/useRecruitmentContext";
 import useTokenContext from "../../hooks/useTokenContext";
 import {
-  DAY_ERROR_MESSAGE,
   isValidDay,
   isValidMonth,
   isValidYear,
-  MONTH_ERROR_MESSAGE,
-  YEAR_ERROR_MESSAGE,
 } from "../../utils/validation/birth";
-import {
-  EMAIL_ERROR_MESSAGE,
-  isValidEmail,
-} from "../../utils/validation/email";
-import { isValidName, NAME_ERROR_MESSAGE } from "../../utils/validation/name";
-import {
-  isValidPassword,
-  PASSWORD_ERROR_MESSAGE,
-} from "../../utils/validation/password";
-import {
-  isValidPhoneNumber,
-  PHONE_NUMBER_ERROR_MESSAGE,
-} from "../../utils/validation/phoneNumber";
+import { isValidEmail } from "../../utils/validation/email";
+import { isValidName } from "../../utils/validation/name";
+import { isValidPassword } from "../../utils/validation/password";
+import { isValidPhoneNumber } from "../../utils/validation/phoneNumber";
 import styles from "./ApplicantRegister.module.css";
 
 const ApplicantRegister = () => {
@@ -86,7 +75,7 @@ const ApplicantRegister = () => {
       return;
     }
 
-    setErrorMessage((prev) => ({ ...prev, name: NAME_ERROR_MESSAGE }));
+    setErrorMessage((prev) => ({ ...prev, name: ERROR_MESSAGE.VALIDATION.NAME }));
   };
 
   const onChangeEmail = ({ target }) => {
@@ -98,7 +87,7 @@ const ApplicantRegister = () => {
       return;
     }
 
-    setErrorMessage((prev) => ({ ...prev, email: EMAIL_ERROR_MESSAGE }));
+    setErrorMessage((prev) => ({ ...prev, email: ERROR_MESSAGE.VALIDATION.EMAIL }));
   };
 
   const onChangePhoneNumber = ({ target }) => {
@@ -112,7 +101,7 @@ const ApplicantRegister = () => {
 
     setErrorMessage((prev) => ({
       ...prev,
-      phoneNumber: PHONE_NUMBER_ERROR_MESSAGE,
+      phoneNumber: ERROR_MESSAGE.VALIDATION.PHONE_NUMBER,
     }));
   };
 
@@ -131,7 +120,7 @@ const ApplicantRegister = () => {
     if (!isValidPassword(target.value)) {
       setErrorMessage((prev) => ({
         ...prev,
-        password: PASSWORD_ERROR_MESSAGE,
+        password: ERROR_MESSAGE.VALIDATION.PASSWORD,
       }));
 
       return;
@@ -146,7 +135,7 @@ const ApplicantRegister = () => {
     if (target.value !== value.password) {
       setErrorMessage((prev) => ({
         ...prev,
-        rePassword: "비밀번호를 확인해주세요.",
+        rePassword: ERROR_MESSAGE.VALIDATION.RE_PASSWORD,
       }));
 
       return;
@@ -174,7 +163,7 @@ const ApplicantRegister = () => {
       ...prev,
       birthday: {
         ...prev.birthday,
-        year: YEAR_ERROR_MESSAGE,
+        year: ERROR_MESSAGE.VALIDATION.YEAR,
       },
     }));
   };
@@ -198,7 +187,7 @@ const ApplicantRegister = () => {
       ...prev,
       birthday: {
         ...prev.birthday,
-        month: MONTH_ERROR_MESSAGE,
+        month: ERROR_MESSAGE.VALIDATION.MONTH,
       },
     }));
   };
@@ -222,7 +211,7 @@ const ApplicantRegister = () => {
       ...prev,
       birthday: {
         ...prev.birthday,
-        day: DAY_ERROR_MESSAGE,
+        day: ERROR_MESSAGE.VALIDATION.DAY,
       },
     }));
   };

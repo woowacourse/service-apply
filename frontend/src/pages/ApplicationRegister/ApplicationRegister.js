@@ -11,7 +11,7 @@ import {
   TextField,
 } from "../../components/form";
 import RecruitCard from "../../components/RecruitCard/RecruitCard";
-import { ALREADY_REGISTER } from "../../constants/messages";
+import { ERROR_MESSAGE } from "../../constants/messages";
 import useRecruitmentContext from "../../hooks/useRecruitmentContext";
 import useTokenContext from "../../hooks/useTokenContext";
 import { formatDateTime } from "../../utils/date";
@@ -54,7 +54,9 @@ const ApplicationRegister = () => {
           });
         }
       } catch (error) {
-        if (error.response.data.message === ALREADY_REGISTER) {
+        if (
+          error.response.data.message === ERROR_MESSAGE.API.ALREADY_REGISTER
+        ) {
           alert("이미 신청서를 작성했습니다. 로그인 페이지로 이동합니다.");
           history.replace("/login");
         } else {

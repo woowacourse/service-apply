@@ -1,18 +1,12 @@
 import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
-
+import Button from "../../components/form/Button/Button";
 import Form from "../../components/form/Form/Form";
 import TextField from "../../components/form/TextField/TextField";
-import Button from "../../components/form/Button/Button";
-import {
-  isValid as isValidEmail,
-  MESSAGE as EMAIL_MESSAGAE,
-} from "../../utils/validation/email";
-import {
-  isValid as isValidPassword,
-  MESSAGE as PASSWORD_MESSAGE,
-} from "../../utils/validation/password";
+import { ERROR_MESSAGE } from "../../constants/messages";
 import useTokenContext from "../../hooks/useTokenContext";
+import { isValidEmail } from "../../utils/validation/email";
+import { isValidPassword } from "../../utils/validation/password";
 import styles from "./Login.module.css";
 
 const validator = {
@@ -21,8 +15,8 @@ const validator = {
 };
 
 const message = {
-  email: EMAIL_MESSAGAE,
-  password: PASSWORD_MESSAGE,
+  email: ERROR_MESSAGE.VALIDATION.EMAIL,
+  password: ERROR_MESSAGE.VALIDATION.PASSWORD,
 };
 
 const Login = () => {

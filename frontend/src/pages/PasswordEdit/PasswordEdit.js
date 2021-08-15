@@ -1,42 +1,39 @@
 import { useState } from "react";
+import { useHistory } from "react-router-dom";
+import { fetchPasswordEdit } from "../../api";
 import Button from "../../components/form/Button/Button";
 import Form from "../../components/form/Form/Form";
 import TextField from "../../components/form/TextField/TextField";
-import styles from "./PasswordEdit.module.css";
-
-import {
-  isValid as isValidPassword,
-  MESSAGE as PASSWORD_MESSAGE,
-} from "../../utils/validation/password";
+import { ERROR_MESSAGE } from "../../constants/messages";
 import useTokenContext from "../../hooks/useTokenContext";
-import { useHistory } from "react-router-dom";
-import { fetchPasswordEdit } from "../../api";
+import { isValidPassword } from "../../utils/validation/password";
+import styles from "./PasswordEdit.module.css";
 
 const validator = {
   password: isValidPassword,
   newPassword: isValidPassword,
-  reNewPassword:
-    (reNewPassword) =>
+  rePassword:
+    (rePassword) =>
     ({ newPassword }) =>
-      reNewPassword === newPassword,
+      rePassword === newPassword,
 };
 
 const message = {
-  password: PASSWORD_MESSAGE,
-  newPassword: PASSWORD_MESSAGE,
-  reNewPassword: "비밀번호가 일치하지 않습니다.",
+  password: ERROR_MESSAGE.VALIDATION.PASSWORD,
+  newPassword: ERROR_MESSAGE.VALIDATION.PASSWORD,
+  rePassword: ERROR_MESSAGE.VALIDATION.RE_PASSWORD,
 };
 
 const PasswordEdit = () => {
   const [value, setValue] = useState({
     password: "",
     newPassword: "",
-    reNewPassword: "",
+    rePassword: "",
   });
   const [errorMessage, setErrorMessage] = useState({
     password: "",
     newPassword: "",
-    reNewPassword: "",
+    rePassword: "",
   });
   const { resetToken } = useTokenContext();
 
@@ -107,15 +104,15 @@ const PasswordEdit = () => {
         />
         <p className={styles["rule-field"]}>{errorMessage.newPassword}</p>
         <TextField
-          name="reNewPassword"
+          name="rePassword"
           type="password"
           label="비밀번호 확인"
-          value={value.reNewPassword}
+          value={value.rePassword}
           placeholder="비밀번호를 다시 한 번 입력해 주세요"
           onChange={handleChange}
           required
         />
-        <p className={styles["rule-field"]}>{errorMessage.reNewPassword}</p>
+        <p className={styles["rule-field"]}>{errorMessage.rePassword}</p>
         <div className={styles.buttons}>
           <Button cancel onClick={() => history.goBack()}>
             이전
