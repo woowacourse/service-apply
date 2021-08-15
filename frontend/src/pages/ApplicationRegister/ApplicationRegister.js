@@ -54,7 +54,8 @@ const ApplicationRegister = () => {
           });
         }
       } catch (error) {
-        console.log(error);
+        console.error(error);
+
         if (
           error.response.data.message === ERROR_MESSAGE.API.ALREADY_REGISTER
         ) {

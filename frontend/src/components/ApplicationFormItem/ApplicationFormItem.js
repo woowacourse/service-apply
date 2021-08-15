@@ -18,9 +18,7 @@ const ApplicationFormItem = ({ recruitment, submitted, className }) => {
   const goApplicationFormsEditPage = () => {
     history.push({
       pathname: `/application-forms/edit`,
-      state: {
-        recruitmentId: recruitment.id,
-      },
+      search: `recruitmentId=${recruitment.id}`,
     });
   };
 

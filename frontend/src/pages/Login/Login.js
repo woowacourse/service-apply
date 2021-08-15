@@ -33,6 +33,18 @@ const Login = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    try {
+      await fetchLogin({
+        email: value.email,
+        password: value.password,
+      });
+
+      alert("로그인 성공");
+      history.push({ pathname: "/recruits", search: "?status=applied" });
+    } catch (e) {
+      alert(e.response.data.message);
+    }
+
     await fetchLogin({
       email: value.email,
       password: value.password,

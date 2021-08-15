@@ -33,14 +33,22 @@ const Recruits = () => {
         return;
       }
 
-      const myApplicationFormData = await fetchMyApplicationForms(token);
-      const myRecruits = myApplicationFormData.map(
-        ({ recruitmentId, submitted }) => ({
-          ...recruitment.findById(recruitmentId),
-          submitted,
-        })
-      );
-      setMyApplication(myRecruits);
+      try {
+        const myApplicationFormData = await fetchMyApplicationForms(token);
+        const myRecruits = myApplicationFormData.map(
+          ({ recruitmentId, submitted }) => ({
+            ...recruitment.findById(recruitmentId),
+            submitted,
+          })
+        );
+
+        setMyApplication(myRecruits);
+      } catch (e) {
+        console.error(e);
+
+        alert("내 지원서를 불러오는데 실패했습니다.");
+        history.push("/login");
+      }
     })();
   }, [selectedTab, recruitment, fetchMyApplicationForms, token, history]);
 

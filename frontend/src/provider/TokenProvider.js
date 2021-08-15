@@ -6,29 +6,17 @@ import * as Api from "../api";
 
 const TokenProvider = ({ children }) => {
   const [token, setToken] = useState("");
-  const history = useHistory();
 
   const postRegister = async (payload) => {
-    try {
-      const { data: token } = await Api.fetchRegister(payload);
+    const { data: token } = await Api.fetchRegister(payload);
 
-      setToken(token);
-    } catch (e) {
-      alert("이미 신청서를 작성했습니다. 로그인 페이지로 이동합니다.");
-      history.push("/login");
-    }
+    setToken(token);
   };
 
   const fetchLogin = async (payload) => {
-    try {
-      const { data: token } = await Api.fetchLogin(payload);
+    const { data: token } = await Api.fetchLogin(payload);
 
-      setToken(token);
-      alert("로그인 성공");
-      history.push({ pathname: "/recruits", search: "?status=applied" });
-    } catch (e) {
-      alert(e.response.data.message);
-    }
+    setToken(token);
   };
 
   const resetToken = () => {
