@@ -2,7 +2,7 @@ import React from "react";
 import Recruits from "./Recruits";
 
 export default {
-  title: "page/Recruits",
+  title: "pages/Recruits",
   component: Recruits,
 };
 
