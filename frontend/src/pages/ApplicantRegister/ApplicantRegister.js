@@ -268,18 +268,13 @@ const ApplicantRegister = () => {
       ),
     };
 
-    try {
-      await postRegister(data);
+    await postRegister(data);
 
-      history.push({
-        pathname: "/application-forms/new",
-        search: `?recruitmentId=${recruitmentId}`,
-        state: { currentRecruitment },
-      });
-    } catch (e) {
-      alert("이미 신청서를 작성했습니다. 로그인 페이지로 이동합니다.");
-      history.push("/login");
-    }
+    history.push({
+      pathname: "/application-forms/new",
+      search: `?recruitmentId=${recruitmentId}`,
+      state: { currentRecruitment },
+    });
   };
 
   return (

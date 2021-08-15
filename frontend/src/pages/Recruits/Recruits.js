@@ -33,14 +33,8 @@ const Recruits = () => {
         return;
       }
 
-      try {
-        const data = await fetchMyApplicationForms(token);
-
-        setMyApplication(data);
-      } catch (e) {
-        alert("내 지원서를 불러오는데 실패했습니다.");
-        history.push("/login");
-      }
+      const data = await fetchMyApplicationForms(token);
+      setMyApplication(data);
     })();
   }, [selectedTab, fetchMyApplicationForms, token, history]);
 

@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { RecruitmentContext } from "../hooks/useRecruitmentContext";
+import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import * as Api from "../api";
 import { RECRUITMENT_STATUS } from "../constants/recruitment";
+import { RecruitmentContext } from "../hooks/useRecruitmentContext";
 
 export const recruitmentFilter = (recruitments) => ({
   all: recruitments,
@@ -21,6 +22,7 @@ export const recruitmentFilter = (recruitments) => ({
 });
 
 const RecruitmentProvider = ({ children }) => {
+  const history = useHistory();
   const [recruitments, setRecruitments] = useState([]);
 
   useEffect(() => {
@@ -47,7 +49,8 @@ const RecruitmentProvider = ({ children }) => {
       return myApplicationForms;
     } catch (e) {
       console.error(e);
-      throw e;
+      alert("내 지원서를 불러오는데 실패했습니다.");
+      history.push("/login");
     }
   };
 
