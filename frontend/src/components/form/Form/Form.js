@@ -9,12 +9,12 @@ const Form = ({ children, actions, footer, className, ...props }) => {
       {children}
       <div className={styles.actions}>{actions}</div>
       <footer>
-        <a className={styles.logo} href="#">
+        <div className={styles.logo}>
           <img
             src={process.env.PUBLIC_URL + "/assets/logo/logo_full_dark.png"}
             alt="우아한테크코스 로고"
           />
-        </a>
+        </div>
         {footer}
       </footer>
     </form>
