@@ -37,8 +37,6 @@ const Login = () => {
       email: value.email,
       password: value.password,
     });
-    alert("로그인 성공");
-    history.push({ pathname: "/recruits", state: { status: "applied" } });
   };
 
   const handleChange = ({ target: { name, value } }) => {

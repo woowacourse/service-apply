@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router";
+import { useHistory } from "react-router-dom";
 
 import { TokenContext } from "../hooks/useTokenContext";
 import * as Api from "../api";
@@ -24,6 +24,8 @@ const TokenProvider = ({ children }) => {
       const { data: token } = await Api.fetchLogin(payload);
 
       setToken(token);
+      alert("로그인 성공");
+      history.push({ pathname: "/recruits", search: "?status=applied" });
     } catch (e) {
       alert(e.response.data.message);
     }
