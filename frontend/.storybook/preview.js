@@ -2,12 +2,14 @@ import { MemoryRouter } from "react-router-dom";
 import { addDecorator } from "@storybook/react";
 import { initializeWorker, mswDecorator } from "msw-storybook-addon";
 import axios from "axios";
+import "../src/api/api";
 import { RecruitmentContext } from "../src/hooks/useRecruitmentContext";
 import { recruitmentFilter } from "../src/provider/RecruitmentProvider";
 import TokenProvider from "../src/provider/TokenProvider";
 import "../src/App.css";
 
-axios.defaults.baseURL = "http://localhost:8080";
+export const API_BASE_URL = process.env.API_BASE_URL;
+axios.defaults.baseURL = API_BASE_URL;
 
 initializeWorker();
 addDecorator(mswDecorator);

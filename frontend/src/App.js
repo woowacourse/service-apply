@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
-import axios from "axios";
+import "./api/api";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import MainHeader from "./components/MainHeader/MainHeader";
 import MainFooter from "./components/MainFooter/MainFooter";
@@ -13,8 +13,6 @@ import PasswordEdit from "./pages/PasswordEdit/PasswordEdit";
 import PasswordFindResult from "./pages/PasswordFindResult/PasswordFindResult";
 import useTokenContext from "./hooks/useTokenContext";
 import "./App.css";
-
-axios.defaults.baseURL = "http://localhost:8080";
 
 const App = () => {
   const { token } = useTokenContext();

@@ -3,6 +3,7 @@ import { rest } from "msw";
 import { Route, MemoryRouter } from "react-router-dom";
 
 import ApplicationRegister from "./ApplicationRegister";
+import { API_BASE_URL } from "../../../.storybook/preview";
 
 export default {
   title: "pages/ApplicationRegister",
@@ -31,7 +32,7 @@ export const Default = Template.bind({});
 Default.parameters = {
   msw: [
     rest.get(
-      "http://localhost:8080/api/recruitments/:recruitmentId/items",
+      `${API_BASE_URL}/api/recruitments/:recruitmentId/items`,
       (req, res, ctx) => {
         return res(
           ctx.json({
@@ -60,11 +61,8 @@ Default.parameters = {
         );
       }
     ),
-    rest.post(
-      "http://localhost:8080/api/application-forms",
-      (req, res, ctx) => {
-        return res(ctx.json({}));
-      }
-    ),
+    rest.post(`${API_BASE_URL}/api/application-forms`, (req, res, ctx) => {
+      return res(ctx.json({}));
+    }),
   ],
 };
