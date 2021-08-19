@@ -4,16 +4,18 @@ import PropTypes from "prop-types";
 
 import CommonItem from "../CommonItem/CommonItem";
 
+import { RECRUITMENT_STATUS } from "../../constants/recruitment";
+
 const RecruitItem = ({ recruitment }) => {
   const history = useHistory();
 
-  const isRecruiting = recruitment.status === "RECRUITING";
+  const isRecruiting = recruitment.status === RECRUITMENT_STATUS.RECRUITING;
 
   const buttonLabels = {
-    RECRUITING: "지원하기",
-    RECRUITABLE: "모집 예정",
-    UNRECRUITABLE: "일시 중지",
-    ENDED: "모집 종료",
+    [RECRUITMENT_STATUS.RECRUITING]: "지원하기",
+    [RECRUITMENT_STATUS.RECRUITABLE]: "모집 예정",
+    [RECRUITMENT_STATUS.UNRECRUITABLE]: "일시 중지",
+    [RECRUITMENT_STATUS.ENDED]: "모집 종료",
   };
   const buttonLabel = buttonLabels[recruitment.status] || "";
 
@@ -21,7 +23,7 @@ const RecruitItem = ({ recruitment }) => {
     history.push({
       pathname: `/applicants/new`,
       state: {
-        recruitment: recruitment.Id,
+        recruitmentId: recruitment.id,
       },
     });
   };

@@ -12,7 +12,7 @@
 @media screen and (max-width: 800px) {
   .box {
     width: 100vw;
-    margin: 0;
+    margin: 15px 0;
   }
 }
 

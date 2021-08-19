@@ -16,7 +16,7 @@ const PasswordFindResult = () => {
   return (
     <div className={styles["password-find-result"]}>
       <Form>
-        <h1>비밀번호 찾기</h1>
+        <h2>비밀번호 찾기</h2>
         <div>
           임시 비밀번호가 <strong>{email}</strong> 으로 발송되었습니다.
         </div>

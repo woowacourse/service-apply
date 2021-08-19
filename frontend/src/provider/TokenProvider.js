@@ -1,11 +1,12 @@
 import React, { useState } from "react";
+
 import { TokenContext } from "../hooks/useTokenContext";
 import * as Api from "../api";
 
 const TokenProvider = ({ children }) => {
   const [token, setToken] = useState("");
 
-  const fetchRegister = async (payload) => {
+  const postRegister = async (payload) => {
     const { data: token } = await Api.fetchRegister(payload);
 
     setToken(token);
@@ -23,7 +24,7 @@ const TokenProvider = ({ children }) => {
 
   return (
     <TokenContext.Provider
-      value={{ token, fetchRegister, fetchLogin, resetToken }}
+      value={{ token, postRegister, fetchLogin, resetToken }}
     >
       {children}
     </TokenContext.Provider>

@@ -1,14 +1,22 @@
 import React from "react";
 import PropTypes from "prop-types";
-import "./TextInput.css";
 import classNames from "classnames";
+import styles from "./TextInput.module.css";
 
-const TextInput = ({ className, type, readOnly, value, ...props }) => {
+const TextInput = ({
+  className,
+  type,
+  readOnly,
+  value,
+  maxLength,
+  ...props
+}) => {
   if (type === "textarea") {
     return (
       <textarea
         value={value}
-        className={classNames("text-input", className)}
+        maxLength={maxLength}
+        className={classNames(styles["text-input"], className)}
         readOnly={readOnly}
         {...props}
       />
@@ -19,7 +27,8 @@ const TextInput = ({ className, type, readOnly, value, ...props }) => {
     <input
       type={type}
       value={value}
-      className={classNames("text-input", className)}
+      maxLength={maxLength}
+      className={classNames(styles["text-input"], className)}
       readOnly={readOnly}
       {...props}
     />
@@ -31,6 +40,7 @@ TextInput.propTypes = {
   type: PropTypes.oneOf(["text", "email", "password", "textarea", "url"]),
   readOnly: PropTypes.bool,
   value: PropTypes.string,
+  maxLength: PropTypes.number,
 };
 
 TextInput.defaultProps = {
@@ -38,6 +48,7 @@ TextInput.defaultProps = {
   type: "text",
   readOnly: false,
   value: "",
+  maxLength: undefined,
 };
 
 export default TextInput;

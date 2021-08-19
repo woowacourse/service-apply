@@ -53,6 +53,11 @@
     "@storybook/preset-create-react-app": "^3.2.0",
     "@storybook/react": "^6.3.4",
     "babel-loader": "8.1.0",
+    "msw": "^0.34.0",
+    "msw-storybook-addon": "^1.2.0",
     "prettier": "^2.3.2"
+  },
+  "msw": {
+    "workerDirectory": "public"
   }
 }

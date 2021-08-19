@@ -1,0 +1,30 @@
+.applicant-register {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.summary {
+  padding: 0;
+  margin: 0;
+  color: #333;
+  font-size: 12px;
+}
+
+.rule-field {
+  margin-left: 8px;
+  font-size: 12px;
+  color: #ff0000;
+}
+
+.button-wrapper {
+  display: flex;
+  justify-content: stretch;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.button-wrapper button {
+  flex-grow: 1;
+  margin: 0;
+}

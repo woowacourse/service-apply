@@ -1,48 +1,46 @@
 import React, { useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import Form from "../../components/form/Form/Form";
 import TextField from "../../components/form/TextField/TextField";
 import Button from "../../components/form/Button/Button";
-import {
-  isValid as isValidName,
-  MESSAGE as NAME_MESSAGE,
-} from "../../utils/validation/name";
-import {
-  isValid as isValidEmail,
-  MESSAGE as EMAIL_MESSAGAE,
-} from "../../utils/validation/email";
+import { isValidName } from "../../utils/validation/name";
+import { isValidEmail } from "../../utils/validation/email";
 import styles from "./PasswordFind.module.css";
 import { fetchPasswordFind } from "../../api/applicants";
 import BirthField from "../../components/form/BirthField/BirthField";
+import { ERROR_MESSAGE } from "../../constants/messages";
 import {
-  DAY_MESSAGE,
-  isDayValid,
-  isMonthValid,
-  isYearValid,
-  MONTH_MESSAGE,
-  YEAR_MESSAGE,
+  isValidDay,
+  isValidMonth,
+  isValidYear,
 } from "../../utils/validation/birth";
 import { formatLocalDate } from "../../utils/date";
 
 const validator = {
   name: isValidName,
   email: isValidEmail,
-  year: isYearValid,
-  month: isMonthValid,
-  day: isDayValid,
+  year: isValidYear,
+  month: isValidMonth,
+  day: isValidDay,
 };
 
 const message = {
-  name: NAME_MESSAGE,
-  email: EMAIL_MESSAGAE,
-  year: YEAR_MESSAGE,
-  month: MONTH_MESSAGE,
-  day: DAY_MESSAGE,
+  name: ERROR_MESSAGE.VALIDATION.NAME,
+  email: ERROR_MESSAGE.VALIDATION.EMAIL,
+  year: ERROR_MESSAGE.VALIDATION.YEAR,
+  month: ERROR_MESSAGE.VALIDATION.MONTH,
+  day: ERROR_MESSAGE.VALIDATION.DAY,
 };
 
 const PasswordFind = () => {
-  const [value, setValue] = useState({});
+  const [value, setValue] = useState({
+    name: "",
+    email: "",
+    year: "",
+    month: "",
+    day: "",
+  });
   const [errorMessage, setErrorMessage] = useState({});
 
   const history = useHistory();
@@ -91,7 +89,7 @@ const PasswordFind = () => {
   return (
     <div className={styles["password-find"]}>
       <Form onSubmit={handleSubmit}>
-        <h1>비밀번호 찾기</h1>
+        <h2>비밀번호 찾기</h2>
         <TextField
           name="name"
           type="text"

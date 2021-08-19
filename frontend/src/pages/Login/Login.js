@@ -1,18 +1,12 @@
 import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
-
+import Button from "../../components/form/Button/Button";
 import Form from "../../components/form/Form/Form";
 import TextField from "../../components/form/TextField/TextField";
-import Button from "../../components/form/Button/Button";
-import {
-  isValid as isValidEmail,
-  MESSAGE as EMAIL_MESSAGAE,
-} from "../../utils/validation/email";
-import {
-  isValid as isValidPassword,
-  MESSAGE as PASSWORD_MESSAGE,
-} from "../../utils/validation/password";
+import { ERROR_MESSAGE } from "../../constants/messages";
 import useTokenContext from "../../hooks/useTokenContext";
+import { isValidEmail } from "../../utils/validation/email";
+import { isValidPassword } from "../../utils/validation/password";
 import styles from "./Login.module.css";
 
 const validator = {
@@ -21,8 +15,8 @@ const validator = {
 };
 
 const message = {
-  email: EMAIL_MESSAGAE,
-  password: PASSWORD_MESSAGE,
+  email: ERROR_MESSAGE.VALIDATION.EMAIL,
+  password: ERROR_MESSAGE.VALIDATION.PASSWORD,
 };
 
 const Login = () => {
@@ -44,11 +38,17 @@ const Login = () => {
         email: value.email,
         password: value.password,
       });
+
       alert("로그인 성공");
-      history.push({ pathname: "/recruits", state: { status: "applied" } });
+      history.push({ pathname: "/recruits", search: "?status=applied" });
     } catch (e) {
       alert(e.response.data.message);
     }
+
+    await fetchLogin({
+      email: value.email,
+      password: value.password,
+    });
   };
 
   const handleChange = ({ target: { name, value } }) => {
@@ -71,8 +71,15 @@ const Login = () => {
 
   return (
     <div className={styles.login}>
-      <Form onSubmit={handleSubmit}>
-        <h1>내 지원서 보기</h1>
+      <Form
+        onSubmit={handleSubmit}
+        footer={
+          <Link to="/find" className={styles["find-password"]}>
+            비밀번호 찾기
+          </Link>
+        }
+      >
+        <h2>내 지원서 보기</h2>
         <TextField
           name="email"
           type="email"
@@ -102,9 +109,6 @@ const Login = () => {
           </Button>
         </div>
       </Form>
-      <Link to="/find" className={styles["find-password"]}>
-        비밀번호 찾기
-      </Link>
     </div>
   );
 };

@@ -1,19 +1,36 @@
 import React from "react";
+import PropTypes from "prop-types";
 import Field from "../Field/Field";
 import Label from "../Label/Label";
 import Radio from "../Radio/Radio";
-import "./GenderField.css";
+import styles from "./GenderField.module.css";
 
-const GenderField = () => {
+const GenderField = ({ onChange }) => {
   return (
-    <Field className="gender-field">
+    <Field className={styles["gender-field"]}>
       <Label required>성별</Label>
-      <div className="gender-group">
-        <Radio name="gender" label="남자" value="male" required />
-        <Radio name="gender" label="여자" value="female" required />
+      <div className={styles["gender-group"]}>
+        <Radio
+          onChange={onChange}
+          name="gender"
+          label="남자"
+          value="male"
+          required
+        />
+        <Radio
+          onChange={onChange}
+          name="gender"
+          label="여자"
+          value="female"
+          required
+        />
       </div>
     </Field>
   );
+};
+
+GenderField.propTypes = {
+  onChange: PropTypes.func.isRequired,
 };
 
 export default GenderField;

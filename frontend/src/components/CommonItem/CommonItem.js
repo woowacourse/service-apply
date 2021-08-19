@@ -1,19 +1,43 @@
-import React from "react";
+import React, { useMemo } from "react";
 import PropTypes from "prop-types";
+import classNames from "classnames";
+
+import { formatDateTime } from "../../utils/date";
 
 import BaseItem from "../BaseItem/BaseItem";
-
 import { Button } from "../form";
 
 import styles from "./CommonItem.module.css";
 
-const CommonItem = ({ buttonLabel, activeButton, recruitment, goPage }) => {
+const CommonItem = ({
+  buttonLabel,
+  activeButton,
+  recruitment,
+  goPage,
+  className,
+}) => {
+  const formattedStartDateTime = useMemo(
+    () =>
+      recruitment.startDateTime
+        ? formatDateTime(new Date(recruitment.startDateTime))
+        : "",
+    [recruitment.startDateTime]
+  );
+
+  const formattedEndDateTime = useMemo(
+    () =>
+      recruitment.endDateTime
+        ? formatDateTime(new Date(recruitment.endDateTime))
+        : "",
+    [recruitment.endDateTime]
+  );
+
   return (
-    <div className={styles["common-item"]}>
+    <div className={classNames(styles["common-item"], className)}>
       <BaseItem
         title={recruitment.title}
-        startDateTime={recruitment.startDateTime}
-        endDateTime={recruitment.endDateTime}
+        startDateTime={formattedStartDateTime}
+        endDateTime={formattedEndDateTime}
       />
       <Button className="button" disabled={!activeButton} onClick={goPage}>
         {buttonLabel}
@@ -29,4 +53,5 @@ CommonItem.propTypes = {
   activeButton: PropTypes.bool.isRequired,
   goPage: PropTypes.func.isRequired,
   recruitment: PropTypes.object.isRequired,
+  className: PropTypes.string,
 };
