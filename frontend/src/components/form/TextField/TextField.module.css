@@ -1,0 +1,10 @@
+.text-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.length-limit {
+  align-self: flex-end;
+  color: #999999;
+  font-size: 13px;
+}

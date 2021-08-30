@@ -1,0 +1,24 @@
+.button {
+  cursor: pointer;
+  outline: none;
+  border: 0;
+  background: #0078ff;
+  color: #fff;
+  border-radius: 3px;
+  padding: 10px;
+  min-width: 80px;
+  min-height: 28px;
+  margin: 5px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.button.cancel {
+  background: #999;
+}
+
+.button:disabled {
+  cursor: default;
+  background: #ccc;
+}
