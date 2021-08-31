@@ -6,7 +6,9 @@ import apply.application.CheaterService
 import apply.createApplicant
 import apply.domain.cheater.Cheater
 import com.ninjasquad.springmockk.MockkBean
+import io.mockk.Runs
 import io.mockk.every
+import io.mockk.just
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.ComponentScan
@@ -61,7 +63,7 @@ internal class CheaterRestControllerTest : RestControllerTest() {
 
     @Test
     internal fun `부정행위자를 추가한다`() {
-        every { cheaterService.save(cheatedApplicant.id) } returns Unit
+        every { cheaterService.save(cheatedApplicant.id) } just Runs
 
         mockMvc.post("/api/cheaters") {
             param("applicantId", cheatedApplicant.id.toString())
@@ -73,7 +75,7 @@ internal class CheaterRestControllerTest : RestControllerTest() {
 
     @Test
     internal fun `부정행위자를 삭제한다`() {
-        every { cheaterService.deleteById(cheatedApplicant.id) } returns Unit
+        every { cheaterService.deleteById(cheatedApplicant.id) } just Runs
 
         mockMvc.delete("/api/cheaters/{applicantId}", cheatedApplicant.id)
             .andExpect {
