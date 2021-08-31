@@ -38,7 +38,7 @@ class Applicant(
     var authenticated: Boolean = authenticated
         private set
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 8)
     val authenticateCode: String = UUID.randomUUID().toString().take(8)
 
     constructor(
