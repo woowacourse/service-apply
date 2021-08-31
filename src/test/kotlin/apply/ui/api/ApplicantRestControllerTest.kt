@@ -14,7 +14,9 @@ import apply.domain.applicant.Gender
 import apply.domain.applicant.Password
 import apply.security.JwtTokenProvider
 import com.ninjasquad.springmockk.MockkBean
+import io.mockk.Runs
 import io.mockk.every
+import io.mockk.just
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.HttpHeaders.AUTHORIZATION
@@ -107,7 +109,7 @@ internal class ApplicantRestControllerTest : RestControllerTest() {
     @Test
     fun `유효한 지원자 생성 및 검증 요청에 대하여 응답으로 토큰이 반환된다`() {
         every { applicantAuthenticationService.generateToken(applicantRequest) } returns VALID_TOKEN
-        every { mailService.sendAuthenticationMail(applicantRequest, any()) } returns Unit
+        every { mailService.sendAuthenticationMail(applicantRequest, any()) } just Runs
         every { applicantService.getByEmail(applicantRequest.email) } returns applicantRequest.toEntity()
 
         mockMvc.post("/api/applicants/register") {
@@ -170,7 +172,7 @@ internal class ApplicantRestControllerTest : RestControllerTest() {
             applicantService.resetPassword(applicantPasswordFindRequest)
         } returns RANDOM_PASSWORD
 
-        every { mailService.sendPasswordResetMail(applicantPasswordFindRequest, RANDOM_PASSWORD) } returns Unit
+        every { mailService.sendPasswordResetMail(applicantPasswordFindRequest, RANDOM_PASSWORD) } just Runs
 
         mockMvc.post("/api/applicants/reset-password") {
             content = objectMapper.writeValueAsBytes(applicantPasswordFindRequest)
@@ -199,7 +201,7 @@ internal class ApplicantRestControllerTest : RestControllerTest() {
         every { jwtTokenProvider.isValidToken("valid_token") } returns true
         every { jwtTokenProvider.getSubject("valid_token") } returns applicantRequest.email
         every { applicantService.getByEmail(applicantRequest.email) } returns applicantRequest.toEntity()
-        every { applicantService.editPassword(any(), eq(validEditPasswordRequest)) } returns Unit
+        every { applicantService.editPassword(any(), eq(validEditPasswordRequest)) } just Runs
 
         val actualValidEditPasswordRequest = createValidEditPasswordRequest()
 
@@ -234,7 +236,7 @@ internal class ApplicantRestControllerTest : RestControllerTest() {
 
     @Test
     fun `이메일 인증 요청에 응답으로 NoContent를 반환한다`() {
-        every { applicantAuthenticationService.authenticateEmail(applicantRequest.email, any()) } returns Unit
+        every { applicantAuthenticationService.authenticateEmail(applicantRequest.email, any()) } just Runs
 
         mockMvc.post("/api/applicants/authenticate-email") {
             param("email", applicantRequest.email)

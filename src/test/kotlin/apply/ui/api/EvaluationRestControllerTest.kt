@@ -7,7 +7,9 @@ import apply.application.EvaluationService
 import apply.createEvaluation
 import apply.createRecruitment
 import com.ninjasquad.springmockk.MockkBean
+import io.mockk.Runs
 import io.mockk.every
+import io.mockk.just
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.ComponentScan
@@ -35,7 +37,7 @@ internal class EvaluationRestControllerTest : RestControllerTest() {
         val evaluationId = 1L
         val evaluationData = EvaluationData(createEvaluation(), createRecruitment(), null, emptyList())
 
-        every { evaluationService.save(evaluationData) } returns Unit
+        every { evaluationService.save(evaluationData) } just Runs
 
         mockMvc.post("/api/recruitments/{recruitmentId}/evaluations", evaluationId) {
             content = objectMapper.writeValueAsBytes(evaluationData)
@@ -79,7 +81,7 @@ internal class EvaluationRestControllerTest : RestControllerTest() {
     internal fun `평가를 삭제한다`() {
         val recruitmentId = 1L
         val evaluationId = 1L
-        every { evaluationService.deleteById(evaluationId) } returns Unit
+        every { evaluationService.deleteById(evaluationId) } just Runs
 
         mockMvc.delete("/api/recruitments/{recruitmentId}/evaluations/{evaluationId}", recruitmentId, evaluationId)
             .andExpect {
