@@ -81,7 +81,7 @@ class Applicant(
     }
 
     fun authenticateEmail(authenticateCode: String) {
-        identify(authenticated) { "이미 이메일이 인증된 지원자입니다." }
+        identify(!authenticated) { "이미 이메일이 인증된 지원자입니다." }
         identify(this.authenticateCode == authenticateCode)
         authenticated = true
     }
