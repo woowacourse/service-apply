@@ -101,4 +101,34 @@ internal class ApplicantAuthenticationServiceTest {
             assertThrows<ApplicantAuthenticationException> { subject() }
         }
     }
+
+    @DisplayName("이메일 사용자 인증 시")
+    @Nested
+    inner class AuthenticateEmail {
+        val applicant = createApplicant()
+
+        @Test
+        fun `인증 코드가 일치한다면 인증된 사용자로 변경한다`() {
+            every { applicantRepository.findByEmail(applicant.email) } returns applicant
+
+            applicantAuthenticationService.authenticateEmail(applicant.email, applicant.authenticateCode)
+
+            assertThat(applicant.authenticated).isTrue
+        }
+
+        @Test
+        fun `인증 코드가 일치하지 않는다면 예외가 발생한다`() {
+            val applicant = createApplicant()
+            every { applicantRepository.findByEmail(applicant.email) } returns applicant
+
+            assertThrows<ApplicantAuthenticationException> {
+                applicantAuthenticationService.authenticateEmail(
+                    applicant.email,
+                    "wrong_code"
+                )
+            }
+
+            assertThat(applicant.authenticated).isFalse
+        }
+    }
 }

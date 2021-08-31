@@ -11,7 +11,9 @@ import apply.createRecruitmentItemData
 import apply.domain.term.Term
 import apply.security.JwtTokenProvider
 import com.ninjasquad.springmockk.MockkBean
+import io.mockk.Runs
 import io.mockk.every
+import io.mockk.just
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
@@ -104,7 +106,7 @@ internal class RecruitmentRestControllerTest : RestControllerTest() {
 
     @Test
     fun `지원과 지원 항목을 저장한다`() {
-        every { recruitmentService.save(recruitmentData) } returns Unit
+        every { recruitmentService.save(recruitmentData) } just Runs
 
         mockMvc.perform(
             RestDocumentationRequestBuilders.post(
@@ -134,7 +136,7 @@ internal class RecruitmentRestControllerTest : RestControllerTest() {
 
     @Test
     fun `모집 id로 모집을 삭제한다`() {
-        every { recruitmentService.deleteById(recruitmentId) } returns Unit
+        every { recruitmentService.deleteById(recruitmentId) } just Runs
 
         mockMvc.perform(
             RestDocumentationRequestBuilders.delete(

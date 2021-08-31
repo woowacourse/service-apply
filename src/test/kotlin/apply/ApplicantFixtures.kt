@@ -24,7 +24,8 @@ fun createApplicant(
     gender: Gender = GENDER,
     birthday: LocalDate = BIRTHDAY,
     password: Password = PASSWORD,
+    authenticated: Boolean = false,
     id: Long = 0L
 ): Applicant {
-    return Applicant(name, email, phoneNumber, gender, birthday, password, id)
+    return Applicant(name, email, phoneNumber, gender, birthday, password, authenticated, id)
 }

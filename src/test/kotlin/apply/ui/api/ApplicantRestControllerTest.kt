@@ -109,6 +109,8 @@ internal class ApplicantRestControllerTest : RestControllerTest() {
     @Test
     fun `유효한 지원자 생성 및 검증 요청에 대하여 응답으로 토큰이 반환된다`() {
         every { applicantAuthenticationService.generateToken(applicantRequest) } returns VALID_TOKEN
+        every { mailService.sendAuthenticationMail(applicantRequest, any()) } just Runs
+        every { applicantService.getByEmail(applicantRequest.email) } returns applicantRequest.toEntity()
 
         mockMvc.post("/api/applicants/register") {
             content = objectMapper.writeValueAsBytes(applicantRequest.withPlainPassword(PASSWORD))
@@ -229,6 +231,18 @@ internal class ApplicantRestControllerTest : RestControllerTest() {
             header(AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isUnauthorized }
+        }
+    }
+
+    @Test
+    fun `이메일 인증 요청에 응답으로 NoContent를 반환한다`() {
+        every { applicantAuthenticationService.authenticateEmail(applicantRequest.email, any()) } just Runs
+
+        mockMvc.post("/api/applicants/authenticate-email") {
+            param("email", applicantRequest.email)
+            param("authenticateCode", "code")
+        }.andExpect {
+            status { isNoContent }
         }
     }
 
