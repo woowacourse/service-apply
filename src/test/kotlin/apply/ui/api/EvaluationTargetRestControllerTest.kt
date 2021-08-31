@@ -13,7 +13,9 @@ import apply.domain.evaluationtarget.EvaluationAnswers
 import apply.domain.evaluationtarget.EvaluationStatus
 import apply.security.JwtTokenProvider
 import com.ninjasquad.springmockk.MockkBean
+import io.mockk.Runs
 import io.mockk.every
+import io.mockk.just
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
@@ -109,7 +111,7 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
 
     @Test
     fun `이전 평가와 평가 대상자 존재 여부를 통해 저장하거나 갱신한다 `() {
-        every { evaluationTargetService.load(evaluationId) } returns Unit
+        every { evaluationTargetService.load(evaluationId) } just Runs
 
         mockMvc.perform(
             RestDocumentationRequestBuilders.put(
@@ -184,7 +186,7 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
 
     @Test
     fun `평가 완료 후 점수를 매긴다`() {
-        every { evaluationTargetService.grade(targetId, gradeEvaluationRequest) } returns Unit
+        every { evaluationTargetService.grade(targetId, gradeEvaluationRequest) } just Runs
 
         mockMvc.perform(
             RestDocumentationRequestBuilders.patch(
