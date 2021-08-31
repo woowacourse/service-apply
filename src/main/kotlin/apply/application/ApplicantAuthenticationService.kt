@@ -27,7 +27,8 @@ class ApplicantAuthenticationService(
     }
 
     fun authenticateEmail(email: String, authenticateCode: String) {
-        val applicant = applicantRepository.findByEmail(email) ?: throw IllegalArgumentException("지원자가 존재하지 않습니다. email: $email")
+        val applicant = applicantRepository.findByEmail(email)
+            ?: throw IllegalArgumentException("지원자가 존재하지 않습니다. email: $email")
         applicant.authenticateEmail(authenticateCode)
     }
 }

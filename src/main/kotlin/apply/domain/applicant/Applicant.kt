@@ -16,8 +16,8 @@ class Applicant(
     @AttributeOverride(name = "value", column = Column(name = "password", nullable = false))
     @Embedded
     var password: Password,
-    id: Long = 0L,
-    authenticated: Boolean = false
+    authenticated: Boolean,
+    id: Long = 0L
 ) : BaseEntity(id) {
     val name: String
         get() = information.name
@@ -48,9 +48,10 @@ class Applicant(
         gender: Gender,
         birthday: LocalDate,
         password: Password,
+        authenticated: Boolean = false,
         id: Long = 0L
     ) : this(
-        ApplicantInformation(name, email, phoneNumber, gender, birthday), password, id
+        ApplicantInformation(name, email, phoneNumber, gender, birthday), password, authenticated, id
     )
 
     fun authenticate(applicant: Applicant) {
@@ -72,16 +73,15 @@ class Applicant(
         this.password = Password(password)
     }
 
-    private fun identify(value: Boolean) {
+    private fun identify(value: Boolean, lazyMessage: () -> Any = {}) {
         if (!value) {
-            throw ApplicantAuthenticationException()
+            val message = lazyMessage()
+            throw ApplicantAuthenticationException(message.toString())
         }
     }
 
     fun authenticateEmail(authenticateCode: String) {
-        if (this.authenticated) {
-            throw ApplicantAuthenticationException("이미 이메일이 인증된 지원자 입니다.")
-        }
+        identify(authenticated) { "이미 이메일이 인증된 지원자입니다." }
         identify(this.authenticateCode == authenticateCode)
         authenticated = true
     }

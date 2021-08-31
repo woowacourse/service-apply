@@ -22,8 +22,7 @@ data class ApplicantInformation(
     val gender: Gender,
 
     @Column(nullable = false)
-    val birthday: LocalDate,
-
+    val birthday: LocalDate
 ) {
     fun same(name: String, birthday: LocalDate): Boolean {
         return this.name == name && this.birthday == birthday
