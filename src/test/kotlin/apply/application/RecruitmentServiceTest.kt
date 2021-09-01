@@ -37,12 +37,7 @@ internal class RecruitmentServiceTest {
 
     @BeforeEach
     internal fun setUp() {
-        recruitmentService =
-            RecruitmentService(
-                recruitmentRepository,
-                recruitmentItemRepository,
-                termRepository
-            )
+        recruitmentService = RecruitmentService(recruitmentRepository, recruitmentItemRepository, termRepository)
     }
 
     @Nested
@@ -142,7 +137,7 @@ internal class RecruitmentServiceTest {
     }
 
     @Test
-    fun `모집중인 경우 모집을 삭제하는 경우 예외를 던진다`() {
+    fun `모집 중인 모집은 삭제할 수 없다`() {
         val recruitment = createRecruitment(recruitable = true)
         every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
         assertThrows<IllegalStateException> { recruitmentService.deleteById(recruitment.id) }
