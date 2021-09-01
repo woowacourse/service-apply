@@ -77,7 +77,7 @@ class SelectionView(
             tabs,
             HorizontalLayout(
                 createLoadButton(tabs),
-                createDownloadButton()
+                createResultDownloadButton()
             )
         ).apply {
             setWidthFull()
@@ -187,8 +187,8 @@ class SelectionView(
         }
     }
 
-    private fun createDownloadButton(): Button {
-        return createSuccessButton("다운로드") {
+    private fun createResultDownloadButton(): Button {
+        return createSuccessButton("평가 결과 다운로드") {
             if (tabs.selectedIndex == 0) {
                 val excel = excelService.createApplicantExcel(recruitmentId)
                 downloadFile("${recruitmentService.getById(recruitmentId).title}.xlsx", excel)
