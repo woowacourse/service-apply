@@ -18,17 +18,6 @@ class RecruitmentRepositoryTest(
     private val entityManager: TestEntityManager
 ) {
     @Test
-    fun `논리 삭제가 적용된 경우 조회하지 않는다`() {
-        val recruitment = recruitmentRepository.save(createRecruitment(deleted = true))
-
-        flushAndClear()
-        assertAll(
-            { assertThat(recruitmentRepository.findAll()).hasSize(0) },
-            { assertThat(recruitmentRepository.findByIdOrNull(recruitment.id)).isNull() }
-        )
-    }
-
-    @Test
     fun `삭제 시 논리적 삭제가 적용된다`() {
         val recruitment = recruitmentRepository.save(createRecruitment())
         flushAndClear()

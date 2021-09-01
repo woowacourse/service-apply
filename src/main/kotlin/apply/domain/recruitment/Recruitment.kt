@@ -8,9 +8,9 @@ import javax.persistence.Column
 import javax.persistence.Embedded
 import javax.persistence.Entity
 
-@Entity
 @SQLDelete(sql = "update recruitment set deleted = true WHERE id=?")
 @Where(clause = "deleted=false")
+@Entity
 class Recruitment(
     @Column(nullable = false)
     var title: String,
@@ -22,12 +22,12 @@ class Recruitment(
     val termId: Long = 0L,
     recruitable: Boolean = false,
     hidden: Boolean = true,
-    id: Long,
-    deleted: Boolean = false
+    id: Long
 ) : BaseEntity(id) {
     @Column(nullable = false)
     var recruitable: Boolean = recruitable
         private set
+
     @Column(nullable = false)
     var hidden: Boolean = hidden
         private set
@@ -37,6 +37,9 @@ class Recruitment(
 
     val endDateTime: LocalDateTime
         get() = period.endDateTime
+
+    @Column(nullable = false)
+    private var deleted: Boolean = false
 
     val status: RecruitmentStatus
         get() = RecruitmentStatus.of(period, recruitable)
@@ -50,9 +53,6 @@ class Recruitment(
     val single: Boolean
         get() = termId == 0L
 
-    var deleted: Boolean = deleted
-        private set
-
     constructor(
         title: String,
         startDateTime: LocalDateTime,
@@ -60,7 +60,6 @@ class Recruitment(
         termId: Long = 0L,
         recruitable: Boolean = false,
         hidden: Boolean = true,
-        id: Long = 0L,
-        deleted: Boolean = false
-    ) : this(title, RecruitmentPeriod(startDateTime, endDateTime), termId, recruitable, hidden, id, deleted)
+        id: Long = 0L
+    ) : this(title, RecruitmentPeriod(startDateTime, endDateTime), termId, recruitable, hidden, id)
 }
