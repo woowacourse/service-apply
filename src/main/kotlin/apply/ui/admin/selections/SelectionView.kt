@@ -76,8 +76,10 @@ class SelectionView(
             },
             tabs,
             HorizontalLayout(
+                createEvaluationExcelDownloadButton(),
+                createEvaluationExcelUploadButton(),
                 createLoadButton(tabs),
-                createResultDownloadButton()
+                createEvaluationResultDownloadButton()
             )
         ).apply {
             setWidthFull()
@@ -187,8 +189,27 @@ class SelectionView(
         }
     }
 
-    private fun createResultDownloadButton(): Button {
-        return createSuccessButton("평가 결과 다운로드") {
+    private fun createEvaluationExcelDownloadButton(): Button {
+        return createSuccessButton("평가지 다운로드") {
+            if (tabs.selectedIndex != 0) {
+                val evaluation = evaluations[tabs.selectedIndex - 1]
+                // TODO: 평가지 만드는 API 연동
+                val excel = excelService.createTargetExcel(evaluation.id)
+                downloadFile("${evaluation.title}.csv", excel)
+            }
+        }
+    }
+
+    private fun createEvaluationExcelUploadButton(): Button {
+        return createSuccessButton("평가지 업로드") {
+            if (tabs.selectedIndex != 0) {
+                // TODO: 평가지 업로드 기능
+            }
+        }
+    }
+
+    private fun createEvaluationResultDownloadButton(): Button {
+        return createSuccessButton("평가결과 다운로드") {
             if (tabs.selectedIndex == 0) {
                 val excel = excelService.createApplicantExcel(recruitmentId)
                 downloadFile("${recruitmentService.getById(recruitmentId).title}.xlsx", excel)
