@@ -10,7 +10,9 @@ import javax.persistence.Id
 @Entity
 class Cheater(
     @Column(nullable = false)
-    val applicantId: Long,
+    val email: String,
+
+    val description: String = "",
 
     @Column(nullable = false)
     val createdDateTime: LocalDateTime = LocalDateTime.now(),

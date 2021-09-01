@@ -56,7 +56,8 @@ class EvaluationTargetService(
 
     fun load(evaluationId: Long) {
         val evaluation = evaluationRepository.findByIdOrNull(evaluationId) ?: throw IllegalArgumentException()
-        val cheaterApplicantIds = cheaterRepository.findAll().map { it.applicantId }
+        val cheaterApplicantIds = applicantRepository.findAllByEmailIn(cheaterRepository.findAll().map { it.email })
+            .map { it.id }
         val updatingApplicantIds = createUpdatingEvaluationTargets(evaluation)
             .filterNot { cheaterApplicantIds.contains(it.applicantId) }
             .map { it.applicantId }

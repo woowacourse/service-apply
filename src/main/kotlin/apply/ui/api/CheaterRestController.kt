@@ -23,8 +23,8 @@ class CheaterRestController(
     }
 
     @PostMapping
-    fun save(@RequestParam("applicantId") applicantId: Long): ResponseEntity<Unit> {
-        cheaterService.save(applicantId)
+    fun save(@RequestParam("email") email: String): ResponseEntity<Unit> {
+        cheaterService.save(email)
         return ResponseEntity.ok().build()
     }
 

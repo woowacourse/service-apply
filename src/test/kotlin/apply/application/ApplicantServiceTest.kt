@@ -57,6 +57,7 @@ internal class ApplicantServiceTest {
         @BeforeEach
         internal fun setUp() {
             val applicantId = 1L
+            val email = "email"
 
             slot<Long>().also { slot ->
                 every { applicationFormRepository.findByRecruitmentIdAndSubmittedTrue(capture(slot)) } answers {
@@ -64,16 +65,16 @@ internal class ApplicantServiceTest {
                 }
             }
 
-            every { cheaterRepository.findAll() } returns listOf(Cheater(applicantId))
+            every { cheaterRepository.findAll() } returns listOf(Cheater(email))
             slot<Iterable<Long>>().also { slot ->
                 every { applicantRepository.findAllById(capture(slot)) } answers {
-                    slot.captured.map { createApplicant(id = it) }
+                    slot.captured.map { createApplicant(id = it, email = email) }
                 }
             }
 
             slot<String>().also { slot ->
                 every { applicantRepository.findAllByKeyword(capture(slot)) } answers {
-                    listOf(createApplicant(name = slot.captured, id = applicantId))
+                    listOf(createApplicant(name = slot.captured, id = applicantId, email = email))
                 }
             }
         }

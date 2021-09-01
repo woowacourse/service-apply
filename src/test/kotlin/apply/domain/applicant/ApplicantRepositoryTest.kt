@@ -57,4 +57,10 @@ internal class ApplicantRepositoryTest(private val applicantRepository: Applican
     fun `이메일이 일치하는 지원자가 존재하지 않을 때, null을 반환한다`() {
         assertThat(applicantRepository.findByEmail("notexist@email.com")).isNull()
     }
+
+    @Test
+    internal fun `이메일이 일치하는 지원자들을 전부 조회한다`() {
+        val emails = listOf("b@email.com", "c@email.com")
+        assertThat(applicantRepository.findAllByEmailIn(emails)).hasSize(2)
+    }
 }

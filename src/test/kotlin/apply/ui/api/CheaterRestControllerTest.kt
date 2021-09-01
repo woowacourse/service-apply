@@ -34,15 +34,15 @@ internal class CheaterRestControllerTest : RestControllerTest() {
     private val cheaterResponses = listOf(
         CheaterResponse(
             Cheater(
-                1L,
-                createLocalDateTime(2021, 10, 9, 10, 0, 0, 0)
+                email = "Loki@email.com",
+                createdDateTime = createLocalDateTime(2021, 10, 9, 10, 0, 0, 0)
             ),
             createApplicant(name = "로키")
         ),
         CheaterResponse(
             Cheater(
-                2L,
-                createLocalDateTime(2021, 10, 10, 10, 0, 0, 0)
+                email = "Amazzi@email.com",
+                createdDateTime = createLocalDateTime(2021, 10, 10, 10, 0, 0, 0)
             ),
             createApplicant(name = "아마찌")
         )
@@ -63,10 +63,10 @@ internal class CheaterRestControllerTest : RestControllerTest() {
 
     @Test
     internal fun `부정행위자를 추가한다`() {
-        every { cheaterService.save(cheatedApplicant.id) } just Runs
+        every { cheaterService.save(cheatedApplicant.email) } just Runs
 
         mockMvc.post("/api/cheaters") {
-            param("applicantId", cheatedApplicant.id.toString())
+            param("email", cheatedApplicant.email.toString())
         }
             .andExpect {
                 status { isOk }
