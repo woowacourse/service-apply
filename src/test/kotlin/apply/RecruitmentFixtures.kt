@@ -27,9 +27,10 @@ fun createRecruitment(
     termId: Long = 0L,
     recruitable: Boolean = true,
     hidden: Boolean = true,
-    id: Long = 0L
+    id: Long = 0L,
+    deleted: Boolean = false
 ): Recruitment {
-    return Recruitment(title, startDateTime, endDateTime, termId, recruitable, hidden, id)
+    return Recruitment(title, startDateTime, endDateTime, termId, recruitable, hidden, id, deleted)
 }
 
 fun createRecruitmentItem(
