@@ -1,18 +1,13 @@
 package apply.application
 
-import apply.domain.applicationform.ApplicationFormRepository
-import apply.domain.evaluation.Evaluation
-import apply.domain.evaluation.EvaluationRepository
-import apply.domain.evaluationItem.EvaluationItem
-import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentRepository
+import apply.domain.recruitment.getById
 import apply.domain.recruitmentitem.RecruitmentItem
 import apply.domain.recruitmentitem.RecruitmentItemRepository
 import apply.domain.term.Term
 import apply.domain.term.TermRepository
 import apply.domain.term.getById
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -21,9 +16,6 @@ import org.springframework.transaction.annotation.Transactional
 class RecruitmentService(
     private val recruitmentRepository: RecruitmentRepository,
     private val recruitmentItemRepository: RecruitmentItemRepository,
-    private val applicationFormRepository: ApplicationFormRepository,
-    private val evaluationRepository: EvaluationRepository,
-    private val evaluationItemRepository: EvaluationItemRepository,
     private val termRepository: TermRepository
 ) {
     fun save(request: RecruitmentData) {
@@ -39,7 +31,7 @@ class RecruitmentService(
             )
         )
         recruitmentItemRepository.deleteAll(
-            findRecruitmentItems(request.id, request.recruitmentItems.map { it.id })
+            findRecruitmentItemsToDelete(request.id, request.recruitmentItems.map { it.id })
         )
         recruitmentItemRepository.saveAll(
             request.recruitmentItems.map {
@@ -48,7 +40,7 @@ class RecruitmentService(
         )
     }
 
-    private fun findRecruitmentItems(recruitmentId: Long, excludedItemIds: List<Long>): List<RecruitmentItem> {
+    private fun findRecruitmentItemsToDelete(recruitmentId: Long, excludedItemIds: List<Long>): List<RecruitmentItem> {
         return recruitmentItemRepository
             .findByRecruitmentIdOrderByPosition(recruitmentId)
             .filterNot { excludedItemIds.contains(it.id) }
@@ -66,34 +58,11 @@ class RecruitmentService(
 
     fun deleteById(id: Long) {
         val recruitment = getById(id)
-        validateDeletable(recruitment)
-        recruitmentItemRepository.deleteInBatch(findRecruitmentItems(id))
-        val evaluations = evaluationRepository.findAllByRecruitmentId(id)
-        deleteEvaluationItems(evaluations)
-        evaluationRepository.deleteInBatch(evaluations)
+        check(!recruitment.recruitable)
         recruitmentRepository.delete(recruitment)
     }
 
-    private fun deleteEvaluationItems(evaluations: List<Evaluation>) {
-        evaluations.forEach {
-            val findAllByEvaluationId = findAllEvaluationItems(it)
-            evaluationItemRepository.deleteInBatch(findAllByEvaluationId)
-        }
-    }
-
-    private fun findAllEvaluationItems(evaluation: Evaluation): List<EvaluationItem> =
-        evaluationItemRepository.findAllByEvaluationId(evaluation.id)
-
-    private fun findRecruitmentItems(id: Long): List<RecruitmentItem> =
-        recruitmentItemRepository.findAllByRecruitmentId(id)
-
-    private fun validateDeletable(recruitment: Recruitment) {
-        check(!recruitment.recruitable)
-        check(!applicationFormRepository.existsByRecruitmentId(recruitment.id))
-    }
-
-    fun getById(id: Long): Recruitment =
-        recruitmentRepository.findByIdOrNull(id) ?: throw IllegalArgumentException()
+    fun getById(id: Long): Recruitment = recruitmentRepository.getById(id)
 
     fun getNotEndedDataById(id: Long): RecruitmentData {
         val recruitment = getById(id)

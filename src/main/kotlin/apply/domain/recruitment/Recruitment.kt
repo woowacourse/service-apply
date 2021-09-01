@@ -23,12 +23,11 @@ class Recruitment(
     recruitable: Boolean = false,
     hidden: Boolean = true,
     id: Long,
-    var deleted: Boolean = false
+    deleted: Boolean = false
 ) : BaseEntity(id) {
     @Column(nullable = false)
     var recruitable: Boolean = recruitable
         private set
-
     @Column(nullable = false)
     var hidden: Boolean = hidden
         private set
@@ -50,6 +49,9 @@ class Recruitment(
 
     val single: Boolean
         get() = termId == 0L
+
+    var deleted: Boolean = deleted
+        private set
 
     constructor(
         title: String,

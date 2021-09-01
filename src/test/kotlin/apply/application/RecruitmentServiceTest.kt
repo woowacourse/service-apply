@@ -1,14 +1,9 @@
 package apply.application
 
-import apply.createEvaluation
-import apply.createEvaluationItem
 import apply.createRecruitment
 import apply.createRecruitmentData
 import apply.createRecruitmentItem
 import apply.createRecruitmentItemData
-import apply.domain.applicationform.ApplicationFormRepository
-import apply.domain.evaluation.EvaluationRepository
-import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitmentitem.RecruitmentItem
@@ -36,15 +31,6 @@ internal class RecruitmentServiceTest {
     private lateinit var recruitmentItemRepository: RecruitmentItemRepository
 
     @MockK
-    private lateinit var applicationFormRepository: ApplicationFormRepository
-
-    @MockK
-    private lateinit var evaluationRepository: EvaluationRepository
-
-    @MockK
-    private lateinit var evaluationItemRepository: EvaluationItemRepository
-
-    @MockK
     private lateinit var termRepository: TermRepository
 
     private lateinit var recruitmentService: RecruitmentService
@@ -55,9 +41,6 @@ internal class RecruitmentServiceTest {
             RecruitmentService(
                 recruitmentRepository,
                 recruitmentItemRepository,
-                applicationFormRepository,
-                evaluationRepository,
-                evaluationItemRepository,
                 termRepository
             )
     }
@@ -159,36 +142,9 @@ internal class RecruitmentServiceTest {
     }
 
     @Test
-    fun `지원서가 존재하는 모집을 삭제하는 경우 예외를 던진다`() {
-        every { recruitmentRepository.findByIdOrNull(1L) } returns createRecruitment(id = 1L, recruitable = false)
-        every { applicationFormRepository.existsByRecruitmentId(1L) } returns true
-
-        assertThrows<IllegalStateException> { recruitmentService.deleteById(1L) }
-    }
-
-    @Test
-    fun `모집 삭제 시 평가, 평가 항목, 모집 항목을 함께 삭제한다`() {
-        every { recruitmentRepository.findByIdOrNull(1L) } returns createRecruitment(id = 1L, recruitable = false)
-        every { applicationFormRepository.existsByRecruitmentId(1L) } returns false
-        every { recruitmentItemRepository.findAllByRecruitmentId(1L) } returns listOf(
-            createRecruitmentItem(recruitmentId = 1L, id = 2L)
-        )
-        every { evaluationRepository.findAllByRecruitmentId(1L) } returns listOf(
-            createEvaluation(recruitmentId = 1L, id = 3L)
-        )
-        every { evaluationItemRepository.findAllByEvaluationId(3L) } returns listOf(
-            createEvaluationItem(evaluationId = 3L, id = 4L)
-        )
-        every { recruitmentRepository.delete(createRecruitment(id = 1L)) } just Runs
-        every { recruitmentItemRepository.deleteInBatch(listOf(createRecruitmentItem(id = 2L))) } just Runs
-        every { evaluationRepository.deleteInBatch(listOf(createEvaluation(id = 3L))) } just Runs
-        every { evaluationItemRepository.deleteInBatch(listOf(createEvaluationItem(id = 4L))) } just Runs
-
-        recruitmentService.deleteById(1L)
-
-        verify { recruitmentRepository.delete(createRecruitment(id = 1L)) }
-        verify { recruitmentItemRepository.deleteInBatch(listOf(createRecruitmentItem(id = 2L))) }
-        verify { evaluationRepository.deleteInBatch(listOf(createEvaluation(id = 3L))) }
-        verify { evaluationItemRepository.deleteInBatch(listOf(createEvaluationItem(id = 4L))) }
+    fun `모집중인 경우 모집을 삭제하는 경우 예외를 던진다`() {
+        val recruitment = createRecruitment(recruitable = true)
+        every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
+        assertThrows<IllegalStateException> { recruitmentService.deleteById(recruitment.id) }
     }
 }
