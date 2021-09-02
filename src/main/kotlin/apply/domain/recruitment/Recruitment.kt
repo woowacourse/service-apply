@@ -1,11 +1,15 @@
 package apply.domain.recruitment
 
+import org.hibernate.annotations.SQLDelete
+import org.hibernate.annotations.Where
 import support.domain.BaseEntity
 import java.time.LocalDateTime
 import javax.persistence.Column
 import javax.persistence.Embedded
 import javax.persistence.Entity
 
+@SQLDelete(sql = "update recruitment set deleted = true WHERE id=?")
+@Where(clause = "deleted=false")
 @Entity
 class Recruitment(
     @Column(nullable = false)
@@ -33,6 +37,9 @@ class Recruitment(
 
     val endDateTime: LocalDateTime
         get() = period.endDateTime
+
+    @Column(nullable = false)
+    private var deleted: Boolean = false
 
     val status: RecruitmentStatus
         get() = RecruitmentStatus.of(period, recruitable)
