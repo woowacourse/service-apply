@@ -2,12 +2,12 @@ package apply.application
 
 import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentRepository
+import apply.domain.recruitment.getById
 import apply.domain.recruitmentitem.RecruitmentItem
 import apply.domain.recruitmentitem.RecruitmentItemRepository
 import apply.domain.term.Term
 import apply.domain.term.TermRepository
 import apply.domain.term.getById
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -62,8 +62,7 @@ class RecruitmentService(
         recruitmentRepository.delete(recruitment)
     }
 
-    fun getById(id: Long): Recruitment =
-        recruitmentRepository.findByIdOrNull(id) ?: throw IllegalArgumentException()
+    fun getById(id: Long): Recruitment = recruitmentRepository.getById(id)
 
     fun getNotEndedDataById(id: Long): RecruitmentData {
         val recruitment = getById(id)
