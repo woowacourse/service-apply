@@ -52,6 +52,7 @@ dependencies {
     testImplementation("com.ninja-squad:springmockk:2.0.3")
     asciidoctor("org.springframework.restdocs:spring-restdocs-asciidoctor")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
+    implementation("org.apache.commons:commons-csv:1.5")
 }
 
 dependencyManagement {

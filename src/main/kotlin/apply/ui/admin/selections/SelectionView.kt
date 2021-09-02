@@ -32,15 +32,17 @@ import com.vaadin.flow.router.BeforeEvent
 import com.vaadin.flow.router.HasUrlParameter
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.router.WildcardParameter
+import org.apache.commons.csv.CSVFormat
+import org.apache.commons.csv.CSVParser
 import support.views.addSortableColumn
 import support.views.addSortableDateColumn
 import support.views.addSortableDateTimeColumn
+import support.views.createCsvUploadButton
 import support.views.createNormalButton
 import support.views.createPrimaryButton
 import support.views.createPrimarySmallButton
 import support.views.createSearchBar
 import support.views.createSuccessButton
-import support.views.createUploadButton
 import support.views.downloadFile
 import java.io.BufferedReader
 
@@ -88,7 +90,16 @@ class SelectionView(
             justifyContentMode = FlexComponent.JustifyContentMode.BETWEEN
         }
 
-        return VerticalLayout(menu, grids).apply { setWidthFull() }
+        val csvButtons = HorizontalLayout(
+            createEvaluationExcelDownloadButton(),
+            createEvaluationExcelUploadButton(),
+        ).apply {
+            setWidthFull()
+            justifyContentMode = FlexComponent.JustifyContentMode.CENTER
+            defaultVerticalComponentAlignment = FlexComponent.Alignment.CENTER
+        }
+
+        return VerticalLayout(menu, grids, csvButtons).apply { setWidthFull() }
     }
 
     private fun mapTabAndGrid(keyword: String): Map<Tab, Component> {
@@ -191,6 +202,17 @@ class SelectionView(
         }
     }
 
+    private fun createCsvDownloadAndUploadButton(): HorizontalLayout {
+        return HorizontalLayout(
+            createEvaluationExcelDownloadButton(),
+            createEvaluationExcelUploadButton(),
+        ).apply {
+            setWidthFull()
+            justifyContentMode = FlexComponent.JustifyContentMode.CENTER
+            defaultVerticalComponentAlignment = FlexComponent.Alignment.CENTER
+        }
+    }
+
     private fun createEvaluationExcelDownloadButton(): Button {
         return createSuccessButton("평가지 다운로드") {
             val evaluation = evaluations[tabs.selectedIndex - 1]
@@ -201,12 +223,17 @@ class SelectionView(
     }
 
     private fun createEvaluationExcelUploadButton(): Upload {
-        return createUploadButton("평가지 업로드", MemoryBuffer()) { it ->
+        return createCsvUploadButton("평가지 업로드", MemoryBuffer()) { it ->
             val reader = BufferedReader(it.inputStream.reader())
-            var content: String
-            reader.use {
-                content = it.readText()
+            val csvParser = CSVParser(reader, CSVFormat.DEFAULT)
+            for (csvRecord in csvParser) {
+                println("++++++++++++++++${csvRecord[0]}")
             }
+            csvParser.close()
+            // var content: String
+            // reader.use {
+            //     content = it.readText()
+            // }
         }
     }
 

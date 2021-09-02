@@ -9,7 +9,6 @@ import com.vaadin.flow.component.dialog.Dialog
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.upload.Upload
-import com.vaadin.flow.component.upload.UploadI18N
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer
 
 typealias ClickListener = (ClickEvent<Button>) -> Unit
@@ -31,15 +30,14 @@ fun createSuccessButton(text: String, clickListener: ClickListener): Button {
     }
 }
 
-fun createUploadButton(text: String, receiver: MemoryBuffer, eventListener: SucceededListener): Upload {
+fun createCsvUploadButton(text: String, receiver: MemoryBuffer, eventListener: SucceededListener): Upload {
     return Upload(receiver).apply {
         setAcceptedFileTypes("text/csv")
-        uploadButton = createSuccessButton(text) {
+        uploadButton = createPrimaryButton(text) {
         }
         addSucceededListener {
             eventListener(receiver)
         }
-        i18n = UploadI18N()
     }
 }
 
