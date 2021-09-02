@@ -62,11 +62,11 @@ internal class CheaterRestControllerTest : RestControllerTest() {
     }
 
     @Test
-    internal fun `부정행위자를 추가한다`() {
+    fun `부정행위자를 추가한다`() {
         every { cheaterService.save(cheatedApplicant.email) } just Runs
 
         mockMvc.post("/api/cheaters") {
-            param("email", cheatedApplicant.email.toString())
+            param("email", cheatedApplicant.email)
         }
             .andExpect {
                 status { isOk }
@@ -74,7 +74,7 @@ internal class CheaterRestControllerTest : RestControllerTest() {
     }
 
     @Test
-    internal fun `부정행위자를 삭제한다`() {
+    fun `부정행위자를 삭제한다`() {
         every { cheaterService.deleteById(cheatedApplicant.id) } just Runs
 
         mockMvc.delete("/api/cheaters/{applicantId}", cheatedApplicant.id)
