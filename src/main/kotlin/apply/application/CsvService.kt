@@ -3,8 +3,12 @@ package apply.application
 import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.utils.CsvGenerator
 import apply.utils.CsvRow
+import org.springframework.stereotype.Service
 import java.io.ByteArrayInputStream
+import javax.transaction.Transactional
 
+@Transactional
+@Service
 class CsvService(
     private val applicantService: ApplicantService,
     private val evaluationTargetService: EvaluationTargetService,
