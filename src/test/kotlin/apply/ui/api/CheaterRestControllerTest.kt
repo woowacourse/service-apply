@@ -34,14 +34,14 @@ internal class CheaterRestControllerTest : RestControllerTest() {
     private val cheaterResponses = listOf(
         CheaterResponse(
             Cheater(
-                email = "Loki@email.com",
+                email = "loki@email.com",
                 createdDateTime = createLocalDateTime(2021, 10, 9, 10, 0, 0, 0)
             ),
             createApplicant(name = "로키")
         ),
         CheaterResponse(
             Cheater(
-                email = "Amazzi@email.com",
+                email = "amazzi@email.com",
                 createdDateTime = createLocalDateTime(2021, 10, 10, 10, 0, 0, 0)
             ),
             createApplicant(name = "아마찌")

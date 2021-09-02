@@ -35,6 +35,6 @@ internal class CheaterServiceTest {
     @Test
     fun `이미 등록된 부정 행위자를 추가하는 경우 예외를 던진다`() {
         every { cheaterRepository.existsByEmail(any()) } returns true
-        assertThrows<IllegalArgumentException> { cheaterService.save("cheaterEmail") }
+        assertThrows<IllegalArgumentException> { cheaterService.save("cheater@email.com") }
     }
 }
