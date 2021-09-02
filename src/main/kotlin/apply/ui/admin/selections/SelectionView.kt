@@ -24,6 +24,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.tabs.Tab
 import com.vaadin.flow.component.tabs.Tabs
 import com.vaadin.flow.component.textfield.TextArea
+import com.vaadin.flow.component.upload.Upload
+import com.vaadin.flow.component.upload.receivers.MemoryBuffer
 import com.vaadin.flow.data.renderer.ComponentRenderer
 import com.vaadin.flow.data.renderer.Renderer
 import com.vaadin.flow.router.BeforeEvent
@@ -38,7 +40,9 @@ import support.views.createPrimaryButton
 import support.views.createPrimarySmallButton
 import support.views.createSearchBar
 import support.views.createSuccessButton
+import support.views.createUploadButton
 import support.views.downloadFile
+import java.io.BufferedReader
 
 @Route(value = "admin/selections", layout = BaseLayout::class)
 class SelectionView(
@@ -76,8 +80,6 @@ class SelectionView(
             },
             tabs,
             HorizontalLayout(
-                createEvaluationExcelDownloadButton(),
-                createEvaluationExcelUploadButton(),
                 createLoadButton(tabs),
                 createEvaluationResultDownloadButton()
             )
@@ -191,19 +193,19 @@ class SelectionView(
 
     private fun createEvaluationExcelDownloadButton(): Button {
         return createSuccessButton("평가지 다운로드") {
-            if (tabs.selectedIndex != 0) {
-                val evaluation = evaluations[tabs.selectedIndex - 1]
-                // TODO: 평가지 만드는 API 연동
-                val excel = excelService.createTargetExcel(evaluation.id)
-                downloadFile("${evaluation.title}.csv", excel)
-            }
+            val evaluation = evaluations[tabs.selectedIndex - 1]
+            // TODO: 평가지 CSV로 변경
+            val excel = excelService.createTargetExcel(evaluation.id)
+            downloadFile("${evaluation.title}.csv", excel)
         }
     }
 
-    private fun createEvaluationExcelUploadButton(): Button {
-        return createSuccessButton("평가지 업로드") {
-            if (tabs.selectedIndex != 0) {
-                // TODO: 평가지 업로드 기능
+    private fun createEvaluationExcelUploadButton(): Upload {
+        return createUploadButton("평가지 업로드", MemoryBuffer()) { it ->
+            val reader = BufferedReader(it.inputStream.reader())
+            var content: String
+            reader.use {
+                content = it.readText()
             }
         }
     }

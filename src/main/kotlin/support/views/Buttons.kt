@@ -8,8 +8,12 @@ import com.vaadin.flow.component.button.ButtonVariant
 import com.vaadin.flow.component.dialog.Dialog
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
+import com.vaadin.flow.component.upload.Upload
+import com.vaadin.flow.component.upload.UploadI18N
+import com.vaadin.flow.component.upload.receivers.MemoryBuffer
 
 typealias ClickListener = (ClickEvent<Button>) -> Unit
+typealias SucceededListener = (MemoryBuffer) -> Unit
 
 fun createNormalButton(text: String, clickListener: ClickListener): Button {
     return Button(text, clickListener)
@@ -24,6 +28,18 @@ fun createPrimaryButton(text: String = "", clickListener: ClickListener): Button
 fun createSuccessButton(text: String, clickListener: ClickListener): Button {
     return createPrimaryButton(text, clickListener).apply {
         addThemeVariants(ButtonVariant.LUMO_SUCCESS)
+    }
+}
+
+fun createUploadButton(text: String, receiver: MemoryBuffer, eventListener: SucceededListener): Upload {
+    return Upload(receiver).apply {
+        setAcceptedFileTypes("text/csv")
+        uploadButton = createSuccessButton(text) {
+        }
+        addSucceededListener {
+            eventListener(receiver)
+        }
+        i18n = UploadI18N()
     }
 }
 
