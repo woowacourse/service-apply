@@ -2,4 +2,4 @@ alter table cheater
     change applicant_id email varchar(255) not null;
 
 alter table cheater
-    add description varchar(255);
+    add description longtext not null after email;
