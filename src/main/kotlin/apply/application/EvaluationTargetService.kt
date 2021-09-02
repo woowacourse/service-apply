@@ -8,6 +8,7 @@ import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.evaluationtarget.EvaluationAnswer
 import apply.domain.evaluationtarget.EvaluationAnswers
+import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
 import org.springframework.data.repository.findByIdOrNull
@@ -139,5 +140,33 @@ class EvaluationTargetService(
             evaluationAnswers = EvaluationAnswers(evaluationAnswers),
             note = request.note
         )
+    }
+
+    fun findAllMailSendingTargetEmail(
+        evaluationId: Long,
+        request: EvaluationSendingTargetRequest
+    ): List<EvaluationSendingTargetResponse> {
+        val targetApplicantIds = extractMailSendingTargets(evaluationId, request.evaluationStatus)
+            .map { it.applicantId }
+
+        return applicantRepository.findAllById(targetApplicantIds)
+            .map { EvaluationSendingTargetResponse(it.email) }
+    }
+
+    private fun extractMailSendingTargets(
+        evaluationId: Long,
+        evaluationStatus: EvaluationStatus
+    ): List<EvaluationTarget> {
+        if (evaluationStatus == EvaluationStatus.PASS) {
+            return evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(
+                evaluationId,
+                evaluationStatus
+            )
+        }
+
+        return evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(
+            evaluationId,
+            evaluationStatus
+        ).filterNot { it.hasNotSubmitAssignment() }
     }
 }

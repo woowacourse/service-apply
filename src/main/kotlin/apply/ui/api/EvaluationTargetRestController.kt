@@ -1,5 +1,7 @@
 package apply.ui.api
 
+import apply.application.EvaluationSendingTargetRequest
+import apply.application.EvaluationSendingTargetResponse
 import apply.application.EvaluationTargetData
 import apply.application.EvaluationTargetResponse
 import apply.application.EvaluationTargetService
@@ -55,5 +57,15 @@ class EvaluationTargetRestController(
     ): ResponseEntity<Unit> {
         evaluationTargetService.grade(targetId, request)
         return ResponseEntity.ok().build()
+    }
+
+    @GetMapping("/sending-email-targets")
+    fun findAllMailSendingTargetEmail(
+        @PathVariable recruitmentId: Long,
+        @PathVariable evaluationId: Long,
+        @RequestBody request: EvaluationSendingTargetRequest,
+    ): ResponseEntity<ApiResponse<List<EvaluationSendingTargetResponse>>> {
+        val mailSendingTargetEmails = evaluationTargetService.findAllMailSendingTargetEmail(evaluationId, request)
+        return ResponseEntity.ok(ApiResponse.success(mailSendingTargetEmails))
     }
 }

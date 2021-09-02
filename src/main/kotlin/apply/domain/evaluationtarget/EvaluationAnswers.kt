@@ -14,12 +14,15 @@ class EvaluationAnswers(
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "evaluation_target_answers")
     private val _answers: MutableList<EvaluationAnswer> = answers.toMutableList()
+
     val answers: List<EvaluationAnswer>
         get() = _answers
 
     fun add(evaluationAnswer: EvaluationAnswer) {
         _answers.add(evaluationAnswer)
     }
+
+    fun hasNotSubmitEvaluationAnswer(): Boolean = answers.any { it.score == 0 }
 
     fun countTotalScore(): Int {
         return _answers.map { it.score }.sum()

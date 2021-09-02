@@ -4,6 +4,8 @@ import apply.NOTE
 import apply.application.ApplicantService
 import apply.application.EvaluationItemResponse
 import apply.application.EvaluationItemScoreData
+import apply.application.EvaluationSendingTargetRequest
+import apply.application.EvaluationSendingTargetResponse
 import apply.application.EvaluationTargetData
 import apply.application.EvaluationTargetResponse
 import apply.application.EvaluationTargetService
@@ -17,6 +19,8 @@ import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.EnumSource
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders
@@ -221,6 +225,48 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
                         fieldWithPath("evaluationStatus").type(JsonFieldType.STRING)
                             .description("평가 상태")
                     )
+                )
+            )
+    }
+
+    @ParameterizedTest
+    @EnumSource(names = ["PASS", "FAIL"])
+    fun `메일 발송 대상(합격자)들의 이메일 정보를 조회한다`(enumStatus: EvaluationStatus) {
+        val evaluationSendingTargetRequest = EvaluationSendingTargetRequest(EvaluationStatus.PASS)
+        every {
+            evaluationTargetService.findAllMailSendingTargetEmail(
+                evaluationId,
+                evaluationSendingTargetRequest,
+            )
+        } returns listOf(EvaluationSendingTargetResponse("roki@woowacourse.com"))
+
+        mockMvc.perform(
+            RestDocumentationRequestBuilders.get(
+                "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/sending-email-targets",
+                recruitmentId,
+                evaluationId
+            ).header("Content-Type", "application/json")
+                .content(
+                    objectMapper.writeValueAsString(
+                        evaluationSendingTargetRequest
+                    )
+                )
+        ).andExpect(status().isOk)
+            .andDo(
+                document(
+                    "evaluationtarget-email-sending-target-emails",
+                    pathParameters(
+                        parameterWithName("recruitmentId").description("모집 ID"),
+                        parameterWithName("evaluationId").description("평가 ID"),
+                    ),
+                    requestFields(
+                        fieldWithPath("evaluationStatus").type(JsonFieldType.STRING)
+                            .description("평가 상태"),
+                    ),
+                    responseFields(
+                        fieldWithPath("message").description("응답 메시지"),
+                        fieldWithPath("body.[].email").type(JsonFieldType.STRING).description("대상 E-MAIL"),
+                    ),
                 )
             )
     }

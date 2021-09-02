@@ -341,6 +341,66 @@ class EvaluationTargetServiceTest(
         )
     }
 
+    @Test
+    fun `평가 상태에따라 (합격) 메일 발송 대상들의 이메일 정보를 불러온다`() {
+        val passApplicant = createApplicant(1L)
+        val failApplicant = createApplicant(2L)
+        val notSubmitAssignmentApplicant = createApplicant(3L)
+        val hasNotSubmitAnswer = EvaluationAnswers(listOf(createEvaluationAnswer(0)))
+        val twoScoreAnswer = EvaluationAnswers(listOf(createEvaluationAnswer(2)))
+        val threeScoreAnswer = EvaluationAnswers(listOf(createEvaluationAnswer(3)))
+
+        val evaluationTarget = createEvaluationTarget(EVALUATION_ID, passApplicant.id, PASS, NOTE, threeScoreAnswer)
+
+        evaluationTargetRepository.saveAll(
+            listOf(
+                evaluationTarget,
+                createEvaluationTarget(EVALUATION_ID, failApplicant.id, FAIL, NOTE, hasNotSubmitAnswer),
+                createEvaluationTarget(EVALUATION_ID, notSubmitAssignmentApplicant.id, FAIL, NOTE, twoScoreAnswer),
+            )
+        )
+
+        every {
+            applicantRepository.findAllById(listOf(evaluationTarget.applicantId))
+        } returns listOf(passApplicant)
+
+        val mailSendingTargetEmails = evaluationTargetService.findAllMailSendingTargetEmail(
+            EVALUATION_ID, EvaluationSendingTargetRequest(PASS)
+        )
+
+        assertThat(mailSendingTargetEmails).hasSize(1)
+    }
+
+    @Test
+    fun `평가 상태에따라 (탈락) 메일 발송 대상들의 이메일 정보를 불러온다`() {
+        val passApplicant = createApplicant(1L)
+        val failApplicant = createApplicant(2L)
+        val notSubmitAssignmentApplicant = createApplicant(3L)
+        val hasNotSubmitAnswer = EvaluationAnswers(listOf(createEvaluationAnswer(0)))
+        val twoScoreAnswer = EvaluationAnswers(listOf(createEvaluationAnswer(2)))
+        val threeScoreAnswer = EvaluationAnswers(listOf(createEvaluationAnswer(3)))
+
+        val evaluationTarget =
+            createEvaluationTarget(EVALUATION_ID, failApplicant.id, FAIL, NOTE, twoScoreAnswer)
+        evaluationTargetRepository.saveAll(
+            listOf(
+                createEvaluationTarget(EVALUATION_ID, passApplicant.id, PASS, NOTE, threeScoreAnswer),
+                createEvaluationTarget(EVALUATION_ID, notSubmitAssignmentApplicant.id, FAIL, NOTE, hasNotSubmitAnswer),
+                evaluationTarget,
+            )
+        )
+
+        every {
+            applicantRepository.findAllById(listOf(failApplicant.id))
+        } returns listOf(failApplicant)
+
+        val mailSendingTargetEmails = evaluationTargetService.findAllMailSendingTargetEmail(
+            EVALUATION_ID, EvaluationSendingTargetRequest(FAIL)
+        )
+
+        assertThat(mailSendingTargetEmails).hasSize(1)
+    }
+
     private fun createApplicationForm(id: Long, recruitmentId: Long = 1L, applicantId: Long): ApplicationForm {
         return ApplicationForm(
             applicantId = applicantId,

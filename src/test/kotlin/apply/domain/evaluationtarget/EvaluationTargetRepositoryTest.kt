@@ -66,4 +66,24 @@ class EvaluationTargetRepositoryTest(
 
         assertThat(evaluationTargetRepository.count()).isEqualTo(1)
     }
+
+    @ParameterizedTest
+    @CsvSource(value = ["PASS,2", "FAIL,1"])
+    fun `지정한 평가에 해당되고 평가대상자들의 평가 상태가 특정 평가 상태와 일치하는 평가 대상자를 찾는다`(
+        evaluationStatus: EvaluationStatus,
+        expectedSize: Int
+    ) {
+        evaluationTargetRepository.saveAll(
+            listOf(
+                EvaluationTarget(EVALUATION_ID, applicantId = 1L, evaluationStatus = EvaluationStatus.PASS),
+                EvaluationTarget(EVALUATION_ID, applicantId = 2L, evaluationStatus = EvaluationStatus.PASS),
+                EvaluationTarget(EVALUATION_ID, applicantId = 3L, evaluationStatus = EvaluationStatus.FAIL),
+            )
+        )
+
+        val evaluationTargets =
+            evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(EVALUATION_ID, evaluationStatus)
+
+        assertThat(evaluationTargets).hasSize(expectedSize)
+    }
 }

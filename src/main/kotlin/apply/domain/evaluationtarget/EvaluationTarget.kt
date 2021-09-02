@@ -38,6 +38,8 @@ class EvaluationTarget(
     val isPassed: Boolean
         get() = this.evaluationStatus == EvaluationStatus.PASS
 
+    fun hasNotSubmitAssignment(): Boolean = evaluationAnswers.hasNotSubmitEvaluationAnswer()
+
     fun update(evaluationStatus: EvaluationStatus, evaluationAnswers: EvaluationAnswers, note: String) {
         this.evaluationStatus = evaluationStatus
         this.evaluationAnswers = evaluationAnswers

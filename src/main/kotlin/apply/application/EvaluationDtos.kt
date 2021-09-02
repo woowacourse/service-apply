@@ -149,6 +149,16 @@ data class EvaluationTargetData(
     var evaluationStatus: EvaluationStatus = EvaluationStatus.WAITING
 )
 
+data class EvaluationSendingTargetRequest(
+    @field:NotNull
+    val evaluationStatus: EvaluationStatus = EvaluationStatus.WAITING
+)
+
+data class EvaluationSendingTargetResponse(
+    @field:NotNull
+    val email: String
+)
+
 data class EvaluationItemScoreData(
     @field:NotNull
     @field:Min(0)
