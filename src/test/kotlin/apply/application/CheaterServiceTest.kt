@@ -28,8 +28,8 @@ internal class CheaterServiceTest {
     @Test
     fun `부정 행위자를 추가한다`() {
         every { cheaterRepository.existsByEmail(any()) } returns false
-        every { cheaterRepository.save(any()) } returns Cheater("cheaterEmail")
-        assertDoesNotThrow { cheaterService.save("cheaterEmail") }
+        every { cheaterRepository.save(any()) } returns Cheater("cheater@email.com")
+        assertDoesNotThrow { cheaterService.save("cheater@email.com") }
     }
 
     @Test

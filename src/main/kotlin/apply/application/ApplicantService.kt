@@ -29,7 +29,11 @@ class ApplicantService(
         val cheaterApplicantEmails = cheaterRepository.findAll().map { it.email }
         return findAllByIdsAndKeyword(formsByApplicantId.keys, keyword)
             .map {
-                ApplicantAndFormResponse(it, cheaterApplicantEmails.contains(it.email), formsByApplicantId.getValue(it.id))
+                ApplicantAndFormResponse(
+                    it,
+                    cheaterApplicantEmails.contains(it.email),
+                    formsByApplicantId.getValue(it.id)
+                )
             }
     }
 

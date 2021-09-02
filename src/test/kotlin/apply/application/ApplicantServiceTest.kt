@@ -57,7 +57,7 @@ internal class ApplicantServiceTest {
         @BeforeEach
         internal fun setUp() {
             val applicantId = 1L
-            val email = "email"
+            val email = "email@email.com"
 
             slot<Long>().also { slot ->
                 every { applicationFormRepository.findByRecruitmentIdAndSubmittedTrue(capture(slot)) } answers {

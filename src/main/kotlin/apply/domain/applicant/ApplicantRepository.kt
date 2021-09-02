@@ -12,5 +12,5 @@ interface ApplicantRepository : JpaRepository<Applicant, Long> {
     fun findByEmail(@Param("email") email: String): Applicant?
 
     @Query("select a from Applicant a where a.information.email in :emails")
-    fun findAllByEmailIn(@Param("emails") map: List<String>): List<Applicant>
+    fun findAllByEmailIn(@Param("emails") emails: List<String>): List<Applicant>
 }

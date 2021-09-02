@@ -59,7 +59,7 @@ internal class ApplicantRepositoryTest(private val applicantRepository: Applican
     }
 
     @Test
-    internal fun `이메일이 일치하는 지원자들을 전부 조회한다`() {
+    fun `이메일이 일치하는 지원자들을 전부 조회한다`() {
         val emails = listOf("b@email.com", "c@email.com")
         assertThat(applicantRepository.findAllByEmailIn(emails)).hasSize(2)
     }
