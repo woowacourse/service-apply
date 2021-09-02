@@ -91,8 +91,8 @@ class SelectionView(
         }
 
         val csvButtons = HorizontalLayout(
-            createEvaluationExcelDownloadButton(),
-            createEvaluationExcelUploadButton(),
+            createCsvDownloadButton(),
+            createCsvUploadButton()
         ).apply {
             setWidthFull()
             justifyContentMode = FlexComponent.JustifyContentMode.CENTER
@@ -202,38 +202,23 @@ class SelectionView(
         }
     }
 
-    private fun createCsvDownloadAndUploadButton(): HorizontalLayout {
-        return HorizontalLayout(
-            createEvaluationExcelDownloadButton(),
-            createEvaluationExcelUploadButton(),
-        ).apply {
-            setWidthFull()
-            justifyContentMode = FlexComponent.JustifyContentMode.CENTER
-            defaultVerticalComponentAlignment = FlexComponent.Alignment.CENTER
-        }
-    }
-
-    private fun createEvaluationExcelDownloadButton(): Button {
+    private fun createCsvDownloadButton(): Button {
         return createSuccessButton("평가지 다운로드") {
             val evaluation = evaluations[tabs.selectedIndex - 1]
-            // TODO: 평가지 CSV로 변경
+            // TODO: 평가지 양식 CSV로 변경
             val excel = excelService.createTargetExcel(evaluation.id)
             downloadFile("${evaluation.title}.csv", excel)
         }
     }
 
-    private fun createEvaluationExcelUploadButton(): Upload {
-        return createCsvUploadButton("평가지 업로드", MemoryBuffer()) { it ->
+    private fun createCsvUploadButton(): Upload {
+        return createCsvUploadButton("평가지 업로드", MemoryBuffer()) {
+            // TODO: 평가지 CSV 양식을 읽는 서비스 메서드로 변경 및 분리
             val reader = BufferedReader(it.inputStream.reader())
             val csvParser = CSVParser(reader, CSVFormat.DEFAULT)
             for (csvRecord in csvParser) {
-                println("++++++++++++++++${csvRecord[0]}")
+                csvRecord[0]
             }
-            csvParser.close()
-            // var content: String
-            // reader.use {
-            //     content = it.readText()
-            // }
         }
     }
 
