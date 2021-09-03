@@ -6,8 +6,12 @@ import apply.application.CheaterResponse
 import apply.application.CheaterService
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
+import com.vaadin.flow.component.Text
 import com.vaadin.flow.component.UI
+import com.vaadin.flow.component.button.Button
+import com.vaadin.flow.component.dialog.Dialog
 import com.vaadin.flow.component.grid.Grid
+import com.vaadin.flow.component.html.Div
 import com.vaadin.flow.component.html.H1
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
@@ -89,8 +93,27 @@ class CheatersView(
     private fun createDetailInformationButtonRenderer(): Renderer<CheaterResponse> {
         return ComponentRenderer<Component, CheaterResponse> { cheater ->
             createPrimarySmallButton("상세 내용 조회") {
-                TODO("alert modal")
+                createInformationModal(cheater)
             }
         }
+    }
+
+    private fun createInformationModal(cheater: CheaterResponse) {
+        Dialog().apply {
+            add(
+                Text("description of cheater " + cheater.id)
+            )
+            add(
+                HorizontalLayout(
+                    Div(
+                        Button("confirmed") {
+                            this.close()
+                        }
+                    )
+                ).apply {
+                    justifyContentMode = FlexComponent.JustifyContentMode.CENTER
+                }
+            )
+        }.open()
     }
 }
