@@ -70,7 +70,7 @@ class CheatersView(
     private fun createCheaterGrid(): Grid<CheaterResponse> {
         return Grid<CheaterResponse>(10).apply {
             addSortableColumn("이름") { it.applicant.name }
-            addSortableColumn("이메일") { it.applicant.email }
+            addSortableColumn("이메일") { it.email }
             addSortableDateTimeColumn("등록일", CheaterResponse::createdDateTime)
             addColumn(createDeleteButtonRenderer()).apply { isAutoWidth = true }
             addColumn(createDetailInformationButtonRenderer()).apply { isAutoWidth = true }
