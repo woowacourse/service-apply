@@ -101,7 +101,7 @@ class CheatersView(
     private fun createInformationModal(cheater: CheaterResponse) {
         Dialog().apply {
             add(
-                Text("description of cheater " + cheater.id)
+                Text(cheater.description)
             )
             add(
                 HorizontalLayout(
