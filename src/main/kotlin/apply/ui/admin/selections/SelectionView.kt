@@ -204,7 +204,7 @@ class SelectionView(
 
     private fun createCsvDownloadButton(): Button {
         return createSuccessButton("평가지 다운로드") {
-            if (tabs.selectedIndex != 0) {
+            if (isTotalApplicantTabSelected()) {
                 val evaluation = evaluations[tabs.selectedIndex - 1]
                 // TODO: 평가지 양식에 맞게 만들어진 CSV로 변경
                 val excel = excelService.createTargetExcel(evaluation.id)
@@ -215,7 +215,7 @@ class SelectionView(
 
     private fun createCsvUploadButton(): Upload {
         return createCsvUploadButton("평가지 업로드", MemoryBuffer()) {
-            if (tabs.selectedIndex != 0) {
+            if (isTotalApplicantTabSelected()) {
                 // TODO: 평가지 양식에 맞는 CSV 읽는 서비스 메서드로 분리 및 연결
                 val reader = BufferedReader(it.inputStream.reader())
                 val csvParser = CSVParser(reader, CSVFormat.DEFAULT)
@@ -228,7 +228,7 @@ class SelectionView(
 
     private fun createResultDownloadButton(): Button {
         return createSuccessButton("평가결과 다운로드") {
-            if (tabs.selectedIndex == 0) {
+            if (isTotalApplicantTabSelected()) {
                 val excel = excelService.createApplicantExcel(recruitmentId)
                 downloadFile("${recruitmentService.getById(recruitmentId).title}.xlsx", excel)
             } else {
@@ -238,6 +238,8 @@ class SelectionView(
             }
         }
     }
+
+    private fun isTotalApplicantTabSelected() = tabs.selectedIndex != 0
 
     private fun createRecruitmentItems(applicationForm: ApplicationForm): Array<Component> {
         val answers = applicationForm.answers
