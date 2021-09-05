@@ -6,12 +6,14 @@ import RecruitItem from "../../components/RecruitItem/RecruitItem";
 import ApplicationFormItem from "../../components/ApplicationFormItem/ApplicationFormItem";
 import useTokenContext from "../../hooks/useTokenContext";
 import useRecruitmentContext from "../../hooks/useRecruitmentContext";
-import { TAB_LIST } from "../../constants/tab";
+import { RECRUITS_TAB, RECRUITS_TAB_LIST } from "../../constants/tab";
+import { ERROR_MESSAGE } from "../../constants/messages";
+import PATH, { createPath } from "../../constants/path";
 import styles from "./Recruits.module.css";
 
 const Recruits = () => {
   const query = new URLSearchParams(useLocation().search);
-  const selectedTab = query.get("status") ?? "all";
+  const selectedTab = query.get("status") ?? RECRUITS_TAB.ALL.name;
 
   const [myApplication, setMyApplication] = useState([]);
 
@@ -22,13 +24,13 @@ const Recruits = () => {
 
   useEffect(() => {
     (async () => {
-      if (selectedTab !== "applied") {
+      if (selectedTab !== RECRUITS_TAB.APPLIED.name) {
         return;
       }
 
       if (token === "") {
-        alert("로그인이 필요합니다.");
-        history.push("/login");
+        alert(ERROR_MESSAGE.ACCESS.REQUIRED_LOGIN);
+        history.push(PATH.LOGIN);
 
         return;
       }
@@ -46,8 +48,8 @@ const Recruits = () => {
       } catch (e) {
         console.error(e);
 
-        alert("내 지원서를 불러오는데 실패했습니다.");
-        history.push("/login");
+        alert(ERROR_MESSAGE.API.FETCHING_MY_APPLICATION);
+        history.push(PATH.LOGIN);
       }
     })();
   }, [selectedTab, recruitment, fetchMyApplicationForms, token, history]);
@@ -56,10 +58,10 @@ const Recruits = () => {
     <div className={styles.recruits}>
       <Box>
         <ul className={styles["tab-list"]}>
-          {TAB_LIST.map(({ name, label }) => (
+          {RECRUITS_TAB_LIST.map(({ name, label }) => (
             <li key={name} className={styles["tab-item"]}>
               <Link
-                to={`/recruits?status=${name}`}
+                to={createPath.recruits(name)}
                 className={classNames({
                   [styles.active]: name === selectedTab,
                 })}
@@ -75,11 +77,11 @@ const Recruits = () => {
                 styles["edit-password"]
               )}
             >
-              <Link to="/edit">비밀번호 변경</Link>
+              <Link to={PATH.EDIT_PASSWORD}>비밀번호 변경</Link>
             </li>
           )}
         </ul>
-        {selectedTab === "applied"
+        {selectedTab === RECRUITS_TAB.APPLIED.name
           ? myApplication.length !== 0 &&
             myApplication.map((recruitment) => (
               <ApplicationFormItem

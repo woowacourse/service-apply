@@ -1,5 +1,4 @@
 import { useHistory } from "react-router-dom";
-import { fetchPasswordEdit } from "../../api";
 import Button from "../../components/form/Button/Button";
 import useTokenContext from "../../hooks/useTokenContext";
 import FormProvider from "../../provider/FormProvider/FormProvider";
@@ -25,10 +24,10 @@ const PasswordEdit = () => {
         password: value.password,
         newPassword: value.newPassword,
       });
-      alert("비밀번호가 변경되었습니다. 다시 로그인해주세요.");
+      alert(SUCCESS_MESSAGE.API.CHANGE_PASSWORD);
 
       resetToken();
-      history.push("/login");
+      history.push(PATH.LOGIN);
     } catch (e) {
       alert(e.response.data.message);
     }

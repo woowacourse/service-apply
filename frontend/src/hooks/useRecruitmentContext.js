@@ -1,4 +1,5 @@
 import { useContext, createContext } from "react";
+import { ERROR_MESSAGE } from '../constants/messages';
 
 export const RecruitmentContext = createContext();
 
@@ -6,7 +7,7 @@ const useRecruitmentContext = () => {
   const recruitmentContext = useContext(RecruitmentContext);
 
   if (!recruitmentContext)
-    throw Error("recruitmentContext가 존재하지 않습니다");
+    throw Error(ERROR_MESSAGE.HOOKS.CANNOT_FIND_RECRUITMENT_CONTEXT);
 
   return recruitmentContext;
 };

@@ -14,6 +14,7 @@ import Recruits from "./pages/Recruits/Recruits";
 import RecruitmentProvider from "./provider/RecruitmentProvider";
 import TokenProvider from "./provider/TokenProvider";
 import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
+import PATH from "./constants/path";
 import "./App.css";
 
 const App = () => {
@@ -25,28 +26,25 @@ const App = () => {
           <div className="main-view">
             <ScrollToTop>
               <Switch>
-                <Route path={["/", "/recruits"]} exact>
+                <Route path={[PATH.HOME, PATH.RECRUITS]} exact>
                   <Recruits />
                 </Route>
-                <Route path="/applicants/new" exact>
+                <Route path={PATH.NEW_APPLICATION} exact>
                   <ApplicantRegister />
                 </Route>
-                <Route path="/login" exact>
+                <Route path={PATH.LOGIN} exact>
                   <Login />
                 </Route>
-                <Route path="/find" exact>
+                <Route path={PATH.FIND_PASSWORD} exact>
                   <PasswordFind />
                 </Route>
-                <Route path="/find/result" exact>
+                <Route path={PATH.FIND_PASSWORD_RESULT} exact>
                   <PasswordFindResult />
                 </Route>
-                <PrivateRoute path="/application-forms/:status" exact>
+                <PrivateRoute path={PATH.APPLICATION_FORM} exact>
                   <ApplicationRegister />
                 </PrivateRoute>
-                <Route path="/application-forms/:status" exact>
-                  <ApplicationRegister />
-                </Route>
-                <PrivateRoute path="/edit" exact>
+                <PrivateRoute path={PATH.EDIT_PASSWORD} exact>
                   <PasswordEdit />
                 </PrivateRoute>
               </Switch>

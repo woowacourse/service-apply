@@ -1,6 +1,5 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-
 import Button from "../../components/form/Button/Button";
 import { validateName } from "../../utils/validation/name";
 import { validateEmail } from "../../utils/validation/email";
@@ -33,7 +32,10 @@ const PasswordFind = () => {
           day: value.day,
         }),
       });
-      history.push({ path: `/find/result`, state: { email: value.email } });
+      history.push({
+        path: PATH.FIND_PASSWORD_RESULT,
+        state: { email: value.email },
+      });
     } catch (e) {
       alert(e.response.data.message);
     }

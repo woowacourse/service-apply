@@ -2,6 +2,9 @@ import React from "react";
 import { Link, useHistory } from "react-router-dom";
 import { Form } from "../../components/form";
 import Button from "../../components/form/Button/Button";
+import { SUCCESS_MESSAGE } from "../../constants/messages";
+import PATH, { createPath } from "../../constants/path";
+import { RECRUITS_TAB } from "../../constants/tab";
 import useForm from "../../hooks/useForm";
 import useTokenContext from "../../hooks/useTokenContext";
 import FormProvider from "../../provider/FormProvider/FormProvider";
@@ -23,8 +26,11 @@ const Login = () => {
         password: value.password,
       });
 
-      alert("로그인 성공");
-      history.push({ pathname: "/recruits", search: "?status=applied" });
+      alert(SUCCESS_MESSAGE.API.LOGIN);
+      history.push({
+        pathname: PATH.RECRUITS,
+        search: createPath.recruitsQuery(RECRUITS_TAB.APPLIED.name),
+      });
     } catch (e) {
       alert(e.response.data.message);
     }

@@ -1,12 +1,13 @@
+import PropTypes from "prop-types";
 import { Button } from "../../components/form";
 import useFormContext from "../../hooks/useFormContext";
-import PropTypes from "prop-types";
+import { CONFIRM_MESSAGE } from '../../constants/messages';
 
 const ResetButton = ({ children }) => {
   const { reset } = useFormContext();
 
   const handleClick = () => {
-    if (window.confirm("정말 초기화하시겠습니까?")) {
+    if (window.confirm(CONFIRM_MESSAGE.RESET_APPLICATION)) {
       reset();
     }
   };
