@@ -27,7 +27,7 @@ const BirthField = () => {
         <Label for="year">생년월일</Label>
         <div className={styles.birth}>
           <TextInput
-            className="year"
+            className={styles.year}
             id="year"
             name="year"
             type="text"
