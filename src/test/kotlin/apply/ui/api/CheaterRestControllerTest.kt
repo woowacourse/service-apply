@@ -1,9 +1,11 @@
 package apply.ui.api
 
 import apply.application.ApplicantService
+import apply.application.CheaterData
 import apply.application.CheaterResponse
 import apply.application.CheaterService
 import apply.createApplicant
+import apply.createCheaterData
 import apply.domain.cheater.Cheater
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
@@ -13,6 +15,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
+import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
@@ -63,10 +66,12 @@ internal class CheaterRestControllerTest : RestControllerTest() {
 
     @Test
     fun `부정행위자를 추가한다`() {
-        every { cheaterService.save(cheatedApplicant.email) } just Runs
+        val cheaterData = createCheaterData()
+        every { cheaterService.save(cheaterData) } just Runs
 
         mockMvc.post("/api/cheaters") {
-            param("email", cheatedApplicant.email)
+            content = objectMapper.writeValueAsString(cheaterData)
+            contentType = MediaType.APPLICATION_JSON
         }
             .andExpect {
                 status { isOk }
