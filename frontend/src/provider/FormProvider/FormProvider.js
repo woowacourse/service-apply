@@ -3,7 +3,7 @@ import { Form } from "../../components/form";
 import { FormContext } from "../../hooks/useFormContext";
 import PropTypes from "prop-types";
 
-const FormProvider = ({ submit, validators, children }) => {
+const FormProvider = ({ className, submit, validators, children }) => {
   const [value, setValue] = useState({});
   const [errorMessage, setErrorMessage] = useState({});
 
@@ -12,7 +12,11 @@ const FormProvider = ({ submit, validators, children }) => {
     Object.values(value).filter(Boolean).length < Object.values(value).length;
 
   const onChange = ({ target }) => {
-    setValue((prev) => ({ ...prev, [target.name]: target.value }));
+    if (target.type === "checkbox") {
+      setValue((prev) => ({ ...prev, [target.name]: target.checked }));
+    } else {
+      setValue((prev) => ({ ...prev, [target.name]: target.value }));
+    }
 
     const validator = validators?.[target.name];
     if (!validator) return;
@@ -37,8 +41,8 @@ const FormProvider = ({ submit, validators, children }) => {
     submit(value);
   };
 
-  const register = (name) => {
-    setValue((prev) => ({ ...prev, [name]: "" }));
+  const register = (name, initialValue = "") => {
+    setValue((prev) => ({ ...prev, [name]: initialValue }));
     setErrorMessage((prev) => ({ ...prev, [name]: null }));
   };
 
@@ -48,6 +52,23 @@ const FormProvider = ({ submit, validators, children }) => {
 
     setValue(newValue);
     setErrorMessage(newErrorMessage);
+  };
+
+  const reset = () => {
+    setValue((prev) => {
+      for (const val in prev) {
+        prev[val] = "";
+      }
+
+      return { ...prev };
+    });
+    setErrorMessage((prev) => {
+      for (const val in prev) {
+        prev[val] = "";
+      }
+
+      return { ...prev };
+    });
   };
 
   return (
@@ -60,9 +81,12 @@ const FormProvider = ({ submit, validators, children }) => {
         unRegister,
         isValid,
         isEmpty,
+        reset,
       }}
     >
-      <Form onSubmit={onSubmit}>{children}</Form>
+      <Form className={className} onSubmit={onSubmit}>
+        {children}
+      </Form>
     </FormContext.Provider>
   );
 };
@@ -70,6 +94,7 @@ const FormProvider = ({ submit, validators, children }) => {
 export default FormProvider;
 
 FormProvider.propTypes = {
+  className: PropTypes.string,
   children: PropTypes.node.isRequired,
   submit: PropTypes.func.isRequired,
   validators: PropTypes.object,

@@ -3,12 +3,12 @@ import { TextField } from "../../components/form";
 import useFormContext from "../../hooks/useFormContext";
 import PropTypes from "prop-types";
 
-const InputField = ({ name, ...props }) => {
+const InputField = ({ name, initialValue, ...props }) => {
   const { value, errorMessage, onChange, register, unRegister } =
     useFormContext();
 
   useEffect(() => {
-    register(name);
+    register(name, initialValue);
 
     return () => {
       unRegister(name);
@@ -29,5 +29,6 @@ const InputField = ({ name, ...props }) => {
 export default InputField;
 
 InputField.propTypes = {
+  initialValue: PropTypes.string,
   name: PropTypes.string,
 };

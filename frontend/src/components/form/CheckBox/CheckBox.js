@@ -1,18 +1,37 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import Label from "../Label/Label";
 import styles from "./CheckBox.module.css";
+import useFormContext from "../../../hooks/useFormContext";
 
-const CheckBox = ({ label, required, ...props }) => {
+const CheckBox = ({ name, label, required, ...props }) => {
+  const { value, onChange, register, unRegister } = useFormContext();
+
+  useEffect(() => {
+    register(name);
+
+    return () => {
+      unRegister();
+    };
+  }, []);
+
   return (
     <Label className={styles.checkbox} required={required}>
-      <input type="checkbox" required={required} {...props} />
+      <input
+        type="checkbox"
+        name={name}
+        value={value[name]}
+        onChange={onChange}
+        required={required}
+        {...props}
+      />
       {label}
     </Label>
   );
 };
 
 CheckBox.propTypes = {
+  name: PropTypes.string,
   label: PropTypes.string,
   required: PropTypes.bool,
 };
