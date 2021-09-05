@@ -3,7 +3,13 @@ import { Form } from "../../components/form";
 import { FormContext } from "../../hooks/useFormContext";
 import PropTypes from "prop-types";
 
-const FormProvider = ({ className, submit, validators, children }) => {
+const FormProvider = ({
+  className,
+  submit,
+  validators,
+  children,
+  ...props
+}) => {
   const [value, setValue] = useState({});
   const [errorMessage, setErrorMessage] = useState({});
 
@@ -84,7 +90,7 @@ const FormProvider = ({ className, submit, validators, children }) => {
         reset,
       }}
     >
-      <Form className={className} onSubmit={onSubmit}>
+      <Form className={className} onSubmit={onSubmit} {...props}>
         {children}
       </Form>
     </FormContext.Provider>
