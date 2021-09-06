@@ -11,7 +11,7 @@ const CheckBox = ({ name, label, required, ...props }) => {
     register(name);
 
     return () => {
-      unRegister();
+      unRegister(name);
     };
   }, []);
 
