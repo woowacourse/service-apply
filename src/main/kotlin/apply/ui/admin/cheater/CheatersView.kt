@@ -20,7 +20,6 @@ import support.views.addSortableColumn
 import support.views.addSortableDateTimeColumn
 import support.views.createDeleteButtonWithDialog
 import support.views.createPrimaryButton
-import support.views.createPrimarySmallButton
 import support.views.createSearchBar
 
 @Route(value = "admin/cheaters", layout = BaseLayout::class)
@@ -69,11 +68,11 @@ class CheatersView(
 
     private fun createCheaterGrid(): Grid<CheaterResponse> {
         return Grid<CheaterResponse>(10).apply {
-            addSortableColumn("이름") { it.applicant.name }
+            addSortableColumn("이름") { it.applicant?.name ?: "(이름 없음)" }
             addSortableColumn("이메일") { it.email }
             addSortableDateTimeColumn("등록일", CheaterResponse::createdDateTime)
+            addSortableColumn("설명") { it.description }
             addColumn(createDeleteButtonRenderer()).apply { isAutoWidth = true }
-            addColumn(createDetailInformationButtonRenderer()).apply { isAutoWidth = true }
             setItems(cheaterService.findAll())
         }
     }
@@ -82,14 +81,6 @@ class CheatersView(
         return ComponentRenderer<Component, CheaterResponse> { cheater ->
             createDeleteButtonWithDialog("부정 행위자를 삭제하시겠습니까?") {
                 cheaterService.deleteById(cheater.id)
-            }
-        }
-    }
-
-    private fun createDetailInformationButtonRenderer(): Renderer<CheaterResponse> {
-        return ComponentRenderer<Component, CheaterResponse> { cheater ->
-            createPrimarySmallButton("상세 내용 조회") {
-                CheaterDescriptionDialog(cheater)
             }
         }
     }
