@@ -1,7 +1,6 @@
 package apply.ui.api
 
 import apply.application.ApplicantService
-import apply.application.CheaterData
 import apply.application.CheaterResponse
 import apply.application.CheaterService
 import apply.createApplicant
