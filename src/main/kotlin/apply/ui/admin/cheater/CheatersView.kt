@@ -49,7 +49,7 @@ class CheatersView(
                     container.add(
                         select,
                         createPrimaryButton("추가") {
-                            cheaterService.save(select.value.id)
+                            cheaterService.save(select.value.email)
                             UI.getCurrent().page.reload()
                         }
                     )
