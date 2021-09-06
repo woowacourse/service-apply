@@ -36,14 +36,14 @@ internal class CheaterRepositoryTest(
 
     @BeforeEach
     internal fun setUp() {
-        cheaterRepository.save(Cheater(cheater.id))
+        cheaterRepository.save(Cheater(cheater.email))
     }
 
     @Test
     fun `지원자의 부정 행위 여부를 확인한다`() {
         assertAll(
-            { assertThat(cheaterRepository.existsByApplicantId(cheater.id)).isTrue() },
-            { assertThat(cheaterRepository.existsByApplicantId(applicant.id)).isFalse() }
+            { assertThat(cheaterRepository.existsByEmail(cheater.email)).isTrue() },
+            { assertThat(cheaterRepository.existsByEmail(applicant.email)).isFalse() }
         )
     }
 }
