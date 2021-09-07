@@ -21,7 +21,7 @@ class CsvService(
             evaluationTargetService.findAllByEvaluationIdAndKeyword(evaluationId)
         val evaluationItems: List<EvaluationItem> =
             evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluationId)
-        val titles: Array<String> = evaluationItems.map { it.title + "(" + it.maximumScore + ")" }.toTypedArray()
+        val titles: Array<String> = evaluationItems.map { "${it.title}(${it.maximumScore})" }.toTypedArray()
         val scores = LinkedHashMap<Long, String>()
 
         val headerTitles = arrayOf("applicantId", "이름", "이메일", "평가 상태", *titles)
@@ -30,13 +30,13 @@ class CsvService(
             it.answers.map { item ->
                 scores.put(item.evaluationItemId, item.score.toString())
             }
-            val values = scores.values.toTypedArray()
+            val filledScores = scores.values.toTypedArray()
             CsvRow(
                 applicantService.getByEmail(it.email).id.toString(),
                 it.name,
                 it.email,
                 it.evaluationStatus.name,
-                *values
+                *filledScores
             )
         }
         return csvGenerator.generateBy(headerTitles, csvRows)

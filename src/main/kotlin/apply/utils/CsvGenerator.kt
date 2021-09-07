@@ -13,7 +13,11 @@ class CsvGenerator {
 
         val csvPrinter = CSVPrinter(csvContent, CSVFormat.DEFAULT)
         csvPrinter.printRecords(headerTitles)
-        rows.map { it -> csvPrinter.printRecord(it.data) }
+        CSVPrinter(csvContent, CSVFormat.DEFAULT)
+            .apply {
+                printRecords(headerTitles)
+                rows.forEach { printRecord(it.data) }
+            }
 
         return ByteArrayInputStream(csvContent.toString().toByteArray())
     }
