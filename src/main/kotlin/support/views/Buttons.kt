@@ -30,13 +30,12 @@ fun createSuccessButton(text: String, clickListener: ClickListener): Button {
     }
 }
 
-fun createCsvUploadButton(text: String, receiver: MemoryBuffer, eventListenerUpload: UploadSucceededListener): Upload {
+fun createCsvUpload(text: String, receiver: MemoryBuffer, succeededListener: UploadSucceededListener): Upload {
     return Upload(receiver).apply {
         setAcceptedFileTypes("text/csv")
-        uploadButton = createPrimaryButton(text) {
-        }
+        uploadButton = createPrimaryButton(text) {}
         addSucceededListener {
-            eventListenerUpload(receiver)
+            succeededListener(receiver)
         }
     }
 }
