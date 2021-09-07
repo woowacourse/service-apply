@@ -37,21 +37,21 @@ const PasswordEdit = () => {
       <FormProvider
         submit={submit}
         validators={{
+          oldPassword: validatePassword,
           password: validatePassword,
-          newPassword: validatePassword,
           rePassword: validateRePassword,
         }}
       >
         <h2>비밀번호 변경</h2>
         <InputField
-          name="password"
+          name="oldPassword"
           type="password"
           label="기존 비밀번호"
           placeholder="기존 비밀번호를 입력해 주세요"
           required
         />
         <InputField
-          name="newPassword"
+          name="password"
           type="password"
           label="새 비밀번호"
           placeholder="비밀번호를 입력해 주세요"

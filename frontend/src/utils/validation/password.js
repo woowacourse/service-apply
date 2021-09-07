@@ -11,7 +11,6 @@ export const validatePassword = (v) => {
 
 export const validateRePassword =
   (v) =>
-  ({ newPassword }) => {
-    if (v !== newPassword)
-      throw new Error(ERROR_MESSAGE.VALIDATION.RE_PASSWORD);
+  ({ password }) => {
+    if (v !== password) throw new Error(ERROR_MESSAGE.VALIDATION.RE_PASSWORD);
   };
