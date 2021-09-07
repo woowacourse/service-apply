@@ -342,7 +342,7 @@ class EvaluationTargetServiceTest(
     }
 
     @Test
-    fun `평가 상태에따라 (ALL) 메일 발송 대상들의 이메일 정보를 불러온다`() {
+    fun `해당 평가의 모든 메일 발송 대상들의 이메일 정보를 불러온다`() {
         val passApplicant = createApplicant(1L)
         val failApplicant = createApplicant(2L)
         val notSubmitAssignmentApplicant = createApplicant(3L)
@@ -352,7 +352,7 @@ class EvaluationTargetServiceTest(
         evaluationTargetRepository.saveAll(
             listOf(
                 createEvaluationTarget(EVALUATION_ID, passApplicant.id, PASS, NOTE, threeScoreAnswer),
-                createEvaluationTarget(EVALUATION_ID, failApplicant.id),
+                createEvaluationTarget(EVALUATION_ID, failApplicant.id, FAIL),
                 createEvaluationTarget(EVALUATION_ID, notSubmitAssignmentApplicant.id, FAIL, NOTE, twoScoreAnswer),
             )
         )
@@ -361,9 +361,7 @@ class EvaluationTargetServiceTest(
             applicantRepository.findAllById(listOf(passApplicant.id, failApplicant.id, notSubmitAssignmentApplicant.id))
         } returns listOf(passApplicant, failApplicant, notSubmitAssignmentApplicant)
 
-        val mailSendingTargetEmails = evaluationTargetService.findAllMailSendingTargetEmail(
-            EVALUATION_ID, EvaluationSendingTargetRequest(EvaluationStatusesRequest.ALL)
-        )
+        val mailSendingTargetEmails = evaluationTargetService.findAllMailSendingTargets(EVALUATION_ID)
 
         assertThat(mailSendingTargetEmails).hasSize(3)
     }
@@ -391,8 +389,8 @@ class EvaluationTargetServiceTest(
             applicantRepository.findAllById(listOf(evaluationTarget.applicantId))
         } returns listOf(passApplicant)
 
-        val mailSendingTargetEmails = evaluationTargetService.findAllMailSendingTargetEmail(
-            EVALUATION_ID, EvaluationSendingTargetRequest(EvaluationStatusesRequest.PASS)
+        val mailSendingTargetEmails = evaluationTargetService.findAllMailSendingTargetsBySpecificEvaluationStatus(
+            EVALUATION_ID, PASS
         )
 
         assertThat(mailSendingTargetEmails).hasSize(1)
@@ -421,8 +419,8 @@ class EvaluationTargetServiceTest(
             applicantRepository.findAllById(listOf(failApplicant.id))
         } returns listOf(failApplicant)
 
-        val mailSendingTargetEmails = evaluationTargetService.findAllMailSendingTargetEmail(
-            EVALUATION_ID, EvaluationSendingTargetRequest(EvaluationStatusesRequest.FAIL)
+        val mailSendingTargetEmails = evaluationTargetService.findAllMailSendingTargetsBySpecificEvaluationStatus(
+            EVALUATION_ID, FAIL
         )
 
         assertThat(mailSendingTargetEmails).hasSize(1)
@@ -446,8 +444,8 @@ class EvaluationTargetServiceTest(
             applicantRepository.findAllById(listOf(firstApplicant.id, secondApplicant.id, thirdApplicant.id))
         } returns listOf(firstApplicant, secondApplicant, thirdApplicant)
 
-        val mailSendingTargetEmails = evaluationTargetService.findAllMailSendingTargetEmail(
-            EVALUATION_ID, EvaluationSendingTargetRequest(EvaluationStatusesRequest.WAITING)
+        val mailSendingTargetEmails = evaluationTargetService.findAllMailSendingTargetsBySpecificEvaluationStatus(
+            EVALUATION_ID, WAITING
         )
 
         assertThat(mailSendingTargetEmails).hasSize(3)

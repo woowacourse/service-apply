@@ -8,6 +8,7 @@ import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.evaluationtarget.EvaluationAnswer
 import apply.domain.evaluationtarget.EvaluationAnswers
+import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
 import org.springframework.data.repository.findByIdOrNull
@@ -141,31 +142,36 @@ class EvaluationTargetService(
         )
     }
 
-    fun findAllMailSendingTargetEmail(
+    fun findAllMailSendingTargets(
         evaluationId: Long,
-        request: EvaluationSendingTargetRequest
-    ): List<EvaluationSendingTargetResponse> {
-        val targetApplicantIds = extractMailSendingTargets(evaluationId, request.evaluationStatuses)
+    ): List<MailSendingTargetResponse> {
+        val targetApplicantIds = evaluationTargetRepository.findAllByEvaluationId(evaluationId)
             .map { it.applicantId }
 
         return applicantRepository.findAllById(targetApplicantIds)
-            .map { EvaluationSendingTargetResponse(it.email) }
+            .map { MailSendingTargetResponse(it.email) }
     }
 
-    private fun extractMailSendingTargets(
+    fun findAllMailSendingTargetsBySpecificEvaluationStatus(
         evaluationId: Long,
-        evaluationStatusesRequest: EvaluationStatusesRequest
+        evaluationStatus: EvaluationStatus
+    ): List<MailSendingTargetResponse> {
+        val targetApplicantIds = extractMailSendingTargetsByEvaluationStatus(evaluationId, evaluationStatus)
+            .map { it.applicantId }
+
+        return applicantRepository.findAllById(targetApplicantIds)
+            .map { MailSendingTargetResponse(it.email) }
+    }
+
+    private fun extractMailSendingTargetsByEvaluationStatus(
+        evaluationId: Long,
+        evaluationStatus: EvaluationStatus
     ): List<EvaluationTarget> {
-        if (evaluationStatusesRequest == EvaluationStatusesRequest.FAIL) {
-            return evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatusIn(
-                evaluationId,
-                evaluationStatusesRequest.values
-            ).filter { it.isAllSubmitAssignment() }
+        if (evaluationStatus == EvaluationStatus.FAIL) {
+            return evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(evaluationId, evaluationStatus)
+                .filter { it.isAllSubmitAssignment() }
         }
 
-        return evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatusIn(
-            evaluationId,
-            evaluationStatusesRequest.values
-        )
+        return evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(evaluationId, evaluationStatus)
     }
 }

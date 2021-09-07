@@ -4,13 +4,11 @@ import apply.NOTE
 import apply.application.ApplicantService
 import apply.application.EvaluationItemResponse
 import apply.application.EvaluationItemScoreData
-import apply.application.EvaluationSendingTargetRequest
-import apply.application.EvaluationSendingTargetResponse
-import apply.application.EvaluationStatusesRequest
 import apply.application.EvaluationTargetData
 import apply.application.EvaluationTargetResponse
 import apply.application.EvaluationTargetService
 import apply.application.GradeEvaluationResponse
+import apply.application.MailSendingTargetResponse
 import apply.createEvaluationItem
 import apply.domain.evaluationtarget.EvaluationAnswers
 import apply.domain.evaluationtarget.EvaluationStatus
@@ -231,27 +229,22 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
     }
 
     @ParameterizedTest
-    @EnumSource(names = ["ALL", "PASS", "FAIL", "WAITING"])
-    fun `메일 발송 대상(합격자)들의 이메일 정보를 조회한다`(enumStatuses: EvaluationStatusesRequest) {
-        val evaluationSendingTargetRequest = EvaluationSendingTargetRequest(enumStatuses)
+    @EnumSource(names = ["PASS", "FAIL", "WAITING"])
+    fun `메일 발송 대상(합격자)들의 이메일 정보를 조회한다`(enumStatus: EvaluationStatus) {
         every {
-            evaluationTargetService.findAllMailSendingTargetEmail(
+            evaluationTargetService.findAllMailSendingTargetsBySpecificEvaluationStatus(
                 evaluationId,
-                evaluationSendingTargetRequest,
+                enumStatus,
             )
-        } returns listOf(EvaluationSendingTargetResponse("roki@woowacourse.com"))
+        } returns listOf(MailSendingTargetResponse("roki@woowacourse.com"))
 
         mockMvc.perform(
             RestDocumentationRequestBuilders.get(
-                "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/emails",
+                "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/emails?status={status}",
                 recruitmentId,
-                evaluationId
+                evaluationId,
+                enumStatus.toString()
             ).header("Content-Type", "application/json")
-                .content(
-                    objectMapper.writeValueAsString(
-                        evaluationSendingTargetRequest
-                    )
-                )
         ).andExpect(status().isOk)
             .andDo(
                 document(
@@ -260,9 +253,8 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
                         parameterWithName("recruitmentId").description("모집 ID"),
                         parameterWithName("evaluationId").description("평가 ID"),
                     ),
-                    requestFields(
-                        fieldWithPath("evaluationStatuses").type(JsonFieldType.STRING)
-                            .description("조회할 평가 상태"),
+                    requestParameters(
+                        parameterWithName("status").description("조회할 평가 상태")
                     ),
                     responseFields(
                         fieldWithPath("message").description("응답 메시지"),
