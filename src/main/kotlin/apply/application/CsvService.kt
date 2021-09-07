@@ -20,15 +20,15 @@ class CsvService(
         val titles =
             evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluationId)
                 .map { it.title + "(" + it.maximumScore + ")" }.toTypedArray()
-        val headerTitles = arrayOf("applicantId", "이름", "이메일", *titles, "평가 상태")
+        val headerTitles = arrayOf("applicantId", "이름", "이메일", "평가 상태", *titles)
 
         val csvRows = targets.map {
             CsvRow(
                 applicantService.getByEmail(it.email).id.toString(),
                 it.name,
                 it.email,
-                *it.answers.map { item -> item.score.toString() }.toTypedArray(),
-                it.evaluationStatus.name
+                it.evaluationStatus.name,
+                *it.answers.map { item -> item.score.toString() }.toTypedArray()
             )
         }
         return csvGenerator.generateBy(headerTitles, csvRows)
