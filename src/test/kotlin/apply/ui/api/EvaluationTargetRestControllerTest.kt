@@ -6,6 +6,7 @@ import apply.application.EvaluationItemResponse
 import apply.application.EvaluationItemScoreData
 import apply.application.EvaluationSendingTargetRequest
 import apply.application.EvaluationSendingTargetResponse
+import apply.application.EvaluationStatusesRequest
 import apply.application.EvaluationTargetData
 import apply.application.EvaluationTargetResponse
 import apply.application.EvaluationTargetService
@@ -230,9 +231,9 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
     }
 
     @ParameterizedTest
-    @EnumSource(names = ["PASS", "FAIL"])
-    fun `메일 발송 대상(합격자)들의 이메일 정보를 조회한다`(enumStatus: EvaluationStatus) {
-        val evaluationSendingTargetRequest = EvaluationSendingTargetRequest(EvaluationStatus.PASS)
+    @EnumSource(names = ["ALL", "PASS", "FAIL", "WAITING"])
+    fun `메일 발송 대상(합격자)들의 이메일 정보를 조회한다`(enumStatuses: EvaluationStatusesRequest) {
+        val evaluationSendingTargetRequest = EvaluationSendingTargetRequest(enumStatuses)
         every {
             evaluationTargetService.findAllMailSendingTargetEmail(
                 evaluationId,
@@ -242,7 +243,7 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
 
         mockMvc.perform(
             RestDocumentationRequestBuilders.get(
-                "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/sending-email-targets",
+                "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/emails",
                 recruitmentId,
                 evaluationId
             ).header("Content-Type", "application/json")
@@ -260,8 +261,8 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
                         parameterWithName("evaluationId").description("평가 ID"),
                     ),
                     requestFields(
-                        fieldWithPath("evaluationStatus").type(JsonFieldType.STRING)
-                            .description("평가 상태"),
+                        fieldWithPath("evaluationStatuses").type(JsonFieldType.STRING)
+                            .description("조회할 평가 상태"),
                     ),
                     responseFields(
                         fieldWithPath("message").description("응답 메시지"),

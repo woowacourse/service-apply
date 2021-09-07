@@ -82,7 +82,7 @@ class EvaluationTargetRepositoryTest(
         )
 
         val evaluationTargets =
-            evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(EVALUATION_ID, evaluationStatus)
+            evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatusIn(EVALUATION_ID, listOf(evaluationStatus))
 
         assertThat(evaluationTargets).hasSize(expectedSize)
     }

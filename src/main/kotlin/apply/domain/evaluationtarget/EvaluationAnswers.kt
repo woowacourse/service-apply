@@ -22,7 +22,7 @@ class EvaluationAnswers(
         _answers.add(evaluationAnswer)
     }
 
-    fun hasNotSubmitEvaluationAnswer(): Boolean = answers.any { it.score == 0 }
+    fun isAllSubmitEvaluationAnswer(): Boolean = answers.all { it.score > 0 }
 
     fun countTotalScore(): Int {
         return _answers.map { it.score }.sum()

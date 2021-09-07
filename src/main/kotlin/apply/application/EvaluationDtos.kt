@@ -151,8 +151,15 @@ data class EvaluationTargetData(
 
 data class EvaluationSendingTargetRequest(
     @field:NotNull
-    val evaluationStatus: EvaluationStatus = EvaluationStatus.WAITING
+    val evaluationStatuses: EvaluationStatusesRequest
 )
+
+enum class EvaluationStatusesRequest(val values: List<EvaluationStatus>) {
+    ALL(EvaluationStatus.values().toList()),
+    PASS(listOf(EvaluationStatus.PASS)),
+    FAIL(listOf(EvaluationStatus.FAIL)),
+    WAITING(listOf(EvaluationStatus.WAITING))
+}
 
 data class EvaluationSendingTargetResponse(
     @field:NotNull

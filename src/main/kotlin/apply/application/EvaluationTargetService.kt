@@ -8,7 +8,6 @@ import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.evaluationtarget.EvaluationAnswer
 import apply.domain.evaluationtarget.EvaluationAnswers
-import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
 import org.springframework.data.repository.findByIdOrNull
@@ -146,7 +145,7 @@ class EvaluationTargetService(
         evaluationId: Long,
         request: EvaluationSendingTargetRequest
     ): List<EvaluationSendingTargetResponse> {
-        val targetApplicantIds = extractMailSendingTargets(evaluationId, request.evaluationStatus)
+        val targetApplicantIds = extractMailSendingTargets(evaluationId, request.evaluationStatuses)
             .map { it.applicantId }
 
         return applicantRepository.findAllById(targetApplicantIds)
@@ -155,18 +154,18 @@ class EvaluationTargetService(
 
     private fun extractMailSendingTargets(
         evaluationId: Long,
-        evaluationStatus: EvaluationStatus
+        evaluationStatusesRequest: EvaluationStatusesRequest
     ): List<EvaluationTarget> {
-        if (evaluationStatus == EvaluationStatus.PASS) {
-            return evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(
+        if (evaluationStatusesRequest == EvaluationStatusesRequest.FAIL) {
+            return evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatusIn(
                 evaluationId,
-                evaluationStatus
-            )
+                evaluationStatusesRequest.values
+            ).filter { it.isAllSubmitAssignment() }
         }
 
-        return evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(
+        return evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatusIn(
             evaluationId,
-            evaluationStatus
-        ).filterNot { it.hasNotSubmitAssignment() }
+            evaluationStatusesRequest.values
+        )
     }
 }

@@ -342,7 +342,34 @@ class EvaluationTargetServiceTest(
     }
 
     @Test
-    fun `평가 상태에따라 (합격) 메일 발송 대상들의 이메일 정보를 불러온다`() {
+    fun `평가 상태에따라 (ALL) 메일 발송 대상들의 이메일 정보를 불러온다`() {
+        val passApplicant = createApplicant(1L)
+        val failApplicant = createApplicant(2L)
+        val notSubmitAssignmentApplicant = createApplicant(3L)
+        val twoScoreAnswer = EvaluationAnswers(listOf(createEvaluationAnswer(2)))
+        val threeScoreAnswer = EvaluationAnswers(listOf(createEvaluationAnswer(3)))
+
+        evaluationTargetRepository.saveAll(
+            listOf(
+                createEvaluationTarget(EVALUATION_ID, passApplicant.id, PASS, NOTE, threeScoreAnswer),
+                createEvaluationTarget(EVALUATION_ID, failApplicant.id),
+                createEvaluationTarget(EVALUATION_ID, notSubmitAssignmentApplicant.id, FAIL, NOTE, twoScoreAnswer),
+            )
+        )
+
+        every {
+            applicantRepository.findAllById(listOf(passApplicant.id, failApplicant.id, notSubmitAssignmentApplicant.id))
+        } returns listOf(passApplicant, failApplicant, notSubmitAssignmentApplicant)
+
+        val mailSendingTargetEmails = evaluationTargetService.findAllMailSendingTargetEmail(
+            EVALUATION_ID, EvaluationSendingTargetRequest(EvaluationStatusesRequest.ALL)
+        )
+
+        assertThat(mailSendingTargetEmails).hasSize(3)
+    }
+
+    @Test
+    fun `평가 상태에따라 (PASS) 메일 발송 대상들의 이메일 정보를 불러온다`() {
         val passApplicant = createApplicant(1L)
         val failApplicant = createApplicant(2L)
         val notSubmitAssignmentApplicant = createApplicant(3L)
@@ -365,14 +392,14 @@ class EvaluationTargetServiceTest(
         } returns listOf(passApplicant)
 
         val mailSendingTargetEmails = evaluationTargetService.findAllMailSendingTargetEmail(
-            EVALUATION_ID, EvaluationSendingTargetRequest(PASS)
+            EVALUATION_ID, EvaluationSendingTargetRequest(EvaluationStatusesRequest.PASS)
         )
 
         assertThat(mailSendingTargetEmails).hasSize(1)
     }
 
     @Test
-    fun `평가 상태에따라 (탈락) 메일 발송 대상들의 이메일 정보를 불러온다`() {
+    fun `평가 상태에따라 (FAIL) 메일 발송 대상들의 이메일 정보를 불러온다`() {
         val passApplicant = createApplicant(1L)
         val failApplicant = createApplicant(2L)
         val notSubmitAssignmentApplicant = createApplicant(3L)
@@ -395,10 +422,35 @@ class EvaluationTargetServiceTest(
         } returns listOf(failApplicant)
 
         val mailSendingTargetEmails = evaluationTargetService.findAllMailSendingTargetEmail(
-            EVALUATION_ID, EvaluationSendingTargetRequest(FAIL)
+            EVALUATION_ID, EvaluationSendingTargetRequest(EvaluationStatusesRequest.FAIL)
         )
 
         assertThat(mailSendingTargetEmails).hasSize(1)
+    }
+
+    @Test
+    fun `평가 상태에따라 (평가전) 메일 발송 대상들의 이메일 정보를 불러온다`() {
+        val firstApplicant = createApplicant(1L)
+        val secondApplicant = createApplicant(2L)
+        val thirdApplicant = createApplicant(3L)
+
+        evaluationTargetRepository.saveAll(
+            listOf(
+                createEvaluationTarget(applicantId = firstApplicant.id),
+                createEvaluationTarget(applicantId = secondApplicant.id),
+                createEvaluationTarget(applicantId = thirdApplicant.id),
+            )
+        )
+
+        every {
+            applicantRepository.findAllById(listOf(firstApplicant.id, secondApplicant.id, thirdApplicant.id))
+        } returns listOf(firstApplicant, secondApplicant, thirdApplicant)
+
+        val mailSendingTargetEmails = evaluationTargetService.findAllMailSendingTargetEmail(
+            EVALUATION_ID, EvaluationSendingTargetRequest(EvaluationStatusesRequest.WAITING)
+        )
+
+        assertThat(mailSendingTargetEmails).hasSize(3)
     }
 
     private fun createApplicationForm(id: Long, recruitmentId: Long = 1L, applicantId: Long): ApplicationForm {

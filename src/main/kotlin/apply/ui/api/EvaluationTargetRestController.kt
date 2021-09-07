@@ -59,7 +59,7 @@ class EvaluationTargetRestController(
         return ResponseEntity.ok().build()
     }
 
-    @GetMapping("/sending-email-targets")
+    @GetMapping("/emails")
     fun findAllMailSendingTargetEmail(
         @PathVariable recruitmentId: Long,
         @PathVariable evaluationId: Long,
