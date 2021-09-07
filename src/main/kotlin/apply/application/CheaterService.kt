@@ -17,11 +17,12 @@ class CheaterService(
         CheaterResponse(it, applicant)
     }
 
-    fun save(email: String) {
+    fun save(request: CheaterData) {
+        val email = request.email
         require(!cheaterRepository.existsByEmail(email)) {
             "이미 등록된 부정 행위자입니다."
         }
-        cheaterRepository.save(Cheater(email))
+        cheaterRepository.save(Cheater(email, request.description))
     }
 
     fun deleteById(id: Long) {
