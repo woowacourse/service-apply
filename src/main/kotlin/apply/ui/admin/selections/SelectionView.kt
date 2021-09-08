@@ -2,6 +2,7 @@ package apply.ui.admin.selections
 
 import apply.application.ApplicantAndFormResponse
 import apply.application.ApplicantService
+import apply.application.CsvService
 import apply.application.EvaluationService
 import apply.application.EvaluationTargetResponse
 import apply.application.EvaluationTargetService
@@ -54,7 +55,8 @@ class SelectionView(
     private val recruitmentItemService: RecruitmentItemService,
     private val evaluationService: EvaluationService,
     private val evaluationTargetService: EvaluationTargetService,
-    private val excelService: ExcelService
+    private val excelService: ExcelService,
+    private val csvService: CsvService
 ) : VerticalLayout(), HasUrlParameter<Long> {
     private var recruitmentId: Long = 0L
     private var evaluations: List<Evaluation> = evaluationService.findAllByRecruitmentId(recruitmentId)
@@ -214,9 +216,8 @@ class SelectionView(
     private fun createEvaluationFileDownloadButton(): Button {
         return createSuccessButton("평가지 다운로드") {
             val evaluation = evaluations[tabs.selectedIndex - 1]
-            // TODO: 평가지 양식에 맞게 만들어진 CSV로 변경
-            val excel = excelService.createTargetExcel(evaluation.id)
-            downloadFile("${evaluation.title}.csv", excel)
+            val csv = csvService.createTargetCsv(evaluation.id)
+            downloadFile("${evaluation.title}.csv", csv)
         }
     }
 
