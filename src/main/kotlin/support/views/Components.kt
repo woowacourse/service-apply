@@ -54,8 +54,10 @@ private fun createTextRenderer(trueText: String, falseText: String): ComponentRe
     }
 }
 
-fun createSearchBar(eventListener: (name: String) -> Unit): Div {
-    val textField = TextField()
+fun createSearchBar(labelText: String = "", eventListener: (name: String) -> Unit): Div {
+    val textField = TextField().apply {
+        label = labelText
+    }
     textField.addKeyDownListener(
         Key.ENTER,
         ComponentEventListener<KeyDownEvent?> { eventListener(textField.value) }
@@ -64,7 +66,9 @@ fun createSearchBar(eventListener: (name: String) -> Unit): Div {
         HorizontalLayout(
             textField,
             Button(Icon(VaadinIcon.SEARCH)) { eventListener(textField.value) }
-        )
+        ).apply {
+            defaultVerticalComponentAlignment = FlexComponent.Alignment.END
+        }
     )
 }
 
