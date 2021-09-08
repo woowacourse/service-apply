@@ -19,8 +19,7 @@
 .nav {
   display: flex;
   align-items: center;
-  width: 830px;
-  padding: 0 15px;
+  width: 900px;
 }
 
 .logo {

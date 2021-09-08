@@ -13,7 +13,7 @@ const BirthField = ({ required, value, onChange }) => {
       </Label>
       <div className={styles.birth}>
         <TextInput
-          className="year"
+          className={styles.year}
           id="year"
           name="year"
           type="text"
