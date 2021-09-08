@@ -9,6 +9,7 @@ import apply.application.ExcelService
 import apply.application.RecruitmentItemService
 import apply.application.RecruitmentService
 import apply.domain.applicationform.ApplicationForm
+import apply.domain.evaluation.Evaluation
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
@@ -24,21 +25,27 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.tabs.Tab
 import com.vaadin.flow.component.tabs.Tabs
 import com.vaadin.flow.component.textfield.TextArea
+import com.vaadin.flow.component.upload.Upload
+import com.vaadin.flow.component.upload.receivers.MemoryBuffer
 import com.vaadin.flow.data.renderer.ComponentRenderer
 import com.vaadin.flow.data.renderer.Renderer
 import com.vaadin.flow.router.BeforeEvent
 import com.vaadin.flow.router.HasUrlParameter
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.router.WildcardParameter
+import org.apache.commons.csv.CSVFormat
+import org.apache.commons.csv.CSVParser
 import support.views.addSortableColumn
 import support.views.addSortableDateColumn
 import support.views.addSortableDateTimeColumn
+import support.views.createCsvUpload
 import support.views.createNormalButton
 import support.views.createPrimaryButton
 import support.views.createPrimarySmallButton
 import support.views.createSearchBar
 import support.views.createSuccessButton
 import support.views.downloadFile
+import java.io.BufferedReader
 
 @Route(value = "admin/selections", layout = BaseLayout::class)
 class SelectionView(
@@ -49,10 +56,16 @@ class SelectionView(
     private val evaluationTargetService: EvaluationTargetService,
     private val excelService: ExcelService
 ) : VerticalLayout(), HasUrlParameter<Long> {
-    private var recruitmentId = 0L
-    private var evaluations = evaluationService.findAllByRecruitmentId(recruitmentId)
-    private var tabs = Tabs()
-    private var selectedTabIndex = 0
+    private var recruitmentId: Long = 0L
+    private var evaluations: List<Evaluation> = evaluationService.findAllByRecruitmentId(recruitmentId)
+    private var tabs: Tabs = Tabs()
+    private var selectedTabIndex: Int = 0
+    private var evaluationFileButtons: HorizontalLayout = createEvaluationFileButtons()
+
+    override fun setParameter(event: BeforeEvent, @WildcardParameter parameter: Long) {
+        this.recruitmentId = parameter
+        add(createTitle(), createContent())
+    }
 
     private fun createTitle(): Component {
         return HorizontalLayout(H1(recruitmentService.getById(recruitmentId).title)).apply {
@@ -64,7 +77,6 @@ class SelectionView(
     private fun createContent(keyword: String = ""): Component {
         val tabsToGrids: Map<Tab, Component> = mapTabAndGrid(keyword)
         val (tabs, grids) = createTabComponents(tabsToGrids)
-
         val menu = HorizontalLayout(
             createSearchBar {
                 removeAll()
@@ -77,21 +89,32 @@ class SelectionView(
             tabs,
             HorizontalLayout(
                 createLoadButton(tabs),
-                createDownloadButton()
+                createResultDownloadButton()
             )
         ).apply {
             setWidthFull()
             justifyContentMode = FlexComponent.JustifyContentMode.BETWEEN
         }
+        return VerticalLayout(menu, grids, evaluationFileButtons).apply { setWidthFull() }
+    }
 
-        return VerticalLayout(menu, grids).apply { setWidthFull() }
+    private fun createEvaluationFileButtons(): HorizontalLayout {
+        return HorizontalLayout(
+            createEvaluationFileDownloadButton(),
+            createEvaluationFileUpload()
+        ).apply {
+            setWidthFull()
+            isVisible = false
+            justifyContentMode = FlexComponent.JustifyContentMode.CENTER
+            defaultVerticalComponentAlignment = FlexComponent.Alignment.CENTER
+        }
     }
 
     private fun mapTabAndGrid(keyword: String): Map<Tab, Component> {
         val tabsToGrids = LinkedHashMap<Tab, Component>()
 
         val applicantResponses = applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId, keyword)
-        tabsToGrids[Tab("전체 지원자")] = createTotalApplicantsGrid(applicantResponses)
+        tabsToGrids[Tab(TOTAL_APPLICANT_LABEL)] = createTotalApplicantsGrid(applicantResponses)
 
         evaluations = evaluationService.findAllByRecruitmentId(recruitmentId)
         for (evaluation in evaluations) {
@@ -159,6 +182,7 @@ class SelectionView(
         val tabs = Tabs().apply {
             add(*(tabsToGrids.keys).toTypedArray())
             addSelectedChangeListener {
+                evaluationFileButtons.isVisible = !isTotalApplicantTab(it.selectedTab)
                 tabsToGrids.forEach { (tab, grid) ->
                     grid.isVisible = (tab == selectedTab)
                 }
@@ -187,9 +211,29 @@ class SelectionView(
         }
     }
 
-    private fun createDownloadButton(): Button {
-        return createSuccessButton("다운로드") {
-            if (tabs.selectedIndex == 0) {
+    private fun createEvaluationFileDownloadButton(): Button {
+        return createSuccessButton("평가지 다운로드") {
+            val evaluation = evaluations[tabs.selectedIndex - 1]
+            // TODO: 평가지 양식에 맞게 만들어진 CSV로 변경
+            val excel = excelService.createTargetExcel(evaluation.id)
+            downloadFile("${evaluation.title}.csv", excel)
+        }
+    }
+
+    private fun createEvaluationFileUpload(): Upload {
+        return createCsvUpload("평가지 업로드", MemoryBuffer()) {
+            // TODO: 평가지 양식에 맞는 CSV 읽는 서비스 메서드로 분리 및 연결
+            val reader = BufferedReader(it.inputStream.reader())
+            val csvParser = CSVParser(reader, CSVFormat.DEFAULT)
+            for (csvRecord in csvParser) {
+                csvRecord[0]
+            }
+        }
+    }
+
+    private fun createResultDownloadButton(): Button {
+        return createSuccessButton("평가결과 다운로드") {
+            if (isTotalApplicantTab(tabs.selectedTab)) {
                 val excel = excelService.createApplicantExcel(recruitmentId)
                 downloadFile("${recruitmentService.getById(recruitmentId).title}.xlsx", excel)
             } else {
@@ -201,14 +245,10 @@ class SelectionView(
     }
 
     private fun createRecruitmentItems(applicationForm: ApplicationForm): Array<Component> {
-        val answers = applicationForm.answers
-            .items
-            .map { it.recruitmentItemId to it.contents }
-            .toMap()
+        val answers = applicationForm.answers.items.associate { it.recruitmentItemId to it.contents }
         val items = recruitmentItemService.findByRecruitmentIdOrderByPosition(recruitmentId)
-            .map {
-                createItem(it.title, createAnswer(answers.getOrDefault(it.id, "")))
-            }.toTypedArray()
+            .map { createItem(it.title, createAnswer(answers.getOrDefault(it.id, ""))) }
+            .toTypedArray()
         return addIfExist(items, applicationForm.referenceUrl)
     }
 
@@ -243,11 +283,11 @@ class SelectionView(
         }
     }
 
-    override fun setParameter(event: BeforeEvent, @WildcardParameter parameter: Long) {
-        this.recruitmentId = parameter
-        add(
-            createTitle(),
-            createContent()
-        )
+    private fun isTotalApplicantTab(tab: Tab): Boolean {
+        return tab.label == TOTAL_APPLICANT_LABEL
+    }
+
+    companion object {
+        private const val TOTAL_APPLICANT_LABEL: String = "전체 지원자"
     }
 }

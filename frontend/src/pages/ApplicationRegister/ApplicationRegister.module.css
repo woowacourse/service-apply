@@ -6,7 +6,11 @@
 
 .recruit-card,
 .application-form {
-  width: 800px;
+  width: 900px;
+}
+
+.text-field-container {
+  margin-bottom: 30px;
 }
 
 .rule-field {

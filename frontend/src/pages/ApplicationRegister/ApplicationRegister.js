@@ -224,7 +224,7 @@ const ApplicationRegister = () => {
         )}
         {recruitmentItems.length !== 0 &&
           recruitmentItems.map((item, index) => (
-            <div key={item.id}>
+            <div className={styles["text-field-container"]} key={item.id}>
               <TextField
                 name="recruitment-item"
                 type="textarea"
