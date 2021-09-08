@@ -37,6 +37,7 @@ dependencies {
     implementation("com.vaadin:vaadin-spring-boot-starter")
     implementation("org.flywaydb:flyway-core")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.apache.commons:commons-csv:1.5")
     implementation("org.apache.poi:poi-ooxml:4.1.2")
     implementation("dev.mett.vaadin:tooltip:1.7.0")
     implementation("com.amazonaws:aws-java-sdk-ses:1.11.880")

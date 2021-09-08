@@ -3,7 +3,6 @@ package apply.application
 import apply.domain.applicant.ApplicantRepository
 import apply.domain.cheater.Cheater
 import apply.domain.cheater.CheaterRepository
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -14,15 +13,16 @@ class CheaterService(
     private val cheaterRepository: CheaterRepository
 ) {
     fun findAll(): List<CheaterResponse> = cheaterRepository.findAll().map {
-        val applicant = applicantRepository.findByIdOrNull(it.applicantId)!!
+        val applicant = applicantRepository.findByEmail(it.email)!!
         CheaterResponse(it, applicant)
     }
 
-    fun save(applicantId: Long) {
-        require(!cheaterRepository.existsByApplicantId(applicantId)) {
+    fun save(request: CheaterData) {
+        val email = request.email
+        require(!cheaterRepository.existsByEmail(email)) {
             "이미 등록된 부정 행위자입니다."
         }
-        cheaterRepository.save(Cheater(applicantId))
+        cheaterRepository.save(Cheater(email, request.description))
     }
 
     fun deleteById(id: Long) {

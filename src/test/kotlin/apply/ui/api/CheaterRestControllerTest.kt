@@ -4,6 +4,7 @@ import apply.application.ApplicantService
 import apply.application.CheaterResponse
 import apply.application.CheaterService
 import apply.createApplicant
+import apply.createCheaterData
 import apply.domain.cheater.Cheater
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
+import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
@@ -34,15 +36,15 @@ internal class CheaterRestControllerTest : RestControllerTest() {
     private val cheaterResponses = listOf(
         CheaterResponse(
             Cheater(
-                1L,
-                createLocalDateTime(2021, 10, 9, 10, 0, 0, 0)
+                email = "loki@email.com",
+                createdDateTime = createLocalDateTime(2021, 10, 9, 10, 0, 0, 0)
             ),
             createApplicant(name = "로키")
         ),
         CheaterResponse(
             Cheater(
-                2L,
-                createLocalDateTime(2021, 10, 10, 10, 0, 0, 0)
+                email = "amazzi@email.com",
+                createdDateTime = createLocalDateTime(2021, 10, 10, 10, 0, 0, 0)
             ),
             createApplicant(name = "아마찌")
         )
@@ -62,11 +64,13 @@ internal class CheaterRestControllerTest : RestControllerTest() {
     }
 
     @Test
-    internal fun `부정행위자를 추가한다`() {
-        every { cheaterService.save(cheatedApplicant.id) } just Runs
+    fun `부정행위자를 추가한다`() {
+        val cheaterData = createCheaterData()
+        every { cheaterService.save(cheaterData) } just Runs
 
         mockMvc.post("/api/cheaters") {
-            param("applicantId", cheatedApplicant.id.toString())
+            content = objectMapper.writeValueAsString(cheaterData)
+            contentType = MediaType.APPLICATION_JSON
         }
             .andExpect {
                 status { isOk }
@@ -74,7 +78,7 @@ internal class CheaterRestControllerTest : RestControllerTest() {
     }
 
     @Test
-    internal fun `부정행위자를 삭제한다`() {
+    fun `부정행위자를 삭제한다`() {
         every { cheaterService.deleteById(cheatedApplicant.id) } just Runs
 
         mockMvc.delete("/api/cheaters/{applicantId}", cheatedApplicant.id)
