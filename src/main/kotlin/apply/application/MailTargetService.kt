@@ -23,11 +23,11 @@ class MailTargetService(
         return if (evaluationStatus == null) {
             evaluationTargetRepository.findAllByEvaluationId(evaluationId)
         } else {
-            findEvaluationTargets(evaluationId, evaluationStatus)
-        }.map { it.applicantId }
+            findEvaluationTargetsByEvaluationStatus(evaluationId, evaluationStatus)
+        }
     }
 
-    private fun findEvaluationTargets(
+    private fun findEvaluationTargetsByEvaluationStatus(
         evaluationId: Long,
         evaluationStatus: EvaluationStatus
     ): List<EvaluationTarget> {
