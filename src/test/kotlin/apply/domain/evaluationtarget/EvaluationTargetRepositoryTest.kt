@@ -77,7 +77,7 @@ class EvaluationTargetRepositoryTest(
             listOf(
                 EvaluationTarget(EVALUATION_ID, applicantId = 1L, evaluationStatus = EvaluationStatus.PASS),
                 EvaluationTarget(EVALUATION_ID, applicantId = 2L, evaluationStatus = EvaluationStatus.PASS),
-                EvaluationTarget(EVALUATION_ID, applicantId = 3L, evaluationStatus = EvaluationStatus.FAIL),
+                EvaluationTarget(EVALUATION_ID, applicantId = 3L, evaluationStatus = EvaluationStatus.FAIL)
             )
         )
         val actual =

@@ -43,7 +43,7 @@ class MailTargetServiceTest {
             createApplicant(id = 1L, email = "waiting@email.com"),
             createApplicant(id = 2L, email = "pending@email.com"),
             createApplicant(id = 3L, email = "pass@email.com"),
-            createApplicant(id = 4L, email = "fail@email.com"),
+            createApplicant(id = 4L, email = "fail@email.com")
         )
         val actual = mailTargetService.findMailTargets(EVALUATION_ID)
         assertThat(actual).hasSize(4)

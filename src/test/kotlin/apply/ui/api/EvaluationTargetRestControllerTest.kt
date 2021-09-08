@@ -238,7 +238,7 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
         every {
             mailTargetService.findMailTargets(
                 evaluationId,
-                enumStatus,
+                enumStatus
             )
         } returns listOf(MailTargetResponse("roki@woowacourse.com"))
 
@@ -255,15 +255,15 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
                     "evaluationtarget-email-sending-target-emails",
                     pathParameters(
                         parameterWithName("recruitmentId").description("모집 ID"),
-                        parameterWithName("evaluationId").description("평가 ID"),
+                        parameterWithName("evaluationId").description("평가 ID")
                     ),
                     requestParameters(
                         parameterWithName("status").description("조회할 평가 상태")
                     ),
                     responseFields(
                         fieldWithPath("message").description("응답 메시지"),
-                        fieldWithPath("body.[].email").type(JsonFieldType.STRING).description("대상 E-MAIL"),
-                    ),
+                        fieldWithPath("body.[].email").type(JsonFieldType.STRING).description("대상 E-MAIL")
+                    )
                 )
             )
     }

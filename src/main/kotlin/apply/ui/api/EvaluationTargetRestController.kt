@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets")
 class EvaluationTargetRestController(
     private val evaluationTargetService: EvaluationTargetService,
-    private val mailTargetService: MailTargetService,
+    private val mailTargetService: MailTargetService
 ) {
     @GetMapping
     fun findAllByEvaluationIdAndKeyword(
@@ -65,7 +65,7 @@ class EvaluationTargetRestController(
     fun findMailTargets(
         @PathVariable recruitmentId: Long,
         @PathVariable evaluationId: Long,
-        @RequestParam status: EvaluationStatus?,
+        @RequestParam status: EvaluationStatus?
     ): ResponseEntity<ApiResponse<List<MailTargetResponse>>> {
         val mailSendingTargets = mailTargetService.findMailTargets(evaluationId, status)
         return ResponseEntity.ok(ApiResponse.success(mailSendingTargets))

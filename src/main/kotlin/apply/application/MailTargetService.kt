@@ -11,7 +11,7 @@ import javax.transaction.Transactional
 @Service
 class MailTargetService(
     private val evaluationTargetRepository: EvaluationTargetRepository,
-    private val applicantRepository: ApplicantRepository,
+    private val applicantRepository: ApplicantRepository
 ) {
     fun findMailTargets(evaluationId: Long, evaluationStatus: EvaluationStatus? = null): List<MailTargetResponse> {
         val applicantIds = findEvaluationTargets(evaluationId, evaluationStatus).map { it.applicantId }
