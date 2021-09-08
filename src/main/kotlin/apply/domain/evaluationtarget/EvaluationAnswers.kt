@@ -14,7 +14,6 @@ class EvaluationAnswers(
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "evaluation_target_answers")
     private val _answers: MutableList<EvaluationAnswer> = answers.toMutableList()
-
     val answers: List<EvaluationAnswer>
         get() = _answers
 
@@ -22,10 +21,10 @@ class EvaluationAnswers(
         _answers.add(evaluationAnswer)
     }
 
-    fun isAllSubmitEvaluationAnswer(): Boolean = answers.all { it.score > 0 }
+    fun isAllAssignmentFinished(): Boolean = answers.all { it.score > 0 }
 
     fun countTotalScore(): Int {
-        return _answers.map { it.score }.sum()
+        return _answers.sumOf { it.score }
     }
 
     fun findScoreByEvaluationItemId(evaluationItemId: Long): Int =

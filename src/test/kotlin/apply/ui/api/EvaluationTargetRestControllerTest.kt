@@ -8,6 +8,7 @@ import apply.application.EvaluationTargetData
 import apply.application.EvaluationTargetResponse
 import apply.application.EvaluationTargetService
 import apply.application.GradeEvaluationResponse
+import apply.application.MailSendingService
 import apply.application.MailSendingTargetResponse
 import apply.createEvaluationItem
 import apply.domain.evaluationtarget.EvaluationAnswers
@@ -45,6 +46,9 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
 
     @MockkBean
     private lateinit var evaluationTargetService: EvaluationTargetService
+
+    @MockkBean
+    private lateinit var mailSendingService: MailSendingService
 
     private val recruitmentId = 1L
     private val evaluationId = 1L
@@ -228,11 +232,11 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
             )
     }
 
-    @ParameterizedTest
     @EnumSource(names = ["PASS", "FAIL", "WAITING"])
-    fun `메일 발송 대상(합격자)들의 이메일 정보를 조회한다`(enumStatus: EvaluationStatus) {
+    @ParameterizedTest
+    fun `메일 발송 대상(합격자)들의 이메일 정보를 조회한다`(enumStatus: EvaluationStatus?) {
         every {
-            evaluationTargetService.findAllMailSendingTargetsBySpecificEvaluationStatus(
+            mailSendingService.findMailSendingTargetsByEvaluationStatus(
                 evaluationId,
                 enumStatus,
             )

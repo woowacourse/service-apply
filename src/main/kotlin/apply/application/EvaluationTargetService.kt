@@ -8,7 +8,6 @@ import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.evaluationtarget.EvaluationAnswer
 import apply.domain.evaluationtarget.EvaluationAnswers
-import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
 import org.springframework.data.repository.findByIdOrNull
@@ -140,38 +139,5 @@ class EvaluationTargetService(
             evaluationAnswers = EvaluationAnswers(evaluationAnswers),
             note = request.note
         )
-    }
-
-    fun findAllMailSendingTargets(
-        evaluationId: Long,
-    ): List<MailSendingTargetResponse> {
-        val targetApplicantIds = evaluationTargetRepository.findAllByEvaluationId(evaluationId)
-            .map { it.applicantId }
-
-        return applicantRepository.findAllById(targetApplicantIds)
-            .map { MailSendingTargetResponse(it.email) }
-    }
-
-    fun findAllMailSendingTargetsBySpecificEvaluationStatus(
-        evaluationId: Long,
-        evaluationStatus: EvaluationStatus
-    ): List<MailSendingTargetResponse> {
-        val targetApplicantIds = extractMailSendingTargetsByEvaluationStatus(evaluationId, evaluationStatus)
-            .map { it.applicantId }
-
-        return applicantRepository.findAllById(targetApplicantIds)
-            .map { MailSendingTargetResponse(it.email) }
-    }
-
-    private fun extractMailSendingTargetsByEvaluationStatus(
-        evaluationId: Long,
-        evaluationStatus: EvaluationStatus
-    ): List<EvaluationTarget> {
-        if (evaluationStatus == EvaluationStatus.FAIL) {
-            return evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(evaluationId, evaluationStatus)
-                .filter { it.isAllSubmitAssignment() }
-        }
-
-        return evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(evaluationId, evaluationStatus)
     }
 }

@@ -150,7 +150,6 @@ data class EvaluationTargetData(
 )
 
 data class MailSendingTargetResponse(
-    @field:NotNull
     val email: String
 )
 
