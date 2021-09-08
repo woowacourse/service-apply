@@ -1,11 +1,11 @@
 package apply.ui.api
 
-import apply.application.MailSendingTargetResponse
+import apply.application.MailTargetResponse
 import apply.application.EvaluationTargetData
 import apply.application.EvaluationTargetResponse
 import apply.application.EvaluationTargetService
 import apply.application.GradeEvaluationResponse
-import apply.application.MailSendingService
+import apply.application.MailTargetService
 import apply.domain.evaluationtarget.EvaluationStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets")
 class EvaluationTargetRestController(
     private val evaluationTargetService: EvaluationTargetService,
-    private val mailSendingService: MailSendingService,
+    private val mailTargetService: MailTargetService,
 ) {
     @GetMapping
     fun findAllByEvaluationIdAndKeyword(
@@ -62,12 +62,12 @@ class EvaluationTargetRestController(
     }
 
     @GetMapping("/emails")
-    fun findAllMailSendingTargets(
+    fun findMailTargets(
         @PathVariable recruitmentId: Long,
         @PathVariable evaluationId: Long,
         @RequestParam status: EvaluationStatus?,
-    ): ResponseEntity<ApiResponse<List<MailSendingTargetResponse>>> {
-        val mailSendingTargets = mailSendingService.findMailSendingTargetsByEvaluationStatus(evaluationId, status)
+    ): ResponseEntity<ApiResponse<List<MailTargetResponse>>> {
+        val mailSendingTargets = mailTargetService.findMailTargets(evaluationId, status)
         return ResponseEntity.ok(ApiResponse.success(mailSendingTargets))
     }
 }

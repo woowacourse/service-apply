@@ -149,7 +149,7 @@ data class EvaluationTargetData(
     var evaluationStatus: EvaluationStatus = EvaluationStatus.WAITING
 )
 
-data class MailSendingTargetResponse(
+data class MailTargetResponse(
     val email: String
 )
 

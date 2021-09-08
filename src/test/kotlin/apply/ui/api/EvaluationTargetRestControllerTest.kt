@@ -8,8 +8,8 @@ import apply.application.EvaluationTargetData
 import apply.application.EvaluationTargetResponse
 import apply.application.EvaluationTargetService
 import apply.application.GradeEvaluationResponse
-import apply.application.MailSendingService
-import apply.application.MailSendingTargetResponse
+import apply.application.MailTargetService
+import apply.application.MailTargetResponse
 import apply.createEvaluationItem
 import apply.domain.evaluationtarget.EvaluationAnswers
 import apply.domain.evaluationtarget.EvaluationStatus
@@ -48,7 +48,7 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
     private lateinit var evaluationTargetService: EvaluationTargetService
 
     @MockkBean
-    private lateinit var mailSendingService: MailSendingService
+    private lateinit var mailTargetService: MailTargetService
 
     private val recruitmentId = 1L
     private val evaluationId = 1L
@@ -236,11 +236,11 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
     @ParameterizedTest
     fun `메일 발송 대상(합격자)들의 이메일 정보를 조회한다`(enumStatus: EvaluationStatus?) {
         every {
-            mailSendingService.findMailSendingTargetsByEvaluationStatus(
+            mailTargetService.findMailTargets(
                 evaluationId,
                 enumStatus,
             )
-        } returns listOf(MailSendingTargetResponse("roki@woowacourse.com"))
+        } returns listOf(MailTargetResponse("roki@woowacourse.com"))
 
         mockMvc.perform(
             RestDocumentationRequestBuilders.get(

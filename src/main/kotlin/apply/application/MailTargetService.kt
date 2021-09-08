@@ -9,24 +9,25 @@ import javax.transaction.Transactional
 
 @Transactional
 @Service
-class MailSendingService(
+class MailTargetService(
     private val evaluationTargetRepository: EvaluationTargetRepository,
     private val applicantRepository: ApplicantRepository,
 ) {
-    fun findMailSendingTargetsByEvaluationStatus(
-        evaluationId: Long,
-        evaluationStatus: EvaluationStatus?
-    ): List<MailSendingTargetResponse> {
-        val targetApplicantIds = if (evaluationStatus == null) {
-            evaluationTargetRepository.findAllByEvaluationId(evaluationId).map { it.applicantId }
-        } else {
-            extractMailSendingTargetsByEvaluationStatus(evaluationId, evaluationStatus).map { it.applicantId }
-        }
+    fun findMailTargets(evaluationId: Long, evaluationStatus: EvaluationStatus? = null): List<MailTargetResponse> {
+        val targetApplicantIds = findTargetIds(evaluationStatus, evaluationId)
         return applicantRepository.findAllById(targetApplicantIds)
-            .map { MailSendingTargetResponse(it.email) }
+            .map { MailTargetResponse(it.email) }
     }
 
-    private fun extractMailSendingTargetsByEvaluationStatus(
+    private fun findTargetIds(evaluationStatus: EvaluationStatus?, evaluationId: Long): List<Long> {
+        return if (evaluationStatus == null) {
+            evaluationTargetRepository.findAllByEvaluationId(evaluationId)
+        } else {
+            findEvaluationTargets(evaluationId, evaluationStatus)
+        }.map { it.applicantId }
+    }
+
+    private fun findEvaluationTargets(
         evaluationId: Long,
         evaluationStatus: EvaluationStatus
     ): List<EvaluationTarget> {
@@ -34,7 +35,7 @@ class MailSendingService(
             evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(evaluationId, evaluationStatus)
 
         return if (evaluationStatus == EvaluationStatus.FAIL) {
-            evaluationTargets.filter { it.isAllAssignmentFinished() }
+            evaluationTargets.filter { it.submitted() }
         } else {
             evaluationTargets
         }
