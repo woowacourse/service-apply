@@ -25,8 +25,7 @@ class EvaluationTargetRestController(
         @PathVariable evaluationId: Long,
         @RequestParam keyword: String
     ): ResponseEntity<ApiResponse<List<EvaluationTargetResponse>>> {
-        val evaluationTargets =
-            evaluationTargetService.findAllByEvaluationIdAndKeyword(evaluationId, keyword)
+        val evaluationTargets = evaluationTargetService.findAllByEvaluationIdAndKeyword(evaluationId, keyword)
         return ResponseEntity.ok(ApiResponse.success(evaluationTargets))
     }
 

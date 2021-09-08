@@ -11,34 +11,33 @@ import javax.transaction.Transactional
 @Transactional
 @Service
 class CsvService(
-    private val applicantService: ApplicantService,
     private val evaluationTargetService: EvaluationTargetService,
     private val evaluationItemRepository: EvaluationItemRepository,
     private val csvGenerator: CsvGenerator
 ) {
     fun createTargetCsv(evaluationId: Long): ByteArrayInputStream {
-        val targets: List<EvaluationTargetResponse> =
-            evaluationTargetService.findAllByEvaluationIdAndKeyword(evaluationId)
-        val evaluationItems: List<EvaluationItem> =
-            evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluationId)
-        val titles: Array<String> = evaluationItems.map { "${it.title}(${it.maximumScore})" }.toTypedArray()
-        val scores = LinkedHashMap<Long, String>()
+        val targets = evaluationTargetService.findAllByEvaluationIdAndKeyword(evaluationId)
+        val evaluationItems = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluationId)
+        val titles = evaluationItems.map { "${it.title}(${it.maximumScore})" }.toTypedArray()
 
-        val headerTitles = arrayOf("applicantId", "이름", "이메일", "평가 상태", *titles)
-        val csvRows = targets.map {
-            evaluationItems.associateTo(scores) { it.id to "0" }
-            it.answers.map { item ->
-                scores.put(item.evaluationItemId, item.score.toString())
-            }
-            val filledScores = scores.values.toTypedArray()
+        val headerTitles = arrayOf("id", "이름", "이메일", "평가 상태", *titles)
+        val csvRows = targets.map { target ->
             CsvRow(
-                applicantService.getByEmail(it.email).id.toString(),
-                it.name,
-                it.email,
-                it.evaluationStatus.name,
-                *filledScores
+                target.id.toString(),
+                target.name,
+                target.email,
+                target.evaluationStatus.name,
+                *scores(target.answers, evaluationItems).values.toTypedArray()
             )
         }
         return csvGenerator.generateBy(headerTitles, csvRows)
+    }
+
+    private fun scores(
+        answers: List<EvaluationAnswerResponse>,
+        evaluationItems: List<EvaluationItem>
+    ): Map<Long, String> {
+        return evaluationItems.associate { it.id to "0" } +
+            answers.associate { it.evaluationItemId to it.score.toString() }
     }
 }
