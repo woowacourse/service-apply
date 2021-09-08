@@ -13,7 +13,7 @@ class CheaterService(
     private val cheaterRepository: CheaterRepository
 ) {
     fun findAll(): List<CheaterResponse> = cheaterRepository.findAll().map {
-        val applicant = applicantRepository.findByEmail(it.email)!!
+        val applicant = applicantRepository.findByEmail(it.email)
         CheaterResponse(it, applicant)
     }
 

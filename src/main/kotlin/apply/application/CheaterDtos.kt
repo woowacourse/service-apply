@@ -18,11 +18,15 @@ data class CheaterData(
 data class CheaterResponse(
     val id: Long,
     val createdDateTime: LocalDateTime,
-    val applicant: Applicant
+    val description: String,
+    val email: String,
+    val name: String?
 ) {
-    constructor(cheater: Cheater, applicant: Applicant) : this(
+    constructor(cheater: Cheater, applicant: Applicant?) : this(
         cheater.id,
         cheater.createdDateTime,
-        applicant
+        cheater.description,
+        cheater.email,
+        applicant?.name
     )
 }
