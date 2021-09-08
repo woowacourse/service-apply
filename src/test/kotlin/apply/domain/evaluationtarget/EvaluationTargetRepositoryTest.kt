@@ -80,10 +80,8 @@ class EvaluationTargetRepositoryTest(
                 EvaluationTarget(EVALUATION_ID, applicantId = 3L, evaluationStatus = EvaluationStatus.FAIL),
             )
         )
-
-        val evaluationTargets =
+        val actual =
             evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(EVALUATION_ID, evaluationStatus)
-
-        assertThat(evaluationTargets).hasSize(expectedSize)
+        assertThat(actual).hasSize(expectedSize)
     }
 }
