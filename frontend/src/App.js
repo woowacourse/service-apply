@@ -13,6 +13,7 @@ import PasswordFindResult from "./pages/PasswordFindResult/PasswordFindResult";
 import Recruits from "./pages/Recruits/Recruits";
 import RecruitmentProvider from "./provider/RecruitmentProvider";
 import TokenProvider from "./provider/TokenProvider";
+import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
 import "./App.css";
 
 const App = () => {
@@ -20,6 +21,7 @@ const App = () => {
     <TokenProvider>
       <RecruitmentProvider>
         <BrowserRouter>
+          <ScrollToTop />
           <MainHeader />
           <div className="main-view">
             <Switch>
