@@ -1,6 +1,8 @@
 import React from "react";
 import { Link, useHistory } from "react-router-dom";
+import { Form } from "../../components/form";
 import Button from "../../components/form/Button/Button";
+import useForm from "../../hooks/useForm";
 import useTokenContext from "../../hooks/useTokenContext";
 import FormProvider from "../../provider/FormProvider/FormProvider";
 import InputField from "../../provider/FormProvider/InputField";
@@ -33,41 +35,47 @@ const Login = () => {
     });
   };
 
+  const { handleSubmit, ...methods } = useForm({
+    validators: {
+      email: validateEmail,
+      password: validatePassword,
+    },
+    submit,
+  });
+
   return (
     <div className={styles.login}>
-      <FormProvider
-        submit={submit}
-        validators={{
-          email: validateEmail,
-          password: validatePassword,
-        }}
-        footer={
-          <Link to="/find" className={styles["find-password"]}>
-            비밀번호 찾기
-          </Link>
-        }
-      >
-        <h2>내 지원서 보기</h2>
-        <InputField
-          name="email"
-          type="email"
-          label="이메일"
-          placeholder="이메일 주소를 입력해 주세요."
-          required
-        />
-        <InputField
-          name="password"
-          type="password"
-          label="비밀번호"
-          placeholder="비밀번호를 입력해 주세요."
-          required
-        />
-        <div className={styles.buttons}>
-          <Button cancel onClick={() => history.goBack()}>
-            이전
-          </Button>
-          <SubmitButton>확인</SubmitButton>
-        </div>
+      <FormProvider {...methods}>
+        <Form
+          onSubmit={handleSubmit}
+          footer={
+            <Link to="/find" className={styles["find-password"]}>
+              비밀번호 찾기
+            </Link>
+          }
+        >
+          <h2>내 지원서 보기</h2>
+          <InputField
+            name="email"
+            type="email"
+            label="이메일"
+            placeholder="이메일 주소를 입력해 주세요."
+            required
+          />
+          <InputField
+            name="password"
+            type="password"
+            label="비밀번호"
+            placeholder="비밀번호를 입력해 주세요."
+            required
+          />
+          <div className={styles.buttons}>
+            <Button cancel onClick={() => history.goBack()}>
+              이전
+            </Button>
+            <SubmitButton>확인</SubmitButton>
+          </div>
+        </Form>
       </FormProvider>
     </div>
   );

@@ -6,7 +6,7 @@ import styles from "./BirthField.module.css";
 import useFormContext from "../../../hooks/useFormContext";
 
 const BirthField = () => {
-  const { value, errorMessage, onChange, register, unRegister } =
+  const { value, errorMessage, handleChange, register, unRegister } =
     useFormContext();
 
   useEffect(() => {
@@ -32,7 +32,7 @@ const BirthField = () => {
             name="year"
             type="text"
             placeholder="YYYY"
-            onChange={onChange}
+            onChange={handleChange}
             value={value.year}
           />
           <TextInput
@@ -40,7 +40,7 @@ const BirthField = () => {
             name="month"
             type="text"
             placeholder="MM"
-            onChange={onChange}
+            onChange={handleChange}
             value={value.month}
           />
           <TextInput
@@ -48,7 +48,7 @@ const BirthField = () => {
             name="day"
             type="text"
             placeholder="DD"
-            onChange={onChange}
+            onChange={handleChange}
             value={value.day}
           />
         </div>

@@ -16,6 +16,8 @@ import { formatLocalDate } from "../../utils/date";
 import SubmitButton from "../../provider/FormProvider/SubmitButton";
 import FormProvider from "../../provider/FormProvider/FormProvider";
 import InputField from "../../provider/FormProvider/InputField";
+import useForm from "../../hooks/useForm";
+import { Form } from "../../components/form";
 
 const PasswordFind = () => {
   const history = useHistory();
@@ -37,40 +39,44 @@ const PasswordFind = () => {
     }
   };
 
+  const { handleSubmit, ...methods } = useForm({
+    validators: {
+      name: validateName,
+      email: validateEmail,
+      year: validateYear,
+      month: validateMonth,
+      day: validateDay,
+    },
+    submit,
+  });
+
   return (
     <div className={styles["password-find"]}>
-      <FormProvider
-        submit={submit}
-        validators={{
-          name: validateName,
-          email: validateEmail,
-          year: validateYear,
-          month: validateMonth,
-          day: validateDay,
-        }}
-      >
-        <h2>비밀번호 찾기</h2>
-        <InputField
-          name="name"
-          type="text"
-          label="이름"
-          placeholder="이름을 입력해 주세요."
-          required
-        />
-        <InputField
-          name="email"
-          type="email"
-          label="이메일"
-          placeholder="이메일 주소를 입력해 주세요."
-          required
-        />
-        <BirthField />
-        <div className={styles.buttons}>
-          <Button cancel onClick={() => history.goBack()}>
-            이전
-          </Button>
-          <SubmitButton>확인</SubmitButton>
-        </div>
+      <FormProvider {...methods}>
+        <Form onSubmit={handleSubmit}>
+          <h2>비밀번호 찾기</h2>
+          <InputField
+            name="name"
+            type="text"
+            label="이름"
+            placeholder="이름을 입력해 주세요."
+            required
+          />
+          <InputField
+            name="email"
+            type="email"
+            label="이메일"
+            placeholder="이메일 주소를 입력해 주세요."
+            required
+          />
+          <BirthField />
+          <div className={styles.buttons}>
+            <Button cancel onClick={() => history.goBack()}>
+              이전
+            </Button>
+            <SubmitButton>확인</SubmitButton>
+          </div>
+        </Form>
       </FormProvider>
     </div>
   );

@@ -6,10 +6,12 @@ import {
   CheckBox,
   Description,
   Field,
+  Form,
   Label,
 } from "../../components/form";
 import RecruitCard from "../../components/RecruitCard/RecruitCard";
 import { ERROR_MESSAGE } from "../../constants/messages";
+import useForm from "../../hooks/useForm";
 import useFormContext from "../../hooks/useFormContext";
 import useRecruitmentContext from "../../hooks/useRecruitmentContext";
 import useTokenContext from "../../hooks/useTokenContext";
@@ -148,6 +150,11 @@ const ApplicationRegister = () => {
     }
   };
 
+  const { handleSubmit, ...methods } = useForm({
+    validators: { url: validateURL },
+    submit,
+  });
+
   const SaveButton = () => {
     const history = useHistory();
     const { value } = useFormContext();
@@ -186,62 +193,60 @@ const ApplicationRegister = () => {
           endDateTime={currentRecruitment.endDateTime}
         />
       )}
-      <FormProvider
-        className={styles["application-form"]}
-        submit={submit}
-        validators={{ url: validateURL }}
-      >
-        <h2>지원서 작성</h2>
-        {status === "edit" && (
-          <p className={styles["autosave-indicator"]}>
-            {`임시 저장되었습니다. (${modifiedDateTime})`}
-          </p>
-        )}
-        {recruitmentItems.length !== 0 &&
-          recruitmentItems.map((item, index) => (
-            <div key={item.id}>
-              <InputField
-                name={`recruitment-item-${index}`}
-                type="textarea"
-                initialValue={initialFormData[`recruitment-item-${index}`]}
-                label={`${index + 1}. ${item.title}`}
-                description={item.description}
-                placeholder="내용을 입력해 주세요."
-                maxLength={item.maximumLength}
-                required
-              />
-            </div>
-          ))}
-        <InputField
-          name="url"
-          type="url"
-          initialValue={initialFormData.referenceUrl}
-          description={
-            <>
-              자신을 드러낼 수 있는 개인 블로그, GitHub, 포트폴리오 주소 등이
-              있다면 입력해 주세요.
-              <div className={styles.description}>
-                여러 개가 있는 경우 Notion, Google 문서 등을 사용하여 하나로
-                묶어 주세요.
+      <FormProvider {...methods}>
+        <Form className={styles["application-form"]} onSubmit={handleSubmit}>
+          <h2>지원서 작성</h2>
+          {status === "edit" && (
+            <p className={styles["autosave-indicator"]}>
+              {`임시 저장되었습니다. (${modifiedDateTime})`}
+            </p>
+          )}
+          {recruitmentItems.length !== 0 &&
+            recruitmentItems.map((item, index) => (
+              <div key={item.id}>
+                <InputField
+                  name={`recruitment-item-${index}`}
+                  type="textarea"
+                  initialValue={initialFormData[`recruitment-item-${index}`]}
+                  label={`${index + 1}. ${item.title}`}
+                  description={item.description}
+                  placeholder="내용을 입력해 주세요."
+                  maxLength={item.maximumLength}
+                  required
+                />
               </div>
-            </>
-          }
-          label="URL"
-          placeholder="ex) https://woowacourse.github.io/javable"
-        />
-        <Field>
-          <Label required>지원서 작성 내용 사실 확인</Label>
-          <Description>
-            기재한 사실 중 허위사실이 발견되는 즉시, 교육 대상자에서 제외되며
-            향후 지원도 불가능합니다.
-          </Description>
-          <CheckBox name="agree" label="동의합니다." />
-        </Field>
-        <div className={styles["button-wrapper"]}>
-          <ResetButton>초기화</ResetButton>
-          <SaveButton />
-          <SubmitButton>제출</SubmitButton>
-        </div>
+            ))}
+          <InputField
+            name="url"
+            type="url"
+            initialValue={initialFormData.referenceUrl}
+            description={
+              <>
+                자신을 드러낼 수 있는 개인 블로그, GitHub, 포트폴리오 주소 등이
+                있다면 입력해 주세요.
+                <div className={styles.description}>
+                  여러 개가 있는 경우 Notion, Google 문서 등을 사용하여 하나로
+                  묶어 주세요.
+                </div>
+              </>
+            }
+            label="URL"
+            placeholder="ex) https://woowacourse.github.io/javable"
+          />
+          <Field>
+            <Label required>지원서 작성 내용 사실 확인</Label>
+            <Description>
+              기재한 사실 중 허위사실이 발견되는 즉시, 교육 대상자에서 제외되며
+              향후 지원도 불가능합니다.
+            </Description>
+            <CheckBox name="agree" label="동의합니다." />
+          </Field>
+          <div className={styles["button-wrapper"]}>
+            <ResetButton>초기화</ResetButton>
+            <SaveButton />
+            <SubmitButton>제출</SubmitButton>
+          </div>
+        </Form>
       </FormProvider>
     </div>
   );

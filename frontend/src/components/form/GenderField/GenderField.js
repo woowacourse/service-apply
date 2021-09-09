@@ -6,7 +6,7 @@ import styles from "./GenderField.module.css";
 import useFormContext from "../../../hooks/useFormContext";
 
 const GenderField = () => {
-  const { onChange, register, unRegister } = useFormContext();
+  const { handleChange, register, unRegister } = useFormContext();
 
   useEffect(() => {
     register("gender");
@@ -21,14 +21,14 @@ const GenderField = () => {
       <Label required>성별</Label>
       <div className={styles["gender-group"]}>
         <Radio
-          onChange={onChange}
+          onChange={handleChange}
           name="gender"
           label="남자"
           value="male"
           required
         />
         <Radio
-          onChange={onChange}
+          onChange={handleChange}
           name="gender"
           label="여자"
           value="female"

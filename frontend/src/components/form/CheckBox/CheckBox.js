@@ -5,7 +5,7 @@ import styles from "./CheckBox.module.css";
 import useFormContext from "../../../hooks/useFormContext";
 
 const CheckBox = ({ name, label, required, ...props }) => {
-  const { value, onChange, register, unRegister } = useFormContext();
+  const { value, handleChange, register, unRegister } = useFormContext();
 
   useEffect(() => {
     register(name);
@@ -21,7 +21,7 @@ const CheckBox = ({ name, label, required, ...props }) => {
         type="checkbox"
         name={name}
         value={value[name]}
-        onChange={onChange}
+        onChange={handleChange}
         required={required}
         {...props}
       />

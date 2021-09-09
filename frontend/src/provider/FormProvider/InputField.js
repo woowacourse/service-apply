@@ -4,7 +4,7 @@ import useFormContext from "../../hooks/useFormContext";
 import PropTypes from "prop-types";
 
 const InputField = ({ name, initialValue, ...props }) => {
-  const { value, errorMessage, onChange, register, unRegister } =
+  const { value, errorMessage, handleChange, register, unRegister } =
     useFormContext();
 
   useEffect(() => {
@@ -20,7 +20,7 @@ const InputField = ({ name, initialValue, ...props }) => {
       name={name}
       value={value[name]}
       errorMessage={errorMessage[name]}
-      onChange={onChange}
+      onChange={handleChange}
       {...props}
     />
   );
