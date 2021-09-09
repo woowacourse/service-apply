@@ -70,7 +70,7 @@ const FormProvider = ({
     });
     setErrorMessage((prev) => {
       for (const val in prev) {
-        prev[val] = "";
+        prev[val] = null;
       }
 
       return { ...prev };
