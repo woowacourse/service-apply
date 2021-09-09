@@ -5,15 +5,14 @@ import PropTypes from "prop-types";
 const ResetButton = ({ children }) => {
   const { reset } = useFormContext();
 
+  const handleClick = () => {
+    if (window.confirm("정말 초기화하시겠습니까?")) {
+      reset();
+    }
+  };
+
   return (
-    <Button
-      type="reset"
-      onClick={() => {
-        if (window.confirm("정말 초기화하시겠습니까?")) {
-          reset();
-        }
-      }}
-    >
+    <Button type="reset" onClick={handleClick}>
       {children}
     </Button>
   );
