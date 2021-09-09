@@ -5,9 +5,11 @@ import {
   Button,
   Form,
   GenderField,
-  SummaryCheckField,
+  SummaryCheckField
 } from "../../components/form";
 import RecruitCard from "../../components/RecruitCard/RecruitCard";
+import { ERROR_MESSAGE } from '../../constants/messages';
+import PATH, { PARAM } from '../../constants/path';
 import { POLICY_SUMMARY } from "../../constants/policySummary";
 import useForm from "../../hooks/useForm";
 import useRecruitmentContext from "../../hooks/useRecruitmentContext";
@@ -16,15 +18,13 @@ import FormProvider from "../../provider/FormProvider/FormProvider";
 import InputField from "../../provider/FormProvider/InputField";
 import SubmitButton from "../../provider/FormProvider/SubmitButton";
 import {
-  validateDay,
-  validateYear,
-  validateMonth,
+  validateDay, validateMonth, validateYear
 } from "../../utils/validation/birth";
 import { validateEmail } from "../../utils/validation/email";
 import { validateName } from "../../utils/validation/name";
 import {
   validatePassword,
-  validateRePassword,
+  validateRePassword
 } from "../../utils/validation/password";
 import { validatePhoneNumber } from "../../utils/validation/phoneNumber";
 import styles from "./ApplicantRegister.module.css";
@@ -60,8 +60,10 @@ const ApplicantRegister = () => {
       });
 
       history.push({
-        pathname: createPath.applicationForm(PARAM.APPLICATION_FORM_STATUS.NEW),
-        search: createPath.applicationFormQuery(recruitmentId),
+        pathname: generatePath(PATH.APPLICATION_FORM, {
+          status: PARAM.APPLICATION_FORM_STATUS.NEW,
+        }),
+        search: generateQuery({ recruitmentId }),
         state: { currentRecruitment },
       });
     } catch (e) {

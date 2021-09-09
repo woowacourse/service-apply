@@ -8,8 +8,9 @@ import useTokenContext from "../../hooks/useTokenContext";
 import useRecruitmentContext from "../../hooks/useRecruitmentContext";
 import { RECRUITS_TAB, RECRUITS_TAB_LIST } from "../../constants/tab";
 import { ERROR_MESSAGE } from "../../constants/messages";
-import PATH, { createPath } from "../../constants/path";
+import PATH from "../../constants/path";
 import styles from "./Recruits.module.css";
+import { generateQuery } from "../../utils/route/query";
 
 const Recruits = () => {
   const query = new URLSearchParams(useLocation().search);
@@ -61,7 +62,10 @@ const Recruits = () => {
           {RECRUITS_TAB_LIST.map(({ name, label }) => (
             <li key={name} className={styles["tab-item"]}>
               <Link
-                to={createPath.recruits(name)}
+                to={{
+                  pathname: PATH.RECRUITS,
+                  search: generateQuery({ status: name }),
+                }}
                 className={classNames({
                   [styles.active]: name === selectedTab,
                 })}

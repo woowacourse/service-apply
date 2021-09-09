@@ -3,13 +3,14 @@ import { Link, useHistory } from "react-router-dom";
 import { Form } from "../../components/form";
 import Button from "../../components/form/Button/Button";
 import { SUCCESS_MESSAGE } from "../../constants/messages";
-import PATH, { createPath } from "../../constants/path";
+import PATH from "../../constants/path";
 import { RECRUITS_TAB } from "../../constants/tab";
 import useForm from "../../hooks/useForm";
 import useTokenContext from "../../hooks/useTokenContext";
 import FormProvider from "../../provider/FormProvider/FormProvider";
 import InputField from "../../provider/FormProvider/InputField";
 import SubmitButton from "../../provider/FormProvider/SubmitButton";
+import { generateQuery } from "../../utils/route/query";
 import { validateEmail } from "../../utils/validation/email";
 import { validatePassword } from "../../utils/validation/password";
 import styles from "./Login.module.css";
@@ -29,7 +30,7 @@ const Login = () => {
       alert(SUCCESS_MESSAGE.API.LOGIN);
       history.push({
         pathname: PATH.RECRUITS,
-        search: createPath.recruitsQuery(RECRUITS_TAB.APPLIED.name),
+        search: generateQuery({ status: RECRUITS_TAB.APPLIED.name }),
       });
     } catch (e) {
       alert(e.response.data.message);

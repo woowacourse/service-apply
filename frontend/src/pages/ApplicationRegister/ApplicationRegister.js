@@ -1,5 +1,9 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useHistory, useLocation, useParams } from "react-router-dom";
+import {
+  useHistory,
+  useLocation,
+  useParams
+} from "react-router-dom";
 import * as Api from "../../api";
 import {
   Button,
@@ -7,9 +11,15 @@ import {
   Description,
   Field,
   Form,
-  Label,
+  Label
 } from "../../components/form";
 import RecruitCard from "../../components/RecruitCard/RecruitCard";
+import {
+  CONFIRM_MESSAGE,
+  ERROR_MESSAGE,
+  SUCCESS_MESSAGE
+} from "../../constants/messages";
+import PATH, { PARAM } from "../../constants/path";
 import useForm from "../../hooks/useForm";
 import useFormContext from "../../hooks/useFormContext";
 import useRecruitmentContext from "../../hooks/useRecruitmentContext";
@@ -21,8 +31,6 @@ import SubmitButton from "../../provider/FormProvider/SubmitButton";
 import { formatDateTime } from "../../utils/date";
 import parseQuery from "../../utils/route/query";
 import { validateURL } from "../../utils/validation/url";
-import { CONFIRM_MESSAGE, ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
-import PATH, { PARAM } from "../../constants/path";
 import styles from "./ApplicationRegister.module.css";
 
 const ApplicationRegister = () => {
