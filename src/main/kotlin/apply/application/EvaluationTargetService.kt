@@ -8,6 +8,7 @@ import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.evaluationtarget.EvaluationAnswer
 import apply.domain.evaluationtarget.EvaluationAnswers
+import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
 import org.springframework.data.repository.findByIdOrNull
@@ -56,11 +57,12 @@ class EvaluationTargetService(
 
     fun load(evaluationId: Long) {
         val evaluation = evaluationRepository.findByIdOrNull(evaluationId) ?: throw IllegalArgumentException()
-        val cheaterApplicantIds = applicantRepository.findAllByEmailIn(cheaterRepository.findAll().map { it.email })
-            .map { it.id }
         val updatingApplicantIds = createUpdatingEvaluationTargets(evaluation)
-            .filterNot { cheaterApplicantIds.contains(it.applicantId) }
             .map { it.applicantId }
+            .toSet()
+        val cheaterApplicantIds = applicantRepository.findAllByEmailIn(cheaterRepository.findAll().map { it.email })
+            .filter { updatingApplicantIds.contains(it.id) }
+            .map { it.id }
             .toSet()
         val currentApplicantIds = evaluationTargetRepository.findAllByEvaluationId(evaluationId)
             .map { it.applicantId }
@@ -68,11 +70,14 @@ class EvaluationTargetService(
 
         evaluationTargetRepository.deleteByEvaluationIdAndApplicantIdIn(
             evaluationId,
-            currentApplicantIds - updatingApplicantIds
+            currentApplicantIds.filter {
+                !updatingApplicantIds.contains(it) || cheaterApplicantIds.contains(it)
+            }
         )
 
-        val newApplicantIds = updatingApplicantIds - currentApplicantIds
-        save(newApplicantIds, evaluation)
+        val newApplicantIds = updatingApplicantIds - (currentApplicantIds + cheaterApplicantIds)
+        save(newApplicantIds, evaluation, EvaluationStatus.WAITING)
+        save(cheaterApplicantIds, evaluation, EvaluationStatus.FAIL)
     }
 
     private fun createUpdatingEvaluationTargets(evaluation: Evaluation): List<EvaluationTarget> {
@@ -97,11 +102,16 @@ class EvaluationTargetService(
             .map { EvaluationTarget(evaluationId = evaluation.id, applicantId = it.id) }
     }
 
-    private fun save(applicantIds: Set<Long>, evaluation: Evaluation) {
-        val additionalEvaluationTargets = applicantRepository.findAllById(applicantIds)
-            .map { EvaluationTarget(evaluationId = evaluation.id, applicantId = it.id) }
-
-        evaluationTargetRepository.saveAll(additionalEvaluationTargets)
+    private fun save(applicantIds: Set<Long>, evaluation: Evaluation, evaluationStatus: EvaluationStatus) {
+        val evaluationTargets = applicantRepository.findAllById(applicantIds)
+            .map {
+                EvaluationTarget(
+                    evaluationId = evaluation.id,
+                    applicantId = it.id,
+                    evaluationStatus = evaluationStatus
+                )
+            }
+        evaluationTargetRepository.saveAll(evaluationTargets)
     }
 
     fun getGradeEvaluation(targetId: Long): GradeEvaluationResponse {
