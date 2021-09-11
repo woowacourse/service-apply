@@ -6,12 +6,12 @@ import apply.domain.evaluationtarget.EvaluationAnswer
 import apply.domain.evaluationtarget.EvaluationStatus
 import apply.utils.CsvGenerator
 import apply.utils.CsvRow
-import com.vaadin.flow.component.upload.receivers.MemoryBuffer
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.springframework.stereotype.Service
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream
+import java.io.InputStreamReader
 import javax.transaction.Transactional
 
 @Transactional
@@ -49,17 +49,16 @@ class CsvService(
             answers.associate { it.evaluationItemId to it.score.toString() }
     }
 
-    fun readTargetCsv(memoryBuffer: MemoryBuffer, evaluationId: Long) {
+    fun updateTargetByCsv(reader: InputStreamReader, evaluationId: Long) {
         val evaluationItems = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluationId)
-        val reader = BufferedReader(memoryBuffer.inputStream.reader())
         val csvParser = CSVParser(
-            reader,
+            BufferedReader(reader),
             CSVFormat.DEFAULT
                 .withFirstRecordAsHeader()
                 .withTrim()
         )
         for (csvRecord in csvParser) {
-            var evaluationId = csvRecord.get(ID)
+            var targetId = csvRecord.get(ID)
             var name = csvRecord.get(NAME)
             var email = csvRecord.get(EMAIL)
             var evaluationStatus = EvaluationStatus.valueOf(csvRecord.get(STATUS))
@@ -69,6 +68,7 @@ class CsvService(
                     evaluationItem.id
                 )
             }
+            // TODO: 평가 대상자 상태 업데이트
         }
     }
 
