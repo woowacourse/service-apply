@@ -1,8 +1,11 @@
 package apply.application
 
+import apply.domain.evaluationItem.EvaluationItem
 import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.recruitmentitem.RecruitmentItemRepository
+import apply.utils.CsvGenerator
+import apply.utils.CsvRow
 import apply.utils.ExcelGenerator
 import apply.utils.ExcelRow
 import org.springframework.stereotype.Service
@@ -11,12 +14,13 @@ import java.io.ByteArrayInputStream
 
 @Transactional
 @Service
-class ExcelService(
-    val applicantService: ApplicantService,
-    val evaluationTargetService: EvaluationTargetService,
-    val recruitmentItemRepository: RecruitmentItemRepository,
-    val evaluationItemRepository: EvaluationItemRepository,
-    val excelGenerator: ExcelGenerator
+class FileService(
+    private val applicantService: ApplicantService,
+    private val evaluationTargetService: EvaluationTargetService,
+    private val recruitmentItemRepository: RecruitmentItemRepository,
+    private val evaluationItemRepository: EvaluationItemRepository,
+    private val excelGenerator: ExcelGenerator,
+    private val csvGenerator: CsvGenerator
 ) {
     fun createApplicantExcel(recruitmentId: Long): ByteArrayInputStream {
         val applicants = applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId)
@@ -71,4 +75,38 @@ class ExcelService(
             EvaluationStatus.FAIL -> "탈락"
             EvaluationStatus.PENDING -> "보류"
         }
+
+    fun createTargetCsv(evaluationId: Long): ByteArrayInputStream {
+        val targets = evaluationTargetService.findAllByEvaluationIdAndKeyword(evaluationId)
+        val evaluationItems = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluationId)
+        val evaluationItemHeaders = evaluationItems.map { it.toHeader() }.toTypedArray()
+
+        val headerTitles = arrayOf(ID, NAME, EMAIL, STATUS, *evaluationItemHeaders)
+        val csvRows = targets.map { target ->
+            CsvRow(
+                target.id.toString(),
+                target.name,
+                target.email,
+                target.evaluationStatus.name,
+                *scores(target.answers, evaluationItems).values.toTypedArray()
+            )
+        }
+        return csvGenerator.generateBy(headerTitles, csvRows)
+    }
+
+    private fun scores(
+        answers: List<EvaluationAnswerResponse>,
+        evaluationItems: List<EvaluationItem>
+    ): Map<Long, String> {
+        return evaluationItems.associate { it.id to "0" } +
+            answers.associate { it.evaluationItemId to it.score.toString() }
+    }
+
+    companion object {
+        const val ID: String = "id"
+        const val NAME: String = "이름"
+        const val EMAIL: String = "이메일"
+        const val STATUS: String = "평가 상태"
+        fun EvaluationItem.toHeader() = "${this.title}(${this.maximumScore})"
+    }
 }

@@ -2,7 +2,7 @@ package apply.ui.api
 
 import apply.NOTE
 import apply.application.ApplicantService
-import apply.application.CsvService
+import apply.application.CsvTargetService
 import apply.application.EvaluationItemResponse
 import apply.application.EvaluationItemScoreData
 import apply.application.EvaluationTargetData
@@ -57,7 +57,7 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
     private lateinit var mailTargetService: MailTargetService
 
     @MockkBean
-    private lateinit var csvService: CsvService
+    private lateinit var csvTargetService: CsvTargetService
 
     private val recruitmentId = 1L
     private val evaluationId = 1L
@@ -283,7 +283,7 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
         val absolutePath = File(classLoader.getResource("evaluation_test.csv")!!.file).absolutePath
         val inputStream = FileReader(absolutePath).toString().byteInputStream()
         val file = MockMultipartFile("evaluation_test", "evaluation_test.csv", "text/text", inputStream)
-        every { csvService.updateTargetByCsv(any(), evaluationId) } just Runs
+        every { csvTargetService.updateTarget(any(), evaluationId) } just Runs
 
         val request = RestDocumentationRequestBuilders.fileUpload(
             "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/grade",

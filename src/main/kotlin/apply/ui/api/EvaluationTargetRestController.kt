@@ -1,6 +1,6 @@
 package apply.ui.api
 
-import apply.application.CsvService
+import apply.application.CsvTargetService
 import apply.application.EvaluationTargetData
 import apply.application.EvaluationTargetResponse
 import apply.application.EvaluationTargetService
@@ -24,7 +24,7 @@ import org.springframework.web.multipart.MultipartFile
 class EvaluationTargetRestController(
     private val evaluationTargetService: EvaluationTargetService,
     private val mailTargetService: MailTargetService,
-    private val csvService: CsvService
+    private val csvTargetService: CsvTargetService
 ) {
     @GetMapping
     fun findAllByEvaluationIdAndKeyword(
@@ -79,7 +79,7 @@ class EvaluationTargetRestController(
         @PathVariable evaluationId: Long,
         @RequestParam("file") file: MultipartFile
     ): ResponseEntity<Unit> {
-        csvService.updateTargetByCsv(file.inputStream.reader(), evaluationId)
+        csvTargetService.updateTarget(file.inputStream.reader(), evaluationId)
         return ResponseEntity.ok().build()
     }
 }
