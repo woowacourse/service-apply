@@ -36,8 +36,7 @@ class CsvTargetService(
             var email = csvRecord.get(EMAIL)
             var evaluationStatus = EvaluationStatus.valueOf(csvRecord.get(STATUS))
             val evaluationAnswers = readEvaluationAnswers(evaluationItems, csvRecord)
-            // TODO: 평가 대상자 상태 업데이트
-            print("$targetId, $name, $email, $evaluationStatus")
+            // TODO: 평가 대상자 상태 업데이트 기능 구현
         }
     }
 

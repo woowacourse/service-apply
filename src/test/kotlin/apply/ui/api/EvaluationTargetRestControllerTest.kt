@@ -38,7 +38,7 @@ import org.springframework.restdocs.request.RequestDocumentation.requestParts
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.io.File
-import java.io.FileReader
+import java.io.FileInputStream
 
 @WebMvcTest(
     controllers = [EvaluationTargetRestController::class]
@@ -279,10 +279,10 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
 
     @Test
     fun `평가지를 기준으로 평가대상자들의 상태를 업데이트한다`() {
-        val classLoader = javaClass.classLoader
-        val absolutePath = File(classLoader.getResource("evaluation_test.csv")!!.file).absolutePath
-        val inputStream = FileReader(absolutePath).toString().byteInputStream()
-        val file = MockMultipartFile("evaluation_test", "evaluation_test.csv", "text/text", inputStream)
+        val pathname = javaClass.classLoader.getResource("another_evaluation.csv")!!.file
+        val inputStream = FileInputStream(File(pathname))
+        val file = MockMultipartFile("evaluation", "evaluation.csv", "text/csv", inputStream)
+
         every { csvTargetService.updateTarget(any(), evaluationId) } just Runs
 
         val request = RestDocumentationRequestBuilders.fileUpload(
@@ -290,11 +290,10 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
             recruitmentId,
             evaluationId
         ).file("file", file.bytes)
-
-        request.with { request ->
-            request.method = "PATCH"
-            request
-        }
+            .with { request ->
+                request.method = "PATCH"
+                request
+            }
 
         mockMvc.perform(request)
             .andExpect(status().isOk)

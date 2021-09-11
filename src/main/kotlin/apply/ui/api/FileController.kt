@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/recruitments/{recruitmentId}")
-class ExcelController(
+class FileController(
     private val fileService: FileService,
     private val recruitmentService: RecruitmentService,
     private val evaluationService: EvaluationService
