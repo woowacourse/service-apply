@@ -24,9 +24,9 @@ class CsvService(
     fun createTargetCsv(evaluationId: Long): ByteArrayInputStream {
         val targets = evaluationTargetService.findAllByEvaluationIdAndKeyword(evaluationId)
         val evaluationItems = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluationId)
-        val titles = evaluationItems.map { "${it.title}(${it.maximumScore})" }.toTypedArray()
+        val titles = evaluationItems.map { titles(it) }.toTypedArray()
 
-        val headerTitles = arrayOf("id", "이름", "이메일", "평가 상태", *titles)
+        val headerTitles = arrayOf(ID, NAME, EMAIL, STATUS, *titles)
         val csvRows = targets.map { target ->
             CsvRow(
                 target.id.toString(),
@@ -38,6 +38,8 @@ class CsvService(
         }
         return csvGenerator.generateBy(headerTitles, csvRows)
     }
+
+    private fun titles(it: EvaluationItem) = "${it.title}(${it.maximumScore})"
 
     private fun scores(
         answers: List<EvaluationAnswerResponse>,
@@ -57,16 +59,23 @@ class CsvService(
                 .withTrim()
         )
         for (csvRecord in csvParser) {
-            var evaluationId = csvRecord.get("id")
-            var name = csvRecord.get("이름")
-            var email = csvRecord.get("이메일")
-            var evaluationStatus = EvaluationStatus.valueOf(csvRecord.get("평가 상태"))
+            var evaluationId = csvRecord.get(ID)
+            var name = csvRecord.get(NAME)
+            var email = csvRecord.get(EMAIL)
+            var evaluationStatus = EvaluationStatus.valueOf(csvRecord.get(STATUS))
             val evaluationAnswers = evaluationItems.map { evaluationItem ->
                 EvaluationAnswer(
-                    csvRecord.get("${evaluationItem.title}(${evaluationItem.maximumScore})").toInt(),
+                    csvRecord.get(titles(evaluationItem)).toInt(),
                     evaluationItem.id
                 )
             }
         }
+    }
+
+    companion object {
+        private const val ID: String = "id"
+        private const val NAME: String = "이름"
+        private const val EMAIL: String = "이메일"
+        private const val STATUS: String = "평가 상태"
     }
 }
