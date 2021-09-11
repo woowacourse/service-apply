@@ -77,7 +77,7 @@ class EvaluationTargetRestController(
     fun gradeByCsv(
         @PathVariable recruitmentId: Long,
         @PathVariable evaluationId: Long,
-        @RequestParam("file") file: MultipartFile
+        @RequestParam file: MultipartFile
     ): ResponseEntity<Unit> {
         csvTargetService.updateTarget(file.inputStream.reader(), evaluationId)
         return ResponseEntity.ok().build()
