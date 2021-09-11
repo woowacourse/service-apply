@@ -2,9 +2,15 @@ package apply.application
 
 import apply.domain.evaluationItem.EvaluationItem
 import apply.domain.evaluationItem.EvaluationItemRepository
+import apply.domain.evaluationtarget.EvaluationAnswer
+import apply.domain.evaluationtarget.EvaluationStatus
 import apply.utils.CsvGenerator
 import apply.utils.CsvRow
+import com.vaadin.flow.component.upload.receivers.MemoryBuffer
+import org.apache.commons.csv.CSVFormat
+import org.apache.commons.csv.CSVParser
 import org.springframework.stereotype.Service
+import java.io.BufferedReader
 import java.io.ByteArrayInputStream
 import javax.transaction.Transactional
 
@@ -39,5 +45,28 @@ class CsvService(
     ): Map<Long, String> {
         return evaluationItems.associate { it.id to "0" } +
             answers.associate { it.evaluationItemId to it.score.toString() }
+    }
+
+    fun readTargetCsv(memoryBuffer: MemoryBuffer, evaluationId: Long) {
+        val evaluationItems = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluationId)
+        val reader = BufferedReader(memoryBuffer.inputStream.reader())
+        val csvParser = CSVParser(
+            reader,
+            CSVFormat.DEFAULT
+                .withFirstRecordAsHeader()
+                .withTrim()
+        )
+        for (csvRecord in csvParser) {
+            var evaluationId = csvRecord.get("id")
+            var name = csvRecord.get("이름")
+            var email = csvRecord.get("이메일")
+            var evaluationStatus = EvaluationStatus.valueOf(csvRecord.get("평가 상태"))
+            val evaluationAnswers = evaluationItems.map { evaluationItem ->
+                EvaluationAnswer(
+                    csvRecord.get("${evaluationItem.title}(${evaluationItem.maximumScore})").toInt(),
+                    evaluationItem.id
+                )
+            }
+        }
     }
 }

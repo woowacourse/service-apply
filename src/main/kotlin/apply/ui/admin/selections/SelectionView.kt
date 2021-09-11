@@ -34,8 +34,6 @@ import com.vaadin.flow.router.BeforeEvent
 import com.vaadin.flow.router.HasUrlParameter
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.router.WildcardParameter
-import org.apache.commons.csv.CSVFormat
-import org.apache.commons.csv.CSVParser
 import support.views.addSortableColumn
 import support.views.addSortableDateColumn
 import support.views.addSortableDateTimeColumn
@@ -46,7 +44,6 @@ import support.views.createPrimarySmallButton
 import support.views.createSearchBar
 import support.views.createSuccessButton
 import support.views.downloadFile
-import java.io.BufferedReader
 
 @Route(value = "admin/selections", layout = BaseLayout::class)
 class SelectionView(
@@ -223,12 +220,8 @@ class SelectionView(
 
     private fun createEvaluationFileUpload(): Upload {
         return createCsvUpload("평가지 업로드", MemoryBuffer()) {
-            // TODO: 평가지 양식에 맞는 CSV 읽는 서비스 메서드로 분리 및 연결
-            val reader = BufferedReader(it.inputStream.reader())
-            val csvParser = CSVParser(reader, CSVFormat.DEFAULT)
-            for (csvRecord in csvParser) {
-                csvRecord[0]
-            }
+            val evaluation = evaluations[tabs.selectedIndex - 1]
+            csvService.readTargetCsv(it, evaluation.id)
         }
     }
 
