@@ -8,6 +8,8 @@ import apply.application.EvaluationTargetData
 import apply.application.EvaluationTargetResponse
 import apply.application.EvaluationTargetService
 import apply.application.GradeEvaluationResponse
+import apply.application.MailTargetService
+import apply.application.MailTargetResponse
 import apply.createEvaluationItem
 import apply.domain.evaluationtarget.EvaluationAnswers
 import apply.domain.evaluationtarget.EvaluationStatus
@@ -17,6 +19,8 @@ import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.EnumSource
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders
@@ -42,6 +46,9 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
 
     @MockkBean
     private lateinit var evaluationTargetService: EvaluationTargetService
+
+    @MockkBean
+    private lateinit var mailTargetService: MailTargetService
 
     private val recruitmentId = 1L
     private val evaluationId = 1L
@@ -220,6 +227,42 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
                             .description("평가 특이 사항"),
                         fieldWithPath("evaluationStatus").type(JsonFieldType.STRING)
                             .description("평가 상태")
+                    )
+                )
+            )
+    }
+
+    @EnumSource(names = ["PASS", "FAIL", "WAITING"])
+    @ParameterizedTest
+    fun `메일 발송 대상(합격자)들의 이메일 정보를 조회한다`(enumStatus: EvaluationStatus?) {
+        every {
+            mailTargetService.findMailTargets(
+                evaluationId,
+                enumStatus
+            )
+        } returns listOf(MailTargetResponse("roki@woowacourse.com"))
+
+        mockMvc.perform(
+            RestDocumentationRequestBuilders.get(
+                "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/emails?status={status}",
+                recruitmentId,
+                evaluationId,
+                enumStatus.toString()
+            ).header("Content-Type", "application/json")
+        ).andExpect(status().isOk)
+            .andDo(
+                document(
+                    "evaluationtarget-email-sending-target-emails",
+                    pathParameters(
+                        parameterWithName("recruitmentId").description("모집 ID"),
+                        parameterWithName("evaluationId").description("평가 ID")
+                    ),
+                    requestParameters(
+                        parameterWithName("status").description("조회할 평가 상태")
+                    ),
+                    responseFields(
+                        fieldWithPath("message").description("응답 메시지"),
+                        fieldWithPath("body.[].email").type(JsonFieldType.STRING).description("대상 E-MAIL")
                     )
                 )
             )

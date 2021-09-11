@@ -10,4 +10,9 @@ interface EvaluationTargetRepository : JpaRepository<EvaluationTarget, Long> {
     fun deleteByApplicantIdIn(applicantIds: Collection<Long>)
 
     fun deleteByEvaluationIdAndApplicantIdIn(evaluationId: Long, applicantIds: Collection<Long>)
+
+    fun findAllByEvaluationIdAndEvaluationStatus(
+        evaluationId: Long,
+        evaluationStatus: EvaluationStatus
+    ): List<EvaluationTarget>
 }
