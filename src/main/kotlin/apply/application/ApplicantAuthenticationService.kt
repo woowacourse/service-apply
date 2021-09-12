@@ -2,6 +2,8 @@ package apply.application
 
 import apply.domain.applicant.ApplicantAuthenticationException
 import apply.domain.applicant.ApplicantRepository
+import apply.domain.authenticationcode.AuthenticationCodeRepository
+import apply.domain.authenticationcode.getLastByEmail
 import apply.security.JwtTokenProvider
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -10,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class ApplicantAuthenticationService(
     private val applicantRepository: ApplicantRepository,
+    private val authenticationCodeRepository: AuthenticationCodeRepository,
     private val jwtTokenProvider: JwtTokenProvider
 ) {
     fun generateToken(request: RegisterApplicantRequest): String {
@@ -26,9 +29,8 @@ class ApplicantAuthenticationService(
         return jwtTokenProvider.createToken(applicant.email)
     }
 
-    fun authenticateEmail(email: String, authenticateCode: String) {
-        val applicant = applicantRepository.findByEmail(email)
-            ?: throw IllegalArgumentException("지원자가 존재하지 않습니다. email: $email")
-        applicant.authenticateEmail(authenticateCode)
+    fun authenticateEmail(email: String, code: String) {
+        val authenticationCode = authenticationCodeRepository.getLastByEmail(email)
+        authenticationCode.authenticate(code)
     }
 }
