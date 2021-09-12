@@ -8,3 +8,9 @@ create table authentication_code
     primary key (id)
 ) engine = InnoDB
   default charset = utf8mb4;
+
+alter table applicant
+    drop column authenticate_code;
+
+alter table applicant
+    drop column authenticated;

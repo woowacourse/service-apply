@@ -2,7 +2,6 @@ package apply.domain.applicant
 
 import support.domain.BaseEntity
 import java.time.LocalDate
-import java.util.UUID
 import javax.persistence.AttributeOverride
 import javax.persistence.Column
 import javax.persistence.Embedded
@@ -16,7 +15,6 @@ class Applicant(
     @AttributeOverride(name = "value", column = Column(name = "password", nullable = false))
     @Embedded
     var password: Password,
-    authenticated: Boolean,
     id: Long = 0L
 ) : BaseEntity(id) {
     val name: String
@@ -34,13 +32,6 @@ class Applicant(
     val birthday: LocalDate
         get() = information.birthday
 
-    @Column(nullable = false)
-    var authenticated: Boolean = authenticated
-        private set
-
-    @Column(nullable = false, columnDefinition = "char(8)")
-    val authenticateCode: String = UUID.randomUUID().toString().take(8)
-
     constructor(
         name: String,
         email: String,
@@ -48,10 +39,9 @@ class Applicant(
         gender: Gender,
         birthday: LocalDate,
         password: Password,
-        authenticated: Boolean = false,
         id: Long = 0L
     ) : this(
-        ApplicantInformation(name, email, phoneNumber, gender, birthday), password, authenticated, id
+        ApplicantInformation(name, email, phoneNumber, gender, birthday), password, id
     )
 
     fun authenticate(applicant: Applicant) {
