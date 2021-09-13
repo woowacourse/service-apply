@@ -21,35 +21,36 @@ const App = () => {
     <TokenProvider>
       <RecruitmentProvider>
         <BrowserRouter>
-          <ScrollToTop />
           <MainHeader />
           <div className="main-view">
-            <Switch>
-              <Route path={["/", "/recruits"]} exact>
-                <Recruits />
-              </Route>
-              <Route path="/applicants/new" exact>
-                <ApplicantRegister />
-              </Route>
-              <Route path="/login" exact>
-                <Login />
-              </Route>
-              <Route path="/find" exact>
-                <PasswordFind />
-              </Route>
-              <Route path="/find/result" exact>
-                <PasswordFindResult />
-              </Route>
-              <PrivateRoute path="/application-forms/:status" exact>
-                <ApplicationRegister />
-              </PrivateRoute>
-              <Route path="/application-forms/:status" exact>
-                <ApplicationRegister />
-              </Route>
-              <PrivateRoute path="/edit" exact>
-                <PasswordEdit />
-              </PrivateRoute>
-            </Switch>
+            <ScrollToTop>
+              <Switch>
+                <Route path={["/", "/recruits"]} exact>
+                  <Recruits />
+                </Route>
+                <Route path="/applicants/new" exact>
+                  <ApplicantRegister />
+                </Route>
+                <Route path="/login" exact>
+                  <Login />
+                </Route>
+                <Route path="/find" exact>
+                  <PasswordFind />
+                </Route>
+                <Route path="/find/result" exact>
+                  <PasswordFindResult />
+                </Route>
+                <PrivateRoute path="/application-forms/:status" exact>
+                  <ApplicationRegister />
+                </PrivateRoute>
+                <Route path="/application-forms/:status" exact>
+                  <ApplicationRegister />
+                </Route>
+                <PrivateRoute path="/edit" exact>
+                  <PasswordEdit />
+                </PrivateRoute>
+              </Switch>
+            </ScrollToTop>
           </div>
           <MainFooter />
         </BrowserRouter>
