@@ -1,8 +1,6 @@
 package apply.ui.admin.cheater
 
-import apply.application.ApplicantResponse
 import apply.application.ApplicantService
-import apply.application.CheaterData
 import apply.application.CheaterService
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.button.Button
@@ -12,11 +10,8 @@ import com.vaadin.flow.component.notification.Notification
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
-import com.vaadin.flow.component.select.Select
-import com.vaadin.flow.component.textfield.TextArea
 import support.views.createContrastButton
 import support.views.createPrimaryButton
-import support.views.createSearchBar
 
 class CheaterRegistrationFormDialog(
     private val applicantService: ApplicantService,
@@ -24,14 +19,10 @@ class CheaterRegistrationFormDialog(
     reloadComponents: () -> Unit
 ) : Dialog() {
     private val title: H2 = H2("부정 행위자 등록")
-    private val description: TextArea = TextArea("등록 사유").apply {
-        placeholder = "사유를 입력하세요"
-        setWidthFull()
-    }
-    private var cheater: ApplicantResponse? = null
+    private val cheaterRegistrationForm: CheaterRegistrationForm = CheaterRegistrationForm(applicantService)
 
     init {
-        add(createHeader(), createRegisterForm(), createButtons(reloadComponents))
+        add(createHeader(), cheaterRegistrationForm, createButtons(reloadComponents))
         width = "800px"
         height = "60%"
         open()
@@ -42,42 +33,6 @@ class CheaterRegistrationFormDialog(
             alignItems = FlexComponent.Alignment.CENTER
             isPadding = false
             element.style.set("margin-bottom", "50px")
-        }
-    }
-
-    private fun createRegisterForm(): VerticalLayout {
-        return VerticalLayout(
-            createSearchBar(), description
-        ).apply {
-            element.style.set("margin-bottom", "30px")
-        }
-    }
-
-    private fun createSearchBar(): Component {
-        val container = HorizontalLayout()
-        return HorizontalLayout(
-            createSearchBar("지원자 검색") {
-                container.removeAll()
-                val founds = applicantService.findAllByKeyword(it)
-                if (founds.isNotEmpty()) {
-                    val select = createSelectApplicant(founds)
-                    container.add(select)
-                }
-            },
-            container
-        ).apply {
-            defaultVerticalComponentAlignment = FlexComponent.Alignment.END
-        }
-    }
-
-    private fun createSelectApplicant(applicants: List<ApplicantResponse>): Select<ApplicantResponse> {
-        return Select<ApplicantResponse>().apply {
-            setTextRenderer { "${it.name}/${it.email}" }
-            setItems(applicants)
-        }.apply {
-            addValueChangeListener {
-                cheater = it.value
-            }
         }
     }
 
@@ -92,7 +47,7 @@ class CheaterRegistrationFormDialog(
     private fun getCreateAddButton(reloadComponent: () -> Unit): Button {
         return createPrimaryButton("저장") {
             try {
-                cheaterService.save(CheaterData(cheater!!.email, description.value))
+                cheaterService.save(cheaterRegistrationForm.cheater)
                 reloadComponent()
             } catch (e: IllegalArgumentException) {
                 createNotification("이미 등록된 부정 행위자입니다.").open()
