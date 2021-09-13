@@ -1,5 +1,10 @@
 import { useHistory } from "react-router-dom";
+import { fetchPasswordEdit } from "../../api/applicants";
+import { Form } from "../../components/form";
 import Button from "../../components/form/Button/Button";
+import { SUCCESS_MESSAGE } from "../../constants/messages";
+import PATH from "../../constants/path";
+import useForm from "../../hooks/useForm";
 import useTokenContext from "../../hooks/useTokenContext";
 import FormProvider from "../../provider/FormProvider/FormProvider";
 import InputField from "../../provider/FormProvider/InputField";
@@ -8,9 +13,7 @@ import {
   validatePassword,
   validateRePassword,
 } from "../../utils/validation/password";
-import useForm from "../../hooks/useForm";
 import styles from "./PasswordEdit.module.css";
-import { Form } from "../../components/form";
 
 const PasswordEdit = () => {
   const { token, resetToken } = useTokenContext();

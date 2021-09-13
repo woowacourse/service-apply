@@ -1,9 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import {
-  useHistory,
-  useLocation,
-  useParams
-} from "react-router-dom";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import * as Api from "../../api";
 import {
   Button,
@@ -11,13 +7,13 @@ import {
   Description,
   Field,
   Form,
-  Label
+  Label,
 } from "../../components/form";
 import RecruitCard from "../../components/RecruitCard/RecruitCard";
 import {
   CONFIRM_MESSAGE,
   ERROR_MESSAGE,
-  SUCCESS_MESSAGE
+  SUCCESS_MESSAGE,
 } from "../../constants/messages";
 import PATH, { PARAM } from "../../constants/path";
 import useForm from "../../hooks/useForm";
@@ -29,7 +25,7 @@ import InputField from "../../provider/FormProvider/InputField";
 import ResetButton from "../../provider/FormProvider/ResetButton";
 import SubmitButton from "../../provider/FormProvider/SubmitButton";
 import { formatDateTime } from "../../utils/date";
-import parseQuery from "../../utils/route/query";
+import { parseQuery } from "../../utils/route/query";
 import { validateURL } from "../../utils/validation/url";
 import styles from "./ApplicationRegister.module.css";
 
@@ -138,11 +134,7 @@ const ApplicationRegister = () => {
   };
 
   const submit = async (value) => {
-    if (
-      window.confirm(
-        CONFIRM_MESSAGE.SUBMIT_APPLICATION
-      )
-    ) {
+    if (window.confirm(CONFIRM_MESSAGE.SUBMIT_APPLICATION)) {
       const answers = recruitmentItems.map((item, index) => ({
         contents: value[`recruitment-item-${index}`],
         recruitmentItemId: item.id,

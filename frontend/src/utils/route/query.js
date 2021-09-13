@@ -1,4 +1,4 @@
-const parseQuery = (query) => {
+export const parseQuery = (query) => {
   const queryObj = {};
 
   query
@@ -18,5 +18,3 @@ export const generateQuery = (queryObj) => {
 
   return `?${queryKeys.map((key) => `${key}=${queryObj[key]}`).join("&")}`;
 };
-
-export default parseQuery;

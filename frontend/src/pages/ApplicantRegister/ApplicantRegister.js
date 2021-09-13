@@ -1,15 +1,15 @@
 import React from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory, useLocation, generatePath } from "react-router-dom";
 import {
   BirthField,
   Button,
   Form,
   GenderField,
-  SummaryCheckField
+  SummaryCheckField,
 } from "../../components/form";
 import RecruitCard from "../../components/RecruitCard/RecruitCard";
-import { ERROR_MESSAGE } from '../../constants/messages';
-import PATH, { PARAM } from '../../constants/path';
+import { ERROR_MESSAGE } from "../../constants/messages";
+import PATH, { PARAM } from "../../constants/path";
 import { POLICY_SUMMARY } from "../../constants/policySummary";
 import useForm from "../../hooks/useForm";
 import useRecruitmentContext from "../../hooks/useRecruitmentContext";
@@ -18,16 +18,19 @@ import FormProvider from "../../provider/FormProvider/FormProvider";
 import InputField from "../../provider/FormProvider/InputField";
 import SubmitButton from "../../provider/FormProvider/SubmitButton";
 import {
-  validateDay, validateMonth, validateYear
+  validateDay,
+  validateMonth,
+  validateYear,
 } from "../../utils/validation/birth";
 import { validateEmail } from "../../utils/validation/email";
 import { validateName } from "../../utils/validation/name";
 import {
   validatePassword,
-  validateRePassword
+  validateRePassword,
 } from "../../utils/validation/password";
 import { validatePhoneNumber } from "../../utils/validation/phoneNumber";
 import styles from "./ApplicantRegister.module.css";
+import { generateQuery } from "../../utils/route/query";
 
 const ApplicantRegister = () => {
   const location = useLocation();

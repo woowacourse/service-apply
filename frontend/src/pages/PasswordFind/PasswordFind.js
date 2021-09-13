@@ -1,22 +1,23 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import Button from "../../components/form/Button/Button";
-import { validateName } from "../../utils/validation/name";
-import { validateEmail } from "../../utils/validation/email";
-import styles from "./PasswordFind.module.css";
 import { fetchPasswordFind } from "../../api/applicants";
+import { Form } from "../../components/form";
 import BirthField from "../../components/form/BirthField/BirthField";
+import Button from "../../components/form/Button/Button";
+import PATH from "../../constants/path";
+import useForm from "../../hooks/useForm";
+import FormProvider from "../../provider/FormProvider/FormProvider";
+import InputField from "../../provider/FormProvider/InputField";
+import SubmitButton from "../../provider/FormProvider/SubmitButton";
+import { formatLocalDate } from "../../utils/date";
 import {
   validateDay,
   validateMonth,
   validateYear,
 } from "../../utils/validation/birth";
-import { formatLocalDate } from "../../utils/date";
-import SubmitButton from "../../provider/FormProvider/SubmitButton";
-import FormProvider from "../../provider/FormProvider/FormProvider";
-import InputField from "../../provider/FormProvider/InputField";
-import useForm from "../../hooks/useForm";
-import { Form } from "../../components/form";
+import { validateEmail } from "../../utils/validation/email";
+import { validateName } from "../../utils/validation/name";
+import styles from "./PasswordFind.module.css";
 
 const PasswordFind = () => {
   const history = useHistory();
