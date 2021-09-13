@@ -66,9 +66,7 @@ fun createSearchBar(labelText: String = "", eventListener: (name: String) -> Uni
         HorizontalLayout(
             textField,
             Button(Icon(VaadinIcon.SEARCH)) { eventListener(textField.value) }
-        ).apply {
-            defaultVerticalComponentAlignment = FlexComponent.Alignment.END
-        }
+        )
     )
 }
 

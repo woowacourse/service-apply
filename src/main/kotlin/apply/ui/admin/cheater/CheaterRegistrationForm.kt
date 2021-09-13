@@ -39,6 +39,11 @@ class CheaterRegistrationForm(
                     val select = createSelectApplicant(founds)
                     container.add(select)
                 }
+            }.apply {
+                this.children.forEach {
+                    if (it is HorizontalLayout)
+                        it.apply { defaultVerticalComponentAlignment = FlexComponent.Alignment.END }
+                }
             },
             container
         ).apply {
