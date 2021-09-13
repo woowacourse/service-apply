@@ -31,6 +31,7 @@ import {
 import { validatePhoneNumber } from "../../utils/validation/phoneNumber";
 import styles from "./ApplicantRegister.module.css";
 import { generateQuery } from "../../utils/route/query";
+import { formatBirthday } from "../../utils/date";
 
 const ApplicantRegister = () => {
   const location = useLocation();
@@ -59,7 +60,7 @@ const ApplicantRegister = () => {
         email,
         password,
         gender,
-        birthday: { year, month, day },
+        birthday: formatBirthday({ year, month, day }),
       });
 
       history.push({

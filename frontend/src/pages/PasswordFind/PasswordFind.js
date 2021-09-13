@@ -9,7 +9,7 @@ import useForm from "../../hooks/useForm";
 import FormProvider from "../../provider/FormProvider/FormProvider";
 import InputField from "../../provider/FormProvider/InputField";
 import SubmitButton from "../../provider/FormProvider/SubmitButton";
-import { formatLocalDate } from "../../utils/date";
+import { formatBirthday } from "../../utils/date";
 import {
   validateDay,
   validateMonth,
@@ -27,7 +27,7 @@ const PasswordFind = () => {
       await fetchPasswordFind({
         name: value.name,
         email: value.email,
-        birthday: formatLocalDate({
+        birthday: formatBirthday({
           year: value.year,
           month: value.month,
           day: value.day,
