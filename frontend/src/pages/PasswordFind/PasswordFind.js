@@ -33,8 +33,9 @@ const PasswordFind = () => {
           day: value.day,
         }),
       });
+
       history.push({
-        path: PATH.FIND_PASSWORD_RESULT,
+        pathname: PATH.FIND_PASSWORD_RESULT,
         state: { email: value.email },
       });
     } catch (e) {
