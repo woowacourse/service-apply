@@ -1,5 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useHistory, useLocation, useParams } from "react-router-dom";
+import {
+  useHistory,
+  useLocation,
+  useParams,
+  generatePath,
+} from "react-router-dom";
 import * as Api from "../../api";
 import {
   Button,
@@ -25,7 +30,7 @@ import InputField from "../../provider/FormProvider/InputField";
 import ResetButton from "../../provider/FormProvider/ResetButton";
 import SubmitButton from "../../provider/FormProvider/SubmitButton";
 import { formatDateTime } from "../../utils/date";
-import { parseQuery } from "../../utils/route/query";
+import { generateQuery, parseQuery } from "../../utils/route/query";
 import { validateURL } from "../../utils/validation/url";
 import styles from "./ApplicationRegister.module.css";
 
@@ -43,38 +48,7 @@ const ApplicationRegister = () => {
   const [initialFormData, setInitialFormData] = useState({});
   const [modifiedDateTime, setModifiedDateTime] = useState("");
 
-  useEffect(() => {
-    const init = async () => {
-      try {
-        await fetchRecruitmentItems();
-
-        if (status === PARAM.APPLICATION_FORM_STATUS.EDIT) {
-          await fetchApplicationForm();
-        } else {
-          await Api.createForm({
-            token,
-            recruitmentId,
-          });
-        }
-      } catch (error) {
-        console.error(error);
-
-        if (
-          error.response.data.message === ERROR_MESSAGE.API.ALREADY_REGISTER
-        ) {
-          alert(ERROR_MESSAGE.API.ALREADY_HAS_APPLICATION);
-          history.replace(PATH.LOGIN);
-        } else {
-          alert(error.response.data.message);
-          history.replace(PATH.HOME);
-        }
-      }
-    };
-
-    init();
-  }, [recruitment, recruitmentId]);
-
-  const fetchRecruitmentItems = async () => {
+  const fetchRecruitmentItems = useCallback(async () => {
     try {
       const { data } = await Api.fetchItems(recruitmentId);
 
@@ -83,7 +57,7 @@ const ApplicationRegister = () => {
       alert(e.response.data.message);
       history.replace(PATH.HOME);
     }
-  };
+  }, [history, recruitmentId]);
 
   const fillForm = (applicationForm) => {
     setInitialFormData((prev) => {
@@ -156,6 +130,45 @@ const ApplicationRegister = () => {
     submit,
   });
 
+  useEffect(() => {
+    const init = async () => {
+      try {
+        await fetchRecruitmentItems();
+
+        if (status === PARAM.APPLICATION_FORM_STATUS.EDIT) {
+          await fetchApplicationForm();
+        } else {
+          await Api.createForm({
+            token,
+            recruitmentId,
+          });
+        }
+      } catch (error) {
+        console.error(error);
+
+        if (
+          error.response.data.message === ERROR_MESSAGE.API.ALREADY_REGISTER
+        ) {
+          alert(ERROR_MESSAGE.API.ALREADY_HAS_APPLICATION);
+          history.replace(PATH.LOGIN);
+        } else {
+          alert(error.response.data.message);
+          history.replace(PATH.HOME);
+        }
+      }
+    };
+
+    init();
+  }, [
+    recruitment,
+    recruitmentId,
+    history,
+    status,
+    token,
+    fetchApplicationForm,
+    fetchRecruitmentItems,
+  ]);
+
   const SaveButton = () => {
     const history = useHistory();
     const { value } = useFormContext();
@@ -172,7 +185,9 @@ const ApplicationRegister = () => {
 
         if (status !== PARAM.APPLICATION_FORM_STATUS.EDIT) {
           history.replace(
-            "/application-forms/edit?recruitmentId=" + recruitmentId
+            `${generatePath(PATH.APPLICATION_FORM, {
+              status: PARAM.APPLICATION_FORM_STATUS.EDIT,
+            })}${generateQuery({ recruitmentId })}`
           );
         }
       } catch (e) {
@@ -197,7 +212,7 @@ const ApplicationRegister = () => {
       <FormProvider {...methods}>
         <Form className={styles["application-form"]} onSubmit={handleSubmit}>
           <h2>지원서 작성</h2>
-          {status === "edit" && (
+          {status === PARAM.APPLICATION_FORM_STATUS.EDIT && (
             <p className={styles["autosave-indicator"]}>
               {`임시 저장되었습니다. (${modifiedDateTime})`}
             </p>

@@ -13,7 +13,7 @@ const InputField = ({ name, initialValue, ...props }) => {
     return () => {
       unRegister(name);
     };
-  }, []);
+  }, [name, initialValue]);
 
   return (
     <TextField
