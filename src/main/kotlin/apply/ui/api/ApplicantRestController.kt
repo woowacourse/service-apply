@@ -55,6 +55,15 @@ class ApplicantRestController(
         return ResponseEntity.noContent().build()
     }
 
+    @PostMapping("/authentication-code")
+    fun generateAuthenticationCode(
+        @RequestParam email: String
+    ): ResponseEntity<Unit> {
+        val authenticateCode = applicantAuthenticationService.generateAuthenticationCode(email)
+        mailService.sendAuthenticationCodeMail(email, authenticateCode)
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
+    }
+
     @PostMapping("/authenticate-email")
     fun authenticateEmail(
         @RequestParam email: String,

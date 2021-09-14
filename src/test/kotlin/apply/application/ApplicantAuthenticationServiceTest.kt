@@ -129,5 +129,12 @@ internal class ApplicantAuthenticationServiceTest {
                 applicantAuthenticationService.authenticateEmail(authenticationCode.email, "INVALID")
             }
         }
+
+        @Test
+        fun `인증 코드를 생성한다`() {
+            every { authenticationCodeRepository.save(any()) } returns authenticationCode
+            assertThat(applicantAuthenticationService.generateAuthenticationCode(authenticationCode.email))
+                .isEqualTo(authenticationCode.code)
+        }
     }
 }

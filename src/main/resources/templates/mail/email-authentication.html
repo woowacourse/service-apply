@@ -1,3 +1,4 @@
+<meta charset="utf-8" xmlns:th="http://www.w3.org/1999/xhtml">
 <div
         style="width: 100%;max-width: 512px;padding: 20px;margin: 15px;border-radius: 3px;background: #f1f2f6;box-shadow: 0 0 7px rgba(0, 0, 0, 0.05);"
 >
@@ -6,18 +7,11 @@
             style="width: 200px"
             alt="logo"
     />
-    <h3><span th:text="${name}"></span>님, 버튼을 눌러 인증을 완료하세요.</h3>
+    <h3>이메일 인증 코드 입니다.</h3>
     <div>
         <br />
         <div style="text-align: center">
-            <a th:href="${url}" target="_blank">
-                <button
-                        style="cursor: pointer;outline: none;border: 0;background: #0078ff;color: #fff;border-radius: 3px;padding: 10px;min-width:
-80px; min-height: 28px; margin: 5px;" formmethod="POST"
-                >
-                    메일 인증
-                </button>
-            </a>
+            <span th:text="${authenticationCode}"></span>
         </div>
     </div>
 </div>

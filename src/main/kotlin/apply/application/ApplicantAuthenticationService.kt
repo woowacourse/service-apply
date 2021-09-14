@@ -2,6 +2,7 @@ package apply.application
 
 import apply.domain.applicant.ApplicantAuthenticationException
 import apply.domain.applicant.ApplicantRepository
+import apply.domain.authenticationcode.AuthenticationCode
 import apply.domain.authenticationcode.AuthenticationCodeRepository
 import apply.domain.authenticationcode.getLastByEmail
 import apply.security.JwtTokenProvider
@@ -27,6 +28,11 @@ class ApplicantAuthenticationService(
             ?.also { it.authenticate(request.password) }
             ?: throw ApplicantAuthenticationException()
         return jwtTokenProvider.createToken(applicant.email)
+    }
+
+    fun generateAuthenticationCode(email: String): String {
+        val authenticationCode = authenticationCodeRepository.save(AuthenticationCode(email))
+        return authenticationCode.code
     }
 
     fun authenticateEmail(email: String, code: String) {
