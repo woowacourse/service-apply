@@ -14,5 +14,31 @@ export const ERROR_MESSAGE = {
   },
   API: {
     ALREADY_REGISTER: "이미 지원한 이력이 있습니다.",
+    ALREADY_HAS_APPLICATION:
+      "이미 신청서를 작성했습니다. 로그인 페이지로 이동합니다.",
+    FETCHING_MY_APPLICATION: "내 지원서를 불러오는데 실패했습니다.",
   },
+  ACCESS: {
+    REQUIRED_LOGIN: "로그인이 필요합니다.",
+  },
+  HOOKS: {
+    CANNOT_FIND_FORM_CONTEXT: "FormContext가 존재하지 않습니다.",
+    CANNOT_FIND_RECRUITMENT_CONTEXT: "recruitmentContext가 존재하지 않습니다",
+    CANNOT_FIND_TOKEN_CONTEXT: "TokenContext가 존재하지 않습니다",
+  }
+};
+
+export const SUCCESS_MESSAGE = {
+  API: {
+    LOGIN: "로그인 성공",
+    CHANGE_PASSWORD: "비밀번호가 변경되었습니다. 다시 로그인해주세요.",
+    SUBMIT_APPLICATION: "정상적으로 제출되었습니다.",
+    SAVE_APPLICATION: "정상적으로 저장되었습니다.",
+  },
+};
+
+export const CONFIRM_MESSAGE = {
+  SUBMIT_APPLICATION:
+    "제출하신 뒤에는 수정하실 수 없습니다. 정말로 제출하시겠습니까?",
+  RESET_APPLICATION: "정말 초기화하시겠습니까?",
 };
