@@ -1,23 +1,182 @@
-<div
-  style="width: 100%;max-width: 512px;padding: 20px;margin: 15px;border-radius: 3px;background: #f1f2f6;box-shadow: 0 0 7px rgba(0, 0, 0, 0.05);"
->
-  <img
-    src="https://woowacourse.github.io/img/logo_full_dark.26e30197.png"
-    style="width: 200px"
-    alt="logo"
-  />
-  <h3><span th:text="${name}"></span>님, 지원이 완료되었습니다.</h3>
-  <div>
-    <br />
-    <div style="text-align: center">
-      <a th:href="${url}+'/recruits'" target="_blank">
-        <button
-          style="cursor: pointer;outline: none;border: 0;background: #0078ff;color: #fff;border-radius: 3px;padding: 10px;min-width:
-80px; min-height: 28px; margin: 5px;"
-        >
-          내 지원서 보기
-        </button>
-      </a>
-    </div>
-  </div>
-</div>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <title>email</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+  <body>
+    <table
+      class="root"
+      border="0"
+      cellpadding="0"
+      cellspacing="0"
+      width="100%"
+      style="
+        font-family: sans-serif;
+        color: #333333;
+        padding: 0;
+        font-size: 16px;
+      "
+    >
+      <tr style="color: #333333; padding: 0; font-size: 16px">
+        <td align="center" style="color: #333333; padding: 0; font-size: 16px">
+          <table
+            border="0"
+            cellpadding="0"
+            cellspacing="0"
+            width="600"
+            style="color: #333333; padding: 0; font-size: 16px"
+          >
+            <tr style="color: #333333; padding: 0; font-size: 16px">
+              <td
+                id="header"
+                height="0"
+                style="height: 0; line-height: 0; padding: 0"
+              >
+                <img
+                  src="https://github.com/woowacourse/service-apply/tree/master/src/main/resources/static/images/mail/header.jpg"
+                  alt="우아한테크코스 로고"
+                  style="display: block; width: 600px; height: 193px"
+                  width="600"
+                  height="193"
+                />
+              </td>
+            </tr>
+            <tr style="color: #333333; padding: 0; font-size: 16px">
+              <td id="body" style="color: #333333; padding: 0; font-size: 16px">
+                <table
+                  border="0"
+                  cellpadding="0"
+                  cellspacing="0"
+                  style="
+                    width: 100%;
+                    color: #333333;
+                    padding: 0;
+                    font-size: 16px;
+                  "
+                >
+                  <tr style="color: #333333; padding: 0; font-size: 16px">
+                    <td
+                      id="title"
+                      align="center"
+                      style="
+                        color: #333333;
+                        padding: 0;
+                        font-size: 24px;
+                        font-weight: bold;
+                        padding-top: 48px;
+                      "
+                    >
+                      지원 완료
+                    </td>
+                  </tr>
+                  <tr style="color: #333333; padding: 0; font-size: 16px">
+                    <td
+                      id="content"
+                      style="
+                        color: #333333;
+                        width: 100%;
+                        padding: 0;
+                        font-size: 16px;
+                        padding-top: 32px;
+                        padding-bottom: 48px;
+                        text-align: center;
+                      "
+                    >
+                      안녕하세요. <span th:text="${name}"></span>님.
+                      우아한테크코스 <span th:text="${course}"></span>
+                      지원이 완료되었습니다.
+                      <br /><br />
+                      추후 진행사항은 해당 이메일을 통해 안내됩니다. 감사합니다.
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr style="color: #333333; padding: 0; font-size: 16px">
+              <td
+                id="footer"
+                style="
+                  color: #333333;
+                  padding: 0;
+                  font-size: 16px;
+                  border-top-width: 1px;
+                  border-top-style: solid;
+                  border-top-color: #cccccc;
+                  padding-top: 16px;
+                  padding-left: 8px;
+                "
+              >
+                <table
+                  border="0"
+                  cellpadding="0"
+                  cellspacing="0"
+                  style="color: #333333; padding: 0; font-size: 16px"
+                >
+                  <tr style="color: #333333; padding: 0; font-size: 16px">
+                    <td
+                      id="logo"
+                      height="0"
+                      style="
+                        color: #666666;
+                        font-size: 12px;
+                        padding-bottom: 22px;
+                        height: 0;
+                        line-height: 0;
+                      "
+                    >
+                      <img
+                        src="https://github.com/woowacourse/service-apply/tree/master/src/main/resources/static/images/mail/footer_logo.png"
+                        alt="우아한테크코스 텍스트 로고"
+                        style="display: block; width: 126px; height: 19px"
+                        width="126"
+                        height="19"
+                      />
+                    </td>
+                  </tr>
+                  <tr style="color: #333333; padding: 0; font-size: 16px">
+                    <td
+                      id="link"
+                      style="
+                        padding: 0;
+                        color: #666666;
+                        font-size: 12px;
+                        padding-bottom: 28px;
+                      "
+                    >
+                      <a
+                        href="https://woowacourse.github.io/"
+                        style="text-decoration: none"
+                        >HOME</a
+                      >&nbsp;|&nbsp;
+                      <a
+                        href="https://tecoble.techcourse.co.kr/"
+                        style="text-decoration: none"
+                        >BLOG</a
+                      >&nbsp;|&nbsp;
+                      <a
+                        href="https://www.youtube.com/channel/UC-mOekGSesms0agFntnQang/featured"
+                        style="text-decoration: none"
+                        >YOUTUBE</a
+                      >
+                    </td>
+                  </tr>
+                  <tr style="color: #333333; padding: 0; font-size: 16px">
+                    <td
+                      id="copyright"
+                      style="padding: 0; color: #666666; font-size: 12px"
+                    >
+                      Copyright © 우아한테크코스. All rights reserved
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
