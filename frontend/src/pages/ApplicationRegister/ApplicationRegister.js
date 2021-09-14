@@ -21,6 +21,7 @@ import {
   SUCCESS_MESSAGE,
 } from "../../constants/messages";
 import PATH, { PARAM } from "../../constants/path";
+import { RECRUITS_TAB } from "../../constants/tab";
 import useForm from "../../hooks/useForm";
 import useFormContext from "../../hooks/useFormContext";
 import useRecruitmentContext from "../../hooks/useRecruitmentContext";
@@ -151,7 +152,11 @@ const ApplicationRegister = () => {
 
         if (isAlreadyRegister) {
           alert(ERROR_MESSAGE.API.ALREADY_HAS_APPLICATION);
-          history.replace(PATH.LOGIN);
+
+          history.push({
+            pathname: PATH.RECRUITS,
+            search: generateQuery({ status: RECRUITS_TAB.APPLIED.name }),
+          });
         } else {
           alert(error.response.data.message);
           history.replace(PATH.HOME);
