@@ -1,5 +1,5 @@
 import React from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory, useLocation, generatePath } from "react-router-dom";
 import {
   BirthField,
   Button,
@@ -8,6 +8,8 @@ import {
   SummaryCheckField,
 } from "../../components/form";
 import RecruitCard from "../../components/RecruitCard/RecruitCard";
+import { ERROR_MESSAGE } from "../../constants/messages";
+import PATH, { PARAM } from "../../constants/path";
 import { POLICY_SUMMARY } from "../../constants/policySummary";
 import useForm from "../../hooks/useForm";
 import useRecruitmentContext from "../../hooks/useRecruitmentContext";
@@ -17,8 +19,8 @@ import InputField from "../../provider/FormProvider/InputField";
 import SubmitButton from "../../provider/FormProvider/SubmitButton";
 import {
   validateDay,
-  validateYear,
   validateMonth,
+  validateYear,
 } from "../../utils/validation/birth";
 import { validateEmail } from "../../utils/validation/email";
 import { validateName } from "../../utils/validation/name";
@@ -28,6 +30,8 @@ import {
 } from "../../utils/validation/password";
 import { validatePhoneNumber } from "../../utils/validation/phoneNumber";
 import styles from "./ApplicantRegister.module.css";
+import { generateQuery } from "../../utils/route/query";
+import { formatBirthday } from "../../utils/date";
 
 const ApplicantRegister = () => {
   const location = useLocation();
@@ -56,17 +60,19 @@ const ApplicantRegister = () => {
         email,
         password,
         gender,
-        birthday: { year, month, day },
+        birthday: formatBirthday({ year, month, day }),
       });
 
       history.push({
-        pathname: "/application-forms/new",
-        search: `?recruitmentId=${recruitmentId}`,
+        pathname: generatePath(PATH.APPLICATION_FORM, {
+          status: PARAM.APPLICATION_FORM_STATUS.NEW,
+        }),
+        search: generateQuery({ recruitmentId }),
         state: { currentRecruitment },
       });
     } catch (e) {
-      alert("이미 신청서를 작성했습니다. 로그인 페이지로 이동합니다.");
-      history.push("/login");
+      alert(ERROR_MESSAGE.API.ALREADY_HAS_APPLICATION);
+      history.push(PATH.LOGIN);
     }
   };
 

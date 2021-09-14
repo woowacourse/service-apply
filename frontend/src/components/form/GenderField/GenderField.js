@@ -24,14 +24,14 @@ const GenderField = () => {
           onChange={handleChange}
           name="gender"
           label="남자"
-          value="male"
+          value="MALE"
           required
         />
         <Radio
           onChange={handleChange}
           name="gender"
           label="여자"
-          value="female"
+          value="FEMALE"
           required
         />
       </div>
