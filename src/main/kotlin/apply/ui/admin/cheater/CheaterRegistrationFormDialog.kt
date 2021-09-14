@@ -19,7 +19,9 @@ class CheaterRegistrationFormDialog(
     reloadComponents: () -> Unit
 ) : Dialog() {
     private val title: H2 = H2("부정 행위자 등록")
-    private val cheaterRegistrationForm: CheaterRegistrationForm = CheaterRegistrationForm(applicantService)
+    private val cheaterRegistrationForm: CheaterForm = CheaterForm() {
+        applicantService.findAllByKeyword(it)
+    }
 
     init {
         add(createHeader(), cheaterRegistrationForm, createButtons(reloadComponents))
@@ -47,14 +49,17 @@ class CheaterRegistrationFormDialog(
     private fun getCreateAddButton(reloadComponent: () -> Unit): Button {
         return createPrimaryButton("저장") {
             try {
-                cheaterService.save(cheaterRegistrationForm.cheater)
-                reloadComponent()
+                val bindOrNull = cheaterRegistrationForm.bindOrNull()
+                bindOrNull?.let {
+                    cheaterService.save(it)
+                    reloadComponent()
+                    close()
+                }
             } catch (e: IllegalArgumentException) {
                 createNotification("이미 등록된 부정 행위자입니다.").open()
             } catch (e: NullPointerException) {
                 createNotification("대상을 선택해야 합니다.").open()
             }
-            close()
         }
     }
 
