@@ -12,6 +12,9 @@ import apply.createApplicant
 import apply.domain.applicant.Applicant
 import apply.domain.applicant.ApplicantAuthenticationException
 import apply.domain.applicant.ApplicantRepository
+import apply.domain.authenticationcode.AuthenticationCode
+import apply.domain.authenticationcode.AuthenticationCodeRepository
+import apply.domain.authenticationcode.getLastByEmail
 import apply.security.JwtTokenProvider
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
@@ -29,6 +32,9 @@ internal class ApplicantAuthenticationServiceTest {
     private lateinit var applicantRepository: ApplicantRepository
 
     @MockK
+    private lateinit var authenticationCodeRepository: AuthenticationCodeRepository
+
+    @MockK
     private lateinit var jwtTokenProvider: JwtTokenProvider
 
     private lateinit var applicantAuthenticationService: ApplicantAuthenticationService
@@ -36,7 +42,9 @@ internal class ApplicantAuthenticationServiceTest {
     @BeforeEach
     internal fun setUp() {
         every { jwtTokenProvider.createToken(any()) } returns VALID_TOKEN
-        applicantAuthenticationService = ApplicantAuthenticationService(applicantRepository, jwtTokenProvider)
+        applicantAuthenticationService = ApplicantAuthenticationService(
+            applicantRepository, authenticationCodeRepository, jwtTokenProvider
+        )
     }
 
     @DisplayName("토큰 생성은")
@@ -105,30 +113,21 @@ internal class ApplicantAuthenticationServiceTest {
     @DisplayName("이메일 사용자 인증 시")
     @Nested
     inner class AuthenticateEmail {
-        val applicant = createApplicant()
+        private val authenticationCode = AuthenticationCode("test@email.com")
 
         @Test
         fun `인증 코드가 일치한다면 인증된 사용자로 변경한다`() {
-            every { applicantRepository.findByEmail(applicant.email) } returns applicant
-
-            applicantAuthenticationService.authenticateEmail(applicant.email, applicant.authenticateCode)
-
-            assertThat(applicant.authenticated).isTrue
+            every { authenticationCodeRepository.getLastByEmail(any()) } returns authenticationCode
+            applicantAuthenticationService.authenticateEmail(authenticationCode.email, authenticationCode.code)
+            assertThat(authenticationCode.authenticated).isTrue()
         }
 
         @Test
         fun `인증 코드가 일치하지 않는다면 예외가 발생한다`() {
-            val applicant = createApplicant()
-            every { applicantRepository.findByEmail(applicant.email) } returns applicant
-
-            assertThrows<ApplicantAuthenticationException> {
-                applicantAuthenticationService.authenticateEmail(
-                    applicant.email,
-                    "wrong_code"
-                )
+            every { authenticationCodeRepository.getLastByEmail(any()) } returns authenticationCode
+            assertThrows<IllegalArgumentException> {
+                applicantAuthenticationService.authenticateEmail(authenticationCode.email, "INVALID")
             }
-
-            assertThat(applicant.authenticated).isFalse
         }
     }
 }
