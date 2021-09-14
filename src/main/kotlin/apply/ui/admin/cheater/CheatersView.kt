@@ -38,7 +38,7 @@ class CheatersView(
     private fun createAddCheater(): Component {
         return HorizontalLayout(
             createPrimaryButton("추가") {
-                CheaterRegistrationFormDialog(applicantService, cheaterService) {
+                CheaterFormDialog(applicantService, cheaterService) {
                     UI.getCurrent().page.reload()
                 }
             }

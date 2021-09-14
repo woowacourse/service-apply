@@ -13,7 +13,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import support.views.createContrastButton
 import support.views.createPrimaryButton
 
-class CheaterRegistrationFormDialog(
+class CheaterFormDialog(
     private val applicantService: ApplicantService,
     private val cheaterService: CheaterService,
     reloadComponents: () -> Unit
