@@ -90,7 +90,7 @@
                         bgcolor="#f1f2f6"
                       >
                         <tr>
-                          <td>${authenticationCode}</td>
+                          <td><span th:text="${authenticationCode}"></span></td>
                         </tr>
                       </table>
                     </td>
@@ -108,7 +108,8 @@
                         text-align: center;
                       "
                     >
-                      안녕하세요. xxx님 이메일 인증코드가 발급 되었습니다.
+                      안녕하세요. <span th:text="${name}"></span>님 이메일
+                      인증코드가 발급 되었습니다.
                       <br />
                       해당 문자 를 인증코드 입력창에 입력해주세요.
                     </td>
