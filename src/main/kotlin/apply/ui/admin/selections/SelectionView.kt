@@ -199,7 +199,7 @@ class SelectionView(
     }
 
     private fun createLoadButton(tabs: Tabs): Button {
-        return createPrimaryButton("평가자 불러오기") {
+        return createPrimaryButton("평가 대상자 불러오기") {
             val evaluation = evaluations.first { it.title == tabs.selectedTab.label }
             evaluationTargetService.load(evaluation.id)
             selectedTabIndex = tabs.selectedIndex
