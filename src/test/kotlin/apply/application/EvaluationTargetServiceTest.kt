@@ -308,11 +308,11 @@ class EvaluationTargetServiceTest(
     }
 
     @Test
-    fun `현재 평가를 불러올 때, 평가 대상자가 부정행위자로 지정되어 제거될 경우 현재 평가에만 영향이 가는지 확인한다`() {
+    fun `현재 평가를 불러올 때, 평가 대상자가 부정행위자로 지정되어 탈락 처리되는 경우, 현재 평가에만 영향이 가는지 확인한다`() {
         // given
-        val beforeEvaluationTarget = EvaluationTarget(evaluationId = 1L, applicantId = 1L)
-        val currentEvaluationTarget = EvaluationTarget(evaluationId = 2L, applicantId = 1L)
-        val nextEvaluationTarget = EvaluationTarget(evaluationId = 3L, applicantId = 1L)
+        val beforeEvaluationTarget = createEvaluationTarget(1L, 1L, PASS)
+        val currentEvaluationTarget = createEvaluationTarget(2L, 1L, PASS)
+        val nextEvaluationTarget = createEvaluationTarget(3L, 1L, PASS)
         evaluationTargetRepository.saveAll(
             listOf(
                 beforeEvaluationTarget,
@@ -325,18 +325,18 @@ class EvaluationTargetServiceTest(
         val currentEvaluation = createEvaluation(id = 2L, beforeEvaluationId = 1L)
 
         every { evaluationRepository.findByIdOrNull(2L) } returns currentEvaluation
-        every { cheaterRepository.findAll() } returns listOf(Cheater("3@email.com"))
-        every { applicantRepository.findAllByEmailIn(listOf("3@email.com")) } returns listOf(createApplicant(3L))
-        every { applicantRepository.findAllById(listOf(1L)) } returns listOf(createApplicant(1L))
+        every { cheaterRepository.findAll() } returns listOf(Cheater("1@email.com"))
+        every { applicantRepository.findAllByEmailIn(listOf("1@email.com")) } returns listOf(createApplicant(1L))
+        every { applicantRepository.findAllById(setOf(1L)) } returns listOf(createApplicant(1L))
         every { applicantRepository.findAllById(emptySet()) } returns emptyList()
 
         evaluationTargetService.load(2L)
 
         // then
         assertAll(
-            { assertThat(evaluationTargetRepository.findAllByEvaluationId(1L)).isNotEmpty() },
-            { assertThat(evaluationTargetRepository.findAllByEvaluationId(2L)).isEmpty() },
-            { assertThat(evaluationTargetRepository.findAllByEvaluationId(3L)).isNotEmpty() }
+            { assertThat(evaluationTargetRepository.findAllByEvaluationId(1L)[0].evaluationStatus).isEqualTo(PASS) },
+            { assertThat(evaluationTargetRepository.findAllByEvaluationId(2L)[0].evaluationStatus).isEqualTo(FAIL) },
+            { assertThat(evaluationTargetRepository.findAllByEvaluationId(3L)[0].evaluationStatus).isEqualTo(PASS) }
         )
     }
 
