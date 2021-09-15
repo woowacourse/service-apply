@@ -8,6 +8,7 @@ import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.html.H1
 import com.vaadin.flow.component.icon.Icon
 import com.vaadin.flow.component.icon.VaadinIcon
+import com.vaadin.flow.component.notification.Notification
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup
@@ -64,6 +65,13 @@ fun createSearchBar(labelText: String = "", eventListener: (name: String) -> Uni
         Button(Icon(VaadinIcon.SEARCH)) { eventListener(textField.value) }
     ).apply {
         defaultVerticalComponentAlignment = FlexComponent.Alignment.END
+    }
+}
+
+fun createNotification(text: String, durationValue: Int = 1000): Notification {
+    return Notification(text).apply {
+        position = Notification.Position.MIDDLE
+        duration = durationValue
     }
 }
 

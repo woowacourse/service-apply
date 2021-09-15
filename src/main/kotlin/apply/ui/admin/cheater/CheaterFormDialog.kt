@@ -6,11 +6,11 @@ import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.dialog.Dialog
 import com.vaadin.flow.component.html.H2
-import com.vaadin.flow.component.notification.Notification
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import support.views.createContrastButton
+import support.views.createNotification
 import support.views.createPrimaryButton
 
 class CheaterFormDialog(
@@ -19,9 +19,7 @@ class CheaterFormDialog(
     reloadComponents: () -> Unit
 ) : Dialog() {
     private val title: H2 = H2("부정 행위자 등록")
-    private val cheaterRegistrationForm: CheaterForm = CheaterForm {
-        applicantService.findAllByKeyword(it)
-    }
+    private val cheaterRegistrationForm: CheaterForm = CheaterForm { applicantService.findAllByKeyword(it) }
 
     init {
         add(createHeader(), cheaterRegistrationForm, createButtons(reloadComponents))
@@ -49,8 +47,7 @@ class CheaterFormDialog(
     private fun getCreateAddButton(reloadComponent: () -> Unit): Button {
         return createPrimaryButton("저장") {
             try {
-                val bindOrNull = cheaterRegistrationForm.bindOrNull()
-                bindOrNull?.let {
+                cheaterRegistrationForm.bindOrNull()?.let {
                     cheaterService.save(it)
                     reloadComponent()
                     close()
@@ -60,13 +57,6 @@ class CheaterFormDialog(
             } catch (e: NullPointerException) {
                 createNotification("대상을 선택해야 합니다.").open()
             }
-        }
-    }
-
-    private fun createNotification(content: String, durationValue: Int = 1000): Notification {
-        return Notification(content).apply {
-            duration = durationValue
-            position = Notification.Position.MIDDLE
         }
     }
 
