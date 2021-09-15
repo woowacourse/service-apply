@@ -2,6 +2,7 @@ package apply.domain.authenticationcode
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertAll
 import support.test.RepositoryTest
 
 private const val EMAIL: String = "test@email.com"
@@ -17,5 +18,37 @@ class AuthenticationCodeRepositoryTest(
         )
         val actual = authenticationCodeRepository.findFirstByEmailOrderByCreatedDateTimeDesc(EMAIL)
         assertThat(actual).isSameAs(authenticationCodes.last())
+    }
+
+    @Test
+    fun `인증된 이메일을 이메일로 조회한다`() {
+        authenticationCodeRepository.saveAll(
+            listOf(
+                AuthenticationCode("authenticated@email.com", authenticated = true),
+                AuthenticationCode("authenticated@email.com", authenticated = true),
+                AuthenticationCode("unauthenticated@email.com")
+            )
+        )
+        val actual = authenticationCodeRepository.existsByEmailAndAuthenticatedTrue("authenticated@email.com")
+        assertAll(
+            { assertThat(actual).isNotNull() },
+            { assertThat(actual).isTrue() }
+        )
+    }
+
+    @Test
+    fun `인증되지 않은 이메일을 이메일로 조회한다`() {
+        authenticationCodeRepository.saveAll(
+            listOf(
+                AuthenticationCode("authenticated@email.com", authenticated = true),
+                AuthenticationCode("unauthenticated@email.com"),
+                AuthenticationCode("unauthenticated@email.com")
+            )
+        )
+        val actual = authenticationCodeRepository.existsByEmailAndAuthenticatedTrue("unauthenticated@email.com")
+        assertAll(
+            { assertThat(actual).isNotNull() },
+            { assertThat(actual).isFalse() }
+        )
     }
 }

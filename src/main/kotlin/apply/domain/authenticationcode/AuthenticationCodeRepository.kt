@@ -9,4 +9,5 @@ fun AuthenticationCodeRepository.getLastByEmail(email: String): AuthenticationCo
 
 interface AuthenticationCodeRepository : JpaRepository<AuthenticationCode, Long> {
     fun findFirstByEmailOrderByCreatedDateTimeDesc(email: String): AuthenticationCode?
+    fun existsByEmailAndAuthenticatedTrue(email: String): Boolean
 }

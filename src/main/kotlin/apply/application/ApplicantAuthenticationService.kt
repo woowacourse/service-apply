@@ -1,7 +1,7 @@
 package apply.application
 
+import apply.domain.applicant.ApplicantAuthenticatedEmailException
 import apply.domain.applicant.ApplicantAuthenticationException
-import apply.domain.applicant.ApplicantRegisteredEmailException
 import apply.domain.applicant.ApplicantRepository
 import apply.domain.authenticationcode.AuthenticationCode
 import apply.domain.authenticationcode.AuthenticationCodeRepository
@@ -32,7 +32,10 @@ class ApplicantAuthenticationService(
     }
 
     fun generateAuthenticationCode(email: String): String {
-        applicantRepository.findByEmail(email)?.let { throw ApplicantRegisteredEmailException() }
+        applicantRepository.findByEmail(email)?.let { throw ApplicantAuthenticatedEmailException() }
+        if (authenticationCodeRepository.existsByEmailAndAuthenticatedTrue(email)) {
+            throw ApplicantAuthenticatedEmailException()
+        }
         val authenticationCode = authenticationCodeRepository.save(AuthenticationCode(email))
         return authenticationCode.code
     }
