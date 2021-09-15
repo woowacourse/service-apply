@@ -58,13 +58,9 @@ class GroupMailFormView(
             setItems(*EvaluationStatus.values())
             setItemLabelGenerator { it.toText() }
             addValueChangeListener {
-                receivers.clear()
+                clearCurrentReceivers()
                 val mailTargets = mailTargetService.findMailTargets(evaluation.value.id, it.value).map { it.email }
-                receivers.addAll(
-                    mailTargets
-                )
-                println("조회한 mailTargets: $mailTargets")
-                println("현재 receivers: $receivers")
+                mailTargets.forEach { addReceiverComponent(it) }
             }
         }
     }

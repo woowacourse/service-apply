@@ -5,13 +5,18 @@ import apply.application.ApplicantService
 import apply.application.MailTargetService
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
+import com.vaadin.flow.component.Key
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.dialog.Dialog
 import com.vaadin.flow.component.grid.Grid
+import com.vaadin.flow.component.html.Div
 import com.vaadin.flow.component.html.H2
+import com.vaadin.flow.component.icon.Icon
+import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
+import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.data.renderer.ComponentRenderer
 import com.vaadin.flow.data.renderer.Renderer
 import com.vaadin.flow.router.Route
@@ -33,13 +38,43 @@ class IndividualMailFormView(
     }
 
     override fun createReceiverFilter(): Component {
+        return HorizontalLayout(
+            createDirectInsertTargetComponent {
+                if (it.isNotBlank()) {
+                    addReceiverComponent(it)
+                }
+            },
+            createSearchTargetComponent()
+        )
+    }
+
+    private fun createDirectInsertTargetComponent(eventListener: (name: String) -> Unit): Div {
+        val mailTarget = TextField().apply {
+            addKeyDownListener(
+                Key.ENTER,
+                {
+                    eventListener(this.value)
+                    this.value = ""
+                }
+            )
+        }
+
+        return Div(
+            HorizontalLayout(
+                mailTarget,
+                Button(Icon(VaadinIcon.ENTER_ARROW)) {
+                    eventListener(mailTarget.value)
+                    mailTarget.value = ""
+                }
+            )
+        )
+    }
+
+    private fun createSearchTargetComponent(): Button {
         return createNormalButton("지원자 조회") {
             Dialog().apply {
                 width = "800px"
                 height = "90%"
-                val applicants = HorizontalLayout().apply {
-                    setWidthFull()
-                }
                 add(
                     H2("지원자 정보 검색"),
                     HorizontalLayout(
@@ -52,8 +87,7 @@ class IndividualMailFormView(
                             justifyContentMode = FlexComponent.JustifyContentMode.END
                             defaultHorizontalComponentAlignment = FlexComponent.Alignment.END
                         }
-                    ),
-                    applicants
+                    )
                 ).apply {
                     setWidthFull()
                 }
@@ -97,23 +131,23 @@ class IndividualMailFormView(
 
     private fun createAddOrDeleteButton(applicantResponse: ApplicantResponse): Component {
         if (this.receivers.contains(applicantResponse.email)) {
-            return createDeleteButton(applicantResponse)
+            return createTargetDeleteButton(applicantResponse)
         }
 
-        return createAddButton(applicantResponse)
+        return createTargetAddButton(applicantResponse)
     }
 
-    private fun createAddButton(applicantResponse: ApplicantResponse): Button {
+    private fun createTargetAddButton(applicantResponse: ApplicantResponse): Button {
         return createPrimaryButton("추가") {
-            this.receivers.add(applicantResponse.email)
+            addReceiverComponent(applicantResponse.email)
         }.apply {
             isDisableOnClick = true
         }
     }
 
-    private fun createDeleteButton(applicantResponse: ApplicantResponse): Button {
+    private fun createTargetDeleteButton(applicantResponse: ApplicantResponse): Button {
         return createErrorButton("삭제") {
-            this.receivers.remove(applicantResponse.email)
+            removeReceiverComponent(applicantResponse.email)
         }.apply {
             isDisableOnClick = true
         }
