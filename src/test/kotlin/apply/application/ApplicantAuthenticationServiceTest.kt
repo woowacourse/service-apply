@@ -11,6 +11,7 @@ import apply.WRONG_PASSWORD
 import apply.createApplicant
 import apply.domain.applicant.Applicant
 import apply.domain.applicant.ApplicantAuthenticationException
+import apply.domain.applicant.ApplicantRegisteredEmailException
 import apply.domain.applicant.ApplicantRepository
 import apply.domain.authenticationcode.AuthenticationCode
 import apply.domain.authenticationcode.AuthenticationCodeRepository
@@ -135,6 +136,14 @@ internal class ApplicantAuthenticationServiceTest {
             every { authenticationCodeRepository.save(any()) } returns authenticationCode
             assertThat(applicantAuthenticationService.generateAuthenticationCode(authenticationCode.email))
                 .isEqualTo(authenticationCode.code)
+        }
+
+        @Test
+        fun `인증코드 요청시 이미 가입된 이메일이라면 예외가 발생한다`() {
+            every { applicantRepository.findByEmail(any()) } returns createApplicant()
+            assertThrows<ApplicantRegisteredEmailException> {
+                applicantAuthenticationService.generateAuthenticationCode(authenticationCode.email)
+            }
         }
     }
 }
