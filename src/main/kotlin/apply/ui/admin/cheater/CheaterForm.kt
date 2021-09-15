@@ -3,6 +3,7 @@ package apply.ui.admin.cheater
 import apply.application.ApplicantResponse
 import apply.application.CheaterData
 import com.vaadin.flow.component.Component
+import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.select.Select
 import com.vaadin.flow.component.textfield.TextArea
@@ -18,21 +19,18 @@ class CheaterForm() : BindingFormLayout<CheaterData>(CheaterData::class) {
         placeholder = "사유를 입력하세요."
     }
 
-    constructor(listener: (keyword: String) -> List<ApplicantResponse>) : this() {
+    constructor(listener: (String) -> List<ApplicantResponse>) : this() {
         add(createApplicantSearchBar(listener), description)
         setResponsiveSteps(ResponsiveStep("0", 1))
         drawRequired()
     }
 
-    private fun createApplicantSearchBar(listener: (keyword: String) -> List<ApplicantResponse>): Component {
+    private fun createApplicantSearchBar(listener: (String) -> List<ApplicantResponse>): Component {
         val searchBar = createSearchBar("회원 검색") {
-            val founds = listener(it)
-            if (founds.isNotEmpty()) {
-                applicants.setItems(founds)
-            }
+            applicants.setItems(listener(it))
         }
         return HorizontalLayout(searchBar, applicants).apply {
-            defaultVerticalComponentAlignment = searchBar.defaultVerticalComponentAlignment
+            defaultVerticalComponentAlignment = FlexComponent.Alignment.END
         }
     }
 
