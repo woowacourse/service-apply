@@ -1,13 +1,10 @@
 package support.views
 
 import com.vaadin.flow.component.Component
-import com.vaadin.flow.component.ComponentEventListener
 import com.vaadin.flow.component.HasText
 import com.vaadin.flow.component.Key
-import com.vaadin.flow.component.KeyDownEvent
 import com.vaadin.flow.component.Text
 import com.vaadin.flow.component.button.Button
-import com.vaadin.flow.component.html.Div
 import com.vaadin.flow.component.html.H1
 import com.vaadin.flow.component.icon.Icon
 import com.vaadin.flow.component.icon.VaadinIcon
@@ -22,7 +19,7 @@ fun createIntSelect(min: Int = 0, max: Int): Select<Int> {
     return Select(*(min..max).toList().toTypedArray())
 }
 
-fun <T> createItemSelect(title: String): Select<T> {
+fun <T> createItemSelect(title: String = ""): Select<T> {
     val select: Select<T> = Select()
     select.apply {
         label = title
@@ -54,20 +51,20 @@ private fun createTextRenderer(trueText: String, falseText: String): ComponentRe
     }
 }
 
-fun createSearchBar(labelText: String = "", eventListener: (name: String) -> Unit): Div {
+fun createSearchBar(labelText: String = "", eventListener: (name: String) -> Unit): HorizontalLayout {
     val textField = TextField().apply {
         label = labelText
     }
     textField.addKeyDownListener(
         Key.ENTER,
-        ComponentEventListener<KeyDownEvent?> { eventListener(textField.value) }
+        { eventListener(textField.value) }
     )
-    return Div(
-        HorizontalLayout(
-            textField,
-            Button(Icon(VaadinIcon.SEARCH)) { eventListener(textField.value) }
-        )
-    )
+    return HorizontalLayout(
+        textField,
+        Button(Icon(VaadinIcon.SEARCH)) { eventListener(textField.value) }
+    ).apply {
+        defaultVerticalComponentAlignment = FlexComponent.Alignment.END
+    }
 }
 
 class Title(val value: H1) : HorizontalLayout(), HasText {

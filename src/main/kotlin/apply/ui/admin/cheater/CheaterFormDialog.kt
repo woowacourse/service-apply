@@ -19,7 +19,7 @@ class CheaterFormDialog(
     reloadComponents: () -> Unit
 ) : Dialog() {
     private val title: H2 = H2("부정 행위자 등록")
-    private val cheaterRegistrationForm: CheaterForm = CheaterForm() {
+    private val cheaterRegistrationForm: CheaterForm = CheaterForm {
         applicantService.findAllByKeyword(it)
     }
 
