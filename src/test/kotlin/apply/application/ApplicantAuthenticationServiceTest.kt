@@ -11,7 +11,6 @@ import apply.WRONG_PASSWORD
 import apply.createApplicant
 import apply.domain.applicant.Applicant
 import apply.domain.applicant.ApplicantAuthenticationException
-import apply.domain.applicant.ApplicantAuthenticatedEmailException
 import apply.domain.applicant.ApplicantRepository
 import apply.domain.authenticationcode.AuthenticationCode
 import apply.domain.authenticationcode.AuthenticationCodeRepository
@@ -27,6 +26,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertThrows
 import support.test.UnitTest
+import java.lang.IllegalStateException
 
 @UnitTest
 internal class ApplicantAuthenticationServiceTest {
@@ -148,7 +148,7 @@ internal class ApplicantAuthenticationServiceTest {
         @Test
         fun `인증코드 요청시 이미 가입된 이메일이라면 예외가 발생한다`() {
             every { applicantRepository.findByEmail(any()) } returns createApplicant()
-            assertThrows<ApplicantAuthenticatedEmailException> {
+            assertThrows<IllegalStateException> {
                 applicantAuthenticationService.generateAuthenticationCode(authenticationCode.email)
             }
         }
@@ -157,7 +157,7 @@ internal class ApplicantAuthenticationServiceTest {
         fun `인증코드 요청시 이미 인증된 이메일이라면 예외가 발생한다`() {
             every { applicantRepository.findByEmail(any()) } returns null
             every { authenticationCodeRepository.existsByEmailAndAuthenticatedTrue(any()) } returns true
-            assertThrows<ApplicantAuthenticatedEmailException> {
+            assertThrows<IllegalStateException> {
                 applicantAuthenticationService.generateAuthenticationCode(authenticationCode.email)
             }
         }
