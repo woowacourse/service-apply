@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import CommonItem from "../CommonItem/CommonItem";
 
 import { RECRUITMENT_STATUS } from "../../constants/recruitment";
+import PATH from "../../constants/path";
 
 const RecruitItem = ({ recruitment }) => {
   const history = useHistory();
@@ -21,7 +22,7 @@ const RecruitItem = ({ recruitment }) => {
 
   const goApplicantsNewPage = () => {
     history.push({
-      pathname: `/applicants/new`,
+      pathname: PATH.NEW_APPLICATION,
       state: {
         recruitmentId: recruitment.id,
       },

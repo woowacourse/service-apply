@@ -10,7 +10,7 @@ const MainFooter = () => {
           <a
             target="_blank"
             href="https://woowacourse.github.io/"
-            rel="noreferrer"
+            rel="noreferrer noopener"
           >
             <img
               className={styles.logo}
@@ -27,13 +27,13 @@ const MainFooter = () => {
             href="https://woowabros.github.io/techcourse/2020/10/06/woowacourse.html"
             target="_blank"
             className="ti-github"
-            rel="noreferrer"
+            rel="noreferrer noopener"
           ></a>
           <a
             href="https://www.youtube.com/channel/UC-mOekGSesms0agFntnQang/featured?view_as=subscribe"
             target="_blank"
             className="fa fa-youtube-play"
-            rel="noreferrer"
+            rel="noreferrer noopener"
           ></a>
         </div>
       </div>

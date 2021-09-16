@@ -8,7 +8,7 @@ const SummaryCheckField = ({ children, label, required, ...props }) => {
   return (
     <Field>
       <CheckBox label={label} required={required} {...props} />
-      <div className={styles.summary} tabIndex="-1">
+      <div className={styles.summary}>
         <div className={styles.text}>{children}</div>
       </div>
     </Field>

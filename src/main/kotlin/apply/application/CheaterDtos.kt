@@ -4,15 +4,14 @@ import apply.domain.applicant.Applicant
 import apply.domain.cheater.Cheater
 import java.time.LocalDateTime
 import javax.validation.constraints.Email
-import javax.validation.constraints.NotBlank
+import javax.validation.constraints.NotNull
 
 data class CheaterData(
-    @field:NotBlank
+    @field:NotNull
     @field:Email
-    val email: String,
+    var email: String = "",
 
-    @field:NotBlank
-    var description: String
+    var description: String = ""
 )
 
 data class CheaterResponse(
