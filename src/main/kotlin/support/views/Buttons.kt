@@ -10,9 +10,11 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.upload.Upload
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer
+import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer
 
 typealias ClickListener = (ClickEvent<Button>) -> Unit
 typealias UploadSucceededListener = (MemoryBuffer) -> Unit
+typealias ImageUploadSucceededListener = (MultiFileMemoryBuffer) -> Unit
 
 fun createNormalButton(text: String, clickListener: ClickListener): Button {
     return Button(text, clickListener)
@@ -36,6 +38,20 @@ fun createCsvUpload(text: String, receiver: MemoryBuffer, succeededListener: Upl
         uploadButton = createPrimaryButton(text) {}
         addSucceededListener {
             succeededListener(receiver)
+        }
+    }
+}
+
+fun createImageUpload(
+    text: String,
+    receiver: MultiFileMemoryBuffer,
+    imageUploadSucceededListener: ImageUploadSucceededListener
+): Upload {
+    return Upload(receiver).apply {
+        setAcceptedFileTypes("image/jpeg", "image/png", "image/gif")
+        uploadButton = createPrimaryButton(text) { }
+        addSucceededListener {
+            imageUploadSucceededListener(receiver)
         }
     }
 }

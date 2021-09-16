@@ -1,6 +1,5 @@
 package apply.ui.admin.mail
 
-import apply.application.MailTargetService
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.html.H3
@@ -13,29 +12,43 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.textfield.TextArea
 import com.vaadin.flow.component.textfield.TextField
+import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer
 import com.vaadin.flow.router.RoutePrefix
+import support.views.createImageUpload
 import support.views.createPrimaryButton
 
 @RoutePrefix(value = "admin/emails")
-abstract class MailFormView(
-    private val mailTargetService: MailTargetService
-) : VerticalLayout() {
-    protected val title: TextField = TextField("메일 제목", "메일 제목 입력")
-    protected val receivers: MutableList<String> = mutableListOf()
-    protected val content: TextArea = createMailBody()
-    private val currentReceivers = HorizontalLayout()
+abstract class MailFormView() : VerticalLayout() {
+    protected val subject: TextField = TextField("메일 제목", "메일 제목 입력")
+    protected val recipients: MutableList<String> = mutableListOf()
+    protected val body: TextArea = createMailBody()
+    private val currentRecipients = HorizontalLayout()
 
-    abstract fun createReceiverFilter(): Component
+    abstract fun createRecipientFilter(): Component
 
     protected fun createMailForm(): Component {
-        val titleText = VerticalLayout(
+        val subjectText = VerticalLayout(
             H3("메일 제목"),
-            title.apply { setSizeFull() }
+            subject.apply { setSizeFull() }
         )
 
-        val receiverFilter = VerticalLayout(H4("수신자"), createReceiverFilter())
+        val recipientFilter = VerticalLayout(H4("수신자"), createRecipientFilter())
+        val uploadFile = createImageUpload("첨부파일", MultiFileMemoryBuffer()) {
+            /*
+            todo: 추후 업로드 된 파일을 메일로 첨부하는 로직이 추가되어야 함
+             (uploadFiles 같은 필드를 두고 mail을 보내는 기능에 포함시키면 될 것 같음)
+            it.files.forEach { fileName ->
+                val fileData = it.getFileData(fileName)
+                val inputStream = it.getInputStream(fileName)
+                val readBytes = inputStream.readBytes()
+            }
+            */
+        }.apply {
+            setWidthFull()
+        }
+
         val mailBody = VerticalLayout(
-            content
+            body
         ).apply {
             setSizeFull()
         }
@@ -43,9 +56,10 @@ abstract class MailFormView(
         val sendButton = createMailSendButton()
 
         return VerticalLayout(
-            titleText,
-            receiverFilter,
-            currentReceivers.apply { setSizeFull() },
+            subjectText,
+            recipientFilter,
+            currentRecipients.apply { setSizeFull() },
+            uploadFile,
             mailBody,
             sendButton
         ).apply {
@@ -58,8 +72,8 @@ abstract class MailFormView(
     private fun createMailSendButton(): VerticalLayout {
         return VerticalLayout(
             createPrimaryButton("전송") {
-                println("title: ${title.value}  receivers: ${this.receivers}  content: ${this.content.value}")
-                // todo: emailService.메일전송(title.value, receivers, content.value)
+                // todo: emailService.메일전송(subject.value, recipients, body.value)
+                // MailService에
             }
         ).apply {
             setSizeFull()
@@ -68,28 +82,28 @@ abstract class MailFormView(
         }
     }
 
-    protected fun addReceiverComponent(email: String) {
-        this.currentReceivers.apply {
-            receivers.add(email)
-            add(createReceiverComponent(email))
+    protected fun addRecipientComponent(email: String) {
+        this.currentRecipients.apply {
+            recipients.add(email)
+            add(createRecipientComponent(email))
         }
     }
 
-    protected fun clearCurrentReceivers() {
-        this.currentReceivers.removeAll()
-        this.receivers.clear()
+    protected fun clearCurrentRecipients() {
+        this.currentRecipients.removeAll()
+        this.recipients.clear()
     }
 
-    protected fun removeReceiverComponent(email: String) {
-        receivers.remove(email)
-        addAllCurrentReceiverComponent()
+    protected fun removeRecipientComponent(email: String) {
+        recipients.remove(email)
+        addAllCurrentRecipientComponent()
     }
 
-    private fun addAllCurrentReceiverComponent() {
-        this.currentReceivers.removeAll()
-        this.currentReceivers.apply {
-            receivers.forEach {
-                add(createReceiverComponent(it))
+    private fun addAllCurrentRecipientComponent() {
+        this.currentRecipients.removeAll()
+        this.currentRecipients.apply {
+            recipients.forEach {
+                add(createRecipientComponent(it))
             }
         }
     }
@@ -102,7 +116,7 @@ abstract class MailFormView(
         }
     }
 
-    private fun createReceiverComponent(email: String): Component {
+    private fun createRecipientComponent(email: String): Component {
         val emailTarget = TextField().apply {
             value = email
             isReadOnly = true
@@ -112,7 +126,7 @@ abstract class MailFormView(
         return Span(
             emailTarget,
             Button(Icon(VaadinIcon.CLOSE_SMALL)) {
-                removeReceiverComponent(email)
+                removeRecipientComponent(email)
             }
         )
     }

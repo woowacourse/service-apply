@@ -19,7 +19,7 @@ class GroupMailFormView(
     private val recruitmentService: RecruitmentService,
     private val evaluationService: EvaluationService,
     private val mailTargetService: MailTargetService
-) : MailFormView(mailTargetService) {
+) : MailFormView() {
     private val recruitment: Select<RecruitmentResponse>
     private val evaluation: Select<Evaluation>
     private val evaluationStatus: Select<EvaluationStatus>
@@ -32,7 +32,7 @@ class GroupMailFormView(
         setWidthFull()
     }
 
-    override fun createReceiverFilter(): Component {
+    override fun createRecipientFilter(): Component {
         return HorizontalLayout(recruitment, evaluation, evaluationStatus)
     }
 
@@ -58,9 +58,9 @@ class GroupMailFormView(
             setItems(*EvaluationStatus.values())
             setItemLabelGenerator { it.toText() }
             addValueChangeListener {
-                clearCurrentReceivers()
+                clearCurrentRecipients()
                 val mailTargets = mailTargetService.findMailTargets(evaluation.value.id, it.value).map { it.email }
-                mailTargets.forEach { addReceiverComponent(it) }
+                mailTargets.forEach { addRecipientComponent(it) }
             }
         }
     }

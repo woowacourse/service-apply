@@ -2,7 +2,6 @@ package apply.ui.admin.mail
 
 import apply.application.ApplicantResponse
 import apply.application.ApplicantService
-import apply.application.MailTargetService
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.Key
@@ -29,19 +28,18 @@ import support.views.createSearchBar
 
 @Route(value = "personal", layout = BaseLayout::class)
 class IndividualMailFormView(
-    private val applicantService: ApplicantService,
-    mailTargetService: MailTargetService
-) : MailFormView(mailTargetService) {
+    private val applicantService: ApplicantService
+) : MailFormView() {
     init {
         add(Title("개별 발송"), createMailForm())
         setWidthFull()
     }
 
-    override fun createReceiverFilter(): Component {
+    override fun createRecipientFilter(): Component {
         return HorizontalLayout(
             createDirectInsertTargetComponent {
                 if (it.isNotBlank()) {
-                    addReceiverComponent(it)
+                    addRecipientComponent(it)
                 }
             },
             createSearchTargetComponent()
@@ -78,7 +76,7 @@ class IndividualMailFormView(
                 add(
                     H2("지원자 정보 검색"),
                     HorizontalLayout(
-                        createAddReceivers(),
+                        createAddRecipients(),
                         HorizontalLayout(
                             createErrorButton("취소") {
                                 close()
@@ -96,7 +94,7 @@ class IndividualMailFormView(
         }.apply { isEnabled = true }
     }
 
-    private fun createAddReceivers(): Component {
+    private fun createAddRecipients(): Component {
         val container = VerticalLayout()
         return VerticalLayout(
             createSearchBar {
@@ -130,7 +128,7 @@ class IndividualMailFormView(
     }
 
     private fun createAddOrDeleteButton(applicantResponse: ApplicantResponse): Component {
-        if (this.receivers.contains(applicantResponse.email)) {
+        if (this.recipients.contains(applicantResponse.email)) {
             return createTargetDeleteButton(applicantResponse)
         }
 
@@ -139,7 +137,7 @@ class IndividualMailFormView(
 
     private fun createTargetAddButton(applicantResponse: ApplicantResponse): Button {
         return createPrimaryButton("추가") {
-            addReceiverComponent(applicantResponse.email)
+            addRecipientComponent(applicantResponse.email)
         }.apply {
             isDisableOnClick = true
         }
@@ -147,7 +145,7 @@ class IndividualMailFormView(
 
     private fun createTargetDeleteButton(applicantResponse: ApplicantResponse): Button {
         return createErrorButton("삭제") {
-            removeReceiverComponent(applicantResponse.email)
+            removeRecipientComponent(applicantResponse.email)
         }.apply {
             isDisableOnClick = true
         }
