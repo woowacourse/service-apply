@@ -107,8 +107,6 @@ internal class ApplicantRestControllerTest : RestControllerTest() {
         ApplicantResponse(createApplicant("로키"))
     )
 
-    private val authenticationCode = AuthenticationCode("authentication-code@email.com")
-
     @Test
     fun `유효한 지원자 생성 및 검증 요청에 대하여 응답으로 토큰이 반환된다`() {
         every { applicantAuthenticationService.generateToken(applicantRequest) } returns VALID_TOKEN
@@ -239,6 +237,7 @@ internal class ApplicantRestControllerTest : RestControllerTest() {
 
     @Test
     fun `이메일 인증 코드 요청에 응답으로 NoContent를 반환한다`() {
+        val authenticationCode = AuthenticationCode("authentication-code@email.com")
         every { applicantAuthenticationService.generateAuthenticationCode(any()) } returns authenticationCode.code
         every { mailService.sendAuthenticationCodeMail(authenticationCode.email, authenticationCode.code) } just Runs
 

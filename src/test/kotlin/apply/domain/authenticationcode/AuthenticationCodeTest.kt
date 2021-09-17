@@ -42,8 +42,8 @@ internal class AuthenticationCodeTest {
 
     @Test
     fun `인증시간이 10분이 지나면 인증할 수 없다`() {
-        val authenticationCode =
-            AuthenticationCode(EMAIL, VALID_CODE, createdDateTime = LocalDateTime.now().minusMinutes(11L))
+        val now = LocalDateTime.now()
+        val authenticationCode = AuthenticationCode(EMAIL, VALID_CODE, createdDateTime = now.minusMinutes(11L))
         assertThrows<IllegalStateException> { authenticationCode.authenticate(VALID_CODE) }
     }
 }

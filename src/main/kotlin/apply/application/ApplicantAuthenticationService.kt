@@ -2,6 +2,8 @@ package apply.application
 
 import apply.domain.applicant.ApplicantAuthenticationException
 import apply.domain.applicant.ApplicantRepository
+import apply.domain.applicant.existsByEmail
+import apply.domain.applicant.findByEmail
 import apply.domain.authenticationcode.AuthenticationCode
 import apply.domain.authenticationcode.AuthenticationCodeRepository
 import apply.domain.authenticationcode.getLastByEmail
@@ -32,7 +34,6 @@ class ApplicantAuthenticationService(
 
     fun generateAuthenticationCode(email: String): String {
         check(!applicantRepository.existsByEmail(email)) { "이미 등록된 이메일입니다." }
-        check(!authenticationCodeRepository.existsByEmailAndAuthenticatedTrue(email))
         val authenticationCode = authenticationCodeRepository.save(AuthenticationCode(email))
         return authenticationCode.code
     }

@@ -59,7 +59,8 @@ class ApplicantRestController(
     fun generateAuthenticationCode(
         @RequestParam email: String
     ): ResponseEntity<Unit> {
-        val authenticateCode = applicantAuthenticationService.generateAuthenticationCode(email)
+        val authenticateCode = applicantAuthenticationService
+            .generateAuthenticationCode(email)
         mailService.sendAuthenticationCodeMail(email, authenticateCode)
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
     }
