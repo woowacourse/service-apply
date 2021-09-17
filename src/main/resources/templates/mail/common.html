@@ -7,17 +7,11 @@
   </head>
   <body>
     <table
-      class="root"
       border="0"
       cellpadding="0"
       cellspacing="0"
       width="100%"
-      style="
-        font-family: sans-serif;
-        color: #333333;
-        padding: 0;
-        font-size: 16px;
-      "
+      style="color: #333333; padding: 0; font-size: 16px"
     >
       <tr style="color: #333333; padding: 0; font-size: 16px">
         <td align="center" style="color: #333333; padding: 0; font-size: 16px">
@@ -49,12 +43,7 @@
                   border="0"
                   cellpadding="0"
                   cellspacing="0"
-                  style="
-                    width: 100%;
-                    color: #333333;
-                    padding: 0;
-                    font-size: 16px;
-                  "
+                  style="color: #333333; padding: 0; font-size: 16px"
                 >
                   <tr style="color: #333333; padding: 0; font-size: 16px">
                     <td
@@ -68,33 +57,7 @@
                         padding-top: 48px;
                       "
                     >
-                      이메일 인증코드
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style="text-align: center; padding-top: 64px">
-                      <table
-                        align="center"
-                        class="auth-code"
-                        style="
-                          width: 374px;
-                          height: 98px;
-                          background-color: #f1f2f6;
-                          font-size: 48px;
-                          font-weight: bold;
-                          text-align: center;
-                          border-radius: 4px;
-                          margin-left: auto;
-                          margin-right: auto;
-                        "
-                        width="374"
-                        height="98"
-                        bgcolor="#f1f2f6"
-                      >
-                        <tr>
-                          <td><span th:text="${authenticationCode}"></span></td>
-                        </tr>
-                      </table>
+                      <span th:text="${title}"></span>
                     </td>
                   </tr>
                   <tr style="color: #333333; padding: 0; font-size: 16px">
@@ -102,17 +65,15 @@
                       id="content"
                       style="
                         color: #333333;
-                        width: 100%;
                         padding: 0;
                         font-size: 16px;
-                        padding-top: 48px;
-                        padding-bottom: 64px;
-                        text-align: center;
+                        padding-top: 32px;
+                        padding-bottom: 48px;
+                        padding-left: 8px;
+                        padding-right: 8px;
                       "
                     >
-                      이메일 인증코드가 발급 되었습니다.
-                      <br />
-                      해당 문자 를 인증코드 입력창에 입력해주세요.
+                      <span th:text="${content}"></span>
                     </td>
                   </tr>
                 </table>
