@@ -68,16 +68,17 @@ class EvaluationTargetService(
             .map { it.applicantId }
             .toSet()
 
-        evaluationTargetRepository.deleteByEvaluationIdAndApplicantIdIn(
-            evaluationId,
-            currentApplicantIds.filter {
-                !updatingApplicantIds.contains(it) || cheaterApplicantIds.contains(it)
-            }
-        )
+        val droppedApplicantIds = currentApplicantIds - updatingApplicantIds
+        evaluationTargetRepository.deleteByEvaluationIdAndApplicantIdIn(evaluationId, droppedApplicantIds)
 
-        val newApplicantIds = updatingApplicantIds - (currentApplicantIds + cheaterApplicantIds)
-        save(newApplicantIds, evaluation, EvaluationStatus.WAITING)
-        save(cheaterApplicantIds, evaluation, EvaluationStatus.FAIL)
+        val currentCheaterIds = currentApplicantIds intersect cheaterApplicantIds
+        updateFail(currentCheaterIds, evaluation)
+
+        val newWaitingApplicantIds = updatingApplicantIds - (currentApplicantIds + cheaterApplicantIds)
+        save(newWaitingApplicantIds, evaluation, EvaluationStatus.WAITING)
+
+        val newCheaterIds = cheaterApplicantIds - currentCheaterIds
+        save(newCheaterIds, evaluation, EvaluationStatus.FAIL)
     }
 
     private fun createUpdatingEvaluationTargets(evaluation: Evaluation): List<EvaluationTarget> {
@@ -112,6 +113,12 @@ class EvaluationTargetService(
                 )
             }
         evaluationTargetRepository.saveAll(evaluationTargets)
+    }
+
+    private fun updateFail(applicantIds: Set<Long>, evaluation: Evaluation) {
+        evaluationTargetRepository.findAllByEvaluationIdAndApplicantIdIn(evaluation.id, applicantIds).forEach {
+            it.evaluationStatus = EvaluationStatus.FAIL
+        }
     }
 
     fun getGradeEvaluation(targetId: Long): GradeEvaluationResponse {

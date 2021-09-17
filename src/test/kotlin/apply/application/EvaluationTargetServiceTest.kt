@@ -185,7 +185,7 @@ class EvaluationTargetServiceTest(
         every { applicationFormRepository.findByRecruitmentIdAndSubmittedTrue(any()) } returns allApplicationForms
         every { applicantRepository.findAllById(listOf(1L, 2L, 3L, 4L)) } returns allApplicants
         every { applicantRepository.findAllById(setOf(4L)) } returns listOf(addingApplicant)
-        every { applicantRepository.findAllById(setOf(3L)) } returns listOf(createApplicant(3L))
+        every { applicantRepository.findAllById(setOf()) } returns listOf()
 
         evaluationTargetService.load(firstEvaluation.id)
 
@@ -198,10 +198,10 @@ class EvaluationTargetServiceTest(
             { assertThat(actual[0].evaluationStatus).isEqualTo(FAIL) },
             { assertThat(actual[1].applicantId).isEqualTo(2L) },
             { assertThat(actual[1].evaluationStatus).isEqualTo(PASS) },
-            { assertThat(actual[2].applicantId).isEqualTo(4L) },
-            { assertThat(actual[2].evaluationStatus).isEqualTo(WAITING) },
-            { assertThat(actual[3].applicantId).isEqualTo(3L) },
-            { assertThat(actual[3].evaluationStatus).isEqualTo(FAIL) }
+            { assertThat(actual[2].applicantId).isEqualTo(3L) },
+            { assertThat(actual[2].evaluationStatus).isEqualTo(FAIL) },
+            { assertThat(actual[3].applicantId).isEqualTo(4L) },
+            { assertThat(actual[3].evaluationStatus).isEqualTo(WAITING) }
         )
     }
 
@@ -234,7 +234,7 @@ class EvaluationTargetServiceTest(
         every { cheaterRepository.findAll() } returns listOf(Cheater("3@email.com"))
         every { applicantRepository.findAllByEmailIn(listOf("3@email.com")) } returns listOf(createApplicant(3L))
         every { applicantRepository.findAllById(setOf(4L)) } returns listOf(addingApplicant)
-        every { applicantRepository.findAllById(setOf(3L)) } returns listOf(createApplicant(3L))
+        every { applicantRepository.findAllById(setOf()) } returns listOf()
 
         evaluationTargetService.load(secondEvaluation.id)
 
@@ -245,10 +245,10 @@ class EvaluationTargetServiceTest(
             { assertThat(actual).hasSize(3) },
             { assertThat(actual[0].applicantId).isEqualTo(2L) },
             { assertThat(actual[0].evaluationStatus).isEqualTo(PASS) },
-            { assertThat(actual[1].applicantId).isEqualTo(4L) },
-            { assertThat(actual[1].evaluationStatus).isEqualTo(WAITING) },
-            { assertThat(actual[2].applicantId).isEqualTo(3L) },
-            { assertThat(actual[2].evaluationStatus).isEqualTo(FAIL) }
+            { assertThat(actual[1].applicantId).isEqualTo(3L) },
+            { assertThat(actual[1].evaluationStatus).isEqualTo(FAIL) },
+            { assertThat(actual[2].applicantId).isEqualTo(4L) },
+            { assertThat(actual[2].evaluationStatus).isEqualTo(WAITING) }
         )
     }
 
