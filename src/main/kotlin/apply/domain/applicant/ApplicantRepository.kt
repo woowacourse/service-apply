@@ -13,4 +13,7 @@ interface ApplicantRepository : JpaRepository<Applicant, Long> {
 
     @Query("select a from Applicant a where a.information.email in :emails")
     fun findAllByEmailIn(@Param("emails") emails: List<String>): List<Applicant>
+
+    @Query("select case when count(a)> 0 then true else false end from Applicant a where a.information.email = :email")
+    fun existsByEmail(@Param("email") email: String): Boolean
 }

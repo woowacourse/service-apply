@@ -8,7 +8,6 @@ import apply.domain.authenticationcode.getLastByEmail
 import apply.security.JwtTokenProvider
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.lang.IllegalStateException
 
 @Transactional
 @Service
@@ -32,7 +31,7 @@ class ApplicantAuthenticationService(
     }
 
     fun generateAuthenticationCode(email: String): String {
-        applicantRepository.findByEmail(email)?.let { throw IllegalStateException() }
+        check(!applicantRepository.existsByEmail(email))
         check(!authenticationCodeRepository.existsByEmailAndAuthenticatedTrue(email))
         val authenticationCode = authenticationCodeRepository.save(AuthenticationCode(email))
         return authenticationCode.code

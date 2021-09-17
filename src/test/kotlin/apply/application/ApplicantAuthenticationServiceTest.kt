@@ -26,7 +26,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertThrows
 import support.test.UnitTest
-import java.lang.IllegalStateException
 
 @UnitTest
 internal class ApplicantAuthenticationServiceTest {
@@ -134,20 +133,19 @@ internal class ApplicantAuthenticationServiceTest {
 
         @Test
         fun `인증 코드를 생성한다`() {
-            every { applicantRepository.findByEmail(any()) } returns null
+            every { applicantRepository.existsByEmail(any()) } returns false
             every { authenticationCodeRepository.existsByEmailAndAuthenticatedTrue(any()) } returns false
             every { authenticationCodeRepository.save(any()) } returns authenticationCode
-            val generatedAuthenticationCode =
-                applicantAuthenticationService.generateAuthenticationCode(authenticationCode.email)
+            val actual = applicantAuthenticationService.generateAuthenticationCode(authenticationCode.email)
             assertAll(
-                { assertThat(generatedAuthenticationCode).isEqualTo(authenticationCode.code) },
+                { assertThat(actual).isEqualTo(authenticationCode.code) },
                 { assertThat(authenticationCode.authenticated).isFalse() }
             )
         }
 
         @Test
         fun `인증코드 요청시 이미 가입된 이메일이라면 예외가 발생한다`() {
-            every { applicantRepository.findByEmail(any()) } returns createApplicant()
+            every { applicantRepository.existsByEmail(any()) } returns true
             assertThrows<IllegalStateException> {
                 applicantAuthenticationService.generateAuthenticationCode(authenticationCode.email)
             }
@@ -155,7 +153,7 @@ internal class ApplicantAuthenticationServiceTest {
 
         @Test
         fun `인증코드 요청시 이미 인증된 이메일이라면 예외가 발생한다`() {
-            every { applicantRepository.findByEmail(any()) } returns null
+            every { applicantRepository.existsByEmail(any()) } returns false
             every { authenticationCodeRepository.existsByEmailAndAuthenticatedTrue(any()) } returns true
             assertThrows<IllegalStateException> {
                 applicantAuthenticationService.generateAuthenticationCode(authenticationCode.email)
