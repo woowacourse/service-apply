@@ -150,8 +150,7 @@ const ApplicationRegister = () => {
           error.response.data.message === ERROR_MESSAGE.API.ALREADY_REGISTER;
 
         if (isAlreadyRegister) {
-          alert(ERROR_MESSAGE.API.ALREADY_HAS_APPLICATION);
-          history.replace(PATH.LOGIN);
+          await fetchApplicationForm();
         } else {
           alert(error.response.data.message);
           history.replace(PATH.HOME);
