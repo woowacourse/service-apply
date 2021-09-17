@@ -4,6 +4,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertThrows
+import java.time.LocalDateTime
 
 private const val EMAIL: String = "test@email.com"
 private const val VALID_CODE: String = "VALID"
@@ -37,5 +38,12 @@ internal class AuthenticationCodeTest {
     fun `코드가 일치하지 않으면 인증할 수 없다`() {
         val authenticationCode = AuthenticationCode(EMAIL, VALID_CODE)
         assertThrows<IllegalArgumentException> { authenticationCode.authenticate(INVALID_CODE) }
+    }
+
+    @Test
+    fun `인증시간이 10분이 지나면 인증할 수 없다`() {
+        val authenticationCode =
+            AuthenticationCode(EMAIL, VALID_CODE, createdDateTime = LocalDateTime.now().minusMinutes(11L))
+        assertThrows<IllegalStateException> { authenticationCode.authenticate(VALID_CODE) }
     }
 }

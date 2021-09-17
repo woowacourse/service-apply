@@ -6,6 +6,8 @@ import java.util.UUID
 import javax.persistence.Column
 import javax.persistence.Entity
 
+private const val EXPIRY_MINUTE_TIME = 10L
+
 @Entity
 class AuthenticationCode(
     @Column(nullable = false)
@@ -23,6 +25,7 @@ class AuthenticationCode(
     fun authenticate(code: String) {
         check(!authenticated) { "이미 인증되었습니다." }
         require(this.code == code) { "인증 코드가 일치하지 않습니다." }
+        check(createdDateTime.plusMinutes(EXPIRY_MINUTE_TIME) > LocalDateTime.now()) { "인증 코드가 만료되었습니다." }
         authenticated = true
     }
 }
