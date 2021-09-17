@@ -23,7 +23,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertThrows
 import support.test.UnitTest
 
@@ -137,10 +136,7 @@ internal class ApplicantAuthenticationServiceTest {
             every { authenticationCodeRepository.existsByEmailAndAuthenticatedTrue(any()) } returns false
             every { authenticationCodeRepository.save(any()) } returns authenticationCode
             val actual = applicantAuthenticationService.generateAuthenticationCode(authenticationCode.email)
-            assertAll(
-                { assertThat(actual).isEqualTo(authenticationCode.code) },
-                { assertThat(authenticationCode.authenticated).isFalse() }
-            )
+            assertThat(actual).isEqualTo(authenticationCode.code)
         }
 
         @Test
