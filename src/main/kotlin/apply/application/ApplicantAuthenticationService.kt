@@ -31,7 +31,7 @@ class ApplicantAuthenticationService(
     }
 
     fun generateAuthenticationCode(email: String): String {
-        check(!applicantRepository.existsByEmail(email))
+        check(!applicantRepository.existsByEmail(email)) { "이미 등록된 이메일입니다." }
         check(!authenticationCodeRepository.existsByEmailAndAuthenticatedTrue(email))
         val authenticationCode = authenticationCodeRepository.save(AuthenticationCode(email))
         return authenticationCode.code
