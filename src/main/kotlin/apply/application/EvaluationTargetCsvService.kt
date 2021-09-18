@@ -12,7 +12,7 @@ import org.apache.commons.csv.CSVRecord
 import org.springframework.stereotype.Service
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream
-import java.io.InputStreamReader
+import java.io.InputStream
 import javax.transaction.Transactional
 
 @Transactional
@@ -50,21 +50,23 @@ class EvaluationTargetCsvService(
         return evaluationItems.map { answerScores[it.id] ?: "0" }
     }
 
-    fun updateTarget(reader: InputStreamReader, evaluationId: Long) {
+    fun updateTarget(inputStream: InputStream, evaluationId: Long) {
         val evaluationItems = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluationId)
-        val csvParser = CSVParser(
-            BufferedReader(reader),
-            CSVFormat.DEFAULT
-                .withFirstRecordAsHeader()
-                .withTrim()
-        )
-        for (csvRecord in csvParser) {
-            var targetId = csvRecord.get(ID)
-            var name = csvRecord.get(NAME)
-            var email = csvRecord.get(EMAIL)
-            var evaluationStatus = EvaluationStatus.valueOf(csvRecord.get(STATUS))
-            val evaluationAnswers = readEvaluationAnswers(evaluationItems, csvRecord)
-            // TODO: 평가 대상자 상태 업데이트 기능 구현
+        inputStream.use {
+            val csvParser = CSVParser(
+                BufferedReader(it.reader()),
+                CSVFormat.DEFAULT
+                    .withFirstRecordAsHeader()
+                    .withTrim()
+            )
+            for (csvRecord in csvParser) {
+                var targetId = csvRecord.get(ID)
+                var name = csvRecord.get(NAME)
+                var email = csvRecord.get(EMAIL)
+                var evaluationStatus = EvaluationStatus.valueOf(csvRecord.get(STATUS))
+                val evaluationAnswers = readEvaluationAnswers(evaluationItems, csvRecord)
+                // TODO: 평가 대상자 상태 업데이트 기능 구현
+            }
         }
     }
 

@@ -79,7 +79,7 @@ class EvaluationTargetRestController(
         @PathVariable evaluationId: Long,
         @RequestParam file: MultipartFile
     ): ResponseEntity<Unit> {
-        evaluationTargetCsvService.updateTarget(file.inputStream.reader(), evaluationId)
+        evaluationTargetCsvService.updateTarget(file.inputStream, evaluationId)
         return ResponseEntity.ok().build()
     }
 }

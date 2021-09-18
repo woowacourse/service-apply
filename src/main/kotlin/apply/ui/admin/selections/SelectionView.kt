@@ -221,7 +221,7 @@ class SelectionView(
     private fun createEvaluationFileUpload(): Upload {
         return createCsvUpload("평가지 업로드", MemoryBuffer()) {
             val evaluation = evaluations[tabs.selectedIndex - 1]
-            evaluationTargetCsvService.updateTarget(it.inputStream.reader(), evaluation.id)
+            evaluationTargetCsvService.updateTarget(it.inputStream, evaluation.id)
         }
     }
 
