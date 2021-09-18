@@ -10,7 +10,6 @@ import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.apache.commons.csv.CSVRecord
 import org.springframework.stereotype.Service
-import java.io.BufferedReader
 import java.io.ByteArrayInputStream
 import java.io.InputStream
 import javax.transaction.Transactional
@@ -52,9 +51,9 @@ class EvaluationTargetCsvService(
 
     fun updateTarget(inputStream: InputStream, evaluationId: Long) {
         val evaluationItems = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluationId)
-        inputStream.use {
+        inputStream.bufferedReader().use { reader ->
             val csvParser = CSVParser(
-                BufferedReader(it.reader()),
+                reader,
                 CSVFormat.DEFAULT
                     .withFirstRecordAsHeader()
                     .withTrim()

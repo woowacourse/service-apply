@@ -8,10 +8,9 @@ import java.io.ByteArrayInputStream
 @Component
 class CsvGenerator {
     fun generateBy(headerTitles: Array<String>, rows: List<CsvRow>): ByteArrayInputStream {
-        val csvPrinter = CSVPrinter(StringBuilder(), CSVFormat.DEFAULT).apply {
-            printRecords(headerTitles)
-            rows.forEach { printRecord(it.data) }
+        return CSVPrinter(StringBuilder(), CSVFormat.DEFAULT.withHeader(*headerTitles)).use { csvPrinter ->
+            rows.forEach { csvPrinter.printRecord(it.data) }
+            ByteArrayInputStream(csvPrinter.out.toString().toByteArray())
         }
-        return ByteArrayInputStream(csvPrinter.out.toString().toByteArray())
     }
 }
