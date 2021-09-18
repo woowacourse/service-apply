@@ -1,7 +1,7 @@
 package apply.ui.api
 
 import apply.application.EvaluationService
-import apply.application.FileService
+import apply.application.ExcelService
 import apply.application.RecruitmentService
 import org.springframework.core.io.InputStreamResource
 import org.springframework.http.ContentDisposition
@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/recruitments/{recruitmentId}")
-class FileController(
-    private val fileService: FileService,
+class ExcelController(
+    private val excelService: ExcelService,
     private val recruitmentService: RecruitmentService,
     private val evaluationService: EvaluationService
 ) {
     @GetMapping("/applicants/excel")
     fun createApplicantExcel(@PathVariable recruitmentId: Long): ResponseEntity<InputStreamResource> {
-        val excel = fileService.createApplicantExcel(recruitmentId)
+        val excel = excelService.createApplicantExcel(recruitmentId)
         val recruitment = recruitmentService.getById(recruitmentId)
         val headers = HttpHeaders().apply {
             contentDisposition = ContentDisposition.builder("attachment")
@@ -38,7 +38,7 @@ class FileController(
         @PathVariable recruitmentId: Long,
         @PathVariable evaluationId: Long
     ): ResponseEntity<InputStreamResource> {
-        val excel = fileService.createTargetExcel(evaluationId)
+        val excel = excelService.createTargetExcel(evaluationId)
         val evaluation = evaluationService.findById(evaluationId)
         val headers = HttpHeaders().apply {
             contentDisposition = ContentDisposition.builder("attachment")

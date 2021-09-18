@@ -2,6 +2,7 @@ package apply.application
 
 import apply.createEvaluationItem
 import apply.domain.evaluationItem.EvaluationItemRepository
+import apply.utils.CsvGenerator
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
@@ -14,15 +15,21 @@ import java.io.File
 import java.io.FileReader
 
 @UnitTest
-class CsvTargetServiceTest {
+class EvaluationTargetCsvServiceTest {
+    @MockK
+    private lateinit var evaluationTargetService: EvaluationTargetService
+
     @MockK
     private lateinit var evaluationItemRepository: EvaluationItemRepository
 
-    private lateinit var csvTargetService: CsvTargetService
+    @MockK
+    private lateinit var csvGenerator: CsvGenerator
+
+    private lateinit var evaluationTargetCsvService: EvaluationTargetCsvService
 
     @BeforeEach
     internal fun setUp() {
-        csvTargetService = CsvTargetService(evaluationItemRepository)
+        evaluationTargetCsvService = EvaluationTargetCsvService(evaluationTargetService, evaluationItemRepository, csvGenerator)
     }
 
     @Test
@@ -37,7 +44,7 @@ class CsvTargetServiceTest {
 
         every { evaluationItemRepository.findByEvaluationIdOrderByPosition(any()) } returns evaluationItems
 
-        assertDoesNotThrow { csvTargetService.updateTarget(reader, 1L) }
+        assertDoesNotThrow { evaluationTargetCsvService.updateTarget(reader, 1L) }
     }
 
     @Test
@@ -51,7 +58,7 @@ class CsvTargetServiceTest {
 
         every { evaluationItemRepository.findByEvaluationIdOrderByPosition(any()) } returns evaluationItems
 
-        assertThrows<IllegalArgumentException> { csvTargetService.updateTarget(reader, 1L) }
+        assertThrows<IllegalArgumentException> { evaluationTargetCsvService.updateTarget(reader, 1L) }
     }
 
     @Test
@@ -65,7 +72,7 @@ class CsvTargetServiceTest {
 
         every { evaluationItemRepository.findByEvaluationIdOrderByPosition(any()) } returns evaluationItems
 
-        val message = assertThrows<IllegalArgumentException> { csvTargetService.updateTarget(reader, 1L) }.message
+        val message = assertThrows<IllegalArgumentException> { evaluationTargetCsvService.updateTarget(reader, 1L) }.message
         assertThat(message).isEqualTo("평가 항목의 최대 점수보다 높은 점수입니다.")
     }
 

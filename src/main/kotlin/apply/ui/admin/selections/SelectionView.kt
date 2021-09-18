@@ -2,11 +2,11 @@ package apply.ui.admin.selections
 
 import apply.application.ApplicantAndFormResponse
 import apply.application.ApplicantService
-import apply.application.CsvTargetService
+import apply.application.EvaluationTargetCsvService
 import apply.application.EvaluationService
 import apply.application.EvaluationTargetResponse
 import apply.application.EvaluationTargetService
-import apply.application.FileService
+import apply.application.ExcelService
 import apply.application.RecruitmentItemService
 import apply.application.RecruitmentService
 import apply.domain.applicationform.ApplicationForm
@@ -52,8 +52,8 @@ class SelectionView(
     private val recruitmentItemService: RecruitmentItemService,
     private val evaluationService: EvaluationService,
     private val evaluationTargetService: EvaluationTargetService,
-    private val fileService: FileService,
-    private val csvTargetService: CsvTargetService
+    private val excelService: ExcelService,
+    private val evaluationTargetCsvService: EvaluationTargetCsvService
 ) : VerticalLayout(), HasUrlParameter<Long> {
     private var recruitmentId: Long = 0L
     private var evaluations: List<Evaluation> = evaluationService.findAllByRecruitmentId(recruitmentId)
@@ -213,7 +213,7 @@ class SelectionView(
     private fun createEvaluationFileDownloadButton(): Button {
         return createSuccessButton("평가지 다운로드") {
             val evaluation = evaluations[tabs.selectedIndex - 1]
-            val csv = fileService.createTargetCsv(evaluation.id)
+            val csv = evaluationTargetCsvService.createTargetCsv(evaluation.id)
             downloadFile("${evaluation.title}.csv", csv)
         }
     }
@@ -221,18 +221,18 @@ class SelectionView(
     private fun createEvaluationFileUpload(): Upload {
         return createCsvUpload("평가지 업로드", MemoryBuffer()) {
             val evaluation = evaluations[tabs.selectedIndex - 1]
-            csvTargetService.updateTarget(it.inputStream.reader(), evaluation.id)
+            evaluationTargetCsvService.updateTarget(it.inputStream.reader(), evaluation.id)
         }
     }
 
     private fun createResultDownloadButton(): Button {
         return createSuccessButton("평가결과 다운로드") {
             if (isTotalApplicantTab(tabs.selectedTab)) {
-                val excel = fileService.createApplicantExcel(recruitmentId)
+                val excel = excelService.createApplicantExcel(recruitmentId)
                 downloadFile("${recruitmentService.getById(recruitmentId).title}.xlsx", excel)
             } else {
                 val evaluation = evaluations[tabs.selectedIndex - 1]
-                val excel = fileService.createTargetExcel(evaluation.id)
+                val excel = excelService.createTargetExcel(evaluation.id)
                 downloadFile("${evaluation.title}.xlsx", excel)
             }
         }
