@@ -39,7 +39,7 @@ class EvaluationTargetCsvService(
         return csvGenerator.generateBy(headerTitles, csvRows)
     }
 
-    private fun EvaluationItem.toHeader() = "${this.title}(${this.maximumScore})"
+    private fun EvaluationItem.toHeader(): String = "${this.title}(${this.maximumScore})"
 
     private fun scores(
         answers: List<EvaluationAnswerResponse>,
@@ -72,7 +72,7 @@ class EvaluationTargetCsvService(
     private fun readEvaluationAnswers(
         evaluationItems: List<EvaluationItem>,
         csvRecord: CSVRecord
-    ) = evaluationItems.map { evaluationItem ->
+    ): List<EvaluationAnswer> = evaluationItems.map { evaluationItem ->
         val score = csvRecord.get(evaluationItem.toHeader())
         require(score.isNotBlank()) { "평가 항목의 점수에 빈 값이 들어갈 수 없습니다" }
         require(score.toInt() <= evaluationItem.maximumScore) { "평가 항목의 최대 점수보다 높은 점수입니다." }
