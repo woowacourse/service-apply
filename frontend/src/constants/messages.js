@@ -14,8 +14,6 @@ export const ERROR_MESSAGE = {
   },
   API: {
     ALREADY_REGISTER: "이미 지원한 이력이 있습니다.",
-    ALREADY_HAS_APPLICATION:
-      "이미 신청서를 작성했습니다. 로그인 페이지로 이동합니다.",
     FETCHING_MY_APPLICATION: "내 지원서를 불러오는데 실패했습니다.",
   },
   ACCESS: {
@@ -25,7 +23,7 @@ export const ERROR_MESSAGE = {
     CANNOT_FIND_FORM_CONTEXT: "FormContext가 존재하지 않습니다.",
     CANNOT_FIND_RECRUITMENT_CONTEXT: "recruitmentContext가 존재하지 않습니다",
     CANNOT_FIND_TOKEN_CONTEXT: "TokenContext가 존재하지 않습니다",
-  }
+  },
 };
 
 export const SUCCESS_MESSAGE = {
