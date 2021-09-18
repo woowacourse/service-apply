@@ -45,12 +45,8 @@ class CsvTargetService(
         csvRecord: CSVRecord
     ) = evaluationItems.map { evaluationItem ->
         val score = csvRecord.get(evaluationItem.toHeader())
-        require(score.isNotBlank()) {
-            "평가 항목의 점수에 빈 값이 들어갈 수 없습니다"
-        }
-        require(score.toInt() <= evaluationItem.maximumScore) {
-            "평가 항목의 최대 점수보다 높은 점수입니다."
-        }
+        require(score.isNotBlank()) { "평가 항목의 점수에 빈 값이 들어갈 수 없습니다" }
+        require(score.toInt() <= evaluationItem.maximumScore) { "평가 항목의 최대 점수보다 높은 점수입니다." }
         EvaluationAnswer(score.toInt(), evaluationItem.id)
     }
 }

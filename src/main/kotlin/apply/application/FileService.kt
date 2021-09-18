@@ -88,7 +88,7 @@ class FileService(
                 target.name,
                 target.email,
                 target.evaluationStatus.name,
-                *scores(target.answers, evaluationItems).values.toTypedArray()
+                *scores(target.answers, evaluationItems).toTypedArray()
             )
         }
         return csvGenerator.generateBy(headerTitles, csvRows)
@@ -97,9 +97,9 @@ class FileService(
     private fun scores(
         answers: List<EvaluationAnswerResponse>,
         evaluationItems: List<EvaluationItem>
-    ): Map<Long, String> {
-        return evaluationItems.associate { it.id to "0" } +
-            answers.associate { it.evaluationItemId to it.score.toString() }
+    ): List<String> {
+        val answerScores = answers.associate { it.evaluationItemId to it.score.toString() }
+        return evaluationItems.map { answerScores[it.id] ?: "0" }
     }
 
     companion object {
