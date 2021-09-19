@@ -69,13 +69,13 @@ class EvaluationTargetCsvService(
 
     private fun CSVRecord.getEvaluationStatus(): EvaluationStatus = EvaluationStatus.valueOf(get(STATUS))
 
-    private fun CSVRecord.getEvaluationAnswers(
-        evaluationItems: List<EvaluationItem>
-    ): List<EvaluationAnswer> = evaluationItems.map { evaluationItem ->
-        val score = get(evaluationItem.toHeader())
-        require(!score.isNullOrBlank()) { "평가 항목의 점수에 빈 값이 들어갈 수 없습니다" }
-        require(score.toInt() <= evaluationItem.maximumScore) { "평가 항목의 최대 점수보다 높은 점수입니다." }
-        EvaluationAnswer(score.toInt(), evaluationItem.id)
+    private fun CSVRecord.getEvaluationAnswers(evaluationItems: List<EvaluationItem>): List<EvaluationAnswer> {
+        return evaluationItems.map {
+            val score = get(it.toHeader())?.toIntOrNull()
+                ?: throw IllegalArgumentException("평가 항목의 점수에 숫자가 아닌 값이 들어갈 수 없습니다.")
+            require(score <= it.maximumScore) { "평가 항목의 최대 점수보다 높은 점수입니다." }
+            EvaluationAnswer(score, it.id)
+        }
     }
 
     private fun EvaluationItem.toHeader(): String = "$title($maximumScore)"
