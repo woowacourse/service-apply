@@ -19,6 +19,7 @@ class ApplicantAuthenticationService(
     private val jwtTokenProvider: JwtTokenProvider
 ) {
     fun generateToken(request: RegisterApplicantRequest): String {
+        // todo: 회원 가입 시, email 이 authenticated 인지 확인하는 로직 추가
         val applicant = applicantRepository.findByEmail(request.email)
             ?.also { it.authenticate(request.toEntity()) }
             ?: applicantRepository.save(request.toEntity())
