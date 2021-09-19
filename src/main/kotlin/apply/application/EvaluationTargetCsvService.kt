@@ -39,8 +39,6 @@ class EvaluationTargetCsvService(
         return csvGenerator.generateBy(headerTitles, csvRows)
     }
 
-    private fun EvaluationItem.toHeader(): String = "${this.title}(${this.maximumScore})"
-
     private fun scores(
         answers: List<EvaluationAnswerResponse>,
         evaluationItems: List<EvaluationItem>
@@ -62,22 +60,25 @@ class EvaluationTargetCsvService(
                 var targetId = csvRecord.get(ID)
                 var name = csvRecord.get(NAME)
                 var email = csvRecord.get(EMAIL)
-                var evaluationStatus = EvaluationStatus.valueOf(csvRecord.get(STATUS))
-                val evaluationAnswers = readEvaluationAnswers(evaluationItems, csvRecord)
+                var evaluationStatus = csvRecord.getEvaluationStatus()
+                val evaluationAnswers = csvRecord.getEvaluationAnswers(evaluationItems)
                 // TODO: 평가 대상자 상태 업데이트 기능 구현
             }
         }
     }
 
-    private fun readEvaluationAnswers(
-        evaluationItems: List<EvaluationItem>,
-        csvRecord: CSVRecord
+    private fun CSVRecord.getEvaluationStatus(): EvaluationStatus = EvaluationStatus.valueOf(get(STATUS))
+
+    private fun CSVRecord.getEvaluationAnswers(
+        evaluationItems: List<EvaluationItem>
     ): List<EvaluationAnswer> = evaluationItems.map { evaluationItem ->
-        val score = csvRecord.get(evaluationItem.toHeader())
+        val score = get(evaluationItem.toHeader())
         require(!score.isNullOrBlank()) { "평가 항목의 점수에 빈 값이 들어갈 수 없습니다" }
         require(score.toInt() <= evaluationItem.maximumScore) { "평가 항목의 최대 점수보다 높은 점수입니다." }
         EvaluationAnswer(score.toInt(), evaluationItem.id)
     }
+
+    private fun EvaluationItem.toHeader(): String = "$title($maximumScore)"
 
     companion object {
         private const val ID: String = "id"
