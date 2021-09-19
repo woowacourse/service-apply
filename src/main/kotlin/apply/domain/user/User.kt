@@ -1,7 +1,8 @@
-package apply.domain.applicant
+package apply.domain.user
 
-import apply.domain.user.User
-import apply.domain.user.UserInformation
+import apply.domain.applicant.ApplicantAuthenticationException
+import apply.domain.applicant.Gender
+import apply.domain.applicant.Password
 import support.domain.BaseEntity
 import java.time.LocalDate
 import javax.persistence.AttributeOverride
@@ -10,7 +11,7 @@ import javax.persistence.Embedded
 import javax.persistence.Entity
 
 @Entity
-class Applicant(
+class User(
     @Embedded
     val information: UserInformation,
 
@@ -46,14 +47,7 @@ class Applicant(
         UserInformation(name, email, phoneNumber, gender, birthday), password, id
     )
 
-    constructor(
-        user: User,
-        id: Long = 0L
-    ) : this(
-        user.information, user.password, id
-    )
-
-    fun authenticate(applicant: Applicant) {
+    fun authenticate(applicant: User) {
         authenticate(applicant.password)
         identify(this.information == applicant.information)
     }
