@@ -13,7 +13,6 @@ class ApplicantService(
     private val applicationFormRepository: ApplicationFormRepository,
     private val applicantRepository: ApplicantRepository,
     private val cheaterRepository: CheaterRepository,
-    private val passwordGenerator: PasswordGenerator
 ) {
     fun getByEmail(email: String): Applicant {
         return applicantRepository.findByEmail(email) ?: throw IllegalArgumentException("지원자가 존재하지 않습니다. email: $email")
@@ -27,6 +26,7 @@ class ApplicantService(
             .findByRecruitmentIdAndSubmittedTrue(recruitmentId)
             .associateBy { it.applicantId }
         val cheaterApplicantEmails = cheaterRepository.findAll().map { it.email }
+        val str = findAllByIdsAndKeyword(formsByApplicantId.keys, keyword)
         return findAllByIdsAndKeyword(formsByApplicantId.keys, keyword)
             .map {
                 ApplicantAndFormResponse(
@@ -39,6 +39,7 @@ class ApplicantService(
 
     private fun findAllByIdsAndKeyword(ids: Set<Long>, keyword: String?): List<Applicant> {
         return if (keyword != null) {
+            val str = applicantRepository.findAllByKeyword(keyword)
             applicantRepository.findAllByKeyword(keyword).filter { ids.contains(it.id) }
         } else {
             applicantRepository.findAllById(ids)
@@ -47,17 +48,5 @@ class ApplicantService(
 
     fun findAllByKeyword(keyword: String): List<ApplicantResponse> {
         return applicantRepository.findAllByKeyword(keyword).map(::ApplicantResponse)
-    }
-
-    fun resetPassword(request: ResetPasswordRequest): String {
-        return passwordGenerator.generate().also {
-            getByEmail(request.email).resetPassword(request.name, request.birthday, it)
-        }
-    }
-
-    fun editPassword(id: Long, request: EditPasswordRequest) {
-        applicantRepository.getOne(id).apply {
-            changePassword(request.password, request.newPassword)
-        }
     }
 }

@@ -2,8 +2,9 @@ package apply.security
 
 import apply.application.ApplicantService
 import apply.domain.applicant.Applicant
-import apply.domain.applicant.Gender
-import apply.domain.applicant.Password
+import apply.domain.user.Gender
+import apply.domain.user.Password
+import apply.domain.user.User
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
@@ -58,12 +59,14 @@ internal class LoginApplicantResolverTest {
         every { jwtTokenProvider.isValidToken("valid_token") } returns true
         every { jwtTokenProvider.getSubject("valid_token") } returns "applicant_email@email.com"
         val expectedApplicant = Applicant(
-            name = "홍길동1",
-            email = "applicant_email@email.com",
-            phoneNumber = "010-0000-0000",
-            gender = Gender.MALE,
-            birthday = createLocalDate(2020, 4, 17),
-            password = Password("password")
+            User(
+                name = "홍길동1",
+                email = "applicant_email@email.com",
+                phoneNumber = "010-0000-0000",
+                gender = Gender.MALE,
+                birthday = createLocalDate(2020, 4, 17),
+                password = Password("password")
+            )
         )
         every { applicantService.getByEmail("applicant_email@email.com") } returns expectedApplicant
 

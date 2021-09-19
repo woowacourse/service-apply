@@ -1,5 +1,8 @@
 package apply.domain.applicant
 
+import apply.createApplicant
+import apply.domain.user.Gender
+import apply.domain.user.Password
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -13,7 +16,7 @@ internal class ApplicantRepositoryTest(private val applicantRepository: Applican
     @BeforeEach
     internal fun setUp() {
         val applicants = listOf(
-            Applicant(
+            createApplicant(
                 "홍길동1",
                 "a@email.com",
                 "010-0000-0000",
@@ -21,7 +24,7 @@ internal class ApplicantRepositoryTest(private val applicantRepository: Applican
                 createLocalDate(2020, 4, 17),
                 Password("password")
             ),
-            Applicant(
+            createApplicant(
                 "홍길동2",
                 "b@email.com",
                 "010-0000-0000",
@@ -29,7 +32,7 @@ internal class ApplicantRepositoryTest(private val applicantRepository: Applican
                 createLocalDate(2020, 5, 5),
                 Password("password")
             ),
-            Applicant(
+            createApplicant(
                 "홍길동3",
                 "c@email.com",
                 "010-0000-0000",

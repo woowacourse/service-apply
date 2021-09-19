@@ -1,32 +1,32 @@
 package apply.application
 
-import apply.domain.applicant.ApplicantAuthenticationException
-import apply.domain.applicant.ApplicantRepository
 import apply.domain.authenticationcode.AuthenticationCodeRepository
 import apply.domain.authenticationcode.getLastByEmail
+import apply.domain.user.UserAuthenticationException
+import apply.domain.user.UserRepository
 import apply.security.JwtTokenProvider
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Transactional
 @Service
-class ApplicantAuthenticationService(
-    private val applicantRepository: ApplicantRepository,
+class UserAuthenticationService(
+    private val userRepository: UserRepository,
     private val authenticationCodeRepository: AuthenticationCodeRepository,
     private val jwtTokenProvider: JwtTokenProvider
 ) {
-    fun generateToken(request: RegisterApplicantRequest): String {
-        val applicant = applicantRepository.findByEmail(request.email)
+    fun generateToken(request: RegisterUserRequest): String {
+        val user = userRepository.findByEmail(request.email)
             ?.also { it.authenticate(request.toEntity()) }
-            ?: applicantRepository.save(request.toEntity())
-        return jwtTokenProvider.createToken(applicant.email)
+            ?: userRepository.save(request.toEntity())
+        return jwtTokenProvider.createToken(user.email)
     }
 
-    fun generateTokenByLogin(request: AuthenticateApplicantRequest): String {
-        val applicant = applicantRepository.findByEmail(request.email)
+    fun generateTokenByLogin(request: AuthenticateUserRequest): String {
+        val user = userRepository.findByEmail(request.email)
             ?.also { it.authenticate(request.password) }
-            ?: throw ApplicantAuthenticationException()
-        return jwtTokenProvider.createToken(applicant.email)
+            ?: throw UserAuthenticationException()
+        return jwtTokenProvider.createToken(user.email)
     }
 
     fun authenticateEmail(email: String, code: String) {

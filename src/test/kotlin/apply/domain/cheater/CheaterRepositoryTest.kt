@@ -1,8 +1,9 @@
 package apply.domain.cheater
 
 import apply.domain.applicant.Applicant
-import apply.domain.applicant.Gender
-import apply.domain.applicant.Password
+import apply.domain.user.Gender
+import apply.domain.user.Password
+import apply.domain.user.User
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -15,23 +16,27 @@ internal class CheaterRepositoryTest(
     private val cheaterRepository: CheaterRepository
 ) {
     private val cheater = Applicant(
-        id = 1L,
-        name = "홍길동1",
-        email = "a@email.com",
-        phoneNumber = "010-0000-0000",
-        gender = Gender.MALE,
-        birthday = createLocalDate(2020, 4, 17),
-        password = Password("password")
+        User(
+            id = 1L,
+            name = "홍길동1",
+            email = "a@email.com",
+            phoneNumber = "010-0000-0000",
+            gender = Gender.MALE,
+            birthday = createLocalDate(2020, 4, 17),
+            password = Password("password")
+        )
     )
 
     private val applicant = Applicant(
-        id = 2L,
-        name = "홍길동2",
-        email = "b@email.com",
-        phoneNumber = "010-0000-0000",
-        gender = Gender.MALE,
-        birthday = createLocalDate(2020, 4, 17),
-        password = Password("password")
+        User(
+            id = 2L,
+            name = "홍길동2",
+            email = "b@email.com",
+            phoneNumber = "010-0000-0000",
+            gender = Gender.MALE,
+            birthday = createLocalDate(2020, 4, 17),
+            password = Password("password")
+        )
     )
 
     @BeforeEach

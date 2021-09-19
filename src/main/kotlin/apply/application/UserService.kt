@@ -1,6 +1,6 @@
 package apply.application
 
-import apply.domain.applicant.Applicant
+import apply.domain.user.User
 import apply.domain.user.UserRepository
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
@@ -11,7 +11,7 @@ class UserService(
     private val userRepository: UserRepository,
     private val passwordGenerator: PasswordGenerator
 ) {
-    fun getByEmail(email: String): Applicant {
+    fun getByEmail(email: String): User {
         return userRepository.findByEmail(email) ?: throw IllegalArgumentException("회원이 존재하지 않습니다. email: $email")
     }
 

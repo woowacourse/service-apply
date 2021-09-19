@@ -1,6 +1,5 @@
 package apply.domain.user
 
-import apply.domain.applicant.Gender
 import java.time.LocalDate
 import javax.persistence.Column
 import javax.persistence.Embeddable

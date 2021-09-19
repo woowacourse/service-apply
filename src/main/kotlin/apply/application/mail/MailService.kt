@@ -1,7 +1,7 @@
 package apply.application.mail
 
 import apply.application.ApplicationProperties
-import apply.application.RegisterApplicantRequest
+import apply.application.RegisterUserRequest
 import apply.application.ResetPasswordRequest
 import apply.domain.applicant.Applicant
 import org.springframework.scheduling.annotation.Async
@@ -52,7 +52,7 @@ class MailService(
     }
 
     @Async
-    fun sendAuthenticationMail(request: RegisterApplicantRequest, authenticateCode: String) {
+    fun sendAuthenticationMail(request: RegisterUserRequest, authenticateCode: String) {
         val url = UriComponentsBuilder.fromUriString(applicationProperties.url)
             .path("/api/applicants/authenticate-email")
             .queryParam("email", request.email)

@@ -1,5 +1,6 @@
 package apply.domain.applicant
 
+import apply.domain.user.Password
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 

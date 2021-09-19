@@ -1,9 +1,9 @@
 package apply.ui.api
 
-import apply.application.ApplicantAuthenticationService
-import apply.application.AuthenticateApplicantRequest
+import apply.application.UserAuthenticationService
+import apply.application.AuthenticateUserRequest
 import apply.application.EditPasswordRequest
-import apply.application.RegisterApplicantRequest
+import apply.application.RegisterUserRequest
 import apply.application.ResetPasswordRequest
 import apply.application.UserService
 import apply.application.mail.MailService
@@ -22,19 +22,18 @@ import javax.validation.Valid
 @RequestMapping("/api/users")
 class UserRestController(
     private val userService: UserService,
-    private val applicantAuthenticationService: ApplicantAuthenticationService,
+    private val userAuthenticationService: UserAuthenticationService,
     private val mailService: MailService,
 ) {
-
     @PostMapping("/register")
-    fun generateToken(@RequestBody @Valid request: RegisterApplicantRequest): ResponseEntity<ApiResponse<String>> {
-        val token = applicantAuthenticationService.generateToken(request)
+    fun generateToken(@RequestBody @Valid request: RegisterUserRequest): ResponseEntity<ApiResponse<String>> {
+        val token = userAuthenticationService.generateToken(request)
         return ResponseEntity.ok().body(ApiResponse.success(token))
     }
 
     @PostMapping("/login")
-    fun generateToken(@RequestBody @Valid request: AuthenticateApplicantRequest): ResponseEntity<ApiResponse<String>> {
-        val token = applicantAuthenticationService.generateTokenByLogin(request)
+    fun generateToken(@RequestBody @Valid request: AuthenticateUserRequest): ResponseEntity<ApiResponse<String>> {
+        val token = userAuthenticationService.generateTokenByLogin(request)
         return ResponseEntity.ok().body(ApiResponse.success(token))
     }
 
@@ -59,7 +58,7 @@ class UserRestController(
         @RequestParam email: String,
         @RequestParam authenticateCode: String
     ): ResponseEntity<Unit> {
-        applicantAuthenticationService.authenticateEmail(email, authenticateCode)
+        userAuthenticationService.authenticateEmail(email, authenticateCode)
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
     }
 }

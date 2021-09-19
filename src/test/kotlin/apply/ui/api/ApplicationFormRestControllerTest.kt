@@ -9,9 +9,8 @@ import apply.application.mail.MailService
 import apply.createApplicant
 import apply.createApplicationForm
 import apply.createApplicationForms
-import apply.domain.applicant.Applicant
-import apply.domain.applicant.Gender
-import apply.domain.applicant.Password
+import apply.domain.user.Gender
+import apply.domain.user.Password
 import apply.security.JwtTokenProvider
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
@@ -40,7 +39,7 @@ internal class ApplicationFormRestControllerTest : RestControllerTest() {
 
     private val recruitmentId = 1L
 
-    private val applicant = Applicant(
+    private val applicant = createApplicant(
         name = "홍길동1",
         email = "applicant_email@email.com",
         phoneNumber = "010-0000-0000",

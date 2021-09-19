@@ -1,8 +1,5 @@
 package apply.domain.user
 
-import apply.domain.applicant.ApplicantAuthenticationException
-import apply.domain.applicant.Gender
-import apply.domain.applicant.Password
 import support.domain.BaseEntity
 import java.time.LocalDate
 import javax.persistence.AttributeOverride
@@ -69,7 +66,7 @@ class User(
     private fun identify(value: Boolean, lazyMessage: () -> Any = {}) {
         if (!value) {
             val message = lazyMessage()
-            throw ApplicantAuthenticationException(message.toString())
+            throw UserAuthenticationException(message.toString())
         }
     }
 }
