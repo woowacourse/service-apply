@@ -27,7 +27,7 @@ class AuthenticationCode(
     fun authenticate(code: String) {
         require(this.code == code) { "인증 코드가 일치하지 않습니다." }
         check(!authenticated) { "이미 인증되었습니다." }
-        check(expiryDateTime > LocalDateTime.now()) { "인증 코드가 만료되었습니다." }
+        check(LocalDateTime.now().isBefore(expiryDateTime)) { "인증 코드가 만료되었습니다." }
         authenticated = true
     }
 
