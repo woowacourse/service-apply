@@ -12,28 +12,32 @@ const TextField = ({
   value,
   description,
   maxLength,
+  errorMessage,
   ...props
 }) => {
   return (
-    <Field className={styles["text-field"]}>
-      <label className={styles["text-field"]}>
-        <div>
-          <Label required={required}>{label}</Label>
-        </div>
-        {description && <Description>{description}</Description>}
-        {maxLength && maxLength > 0 && (
-          <div className={styles["length-limit"]}>
-            {value.length} / {maxLength}
+    <>
+      <Field className={styles["text-field"]}>
+        <label className={styles["text-field"]}>
+          <div>
+            <Label required={required}>{label}</Label>
           </div>
-        )}
-        <TextInput
-          required={required}
-          value={value}
-          maxLength={maxLength}
-          {...props}
-        />
-      </label>
-    </Field>
+          {description && <Description>{description}</Description>}
+          {maxLength && maxLength > 0 && (
+            <div className={styles["length-limit"]}>
+              {value.length} / {maxLength}
+            </div>
+          )}
+          <TextInput
+            required={required}
+            value={value}
+            maxLength={maxLength}
+            {...props}
+          />
+        </label>
+      </Field>
+      <p className={styles["rule-field"]}>{errorMessage}</p>
+    </>
   );
 };
 
@@ -43,6 +47,7 @@ TextField.propTypes = {
   required: PropTypes.bool,
   description: PropTypes.node,
   maxLength: PropTypes.number,
+  errorMessage: PropTypes.string,
 };
 
 TextField.defaultProps = {

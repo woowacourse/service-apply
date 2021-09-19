@@ -21,8 +21,10 @@ class EvaluationAnswers(
         _answers.add(evaluationAnswer)
     }
 
+    fun allZero(): Boolean = answers.all { it.score == 0 }
+
     fun countTotalScore(): Int {
-        return _answers.map { it.score }.sum()
+        return _answers.sumOf { it.score }
     }
 
     fun findScoreByEvaluationItemId(evaluationItemId: Long): Int =
