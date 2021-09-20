@@ -14,8 +14,8 @@ import com.vaadin.flow.component.textfield.TextArea
 import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer
 import com.vaadin.flow.router.RoutePrefix
-import support.views.createUploadButton
 import support.views.createPrimaryButton
+import support.views.createUploadButton
 
 @RoutePrefix(value = "admin/emails")
 abstract class MailFormView() : VerticalLayout() {
@@ -33,6 +33,13 @@ abstract class MailFormView() : VerticalLayout() {
         )
 
         val recipientFilter = VerticalLayout(H4("수신자"), createRecipientFilter())
+
+        val mailBody = VerticalLayout(
+            body
+        ).apply {
+            setSizeFull()
+        }
+
         val uploadFile = createUploadButton("첨부파일", MultiFileMemoryBuffer()) {
             /*
             todo: 추후 업로드 된 파일을 메일로 첨부하는 로직이 추가되어야 함
@@ -47,20 +54,14 @@ abstract class MailFormView() : VerticalLayout() {
             setWidthFull()
         }
 
-        val mailBody = VerticalLayout(
-            body
-        ).apply {
-            setSizeFull()
-        }
-
         val sendButton = createMailSendButton()
 
         return VerticalLayout(
             subjectText,
             recipientFilter,
             currentRecipients.apply { setSizeFull() },
-            uploadFile,
             mailBody,
+            uploadFile,
             sendButton
         ).apply {
             setSizeFull()
@@ -73,7 +74,6 @@ abstract class MailFormView() : VerticalLayout() {
         return VerticalLayout(
             createPrimaryButton("전송") {
                 // todo: emailService.메일전송(subject.value, recipients, body.value)
-                // MailService에
             }
         ).apply {
             setSizeFull()
