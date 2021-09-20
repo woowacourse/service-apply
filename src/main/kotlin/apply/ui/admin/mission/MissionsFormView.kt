@@ -58,7 +58,7 @@ class MissionsFormView(
             missionForm.bindOrNull()?.let {
                 try {
                     missionService.save(it)
-                } catch (e: IllegalArgumentException) {
+                } catch (e: Exception) {
                     createNotification(e.localizedMessage).open()
                 }
                 UI.getCurrent().navigate(MissionSelectionView::class.java, recruitmentId)
