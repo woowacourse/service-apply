@@ -1,6 +1,5 @@
 package apply.ui.api
 
-import apply.application.EvaluationTargetResponse
 import apply.application.MissionData
 import apply.application.MissionService
 import org.springframework.http.ResponseEntity
@@ -20,7 +19,7 @@ class MissionController(
         @PathVariable recruitmentId: Long,
         @PathVariable evaluationId: Long,
         @RequestBody missionData: MissionData
-    ): ResponseEntity<ApiResponse<List<EvaluationTargetResponse>>> {
+    ): ResponseEntity<Unit> {
         missionService.save(missionData)
         return ResponseEntity.ok().build()
     }

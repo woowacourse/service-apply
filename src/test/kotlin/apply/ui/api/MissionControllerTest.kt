@@ -31,7 +31,7 @@ internal class MissionControllerTest : RestControllerTest() {
     private val evaluationId = 1L
 
     @Test
-    fun `과제를 생성한다`() {
+    fun `과제를 추가한다`() {
         every { missionService.save(createMissionData()) } just Runs
 
         mockMvc.post(
