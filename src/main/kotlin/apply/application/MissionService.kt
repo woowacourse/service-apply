@@ -1,5 +1,6 @@
 package apply.application
 
+import apply.domain.mission.Mission
 import apply.domain.mission.MissionRepository
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
@@ -10,6 +11,16 @@ class MissionService(
     private val missionRepository: MissionRepository
 ) {
     fun save(request: MissionData) {
-        // TODO: 생성 기능 구현
+        missionRepository.save(
+            Mission(
+                request.title,
+                request.description,
+                request.recruitment.id,
+                request.evaluation.id,
+                request.startDateTime,
+                request.endDateTime,
+                request.submittable
+            )
+        )
     }
 }

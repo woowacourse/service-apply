@@ -2,6 +2,7 @@ package apply.domain.mission
 
 import apply.domain.recruitment.RecruitmentPeriod
 import support.domain.BaseEntity
+import java.time.LocalDateTime
 import javax.persistence.Column
 import javax.persistence.Embedded
 import javax.persistence.Entity
@@ -26,4 +27,15 @@ class Mission(
     @Column(nullable = false)
     var submittable: Boolean = false,
     id: Long = 0L
-) : BaseEntity(id)
+) : BaseEntity(id) {
+    constructor(
+        title: String,
+        description: String,
+        recruitmentId: Long,
+        evaluationId: Long,
+        startDateTime: LocalDateTime,
+        endDateTime: LocalDateTime,
+        submittable: Boolean = false,
+        id: Long = 0L
+    ) : this(title, description, recruitmentId, evaluationId, RecruitmentPeriod(startDateTime, endDateTime), submittable, id)
+}
