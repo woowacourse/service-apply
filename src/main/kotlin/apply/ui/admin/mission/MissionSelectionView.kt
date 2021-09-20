@@ -1,6 +1,7 @@
 package apply.ui.admin.mission
 
 import apply.application.MissionResponse
+import apply.application.RecruitmentService
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
@@ -23,7 +24,9 @@ import support.views.createPrimaryButton
 import support.views.createPrimarySmallButton
 
 @Route(value = "admin/mission/selections", layout = BaseLayout::class)
-class MissionSelectionView : VerticalLayout(), HasUrlParameter<Long> {
+class MissionSelectionView(
+    private val recruitmentService: RecruitmentService
+) : VerticalLayout(), HasUrlParameter<Long> {
     private var recruitmentId: Long = 0L
 
     override fun setParameter(event: BeforeEvent, @WildcardParameter parameter: Long) {
@@ -32,7 +35,7 @@ class MissionSelectionView : VerticalLayout(), HasUrlParameter<Long> {
     }
 
     private fun createTitle(): Component {
-        return HorizontalLayout(H1("과제 관리")).apply {
+        return HorizontalLayout(H1("${recruitmentService.getById(recruitmentId).title} 과제 관리")).apply {
             setSizeFull()
             justifyContentMode = FlexComponent.JustifyContentMode.CENTER
         }

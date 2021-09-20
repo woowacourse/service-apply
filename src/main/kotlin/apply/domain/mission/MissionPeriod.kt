@@ -13,6 +13,6 @@ data class MissionPeriod(
     val endDateTime: LocalDateTime
 ) {
     init {
-        require(endDateTime >= startDateTime)
+        require(endDateTime >= startDateTime) { "시작 일시는 종료 일시보다 이후일 수 없습니다." }
     }
 }

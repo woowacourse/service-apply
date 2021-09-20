@@ -17,6 +17,7 @@ import support.views.EDIT_VALUE
 import support.views.FORM_URL_PATTERN
 import support.views.Title
 import support.views.createContrastButton
+import support.views.createNotification
 import support.views.createPrimaryButton
 import support.views.toDisplayName
 
@@ -55,7 +56,11 @@ class MissionsFormView(
     private fun createSubmitButton(): Button {
         return createPrimaryButton {
             missionForm.bindOrNull()?.let {
-                missionService.save(it)
+                try {
+                    missionService.save(it)
+                } catch (e: IllegalArgumentException) {
+                    createNotification(e.localizedMessage).open()
+                }
                 UI.getCurrent().navigate(MissionSelectionView::class.java, recruitmentId)
             }
         }
