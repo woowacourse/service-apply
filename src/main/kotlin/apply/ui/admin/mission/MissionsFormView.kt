@@ -20,32 +20,31 @@ import support.views.createContrastButton
 import support.views.createPrimaryButton
 import support.views.toDisplayName
 
-@Route(value = "admin/missions", layout = BaseLayout::class)
+@Route(value = "admin/mission/selections", layout = BaseLayout::class)
 class MissionsFormView(
     private val evaluationService: EvaluationService,
     private val missionService: MissionService
 ) : VerticalLayout(), HasUrlParameter<String> {
+    private var recruitmentId: Long = 0L
     private val title: Title = Title()
-    private val missionForm: MissionForm = MissionForm(
-        evaluationService.findAllRecruitmentSelectData()
-    ) {
-        evaluationService.getAllSelectDataByRecruitmentId(it)
+    private val missionForm: MissionForm by lazy {
+        MissionForm(
+            evaluationService.getAllSelectDataByRecruitmentId(recruitmentId)
+        )
     }
     private val submitButton: Button = createSubmitButton()
-
-    init {
-        add(title, missionForm, createButtons())
-    }
 
     override fun setParameter(event: BeforeEvent, @WildcardParameter parameter: String) {
         val result = FORM_URL_PATTERN.find(parameter)
         result?.let {
             val (id, value) = it.destructured
+            recruitmentId = id.toLong()
             setDisplayName(value.toDisplayName())
             if (value == EDIT_VALUE) {
                 // TODO: 수정 기능 구현
             }
         } ?: UI.getCurrent().page.history.back()
+        add(title, missionForm, createButtons())
     }
 
     private fun setDisplayName(displayName: String) {
@@ -57,7 +56,7 @@ class MissionsFormView(
         return createPrimaryButton {
             missionForm.bindOrNull()?.let {
                 missionService.save(it)
-                UI.getCurrent().navigate(MissionsView::class.java)
+                UI.getCurrent().navigate(MissionsView::class.java, recruitmentId)
             }
         }
     }
@@ -71,7 +70,7 @@ class MissionsFormView(
 
     private fun createCancelButton(): Button {
         return createContrastButton("취소") {
-            UI.getCurrent().navigate(MissionsView::class.java)
+            UI.getCurrent().navigate(MissionsView::class.java, recruitmentId)
         }
     }
 }

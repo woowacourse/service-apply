@@ -11,7 +11,10 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.data.renderer.ComponentRenderer
 import com.vaadin.flow.data.renderer.Renderer
+import com.vaadin.flow.router.BeforeEvent
+import com.vaadin.flow.router.HasUrlParameter
 import com.vaadin.flow.router.Route
+import com.vaadin.flow.router.WildcardParameter
 import support.views.NEW_VALUE
 import support.views.addSortableColumn
 import support.views.addSortableDateTimeColumn
@@ -19,9 +22,12 @@ import support.views.createDeleteButtonWithDialog
 import support.views.createPrimaryButton
 import support.views.createPrimarySmallButton
 
-@Route(value = "admin/missions", layout = BaseLayout::class)
-class MissionsView : VerticalLayout() {
-    init {
+@Route(value = "admin/mission/selections", layout = BaseLayout::class)
+class MissionsView : VerticalLayout(), HasUrlParameter<Long> {
+    private var recruitmentId: Long = 0L
+
+    override fun setParameter(event: BeforeEvent, @WildcardParameter parameter: Long) {
+        this.recruitmentId = parameter
         add(createTitle(), createButton(), createGrid())
     }
 
@@ -35,7 +41,7 @@ class MissionsView : VerticalLayout() {
     private fun createButton(): Component {
         return HorizontalLayout(
             createPrimaryButton("생성") {
-                UI.getCurrent().navigate(MissionsFormView::class.java, NEW_VALUE)
+                UI.getCurrent().navigate(MissionsFormView::class.java, "$recruitmentId/$NEW_VALUE")
             }
         ).apply {
             setSizeFull()
@@ -46,7 +52,6 @@ class MissionsView : VerticalLayout() {
     private fun createGrid(): Component {
         return Grid<MissionResponse>(10).apply {
             addSortableColumn("과제명", MissionResponse::title)
-            addSortableColumn("모집명") { MissionResponse::recruitmentTitle }
             addSortableColumn("평가명") { MissionResponse::evaluationTitle }
             addSortableColumn("제출 가능 여부") { it.submittable.toText() }
             addSortableDateTimeColumn("시작일시", MissionResponse::startDateTime)

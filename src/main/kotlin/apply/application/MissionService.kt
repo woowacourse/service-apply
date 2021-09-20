@@ -15,7 +15,6 @@ class MissionService(
             Mission(
                 request.title,
                 request.description,
-                request.recruitment.id,
                 request.evaluation.id,
                 request.startDateTime,
                 request.endDateTime,

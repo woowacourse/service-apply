@@ -2,7 +2,6 @@ package apply.ui.admin.mission
 
 import apply.application.EvaluationSelectData
 import apply.application.MissionData
-import apply.application.RecruitmentSelectData
 import com.vaadin.flow.component.datetimepicker.DateTimePicker
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup
 import com.vaadin.flow.component.select.Select
@@ -15,10 +14,6 @@ import support.views.createItemSelect
 class MissionForm() : BindingIdentityFormLayout<MissionData>(MissionData::class) {
     private val title: TextField = TextField("과제명")
     private val description: TextArea = TextArea("설명")
-    private val recruitment: Select<RecruitmentSelectData> = createItemSelect<RecruitmentSelectData>("모집").apply {
-        setItemLabelGenerator(RecruitmentSelectData::title)
-        isEmptySelectionAllowed = false
-    }
     private val evaluation: Select<EvaluationSelectData> = createItemSelect<EvaluationSelectData>("평가").apply {
         setItemLabelGenerator(EvaluationSelectData::title)
         isEmptySelectionAllowed = false
@@ -28,25 +23,20 @@ class MissionForm() : BindingIdentityFormLayout<MissionData>(MissionData::class)
     private val submittable: RadioButtonGroup<Boolean> = createBooleanRadioButtonGroup("제출 가능 여부", "가능", "불가능", false)
 
     init {
-        add(title, recruitment, evaluation, startDateTime, endDateTime, description, submittable)
+        add(title, evaluation, startDateTime, endDateTime, description, submittable)
         setResponsiveSteps(ResponsiveStep("0", 1))
         drawRequired()
     }
 
     constructor(
-        recruitments: List<RecruitmentSelectData>,
-        listener: (id: Long) -> List<EvaluationSelectData>
+        evaluations: List<EvaluationSelectData>
     ) : this() {
-        recruitment.setItems(recruitments)
-        recruitment.addValueChangeListener {
-            evaluation.setItems(listener(it.value.id))
-        }
+        evaluation.setItems(evaluations)
     }
 
     override fun bindOrNull(): MissionData? {
         val result = bindDefaultOrNull()
         return result?.apply {
-            recruitment
             evaluation
         }
     }

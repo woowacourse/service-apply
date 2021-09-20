@@ -11,9 +11,6 @@ data class MissionData(
     var title: String = "",
 
     @field:NotNull
-    var recruitment: RecruitmentSelectData = RecruitmentSelectData(),
-
-    @field:NotNull
     var evaluation: EvaluationSelectData = EvaluationSelectData(),
 
     @field:NotNull
@@ -35,8 +32,6 @@ data class MissionResponse(
     val id: Long,
     val title: String,
     val description: String,
-    val recruitmentTitle: String,
-    val recruitmentId: Long,
     val evaluationTitle: String,
     val evaluationId: Long,
     val submittable: Boolean,
