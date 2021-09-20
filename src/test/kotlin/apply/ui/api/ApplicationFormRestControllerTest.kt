@@ -5,10 +5,12 @@ import apply.application.ApplicantService
 import apply.application.ApplicationFormResponse
 import apply.application.ApplicationFormService
 import apply.application.MyApplicationFormResponse
+import apply.application.UserService
 import apply.application.mail.MailService
 import apply.createApplicant
 import apply.createApplicationForm
 import apply.createApplicationForms
+import apply.createUser
 import apply.domain.user.Gender
 import apply.domain.user.Password
 import apply.security.JwtTokenProvider
@@ -35,11 +37,14 @@ internal class ApplicationFormRestControllerTest : RestControllerTest() {
     private lateinit var jwtTokenProvider: JwtTokenProvider
 
     @MockkBean
+    private lateinit var userService: UserService
+
+    @MockkBean
     private lateinit var applicantService: ApplicantService
 
     private val recruitmentId = 1L
 
-    private val applicant = createApplicant(
+    private val user = createUser(
         name = "홍길동1",
         email = "applicant_email@email.com",
         phoneNumber = "010-0000-0000",
@@ -47,6 +52,10 @@ internal class ApplicationFormRestControllerTest : RestControllerTest() {
         birthday = createLocalDate(2020, 4, 17),
         password = Password("password"),
         id = 1L
+    )
+
+    private val applicant = createApplicant(
+        user, 1L
     )
 
     private val applicationFormResponse = ApplicationFormResponse(
@@ -74,6 +83,7 @@ internal class ApplicationFormRestControllerTest : RestControllerTest() {
     fun `올바른 지원서 요청에 정상적으로 응답한다`() {
         every { jwtTokenProvider.isValidToken("valid_token") } returns true
         every { jwtTokenProvider.getSubject("valid_token") } returns applicant.email
+        every { userService.getByEmail(user.email) } returns user
         every { applicantService.getByEmail(applicant.email) } returns applicant
         every { applicationFormService.getApplicationForm(applicant.id, recruitmentId) } returns applicationFormResponse
 
@@ -90,6 +100,7 @@ internal class ApplicationFormRestControllerTest : RestControllerTest() {
     fun `내 지원서 요청에 정상적으로 응답한다`() {
         every { jwtTokenProvider.isValidToken("valid_token") } returns true
         every { jwtTokenProvider.getSubject("valid_token") } returns applicant.email
+        every { userService.getByEmail(user.email) } returns user
         every { applicantService.getByEmail(applicant.email) } returns applicant
         every { applicationFormService.getMyApplicationForms(applicant.id) } returns myApplicationFormResponses
 

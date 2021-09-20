@@ -1,17 +1,16 @@
 package apply.ui.api
 
-import apply.application.UserAuthenticationService
 import apply.application.AuthenticateUserRequest
 import apply.application.EditPasswordRequest
 import apply.application.RegisterUserRequest
 import apply.application.ResetPasswordRequest
+import apply.application.UserAuthenticationService
 import apply.application.UserService
 import apply.application.mail.MailService
 import apply.domain.user.Gender
 import apply.domain.user.Password
 import apply.domain.user.UserAuthenticationException
 import apply.security.JwtTokenProvider
-import apply.security.LoginApplicantResolver
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
 import io.mockk.every
@@ -30,22 +29,6 @@ private const val PASSWORD = "password"
 private const val INVALID_PASSWORD = "invalid_password"
 private const val WRONG_PASSWORD = "wrongPassword"
 private const val NEW_PASSWORD = "NEW_PASSWORD"
-
-private fun RegisterUserRequest.withPlainPassword(password: String): Map<String, Any?> {
-    return mapOf(
-        "name" to name,
-        "email" to email,
-        "phoneNumber" to phoneNumber,
-        "gender" to gender,
-        "birthday" to birthday,
-        "password" to password
-    )
-}
-
-private fun AuthenticateUserRequest.withPlainPassword(password: String): Map<String, Any?> {
-    return mapOf("email" to email, "password" to password)
-}
-
 @WebMvcTest(
     controllers = [UserRestController::class]
 )
@@ -62,9 +45,6 @@ class UserRestControllerTest : RestControllerTest() {
 
     @MockkBean
     private lateinit var jwtTokenProvider: JwtTokenProvider
-
-    @MockkBean
-    private lateinit var loginApplicantResolver: LoginApplicantResolver
 
     private val userRequest = RegisterUserRequest(
         name = "회원",
@@ -253,4 +233,19 @@ class UserRestControllerTest : RestControllerTest() {
             "newPassword" to NEW_PASSWORD
         )
     }
+}
+
+private fun RegisterUserRequest.withPlainPassword(password: String): Map<String, Any?> {
+    return mapOf(
+        "name" to name,
+        "email" to email,
+        "phoneNumber" to phoneNumber,
+        "gender" to gender,
+        "birthday" to birthday,
+        "password" to password
+    )
+}
+
+private fun AuthenticateUserRequest.withPlainPassword(password: String): Map<String, Any?> {
+    return mapOf("email" to email, "password" to password)
 }

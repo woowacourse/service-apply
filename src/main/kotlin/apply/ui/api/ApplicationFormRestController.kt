@@ -8,8 +8,8 @@ import apply.application.CreateApplicationFormRequest
 import apply.application.MyApplicationFormResponse
 import apply.application.UpdateApplicationFormRequest
 import apply.application.mail.MailService
-import apply.domain.applicant.Applicant
-import apply.security.LoginApplicant
+import apply.domain.user.User
+import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
@@ -30,8 +30,9 @@ class ApplicationFormRestController(
 ) {
     @GetMapping("/application-forms/me")
     fun getMyApplicationForms(
-        @LoginApplicant applicant: Applicant
+        @LoginUser user: User
     ): ResponseEntity<ApiResponse<List<MyApplicationFormResponse>>> {
+        val applicant = applicantService.getByEmail(user.email)
         val form = applicationFormService.getMyApplicationForms(applicant.id)
         return ResponseEntity.ok().body(ApiResponse.success(form))
     }
@@ -39,8 +40,9 @@ class ApplicationFormRestController(
     @GetMapping("/application-forms")
     fun getForm(
         @RequestParam recruitmentId: Long,
-        @LoginApplicant applicant: Applicant
+        @LoginUser user: User
     ): ResponseEntity<ApiResponse<ApplicationFormResponse>> {
+        val applicant = applicantService.getByEmail(user.email)
         val form = applicationFormService.getApplicationForm(applicant.id, recruitmentId)
         return ResponseEntity.ok().body(ApiResponse.success(form))
     }
@@ -48,8 +50,9 @@ class ApplicationFormRestController(
     @PostMapping("/application-forms")
     fun create(
         @RequestBody @Valid request: CreateApplicationFormRequest,
-        @LoginApplicant applicant: Applicant
+        @LoginUser user: User
     ): ResponseEntity<Unit> {
+        val applicant = applicantService.getByEmail(user.email)
         applicationFormService.create(applicant.id, request)
         return ResponseEntity.ok().build()
     }
@@ -57,8 +60,9 @@ class ApplicationFormRestController(
     @PatchMapping("/application-forms")
     fun update(
         @RequestBody @Valid request: UpdateApplicationFormRequest,
-        @LoginApplicant applicant: Applicant
+        @LoginUser user: User
     ): ResponseEntity<Unit> {
+        val applicant = applicantService.getByEmail(user.email)
         applicationFormService.update(applicant.id, request)
 
         // TODO: 차후 연결될 프론트 주소가 필요

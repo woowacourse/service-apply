@@ -7,8 +7,8 @@ import apply.application.RegisterUserRequest
 import apply.application.ResetPasswordRequest
 import apply.application.UserService
 import apply.application.mail.MailService
-import apply.domain.applicant.Applicant
-import apply.security.LoginApplicant
+import apply.domain.user.User
+import apply.security.LoginUser
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -47,9 +47,9 @@ class UserRestController(
     @PostMapping("/edit-password")
     fun editPassword(
         @RequestBody @Valid request: EditPasswordRequest,
-        @LoginApplicant applicant: Applicant
+        @LoginUser user: User
     ): ResponseEntity<Unit> {
-        userService.editPassword(applicant.id, request)
+        userService.editPassword(user.id, request)
         return ResponseEntity.noContent().build()
     }
 

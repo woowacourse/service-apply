@@ -2,6 +2,7 @@ package apply.ui.api
 
 import apply.application.ApplicantResponse
 import apply.application.ApplicantService
+import apply.application.UserService
 import apply.createApplicant
 import apply.security.JwtTokenProvider
 import com.ninjasquad.springmockk.MockkBean
@@ -20,6 +21,9 @@ import support.test.TestEnvironment
 internal class ApplicantRestControllerTest : RestControllerTest() {
     @MockkBean
     private lateinit var applicantService: ApplicantService
+
+    @MockkBean
+    private lateinit var userService: UserService
 
     @MockkBean
     private lateinit var jwtTokenProvider: JwtTokenProvider

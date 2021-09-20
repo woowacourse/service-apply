@@ -26,7 +26,6 @@ class ApplicantService(
             .findByRecruitmentIdAndSubmittedTrue(recruitmentId)
             .associateBy { it.applicantId }
         val cheaterApplicantEmails = cheaterRepository.findAll().map { it.email }
-        val str = findAllByIdsAndKeyword(formsByApplicantId.keys, keyword)
         return findAllByIdsAndKeyword(formsByApplicantId.keys, keyword)
             .map {
                 ApplicantAndFormResponse(
@@ -39,7 +38,6 @@ class ApplicantService(
 
     private fun findAllByIdsAndKeyword(ids: Set<Long>, keyword: String?): List<Applicant> {
         return if (keyword != null) {
-            val str = applicantRepository.findAllByKeyword(keyword)
             applicantRepository.findAllByKeyword(keyword).filter { ids.contains(it.id) }
         } else {
             applicantRepository.findAllById(ids)
