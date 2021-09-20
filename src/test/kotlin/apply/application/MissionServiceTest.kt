@@ -1,7 +1,7 @@
 package apply.application
 
+import apply.createMission
 import apply.createMissionData
-import apply.domain.mission.Mission
 import apply.domain.mission.MissionRepository
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
@@ -25,15 +25,7 @@ class MissionServiceTest {
     @Test
     fun `과제를 추가한다`() {
         val missionData = createMissionData()
-        every { missionRepository.save(any()) } returns Mission(
-            missionData.title,
-            missionData.description,
-            missionData.evaluation.id,
-            missionData.startDateTime,
-            missionData.endDateTime,
-            missionData.submittable,
-            missionData.id
-        )
+        every { missionRepository.save(any()) } returns createMission()
         assertDoesNotThrow { missionService.save(missionData) }
     }
 }
