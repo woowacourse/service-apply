@@ -11,6 +11,7 @@ import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.select.Select
 import com.vaadin.flow.router.Route
+import org.springframework.beans.factory.annotation.Value
 import support.views.Title
 import support.views.createItemSelect
 
@@ -18,8 +19,10 @@ import support.views.createItemSelect
 class GroupMailFormView(
     private val recruitmentService: RecruitmentService,
     private val evaluationService: EvaluationService,
-    private val mailTargetService: MailTargetService
-) : MailFormView() {
+    private val mailTargetService: MailTargetService,
+    @Value("\${spring.mail.username}")
+    private val senderEmail: String
+) : MailFormView(senderEmail) {
     private val recruitment: Select<RecruitmentResponse>
     private val evaluation: Select<Evaluation>
     private val evaluationStatus: Select<EvaluationStatus>

@@ -18,7 +18,9 @@ import support.views.createPrimaryButton
 import support.views.createUploadButton
 
 @RoutePrefix(value = "admin/emails")
-abstract class MailFormView() : VerticalLayout() {
+abstract class MailFormView(
+    private val senderEmail: String
+) : VerticalLayout() {
     protected val subject: TextField = TextField("메일 제목", "메일 제목 입력")
     protected val recipients: MutableList<String> = mutableListOf()
     protected val body: TextArea = createMailBody()
@@ -32,7 +34,8 @@ abstract class MailFormView() : VerticalLayout() {
             subject.apply { setSizeFull() }
         )
 
-        val recipientFilter = VerticalLayout(H4("수신자"), createRecipientFilter())
+        val sender = VerticalLayout(H4("보낸사람"), createSender())
+        val recipientFilter = VerticalLayout(H4("받는사람"), createRecipientFilter())
 
         val mailBody = VerticalLayout(
             body
@@ -58,8 +61,9 @@ abstract class MailFormView() : VerticalLayout() {
 
         return VerticalLayout(
             subjectText,
+            sender,
             recipientFilter,
-            currentRecipients.apply { setSizeFull() },
+            VerticalLayout(currentRecipients.apply { setWidthFull() }).apply { },
             mailBody,
             uploadFile,
             sendButton
@@ -68,6 +72,15 @@ abstract class MailFormView() : VerticalLayout() {
             justifyContentMode = FlexComponent.JustifyContentMode.CENTER
             defaultHorizontalComponentAlignment = FlexComponent.Alignment.CENTER
         }
+    }
+
+    private fun createSender(): Component {
+        val sender = TextField().apply {
+            value = senderEmail
+            isReadOnly = true
+            style.set("background-color", "#00B493")
+        }
+        return HorizontalLayout(sender)
     }
 
     private fun createMailSendButton(): VerticalLayout {

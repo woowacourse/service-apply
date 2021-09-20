@@ -19,6 +19,7 @@ import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.data.renderer.ComponentRenderer
 import com.vaadin.flow.data.renderer.Renderer
 import com.vaadin.flow.router.Route
+import org.springframework.beans.factory.annotation.Value
 import support.views.Title
 import support.views.addSortableColumn
 import support.views.createErrorButton
@@ -28,8 +29,10 @@ import support.views.createSearchBar
 
 @Route(value = "personal", layout = BaseLayout::class)
 class IndividualMailFormView(
-    private val applicantService: ApplicantService
-) : MailFormView() {
+    private val applicantService: ApplicantService,
+    @Value("\${spring.mail.username}")
+    private val senderEmail: String
+) : MailFormView(senderEmail) {
     init {
         add(Title("개별 발송"), createMailForm())
         setWidthFull()
