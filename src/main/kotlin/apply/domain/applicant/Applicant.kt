@@ -5,6 +5,7 @@ import apply.domain.user.User
 import apply.domain.user.UserInformation
 import support.domain.BaseEntity
 import java.time.LocalDate
+import javax.persistence.Column
 import javax.persistence.Embedded
 import javax.persistence.Entity
 
@@ -13,6 +14,8 @@ class Applicant(
     @Embedded
     val information: UserInformation,
 
+    @Column(nullable = false)
+    val userId: Long = 0L,
     id: Long = 0L
 ) : BaseEntity(id) {
     val name: String
@@ -34,6 +37,6 @@ class Applicant(
         user: User,
         id: Long = 0L
     ) : this(
-        user.information, id
+        user.information, user.id, id
     )
 }
