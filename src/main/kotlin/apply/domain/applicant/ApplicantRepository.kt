@@ -11,7 +11,7 @@ fun ApplicantRepository.existsByEmail(email: String): Boolean = existsByInformat
 interface ApplicantRepository : JpaRepository<Applicant, Long> {
     @Query("select a from Applicant a where a.information.name like %:keyword% or a.information.email like %:keyword%")
     fun findAllByKeyword(@Param("keyword") keyword: String): List<Applicant>
-    fun findByInformationEmail(@Param("email") email: String): Applicant?
-    fun findAllByInformationEmailIn(@Param("emails") emails: List<String>): List<Applicant>
-    fun existsByInformationEmail(@Param("email") email: String): Boolean
+    fun findByInformationEmail(email: String): Applicant?
+    fun findAllByInformationEmailIn(emails: List<String>): List<Applicant>
+    fun existsByInformationEmail(email: String): Boolean
 }
