@@ -1,6 +1,5 @@
 package apply.domain.mission
 
-import apply.domain.recruitment.RecruitmentPeriod
 import support.domain.BaseEntity
 import java.time.LocalDateTime
 import javax.persistence.Column
@@ -19,7 +18,7 @@ class Mission(
     val evaluationId: Long,
 
     @Embedded
-    var period: RecruitmentPeriod,
+    var period: MissionPeriod,
 
     @Column(nullable = false)
     var submittable: Boolean = false,
@@ -33,5 +32,5 @@ class Mission(
         endDateTime: LocalDateTime,
         submittable: Boolean = false,
         id: Long = 0L
-    ) : this(title, description, evaluationId, RecruitmentPeriod(startDateTime, endDateTime), submittable, id)
+    ) : this(title, description, evaluationId, MissionPeriod(startDateTime, endDateTime), submittable, id)
 }

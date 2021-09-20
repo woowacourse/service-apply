@@ -56,7 +56,7 @@ class MissionsFormView(
         return createPrimaryButton {
             missionForm.bindOrNull()?.let {
                 missionService.save(it)
-                UI.getCurrent().navigate(MissionsView::class.java, recruitmentId)
+                UI.getCurrent().navigate(MissionSelectionView::class.java, recruitmentId)
             }
         }
     }
@@ -70,7 +70,7 @@ class MissionsFormView(
 
     private fun createCancelButton(): Button {
         return createContrastButton("취소") {
-            UI.getCurrent().navigate(MissionsView::class.java, recruitmentId)
+            UI.getCurrent().navigate(MissionSelectionView::class.java, recruitmentId)
         }
     }
 }

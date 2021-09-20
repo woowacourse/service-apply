@@ -23,7 +23,7 @@ import support.views.createPrimaryButton
 import support.views.createPrimarySmallButton
 
 @Route(value = "admin/mission/selections", layout = BaseLayout::class)
-class MissionsView : VerticalLayout(), HasUrlParameter<Long> {
+class MissionSelectionView : VerticalLayout(), HasUrlParameter<Long> {
     private var recruitmentId: Long = 0L
 
     override fun setParameter(event: BeforeEvent, @WildcardParameter parameter: Long) {
@@ -51,6 +51,7 @@ class MissionsView : VerticalLayout(), HasUrlParameter<Long> {
 
     private fun createGrid(): Component {
         return Grid<MissionResponse>(10).apply {
+            // TODO: 과제 관리 페이지 구현시 수정
             addSortableColumn("과제명", MissionResponse::title)
             addSortableColumn("평가명") { MissionResponse::evaluationTitle }
             addSortableColumn("제출 가능 여부") { it.submittable.toText() }
@@ -64,7 +65,7 @@ class MissionsView : VerticalLayout(), HasUrlParameter<Long> {
         return ComponentRenderer<Component, MissionResponse> { it ->
             HorizontalLayout(
                 createPrimarySmallButton("수정") {
-                    // TODO 수정 뷰 이동
+                    // TODO 수정 기능 구현
                 },
                 createDeleteButtonWithDialog("과제를 삭제하시겠습니까?") {
                     // TODO 삭제 기능 구현

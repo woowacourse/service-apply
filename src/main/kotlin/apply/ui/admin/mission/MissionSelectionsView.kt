@@ -36,7 +36,7 @@ class MissionSelectionsView(private val recruitmentService: RecruitmentService) 
     private fun createButton(recruitment: RecruitmentResponse): Component {
         return HorizontalLayout(
             createNormalButton(recruitment.title) {
-                UI.getCurrent().navigate(MissionsView::class.java, recruitment.id)
+                UI.getCurrent().navigate(MissionSelectionView::class.java, recruitment.id)
             }
         ).apply {
             setSizeFull()
