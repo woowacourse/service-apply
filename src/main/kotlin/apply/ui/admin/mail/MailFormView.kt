@@ -14,7 +14,7 @@ import com.vaadin.flow.component.textfield.TextArea
 import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer
 import com.vaadin.flow.router.RoutePrefix
-import support.views.createImageUpload
+import support.views.createUploadButton
 import support.views.createPrimaryButton
 
 @RoutePrefix(value = "admin/emails")
@@ -33,7 +33,7 @@ abstract class MailFormView() : VerticalLayout() {
         )
 
         val recipientFilter = VerticalLayout(H4("수신자"), createRecipientFilter())
-        val uploadFile = createImageUpload("첨부파일", MultiFileMemoryBuffer()) {
+        val uploadFile = createUploadButton("첨부파일", MultiFileMemoryBuffer()) {
             /*
             todo: 추후 업로드 된 파일을 메일로 첨부하는 로직이 추가되어야 함
              (uploadFiles 같은 필드를 두고 mail을 보내는 기능에 포함시키면 될 것 같음)

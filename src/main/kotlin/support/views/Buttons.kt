@@ -42,13 +42,13 @@ fun createCsvUpload(text: String, receiver: MemoryBuffer, succeededListener: Upl
     }
 }
 
-fun createImageUpload(
+fun createUploadButton(
     text: String,
     receiver: MultiFileMemoryBuffer,
     imageUploadSucceededListener: ImageUploadSucceededListener
 ): Upload {
     return Upload(receiver).apply {
-        setAcceptedFileTypes("image/jpeg", "image/png", "image/gif")
+        maxFileSize = 10_485_760
         uploadButton = createPrimaryButton(text) { }
         addSucceededListener {
             imageUploadSucceededListener(receiver)
