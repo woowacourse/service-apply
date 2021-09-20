@@ -34,6 +34,7 @@ class MissionsFormView(
         )
     }
     private val submitButton: Button = createSubmitButton()
+    private val buttons: Component = createButtons()
 
     override fun setParameter(event: BeforeEvent, @WildcardParameter parameter: String) {
         val result = FORM_URL_PATTERN.find(parameter)
@@ -45,7 +46,7 @@ class MissionsFormView(
                 // TODO: 수정 기능 구현
             }
         } ?: UI.getCurrent().page.history.back()
-        add(title, missionForm, createButtons())
+        add(title, missionForm, buttons)
     }
 
     private fun setDisplayName(displayName: String) {

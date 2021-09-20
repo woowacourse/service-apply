@@ -14,8 +14,10 @@ import support.views.createNormalButton
 
 @Route(value = "admin/mission/selections", layout = BaseLayout::class)
 class MissionSelectionsView(private val recruitmentService: RecruitmentService) : VerticalLayout() {
+    private val title: Component = createTitle()
+    private val buttons: Array<Component> = createButtons()
     init {
-        add(createTitle(), *createButtons())
+        add(title, *buttons)
     }
 
     private fun createTitle(): Component {
