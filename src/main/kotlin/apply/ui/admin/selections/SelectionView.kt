@@ -2,6 +2,7 @@ package apply.ui.admin.selections
 
 import apply.application.ApplicantAndFormResponse
 import apply.application.ApplicantService
+import apply.application.EvaluationTargetCsvService
 import apply.application.EvaluationService
 import apply.application.EvaluationTargetResponse
 import apply.application.EvaluationTargetService
@@ -33,8 +34,6 @@ import com.vaadin.flow.router.BeforeEvent
 import com.vaadin.flow.router.HasUrlParameter
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.router.WildcardParameter
-import org.apache.commons.csv.CSVFormat
-import org.apache.commons.csv.CSVParser
 import support.views.addSortableColumn
 import support.views.addSortableDateColumn
 import support.views.addSortableDateTimeColumn
@@ -45,7 +44,6 @@ import support.views.createPrimarySmallButton
 import support.views.createSearchBar
 import support.views.createSuccessButton
 import support.views.downloadFile
-import java.io.BufferedReader
 
 @Route(value = "admin/selections", layout = BaseLayout::class)
 class SelectionView(
@@ -54,7 +52,8 @@ class SelectionView(
     private val recruitmentItemService: RecruitmentItemService,
     private val evaluationService: EvaluationService,
     private val evaluationTargetService: EvaluationTargetService,
-    private val excelService: ExcelService
+    private val excelService: ExcelService,
+    private val evaluationTargetCsvService: EvaluationTargetCsvService
 ) : VerticalLayout(), HasUrlParameter<Long> {
     private var recruitmentId: Long = 0L
     private var evaluations: List<Evaluation> = evaluationService.findAllByRecruitmentId(recruitmentId)
@@ -214,20 +213,15 @@ class SelectionView(
     private fun createEvaluationFileDownloadButton(): Button {
         return createSuccessButton("평가지 다운로드") {
             val evaluation = evaluations[tabs.selectedIndex - 1]
-            // TODO: 평가지 양식에 맞게 만들어진 CSV로 변경
-            val excel = excelService.createTargetExcel(evaluation.id)
-            downloadFile("${evaluation.title}.csv", excel)
+            val csv = evaluationTargetCsvService.createTargetCsv(evaluation.id)
+            downloadFile("${evaluation.title}.csv", csv)
         }
     }
 
     private fun createEvaluationFileUpload(): Upload {
         return createCsvUpload("평가지 업로드", MemoryBuffer()) {
-            // TODO: 평가지 양식에 맞는 CSV 읽는 서비스 메서드로 분리 및 연결
-            val reader = BufferedReader(it.inputStream.reader())
-            val csvParser = CSVParser(reader, CSVFormat.DEFAULT)
-            for (csvRecord in csvParser) {
-                csvRecord[0]
-            }
+            val evaluation = evaluations[tabs.selectedIndex - 1]
+            evaluationTargetCsvService.updateTarget(it.inputStream, evaluation.id)
         }
     }
 
