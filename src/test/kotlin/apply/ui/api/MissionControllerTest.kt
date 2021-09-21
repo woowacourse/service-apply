@@ -39,7 +39,7 @@ internal class MissionControllerTest : RestControllerTest() {
             recruitmentId,
             evaluationId
         ) {
-            content = objectMapper.writeValueAsBytes(createMissionData())
+            content = objectMapper.writeValueAsString(createMissionData())
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isOk }
