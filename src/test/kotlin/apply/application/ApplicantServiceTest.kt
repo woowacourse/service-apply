@@ -11,6 +11,7 @@ import apply.createApplicationForm
 import apply.domain.applicant.ApplicantAuthenticationException
 import apply.domain.applicant.ApplicantRepository
 import apply.domain.applicant.Password
+import apply.domain.applicant.findByEmail
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.Cheater
 import apply.domain.cheater.CheaterRepository

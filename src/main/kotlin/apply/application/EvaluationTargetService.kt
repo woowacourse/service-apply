@@ -1,6 +1,7 @@
 package apply.application
 
 import apply.domain.applicant.ApplicantRepository
+import apply.domain.applicant.findAllByEmailIn
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.CheaterRepository
 import apply.domain.evaluation.Evaluation

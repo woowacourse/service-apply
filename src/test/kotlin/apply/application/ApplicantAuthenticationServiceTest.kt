@@ -12,6 +12,8 @@ import apply.createApplicant
 import apply.domain.applicant.Applicant
 import apply.domain.applicant.ApplicantAuthenticationException
 import apply.domain.applicant.ApplicantRepository
+import apply.domain.applicant.existsByEmail
+import apply.domain.applicant.findByEmail
 import apply.domain.authenticationcode.AuthenticationCode
 import apply.domain.authenticationcode.AuthenticationCodeRepository
 import apply.domain.authenticationcode.getLastByEmail
@@ -127,6 +129,22 @@ internal class ApplicantAuthenticationServiceTest {
             every { authenticationCodeRepository.getLastByEmail(any()) } returns authenticationCode
             assertThrows<IllegalArgumentException> {
                 applicantAuthenticationService.authenticateEmail(authenticationCode.email, "INVALID")
+            }
+        }
+
+        @Test
+        fun `인증 코드를 생성한다`() {
+            every { applicantRepository.existsByEmail(any()) } returns false
+            every { authenticationCodeRepository.save(any()) } returns authenticationCode
+            val actual = applicantAuthenticationService.generateAuthenticationCode(authenticationCode.email)
+            assertThat(actual).isEqualTo(authenticationCode.code)
+        }
+
+        @Test
+        fun `인증코드 요청시 이미 가입된 이메일이라면 예외가 발생한다`() {
+            every { applicantRepository.existsByEmail(any()) } returns true
+            assertThrows<IllegalStateException> {
+                applicantAuthenticationService.generateAuthenticationCode(authenticationCode.email)
             }
         }
     }
