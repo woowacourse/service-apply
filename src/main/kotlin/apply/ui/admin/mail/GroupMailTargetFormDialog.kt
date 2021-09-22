@@ -20,7 +20,7 @@ import support.views.createErrorButton
 import support.views.createItemSelect
 import support.views.createPrimaryButton
 
-class EvaluationGroupMailFormDialog(
+class GroupMailTargetFormDialog(
     private val recruitmentService: RecruitmentService,
     private val evaluationService: EvaluationService,
     private val mailTargetService: MailTargetService,

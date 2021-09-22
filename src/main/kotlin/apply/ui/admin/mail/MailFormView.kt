@@ -1,6 +1,5 @@
 package apply.ui.admin.mail
 
-import apply.application.ApplicantResponse
 import apply.application.ApplicantService
 import apply.application.EvaluationService
 import apply.application.MailTargetService
@@ -9,10 +8,7 @@ import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.Key
 import com.vaadin.flow.component.button.Button
-import com.vaadin.flow.component.dialog.Dialog
-import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.html.Div
-import com.vaadin.flow.component.html.H2
 import com.vaadin.flow.component.html.H3
 import com.vaadin.flow.component.html.H4
 import com.vaadin.flow.component.html.Span
@@ -24,16 +20,11 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.textfield.TextArea
 import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer
-import com.vaadin.flow.data.renderer.ComponentRenderer
-import com.vaadin.flow.data.renderer.Renderer
 import com.vaadin.flow.router.Route
 import org.springframework.beans.factory.annotation.Value
 import support.views.Title
-import support.views.addSortableColumn
-import support.views.createErrorButton
 import support.views.createNormalButton
 import support.views.createPrimaryButton
-import support.views.createSearchBar
 import support.views.createUploadButton
 
 @Route(value = "admin/emails", layout = BaseLayout::class)
@@ -45,7 +36,7 @@ class MailFormView(
     @Value("\${spring.mail.username}")
     private val senderEmail: String
 ) : VerticalLayout() {
-    private val subject: TextField = TextField("메일 제목", "메일 제목 입력")
+    private val subject: TextField = TextField("메일 제목", "메일 제목 입 력")
     private val recipients: MutableList<String> = mutableListOf()
     private val body: TextArea = createMailBody()
     private val currentRecipients = HorizontalLayout()
@@ -135,94 +126,23 @@ class MailFormView(
 
     private fun createSearchTargetComponent(): Button {
         return createNormalButton("불러오기") {
-            Dialog().apply {
-                width = "800px"
-                height = "90%"
-                add(
-                    H2("지원자 정보 조회"),
-                    HorizontalLayout(
-                        createAddRecipients(),
-                        HorizontalLayout(
-                            createErrorButton("취소") {
-                                close()
-                            }
-                        ).apply {
-                            justifyContentMode = FlexComponent.JustifyContentMode.END
-                            defaultHorizontalComponentAlignment = FlexComponent.Alignment.END
-                        }
-                    )
-                ).apply {
-                    setWidthFull()
+            IndividualMailTargetFormDialog(recipients, applicantService) { targets ->
+                recipients.apply {
+                    clear()
+                    addAll(targets)
                 }
-                open()
+                addAllCurrentRecipientComponent()
             }
         }.apply { isEnabled = true }
     }
 
     private fun createGroupMailTargetComponent(): Component {
         return createNormalButton("그룹 불러오기") {
-            EvaluationGroupMailFormDialog(recruitmentService, evaluationService, mailTargetService) { targets ->
+            GroupMailTargetFormDialog(recruitmentService, evaluationService, mailTargetService) { targets ->
                 targets.filterNot { recipients.contains(it) }
                     .forEach { addRecipientComponent(it) }
             }
         }.apply { isEnabled = true }
-    }
-
-    private fun createAddRecipients(): Component {
-        val container = VerticalLayout()
-        return VerticalLayout(
-            createSearchBar {
-                container.removeAll()
-                val founds = applicantService.findAllByKeyword(it)
-                if (founds.isNotEmpty()) {
-                    container.add(
-                        createGrid(founds)
-                    )
-                }
-            },
-            container
-        )
-    }
-
-    private fun createGrid(applicantResponse: List<ApplicantResponse>): Component {
-        return Grid<ApplicantResponse>(10).apply {
-            addSortableColumn("이름", ApplicantResponse::name)
-            addSortableColumn("이메일", ApplicantResponse::email)
-            addColumn(createEditAndDeleteButton()).apply { isAutoWidth = true }
-            setItems(applicantResponse)
-        }
-    }
-
-    private fun createEditAndDeleteButton(): Renderer<ApplicantResponse> {
-        return ComponentRenderer<Component, ApplicantResponse> { applicantResponse ->
-            HorizontalLayout(
-                createAddOrDeleteButton(applicantResponse)
-            )
-        }
-    }
-
-    private fun createAddOrDeleteButton(applicantResponse: ApplicantResponse): Component {
-        if (this.recipients.contains(applicantResponse.email)) {
-            return createTargetDeleteButton(applicantResponse)
-        }
-
-        return createTargetAddButton(applicantResponse)
-    }
-
-    private fun createTargetAddButton(applicantResponse: ApplicantResponse): Button {
-        return createPrimaryButton("추가") {
-            addRecipientComponent(applicantResponse.email)
-        }.apply {
-            isDisableOnClick = true
-        }
-    }
-
-    private fun createTargetDeleteButton(applicantResponse: ApplicantResponse): Button {
-        return createErrorButton("삭제") {
-            removeRecipientComponent(applicantResponse.email)
-        }.apply {
-            isDisableOnClick = true
-        }
     }
 
     private fun createSender(): Component {
