@@ -26,14 +26,15 @@ class EvaluationTargetCsvService(
         val evaluationItems = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluationId)
         val evaluationItemHeaders = evaluationItems.map { it.toHeader() }.toTypedArray()
 
-        val headerTitles = arrayOf(ID, NAME, EMAIL, STATUS, *evaluationItemHeaders)
+        val headerTitles = arrayOf(ID, NAME, EMAIL, STATUS, *evaluationItemHeaders, NOTE)
         val csvRows = targets.map { target ->
             CsvRow(
                 target.id.toString(),
                 target.name,
                 target.email,
                 target.evaluationStatus.name,
-                *scores(target.answers, evaluationItems).toTypedArray()
+                *scores(target.answers, evaluationItems).toTypedArray(),
+                target.note
             )
         }
         return csvGenerator.generateBy(headerTitles, csvRows)
@@ -62,6 +63,7 @@ class EvaluationTargetCsvService(
                 var email = csvRecord.get(EMAIL)
                 var evaluationStatus = csvRecord.getEvaluationStatus()
                 val evaluationAnswers = csvRecord.getEvaluationAnswers(evaluationItems)
+                val note = csvRecord.get(NOTE)
                 // TODO: 평가 대상자 상태 업데이트 기능 구현
             }
         }
@@ -85,5 +87,6 @@ class EvaluationTargetCsvService(
         private const val NAME: String = "이름"
         private const val EMAIL: String = "이메일"
         private const val STATUS: String = "평가 상태"
+        private const val NOTE: String = "기타 특이사항"
     }
 }
