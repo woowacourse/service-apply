@@ -9,17 +9,18 @@ const useForm = ({ validators, submit }) => {
     Object.values(value).filter(Boolean).length < Object.values(value).length;
 
   const handleChange = ({ target }) => {
-    if (target.type === "checkbox") {
-      setValue((prev) => ({ ...prev, [target.name]: target.checked }));
-    } else {
-      setValue((prev) => ({ ...prev, [target.name]: target.value }));
-    }
+    setValue((prev) => ({
+      ...prev,
+      [target.name]: target.type === "checkbox" ? target.checked : target.value,
+    }));
 
     const validator = validators?.[target.name];
+
     if (!validator) return;
 
     try {
       const result = validator(target.value);
+
       if (typeof result === "function") {
         result(value);
       }
@@ -59,6 +60,7 @@ const useForm = ({ validators, submit }) => {
 
       return { ...prev };
     });
+
     setErrorMessage((prev) => {
       for (const val in prev) {
         prev[val] = null;
