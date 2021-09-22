@@ -56,51 +56,56 @@ class EvaluationTargetService(
     }
 
     fun load(evaluationId: Long) {
-        val evaluation = evaluationRepository.findByIdOrNull(evaluationId) ?: throw IllegalArgumentException()
-        val updatingApplicantIds = createUpdatingEvaluationTargets(evaluation)
-            .map { it.applicantId }
-            .toSet()
-        val cheaterApplicantIds = applicantRepository.findAllByEmailIn(cheaterRepository.findAll().map { it.email })
-            .filter { updatingApplicantIds.contains(it.id) }
-            .map { it.id }
-            .toSet()
-        val currentApplicantIds = evaluationTargetRepository.findAllByEvaluationId(evaluationId)
-            .map { it.applicantId }
-            .toSet()
+        val evaluation = evaluationRepository.getOne(evaluationId)
+        val allApplicantIds = findApplicantIds(evaluation)
+        val loadedApplicantIds = findApplicantIdsFromEvaluation(evaluationId)
+        val allCheaterApplicantIds = findCheaterApplicantIds(allApplicantIds)
 
-        val droppedApplicantIds = currentApplicantIds - updatingApplicantIds
-        evaluationTargetRepository.deleteByEvaluationIdAndApplicantIdIn(evaluationId, droppedApplicantIds)
+        val removedApplicantIds = loadedApplicantIds - allApplicantIds
+        evaluationTargetRepository.deleteByEvaluationIdAndApplicantIdIn(evaluationId, removedApplicantIds)
 
-        val currentCheaterIds = currentApplicantIds intersect cheaterApplicantIds
-        updateFail(currentCheaterIds, evaluation)
+        val loadedCheaterApplicantIds = loadedApplicantIds intersect allCheaterApplicantIds
+        updateFail(loadedCheaterApplicantIds, evaluation)
 
-        val newWaitingApplicantIds = updatingApplicantIds - (currentApplicantIds + cheaterApplicantIds)
-        save(newWaitingApplicantIds, evaluation, EvaluationStatus.WAITING)
+        val newApplicantIds = allApplicantIds - (loadedApplicantIds + allCheaterApplicantIds)
+        save(newApplicantIds, evaluation, EvaluationStatus.WAITING)
 
-        val newCheaterIds = cheaterApplicantIds - currentCheaterIds
-        save(newCheaterIds, evaluation, EvaluationStatus.FAIL)
+        val newCheaterApplicantIds = allCheaterApplicantIds - loadedCheaterApplicantIds
+        save(newCheaterApplicantIds, evaluation, EvaluationStatus.FAIL)
     }
 
-    private fun createUpdatingEvaluationTargets(evaluation: Evaluation): List<EvaluationTarget> {
+    private fun findApplicantIds(evaluation: Evaluation): Set<Long> {
         return if (evaluation.hasBeforeEvaluation()) {
-            createEvaluationTargets(evaluation)
+            findPassedApplicantIdsFromBeforeEvaluation(evaluation)
         } else {
-            createEvaluationTargetsFromRecruitment(evaluation)
+            findApplicantIdsFromRecruitment(evaluation)
         }
     }
 
-    private fun createEvaluationTargets(evaluation: Evaluation): List<EvaluationTarget> {
+    private fun findPassedApplicantIdsFromBeforeEvaluation(evaluation: Evaluation): Set<Long> {
         return evaluationTargetRepository.findAllByEvaluationId(evaluation.beforeEvaluationId)
             .filter { it.isPassed }
-            .map { EvaluationTarget(evaluationId = evaluation.id, applicantId = it.applicantId) }
+            .map { it.applicantId }
+            .toSet()
     }
 
-    private fun createEvaluationTargetsFromRecruitment(evaluation: Evaluation): List<EvaluationTarget> {
-        val applicantIds = applicationFormRepository.findByRecruitmentIdAndSubmittedTrue(evaluation.recruitmentId)
+    private fun findApplicantIdsFromEvaluation(evaluationId: Long): Set<Long> {
+        return evaluationTargetRepository.findAllByEvaluationId(evaluationId)
             .map { it.applicantId }
+            .toSet()
+    }
 
-        return applicantRepository.findAllById(applicantIds)
-            .map { EvaluationTarget(evaluationId = evaluation.id, applicantId = it.id) }
+    private fun findApplicantIdsFromRecruitment(evaluation: Evaluation): Set<Long> {
+        return applicationFormRepository.findByRecruitmentIdAndSubmittedTrue(evaluation.recruitmentId)
+            .map { it.applicantId }
+            .toSet()
+    }
+
+    private fun findCheaterApplicantIds(updatingApplicantIds: Set<Long>): Set<Long> {
+        return applicantRepository.findAllByEmailIn(cheaterRepository.findAll().map { it.email })
+            .filter { updatingApplicantIds.contains(it.id) }
+            .map { it.id }
+            .toSet()
     }
 
     private fun save(applicantIds: Set<Long>, evaluation: Evaluation, evaluationStatus: EvaluationStatus) {
