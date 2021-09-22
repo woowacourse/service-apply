@@ -4,10 +4,7 @@ import apply.application.ApplicantResponse
 import apply.application.ApplicantService
 import apply.application.EvaluationService
 import apply.application.MailTargetService
-import apply.application.RecruitmentResponse
 import apply.application.RecruitmentService
-import apply.domain.evaluation.Evaluation
-import apply.domain.evaluationtarget.EvaluationStatus
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.Key
@@ -24,7 +21,6 @@ import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
-import com.vaadin.flow.component.select.Select
 import com.vaadin.flow.component.textfield.TextArea
 import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer
@@ -35,7 +31,6 @@ import org.springframework.beans.factory.annotation.Value
 import support.views.Title
 import support.views.addSortableColumn
 import support.views.createErrorButton
-import support.views.createItemSelect
 import support.views.createNormalButton
 import support.views.createPrimaryButton
 import support.views.createSearchBar
@@ -164,56 +159,11 @@ class MailFormView(
         }.apply { isEnabled = true }
     }
 
-    private fun createEvaluationItem(): Select<Evaluation> {
-        return createItemSelect("평가")
-    }
-
-    private fun createEvaluationStatusItem(evaluation: Select<Evaluation>): Select<EvaluationStatus> {
-        return createItemSelect<EvaluationStatus>("모집 상태").apply {
-            setItems(*EvaluationStatus.values())
-            setItemLabelGenerator { it.toText() }
-            addValueChangeListener {
-                val mailTargets = mailTargetService.findMailTargets(evaluation.value.id, it.value).map { it.email }
-                mailTargets.filterNot { recipients.contains(it) }
-                    .forEach { addRecipientComponent(it) }
-            }
-        }
-    }
-
-    private fun EvaluationStatus.toText() =
-        when (this) {
-            EvaluationStatus.WAITING -> "평가 전"
-            EvaluationStatus.PASS -> "합격"
-            EvaluationStatus.FAIL -> "탈락"
-            EvaluationStatus.PENDING -> "보류"
-        }
-
     private fun createGroupMailTargetComponent(): Component {
-        val evaluation = createEvaluationItem()
-        val recruitment = createRecruitmentItem(evaluation)
-        val evaluationStatus = createEvaluationStatusItem(evaluation)
-
         return createNormalButton("그룹 불러오기") {
-            Dialog().apply {
-                width = "800px"
-                height = "90%"
-                add(
-                    H2("지원자 정보 조회"),
-                    HorizontalLayout(
-                        recruitment, evaluation, evaluationStatus,
-                        HorizontalLayout(
-                            createErrorButton("취소") {
-                                close()
-                            }
-                        ).apply {
-                            justifyContentMode = FlexComponent.JustifyContentMode.END
-                            defaultHorizontalComponentAlignment = FlexComponent.Alignment.END
-                        }
-                    )
-                ).apply {
-                    setWidthFull()
-                }
-                open()
+            EvaluationGroupMailFormDialog(recruitmentService, evaluationService, mailTargetService) { targets ->
+                targets.filterNot { recipients.contains(it) }
+                    .forEach { addRecipientComponent(it) }
             }
         }.apply { isEnabled = true }
     }
@@ -279,7 +229,7 @@ class MailFormView(
         val sender = TextField().apply {
             value = senderEmail
             isReadOnly = true
-            style.set("background-color", "#00B493")
+            style.set("background-color", "#959EA2")
         }
         return HorizontalLayout(sender)
     }
@@ -329,7 +279,7 @@ class MailFormView(
         val emailTarget = TextField().apply {
             value = email
             isReadOnly = true
-            style.set("background-color", "#00B493")
+            style.set("background-color", "#959EA2")
         }
 
         return Span(
@@ -338,18 +288,5 @@ class MailFormView(
                 removeRecipientComponent(email)
             }
         )
-    }
-
-    private fun createRecruitmentItem(evaluation: Select<Evaluation>): Select<RecruitmentResponse> {
-        return createItemSelect<RecruitmentResponse>("모집").apply {
-            setItems(*recruitmentService.findAll().toTypedArray())
-            setItemLabelGenerator { it.title }
-            addValueChangeListener {
-                evaluation.apply {
-                    setItems(*evaluationService.findAllByRecruitmentId(it.value.id).toTypedArray())
-                    setItemLabelGenerator { it.title }
-                }
-            }
-        }
     }
 }
