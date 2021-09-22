@@ -64,7 +64,7 @@ class EvaluationTargetCsvService(
                 var evaluationStatus = csvRecord.getEvaluationStatus()
                 val evaluationAnswers = csvRecord.getEvaluationAnswers(evaluationItems)
                 val note = csvRecord.get(NOTE)
-                // TODO: 평가 대상자 상태 업데이트 기능 구현
+
                 val evaluationScores = evaluationAnswers.map { EvaluationItemScoreData(it.score, it.evaluationItemId) }
                 val evaluationTargetData = EvaluationTargetData(evaluationScores, note, evaluationStatus)
                 evaluationTargetService.grade(evaluationTargetId.toLong(), evaluationTargetData)
