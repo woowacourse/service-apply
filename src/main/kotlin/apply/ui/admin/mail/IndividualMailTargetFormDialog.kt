@@ -31,7 +31,7 @@ class IndividualMailTargetFormDialog(
             HorizontalLayout(
                 createAddRecipients(),
                 HorizontalLayout(
-                    createPrimaryButton("추가") {
+                    createPrimaryButton("적용") {
                         reloadComponent(additionalRecipients)
                         close()
                     },
