@@ -28,10 +28,10 @@ import {
   validatePassword,
   validateRePassword,
 } from "../../utils/validation/password";
-import { validatePhoneNumber } from "../../utils/validation/phoneNumber";
 import styles from "./ApplicantRegister.module.css";
 import { generateQuery } from "../../utils/route/query";
 import { formatBirthday } from "../../utils/date";
+import useApplicantRegisterForm from "../../hooks/useApplicantRegisterForm";
 
 const ApplicantRegister = () => {
   const location = useLocation();
@@ -40,12 +40,12 @@ const ApplicantRegister = () => {
   const { recruitmentId } = location.state;
   const { postRegister } = useTokenContext();
   const { recruitment } = useRecruitmentContext();
+  const { phoneNumber, handlePhoneNumberChange } = useApplicantRegisterForm();
 
   const currentRecruitment = recruitment.findById(recruitmentId);
 
   const submit = async ({
     name,
-    phoneNumber,
     email,
     password,
     gender,
@@ -82,7 +82,6 @@ const ApplicantRegister = () => {
       name: validateName,
       password: validatePassword,
       rePassword: validateRePassword,
-      phoneNumber: validatePhoneNumber,
       year: validateYear,
       month: validateMonth,
       day: validateDay,
@@ -123,8 +122,10 @@ const ApplicantRegister = () => {
           <div>
             <InputField
               name="phoneNumber"
-              type="text"
+              type="tel"
               label="전화번호"
+              value={phoneNumber}
+              onChange={handlePhoneNumberChange}
               placeholder="연락 가능한 전화번호를 입력해 주세요."
               required
             />

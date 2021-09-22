@@ -3,7 +3,7 @@ import { TextField } from "../../components/form";
 import useFormContext from "../../hooks/useFormContext";
 import PropTypes from "prop-types";
 
-const InputField = ({ name, initialValue, ...props }) => {
+const InputField = ({ name, initialValue, onChange, ...props }) => {
   const { value, errorMessage, handleChange, register, unRegister } =
     useFormContext();
 
@@ -20,7 +20,7 @@ const InputField = ({ name, initialValue, ...props }) => {
       name={name}
       value={value[name]}
       errorMessage={errorMessage[name]}
-      onChange={handleChange}
+      onChange={onChange ?? handleChange}
       {...props}
     />
   );
