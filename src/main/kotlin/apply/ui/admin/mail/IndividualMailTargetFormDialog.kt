@@ -17,8 +17,8 @@ import support.views.createPrimaryButton
 import support.views.createSearchBar
 
 class IndividualMailTargetFormDialog(
-    recipients: List<String>,
     private val applicantService: ApplicantService,
+    recipients: List<String>,
     reloadComponent: (evaluationTargets: List<String>) -> Unit
 ) : Dialog() {
     private val additionalRecipients: MutableList<String> = recipients.toMutableList()

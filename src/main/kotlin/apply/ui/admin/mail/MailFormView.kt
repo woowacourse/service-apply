@@ -126,7 +126,7 @@ class MailFormView(
 
     private fun createSearchTargetComponent(): Button {
         return createNormalButton("불러오기") {
-            IndividualMailTargetFormDialog(recipients, applicantService) { targets ->
+            IndividualMailTargetFormDialog(applicantService, recipients) { targets ->
                 recipients.apply {
                     clear()
                     addAll(targets)
