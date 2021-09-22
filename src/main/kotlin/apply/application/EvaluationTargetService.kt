@@ -105,13 +105,7 @@ class EvaluationTargetService(
 
     private fun save(applicantIds: Set<Long>, evaluation: Evaluation, evaluationStatus: EvaluationStatus) {
         val evaluationTargets = applicantRepository.findAllById(applicantIds)
-            .map {
-                EvaluationTarget(
-                    evaluationId = evaluation.id,
-                    applicantId = it.id,
-                    evaluationStatus = evaluationStatus
-                )
-            }
+            .map { EvaluationTarget(evaluation.id, applicantId = it.id, evaluationStatus = evaluationStatus) }
         evaluationTargetRepository.saveAll(evaluationTargets)
     }
 
