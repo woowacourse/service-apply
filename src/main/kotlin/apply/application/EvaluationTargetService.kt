@@ -5,6 +5,7 @@ import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.CheaterRepository
 import apply.domain.evaluation.Evaluation
 import apply.domain.evaluation.EvaluationRepository
+import apply.domain.evaluation.getById
 import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.evaluationtarget.EvaluationAnswer
 import apply.domain.evaluationtarget.EvaluationAnswers
@@ -56,7 +57,7 @@ class EvaluationTargetService(
     }
 
     fun load(evaluationId: Long) {
-        val evaluation = evaluationRepository.getOne(evaluationId)
+        val evaluation = evaluationRepository.getById(evaluationId)
         val allApplicantIds = findApplicantIds(evaluation)
         val loadedApplicantIds = findApplicantIdsFromEvaluation(evaluationId)
         val allCheaterApplicantIds = findCheaterApplicantIds(allApplicantIds)
@@ -101,9 +102,9 @@ class EvaluationTargetService(
             .toSet()
     }
 
-    private fun findCheaterApplicantIds(updatingApplicantIds: Set<Long>): Set<Long> {
+    private fun findCheaterApplicantIds(applicantIds: Set<Long>): Set<Long> {
         return applicantRepository.findAllByEmailIn(cheaterRepository.findAll().map { it.email })
-            .filter { updatingApplicantIds.contains(it.id) }
+            .filter { applicantIds.contains(it.id) }
             .map { it.id }
             .toSet()
     }
