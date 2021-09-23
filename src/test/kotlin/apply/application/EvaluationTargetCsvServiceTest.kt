@@ -43,14 +43,12 @@ class EvaluationTargetCsvServiceTest {
             createEvaluationItem(maximumScore = 2, position = 2),
             createEvaluationItem(maximumScore = 3, position = 3)
         )
-        val lineCount = getInputStream("evaluation.csv").bufferedReader().readLines().size
-        val headerLine = 1
 
         every { evaluationItemRepository.findByEvaluationIdOrderByPosition(any()) } returns evaluationItems
-        every { evaluationTargetService.grade(any(), any()) } just Runs
+        every { evaluationTargetService.updateGrades(any(), any()) } just Runs
 
         assertDoesNotThrow { evaluationTargetCsvService.updateTarget(inputStream, 1L) }
-        verify(exactly = lineCount - headerLine) { evaluationTargetService.grade(any(), any()) }
+        verify(exactly = 1) { evaluationTargetService.updateGrades(any(), any()) }
     }
 
     @Test

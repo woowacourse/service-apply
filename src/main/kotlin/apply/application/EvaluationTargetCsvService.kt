@@ -50,6 +50,7 @@ class EvaluationTargetCsvService(
 
     fun updateTarget(inputStream: InputStream, evaluationId: Long) {
         val evaluationItems = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluationId)
+        val evaluationTargetsData: MutableMap<Long, EvaluationTargetData> = mutableMapOf<Long, EvaluationTargetData>()
         inputStream.bufferedReader().use { reader ->
             val csvParser = CSVParser(
                 reader,
@@ -67,9 +68,10 @@ class EvaluationTargetCsvService(
 
                 val evaluationScores = evaluationAnswers.map { EvaluationItemScoreData(it.score, it.evaluationItemId) }
                 val evaluationTargetData = EvaluationTargetData(evaluationScores, note, evaluationStatus)
-                evaluationTargetService.grade(evaluationTargetId.toLong(), evaluationTargetData)
+                evaluationTargetsData[evaluationTargetId.toLong()] = evaluationTargetData
             }
         }
+        evaluationTargetService.updateGrades(evaluationId, evaluationTargetsData)
     }
 
     private fun CSVRecord.getEvaluationStatus(): EvaluationStatus = EvaluationStatus.valueOf(get(STATUS))
