@@ -2,6 +2,7 @@ package apply.ui.admin.mail
 
 import apply.application.ApplicantResponse
 import apply.application.ApplicantService
+import apply.application.MailTargetResponse
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.dialog.Dialog
@@ -12,36 +13,17 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.data.renderer.ComponentRenderer
 import com.vaadin.flow.data.renderer.Renderer
 import support.views.addSortableColumn
-import support.views.createErrorButton
 import support.views.createPrimaryButton
 import support.views.createSearchBar
 
 class IndividualMailTargetFormDialog(
     private val applicantService: ApplicantService,
-    private val recipients: List<String>,
-    reloadComponent: (evaluationTargets: List<String>) -> Unit
+    private val reloadComponent: (MailTargetResponse) -> Unit
 ) : Dialog() {
-    private val additionalRecipients: MutableList<String> = recipients.toMutableList()
-
     init {
         width = "800px"
         height = "90%"
-        add(
-            H2("지원자 정보 조회"),
-            HorizontalLayout(
-                createAddRecipients(),
-                HorizontalLayout(
-                    createPrimaryButton("적용") {
-                        println("########### $additionalRecipients")
-                        reloadComponent(additionalRecipients)
-                        close()
-                    },
-                    createErrorButton("취소") {
-                        close()
-                    }
-                )
-            )
-        ).apply {
+        add(H2("지원자 정보 조회"), HorizontalLayout(createAddRecipients())).apply {
             setWidthFull()
         }
         open()
@@ -54,9 +36,7 @@ class IndividualMailTargetFormDialog(
                 container.removeAll()
                 val founds = applicantService.findAllByKeyword(it)
                 if (founds.isNotEmpty()) {
-                    container.add(
-                        createGrid(founds)
-                    )
+                    container.add(createGrid(founds))
                 }
             },
             container
@@ -74,32 +54,13 @@ class IndividualMailTargetFormDialog(
 
     private fun createEditAndDeleteButton(): Renderer<ApplicantResponse> {
         return ComponentRenderer<Component, ApplicantResponse> { applicantResponse ->
-            HorizontalLayout(
-                createAddOrDeleteButton(applicantResponse)
-            )
-        }
-    }
-
-    private fun createAddOrDeleteButton(applicantResponse: ApplicantResponse): Component {
-        val email = applicantResponse.email
-        if (this.additionalRecipients.contains(email)) {
-            return createTargetDeleteButton(applicantResponse)
-        }
-
-        return createTargetAddButton(applicantResponse)
-    }
-
-    private fun createTargetDeleteButton(applicantResponse: ApplicantResponse): Button {
-        return createErrorButton("삭제") {
-            this.additionalRecipients.remove(applicantResponse.email)
-        }.apply {
-            isDisableOnClick = true
+            HorizontalLayout(createTargetAddButton(applicantResponse))
         }
     }
 
     private fun createTargetAddButton(applicantResponse: ApplicantResponse): Button {
         return createPrimaryButton("추가") {
-            this.additionalRecipients.add(applicantResponse.email)
+            reloadComponent(MailTargetResponse(applicantResponse))
         }.apply {
             isDisableOnClick = true
         }
