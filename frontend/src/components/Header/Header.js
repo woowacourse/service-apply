@@ -16,6 +16,7 @@ const Header = () => {
 
   const onLogout = () => {
     if (window.confirm(CONFIRM_MESSAGE.LOGOUT)) {
+      setIsShowMemberMenu(false);
       resetToken();
     }
   };
