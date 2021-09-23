@@ -25,14 +25,19 @@
 
 html,
 body {
-  margin: 0;
-  padding: 0;
   height: 100%;
   background: var(--light-blue-gray);
+  color: var(--black);
 }
 
 a {
   text-decoration: none;
+}
+
+button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
 }
 
 #root {
