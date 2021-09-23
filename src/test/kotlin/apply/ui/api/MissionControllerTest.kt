@@ -3,6 +3,7 @@ package apply.ui.api
 import apply.application.ApplicantService
 import apply.application.MissionService
 import apply.createMissionData
+import apply.domain.evaluation.EvaluationRepository
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
 import io.mockk.every
@@ -27,11 +28,15 @@ internal class MissionControllerTest : RestControllerTest() {
     @MockkBean
     private lateinit var missionService: MissionService
 
+    @MockkBean
+    private lateinit var evaluationRepository: EvaluationRepository
+
     private val recruitmentId = 1L
     private val evaluationId = 1L
 
     @Test
     fun `과제를 추가한다`() {
+        every { evaluationRepository.existsById(evaluationId) } returns true
         every { missionService.save(createMissionData()) } just Runs
 
         mockMvc.post(
