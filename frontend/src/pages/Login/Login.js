@@ -1,5 +1,6 @@
 import React from "react";
 import { Link, useHistory } from "react-router-dom";
+import Box from "../../components/Box/Box";
 import { Form } from "../../components/form";
 import Button from "../../components/form/Button/Button";
 import { SUCCESS_MESSAGE } from "../../constants/messages";
@@ -51,17 +52,9 @@ const Login = () => {
   });
 
   return (
-    <div className={styles.login}>
+    <Box size="narrow" title="로그인">
       <FormProvider {...methods}>
-        <Form
-          onSubmit={handleSubmit}
-          footer={
-            <Link to="/find" className={styles["find-password"]}>
-              비밀번호 찾기
-            </Link>
-          }
-        >
-          <h2>내 지원서 보기</h2>
+        <Form onSubmit={handleSubmit}>
           <InputField
             name="email"
             type="email"
@@ -82,9 +75,12 @@ const Login = () => {
             </Button>
             <SubmitButton>확인</SubmitButton>
           </div>
+          <Link to="/find" className={styles["find-password"]}>
+            비밀번호 찾기
+          </Link>
         </Form>
       </FormProvider>
-    </div>
+    </Box>
   );
 };
 

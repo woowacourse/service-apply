@@ -1,6 +1,7 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { fetchPasswordFind } from "../../api/applicants";
+import Box from "../../components/Box/Box";
 import { Form } from "../../components/form";
 import BirthField from "../../components/form/BirthField/BirthField";
 import Button from "../../components/form/Button/Button";
@@ -55,10 +56,9 @@ const PasswordFind = () => {
   });
 
   return (
-    <div className={styles["password-find"]}>
+    <Box size="narrow" title="비밀번호 찾기">
       <FormProvider {...methods}>
         <Form onSubmit={handleSubmit}>
-          <h2>비밀번호 찾기</h2>
           <InputField
             name="name"
             type="text"
@@ -73,7 +73,7 @@ const PasswordFind = () => {
             placeholder="이메일 주소를 입력해 주세요."
             required
           />
-          <BirthField />
+          <BirthField required />
           <div className={styles.buttons}>
             <Button cancel onClick={() => history.goBack()}>
               이전
@@ -82,7 +82,7 @@ const PasswordFind = () => {
           </div>
         </Form>
       </FormProvider>
-    </div>
+    </Box>
   );
 };
 

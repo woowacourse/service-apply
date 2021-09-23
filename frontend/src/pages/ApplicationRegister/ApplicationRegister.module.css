@@ -2,11 +2,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 1rem;
 }
 
-.recruit-card,
-.application-form {
-  width: 900px;
+.recruit-card {
+  width: var(--pc-main-width);
 }
 
 .text-field-container {

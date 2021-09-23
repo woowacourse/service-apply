@@ -8,6 +8,7 @@ import {
   SummaryCheckField,
 } from "../../components/form";
 import RecruitCard from "../../components/RecruitCard/RecruitCard";
+import Box from "../../components/Box/Box";
 import { ERROR_MESSAGE } from "../../constants/messages";
 import PATH, { PARAM } from "../../constants/path";
 import { POLICY_SUMMARY } from "../../constants/policySummary";
@@ -28,10 +29,11 @@ import {
   validatePassword,
   validateRePassword,
 } from "../../utils/validation/password";
-import styles from "./ApplicantRegister.module.css";
 import { generateQuery } from "../../utils/route/query";
 import { formatBirthday } from "../../utils/format/date";
 import useApplicantRegisterForm from "../../hooks/useApplicantRegisterForm";
+
+import styles from "./ApplicantRegister.module.css";
 
 const ApplicantRegister = () => {
   const location = useLocation();
@@ -90,7 +92,7 @@ const ApplicantRegister = () => {
   });
 
   return (
-    <div className={styles["applicant-register"]}>
+    <div className={styles.container}>
       {currentRecruitment && (
         <RecruitCard
           title={currentRecruitment.title}
@@ -98,79 +100,81 @@ const ApplicantRegister = () => {
           endDateTime={currentRecruitment.endDateTime}
         />
       )}
-      <FormProvider {...methods}>
-        <Form onSubmit={handleSubmit}>
-          <h2>지원자 정보</h2>
-          <div>
-            <SummaryCheckField
-              name="policy"
-              label="개인정보 수집 및 이용 동의"
-              required
-            >
-              <p className={styles.summary}>{POLICY_SUMMARY}</p>
-            </SummaryCheckField>
-          </div>
-          <div>
-            <InputField
-              name="name"
-              type="text"
-              label="이름"
-              placeholder="이름을 입력해 주세요."
-              required
-            />
-          </div>
-          <div>
-            <InputField
-              name="phoneNumber"
-              type="tel"
-              label="전화번호"
-              value={phoneNumber}
-              onChange={handlePhoneNumberChange}
-              placeholder="연락 가능한 전화번호를 입력해 주세요."
-              required
-            />
-          </div>
-          <div>
-            <InputField
-              name="email"
-              type="email"
-              label="이메일"
-              placeholder="이메일 주소를 입력해 주세요."
-              required
-            />
-          </div>
-          <div>
-            <InputField
-              name="password"
-              type="password"
-              label="비밀번호"
-              placeholder="비밀번호를 입력해 주세요."
-              required
-            />
-          </div>
-          <div>
-            <InputField
-              name="rePassword"
-              type="password"
-              label="비밀번호 확인"
-              placeholder="비밀번호를 다시 한번 입력해 주세요."
-              required
-            />
-          </div>
-          <div>
-            <BirthField />
-          </div>
-          <div>
-            <GenderField />
-          </div>
-          <div className={styles["button-wrapper"]}>
-            <Button cancel type="button">
-              취소
-            </Button>
-            <SubmitButton>다음</SubmitButton>
-          </div>
-        </Form>
-      </FormProvider>
+      <Box title="회원가입" size="narrow">
+        <FormProvider {...methods}>
+          <Form onSubmit={handleSubmit}>
+            <h2>지원자 정보</h2>
+            <div>
+              <SummaryCheckField
+                name="policy"
+                label="개인정보 수집 및 이용 동의"
+                required
+              >
+                <p className={styles.summary}>{POLICY_SUMMARY}</p>
+              </SummaryCheckField>
+            </div>
+            <div>
+              <InputField
+                name="name"
+                type="text"
+                label="이름"
+                placeholder="이름을 입력해 주세요."
+                required
+              />
+            </div>
+            <div>
+              <InputField
+                name="phoneNumber"
+                type="tel"
+                label="전화번호"
+                value={phoneNumber}
+                onChange={handlePhoneNumberChange}
+                placeholder="연락 가능한 전화번호를 입력해 주세요."
+                required
+              />
+            </div>
+            <div>
+              <InputField
+                name="email"
+                type="email"
+                label="이메일"
+                placeholder="이메일 주소를 입력해 주세요."
+                required
+              />
+            </div>
+            <div>
+              <InputField
+                name="password"
+                type="password"
+                label="비밀번호"
+                placeholder="비밀번호를 입력해 주세요."
+                required
+              />
+            </div>
+            <div>
+              <InputField
+                name="rePassword"
+                type="password"
+                label="비밀번호 확인"
+                placeholder="비밀번호를 다시 한번 입력해 주세요."
+                required
+              />
+            </div>
+            <div>
+              <BirthField />
+            </div>
+            <div>
+              <GenderField />
+            </div>
+            <div className={styles["button-wrapper"]}>
+              <Button cancel type="button">
+                취소
+              </Button>
+              <SubmitButton>다음</SubmitButton>
+            </div>
+          </Form>
+        </FormProvider>
+      </Box>
     </div>
   );
 };

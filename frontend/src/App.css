@@ -48,5 +48,6 @@ button {
 
 .main {
   flex: 1;
+  margin: 0 auto;
   padding: 2.5rem 0;
 }

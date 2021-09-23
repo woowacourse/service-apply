@@ -1,21 +1,24 @@
 .box {
-  display: flex;
-  flex-direction: column;
-  width: 900px;
-  padding: 20px;
-  margin: 15px;
-  border-radius: 3px;
-  background: #f1f2f6;
-  box-shadow: 0 0 7px rgba(0, 0, 0, 0.05);
+  width: var(--pc-main-width);
+  background: var(--white);
+  border: 1px solid var(--gray-003);
+  padding: 1.875rem 1.25rem;
+  background-color: var(--white);
+}
+
+.narrow {
+  width: var(--pc-main-width-narrow);
+}
+
+.title {
+  font-size: 1.75rem;
+  text-align: center;
+  margin: 0.875rem 0 3rem;
 }
 
 @media screen and (max-width: 800px) {
   .box {
     width: 100vw;
-    margin: 15px 0;
+    margin: 1rem 0;
   }
-}
-
-.box > h1 {
-  color: #2c3e50;
 }
