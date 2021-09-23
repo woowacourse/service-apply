@@ -32,9 +32,9 @@
   color: #333;
 }
 
-.tab-item.edit-password {
+.recruitment-list {
+  width: var(--pc-main-width);
   display: flex;
-  justify-content: flex-end;
-  flex: 1;
-  margin: 0;
+  flex-direction: column;
+  gap: 1.125rem;
 }

@@ -1,5 +1,6 @@
 import React from "react";
 import { useHistory, useLocation, generatePath } from "react-router-dom";
+
 import {
   BirthField,
   Button,
@@ -7,17 +8,16 @@ import {
   GenderField,
   SummaryCheckField,
 } from "../../components/form";
-import RecruitCard from "../../components/RecruitCard/RecruitCard";
+import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
 import Box from "../../components/Box/Box";
-import { ERROR_MESSAGE } from "../../constants/messages";
-import PATH, { PARAM } from "../../constants/path";
-import { POLICY_SUMMARY } from "../../constants/policySummary";
+
 import useForm from "../../hooks/useForm";
 import useRecruitmentContext from "../../hooks/useRecruitmentContext";
 import useTokenContext from "../../hooks/useTokenContext";
 import FormProvider from "../../provider/FormProvider/FormProvider";
 import InputField from "../../provider/FormProvider/InputField";
 import SubmitButton from "../../provider/FormProvider/SubmitButton";
+import useApplicantRegisterForm from "../../hooks/useApplicantRegisterForm";
 import {
   validateDay,
   validateMonth,
@@ -31,7 +31,9 @@ import {
 } from "../../utils/validation/password";
 import { generateQuery } from "../../utils/route/query";
 import { formatBirthday } from "../../utils/format/date";
-import useApplicantRegisterForm from "../../hooks/useApplicantRegisterForm";
+import { ERROR_MESSAGE } from "../../constants/messages";
+import PATH, { PARAM } from "../../constants/path";
+import { POLICY_SUMMARY } from "../../constants/policySummary";
 
 import styles from "./ApplicantRegister.module.css";
 
@@ -94,12 +96,12 @@ const ApplicantRegister = () => {
   return (
     <div className={styles.container}>
       {currentRecruitment && (
-        <RecruitCard
-          title={currentRecruitment.title}
-          startDateTime={currentRecruitment.startDateTime}
-          endDateTime={currentRecruitment.endDateTime}
+        <RecruitmentItem
+          recruitment={currentRecruitment}
+          className={styles.recruitment}
         />
       )}
+
       <Box title="회원가입" size="narrow">
         <FormProvider {...methods}>
           <Form onSubmit={handleSubmit}>
@@ -166,7 +168,7 @@ const ApplicantRegister = () => {
             <div>
               <GenderField />
             </div>
-            <div className={styles["button-wrapper"]}>
+            <div className={styles.buttons}>
               <Button cancel type="button">
                 취소
               </Button>

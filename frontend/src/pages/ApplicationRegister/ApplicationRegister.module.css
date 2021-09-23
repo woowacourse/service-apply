@@ -1,12 +1,8 @@
-.application-register {
+.container {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-}
-
-.recruit-card {
-  width: var(--pc-main-width);
 }
 
 .text-field-container {
@@ -14,7 +10,7 @@
 }
 
 .autosave-indicator {
-  color: darkred;
+  color: var(--blue);
 }
 
 .description {
@@ -23,16 +19,14 @@
   color: #555;
 }
 
-.button-wrapper {
+.buttons {
   display: flex;
-  justify-content: stretch;
-  gap: 12px;
-  margin-top: 16px;
+  gap: 1rem;
+  margin-top: 1rem;
 }
 
-.button-wrapper button {
-  flex-grow: 1;
-  margin: 0;
+.buttons button {
+  flex: 1;
 }
 
 @media screen and (max-width: 800px) {

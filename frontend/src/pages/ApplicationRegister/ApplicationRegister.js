@@ -5,7 +5,8 @@ import {
   useParams,
   generatePath,
 } from "react-router-dom";
-import * as Api from "../../api";
+
+import Box from "../../components/Box/Box";
 import {
   Button,
   CheckBox,
@@ -14,14 +15,9 @@ import {
   Form,
   Label,
 } from "../../components/form";
-import RecruitCard from "../../components/RecruitCard/RecruitCard";
-import Box from "../../components/Box/Box";
-import {
-  CONFIRM_MESSAGE,
-  ERROR_MESSAGE,
-  SUCCESS_MESSAGE,
-} from "../../constants/messages";
-import PATH, { PARAM } from "../../constants/path";
+import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
+
+import * as Api from "../../api";
 import useForm from "../../hooks/useForm";
 import useFormContext from "../../hooks/useFormContext";
 import useRecruitmentContext from "../../hooks/useRecruitmentContext";
@@ -33,6 +29,13 @@ import SubmitButton from "../../provider/FormProvider/SubmitButton";
 import { formatDateTime } from "../../utils/format/date";
 import { generateQuery, parseQuery } from "../../utils/route/query";
 import { validateURL } from "../../utils/validation/url";
+import {
+  CONFIRM_MESSAGE,
+  ERROR_MESSAGE,
+  SUCCESS_MESSAGE,
+} from "../../constants/messages";
+import PATH, { PARAM } from "../../constants/path";
+
 import styles from "./ApplicationRegister.module.css";
 
 const ApplicationRegister = () => {
@@ -201,15 +204,11 @@ const ApplicationRegister = () => {
   };
 
   return (
-    <div className={styles["application-register"]}>
+    <div className={styles.container}>
       {currentRecruitment && (
-        <RecruitCard
-          className={styles["recruit-card"]}
-          title={currentRecruitment.title}
-          startDateTime={currentRecruitment.startDateTime}
-          endDateTime={currentRecruitment.endDateTime}
-        />
+        <RecruitmentItem recruitment={currentRecruitment} />
       )}
+
       <Box title="지원서 작성">
         <FormProvider {...methods}>
           <Form onSubmit={handleSubmit}>
@@ -258,7 +257,8 @@ const ApplicationRegister = () => {
               </Description>
               <CheckBox name="agree" label="동의합니다." />
             </Field>
-            <div className={styles["button-wrapper"]}>
+
+            <div className={styles.buttons}>
               <ResetButton>초기화</ResetButton>
               <SaveButton />
               <SubmitButton>제출</SubmitButton>
