@@ -2,16 +2,19 @@ package apply.ui.admin.mail
 
 import apply.application.ApplicantService
 import apply.application.EvaluationService
+import apply.application.MailTargetResponse
 import apply.application.MailTargetService
 import apply.application.RecruitmentService
+import apply.application.mail.MailSendData
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.Key
 import com.vaadin.flow.component.button.Button
+import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.html.Div
+import com.vaadin.flow.component.html.H1
 import com.vaadin.flow.component.html.H3
 import com.vaadin.flow.component.html.H4
-import com.vaadin.flow.component.html.Span
 import com.vaadin.flow.component.icon.Icon
 import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.orderedlayout.FlexComponent
@@ -22,9 +25,12 @@ import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer
 import com.vaadin.flow.router.Route
 import org.springframework.beans.factory.annotation.Value
+import support.views.BindingFormLayout
 import support.views.Title
+import support.views.addSortableColumn
 import support.views.createNormalButton
 import support.views.createPrimaryButton
+import support.views.createSearchBar
 import support.views.createUploadButton
 
 @Route(value = "admin/emails", layout = BaseLayout::class)
@@ -35,31 +41,44 @@ class MailFormView(
     private val mailTargetService: MailTargetService,
     @Value("\${spring.mail.username}")
     private val senderEmail: String
-) : VerticalLayout() {
-    private val subject: TextField = TextField("메일 제목", "메일 제목 입 력")
+) : BindingFormLayout<MailSendData>(MailSendData::class) {
+    private val subject: TextField = TextField()
     private val recipients: MutableList<String> = mutableListOf()
-    private val body: TextArea = createMailBody()
-    private val currentRecipients = HorizontalLayout()
+    private val content: TextArea = createMailBody()
+    private val mailTargetGrid: Grid<MailTargetResponse> = createMailTargetsGrid()
+
+    private fun createMailTargetsGrid(): Grid<MailTargetResponse> {
+        return Grid<MailTargetResponse>(10).apply {
+            addSortableColumn("이메일", MailTargetResponse::email)
+        }
+    }
 
     init {
         add(Title("메일 발송"), createMailForm())
         setWidthFull()
+        setResponsiveSteps(ResponsiveStep("0", 1))
+        drawRequired()
+    }
+
+    private fun createTitle(): Component {
+        return HorizontalLayout(H1("모집 관리")).apply {
+            setSizeFull()
+            justifyContentMode = FlexComponent.JustifyContentMode.CENTER
+        }
     }
 
     private fun createMailForm(): Component {
         val subjectText = VerticalLayout(
             H3("메일 제목"),
-            subject.apply { setSizeFull() }
+            subject
         )
 
         val sender = VerticalLayout(H4("보낸사람"), createSender())
         val recipientFilter = VerticalLayout(H4("받는사람"), createRecipientFilter())
 
         val mailBody = VerticalLayout(
-            body
-        ).apply {
-            setSizeFull()
-        }
+            content
+        )
 
         val uploadFile = createUploadButton("첨부파일", MultiFileMemoryBuffer()) {
             /*
@@ -79,7 +98,7 @@ class MailFormView(
             subjectText,
             sender,
             recipientFilter,
-            VerticalLayout(currentRecipients.apply { setWidthFull() }).apply { },
+            VerticalLayout(mailTargetGrid),
             mailBody,
             VerticalLayout(uploadFile),
             sendButton
@@ -92,7 +111,7 @@ class MailFormView(
 
     private fun createRecipientFilter(): Component {
         return HorizontalLayout(
-            createDirectInsertTargetComponent {
+            createSearchBar(labelText = "받는사람") {
                 if (it.isNotBlank()) {
                     addRecipientComponent(it)
                 }
@@ -126,12 +145,9 @@ class MailFormView(
 
     private fun createSearchTargetComponent(): Button {
         return createNormalButton("불러오기") {
-            IndividualMailTargetFormDialog(applicantService, recipients) { targets ->
-                recipients.apply {
-                    clear()
-                    addAll(targets)
-                }
-                addAllCurrentRecipientComponent()
+            IndividualMailTargetFormDialog(applicantService, recipients) {
+                recipients.addAll(it)
+                mailTargetGrid.setItems(recipients.map { email -> MailTargetResponse(email) })
             }
         }.apply { isEnabled = true }
     }
@@ -141,8 +157,8 @@ class MailFormView(
             GroupMailTargetFormDialog(recruitmentService, evaluationService, mailTargetService) { targets ->
                 targets.filterNot { recipients.contains(it) }
                     .forEach { addRecipientComponent(it) }
-            }
-        }.apply { isEnabled = true }
+            }.apply { isEnabled = true }
+        }
     }
 
     private fun createSender(): Component {
@@ -167,9 +183,9 @@ class MailFormView(
     }
 
     private fun addRecipientComponent(email: String) {
-        this.currentRecipients.apply {
+        this.mailTargetGrid.apply {
             recipients.add(email)
-            add(createRecipientComponent(email))
+            setItems(MailTargetResponse(email))
         }
     }
 
@@ -179,11 +195,10 @@ class MailFormView(
     }
 
     private fun addAllCurrentRecipientComponent() {
-        this.currentRecipients.removeAll()
-        this.currentRecipients.apply {
-            recipients.forEach {
-                add(createRecipientComponent(it))
-            }
+        // this.currentRecipients.removeAll()
+        mailTargetGrid.removeAllColumns()
+        this.mailTargetGrid.apply {
+            setItems(recipients.map { MailTargetResponse(it) })
         }
     }
 
@@ -195,18 +210,13 @@ class MailFormView(
         }
     }
 
-    private fun createRecipientComponent(email: String): Component {
-        val emailTarget = TextField().apply {
-            value = email
-            isReadOnly = true
-            style.set("background-color", "#959EA2")
+    override fun bindOrNull(): MailSendData? {
+        return bindDefaultOrNull()?.apply {
+            targetMails = recipients
         }
+    }
 
-        return Span(
-            emailTarget,
-            Button(Icon(VaadinIcon.CLOSE_SMALL)) {
-                removeRecipientComponent(email)
-            }
-        )
+    override fun fill(data: MailSendData) {
+        fillDefault(data)
     }
 }
