@@ -2,8 +2,8 @@ package apply.ui.admin.selections
 
 import apply.application.ApplicantAndFormResponse
 import apply.application.ApplicantService
-import apply.application.EvaluationTargetCsvService
 import apply.application.EvaluationService
+import apply.application.EvaluationTargetCsvService
 import apply.application.EvaluationTargetResponse
 import apply.application.EvaluationTargetService
 import apply.application.ExcelService
@@ -222,6 +222,7 @@ class SelectionView(
         return createCsvUpload("평가지 업로드", MemoryBuffer()) {
             val evaluation = evaluations[tabs.selectedIndex - 1]
             evaluationTargetCsvService.updateTarget(it.inputStream, evaluation.id)
+            UI.getCurrent().page.reload()
         }
     }
 
