@@ -13,6 +13,8 @@ import PasswordFindResult from "./pages/PasswordFindResult/PasswordFindResult";
 import Recruits from "./pages/Recruits/Recruits";
 import RecruitmentProvider from "./provider/RecruitmentProvider";
 import TokenProvider from "./provider/TokenProvider";
+import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
+import PATH from "./constants/path";
 import "./App.css";
 
 const App = () => {
@@ -22,32 +24,31 @@ const App = () => {
         <BrowserRouter>
           <MainHeader />
           <div className="main-view">
-            <Switch>
-              <Route path={["/", "/recruits"]} exact>
-                <Recruits />
-              </Route>
-              <Route path="/applicants/new" exact>
-                <ApplicantRegister />
-              </Route>
-              <Route path="/login" exact>
-                <Login />
-              </Route>
-              <Route path="/find" exact>
-                <PasswordFind />
-              </Route>
-              <Route path="/find/result" exact>
-                <PasswordFindResult />
-              </Route>
-              <PrivateRoute path="/application-forms/:status" exact>
-                <ApplicationRegister />
-              </PrivateRoute>
-              <Route path="/application-forms/:status" exact>
-                <ApplicationRegister />
-              </Route>
-              <PrivateRoute path="/edit" exact>
-                <PasswordEdit />
-              </PrivateRoute>
-            </Switch>
+            <ScrollToTop>
+              <Switch>
+                <Route path={[PATH.HOME, PATH.RECRUITS]} exact>
+                  <Recruits />
+                </Route>
+                <Route path={PATH.NEW_APPLICATION} exact>
+                  <ApplicantRegister />
+                </Route>
+                <Route path={PATH.LOGIN} exact>
+                  <Login />
+                </Route>
+                <Route path={PATH.FIND_PASSWORD} exact>
+                  <PasswordFind />
+                </Route>
+                <Route path={PATH.FIND_PASSWORD_RESULT} exact>
+                  <PasswordFindResult />
+                </Route>
+                <PrivateRoute path={PATH.APPLICATION_FORM} exact>
+                  <ApplicationRegister />
+                </PrivateRoute>
+                <PrivateRoute path={PATH.EDIT_PASSWORD} exact>
+                  <PasswordEdit />
+                </PrivateRoute>
+              </Switch>
+            </ScrollToTop>
           </div>
           <MainFooter />
         </BrowserRouter>

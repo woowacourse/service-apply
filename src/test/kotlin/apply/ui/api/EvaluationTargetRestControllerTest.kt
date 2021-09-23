@@ -2,14 +2,15 @@ package apply.ui.api
 
 import apply.NOTE
 import apply.application.ApplicantService
+import apply.application.EvaluationTargetCsvService
 import apply.application.EvaluationItemResponse
 import apply.application.EvaluationItemScoreData
 import apply.application.EvaluationTargetData
 import apply.application.EvaluationTargetResponse
 import apply.application.EvaluationTargetService
 import apply.application.GradeEvaluationResponse
-import apply.application.MailTargetService
 import apply.application.MailTargetResponse
+import apply.application.MailTargetService
 import apply.createEvaluationItem
 import apply.domain.evaluationtarget.EvaluationAnswers
 import apply.domain.evaluationtarget.EvaluationStatus
@@ -22,6 +23,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.mock.web.MockMultipartFile
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders
 import org.springframework.restdocs.payload.JsonFieldType
@@ -29,10 +31,14 @@ import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import org.springframework.restdocs.payload.PayloadDocumentation.requestFields
 import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
+import org.springframework.restdocs.request.RequestDocumentation.partWithName
 import org.springframework.restdocs.request.RequestDocumentation.pathParameters
 import org.springframework.restdocs.request.RequestDocumentation.requestParameters
+import org.springframework.restdocs.request.RequestDocumentation.requestParts
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.io.File
+import java.io.FileInputStream
 
 @WebMvcTest(
     controllers = [EvaluationTargetRestController::class]
@@ -49,6 +55,9 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
 
     @MockkBean
     private lateinit var mailTargetService: MailTargetService
+
+    @MockkBean
+    private lateinit var evaluationTargetCsvService: EvaluationTargetCsvService
 
     private val recruitmentId = 1L
     private val evaluationId = 1L
@@ -264,6 +273,40 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
                         fieldWithPath("message").description("응답 메시지"),
                         fieldWithPath("body.[].email").type(JsonFieldType.STRING).description("대상 E-MAIL")
                     )
+                )
+            )
+    }
+
+    @Test
+    fun `평가지를 기준으로 평가대상자들의 상태를 업데이트한다`() {
+        val pathname = javaClass.classLoader.getResource("another_evaluation.csv")!!.file
+        val inputStream = FileInputStream(File(pathname))
+        val file = MockMultipartFile("evaluation", "evaluation.csv", "text/csv", inputStream)
+
+        every { evaluationTargetCsvService.updateTarget(any(), evaluationId) } just Runs
+
+        val request = RestDocumentationRequestBuilders.fileUpload(
+            "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/grade",
+            recruitmentId,
+            evaluationId
+        ).file("file", file.bytes)
+            .with { request ->
+                request.method = "PATCH"
+                request
+            }
+
+        mockMvc.perform(request)
+            .andExpect(status().isOk)
+            .andDo(
+                document(
+                    "evaluationtarget-csv-grade",
+                    pathParameters(
+                        parameterWithName("recruitmentId").description("모집 ID"),
+                        parameterWithName("evaluationId").description("평가 ID"),
+                    ),
+                    requestParts(
+                        partWithName("file").description("업데이트 기준이 될 평가지")
+                    ),
                 )
             )
     }

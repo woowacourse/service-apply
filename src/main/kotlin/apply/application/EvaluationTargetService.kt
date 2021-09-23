@@ -1,13 +1,16 @@
 package apply.application
 
 import apply.domain.applicant.ApplicantRepository
+import apply.domain.applicant.findAllByEmailIn
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.CheaterRepository
 import apply.domain.evaluation.Evaluation
 import apply.domain.evaluation.EvaluationRepository
+import apply.domain.evaluation.getById
 import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.evaluationtarget.EvaluationAnswer
 import apply.domain.evaluationtarget.EvaluationAnswers
+import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
 import org.springframework.data.repository.findByIdOrNull
@@ -55,53 +58,68 @@ class EvaluationTargetService(
     }
 
     fun load(evaluationId: Long) {
-        val evaluation = evaluationRepository.findByIdOrNull(evaluationId) ?: throw IllegalArgumentException()
-        val cheaterApplicantIds = applicantRepository.findAllByEmailIn(cheaterRepository.findAll().map { it.email })
-            .map { it.id }
-        val updatingApplicantIds = createUpdatingEvaluationTargets(evaluation)
-            .filterNot { cheaterApplicantIds.contains(it.applicantId) }
-            .map { it.applicantId }
-            .toSet()
-        val currentApplicantIds = evaluationTargetRepository.findAllByEvaluationId(evaluationId)
-            .map { it.applicantId }
-            .toSet()
+        val evaluation = evaluationRepository.getById(evaluationId)
+        val allApplicantIds = findApplicantIds(evaluation)
+        val loadedApplicantIds = findApplicantIdsFromEvaluation(evaluationId)
+        val allCheaterApplicantIds = findCheaterApplicantIds(allApplicantIds)
 
-        evaluationTargetRepository.deleteByEvaluationIdAndApplicantIdIn(
-            evaluationId,
-            currentApplicantIds - updatingApplicantIds
-        )
+        val removedApplicantIds = loadedApplicantIds - allApplicantIds
+        evaluationTargetRepository.deleteByEvaluationIdAndApplicantIdIn(evaluationId, removedApplicantIds)
 
-        val newApplicantIds = updatingApplicantIds - currentApplicantIds
-        save(newApplicantIds, evaluation)
+        val loadedCheaterApplicantIds = loadedApplicantIds intersect allCheaterApplicantIds
+        updateFail(loadedCheaterApplicantIds, evaluation)
+
+        val newApplicantIds = allApplicantIds - (loadedApplicantIds + allCheaterApplicantIds)
+        save(newApplicantIds, evaluation, EvaluationStatus.WAITING)
+
+        val newCheaterApplicantIds = allCheaterApplicantIds - loadedCheaterApplicantIds
+        save(newCheaterApplicantIds, evaluation, EvaluationStatus.FAIL)
     }
 
-    private fun createUpdatingEvaluationTargets(evaluation: Evaluation): List<EvaluationTarget> {
+    private fun findApplicantIds(evaluation: Evaluation): Set<Long> {
         return if (evaluation.hasBeforeEvaluation()) {
-            createEvaluationTargets(evaluation)
+            findPassedApplicantIdsFromBeforeEvaluation(evaluation)
         } else {
-            createEvaluationTargetsFromRecruitment(evaluation)
+            findApplicantIdsFromRecruitment(evaluation)
         }
     }
 
-    private fun createEvaluationTargets(evaluation: Evaluation): List<EvaluationTarget> {
+    private fun findPassedApplicantIdsFromBeforeEvaluation(evaluation: Evaluation): Set<Long> {
         return evaluationTargetRepository.findAllByEvaluationId(evaluation.beforeEvaluationId)
             .filter { it.isPassed }
-            .map { EvaluationTarget(evaluationId = evaluation.id, applicantId = it.applicantId) }
-    }
-
-    private fun createEvaluationTargetsFromRecruitment(evaluation: Evaluation): List<EvaluationTarget> {
-        val applicantIds = applicationFormRepository.findByRecruitmentIdAndSubmittedTrue(evaluation.recruitmentId)
             .map { it.applicantId }
-
-        return applicantRepository.findAllById(applicantIds)
-            .map { EvaluationTarget(evaluationId = evaluation.id, applicantId = it.id) }
+            .toSet()
     }
 
-    private fun save(applicantIds: Set<Long>, evaluation: Evaluation) {
-        val additionalEvaluationTargets = applicantRepository.findAllById(applicantIds)
-            .map { EvaluationTarget(evaluationId = evaluation.id, applicantId = it.id) }
+    private fun findApplicantIdsFromEvaluation(evaluationId: Long): Set<Long> {
+        return evaluationTargetRepository.findAllByEvaluationId(evaluationId)
+            .map { it.applicantId }
+            .toSet()
+    }
 
-        evaluationTargetRepository.saveAll(additionalEvaluationTargets)
+    private fun findApplicantIdsFromRecruitment(evaluation: Evaluation): Set<Long> {
+        return applicationFormRepository.findByRecruitmentIdAndSubmittedTrue(evaluation.recruitmentId)
+            .map { it.applicantId }
+            .toSet()
+    }
+
+    private fun findCheaterApplicantIds(applicantIds: Set<Long>): Set<Long> {
+        return applicantRepository.findAllByEmailIn(cheaterRepository.findAll().map { it.email })
+            .filter { applicantIds.contains(it.id) }
+            .map { it.id }
+            .toSet()
+    }
+
+    private fun save(applicantIds: Set<Long>, evaluation: Evaluation, evaluationStatus: EvaluationStatus) {
+        val evaluationTargets = applicantRepository.findAllById(applicantIds)
+            .map { EvaluationTarget(evaluation.id, applicantId = it.id, evaluationStatus = evaluationStatus) }
+        evaluationTargetRepository.saveAll(evaluationTargets)
+    }
+
+    private fun updateFail(applicantIds: Set<Long>, evaluation: Evaluation) {
+        evaluationTargetRepository.findAllByEvaluationIdAndApplicantIdIn(evaluation.id, applicantIds).forEach {
+            it.evaluationStatus = EvaluationStatus.FAIL
+        }
     }
 
     fun getGradeEvaluation(targetId: Long): GradeEvaluationResponse {

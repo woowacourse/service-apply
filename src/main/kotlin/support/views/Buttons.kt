@@ -13,7 +13,7 @@ import com.vaadin.flow.component.upload.receivers.MemoryBuffer
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer
 
 typealias ClickListener = (ClickEvent<Button>) -> Unit
-typealias UploadSucceededListener = (MemoryBuffer) -> Unit
+typealias UploadFinishedListener = (MemoryBuffer) -> Unit
 typealias ImageUploadSucceededListener = (MultiFileMemoryBuffer) -> Unit
 
 fun createNormalButton(text: String, clickListener: ClickListener): Button {
@@ -32,12 +32,15 @@ fun createSuccessButton(text: String, clickListener: ClickListener): Button {
     }
 }
 
-fun createCsvUpload(text: String, receiver: MemoryBuffer, succeededListener: UploadSucceededListener): Upload {
+fun createCsvUpload(text: String, receiver: MemoryBuffer, finishedListener: UploadFinishedListener): Upload {
     return Upload(receiver).apply {
         setAcceptedFileTypes("text/csv")
         uploadButton = createPrimaryButton(text) {}
-        addSucceededListener {
-            succeededListener(receiver)
+        addFinishedListener {
+            finishedListener(receiver)
+        }
+        addFailedListener {
+            createNotification(it.reason.message!!).open()
         }
     }
 }

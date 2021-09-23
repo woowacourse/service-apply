@@ -10,7 +10,6 @@ import apply.application.ResetPasswordRequest
 import apply.application.mail.MailService
 import apply.domain.applicant.Applicant
 import apply.security.LoginApplicant
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -30,8 +29,6 @@ class ApplicantRestController(
     @PostMapping("/register")
     fun generateToken(@RequestBody @Valid request: RegisterApplicantRequest): ResponseEntity<ApiResponse<String>> {
         val token = applicantAuthenticationService.generateToken(request)
-        val applicant = applicantService.getByEmail(request.email)
-        mailService.sendAuthenticationMail(request, applicant.authenticateCode)
         return ResponseEntity.ok().body(ApiResponse.success(token))
     }
 
@@ -57,13 +54,23 @@ class ApplicantRestController(
         return ResponseEntity.noContent().build()
     }
 
+    @PostMapping("/authentication-code")
+    fun generateAuthenticationCode(
+        @RequestParam email: String
+    ): ResponseEntity<Unit> {
+        val authenticateCode = applicantAuthenticationService
+            .generateAuthenticationCode(email)
+        mailService.sendAuthenticationCodeMail(email, authenticateCode)
+        return ResponseEntity.noContent().build()
+    }
+
     @PostMapping("/authenticate-email")
     fun authenticateEmail(
         @RequestParam email: String,
         @RequestParam authenticateCode: String
     ): ResponseEntity<Unit> {
         applicantAuthenticationService.authenticateEmail(email, authenticateCode)
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
+        return ResponseEntity.noContent().build()
     }
 
     @GetMapping

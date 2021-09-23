@@ -27,3 +27,9 @@ export const formatDateTime = (value) => {
     "0"
   )}:${String(second).padStart(2, "0")}`;
 };
+
+export const formatBirthday = ({ year, month, day }) =>
+  `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(
+    2,
+    "0"
+  )}T00:00:00`;
