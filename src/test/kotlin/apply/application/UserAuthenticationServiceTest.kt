@@ -16,6 +16,7 @@ import apply.domain.user.User
 import apply.domain.user.UserAuthenticationException
 import apply.domain.user.UserRepository
 import apply.domain.user.existsByEmail
+import apply.domain.user.findByEmail
 import apply.security.JwtTokenProvider
 import io.mockk.every
 import io.mockk.impl.annotations.MockK

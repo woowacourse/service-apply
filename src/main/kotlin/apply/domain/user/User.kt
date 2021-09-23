@@ -44,9 +44,9 @@ class User(
         UserInformation(name, email, phoneNumber, gender, birthday), password, id
     )
 
-    fun authenticate(applicant: User) {
-        authenticate(applicant.password)
-        identify(this.information == applicant.information)
+    fun authenticate(user: User) {
+        authenticate(user.password)
+        identify(this.information == user.information)
     }
 
     fun authenticate(password: Password) {

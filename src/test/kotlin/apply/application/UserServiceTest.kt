@@ -10,6 +10,7 @@ import apply.createUser
 import apply.domain.user.UserAuthenticationException
 import apply.domain.user.Password
 import apply.domain.user.UserRepository
+import apply.domain.user.findByEmail
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.slot
@@ -18,6 +19,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
+import org.junit.jupiter.api.assertThrows
 import support.test.UnitTest
 
 @UnitTest
@@ -85,13 +88,13 @@ internal class UserServiceTest {
         @Test
         fun `만약 기존 비밀번호가 일치한다면 변경한다`() {
             request = EditPasswordRequest(PASSWORD, Password("new_password"))
-            org.junit.jupiter.api.assertDoesNotThrow { subject() }
+            assertDoesNotThrow { subject() }
         }
 
         @Test
         fun `만약 기존 비밀번호가 일치하지 않다면 예외가 발생한다`() {
             request = EditPasswordRequest(WRONG_PASSWORD, Password("new_password"))
-            org.junit.jupiter.api.assertThrows<UserAuthenticationException> { subject() }
+            assertThrows<UserAuthenticationException> { subject() }
         }
     }
 }

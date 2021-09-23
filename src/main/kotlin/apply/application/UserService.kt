@@ -2,6 +2,7 @@ package apply.application
 
 import apply.domain.user.User
 import apply.domain.user.UserRepository
+import apply.domain.user.findByEmail
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 

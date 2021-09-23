@@ -1,12 +1,13 @@
 package apply.domain.user
 
 import apply.PASSWORD
+import apply.RANDOM_PASSWORD_TEXT
 import apply.WRONG_PASSWORD
 import apply.createUser
-import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Assertions.assertDoesNotThrow
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 internal class UserTest {
     private lateinit var user: User
@@ -23,8 +24,7 @@ internal class UserTest {
 
     @Test
     fun `회원의 개인정보가 요청받은 개인정보와 다를 경우 예외가 발생한다`() {
-        Assertions.assertThatThrownBy { user.authenticate(createUser(name = "다른 이름")) }
-            .isInstanceOf(UserAuthenticationException::class.java)
+        assertThrows<UserAuthenticationException> { user.authenticate(createUser(name = "다른 이름")) }
     }
 
     @Test
@@ -34,7 +34,12 @@ internal class UserTest {
 
     @Test
     fun `회원의 비밀번호와 다를 경우 예외가 발생한다`() {
-        Assertions.assertThatThrownBy { user.authenticate(WRONG_PASSWORD) }
-            .isInstanceOf(UserAuthenticationException::class.java)
+        assertThrows<UserAuthenticationException> { user.authenticate(WRONG_PASSWORD) }
+    }
+
+    @Test
+    fun `회원의 비밀번호를 초기화한다`() {
+        user.resetPassword(user.name, user.birthday, RANDOM_PASSWORD_TEXT)
+        assertThrows<UserAuthenticationException> { user.authenticate(PASSWORD) }
     }
 }

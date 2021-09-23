@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 
+// TODO : 중복이 가능하기에 단일조회시 예외 발생 가능
 fun ApplicantRepository.findByEmail(email: String): Applicant? = findByUserInformationEmail(email)
 fun ApplicantRepository.findAllByEmailIn(emails: List<String>): List<Applicant> = findAllByUserInformationEmailIn(emails)
 fun ApplicantRepository.existsByEmail(email: String): Boolean = existsByUserInformationEmail(email)
