@@ -37,24 +37,28 @@ const Recruits = () => {
   };
 
   return (
-    <div className={styles.recruits}>
-      <ul className={styles["tab-list"]}>
-        {RECRUITS_TAB_LIST.map(({ name, label }) => (
-          <li key={name} className={styles["tab-item"]}>
-            <Link
-              to={{
-                pathname: PATH.RECRUITS,
-                search: generateQuery({ status: name }),
-              }}
-              className={classNames({
+    <div className={styles.container}>
+      <nav className={styles.tab}>
+        <ul className={styles["tab-list"]}>
+          {RECRUITS_TAB_LIST.map(({ name, label }) => (
+            <li
+              key={name}
+              className={classNames(styles["tab-item"], {
                 [styles.active]: name === selectedTab,
               })}
             >
-              {label}
-            </Link>
-          </li>
-        ))}
-      </ul>
+              <Link
+                to={{
+                  pathname: PATH.RECRUITS,
+                  search: generateQuery({ status: name }),
+                }}
+              >
+                {label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
 
       {recruitment && (
         <div className={styles["recruitment-list"]} role="list">
