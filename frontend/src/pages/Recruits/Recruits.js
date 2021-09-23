@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import classNames from "classnames";
+
 import Box from "../../components/Box/Box";
 import RecruitItem from "../../components/RecruitItem/RecruitItem";
 import ApplicationFormItem from "../../components/ApplicationFormItem/ApplicationFormItem";
+
 import useTokenContext from "../../hooks/useTokenContext";
 import useRecruitmentContext from "../../hooks/useRecruitmentContext";
+import { generateQuery } from "../../utils/route/query";
 import { RECRUITS_TAB, RECRUITS_TAB_LIST } from "../../constants/tab";
 import { ERROR_MESSAGE } from "../../constants/messages";
 import PATH from "../../constants/path";
+
 import styles from "./Recruits.module.css";
-import { generateQuery } from "../../utils/route/query";
 
 const Recruits = () => {
   const query = new URLSearchParams(useLocation().search);

@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import "./api/api";
-import MainFooter from "./components/MainFooter/MainFooter";
+import Footer from "./components/Footer/Footer";
 import MainHeader from "./components/MainHeader/MainHeader";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import ApplicantRegister from "./pages/ApplicantRegister/ApplicantRegister";
@@ -23,7 +23,8 @@ const App = () => {
       <RecruitmentProvider>
         <BrowserRouter>
           <MainHeader />
-          <div className="main-view">
+
+          <main className="main">
             <ScrollToTop>
               <Switch>
                 <Route path={[PATH.HOME, PATH.RECRUITS]} exact>
@@ -49,8 +50,9 @@ const App = () => {
                 </PrivateRoute>
               </Switch>
             </ScrollToTop>
-          </div>
-          <MainFooter />
+          </main>
+
+          <Footer />
         </BrowserRouter>
       </RecruitmentProvider>
     </TokenProvider>
