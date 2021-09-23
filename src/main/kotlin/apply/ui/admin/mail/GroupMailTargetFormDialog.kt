@@ -24,12 +24,12 @@ class GroupMailTargetFormDialog(
     private val recruitmentService: RecruitmentService,
     private val evaluationService: EvaluationService,
     private val mailTargetService: MailTargetService,
-    reloadComponent: (evaluationTargets: List<String>) -> Unit
+    private val reloadComponent: (List<MailTargetResponse>) -> Unit
 ) : Dialog() {
     private val evaluation = createEvaluationItem()
     private val recruitment = createRecruitmentItem(evaluation)
     private val evaluationStatus = createEvaluationStatusItem(evaluation)
-    private val mailTargets: MutableList<String> = mutableListOf()
+    private val mailTargets: MutableList<MailTargetResponse> = mutableListOf()
     private val currentMailTargets: VerticalLayout = VerticalLayout(createContent())
 
     init {
@@ -85,7 +85,7 @@ class GroupMailTargetFormDialog(
             addValueChangeListener {
                 val mailTargetResponses = mailTargetService.findMailTargets(evaluation.value.id, it.value)
                 mailTargets.clear()
-                mailTargets.addAll(mailTargetResponses.map { it.email })
+                mailTargets.addAll(mailTargetResponses)
 
                 currentMailTargets.apply {
                     this.removeAll()

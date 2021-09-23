@@ -249,7 +249,7 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
                 evaluationId,
                 enumStatus
             )
-        } returns listOf(MailTargetResponse("roki@woowacourse.com"))
+        } returns listOf(MailTargetResponse("김경록", "roki@woowacourse.com"))
 
         mockMvc.perform(
             RestDocumentationRequestBuilders.get(
@@ -271,6 +271,7 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
                     ),
                     responseFields(
                         fieldWithPath("message").description("응답 메시지"),
+                        fieldWithPath("body.[].name").type(JsonFieldType.STRING).description("대상 이름"),
                         fieldWithPath("body.[].email").type(JsonFieldType.STRING).description("대상 E-MAIL")
                     )
                 )
