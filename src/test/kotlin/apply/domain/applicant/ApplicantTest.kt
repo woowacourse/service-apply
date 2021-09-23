@@ -18,7 +18,7 @@ internal class ApplicantTest {
     fun `회원으로부터 지원자를 생성한다`() {
         val applicant = Applicant(user, 1L)
 
-        assertThat(applicant.userId).isEqualTo(user.id)
-        assertThat(applicant.information).isEqualTo(user.information)
+        assertThat(applicant.user).isEqualTo(user)
+        assertThat(applicant.email).isEqualTo(user.email)
     }
 }

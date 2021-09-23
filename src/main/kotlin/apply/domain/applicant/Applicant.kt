@@ -2,41 +2,31 @@ package apply.domain.applicant
 
 import apply.domain.user.Gender
 import apply.domain.user.User
-import apply.domain.user.UserInformation
 import support.domain.BaseEntity
 import java.time.LocalDate
-import javax.persistence.Column
-import javax.persistence.Embedded
 import javax.persistence.Entity
+import javax.persistence.JoinColumn
+import javax.persistence.ManyToOne
 
 @Entity
 class Applicant(
-    @Embedded
-    val information: UserInformation,
-
-    @Column(nullable = false)
-    val userId: Long = 0L,
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    val user: User,
     id: Long = 0L
 ) : BaseEntity(id) {
     val name: String
-        get() = information.name
+        get() = user.information.name
 
     val email: String
-        get() = information.email
+        get() = user.information.email
 
     val phoneNumber: String
-        get() = information.phoneNumber
+        get() = user.information.phoneNumber
 
     val gender: Gender
-        get() = information.gender
+        get() = user.information.gender
 
     val birthday: LocalDate
-        get() = information.birthday
-
-    constructor(
-        user: User,
-        id: Long = 0L
-    ) : this(
-        user.information, user.id, id
-    )
+        get() = user.information.birthday
 }

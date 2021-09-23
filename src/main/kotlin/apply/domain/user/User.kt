@@ -6,14 +6,7 @@ import javax.persistence.AttributeOverride
 import javax.persistence.Column
 import javax.persistence.Embedded
 import javax.persistence.Entity
-import javax.persistence.Table
-import javax.persistence.UniqueConstraint
 
-@Table(
-    uniqueConstraints = [
-        UniqueConstraint(name = "uk_user", columnNames = ["email"])
-    ]
-)
 @Entity
 class User(
     @Embedded

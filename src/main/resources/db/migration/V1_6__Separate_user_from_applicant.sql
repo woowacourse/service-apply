@@ -11,13 +11,33 @@ create table user
 ) engine=InnoDB default charset=utf8mb4;
 
 alter table applicant
+    drop index UK_6iduje2h6ggdlnmevw2mvolfx;
+
+alter table applicant
     drop column password;
+
+alter table applicant
+    drop column birthday;
+
+alter table applicant
+    drop column email;
+
+alter table applicant
+    drop column gender;
+
+alter table applicant
+    drop column name;
+
+alter table applicant
+    drop column phone_number;
 
 alter table applicant
     add column user_id bigint not null after id;
 
 alter table applicant
-    drop index UK_6iduje2h6ggdlnmevw2mvolfx;
+    add constraint fk_user
+    foreign key (user_id)
+    references user (id);
 
 alter table user
     add constraint uk_user unique (email);
