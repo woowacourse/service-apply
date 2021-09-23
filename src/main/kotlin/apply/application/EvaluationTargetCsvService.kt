@@ -60,8 +60,6 @@ class EvaluationTargetCsvService(
             )
             for (csvRecord in csvParser) {
                 var evaluationTargetId = csvRecord.get(ID)
-                var name = csvRecord.get(NAME)
-                var email = csvRecord.get(EMAIL)
                 var evaluationStatus = csvRecord.getEvaluationStatus()
                 val evaluationAnswers = csvRecord.getEvaluationAnswers(evaluationItems)
                 val note = csvRecord.get(NOTE)
