@@ -11,7 +11,7 @@
   height: 3.625rem;
   background-color: var(--white);
   box-shadow: 0 2px 4px 0 #00000015;
-  z-index: 9998;
+  z-index: var(--nav-z-index);
 }
 
 .tab-list {

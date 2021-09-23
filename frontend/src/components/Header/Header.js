@@ -1,15 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 import useTokenContext from "../../hooks/useTokenContext";
 import PATH from "../../constants/path";
+import { CONFIRM_MESSAGE } from "../../constants/messages";
 
 import MemberIcon from "../../assets/icon/member-icon.svg";
 
 import styles from "./Header.module.css";
 
 const Header = () => {
-  const { token } = useTokenContext();
+  const { token, resetToken } = useTokenContext();
+
+  const [isShowMemberMenu, setIsShowMemberMenu] = useState(false);
+
+  const onLogout = () => {
+    if (window.confirm(CONFIRM_MESSAGE.LOGOUT)) {
+      resetToken();
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -28,9 +37,32 @@ const Header = () => {
 
           <div className={styles["link-container"]}>
             {token ? (
-              <button type="button">
-                <img src={MemberIcon} alt="회원" />
-              </button>
+              <div className={styles["member-menu-container"]}>
+                <button
+                  type="button"
+                  onClick={() => setIsShowMemberMenu(!isShowMemberMenu)}
+                >
+                  <img src={MemberIcon} alt="회원" />
+                </button>
+
+                {isShowMemberMenu && (
+                  <>
+                    <ul className={styles["member-menu-list"]}>
+                      <li>
+                        <Link>마이페이지</Link>
+                      </li>
+                      <li>
+                        <Link>내 지원 현황</Link>
+                      </li>
+                      <li onClick={onLogout}>로그아웃</li>
+                    </ul>
+                    <div
+                      className={styles.dimmed}
+                      onMouseDown={() => setIsShowMemberMenu(false)}
+                    />
+                  </>
+                )}
+              </div>
             ) : (
               <>
                 <Link to={PATH.LOGIN}>로그인</Link>

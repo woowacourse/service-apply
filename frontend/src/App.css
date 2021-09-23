@@ -10,8 +10,14 @@
   --white: #fff;
   --light-blue-gray: #f1f2f6;
   --blue: #279cf6;
+
   --pc-main-width: 800px;
   --pc-main-width-narrow: 512px;
+
+  --tooltip-z-index: 1000;
+  --tooltip-dimmed-z-index: 999;
+  --header-z-index: 998;
+  --nav-z-index: 997;
 }
 
 * {
