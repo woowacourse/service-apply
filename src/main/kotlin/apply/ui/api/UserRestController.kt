@@ -9,7 +9,6 @@ import apply.application.UserService
 import apply.application.mail.MailService
 import apply.domain.user.User
 import apply.security.LoginUser
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -53,12 +52,22 @@ class UserRestController(
         return ResponseEntity.noContent().build()
     }
 
+    @PostMapping("/authentication-code")
+    fun generateAuthenticationCode(
+        @RequestParam email: String
+    ): ResponseEntity<Unit> {
+        val authenticateCode = userAuthenticationService
+            .generateAuthenticationCode(email)
+        mailService.sendAuthenticationCodeMail(email, authenticateCode)
+        return ResponseEntity.noContent().build()
+    }
+
     @PostMapping("/authenticate-email")
     fun authenticateEmail(
         @RequestParam email: String,
         @RequestParam authenticateCode: String
     ): ResponseEntity<Unit> {
         userAuthenticationService.authenticateEmail(email, authenticateCode)
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
+        return ResponseEntity.noContent().build()
     }
 }

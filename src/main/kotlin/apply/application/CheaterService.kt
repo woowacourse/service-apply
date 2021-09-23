@@ -1,6 +1,7 @@
 package apply.application
 
 import apply.domain.applicant.ApplicantRepository
+import apply.domain.applicant.findByEmail
 import apply.domain.cheater.Cheater
 import apply.domain.cheater.CheaterRepository
 import org.springframework.stereotype.Service

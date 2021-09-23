@@ -1,9 +1,11 @@
 package apply.application
 
+import apply.domain.authenticationcode.AuthenticationCode
 import apply.domain.authenticationcode.AuthenticationCodeRepository
 import apply.domain.authenticationcode.getLastByEmail
 import apply.domain.user.UserAuthenticationException
 import apply.domain.user.UserRepository
+import apply.domain.user.existsByEmail
 import apply.security.JwtTokenProvider
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -27,6 +29,12 @@ class UserAuthenticationService(
             ?.also { it.authenticate(request.password) }
             ?: throw UserAuthenticationException()
         return jwtTokenProvider.createToken(user.email)
+    }
+
+    fun generateAuthenticationCode(email: String): String {
+        check(!userRepository.existsByEmail(email)) { "이미 등록된 이메일입니다." }
+        val authenticationCode = authenticationCodeRepository.save(AuthenticationCode(email))
+        return authenticationCode.code
     }
 
     fun authenticateEmail(email: String, code: String) {

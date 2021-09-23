@@ -6,6 +6,7 @@ import apply.domain.user.Password
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import support.createLocalDate
@@ -65,5 +66,13 @@ internal class ApplicantRepositoryTest(private val applicantRepository: Applican
     fun `이메일이 일치하는 지원자들을 전부 조회한다`() {
         val emails = listOf("b@email.com", "c@email.com")
         assertThat(applicantRepository.findAllByEmailIn(emails)).hasSize(2)
+    }
+
+    @Test
+    fun `이메일이 일치하는 지원자 있는지 확인한다`() {
+        assertAll(
+            { assertThat(applicantRepository.existsByEmail("a@email.com")).isTrue() },
+            { assertThat(applicantRepository.existsByEmail("non-exists@email.com")).isFalse() }
+        )
     }
 }

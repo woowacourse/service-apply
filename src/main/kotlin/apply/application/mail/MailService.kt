@@ -1,12 +1,10 @@
 package apply.application.mail
 
 import apply.application.ApplicationProperties
-import apply.application.RegisterUserRequest
 import apply.application.ResetPasswordRequest
 import apply.domain.applicant.Applicant
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
-import org.springframework.web.util.UriComponentsBuilder
 import org.thymeleaf.context.Context
 import org.thymeleaf.spring5.ISpringTemplateEngine
 
@@ -52,24 +50,17 @@ class MailService(
     }
 
     @Async
-    fun sendAuthenticationMail(request: RegisterUserRequest, authenticateCode: String) {
-        val url = UriComponentsBuilder.fromUriString(applicationProperties.url)
-            .path("/api/applicants/authenticate-email")
-            .queryParam("email", request.email)
-            .queryParam("authenticateCode", authenticateCode)
-            .build()
-            .toUriString()
+    fun sendAuthenticationCodeMail(email: String, authenticateCode: String) {
         val context = Context().apply {
             setVariables(
                 mapOf(
-                    "name" to request.name,
-                    "url" to url
+                    "authenticationCode" to authenticateCode
                 )
             )
         }
         mailSender.send(
-            request.email,
-            "${request.name}님, 이메일 인증 메일 발송해 드립니다.",
+            email,
+            "메일 인증 코드를 발송해 드립니다.",
             templateEngine.process("mail/email-authentication.html", context)
         )
     }

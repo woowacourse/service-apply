@@ -15,6 +15,7 @@ import apply.domain.authenticationcode.getLastByEmail
 import apply.domain.user.User
 import apply.domain.user.UserAuthenticationException
 import apply.domain.user.UserRepository
+import apply.domain.user.existsByEmail
 import apply.security.JwtTokenProvider
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
@@ -127,6 +128,22 @@ internal class UserAuthenticationServiceTest {
             every { authenticationCodeRepository.getLastByEmail(any()) } returns authenticationCode
             assertThrows<IllegalArgumentException> {
                 userAuthenticationService.authenticateEmail(authenticationCode.email, "INVALID")
+            }
+        }
+
+        @Test
+        fun `인증 코드를 생성한다`() {
+            every { userRepository.existsByEmail(any()) } returns false
+            every { authenticationCodeRepository.save(any()) } returns authenticationCode
+            val actual = userAuthenticationService.generateAuthenticationCode(authenticationCode.email)
+            assertThat(actual).isEqualTo(authenticationCode.code)
+        }
+
+        @Test
+        fun `인증코드 요청시 이미 가입된 이메일이라면 예외가 발생한다`() {
+            every { userRepository.existsByEmail(any()) } returns true
+            assertThrows<IllegalStateException> {
+                userAuthenticationService.generateAuthenticationCode(authenticationCode.email)
             }
         }
     }
