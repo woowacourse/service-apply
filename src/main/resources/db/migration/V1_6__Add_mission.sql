@@ -4,7 +4,7 @@ create table mission
     title           varchar(255) not null,
     description     varchar(255) not null,
     evaluation_id   bigint       not null,
-    submittable     bit          not null,
+    submittable     boolean      not null,
     end_date_time   datetime(6) not null,
     start_date_time datetime(6) not null,
     primary key (id)
