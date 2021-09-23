@@ -29,18 +29,11 @@ const Login = () => {
       });
 
       alert(SUCCESS_MESSAGE.API.LOGIN);
-      history.push({
-        pathname: PATH.RECRUITS,
-        search: generateQuery({ status: RECRUITS_TAB.APPLIED.name }),
-      });
+
+      history.push(PATH.RECRUITS);
     } catch (e) {
       alert(e.response.data.message);
     }
-
-    await fetchLogin({
-      email: value.email,
-      password: value.password,
-    });
   };
 
   const { handleSubmit, ...methods } = useForm({
