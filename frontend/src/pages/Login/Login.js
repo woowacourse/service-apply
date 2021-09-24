@@ -1,19 +1,20 @@
 import React from "react";
 import { Link, useHistory } from "react-router-dom";
+
 import Box from "../../components/Box/Box";
 import { Form } from "../../components/form";
 import Button from "../../components/form/Button/Button";
-import { SUCCESS_MESSAGE } from "../../constants/messages";
-import PATH from "../../constants/path";
-import { RECRUITS_TAB } from "../../constants/tab";
+
 import useForm from "../../hooks/useForm";
 import useTokenContext from "../../hooks/useTokenContext";
 import FormProvider from "../../provider/FormProvider/FormProvider";
 import InputField from "../../provider/FormProvider/InputField";
 import SubmitButton from "../../provider/FormProvider/SubmitButton";
-import { generateQuery } from "../../utils/route/query";
 import { validateEmail } from "../../utils/validation/email";
 import { validatePassword } from "../../utils/validation/password";
+import { SUCCESS_MESSAGE } from "../../constants/messages";
+import PATH from "../../constants/path";
+
 import styles from "./Login.module.css";
 
 const Login = () => {
