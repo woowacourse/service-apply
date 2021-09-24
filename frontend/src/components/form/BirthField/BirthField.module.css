@@ -11,6 +11,12 @@
   flex: 1;
 }
 
+.year::-webkit-calendar-picker-indicator,
+.month::-webkit-calendar-picker-indicator,
+.day::-webkit-calendar-picker-indicator {
+  visibility: hidden;
+}
+
 .month {
   margin: 0 15px;
 }
