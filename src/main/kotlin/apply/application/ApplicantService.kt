@@ -2,7 +2,8 @@ package apply.application
 
 import apply.domain.applicant.Applicant
 import apply.domain.applicant.ApplicantRepository
-import apply.domain.applicant.findByEmail
+import apply.domain.applicant.findAllByEmail
+import apply.domain.applicant.findByEmailAndRecruitmentId
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.CheaterRepository
 import org.springframework.stereotype.Service
@@ -15,8 +16,12 @@ class ApplicantService(
     private val applicantRepository: ApplicantRepository,
     private val cheaterRepository: CheaterRepository,
 ) {
-    fun getByEmail(email: String): Applicant {
-        return applicantRepository.findByEmail(email) ?: throw IllegalArgumentException("지원자가 존재하지 않습니다. email: $email")
+    fun getByEmailAndRecruitmentId(email: String, recruitmentId: Long): Applicant {
+        return applicantRepository.findByEmailAndRecruitmentId(email, recruitmentId) ?: throw IllegalArgumentException("지원자가 존재하지 않습니다. email: $email")
+    }
+
+    fun getAllByEmail(email: String): List<Applicant> {
+        return applicantRepository.findAllByEmail(email)
     }
 
     fun findAllByRecruitmentIdAndKeyword(

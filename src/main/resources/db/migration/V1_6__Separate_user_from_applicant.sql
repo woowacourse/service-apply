@@ -35,6 +35,9 @@ alter table applicant
     add column user_id bigint not null after id;
 
 alter table applicant
+    add column recruitment_id bigint not null after user_id;
+
+alter table applicant
     add constraint fk_user
     foreign key (user_id)
     references user (id);

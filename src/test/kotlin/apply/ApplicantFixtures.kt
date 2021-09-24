@@ -15,12 +15,12 @@ fun createApplicant(
     password: Password = PASSWORD,
     id: Long = 0L
 ): Applicant {
-    return Applicant(createUser(name, email, phoneNumber, gender, birthday, password, id), id)
+    return Applicant(createUser(name, email, phoneNumber, gender, birthday, password, id), id = id)
 }
 
 fun createApplicant(
     user: User,
     id: Long = 0L
 ): Applicant {
-    return Applicant(user, id)
+    return Applicant(user, id = id)
 }

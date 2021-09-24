@@ -43,8 +43,8 @@ class ApplicationFormService(
         }
     }
 
-    fun getMyApplicationForms(applicantId: Long): List<MyApplicationFormResponse> =
-        applicationFormRepository.findAllByApplicantId(applicantId).map(::MyApplicationFormResponse)
+    fun getMyApplicationForms(applicantIds: List<Long>): List<MyApplicationFormResponse> =
+        applicationFormRepository.findAllByApplicantIdIn(applicantIds).map(::MyApplicationFormResponse)
 
     fun getApplicationForm(applicantId: Long, recruitmentId: Long): ApplicationFormResponse {
         val applicationForm = findByRecruitmentIdAndApplicantId(recruitmentId, applicantId)

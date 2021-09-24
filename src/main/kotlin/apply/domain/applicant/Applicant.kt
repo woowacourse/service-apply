@@ -4,6 +4,7 @@ import apply.domain.user.Gender
 import apply.domain.user.User
 import support.domain.BaseEntity
 import java.time.LocalDate
+import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
@@ -13,6 +14,9 @@ class Applicant(
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     val user: User,
+
+    @Column(nullable = false)
+    val recruitmentId: Long = 0L,
     id: Long = 0L
 ) : BaseEntity(id) {
     val name: String

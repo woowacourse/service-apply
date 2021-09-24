@@ -32,8 +32,8 @@ class ApplicationFormRestController(
     fun getMyApplicationForms(
         @LoginUser user: User
     ): ResponseEntity<ApiResponse<List<MyApplicationFormResponse>>> {
-        val applicant = applicantService.getByEmail(user.email)
-        val form = applicationFormService.getMyApplicationForms(applicant.id)
+        val applicants = applicantService.getAllByEmail(user.email)
+        val form = applicationFormService.getMyApplicationForms(applicants.map { it.id })
         return ResponseEntity.ok().body(ApiResponse.success(form))
     }
 
@@ -42,7 +42,7 @@ class ApplicationFormRestController(
         @RequestParam recruitmentId: Long,
         @LoginUser user: User
     ): ResponseEntity<ApiResponse<ApplicationFormResponse>> {
-        val applicant = applicantService.getByEmail(user.email)
+        val applicant = applicantService.getByEmailAndRecruitmentId(user.email, recruitmentId)
         val form = applicationFormService.getApplicationForm(applicant.id, recruitmentId)
         return ResponseEntity.ok().body(ApiResponse.success(form))
     }
@@ -52,7 +52,7 @@ class ApplicationFormRestController(
         @RequestBody @Valid request: CreateApplicationFormRequest,
         @LoginUser user: User
     ): ResponseEntity<Unit> {
-        val applicant = applicantService.getByEmail(user.email)
+        val applicant = applicantService.getByEmailAndRecruitmentId(user.email, request.recruitmentId)
         applicationFormService.create(applicant.id, request)
         return ResponseEntity.ok().build()
     }
@@ -62,7 +62,7 @@ class ApplicationFormRestController(
         @RequestBody @Valid request: UpdateApplicationFormRequest,
         @LoginUser user: User
     ): ResponseEntity<Unit> {
-        val applicant = applicantService.getByEmail(user.email)
+        val applicant = applicantService.getByEmailAndRecruitmentId(user.email, request.recruitmentId)
         applicationFormService.update(applicant.id, request)
 
         // TODO: 차후 연결될 프론트 주소가 필요

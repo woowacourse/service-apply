@@ -84,7 +84,7 @@ internal class ApplicationFormRestControllerTest : RestControllerTest() {
         every { jwtTokenProvider.isValidToken("valid_token") } returns true
         every { jwtTokenProvider.getSubject("valid_token") } returns applicant.email
         every { userService.getByEmail(user.email) } returns user
-        every { applicantService.getByEmail(applicant.email) } returns applicant
+        every { applicantService.getByEmailAndRecruitmentId(applicant.email, any()) } returns applicant
         every { applicationFormService.getApplicationForm(applicant.id, recruitmentId) } returns applicationFormResponse
 
         mockMvc.get("/api/application-forms") {
@@ -101,8 +101,8 @@ internal class ApplicationFormRestControllerTest : RestControllerTest() {
         every { jwtTokenProvider.isValidToken("valid_token") } returns true
         every { jwtTokenProvider.getSubject("valid_token") } returns applicant.email
         every { userService.getByEmail(user.email) } returns user
-        every { applicantService.getByEmail(applicant.email) } returns applicant
-        every { applicationFormService.getMyApplicationForms(applicant.id) } returns myApplicationFormResponses
+        every { applicantService.getAllByEmail(applicant.email) } returns listOf(applicant)
+        every { applicationFormService.getMyApplicationForms(listOf(applicant.id)) } returns myApplicationFormResponses
 
         mockMvc.get("/api/application-forms/me") {
             header(AUTHORIZATION, "Bearer valid_token")

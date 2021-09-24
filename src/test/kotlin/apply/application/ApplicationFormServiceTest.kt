@@ -147,9 +147,9 @@ class ApplicationFormServiceTest {
 
     @Test
     fun `지원자가 자신의 지원서를 모두 불러온다`() {
-        every { applicationFormRepository.findAllByApplicantId(applicantId) } returns applicationForms
+        every { applicationFormRepository.findAllByApplicantIdIn(listOf(applicantId)) } returns applicationForms
 
-        val expected = applicationFormService.getMyApplicationForms(applicantId)
+        val expected = applicationFormService.getMyApplicationForms(listOf(applicantId))
 
         assertAll(
             { assertThat(expected).isNotNull },
@@ -159,9 +159,9 @@ class ApplicationFormServiceTest {
 
     @Test
     fun `지원자가 지원한 지원서가 없으면 빈 리스트를 불러온다`() {
-        every { applicationFormRepository.findAllByApplicantId(applicantId) } returns emptyList()
+        every { applicationFormRepository.findAllByApplicantIdIn(listOf(applicantId)) } returns emptyList()
 
-        val expected = applicationFormService.getMyApplicationForms(applicantId)
+        val expected = applicationFormService.getMyApplicationForms(listOf(applicantId))
 
         assertAll(
             { assertThat(expected).isNotNull },

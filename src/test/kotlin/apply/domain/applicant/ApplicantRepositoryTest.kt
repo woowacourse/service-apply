@@ -5,6 +5,7 @@ import apply.createUser
 import apply.domain.user.Gender
 import apply.domain.user.Password
 import apply.domain.user.UserRepository
+import apply.domain.user.findByEmail
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -61,16 +62,26 @@ internal class ApplicantRepositoryTest(
 
     @Test
     fun `이메일이 일치하는 지원자를 조회한다`() {
-        assertThat(applicantRepository.findByEmail("b@email.com")!!.name).isEqualTo("홍길동2")
+        assertThat(applicantRepository.findByEmailAndRecruitmentId("b@email.com", 0L)!!.name).isEqualTo("홍길동2")
     }
 
     @Test
     fun `이메일이 일치하는 지원자가 존재하지 않을 때, null을 반환한다`() {
-        assertThat(applicantRepository.findByEmail("notexist@email.com")).isNull()
+        assertThat(applicantRepository.findByEmailAndRecruitmentId("notexist@email.com", 0L)).isNull()
     }
 
     @Test
     fun `이메일이 일치하는 지원자들을 전부 조회한다`() {
+        val email = "a@email.com"
+        applicantRepository.save(
+            createApplicant(userRepository.findByEmail(email)!!)
+        )
+
+        assertThat(applicantRepository.findAllByEmail(email)).hasSize(2)
+    }
+
+    @Test
+    fun `이메일들이 일치하는 지원자들을 전부 조회한다`() {
         val emails = listOf("b@email.com", "c@email.com")
         assertThat(applicantRepository.findAllByEmailIn(emails)).hasSize(2)
     }

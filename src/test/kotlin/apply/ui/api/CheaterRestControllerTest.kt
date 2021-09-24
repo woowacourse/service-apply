@@ -5,6 +5,7 @@ import apply.application.CheaterService
 import apply.application.UserService
 import apply.createApplicant
 import apply.createCheaterData
+import apply.createUser
 import apply.domain.cheater.Cheater
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
@@ -39,14 +40,14 @@ internal class CheaterRestControllerTest : RestControllerTest() {
                 email = "loki@email.com",
                 createdDateTime = createLocalDateTime(2021, 10, 9, 10, 0, 0, 0)
             ),
-            createApplicant(name = "로키")
+            createUser(name = "로키")
         ),
         CheaterResponse(
             Cheater(
                 email = "amazzi@email.com",
                 createdDateTime = createLocalDateTime(2021, 10, 10, 10, 0, 0, 0)
             ),
-            createApplicant(name = "아마찌")
+            createUser(name = "아마찌")
         )
     )
 
