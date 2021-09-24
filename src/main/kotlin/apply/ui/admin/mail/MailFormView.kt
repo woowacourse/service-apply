@@ -12,7 +12,6 @@ import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.html.H1
 import com.vaadin.flow.component.html.H3
-import com.vaadin.flow.component.html.H4
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
@@ -39,7 +38,7 @@ class MailFormView(
     private val mailTargetService: MailTargetService,
     private val mailProperties: MailProperties
 ) : BindingFormLayout<MailSendData>(MailSendData::class) {
-    private val subject: TextField = TextField()
+    private val subject: TextField = TextField("메일 제목")
     private val content: TextArea = createMailBody()
     private val mailTargetGrid: Grid<MailTargetResponse> = createMailTargetsGrid()
     private val mailTargets: MutableSet<MailTargetResponse> = mutableSetOf()
@@ -60,8 +59,8 @@ class MailFormView(
 
     private fun createMailForm(): Component {
         val subjectText = VerticalLayout(H3("메일 제목"), subject).apply { setWidthFull() }
-        val sender = VerticalLayout(H4("보낸사람"), createSender())
-        val recipientFilter = VerticalLayout(H4("받는사람"), createRecipientFilter())
+        val sender = VerticalLayout(createSender())
+        val recipientFilter = VerticalLayout(createRecipientFilter())
         val mailBody = VerticalLayout(content)
         val uploadFile = createUploadButton("첨부파일", MultiFileMemoryBuffer()) {
             /*
@@ -112,7 +111,7 @@ class MailFormView(
         return HorizontalLayout(
             createSearchBar(labelText = "받는사람") {
                 if (it.isNotBlank()) {
-                    mailTargets.add(MailTargetResponse("직접 입력", it))
+                    mailTargets.add(MailTargetResponse("이름 없음", it))
                     mailTargetGrid.setItems(mailTargets)
                 }
             },
@@ -140,7 +139,7 @@ class MailFormView(
     }
 
     private fun createSender(): Component {
-        val sender = TextField().apply {
+        val sender = TextField("보낸사람").apply {
             value = mailProperties.username
             isReadOnly = true
         }
