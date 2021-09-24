@@ -21,7 +21,7 @@ import support.views.createNotification
 import support.views.createPrimaryButton
 import support.views.toDisplayName
 
-@Route(value = "admin/mission/selections", layout = BaseLayout::class)
+@Route(value = "admin/missions", layout = BaseLayout::class)
 class MissionsFormView(
     private val evaluationService: EvaluationService,
     private val missionService: MissionService

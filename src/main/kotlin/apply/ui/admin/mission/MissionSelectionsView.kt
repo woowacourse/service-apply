@@ -12,7 +12,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.router.Route
 import support.views.createNormalButton
 
-@Route(value = "admin/mission/selections", layout = BaseLayout::class)
+@Route(value = "admin/missions", layout = BaseLayout::class)
 class MissionSelectionsView(private val recruitmentService: RecruitmentService) : VerticalLayout() {
     private val title: Component = createTitle()
     private val buttons: Array<Component> = createButtons()

@@ -23,7 +23,7 @@ import support.views.createDeleteButtonWithDialog
 import support.views.createPrimaryButton
 import support.views.createPrimarySmallButton
 
-@Route(value = "admin/mission/selections", layout = BaseLayout::class)
+@Route(value = "admin/missions", layout = BaseLayout::class)
 class MissionSelectionView(
     private val recruitmentService: RecruitmentService
 ) : VerticalLayout(), HasUrlParameter<Long> {
