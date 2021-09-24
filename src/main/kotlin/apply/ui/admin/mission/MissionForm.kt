@@ -35,10 +35,7 @@ class MissionForm() : BindingIdentityFormLayout<MissionData>(MissionData::class)
     }
 
     override fun bindOrNull(): MissionData? {
-        val result = bindDefaultOrNull()
-        return result?.apply {
-            evaluation
-        }
+        return bindDefaultOrNull()
     }
 
     override fun fill(data: MissionData) {
