@@ -50,7 +50,7 @@ class EvaluationTargetCsvService(
 
     fun updateTarget(inputStream: InputStream, evaluationId: Long) {
         val evaluationItems = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluationId)
-        val evaluationTargetsData: MutableMap<Long, EvaluationTargetData> = mutableMapOf<Long, EvaluationTargetData>()
+        val evaluationTargetsData = mutableMapOf<Long, EvaluationTargetData>()
         inputStream.bufferedReader().use { reader ->
             val csvParser = CSVParser(
                 reader,
@@ -59,14 +59,9 @@ class EvaluationTargetCsvService(
                     .withTrim()
             )
             for (csvRecord in csvParser) {
-                var evaluationTargetId = csvRecord.get(ID)
-                var evaluationStatus = csvRecord.getEvaluationStatus()
-                val evaluationAnswers = csvRecord.getEvaluationAnswers(evaluationItems)
-                val note = csvRecord.get(NOTE)
-
-                val evaluationScores = evaluationAnswers.map { EvaluationItemScoreData(it.score, it.evaluationItemId) }
-                val evaluationTargetData = EvaluationTargetData(evaluationScores, note, evaluationStatus)
-                evaluationTargetsData[evaluationTargetId.toLong()] = evaluationTargetData
+                val evaluationTargetId = csvRecord.get(ID).toLong()
+                val evaluationTargetData = csvRecord.getEvaluationTargetData(evaluationItems)
+                evaluationTargetsData[evaluationTargetId] = evaluationTargetData
             }
         }
         evaluationTargetService.updateGrades(evaluationId, evaluationTargetsData)
@@ -81,6 +76,14 @@ class EvaluationTargetCsvService(
             require(score <= it.maximumScore) { "평가 항목의 최대 점수보다 높은 점수입니다." }
             EvaluationAnswer(score, it.id)
         }
+    }
+
+    private fun CSVRecord.getEvaluationTargetData(evaluationItems: List<EvaluationItem>): EvaluationTargetData {
+        val note = get(NOTE)
+        val evaluationStatus = getEvaluationStatus()
+        val evaluationAnswers = getEvaluationAnswers(evaluationItems)
+        val evaluationScores = evaluationAnswers.map { EvaluationItemScoreData(it.score, it.evaluationItemId) }
+        return EvaluationTargetData(evaluationScores, note, evaluationStatus)
     }
 
     private fun EvaluationItem.toHeader(): String = "$title($maximumScore)"
