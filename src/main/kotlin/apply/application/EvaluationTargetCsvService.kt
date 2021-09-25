@@ -50,7 +50,14 @@ class EvaluationTargetCsvService(
 
     fun updateTarget(inputStream: InputStream, evaluationId: Long) {
         val evaluationItems = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluationId)
-        val evaluationTargetsData = mutableMapOf<Long, EvaluationTargetData>()
+        val evaluationTargetsData = getEvaluationTargetsDataFromCsv(inputStream, evaluationItems)
+        evaluationTargetService.updateGrades(evaluationId, evaluationTargetsData)
+    }
+
+    private fun getEvaluationTargetsDataFromCsv(
+        inputStream: InputStream,
+        evaluationItems: List<EvaluationItem>
+    ): Map<Long, EvaluationTargetData> {
         inputStream.bufferedReader().use { reader ->
             val csvParser = CSVParser(
                 reader,
@@ -58,13 +65,10 @@ class EvaluationTargetCsvService(
                     .withFirstRecordAsHeader()
                     .withTrim()
             )
-            for (csvRecord in csvParser) {
-                val evaluationTargetId = csvRecord.get(ID).toLong()
-                val evaluationTargetData = csvRecord.getEvaluationTargetData(evaluationItems)
-                evaluationTargetsData[evaluationTargetId] = evaluationTargetData
+            return csvParser.associate { csvRecord ->
+                csvRecord.get(ID).toLong() to csvRecord.getEvaluationTargetData(evaluationItems)
             }
         }
-        evaluationTargetService.updateGrades(evaluationId, evaluationTargetsData)
     }
 
     private fun CSVRecord.getEvaluationStatus(): EvaluationStatus = EvaluationStatus.valueOf(get(STATUS))
@@ -79,9 +83,9 @@ class EvaluationTargetCsvService(
     }
 
     private fun CSVRecord.getEvaluationTargetData(evaluationItems: List<EvaluationItem>): EvaluationTargetData {
-        val note = get(NOTE)
-        val evaluationStatus = getEvaluationStatus()
         val evaluationAnswers = getEvaluationAnswers(evaluationItems)
+        val evaluationStatus = getEvaluationStatus()
+        val note = get(NOTE)
         val evaluationScores = evaluationAnswers.map { EvaluationItemScoreData(it.score, it.evaluationItemId) }
         return EvaluationTargetData(evaluationScores, note, evaluationStatus)
     }
