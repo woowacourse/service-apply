@@ -3,10 +3,10 @@ import PropTypes from "prop-types";
 import Field from "../Field/Field";
 import Label from "../Label/Label";
 import Description from "../Description/Description";
-import TextInput from "../TextInput/TextInput";
-import styles from "./TextField.module.css";
+import styles from "./TextareaField.module.css";
+import Textarea from "../Textarea/Textarea";
 
-const TextField = ({
+const TextareaField = ({
   required,
   label,
   value,
@@ -18,30 +18,26 @@ const TextField = ({
   return (
     <>
       <Field className={styles["text-field"]}>
-        <label className={styles["text-field"]}>
-          <div>
-            <Label required={required}>{label}</Label>
+        <Label required={required}>{label}</Label>
+        {description && <Description>{description}</Description>}
+        {maxLength && maxLength > 0 && (
+          <div className={styles["length-limit"]}>
+            {value.length} / {maxLength}
           </div>
-          {description && <Description>{description}</Description>}
-          {maxLength && maxLength > 0 && (
-            <div className={styles["length-limit"]}>
-              {value.length} / {maxLength}
-            </div>
-          )}
-          <TextInput
-            required={required}
-            value={value}
-            maxLength={maxLength}
-            {...props}
-          />
-        </label>
+        )}
+        <Textarea
+          required={required}
+          value={value}
+          maxLength={maxLength}
+          {...props}
+        />
       </Field>
       <p className={styles["rule-field"]}>{errorMessage}</p>
     </>
   );
 };
 
-TextField.propTypes = {
+TextareaField.propTypes = {
   label: PropTypes.string,
   value: PropTypes.string,
   required: PropTypes.bool,
@@ -50,7 +46,7 @@ TextField.propTypes = {
   errorMessage: PropTypes.string,
 };
 
-TextField.defaultProps = {
+TextareaField.defaultProps = {
   label: "",
   value: "",
   required: false,
@@ -58,4 +54,4 @@ TextField.defaultProps = {
   maxLength: undefined,
 };
 
-export default TextField;
+export default TextareaField;

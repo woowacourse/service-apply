@@ -27,6 +27,7 @@ import useRecruitmentContext from "../../hooks/useRecruitmentContext";
 import useTokenContext from "../../hooks/useTokenContext";
 import FormProvider from "../../provider/FormProvider/FormProvider";
 import FormInput from "../../provider/FormProvider/FormInput";
+import FormTextarea from "../../provider/FormProvider/FormTextarea";
 import ResetButton from "../../provider/FormProvider/ResetButton";
 import SubmitButton from "../../provider/FormProvider/SubmitButton";
 import { formatDateTime } from "../../utils/date";
@@ -220,7 +221,7 @@ const ApplicationRegister = () => {
           {recruitmentItems.length !== 0 &&
             recruitmentItems.map((item, index) => (
               <div key={item.id}>
-                <FormInput
+                <FormTextarea
                   name={`recruitment-item-${index}`}
                   type="textarea"
                   initialValue={initialFormData[`recruitment-item-${index}`]}

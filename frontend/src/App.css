@@ -34,3 +34,10 @@ button {
 button:active {
   background-color: #cccccc;
 }
+
+input,
+textarea {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}

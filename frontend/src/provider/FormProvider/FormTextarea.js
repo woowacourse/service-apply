@@ -1,9 +1,9 @@
 import { useEffect } from "react";
-import { TextInputField } from "../../components/form";
-import useFormContext from "../../hooks/useFormContext";
 import PropTypes from "prop-types";
+import TextareaField from "../../components/form/TextareaField/TextareaField";
+import useFormContext from "../../hooks/useFormContext";
 
-const FormInput = ({ name, initialValue, ...props }) => {
+const FormTextarea = ({ name, initialValue, ...props }) => {
   const { value, errorMessage, handleChange, register, unRegister } =
     useFormContext();
 
@@ -16,7 +16,7 @@ const FormInput = ({ name, initialValue, ...props }) => {
   }, [name, initialValue]);
 
   return (
-    <TextInputField
+    <TextareaField
       name={name}
       value={value[name]}
       errorMessage={errorMessage[name]}
@@ -26,9 +26,9 @@ const FormInput = ({ name, initialValue, ...props }) => {
   );
 };
 
-export default FormInput;
+export default FormTextarea;
 
-FormInput.propTypes = {
+FormTextarea.propTypes = {
   initialValue: PropTypes.string,
   name: PropTypes.string,
 };

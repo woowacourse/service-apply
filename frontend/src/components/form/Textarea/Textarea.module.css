@@ -1,3 +1,9 @@
+@media screen and (min-width: 513px) {
+  textarea {
+    min-height: 200px !important;
+  }
+}
+
 .text-input {
   padding: 12px;
   border: 1px solid #ced6e0;
@@ -5,13 +11,7 @@
   transition-duration: 0.5s;
   line-height: 30px;
   font-size: 16px;
-}
-
-.text-input:focus {
-  border: 1px solid #1e90ff;
-}
-
-.text-input:read-only {
-  cursor: default;
-  background: #ccc;
+  min-width: 100%;
+  max-width: 100%;
+  min-height: 100px;
 }
