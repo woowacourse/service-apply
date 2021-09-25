@@ -7,6 +7,7 @@ import { RecruitmentContext } from "../src/hooks/useRecruitmentContext";
 import { recruitmentFilter } from "../src/provider/RecruitmentProvider";
 import TokenProvider from "../src/provider/TokenProvider";
 import "../src/App.css";
+import { FormContext } from "../src/hooks/useFormContext";
 
 export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 axios.defaults.baseURL = API_BASE_URL;
@@ -63,7 +64,9 @@ export const decorators = [
     >
       <TokenProvider>
         <MemoryRouter>
-          <Story />
+          <FormContext value={null}>
+            <Story />
+          </FormContext>
         </MemoryRouter>
       </TokenProvider>
     </RecruitmentContext.Provider>

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import Label from "../Label/Label";
-import Radio from "../Radio/Radio";
+import Label from "../../@common/Label/Label";
+import Radio from "../../@common/Radio/Radio";
 import styles from "./GenderField.module.css";
 import useFormContext from "../../../hooks/useFormContext";
 

@@ -1,7 +1,5 @@
 import { useHistory } from "react-router-dom";
 import { fetchPasswordEdit } from "../../api/applicants";
-import { Form } from "../../components/form";
-import Button from "../../components/form/Button/Button";
 import { SUCCESS_MESSAGE } from "../../constants/messages";
 import PATH from "../../constants/path";
 import useForm from "../../hooks/useForm";
@@ -14,6 +12,8 @@ import {
   validateRePassword,
 } from "../../utils/validation/password";
 import styles from "./PasswordEdit.module.css";
+import Form from "../../components/form/Form/Form";
+import Button from "../../components/@common/Button/Button";
 
 const PasswordEdit = () => {
   const { token, resetToken } = useTokenContext();

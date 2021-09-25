@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
-import { Button } from "../../components/form";
 import useFormContext from "../../hooks/useFormContext";
-import { CONFIRM_MESSAGE } from '../../constants/messages';
+import { CONFIRM_MESSAGE } from "../../constants/messages";
+import Button from "../../components/@common/Button/Button";
 
 const ResetButton = ({ children }) => {
   const { reset } = useFormContext();

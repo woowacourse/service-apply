@@ -1,12 +1,6 @@
 import React from "react";
 import { useHistory, useLocation, generatePath } from "react-router-dom";
-import {
-  BirthField,
-  Button,
-  Form,
-  GenderField,
-  SummaryCheckField,
-} from "../../components/form";
+
 import RecruitCard from "../../components/RecruitCard/RecruitCard";
 import { ERROR_MESSAGE } from "../../constants/messages";
 import PATH, { PARAM } from "../../constants/path";
@@ -32,6 +26,11 @@ import { validatePhoneNumber } from "../../utils/validation/phoneNumber";
 import styles from "./ApplicantRegister.module.css";
 import { generateQuery } from "../../utils/route/query";
 import { formatBirthday } from "../../utils/date";
+import Form from "../../components/form/Form/Form";
+import BirthField from "../../components/form/BirthField/BirthField";
+import GenderField from "../../components/form/GenderField/GenderField";
+import Button from "../../components/@common/Button/Button";
+import SummaryCheckField from "../../components/form/SummaryCheckField/SummaryCheckField";
 
 const ApplicantRegister = () => {
   const location = useLocation();

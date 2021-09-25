@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import classNames from "classnames";
-import Box from "../../components/Box/Box";
+import Box from "../../components/@common/Box/Box";
 import RecruitItem from "../../components/RecruitItem/RecruitItem";
 import ApplicationFormItem from "../../components/ApplicationFormItem/ApplicationFormItem";
 import useTokenContext from "../../hooks/useTokenContext";

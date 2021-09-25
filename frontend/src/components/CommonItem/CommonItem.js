@@ -5,9 +5,9 @@ import classNames from "classnames";
 import { formatDateTime } from "../../utils/date";
 
 import BaseItem from "../BaseItem/BaseItem";
-import { Button } from "../form";
 
 import styles from "./CommonItem.module.css";
+import Button from "../@common/Button/Button";
 
 const CommonItem = ({
   buttonLabel,

@@ -1,7 +1,7 @@
 import React from "react";
 import { useHistory, useLocation } from "react-router-dom";
+import Button from "../../components/@common/Button/Button";
 import Form from "../../components/form/Form/Form";
-import Button from "../../components/form/Button/Button";
 import PATH from "../../constants/path";
 import styles from "./PasswordFindResult.module.css";
 

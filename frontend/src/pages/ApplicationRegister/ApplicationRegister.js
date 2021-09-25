@@ -6,13 +6,7 @@ import {
   generatePath,
 } from "react-router-dom";
 import * as Api from "../../api";
-import {
-  Button,
-  CheckBox,
-  Description,
-  Form,
-  Label,
-} from "../../components/form";
+
 import RecruitCard from "../../components/RecruitCard/RecruitCard";
 import {
   CONFIRM_MESSAGE,
@@ -33,6 +27,11 @@ import { formatDateTime } from "../../utils/date";
 import { generateQuery, parseQuery } from "../../utils/route/query";
 import { validateURL } from "../../utils/validation/url";
 import styles from "./ApplicationRegister.module.css";
+import Label from "../../components/@common/Label/Label";
+import Description from "../../components/@common/Description/Description";
+import CheckBox from "../../components/form/CheckBox/CheckBox";
+import Button from "../../components/@common/Button/Button";
+import Form from "../../components/form/Form/Form";
 
 const ApplicationRegister = () => {
   const history = useHistory();

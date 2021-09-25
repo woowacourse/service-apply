@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 
 import BaseItem from "../BaseItem/BaseItem";
-import Box from "../Box/Box";
 
 import styles from "./RecruitCard.module.css";
+import Box from "../@common/Box/Box";
 
 const RecruitCard = ({ title, startDateTime, endDateTime, className }) => {
   return (

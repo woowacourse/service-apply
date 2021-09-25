@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import Label from "../Label/Label";
-import TextInput from "../TextInput/TextInput";
+import Label from "../../@common/Label/Label";
+import TextInput from "../../@common/TextInput/TextInput";
 import useFormContext from "../../../hooks/useFormContext";
 import styles from "./BirthField.module.css";
 

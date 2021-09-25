@@ -1,9 +1,7 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { fetchPasswordFind } from "../../api/applicants";
-import { Form } from "../../components/form";
 import BirthField from "../../components/form/BirthField/BirthField";
-import Button from "../../components/form/Button/Button";
 import PATH from "../../constants/path";
 import useForm from "../../hooks/useForm";
 import FormProvider from "../../provider/FormProvider/FormProvider";
@@ -18,6 +16,8 @@ import {
 import { validateEmail } from "../../utils/validation/email";
 import { validateName } from "../../utils/validation/name";
 import styles from "./PasswordFind.module.css";
+import Form from "../../components/form/Form/Form";
+import Button from "../../components/@common/Button/Button";
 
 const PasswordFind = () => {
   const history = useHistory();

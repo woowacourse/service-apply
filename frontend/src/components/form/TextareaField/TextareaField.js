@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Label from "../Label/Label";
-import Description from "../Description/Description";
+import Label from "../../@common/Label/Label";
+import Description from "../../@common/Description/Description";
 import styles from "./TextareaField.module.css";
-import Textarea from "../Textarea/Textarea";
+import Textarea from "../../@common/Textarea/Textarea";
 
 const TextareaField = ({
   required,

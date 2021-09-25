@@ -1,7 +1,5 @@
 import React from "react";
 import { Link, useHistory } from "react-router-dom";
-import { Form } from "../../components/form";
-import Button from "../../components/form/Button/Button";
 import { SUCCESS_MESSAGE } from "../../constants/messages";
 import PATH from "../../constants/path";
 import { RECRUITS_TAB } from "../../constants/tab";
@@ -14,6 +12,8 @@ import { generateQuery } from "../../utils/route/query";
 import { validateEmail } from "../../utils/validation/email";
 import { validatePassword } from "../../utils/validation/password";
 import styles from "./Login.module.css";
+import Form from "../../components/form/Form/Form";
+import Button from "../../components/@common/Button/Button";
 
 const Login = () => {
   const { fetchLogin } = useTokenContext();

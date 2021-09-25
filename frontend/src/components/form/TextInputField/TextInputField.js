@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Label from "../Label/Label";
-import Description from "../Description/Description";
-import TextInput from "../TextInput/TextInput";
+import Label from "../../@common/Label/Label";
+import Description from "../../@common/Description/Description";
+import TextInput from "../../@common/TextInput/TextInput";
 import styles from "./TextInputField.module.css";
 
 const TextInputField = ({
