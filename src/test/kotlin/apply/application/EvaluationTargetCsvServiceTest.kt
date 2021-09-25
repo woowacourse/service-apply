@@ -52,6 +52,22 @@ class EvaluationTargetCsvServiceTest {
     }
 
     @Test
+    fun `상태에 대해 대소문자 구분을 하지 않고 평가지 업로드 시 csv 읽기에 성공한다`() {
+        val inputStream = getInputStream("status_ignore_case_evaluation.csv")
+        val evaluationItems = listOf(
+            createEvaluationItem(maximumScore = 1, position = 1),
+            createEvaluationItem(maximumScore = 2, position = 2),
+            createEvaluationItem(maximumScore = 3, position = 3)
+        )
+
+        every { evaluationItemRepository.findByEvaluationIdOrderByPosition(any()) } returns evaluationItems
+        every { evaluationTargetService.updateGrades(any(), any()) } just Runs
+
+        assertDoesNotThrow { evaluationTargetCsvService.updateTarget(inputStream, 1L) }
+        verify(exactly = 1) { evaluationTargetService.updateGrades(any(), any()) }
+    }
+
+    @Test
     fun `해당 평가에 맞지 않는 평가지 업로드 시 예외가 발생한다`() {
         val inputStream = getInputStream("another_evaluation.csv")
         val evaluationItems = listOf(
