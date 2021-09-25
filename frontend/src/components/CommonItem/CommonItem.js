@@ -5,9 +5,9 @@ import classNames from "classnames";
 import { formatDateTime } from "../../utils/date";
 
 import BaseItem from "../BaseItem/BaseItem";
+import Button from "../@common/Button/Button";
 
 import styles from "./CommonItem.module.css";
-import Button from "../@common/Button/Button";
 
 const CommonItem = ({
   buttonLabel,
@@ -39,7 +39,12 @@ const CommonItem = ({
         startDateTime={formattedStartDateTime}
         endDateTime={formattedEndDateTime}
       />
-      <Button className="button" disabled={!activeButton} onClick={goPage}>
+      <Button
+        className="button"
+        type="button"
+        disabled={!activeButton}
+        onClick={goPage}
+      >
         {buttonLabel}
       </Button>
     </div>

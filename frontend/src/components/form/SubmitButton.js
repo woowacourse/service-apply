@@ -5,11 +5,7 @@ import Button from "../@common/Button/Button";
 const SubmitButton = ({ children }) => {
   const { isValid, isEmpty } = useFormContext();
 
-  return (
-    <Button type="submit" disabled={!isValid || isEmpty}>
-      {children}
-    </Button>
-  );
+  return <Button disabled={!isValid || isEmpty}>{children}</Button>;
 };
 
 export default SubmitButton;

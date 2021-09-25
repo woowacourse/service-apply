@@ -72,7 +72,7 @@ const PasswordEdit = () => {
             required
           />
           <div className={styles.buttons}>
-            <Button cancel onClick={() => history.goBack()}>
+            <Button type="button" cancel onClick={() => history.goBack()}>
               이전
             </Button>
             <SubmitButton>확인</SubmitButton>

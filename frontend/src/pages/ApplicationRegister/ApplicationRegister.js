@@ -33,6 +33,40 @@ import FormTextarea from "../../components/form/FormTextarea/FormTextarea";
 import ResetButton from "../../components/form/ResetButton";
 import SubmitButton from "../../components/form/SubmitButton";
 
+const SaveButton = ({ recruitmentId, recruitmentItems, status, onSave }) => {
+  const history = useHistory();
+  const { value } = useFormContext();
+
+  const answers = recruitmentItems.map((item, index) => ({
+    contents: value[`recruitment-item-${index}`],
+    recruitmentItemId: item.id,
+  }));
+
+  const onSaveTemp = async () => {
+    try {
+      await onSave(answers, value.url, false);
+      alert(SUCCESS_MESSAGE.API.SAVE_APPLICATION);
+
+      if (status !== PARAM.APPLICATION_FORM_STATUS.EDIT) {
+        history.replace(
+          `${generatePath(PATH.APPLICATION_FORM, {
+            status: PARAM.APPLICATION_FORM_STATUS.EDIT,
+          })}${generateQuery({ recruitmentId })}`
+        );
+      }
+    } catch (e) {
+      alert(e.response.data.message);
+      history.replace(PATH.HOME);
+    }
+  };
+
+  return (
+    <Button type="button" onClick={onSaveTemp}>
+      임시 저장
+    </Button>
+  );
+};
+
 const ApplicationRegister = () => {
   const history = useHistory();
   const location = useLocation();
@@ -168,36 +202,6 @@ const ApplicationRegister = () => {
     fetchRecruitmentItems,
   ]);
 
-  const SaveButton = () => {
-    const history = useHistory();
-    const { value } = useFormContext();
-
-    const answers = recruitmentItems.map((item, index) => ({
-      contents: value[`recruitment-item-${index}`],
-      recruitmentItemId: item.id,
-    }));
-
-    const onSaveTemp = async () => {
-      try {
-        await save(answers, value.url, false);
-        alert(SUCCESS_MESSAGE.API.SAVE_APPLICATION);
-
-        if (status !== PARAM.APPLICATION_FORM_STATUS.EDIT) {
-          history.replace(
-            `${generatePath(PATH.APPLICATION_FORM, {
-              status: PARAM.APPLICATION_FORM_STATUS.EDIT,
-            })}${generateQuery({ recruitmentId })}`
-          );
-        }
-      } catch (e) {
-        alert(e.response.data.message);
-        history.replace(PATH.HOME);
-      }
-    };
-
-    return <Button onClick={onSaveTemp}>임시 저장</Button>;
-  };
-
   return (
     <div className={styles["application-register"]}>
       {currentRecruitment && (
@@ -258,7 +262,12 @@ const ApplicationRegister = () => {
           </div>
           <div className={styles["button-wrapper"]}>
             <ResetButton>초기화</ResetButton>
-            <SaveButton />
+            <SaveButton
+              recruitmentId={recruitmentId}
+              recruitmentItems={recruitmentItems}
+              status={status}
+              onSave={save}
+            />
             <SubmitButton>제출</SubmitButton>
           </div>
         </Form>
