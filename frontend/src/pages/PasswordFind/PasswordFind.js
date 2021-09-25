@@ -7,7 +7,7 @@ import Button from "../../components/form/Button/Button";
 import PATH from "../../constants/path";
 import useForm from "../../hooks/useForm";
 import FormProvider from "../../provider/FormProvider/FormProvider";
-import InputField from "../../provider/FormProvider/InputField";
+import FormInput from "../../provider/FormProvider/FormInput";
 import SubmitButton from "../../provider/FormProvider/SubmitButton";
 import { formatBirthday } from "../../utils/date";
 import {
@@ -59,14 +59,14 @@ const PasswordFind = () => {
       <FormProvider {...methods}>
         <Form onSubmit={handleSubmit}>
           <h2>비밀번호 찾기</h2>
-          <InputField
+          <FormInput
             name="name"
             type="text"
             label="이름"
             placeholder="이름을 입력해 주세요."
             required
           />
-          <InputField
+          <FormInput
             name="email"
             type="email"
             label="이메일"

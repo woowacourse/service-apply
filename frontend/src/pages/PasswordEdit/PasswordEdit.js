@@ -7,7 +7,7 @@ import PATH from "../../constants/path";
 import useForm from "../../hooks/useForm";
 import useTokenContext from "../../hooks/useTokenContext";
 import FormProvider from "../../provider/FormProvider/FormProvider";
-import InputField from "../../provider/FormProvider/InputField";
+import FormInput from "../../provider/FormProvider/FormInput";
 import SubmitButton from "../../provider/FormProvider/SubmitButton";
 import {
   validatePassword,
@@ -50,21 +50,21 @@ const PasswordEdit = () => {
       <FormProvider {...methods}>
         <Form onSubmit={handleSubmit}>
           <h2>비밀번호 변경</h2>
-          <InputField
+          <FormInput
             name="oldPassword"
             type="password"
             label="기존 비밀번호"
             placeholder="기존 비밀번호를 입력해 주세요"
             required
           />
-          <InputField
+          <FormInput
             name="password"
             type="password"
             label="새 비밀번호"
             placeholder="비밀번호를 입력해 주세요"
             required
           />
-          <InputField
+          <FormInput
             name="rePassword"
             type="password"
             label="비밀번호 확인"

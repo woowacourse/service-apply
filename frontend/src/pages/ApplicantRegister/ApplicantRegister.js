@@ -15,7 +15,7 @@ import useForm from "../../hooks/useForm";
 import useRecruitmentContext from "../../hooks/useRecruitmentContext";
 import useTokenContext from "../../hooks/useTokenContext";
 import FormProvider from "../../provider/FormProvider/FormProvider";
-import InputField from "../../provider/FormProvider/InputField";
+import FormInput from "../../provider/FormProvider/FormInput";
 import SubmitButton from "../../provider/FormProvider/SubmitButton";
 import {
   validateDay,
@@ -112,7 +112,7 @@ const ApplicantRegister = () => {
             </SummaryCheckField>
           </div>
           <div>
-            <InputField
+            <FormInput
               name="name"
               type="text"
               label="이름"
@@ -121,7 +121,7 @@ const ApplicantRegister = () => {
             />
           </div>
           <div>
-            <InputField
+            <FormInput
               name="phoneNumber"
               type="text"
               label="전화번호"
@@ -130,7 +130,7 @@ const ApplicantRegister = () => {
             />
           </div>
           <div>
-            <InputField
+            <FormInput
               name="email"
               type="email"
               label="이메일"
@@ -139,7 +139,7 @@ const ApplicantRegister = () => {
             />
           </div>
           <div>
-            <InputField
+            <FormInput
               name="password"
               type="password"
               label="비밀번호"
@@ -148,7 +148,7 @@ const ApplicantRegister = () => {
             />
           </div>
           <div>
-            <InputField
+            <FormInput
               name="rePassword"
               type="password"
               label="비밀번호 확인"

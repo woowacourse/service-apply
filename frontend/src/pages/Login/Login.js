@@ -8,7 +8,7 @@ import { RECRUITS_TAB } from "../../constants/tab";
 import useForm from "../../hooks/useForm";
 import useTokenContext from "../../hooks/useTokenContext";
 import FormProvider from "../../provider/FormProvider/FormProvider";
-import InputField from "../../provider/FormProvider/InputField";
+import FormInput from "../../provider/FormProvider/FormInput";
 import SubmitButton from "../../provider/FormProvider/SubmitButton";
 import { generateQuery } from "../../utils/route/query";
 import { validateEmail } from "../../utils/validation/email";
@@ -62,14 +62,14 @@ const Login = () => {
           }
         >
           <h2>내 지원서 보기</h2>
-          <InputField
+          <FormInput
             name="email"
             type="email"
             label="이메일"
             placeholder="이메일 주소를 입력해 주세요."
             required
           />
-          <InputField
+          <FormInput
             name="password"
             type="password"
             label="비밀번호"

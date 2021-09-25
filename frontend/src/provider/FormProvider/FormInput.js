@@ -3,7 +3,7 @@ import { TextField } from "../../components/form";
 import useFormContext from "../../hooks/useFormContext";
 import PropTypes from "prop-types";
 
-const InputField = ({ name, initialValue, ...props }) => {
+const FormInput = ({ name, initialValue, ...props }) => {
   const { value, errorMessage, handleChange, register, unRegister } =
     useFormContext();
 
@@ -26,9 +26,9 @@ const InputField = ({ name, initialValue, ...props }) => {
   );
 };
 
-export default InputField;
+export default FormInput;
 
-InputField.propTypes = {
+FormInput.propTypes = {
   initialValue: PropTypes.string,
   name: PropTypes.string,
 };

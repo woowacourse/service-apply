@@ -26,7 +26,7 @@ import useFormContext from "../../hooks/useFormContext";
 import useRecruitmentContext from "../../hooks/useRecruitmentContext";
 import useTokenContext from "../../hooks/useTokenContext";
 import FormProvider from "../../provider/FormProvider/FormProvider";
-import InputField from "../../provider/FormProvider/InputField";
+import FormInput from "../../provider/FormProvider/FormInput";
 import ResetButton from "../../provider/FormProvider/ResetButton";
 import SubmitButton from "../../provider/FormProvider/SubmitButton";
 import { formatDateTime } from "../../utils/date";
@@ -220,7 +220,7 @@ const ApplicationRegister = () => {
           {recruitmentItems.length !== 0 &&
             recruitmentItems.map((item, index) => (
               <div key={item.id}>
-                <InputField
+                <FormInput
                   name={`recruitment-item-${index}`}
                   type="textarea"
                   initialValue={initialFormData[`recruitment-item-${index}`]}
@@ -232,7 +232,7 @@ const ApplicationRegister = () => {
                 />
               </div>
             ))}
-          <InputField
+          <FormInput
             name="url"
             type="url"
             initialValue={initialFormData.referenceUrl}
