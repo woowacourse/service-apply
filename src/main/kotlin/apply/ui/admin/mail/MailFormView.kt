@@ -11,7 +11,6 @@ import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.html.H1
-import com.vaadin.flow.component.html.H3
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
@@ -24,9 +23,9 @@ import com.vaadin.flow.router.Route
 import org.springframework.boot.autoconfigure.mail.MailProperties
 import support.views.BindingFormLayout
 import support.views.addSortableColumn
+import support.views.createErrorButton
 import support.views.createNormalButton
 import support.views.createPrimaryButton
-import support.views.createPrimarySmallButton
 import support.views.createSearchBar
 import support.views.createUploadButton
 
@@ -58,35 +57,28 @@ class MailFormView(
     }
 
     private fun createMailForm(): Component {
-        val subjectText = VerticalLayout(H3("메일 제목"), subject).apply { setWidthFull() }
-        val sender = VerticalLayout(createSender())
-        val recipientFilter = VerticalLayout(createRecipientFilter())
-        val mailBody = VerticalLayout(content)
-        val uploadFile = createUploadButton("첨부파일", MultiFileMemoryBuffer()) {
-            /*
-            todo: 추후 업로드 된 파일을 메일로 첨부하는 로직이 추가되어야 함
-             (uploadFiles 같은 필드를 두고 mail을 보내는 기능에 포함시키면 될 것 같음)
-            it.files.forEach { fileName ->
-                val fileData = it.getFileData(fileName)
-                val inputStream = it.getInputStream(fileName)
-                val readBytes = inputStream.readBytes()
-            }
-            */
-        }
-        val sendButton = createMailSendButton()
-
         return VerticalLayout(
-            subjectText,
-            sender,
-            recipientFilter,
-            VerticalLayout(mailTargetGrid),
-            mailBody,
-            VerticalLayout(uploadFile),
-            sendButton
+            subject.apply { setWidthFull() },
+            createSender(),
+            createRecipientFilter(),
+            mailTargetGrid,
+            content,
+            createUploadButton("첨부파일", MultiFileMemoryBuffer()) {
+                /*
+                todo: 추후 업로드 된 파일을 메일로 첨부하는 로직이 추가되어야 함
+                 (uploadFiles 같은 필드를 두고 mail을 보내는 기능에 포함시키면 될 것 같음)
+                it.files.forEach { fileName ->
+                    val fileData = it.getFileData(fileName)
+                    val inputStream = it.getInputStream(fileName)
+                    val readBytes = inputStream.readBytes()
+                }
+                */
+            },
+            createMailSendButton()
         ).apply {
             setSizeFull()
-            justifyContentMode = FlexComponent.JustifyContentMode.CENTER
-            defaultHorizontalComponentAlignment = FlexComponent.Alignment.CENTER
+            justifyContentMode = FlexComponent.JustifyContentMode.START
+            defaultHorizontalComponentAlignment = FlexComponent.Alignment.START
         }
     }
 
@@ -100,7 +92,7 @@ class MailFormView(
 
     private fun createRemoveButtonRender(): Renderer<MailTargetResponse> {
         return ComponentRenderer<Component, MailTargetResponse> { response ->
-            createPrimarySmallButton("삭제") {
+            createErrorButton("삭제") {
                 mailTargets.remove(response)
                 mailTargetGrid.setItems(mailTargets)
             }
@@ -146,17 +138,11 @@ class MailFormView(
         return HorizontalLayout(sender)
     }
 
-    private fun createMailSendButton(): VerticalLayout {
-        return VerticalLayout(
-            createPrimaryButton("전송") {
-                bindOrNull()?.let {
-                    // todo: emailService.메일전송(it, uploadFile)
-                }
+    private fun createMailSendButton(): Button {
+        return createPrimaryButton("전송") {
+            bindOrNull()?.let {
+                // todo: emailService.메일전송(it, uploadFile)
             }
-        ).apply {
-            setSizeFull()
-            justifyContentMode = FlexComponent.JustifyContentMode.CENTER
-            defaultHorizontalComponentAlignment = FlexComponent.Alignment.CENTER
         }
     }
 

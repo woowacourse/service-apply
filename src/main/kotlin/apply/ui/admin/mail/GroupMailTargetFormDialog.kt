@@ -7,16 +7,14 @@ import apply.application.RecruitmentResponse
 import apply.application.RecruitmentService
 import apply.domain.evaluation.Evaluation
 import apply.domain.evaluationtarget.EvaluationStatus
-import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.dialog.Dialog
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.html.H2
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
-import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.select.Select
 import support.views.addSortableColumn
-import support.views.createErrorButton
+import support.views.createContrastButton
 import support.views.createItemSelect
 import support.views.createPrimaryButton
 
@@ -30,32 +28,19 @@ class GroupMailTargetFormDialog(
     private val recruitment = createRecruitmentItem(evaluation)
     private val evaluationStatus = createEvaluationStatusItem(evaluation)
     private val mailTargets: MutableList<MailTargetResponse> = mutableListOf()
-    private val currentMailTargets: VerticalLayout = VerticalLayout(createContent())
+    private val currentMailTargetsGrid: Grid<MailTargetResponse> = createMailTargetsGrid()
 
     init {
-        width = "800px"
-        height = "90%"
         add(
             H2("지원자 정보 조회"),
-            HorizontalLayout(
-                recruitment, evaluation, evaluationStatus,
-                HorizontalLayout(
-                    createPrimaryButton("추가") {
-                        reloadComponent(mailTargets)
-                        close()
-                    },
-                    createErrorButton("취소") {
-                        close()
-                    }
-                ).apply {
-                    justifyContentMode = FlexComponent.JustifyContentMode.END
-                    defaultVerticalComponentAlignment = FlexComponent.Alignment.END
-                },
-            ),
-            currentMailTargets
+            createRecipientFilter(),
+            currentMailTargetsGrid,
+            createButtons()
         ).apply {
             setWidthFull()
         }
+        width = "900px"
+        height = "70%"
         open()
     }
 
@@ -86,10 +71,8 @@ class GroupMailTargetFormDialog(
                 val mailTargetResponses = mailTargetService.findMailTargets(evaluation.value.id, it.value)
                 mailTargets.clear()
                 mailTargets.addAll(mailTargetResponses)
-
-                currentMailTargets.apply {
-                    this.removeAll()
-                    this.add(createContent(mailTargetResponses))
+                currentMailTargetsGrid.apply {
+                    setItems(mailTargetResponses)
                 }
             }
         }
@@ -103,15 +86,35 @@ class GroupMailTargetFormDialog(
             EvaluationStatus.PENDING -> "보류"
         }
 
-    private fun createContent(mailTargets: List<MailTargetResponse> = emptyList()): Component {
-        val grids = createMailTargetsGrid(mailTargets)
-        return VerticalLayout(grids).apply { setWidthFull() }
-    }
-
-    private fun createMailTargetsGrid(mailTargets: List<MailTargetResponse>): Component {
+    private fun createMailTargetsGrid(mailTargets: List<MailTargetResponse> = emptyList()): Grid<MailTargetResponse> {
         return Grid<MailTargetResponse>(10).apply {
+            addSortableColumn("이름", MailTargetResponse::name)
             addSortableColumn("이메일", MailTargetResponse::email)
             setItems(mailTargets)
+        }
+    }
+
+    private fun createRecipientFilter(): HorizontalLayout {
+        return HorizontalLayout(
+            recruitment, evaluation, evaluationStatus,
+        ).apply {
+            element.style.set("margin-bottom", "10px")
+        }
+    }
+
+    private fun createButtons(): HorizontalLayout {
+        return HorizontalLayout(
+            createPrimaryButton("추가") {
+                reloadComponent(mailTargets)
+                close()
+            },
+            createContrastButton("취소") {
+                close()
+            }
+        ).apply {
+            justifyContentMode = FlexComponent.JustifyContentMode.CENTER
+            defaultVerticalComponentAlignment = FlexComponent.Alignment.END
+            element.style.set("margin-top", "10px")
         }
     }
 }
