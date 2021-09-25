@@ -8,9 +8,6 @@ import { POLICY_SUMMARY } from "../../constants/policySummary";
 import useForm from "../../hooks/useForm";
 import useRecruitmentContext from "../../hooks/useRecruitmentContext";
 import useTokenContext from "../../hooks/useTokenContext";
-import FormProvider from "../../provider/FormProvider/FormProvider";
-import FormInput from "../../provider/FormProvider/FormInput";
-import SubmitButton from "../../provider/FormProvider/SubmitButton";
 import {
   validateDay,
   validateMonth,
@@ -31,6 +28,9 @@ import BirthField from "../../components/form/BirthField/BirthField";
 import GenderField from "../../components/form/GenderField/GenderField";
 import Button from "../../components/@common/Button/Button";
 import SummaryCheckField from "../../components/form/SummaryCheckField/SummaryCheckField";
+import FormInput from "../../components/form/FormInput/FormInput";
+import FormProvider from "../../provider/FormProvider";
+import SubmitButton from "../../components/form/SubmitButton";
 
 const ApplicantRegister = () => {
   const location = useLocation();

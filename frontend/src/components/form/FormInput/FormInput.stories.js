@@ -1,12 +1,12 @@
 import React from "react";
-import TextInputField from "./TextInputField";
+import FormInput from "./FormInput";
 
 export default {
-  title: "form/TextInputField",
-  component: TextInputField,
+  title: "form/FormInput",
+  component: FormInput,
 };
 
-const Template = (args) => <TextInputField {...args} />;
+const Template = (args) => <FormInput {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {

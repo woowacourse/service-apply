@@ -1,19 +1,31 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
+import useFormContext from "../../../hooks/useFormContext";
 import Label from "../../@common/Label/Label";
 import Description from "../../@common/Description/Description";
 import TextInput from "../../@common/TextInput/TextInput";
-import styles from "./TextInputField.module.css";
+import styles from "./FormInput.module.css";
 
-const TextInputField = ({
-  required,
+const FormInput = ({
   label,
-  value,
   description,
+  initialValue,
+  name,
   maxLength,
-  errorMessage,
+  required,
   ...props
 }) => {
+  const { value, errorMessage, handleChange, register, unRegister } =
+    useFormContext();
+
+  useEffect(() => {
+    register(name, initialValue);
+
+    return () => {
+      unRegister(name);
+    };
+  }, [name, initialValue]);
+
   return (
     <>
       <div className={styles["text-field"]}>
@@ -22,7 +34,10 @@ const TextInputField = ({
         <TextInput
           required={required}
           value={value}
+          name={name}
+          errorMessage={errorMessage[name]}
           maxLength={maxLength}
+          onChange={handleChange}
           {...props}
         />
       </div>
@@ -31,21 +46,21 @@ const TextInputField = ({
   );
 };
 
-TextInputField.propTypes = {
+FormInput.propTypes = {
   label: PropTypes.string,
-  value: PropTypes.string,
+  initialValue: PropTypes.string,
+  name: PropTypes.string.isRequired,
   required: PropTypes.bool,
   description: PropTypes.node,
   maxLength: PropTypes.number,
   errorMessage: PropTypes.string,
 };
 
-TextInputField.defaultProps = {
+FormInput.defaultProps = {
   label: "",
-  value: "",
+  initialValue: "",
   required: false,
   description: "",
-  maxLength: undefined,
 };
 
-export default TextInputField;
+export default FormInput;

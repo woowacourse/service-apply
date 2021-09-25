@@ -1,19 +1,31 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import Label from "../../@common/Label/Label";
 import Description from "../../@common/Description/Description";
-import styles from "./TextareaField.module.css";
+import styles from "./FormTextarea.module.css";
 import Textarea from "../../@common/Textarea/Textarea";
+import useFormContext from "../../../hooks/useFormContext";
 
-const TextareaField = ({
+const FormTextarea = ({
   required,
   label,
-  value,
+  name,
+  initialValue,
   description,
   maxLength,
-  errorMessage,
   ...props
 }) => {
+  const { value, errorMessage, handleChange, register, unRegister } =
+    useFormContext();
+
+  useEffect(() => {
+    register(name, initialValue);
+
+    return () => {
+      unRegister(name);
+    };
+  }, [name, initialValue]);
+
   return (
     <>
       <div className={styles["text-field"]}>
@@ -28,6 +40,7 @@ const TextareaField = ({
           required={required}
           value={value}
           maxLength={maxLength}
+          onChange={handleChange}
           {...props}
         />
       </div>
@@ -36,16 +49,16 @@ const TextareaField = ({
   );
 };
 
-TextareaField.propTypes = {
+FormTextarea.propTypes = {
   label: PropTypes.string,
-  value: PropTypes.string,
   required: PropTypes.bool,
   description: PropTypes.node,
   maxLength: PropTypes.number,
-  errorMessage: PropTypes.string,
+  initialValue: PropTypes.string,
+  name: PropTypes.string.isRequired,
 };
 
-TextareaField.defaultProps = {
+FormTextarea.defaultProps = {
   label: "",
   value: "",
   required: false,
@@ -53,4 +66,4 @@ TextareaField.defaultProps = {
   maxLength: undefined,
 };
 
-export default TextareaField;
+export default FormTextarea;

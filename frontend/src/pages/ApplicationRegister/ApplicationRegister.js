@@ -18,11 +18,7 @@ import useForm from "../../hooks/useForm";
 import useFormContext from "../../hooks/useFormContext";
 import useRecruitmentContext from "../../hooks/useRecruitmentContext";
 import useTokenContext from "../../hooks/useTokenContext";
-import FormProvider from "../../provider/FormProvider/FormProvider";
-import FormInput from "../../provider/FormProvider/FormInput";
-import FormTextarea from "../../provider/FormProvider/FormTextarea";
-import ResetButton from "../../provider/FormProvider/ResetButton";
-import SubmitButton from "../../provider/FormProvider/SubmitButton";
+import FormProvider from "../../provider/FormProvider";
 import { formatDateTime } from "../../utils/date";
 import { generateQuery, parseQuery } from "../../utils/route/query";
 import { validateURL } from "../../utils/validation/url";
@@ -32,6 +28,10 @@ import Description from "../../components/@common/Description/Description";
 import CheckBox from "../../components/form/CheckBox/CheckBox";
 import Button from "../../components/@common/Button/Button";
 import Form from "../../components/form/Form/Form";
+import FormInput from "../../components/form/FormInput/FormInput";
+import FormTextarea from "../../components/form/FormTextarea/FormTextarea";
+import ResetButton from "../../components/form/ResetButton";
+import SubmitButton from "../../components/form/SubmitButton";
 
 const ApplicationRegister = () => {
   const history = useHistory();

@@ -4,9 +4,7 @@ import { fetchPasswordFind } from "../../api/applicants";
 import BirthField from "../../components/form/BirthField/BirthField";
 import PATH from "../../constants/path";
 import useForm from "../../hooks/useForm";
-import FormProvider from "../../provider/FormProvider/FormProvider";
-import FormInput from "../../provider/FormProvider/FormInput";
-import SubmitButton from "../../provider/FormProvider/SubmitButton";
+import FormProvider from "../../provider/FormProvider";
 import { formatBirthday } from "../../utils/date";
 import {
   validateDay,
@@ -18,6 +16,8 @@ import { validateName } from "../../utils/validation/name";
 import styles from "./PasswordFind.module.css";
 import Form from "../../components/form/Form/Form";
 import Button from "../../components/@common/Button/Button";
+import FormInput from "../../components/form/FormInput/FormInput";
+import SubmitButton from "../../components/form/SubmitButton";
 
 const PasswordFind = () => {
   const history = useHistory();

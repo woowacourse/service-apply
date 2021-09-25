@@ -4,9 +4,7 @@ import { SUCCESS_MESSAGE } from "../../constants/messages";
 import PATH from "../../constants/path";
 import useForm from "../../hooks/useForm";
 import useTokenContext from "../../hooks/useTokenContext";
-import FormProvider from "../../provider/FormProvider/FormProvider";
-import FormInput from "../../provider/FormProvider/FormInput";
-import SubmitButton from "../../provider/FormProvider/SubmitButton";
+import FormProvider from "../../provider/FormProvider";
 import {
   validatePassword,
   validateRePassword,
@@ -14,6 +12,8 @@ import {
 import styles from "./PasswordEdit.module.css";
 import Form from "../../components/form/Form/Form";
 import Button from "../../components/@common/Button/Button";
+import FormInput from "../../components/form/FormInput/FormInput";
+import SubmitButton from "../../components/form/SubmitButton";
 
 const PasswordEdit = () => {
   const { token, resetToken } = useTokenContext();
