@@ -2,7 +2,6 @@ package apply.application
 
 import apply.domain.evaluationItem.EvaluationItem
 import apply.domain.evaluationItem.EvaluationItemRepository
-import apply.domain.evaluationtarget.EvaluationAnswer
 import apply.domain.evaluationtarget.EvaluationStatus
 import apply.utils.CsvGenerator
 import apply.utils.CsvRow
@@ -73,20 +72,19 @@ class EvaluationTargetCsvService(
 
     private fun CSVRecord.getEvaluationStatus(): EvaluationStatus = EvaluationStatus.valueOf(get(STATUS).uppercase())
 
-    private fun CSVRecord.getEvaluationAnswers(evaluationItems: List<EvaluationItem>): List<EvaluationAnswer> {
+    private fun CSVRecord.getEvaluationAnswers(evaluationItems: List<EvaluationItem>): List<EvaluationItemScoreData> {
         return evaluationItems.map {
             val score = get(it.toHeader())?.toIntOrNull()
                 ?: throw IllegalArgumentException("평가 항목의 점수에 숫자가 아닌 값이 들어갈 수 없습니다.")
             require(score <= it.maximumScore) { "평가 항목의 최대 점수보다 높은 점수입니다." }
-            EvaluationAnswer(score, it.id)
+            EvaluationItemScoreData(score, it.id)
         }
     }
 
     private fun CSVRecord.getEvaluationTargetData(evaluationItems: List<EvaluationItem>): EvaluationTargetData {
-        val evaluationAnswers = getEvaluationAnswers(evaluationItems)
+        val evaluationScores = getEvaluationAnswers(evaluationItems)
         val evaluationStatus = getEvaluationStatus()
         val note = get(NOTE)
-        val evaluationScores = evaluationAnswers.map { EvaluationItemScoreData(it.score, it.evaluationItemId) }
         return EvaluationTargetData(evaluationScores, note, evaluationStatus)
     }
 
