@@ -51,7 +51,7 @@ class EvaluationTargetCsvService(
     fun updateTarget(inputStream: InputStream, evaluationId: Long) {
         val evaluationItems = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluationId)
         val evaluationTargetsData = getEvaluationTargetsDataFromCsv(inputStream, evaluationItems)
-        evaluationTargetService.updateGrades(evaluationId, evaluationTargetsData)
+        evaluationTargetService.gradeAll(evaluationId, evaluationTargetsData)
     }
 
     private fun getEvaluationTargetsDataFromCsv(

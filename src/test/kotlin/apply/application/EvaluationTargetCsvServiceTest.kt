@@ -45,10 +45,10 @@ class EvaluationTargetCsvServiceTest {
         )
 
         every { evaluationItemRepository.findByEvaluationIdOrderByPosition(any()) } returns evaluationItems
-        every { evaluationTargetService.updateGrades(any(), any()) } just Runs
+        every { evaluationTargetService.gradeAll(any(), any()) } just Runs
 
         assertDoesNotThrow { evaluationTargetCsvService.updateTarget(inputStream, 1L) }
-        verify(exactly = 1) { evaluationTargetService.updateGrades(any(), any()) }
+        verify(exactly = 1) { evaluationTargetService.gradeAll(any(), any()) }
     }
 
     @Test
@@ -61,10 +61,10 @@ class EvaluationTargetCsvServiceTest {
         )
 
         every { evaluationItemRepository.findByEvaluationIdOrderByPosition(any()) } returns evaluationItems
-        every { evaluationTargetService.updateGrades(any(), any()) } just Runs
+        every { evaluationTargetService.gradeAll(any(), any()) } just Runs
 
         assertDoesNotThrow { evaluationTargetCsvService.updateTarget(inputStream, 1L) }
-        verify(exactly = 1) { evaluationTargetService.updateGrades(any(), any()) }
+        verify(exactly = 1) { evaluationTargetService.gradeAll(any(), any()) }
     }
 
     @Test
