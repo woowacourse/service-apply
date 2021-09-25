@@ -247,7 +247,7 @@ const ApplicationRegister = () => {
                 </>
               }
               label="URL"
-              placeholder="ex) https://woowacourse.github.io/javable"
+              placeholder="ex) https://tecoble.techcourse.co.kr/"
             />
             <Field>
               <Label required>지원서 작성 내용 사실 확인</Label>
