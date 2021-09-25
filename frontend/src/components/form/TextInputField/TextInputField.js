@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Field from "../Field/Field";
 import Label from "../Label/Label";
 import Description from "../Description/Description";
 import TextInput from "../TextInput/TextInput";
@@ -17,7 +16,7 @@ const TextInputField = ({
 }) => {
   return (
     <>
-      <Field className={styles["text-field"]}>
+      <div className={styles["text-field"]}>
         <Label required={required}>{label}</Label>
         {description && <Description>{description}</Description>}
         <TextInput
@@ -26,7 +25,7 @@ const TextInputField = ({
           maxLength={maxLength}
           {...props}
         />
-      </Field>
+      </div>
       <p className={styles["rule-field"]}>{errorMessage}</p>
     </>
   );

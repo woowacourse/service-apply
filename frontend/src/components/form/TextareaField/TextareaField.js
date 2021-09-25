@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Field from "../Field/Field";
 import Label from "../Label/Label";
 import Description from "../Description/Description";
 import styles from "./TextareaField.module.css";
@@ -17,7 +16,7 @@ const TextareaField = ({
 }) => {
   return (
     <>
-      <Field className={styles["text-field"]}>
+      <div className={styles["text-field"]}>
         <Label required={required}>{label}</Label>
         {description && <Description>{description}</Description>}
         {maxLength && maxLength > 0 && (
@@ -31,7 +30,7 @@ const TextareaField = ({
           maxLength={maxLength}
           {...props}
         />
-      </Field>
+      </div>
       <p className={styles["rule-field"]}>{errorMessage}</p>
     </>
   );

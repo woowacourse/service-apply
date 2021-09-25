@@ -1,6 +1,7 @@
 .text-field {
   display: flex;
   flex-direction: column;
+  margin: 0.625rem;
 }
 
 .length-limit {

@@ -1,9 +1,8 @@
 import React, { useEffect } from "react";
-import Field from "../Field/Field";
 import Label from "../Label/Label";
 import TextInput from "../TextInput/TextInput";
-import styles from "./BirthField.module.css";
 import useFormContext from "../../../hooks/useFormContext";
+import styles from "./BirthField.module.css";
 
 const BirthField = () => {
   const { value, errorMessage, handleChange, register, unRegister } =
@@ -23,7 +22,7 @@ const BirthField = () => {
 
   return (
     <>
-      <Field className={styles["birth-field"]}>
+      <div className={styles.container}>
         <Label for="year">생년월일</Label>
         <div className={styles.birth}>
           <TextInput
@@ -52,7 +51,7 @@ const BirthField = () => {
             value={value.day}
           />
         </div>
-      </Field>
+      </div>
 
       <p className={styles["rule-field"]}>
         {errorMessage.year || errorMessage.month || errorMessage.day}
