@@ -14,7 +14,7 @@ class Mission(
     @Column(nullable = false)
     val description: String,
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     val evaluationId: Long,
 
     @Embedded

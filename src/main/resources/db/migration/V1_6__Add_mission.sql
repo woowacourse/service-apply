@@ -10,3 +10,6 @@ create table mission
     primary key (id)
 ) engine = InnoDB
   default charset = utf8mb4;
+
+alter table mission
+    add constraint uk_mission unique (evaluation_id);
