@@ -51,7 +51,7 @@ const BirthField = () => {
           />
           <datalist id="years">
             {years.map((year) => (
-              <option>{year}</option>
+              <option key={year}>{year}</option>
             ))}
           </datalist>
           <TextInput
@@ -65,7 +65,7 @@ const BirthField = () => {
           />
           <datalist id="months">
             {months.map((month) => (
-              <option>{month}</option>
+              <option key={month}>{month}</option>
             ))}
           </datalist>
           <TextInput
@@ -79,7 +79,7 @@ const BirthField = () => {
           />
           <datalist id="days">
             {days.map((day) => (
-              <option>{day}</option>
+              <option key={day}>{day}</option>
             ))}
           </datalist>
         </div>
