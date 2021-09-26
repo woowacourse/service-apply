@@ -34,7 +34,7 @@ const useForm = ({ validators, submit }) => {
     }
   };
 
-  const handleKeyUp = (event) => {
+  const handleCapsLockState = (event) => {
     if (event.target.type !== "password") return;
 
     setErrorMessage((prev) => ({
@@ -90,7 +90,7 @@ const useForm = ({ validators, submit }) => {
     isValid,
     isEmpty,
     handleChange,
-    handleKeyUp,
+    handleCapsLockState,
     handleSubmit,
     register,
     unRegister,

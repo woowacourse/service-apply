@@ -3,12 +3,12 @@ import { TextField } from "../../components/form";
 import useFormContext from "../../hooks/useFormContext";
 import PropTypes from "prop-types";
 
-const InputField = ({ name, initialValue, type, ...props }) => {
+const InputField = ({ name, initialValue, type = "text", ...props }) => {
   const {
     value,
     errorMessage,
     handleChange,
-    handleKeyUp,
+    handleCapsLockState,
     register,
     unRegister,
   } = useFormContext();
@@ -24,11 +24,11 @@ const InputField = ({ name, initialValue, type, ...props }) => {
   return (
     <TextField
       name={name}
-      type={type ?? "text"}
+      type={type}
       value={value[name]}
       errorMessage={errorMessage[name]}
       onChange={handleChange}
-      onKeyUp={type === "password" ? handleKeyUp : null}
+      onKeyUp={type === "password" ? handleCapsLockState : null}
       {...props}
     />
   );
