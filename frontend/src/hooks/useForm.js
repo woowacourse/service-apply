@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import { ERROR_MESSAGE } from "../constants/messages";
+
 const useForm = ({ validators, submit }) => {
   const [value, setValue] = useState({});
   const [errorMessage, setErrorMessage] = useState({});
@@ -16,10 +18,12 @@ const useForm = ({ validators, submit }) => {
     }
 
     const validator = validators?.[target.name];
+
     if (!validator) return;
 
     try {
       const result = validator(target.value);
+
       if (typeof result === "function") {
         result(value);
       }
@@ -28,6 +32,17 @@ const useForm = ({ validators, submit }) => {
     } catch (error) {
       setErrorMessage((prev) => ({ ...prev, [target.name]: error.message }));
     }
+  };
+
+  const handleCapsLockState = (event) => {
+    if (event.target.type !== "password") return;
+
+    setErrorMessage((prev) => ({
+      ...prev,
+      [event.target.name]: event.getModifierState("CapsLock")
+        ? ERROR_MESSAGE.VALIDATION.PASSWORD_CAPSLOCK
+        : prev[event.target.name],
+    }));
   };
 
   const handleSubmit = (event) => {
@@ -59,6 +74,7 @@ const useForm = ({ validators, submit }) => {
 
       return { ...prev };
     });
+
     setErrorMessage((prev) => {
       for (const val in prev) {
         prev[val] = null;
@@ -74,6 +90,7 @@ const useForm = ({ validators, submit }) => {
     isValid,
     isEmpty,
     handleChange,
+    handleCapsLockState,
     handleSubmit,
     register,
     unRegister,
