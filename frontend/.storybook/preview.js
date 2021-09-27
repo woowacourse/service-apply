@@ -55,8 +55,7 @@ const recruitmentDummy = [
 ];
 
 export const decorators = [
-  (Story) => {
-    return (
+  (Story) => (
       <RecruitmentContext.Provider
         value={{
           recruitment: recruitmentFilter(recruitmentDummy),
@@ -70,6 +69,5 @@ export const decorators = [
           </MemoryRouter>
         </TokenProvider>
       </RecruitmentContext.Provider>
-    );
-  },
+    )
 ];
