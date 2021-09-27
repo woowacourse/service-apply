@@ -11,8 +11,6 @@ import apply.createApplicant
 import apply.createApplicationForm
 import apply.createApplicationForms
 import apply.createUser
-import apply.domain.user.Gender
-import apply.domain.user.Password
 import apply.security.JwtTokenProvider
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
@@ -21,7 +19,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.get
-import support.createLocalDate
 
 @WebMvcTest(
     controllers = [ApplicationFormRestController::class]
@@ -44,19 +41,9 @@ internal class ApplicationFormRestControllerTest : RestControllerTest() {
 
     private val recruitmentId = 1L
 
-    private val user = createUser(
-        name = "홍길동1",
-        email = "applicant_email@email.com",
-        phoneNumber = "010-0000-0000",
-        gender = Gender.MALE,
-        birthday = createLocalDate(2020, 4, 17),
-        password = Password("password"),
-        id = 1L
-    )
+    private val user = createUser()
 
-    private val applicant = createApplicant(
-        user, 1L
-    )
+    private val applicant = createApplicant(user, 1L)
 
     private val applicationFormResponse = ApplicationFormResponse(
         createApplicationForm()

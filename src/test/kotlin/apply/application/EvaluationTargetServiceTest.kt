@@ -9,6 +9,7 @@ import apply.createEvaluation
 import apply.createEvaluationAnswer
 import apply.createEvaluationItem
 import apply.createEvaluationTarget
+import apply.createUser
 import apply.domain.applicant.Applicant
 import apply.domain.applicant.ApplicantRepository
 import apply.domain.applicant.findAllByEmailIn
@@ -84,9 +85,9 @@ class EvaluationTargetServiceTest(
             createApplicationForm(id = 3L, recruitmentId = 1L, applicantId = 3L)
         )
 
-        val firstApplicant = getApplicant(1L)
-        val secondApplicant = getApplicant(2L)
-        val thirdApplicant = getApplicant(3L)
+        val firstApplicant = createApplicant(1L)
+        val secondApplicant = createApplicant(2L)
+        val thirdApplicant = createApplicant(3L)
 
         val newApplicants = listOf(firstApplicant, secondApplicant, thirdApplicant)
 
@@ -95,10 +96,10 @@ class EvaluationTargetServiceTest(
         // when
         every { evaluationRepository.findByIdOrNull(any()) } returns firstEvaluation
         every { cheaterRepository.findAll() } returns listOf(Cheater("3@email.com"))
-        every { applicantRepository.findAllByEmailIn(listOf("3@email.com")) } returns listOf(getApplicant(3L))
+        every { applicantRepository.findAllByEmailIn(listOf("3@email.com")) } returns listOf(createApplicant(3L))
         every { applicationFormRepository.findByRecruitmentIdAndSubmittedTrue(any()) } returns applicationForms
         every { applicantRepository.findAllById(listOf(1L, 2L, 3L)) } returns newApplicants
-        every { applicantRepository.findAllById(setOf(3L)) } returns listOf(getApplicant(3L))
+        every { applicantRepository.findAllById(setOf(3L)) } returns listOf(createApplicant(3L))
         every { applicantRepository.findAllById(setOf(1L, 2L)) } returns additionalApplicants
 
         evaluationTargetService.load(firstEvaluation.id)
@@ -133,9 +134,9 @@ class EvaluationTargetServiceTest(
 
         every { evaluationRepository.findByIdOrNull(any()) } returns secondEvaluation
         every { cheaterRepository.findAll() } returns listOf(Cheater("3@email.com"))
-        every { applicantRepository.findAllByEmailIn(listOf("3@email.com")) } returns listOf(getApplicant(3L))
-        every { applicantRepository.findAllById(setOf(3L)) } returns listOf(getApplicant(3L))
-        every { applicantRepository.findAllById(setOf(2L)) } returns listOf(getApplicant(2L))
+        every { applicantRepository.findAllByEmailIn(listOf("3@email.com")) } returns listOf(createApplicant(3L))
+        every { applicantRepository.findAllById(setOf(3L)) } returns listOf(createApplicant(3L))
+        every { applicantRepository.findAllById(setOf(2L)) } returns listOf(createApplicant(2L))
 
         evaluationTargetService.load(secondEvaluation.id)
 
@@ -172,18 +173,18 @@ class EvaluationTargetServiceTest(
             createApplicationForm(id = 4L, recruitmentId = 1L, applicantId = 4L)
         )
 
-        val addingApplicant = getApplicant(id = 4L)
+        val addingApplicant = createApplicant(id = 4L)
 
         val allApplicants = listOf(
-            getApplicant(1L),
-            getApplicant(2L),
-            getApplicant(3L),
+            createApplicant(1L),
+            createApplicant(2L),
+            createApplicant(3L),
             addingApplicant
         )
 
         every { evaluationRepository.findByIdOrNull(any()) } returns firstEvaluation
         every { cheaterRepository.findAll() } returns listOf(Cheater("3@email.com"))
-        every { applicantRepository.findAllByEmailIn(listOf("3@email.com")) } returns listOf(getApplicant(3L))
+        every { applicantRepository.findAllByEmailIn(listOf("3@email.com")) } returns listOf(createApplicant(3L))
         every { applicationFormRepository.findByRecruitmentIdAndSubmittedTrue(any()) } returns allApplicationForms
         every { applicantRepository.findAllById(listOf(1L, 2L, 3L, 4L)) } returns allApplicants
         every { applicantRepository.findAllById(setOf(4L)) } returns listOf(addingApplicant)
@@ -230,11 +231,11 @@ class EvaluationTargetServiceTest(
         // when
         val secondEvaluation = createEvaluation(id = 2L, beforeEvaluationId = 1L)
 
-        val addingApplicant = getApplicant(4L)
+        val addingApplicant = createApplicant(4L)
 
         every { evaluationRepository.findByIdOrNull(any()) } returns secondEvaluation
         every { cheaterRepository.findAll() } returns listOf(Cheater("3@email.com"))
-        every { applicantRepository.findAllByEmailIn(listOf("3@email.com")) } returns listOf(getApplicant(3L))
+        every { applicantRepository.findAllByEmailIn(listOf("3@email.com")) } returns listOf(createApplicant(3L))
         every { applicantRepository.findAllById(setOf(4L)) } returns listOf(addingApplicant)
         every { applicantRepository.findAllById(setOf()) } returns listOf()
 
@@ -276,13 +277,13 @@ class EvaluationTargetServiceTest(
             createApplicationForm(id = 4L, recruitmentId = 1L, applicantId = 4L)
         )
 
-        val cheater = getApplicant(3L)
+        val cheater = createApplicant(3L)
 
         val allApplicants = listOf(
-            getApplicant(1L),
-            getApplicant(2L),
+            createApplicant(1L),
+            createApplicant(2L),
             cheater,
-            getApplicant(4L)
+            createApplicant(4L)
         )
 
         every { evaluationRepository.findByIdOrNull(any()) } returns evaluation
@@ -324,8 +325,8 @@ class EvaluationTargetServiceTest(
 
         every { evaluationRepository.findByIdOrNull(2L) } returns currentEvaluation
         every { cheaterRepository.findAll() } returns listOf(Cheater("1@email.com"))
-        every { applicantRepository.findAllByEmailIn(listOf("1@email.com")) } returns listOf(getApplicant(1L))
-        every { applicantRepository.findAllById(setOf(1L)) } returns listOf(getApplicant(1L))
+        every { applicantRepository.findAllByEmailIn(listOf("1@email.com")) } returns listOf(createApplicant(1L))
+        every { applicantRepository.findAllById(setOf(1L)) } returns listOf(createApplicant(1L))
         every { applicantRepository.findAllById(emptySet()) } returns emptyList()
 
         evaluationTargetService.load(2L)
@@ -428,15 +429,17 @@ class EvaluationTargetServiceTest(
         )
     }
 
-    private fun getApplicant(id: Long): Applicant {
-        return createApplicant(
+    private fun createApplicant(id: Long): Applicant {
+        return Applicant(
             id = id,
-            name = "홍길동$id",
-            email = "$id@email.com",
-            phoneNumber = "010-0000-0000",
-            gender = Gender.MALE,
-            birthday = createLocalDate(2020, 4, 17),
-            password = Password("password")
+            user = createUser(
+                name = "홍길동$id",
+                email = "$id@email.com",
+                phoneNumber = "010-0000-0000",
+                gender = Gender.MALE,
+                birthday = createLocalDate(2020, 4, 17),
+                password = Password("password")
+            )
         )
     }
 }

@@ -7,14 +7,14 @@ import apply.PASSWORD
 import apply.RANDOM_PASSWORD_TEXT
 import apply.WRONG_PASSWORD
 import apply.createUser
-import apply.domain.user.UserAuthenticationException
 import apply.domain.user.Password
+import apply.domain.user.UserAuthenticationException
 import apply.domain.user.UserRepository
 import apply.domain.user.findByEmail
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.slot
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -59,13 +59,13 @@ internal class UserServiceTest {
         @Test
         fun `만약 개인정보가 일치한다면 초기화한다`() {
             request = ResetPasswordRequest(NAME, EMAIL, BIRTHDAY)
-            Assertions.assertThat(subject()).isEqualTo(RANDOM_PASSWORD_TEXT)
+            assertThat(subject()).isEqualTo(RANDOM_PASSWORD_TEXT)
         }
 
         @Test
         fun `만약 개인정보가 일치하지 않는다면 예외가 발생한다`() {
             request = ResetPasswordRequest("가짜 이름", EMAIL, BIRTHDAY)
-            org.junit.jupiter.api.assertThrows<UserAuthenticationException> { subject() }
+            assertThrows<UserAuthenticationException> { subject() }
         }
     }
 

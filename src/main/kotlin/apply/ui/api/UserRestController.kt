@@ -56,8 +56,7 @@ class UserRestController(
     fun generateAuthenticationCode(
         @RequestParam email: String
     ): ResponseEntity<Unit> {
-        val authenticateCode = userAuthenticationService
-            .generateAuthenticationCode(email)
+        val authenticateCode = userAuthenticationService.generateAuthenticationCode(email)
         mailService.sendAuthenticationCodeMail(email, authenticateCode)
         return ResponseEntity.noContent().build()
     }
