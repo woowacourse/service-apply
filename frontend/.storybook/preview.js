@@ -7,6 +7,8 @@ import { RecruitmentContext } from "../src/hooks/useRecruitmentContext";
 import { recruitmentFilter } from "../src/provider/RecruitmentProvider";
 import TokenProvider from "../src/provider/TokenProvider";
 import "../src/App.css";
+import FormProvider from "../src/provider/FormProvider/FormProvider";
+import useForm from "../src/hooks/useForm";
 
 export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 axios.defaults.baseURL = API_BASE_URL;
@@ -55,17 +57,21 @@ const recruitmentDummy = [
 ];
 
 export const decorators = [
-  (Story) => (
-    <RecruitmentContext.Provider
-      value={{
-        recruitment: recruitmentFilter(recruitmentDummy),
-      }}
-    >
-      <TokenProvider>
-        <MemoryRouter>
-          <Story />
-        </MemoryRouter>
-      </TokenProvider>
-    </RecruitmentContext.Provider>
-  ),
+  (Story) => {
+    return (
+      <RecruitmentContext.Provider
+        value={{
+          recruitment: recruitmentFilter(recruitmentDummy),
+        }}
+      >
+        <TokenProvider>
+          <MemoryRouter>
+            <FormProvider>
+              <Story />
+            </FormProvider>
+          </MemoryRouter>
+        </TokenProvider>
+      </RecruitmentContext.Provider>
+    );
+  },
 ];
