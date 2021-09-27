@@ -56,18 +56,16 @@ const recruitmentDummy = [
 
 export const decorators = [
   (Story) => (
-      <RecruitmentContext.Provider
-        value={{
-          recruitment: recruitmentFilter(recruitmentDummy),
-        }}
-      >
-        <TokenProvider>
-          <MemoryRouter>
-            <FormProvider>
-              <Story />
-            </FormProvider>
-          </MemoryRouter>
-        </TokenProvider>
-      </RecruitmentContext.Provider>
-    )
+    <RecruitmentContext.Provider
+      value={{
+        recruitment: recruitmentFilter(recruitmentDummy),
+      }}
+    >
+      <TokenProvider>
+        <MemoryRouter>
+          <Story />
+        </MemoryRouter>
+      </TokenProvider>
+    </RecruitmentContext.Provider>
+  ),
 ];
