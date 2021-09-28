@@ -38,13 +38,13 @@ const FormTextarea = ({
         )}
         <Textarea
           required={required}
-          value={value}
+          value={value[name]}
           maxLength={maxLength}
           onChange={handleChange}
           {...props}
         />
       </div>
-      <p className={styles["rule-field"]}>{errorMessage}</p>
+      <p className={styles["rule-field"]}>{errorMessage[name]}</p>
     </>
   );
 };

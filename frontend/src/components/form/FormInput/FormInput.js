@@ -33,7 +33,7 @@ const FormInput = ({
         {description && <Description>{description}</Description>}
         <TextInput
           required={required}
-          value={value}
+          value={value[name]}
           name={name}
           errorMessage={errorMessage[name]}
           maxLength={maxLength}
@@ -41,7 +41,7 @@ const FormInput = ({
           {...props}
         />
       </div>
-      <p className={styles["rule-field"]}>{errorMessage}</p>
+      <p className={styles["rule-field"]}>{errorMessage[name]}</p>
     </>
   );
 };
