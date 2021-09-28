@@ -6,6 +6,11 @@ import useFormContext from "../../hooks/useFormContext";
 import { generateQuery } from "../../utils/route/query";
 import Button from "../@common/Button/Button";
 
+const pathToEdit = (recruitmentId) =>
+  generatePath(PATH.APPLICATION_FORM, {
+    status: PARAM.APPLICATION_FORM_STATUS.EDIT,
+  }) + generateQuery({ recruitmentId });
+
 const TempSaveButton = ({
   recruitmentId,
   recruitmentItems,
@@ -23,14 +28,11 @@ const TempSaveButton = ({
   const onSaveTemp = async () => {
     try {
       await onSave(answers, value.url, false);
+
       alert(SUCCESS_MESSAGE.API.SAVE_APPLICATION);
 
       if (status !== PARAM.APPLICATION_FORM_STATUS.EDIT) {
-        history.replace(
-          `${generatePath(PATH.APPLICATION_FORM, {
-            status: PARAM.APPLICATION_FORM_STATUS.EDIT,
-          })}${generateQuery({ recruitmentId })}`
-        );
+        history.replace(pathToEdit(recruitmentId));
       }
     } catch (e) {
       alert(e.response.data.message);
