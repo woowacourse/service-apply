@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
-import { formatDateTime } from "../../utils/date";
+import { formatDateTime } from "../../utils/format/date";
 
 import BaseItem from "../BaseItem/BaseItem";
 import { Button } from "../form";

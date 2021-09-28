@@ -30,7 +30,7 @@ import {
 } from "../../utils/validation/password";
 import styles from "./ApplicantRegister.module.css";
 import { generateQuery } from "../../utils/route/query";
-import { formatBirthday } from "../../utils/date";
+import { formatBirthday } from "../../utils/format/date";
 import useApplicantRegisterForm from "../../hooks/useApplicantRegisterForm";
 
 const ApplicantRegister = () => {

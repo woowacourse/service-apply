@@ -29,7 +29,7 @@ import FormProvider from "../../provider/FormProvider/FormProvider";
 import InputField from "../../provider/FormProvider/InputField";
 import ResetButton from "../../provider/FormProvider/ResetButton";
 import SubmitButton from "../../provider/FormProvider/SubmitButton";
-import { formatDateTime } from "../../utils/date";
+import { formatDateTime } from "../../utils/format/date";
 import { generateQuery, parseQuery } from "../../utils/route/query";
 import { validateURL } from "../../utils/validation/url";
 import styles from "./ApplicationRegister.module.css";
