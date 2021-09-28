@@ -1,10 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import {
-  useHistory,
-  useLocation,
-  useParams,
-  generatePath,
-} from "react-router-dom";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import * as Api from "../../api";
 
 import RecruitCard from "../../components/RecruitCard/RecruitCard";
@@ -15,57 +10,22 @@ import {
 } from "../../constants/messages";
 import PATH, { PARAM } from "../../constants/path";
 import useForm from "../../hooks/useForm";
-import useFormContext from "../../hooks/useFormContext";
 import useRecruitmentContext from "../../hooks/useRecruitmentContext";
 import useTokenContext from "../../hooks/useTokenContext";
 import FormProvider from "../../provider/FormProvider";
 import { formatDateTime } from "../../utils/date";
-import { generateQuery, parseQuery } from "../../utils/route/query";
+import { parseQuery } from "../../utils/route/query";
 import { validateURL } from "../../utils/validation/url";
 import styles from "./ApplicationRegister.module.css";
 import Label from "../../components/@common/Label/Label";
 import Description from "../../components/@common/Description/Description";
 import CheckBox from "../../components/form/CheckBox/CheckBox";
-import Button from "../../components/@common/Button/Button";
 import Form from "../../components/form/Form/Form";
 import FormInput from "../../components/form/FormInput/FormInput";
 import FormTextarea from "../../components/form/FormTextarea/FormTextarea";
 import ResetButton from "../../components/form/ResetButton";
 import SubmitButton from "../../components/form/SubmitButton";
-
-const SaveButton = ({ recruitmentId, recruitmentItems, status, onSave }) => {
-  const history = useHistory();
-  const { value } = useFormContext();
-
-  const answers = recruitmentItems.map((item, index) => ({
-    contents: value[`recruitment-item-${index}`],
-    recruitmentItemId: item.id,
-  }));
-
-  const onSaveTemp = async () => {
-    try {
-      await onSave(answers, value.url, false);
-      alert(SUCCESS_MESSAGE.API.SAVE_APPLICATION);
-
-      if (status !== PARAM.APPLICATION_FORM_STATUS.EDIT) {
-        history.replace(
-          `${generatePath(PATH.APPLICATION_FORM, {
-            status: PARAM.APPLICATION_FORM_STATUS.EDIT,
-          })}${generateQuery({ recruitmentId })}`
-        );
-      }
-    } catch (e) {
-      alert(e.response.data.message);
-      history.replace(PATH.HOME);
-    }
-  };
-
-  return (
-    <Button type="button" onClick={onSaveTemp}>
-      임시 저장
-    </Button>
-  );
-};
+import TempSaveButton from "../../components/form/TempSaveButton";
 
 const ApplicationRegister = () => {
   const history = useHistory();
@@ -262,7 +222,7 @@ const ApplicationRegister = () => {
           </div>
           <div className={styles["button-wrapper"]}>
             <ResetButton>초기화</ResetButton>
-            <SaveButton
+            <TempSaveButton
               recruitmentId={recruitmentId}
               recruitmentItems={recruitmentItems}
               status={status}
