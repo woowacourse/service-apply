@@ -2,8 +2,8 @@ package apply.ui.admin.selections
 
 import apply.application.ApplicantAndFormResponse
 import apply.application.ApplicantService
-import apply.application.EvaluationTargetCsvService
 import apply.application.EvaluationService
+import apply.application.EvaluationTargetCsvService
 import apply.application.EvaluationTargetResponse
 import apply.application.EvaluationTargetService
 import apply.application.ExcelService
@@ -13,6 +13,7 @@ import apply.domain.applicationform.ApplicationForm
 import apply.domain.evaluation.Evaluation
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
+import com.vaadin.flow.component.Text
 import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.dialog.Dialog
@@ -222,6 +223,11 @@ class SelectionView(
         return createCsvUpload("평가지 업로드", MemoryBuffer()) {
             val evaluation = evaluations[tabs.selectedIndex - 1]
             evaluationTargetCsvService.updateTarget(it.inputStream, evaluation.id)
+            val alertDialog = Dialog()
+            val text = Text("평가지가 업로드가 완료 되었습니다. 페이지가 새로고침 됩니다.")
+            val reloadButton = Button("확인") { UI.getCurrent().page.reload() }
+            alertDialog.add(VerticalLayout(text, reloadButton).apply { alignItems = FlexComponent.Alignment.CENTER })
+            alertDialog.open()
         }
     }
 

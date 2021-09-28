@@ -2,7 +2,6 @@ package apply.application
 
 import apply.domain.evaluationItem.EvaluationItem
 import apply.domain.evaluationItem.EvaluationItemRepository
-import apply.domain.evaluationtarget.EvaluationAnswer
 import apply.domain.evaluationtarget.EvaluationStatus
 import apply.utils.CsvGenerator
 import apply.utils.CsvRow
@@ -26,14 +25,15 @@ class EvaluationTargetCsvService(
         val evaluationItems = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluationId)
         val evaluationItemHeaders = evaluationItems.map { it.toHeader() }.toTypedArray()
 
-        val headerTitles = arrayOf(ID, NAME, EMAIL, STATUS, *evaluationItemHeaders)
+        val headerTitles = arrayOf(ID, NAME, EMAIL, STATUS, *evaluationItemHeaders, NOTE)
         val csvRows = targets.map { target ->
             CsvRow(
                 target.id.toString(),
                 target.name,
                 target.email,
                 target.evaluationStatus.name,
-                *scores(target.answers, evaluationItems).toTypedArray()
+                *scores(target.answers, evaluationItems).toTypedArray(),
+                target.note
             )
         }
         return csvGenerator.generateBy(headerTitles, csvRows)
@@ -49,6 +49,14 @@ class EvaluationTargetCsvService(
 
     fun updateTarget(inputStream: InputStream, evaluationId: Long) {
         val evaluationItems = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluationId)
+        val evaluationTargetsData = getEvaluationTargetsDataFromCsv(inputStream, evaluationItems)
+        evaluationTargetService.gradeAll(evaluationId, evaluationTargetsData)
+    }
+
+    private fun getEvaluationTargetsDataFromCsv(
+        inputStream: InputStream,
+        evaluationItems: List<EvaluationItem>
+    ): Map<Long, EvaluationTargetData> {
         inputStream.bufferedReader().use { reader ->
             val csvParser = CSVParser(
                 reader,
@@ -56,26 +64,28 @@ class EvaluationTargetCsvService(
                     .withFirstRecordAsHeader()
                     .withTrim()
             )
-            for (csvRecord in csvParser) {
-                var targetId = csvRecord.get(ID)
-                var name = csvRecord.get(NAME)
-                var email = csvRecord.get(EMAIL)
-                var evaluationStatus = csvRecord.getEvaluationStatus()
-                val evaluationAnswers = csvRecord.getEvaluationAnswers(evaluationItems)
-                // TODO: 평가 대상자 상태 업데이트 기능 구현
+            return csvParser.associate { csvRecord ->
+                csvRecord.get(ID).toLong() to csvRecord.getEvaluationTargetData(evaluationItems)
             }
         }
     }
 
-    private fun CSVRecord.getEvaluationStatus(): EvaluationStatus = EvaluationStatus.valueOf(get(STATUS))
+    private fun CSVRecord.getEvaluationStatus(): EvaluationStatus = EvaluationStatus.valueOf(get(STATUS).uppercase())
 
-    private fun CSVRecord.getEvaluationAnswers(evaluationItems: List<EvaluationItem>): List<EvaluationAnswer> {
+    private fun CSVRecord.getEvaluationAnswers(evaluationItems: List<EvaluationItem>): List<EvaluationItemScoreData> {
         return evaluationItems.map {
             val score = get(it.toHeader())?.toIntOrNull()
                 ?: throw IllegalArgumentException("평가 항목의 점수에 숫자가 아닌 값이 들어갈 수 없습니다.")
             require(score <= it.maximumScore) { "평가 항목의 최대 점수보다 높은 점수입니다." }
-            EvaluationAnswer(score, it.id)
+            EvaluationItemScoreData(score, it.id)
         }
+    }
+
+    private fun CSVRecord.getEvaluationTargetData(evaluationItems: List<EvaluationItem>): EvaluationTargetData {
+        val evaluationScores = getEvaluationAnswers(evaluationItems)
+        val evaluationStatus = getEvaluationStatus()
+        val note = get(NOTE)
+        return EvaluationTargetData(evaluationScores, note, evaluationStatus)
     }
 
     private fun EvaluationItem.toHeader(): String = "$title($maximumScore)"
@@ -85,5 +95,6 @@ class EvaluationTargetCsvService(
         private const val NAME: String = "이름"
         private const val EMAIL: String = "이메일"
         private const val STATUS: String = "평가 상태"
+        private const val NOTE: String = "기타 특이사항"
     }
 }
