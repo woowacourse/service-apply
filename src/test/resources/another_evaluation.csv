@@ -1,8 +1,8 @@
-id,이름,이메일,평가 상태,다른 평가 항목 제목(1),다른 평가 항목 제목(2),다른 평가 항목 제목(3)
-1,제이슨,a@email.com,PASS,1,2,3
-2,로키,b@email.com,PASS,1,2,3
-3,마갸,c@email.com,PASS,1,2,3
-4,배럴,d@email.com,PASS,1,2,3
-5,아론,e@email.com,PASS,1,2,3
-6,아마찌,f@email.com,PASS,1,2,3
-7,코기,g@email.com,PASS,1,2,3
+id,이름,이메일,평가 상태,다른 평가 항목 제목(1),다른 평가 항목 제목(2),다른 평가 항목 제목(3),기타 특이사항
+1,제이슨,a@email.com,PASS,1,2,3,
+2,로키,b@email.com,PASS,1,2,3,
+3,마갸,c@email.com,PASS,1,2,3,
+4,배럴,d@email.com,PASS,1,2,3,
+5,아론,e@email.com,PASS,1,2,3,
+6,아마찌,f@email.com,PASS,1,2,3,
+7,코기,g@email.com,PASS,1,2,3,
