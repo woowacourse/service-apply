@@ -2,6 +2,7 @@ input[type="text"],
 input[type="email"],
 input[type="url"],
 input[type="password"],
+input[type="number"],
 textarea {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -37,4 +38,9 @@ textarea.text-input {
 .text-input:read-only {
   cursor: default;
   background: #ccc;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
 }
