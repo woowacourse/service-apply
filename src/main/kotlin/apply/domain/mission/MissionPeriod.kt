@@ -13,10 +13,10 @@ fun LocalDateTime.isBetween(period: MissionPeriod): Boolean = period.contains(th
 @Embeddable
 data class MissionPeriod(
     @Column(nullable = false)
-    val startDateTime: LocalDateTime,
+    var startDateTime: LocalDateTime,
 
     @Column(nullable = false)
-    val endDateTime: LocalDateTime
+    var endDateTime: LocalDateTime
 ) {
     init {
         require(endDateTime >= startDateTime) { "시작 일시는 종료 일시보다 이후일 수 없습니다." }

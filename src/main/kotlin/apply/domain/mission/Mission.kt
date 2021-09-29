@@ -1,5 +1,6 @@
 package apply.domain.mission
 
+import apply.application.MissionData
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
 import support.domain.BaseEntity
@@ -13,7 +14,7 @@ import javax.persistence.Entity
 @Entity
 class Mission(
     @Column(nullable = false)
-    val title: String,
+    var title: String,
 
     @Column(nullable = false)
     val description: String,
@@ -46,4 +47,11 @@ class Mission(
         submittable: Boolean = false,
         id: Long = 0L
     ) : this(title, description, evaluationId, MissionPeriod(startDateTime, endDateTime), submittable, id)
+
+    fun update(request: MissionData) {
+        this.title = request.title
+        this.period.startDateTime = request.startDateTime
+        this.period.endDateTime = request.endDateTime
+        this.submittable = request.submittable
+    }
 }
