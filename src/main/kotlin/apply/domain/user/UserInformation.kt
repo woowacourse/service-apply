@@ -1,4 +1,4 @@
-package apply.domain.applicant
+package apply.domain.user
 
 import java.time.LocalDate
 import javax.persistence.Column
@@ -7,7 +7,7 @@ import javax.persistence.EnumType
 import javax.persistence.Enumerated
 
 @Embeddable
-data class ApplicantInformation(
+data class UserInformation(
     @Column(nullable = false)
     val name: String,
 

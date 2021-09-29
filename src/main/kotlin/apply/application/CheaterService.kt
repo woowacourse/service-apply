@@ -1,7 +1,7 @@
 package apply.application
 
-import apply.domain.applicant.ApplicantRepository
-import apply.domain.applicant.findByEmail
+import apply.domain.user.UserRepository
+import apply.domain.user.findByEmail
 import apply.domain.cheater.Cheater
 import apply.domain.cheater.CheaterRepository
 import org.springframework.stereotype.Service
@@ -10,12 +10,12 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 @Service
 class CheaterService(
-    private val applicantRepository: ApplicantRepository,
+    private val userRepository: UserRepository,
     private val cheaterRepository: CheaterRepository
 ) {
     fun findAll(): List<CheaterResponse> = cheaterRepository.findAll().map {
-        val applicant = applicantRepository.findByEmail(it.email)
-        CheaterResponse(it, applicant)
+        val user = userRepository.findByEmail(it.email)
+        CheaterResponse(it, user)
     }
 
     fun save(request: CheaterData) {

@@ -19,9 +19,9 @@ class ExcelController(
     private val recruitmentService: RecruitmentService,
     private val evaluationService: EvaluationService
 ) {
-    @GetMapping("/applicants/excel")
-    fun createApplicantExcel(@PathVariable recruitmentId: Long): ResponseEntity<InputStreamResource> {
-        val excel = excelService.createApplicantExcel(recruitmentId)
+    @GetMapping("/users/excel")
+    fun createUserExcel(@PathVariable recruitmentId: Long): ResponseEntity<InputStreamResource> {
+        val excel = excelService.createUserExcel(recruitmentId)
         val recruitment = recruitmentService.getById(recruitmentId)
         val headers = HttpHeaders().apply {
             contentDisposition = ContentDisposition.builder("attachment")

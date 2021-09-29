@@ -1,7 +1,7 @@
 package apply.domain.applicationform
 
 import apply.createApplicationForm
-import apply.pass
+import apply.PASS
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -15,14 +15,14 @@ class ApplicationFormRepositoryTest(
     @BeforeEach
     internal fun setUp() {
         val applicationForm = createApplicationForm()
-        val submittedApplicationForm = createApplicationForm(recruitmentId = 2L).apply { submit(pass) }
+        val submittedApplicationForm = createApplicationForm(recruitmentId = 2L).apply { submit(PASS) }
 
         applicationFormRepository.saveAll(listOf(applicationForm, submittedApplicationForm))
     }
 
     @Test
     fun `지원자가 지원한 모집의 지원서를 가져온다`() {
-        val form = applicationFormRepository.findByRecruitmentIdAndApplicantId(1L, 1L)!!
+        val form = applicationFormRepository.findByRecruitmentIdAndUserId(1L, 1L)!!
 
         assertAll(
             { assertThat(form.referenceUrl).isEqualTo("https://example.com") },
@@ -34,6 +34,6 @@ class ApplicationFormRepositoryTest(
 
     @Test
     fun `지원자가 지원서를 제출한 이력이 있는지 확인한다`() {
-        assertThat(applicationFormRepository.existsByApplicantIdAndSubmittedTrue(1L)).isTrue()
+        assertThat(applicationFormRepository.existsByUserIdAndSubmittedTrue(1L)).isTrue()
     }
 }

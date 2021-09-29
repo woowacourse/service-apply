@@ -1,6 +1,6 @@
 package apply.ui.api
 
-import apply.application.ApplicantService
+import apply.application.UserService
 import apply.application.RecruitmentItemService
 import apply.application.RecruitmentResponse
 import apply.application.RecruitmentService
@@ -35,7 +35,7 @@ internal class RecruitmentRestControllerTest : RestControllerTest() {
     private lateinit var jwtTokenProvider: JwtTokenProvider
 
     @MockkBean
-    private lateinit var applicantService: ApplicantService
+    private lateinit var userService: UserService
 
     @MockkBean
     private lateinit var recruitmentService: RecruitmentService

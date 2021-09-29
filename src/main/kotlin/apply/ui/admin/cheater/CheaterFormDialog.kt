@@ -1,6 +1,6 @@
 package apply.ui.admin.cheater
 
-import apply.application.ApplicantService
+import apply.application.UserService
 import apply.application.CheaterService
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.button.Button
@@ -14,12 +14,12 @@ import support.views.createNotification
 import support.views.createPrimaryButton
 
 class CheaterFormDialog(
-    private val applicantService: ApplicantService,
+    private val userService: UserService,
     private val cheaterService: CheaterService,
     reloadComponents: () -> Unit
 ) : Dialog() {
     private val title: H2 = H2("부정 행위자 등록")
-    private val cheaterRegistrationForm: CheaterForm = CheaterForm { applicantService.findAllByKeyword(it) }
+    private val cheaterRegistrationForm: CheaterForm = CheaterForm { userService.findAllByKeyword(it) }
 
     init {
         add(createHeader(), cheaterRegistrationForm, createButtons(reloadComponents))

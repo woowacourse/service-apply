@@ -60,7 +60,7 @@ fun createEvaluationItemData(
 
 fun createEvaluationTarget(
     evaluationId: Long = EVALUATION_ID,
-    applicantId: Long = 1L,
+    userId: Long = 1L,
     evaluationStatus: EvaluationStatus = EvaluationStatus.WAITING,
     note: String = NOTE,
     evaluationAnswers: EvaluationAnswers = EvaluationAnswers(mutableListOf()),
@@ -69,7 +69,7 @@ fun createEvaluationTarget(
     return EvaluationTarget(
         evaluationId = evaluationId,
         administratorId = administratorId,
-        applicantId = applicantId,
+        userId = userId,
         evaluationStatus = evaluationStatus,
         evaluationAnswers = evaluationAnswers,
         note = note

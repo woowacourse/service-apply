@@ -1,17 +1,17 @@
 package apply.ui.api
 
-import apply.application.ApplicantAuthenticationService
-import apply.application.ApplicantResponse
-import apply.application.ApplicantService
-import apply.application.AuthenticateApplicantRequest
+import apply.application.UserAuthenticationService
+import apply.application.UserResponse
+import apply.application.UserService
+import apply.application.AuthenticateUserRequest
 import apply.application.EditPasswordRequest
-import apply.application.RegisterApplicantRequest
+import apply.application.RegisterUserRequest
 import apply.application.ResetPasswordRequest
 import apply.application.mail.MailService
-import apply.createApplicant
-import apply.domain.applicant.ApplicantAuthenticationException
-import apply.domain.applicant.Gender
-import apply.domain.applicant.Password
+import apply.createUser
+import apply.domain.user.UserAuthenticationException
+import apply.domain.user.Gender
+import apply.domain.user.Password
 import apply.domain.authenticationcode.AuthenticationCode
 import apply.security.JwtTokenProvider
 import com.ninjasquad.springmockk.MockkBean
@@ -34,7 +34,7 @@ private const val INVALID_PASSWORD = "invalid_password"
 private const val WRONG_PASSWORD = "wrongPassword"
 private const val NEW_PASSWORD = "NEW_PASSWORD"
 
-private fun RegisterApplicantRequest.withPlainPassword(password: String): Map<String, Any?> {
+private fun RegisterUserRequest.withPlainPassword(password: String): Map<String, Any?> {
     return mapOf(
         "name" to name,
         "email" to email,
@@ -45,20 +45,20 @@ private fun RegisterApplicantRequest.withPlainPassword(password: String): Map<St
     )
 }
 
-private fun AuthenticateApplicantRequest.withPlainPassword(password: String): Map<String, Any?> {
+private fun AuthenticateUserRequest.withPlainPassword(password: String): Map<String, Any?> {
     return mapOf("email" to email, "password" to password)
 }
 
 @WebMvcTest(
-    controllers = [ApplicantRestController::class]
+    controllers = [UserRestController::class]
 )
 @TestEnvironment
-internal class ApplicantRestControllerTest : RestControllerTest() {
+internal class UserRestControllerTest : RestControllerTest() {
     @MockkBean
-    private lateinit var applicantService: ApplicantService
+    private lateinit var userService: UserService
 
     @MockkBean
-    private lateinit var applicantAuthenticationService: ApplicantAuthenticationService
+    private lateinit var userAuthenticationService: UserAuthenticationService
 
     @MockkBean
     private lateinit var mailService: MailService
@@ -66,7 +66,7 @@ internal class ApplicantRestControllerTest : RestControllerTest() {
     @MockkBean
     private lateinit var jwtTokenProvider: JwtTokenProvider
 
-    private val applicantRequest = RegisterApplicantRequest(
+    private val userRequest = RegisterUserRequest(
         name = "지원자",
         email = "test@email.com",
         phoneNumber = "010-0000-0000",
@@ -75,23 +75,23 @@ internal class ApplicantRestControllerTest : RestControllerTest() {
         password = Password(PASSWORD)
     )
 
-    private val applicantLoginRequest = AuthenticateApplicantRequest(
-        email = applicantRequest.email,
-        password = applicantRequest.password
+    private val userLoginRequest = AuthenticateUserRequest(
+        email = userRequest.email,
+        password = userRequest.password
     )
 
-    private val applicantPasswordFindRequest = ResetPasswordRequest(
-        name = applicantRequest.name,
-        email = applicantRequest.email,
-        birthday = applicantRequest.birthday
+    private val userPasswordFindRequest = ResetPasswordRequest(
+        name = userRequest.name,
+        email = userRequest.email,
+        birthday = userRequest.birthday
     )
 
-    private val invalidApplicantRequest = applicantRequest.copy(password = Password(INVALID_PASSWORD))
+    private val invalidUserRequest = userRequest.copy(password = Password(INVALID_PASSWORD))
 
-    private val invalidApplicantLoginRequest = applicantLoginRequest.copy(password = Password(INVALID_PASSWORD))
+    private val invalidUserLoginRequest = userLoginRequest.copy(password = Password(INVALID_PASSWORD))
 
-    private val inValidApplicantPasswordFindRequest =
-        applicantPasswordFindRequest.copy(birthday = createLocalDate(1995, 4, 4))
+    private val inValidUserPasswordFindRequest =
+        userPasswordFindRequest.copy(birthday = createLocalDate(1995, 4, 4))
 
     private val validEditPasswordRequest = EditPasswordRequest(
         password = Password(PASSWORD),
@@ -100,21 +100,21 @@ internal class ApplicantRestControllerTest : RestControllerTest() {
 
     private val inValidEditPasswordRequest = validEditPasswordRequest.copy(password = Password(WRONG_PASSWORD))
 
-    private val applicantKeyword = "아마찌"
+    private val userKeyword = "아마찌"
 
-    private val applicantResponses = listOf(
-        ApplicantResponse(createApplicant("아마찌")),
-        ApplicantResponse(createApplicant("로키"))
+    private val userResponses = listOf(
+        UserResponse(createUser("아마찌")),
+        UserResponse(createUser("로키"))
     )
 
     @Test
     fun `유효한 지원자 생성 및 검증 요청에 대하여 응답으로 토큰이 반환된다`() {
-        every { applicantAuthenticationService.generateToken(applicantRequest) } returns VALID_TOKEN
+        every { userAuthenticationService.generateToken(userRequest) } returns VALID_TOKEN
         every { mailService.sendAuthenticationCodeMail(any(), any()) } just Runs
-        every { applicantService.getByEmail(applicantRequest.email) } returns applicantRequest.toEntity()
+        every { userService.getByEmail(userRequest.email) } returns userRequest.toEntity()
 
-        mockMvc.post("/api/applicants/register") {
-            content = objectMapper.writeValueAsBytes(applicantRequest.withPlainPassword(PASSWORD))
+        mockMvc.post("/api/users/register") {
+            content = objectMapper.writeValueAsBytes(userRequest.withPlainPassword(PASSWORD))
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isOk }
@@ -125,11 +125,11 @@ internal class ApplicantRestControllerTest : RestControllerTest() {
     @Test
     fun `기존 지원자 정보와 일치하지 않는 지원자 생성 및 검증 요청에 응답으로 Unauthorized를 반환한다`() {
         every {
-            applicantAuthenticationService.generateToken(invalidApplicantRequest)
-        } throws ApplicantAuthenticationException()
+            userAuthenticationService.generateToken(invalidUserRequest)
+        } throws UserAuthenticationException()
 
-        mockMvc.post("/api/applicants/register") {
-            content = objectMapper.writeValueAsBytes(invalidApplicantRequest.withPlainPassword(INVALID_PASSWORD))
+        mockMvc.post("/api/users/register") {
+            content = objectMapper.writeValueAsBytes(invalidUserRequest.withPlainPassword(INVALID_PASSWORD))
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isUnauthorized }
@@ -140,11 +140,11 @@ internal class ApplicantRestControllerTest : RestControllerTest() {
     @Test
     fun `올바른 지원자 로그인 요청에 응답으로 Token을 반환한다`() {
         every {
-            applicantAuthenticationService.generateTokenByLogin(applicantLoginRequest)
+            userAuthenticationService.generateTokenByLogin(userLoginRequest)
         } returns VALID_TOKEN
 
-        mockMvc.post("/api/applicants/login") {
-            content = objectMapper.writeValueAsBytes(applicantLoginRequest.withPlainPassword(PASSWORD))
+        mockMvc.post("/api/users/login") {
+            content = objectMapper.writeValueAsBytes(userLoginRequest.withPlainPassword(PASSWORD))
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isOk }
@@ -155,11 +155,11 @@ internal class ApplicantRestControllerTest : RestControllerTest() {
     @Test
     fun `잘못된 지원자 로그인 요청에 응답으로 Unauthorized와 메시지를 반환한다`() {
         every {
-            applicantAuthenticationService.generateTokenByLogin(invalidApplicantLoginRequest)
-        } throws ApplicantAuthenticationException()
+            userAuthenticationService.generateTokenByLogin(invalidUserLoginRequest)
+        } throws UserAuthenticationException()
 
-        mockMvc.post("/api/applicants/login") {
-            content = objectMapper.writeValueAsBytes(invalidApplicantLoginRequest.withPlainPassword(INVALID_PASSWORD))
+        mockMvc.post("/api/users/login") {
+            content = objectMapper.writeValueAsBytes(invalidUserLoginRequest.withPlainPassword(INVALID_PASSWORD))
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isUnauthorized }
@@ -170,13 +170,13 @@ internal class ApplicantRestControllerTest : RestControllerTest() {
     @Test
     fun `올바른 비밀번호 찾기 요청에 응답으로 NoContent를 반환한다`() {
         every {
-            applicantService.resetPassword(applicantPasswordFindRequest)
+            userService.resetPassword(userPasswordFindRequest)
         } returns RANDOM_PASSWORD
 
-        every { mailService.sendPasswordResetMail(applicantPasswordFindRequest, RANDOM_PASSWORD) } just Runs
+        every { mailService.sendPasswordResetMail(userPasswordFindRequest, RANDOM_PASSWORD) } just Runs
 
-        mockMvc.post("/api/applicants/reset-password") {
-            content = objectMapper.writeValueAsBytes(applicantPasswordFindRequest)
+        mockMvc.post("/api/users/reset-password") {
+            content = objectMapper.writeValueAsBytes(userPasswordFindRequest)
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isNoContent }
@@ -186,11 +186,11 @@ internal class ApplicantRestControllerTest : RestControllerTest() {
     @Test
     fun `잘못된 비밀번호 찾기 요청에 응답으로 Unauthorized를 반환한다`() {
         every {
-            applicantService.resetPassword(inValidApplicantPasswordFindRequest)
-        } throws ApplicantAuthenticationException()
+            userService.resetPassword(inValidUserPasswordFindRequest)
+        } throws UserAuthenticationException()
 
-        mockMvc.post("/api/applicants/reset-password") {
-            content = objectMapper.writeValueAsBytes(inValidApplicantPasswordFindRequest)
+        mockMvc.post("/api/users/reset-password") {
+            content = objectMapper.writeValueAsBytes(inValidUserPasswordFindRequest)
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isUnauthorized }
@@ -200,13 +200,13 @@ internal class ApplicantRestControllerTest : RestControllerTest() {
     @Test
     fun `올바른 비밀번호 변경 요청에 응답으로 NoContent를 반환한다`() {
         every { jwtTokenProvider.isValidToken("valid_token") } returns true
-        every { jwtTokenProvider.getSubject("valid_token") } returns applicantRequest.email
-        every { applicantService.getByEmail(applicantRequest.email) } returns applicantRequest.toEntity()
-        every { applicantService.editPassword(any(), eq(validEditPasswordRequest)) } just Runs
+        every { jwtTokenProvider.getSubject("valid_token") } returns userRequest.email
+        every { userService.getByEmail(userRequest.email) } returns userRequest.toEntity()
+        every { userService.editPassword(any(), eq(validEditPasswordRequest)) } just Runs
 
         val actualValidEditPasswordRequest = createValidEditPasswordRequest()
 
-        mockMvc.post("/api/applicants/edit-password") {
+        mockMvc.post("/api/users/edit-password") {
             content = objectMapper.writeValueAsBytes(actualValidEditPasswordRequest)
             contentType = MediaType.APPLICATION_JSON
             header(AUTHORIZATION, "Bearer valid_token")
@@ -218,15 +218,15 @@ internal class ApplicantRestControllerTest : RestControllerTest() {
     @Test
     fun `잘못된 비밀번호 변경 요청에 응답으로 Unauthorized를 반환한다`() {
         every { jwtTokenProvider.isValidToken("valid_token") } returns true
-        every { jwtTokenProvider.getSubject("valid_token") } returns applicantRequest.email
-        every { applicantService.getByEmail(applicantRequest.email) } returns applicantRequest.toEntity()
+        every { jwtTokenProvider.getSubject("valid_token") } returns userRequest.email
+        every { userService.getByEmail(userRequest.email) } returns userRequest.toEntity()
         every {
-            applicantService.editPassword(any(), eq(inValidEditPasswordRequest))
-        } throws ApplicantAuthenticationException()
+            userService.editPassword(any(), eq(inValidEditPasswordRequest))
+        } throws UserAuthenticationException()
 
         val actualInValidEditPasswordRequest = createInValidEditPasswordRequest()
 
-        mockMvc.post("/api/applicants/edit-password") {
+        mockMvc.post("/api/users/edit-password") {
             content = objectMapper.writeValueAsBytes(actualInValidEditPasswordRequest)
             contentType = MediaType.APPLICATION_JSON
             header(AUTHORIZATION, "Bearer valid_token")
@@ -238,10 +238,10 @@ internal class ApplicantRestControllerTest : RestControllerTest() {
     @Test
     fun `이메일 인증 코드 요청에 응답으로 NoContent를 반환한다`() {
         val authenticationCode = AuthenticationCode("authentication-code@email.com")
-        every { applicantAuthenticationService.generateAuthenticationCode(any()) } returns authenticationCode.code
+        every { userAuthenticationService.generateAuthenticationCode(any()) } returns authenticationCode.code
         every { mailService.sendAuthenticationCodeMail(authenticationCode.email, authenticationCode.code) } just Runs
 
-        mockMvc.post("/api/applicants/authentication-code") {
+        mockMvc.post("/api/users/authentication-code") {
             param("email", authenticationCode.email)
         }.andExpect {
             status { isNoContent }
@@ -250,10 +250,10 @@ internal class ApplicantRestControllerTest : RestControllerTest() {
 
     @Test
     fun `이메일 인증 요청에 응답으로 NoContent를 반환한다`() {
-        every { applicantAuthenticationService.authenticateEmail(applicantRequest.email, any()) } just Runs
+        every { userAuthenticationService.authenticateEmail(userRequest.email, any()) } just Runs
 
-        mockMvc.post("/api/applicants/authenticate-email") {
-            param("email", applicantRequest.email)
+        mockMvc.post("/api/users/authenticate-email") {
+            param("email", userRequest.email)
             param("authenticateCode", "code")
         }.andExpect {
             status { isNoContent }
@@ -262,18 +262,18 @@ internal class ApplicantRestControllerTest : RestControllerTest() {
 
     @Test
     fun `키워드(이름 or 이메일)로 지원자들을 조회한다`() {
-        every { applicantService.findAllByKeyword(applicantKeyword) } returns applicantResponses
+        every { userService.findAllByKeyword(userKeyword) } returns userResponses
 
         mockMvc.get(
-            "/api/applicants",
-            applicantKeyword
+            "/api/users",
+            userKeyword
         ) {
             contentType = MediaType.APPLICATION_JSON
             header(AUTHORIZATION, "Bearer valid_token")
-            param("keyword", applicantKeyword)
+            param("keyword", userKeyword)
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(applicantResponses))) }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(userResponses))) }
         }
     }
 

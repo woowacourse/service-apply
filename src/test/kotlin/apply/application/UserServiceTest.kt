@@ -6,12 +6,12 @@ import apply.NAME
 import apply.PASSWORD
 import apply.RANDOM_PASSWORD_TEXT
 import apply.WRONG_PASSWORD
-import apply.createApplicant
+import apply.createUser
 import apply.createApplicationForm
-import apply.domain.applicant.ApplicantAuthenticationException
-import apply.domain.applicant.ApplicantRepository
-import apply.domain.applicant.Password
-import apply.domain.applicant.findByEmail
+import apply.domain.user.UserAuthenticationException
+import apply.domain.user.UserRepository
+import apply.domain.user.Password
+import apply.domain.user.findByEmail
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.Cheater
 import apply.domain.cheater.CheaterRepository
@@ -28,12 +28,12 @@ import org.junit.jupiter.api.assertThrows
 import support.test.UnitTest
 
 @UnitTest
-internal class ApplicantServiceTest {
+internal class UserServiceTest {
     @MockK
     private lateinit var applicationFormRepository: ApplicationFormRepository
 
     @MockK
-    private lateinit var applicantRepository: ApplicantRepository
+    private lateinit var userRepository: UserRepository
 
     @MockK
     private lateinit var cheaterRepository: CheaterRepository
@@ -41,13 +41,13 @@ internal class ApplicantServiceTest {
     @MockK
     private lateinit var passwordGenerator: PasswordGenerator
 
-    private lateinit var applicantService: ApplicantService
+    private lateinit var userService: UserService
 
     @BeforeEach
     internal fun setUp() {
-        applicantService = ApplicantService(
+        userService = UserService(
             applicationFormRepository,
-            applicantRepository,
+            userRepository,
             cheaterRepository,
             passwordGenerator
         )
@@ -57,7 +57,7 @@ internal class ApplicantServiceTest {
     inner class Find {
         @BeforeEach
         internal fun setUp() {
-            val applicantId = 1L
+            val userId = 1L
             val email = "email@email.com"
 
             slot<Long>().also { slot ->
@@ -68,21 +68,21 @@ internal class ApplicantServiceTest {
 
             every { cheaterRepository.findAll() } returns listOf(Cheater(email))
             slot<Iterable<Long>>().also { slot ->
-                every { applicantRepository.findAllById(capture(slot)) } answers {
-                    slot.captured.map { createApplicant(id = it, email = email) }
+                every { userRepository.findAllById(capture(slot)) } answers {
+                    slot.captured.map { createUser(id = it, email = email) }
                 }
             }
 
             slot<String>().also { slot ->
-                every { applicantRepository.findAllByKeyword(capture(slot)) } answers {
-                    listOf(createApplicant(name = slot.captured, id = applicantId, email = email))
+                every { userRepository.findAllByKeyword(capture(slot)) } answers {
+                    listOf(createUser(name = slot.captured, id = userId, email = email))
                 }
             }
         }
 
         @Test
         fun `지원자 정보와 부정 행위자 여부를 함께 제공한다`() {
-            val actual = applicantService.findAllByRecruitmentIdAndKeyword(1L)
+            val actual = userService.findAllByRecruitmentIdAndKeyword(1L)
 
             assertThat(actual).hasSize(1)
             assertThat(actual[0].isCheater).isTrue
@@ -90,7 +90,7 @@ internal class ApplicantServiceTest {
 
         @Test
         fun `키워드로 찾은 지원자 정보와 부정 행위자 여부를 함께 제공한다`() {
-            val actual = applicantService.findAllByRecruitmentIdAndKeyword(1L, "amazzi")
+            val actual = userService.findAllByRecruitmentIdAndKeyword(1L, "amazzi")
 
             assertThat(actual).hasSize(1)
             assertThat(actual[0].isCheater).isTrue
@@ -104,12 +104,12 @@ internal class ApplicantServiceTest {
 
         @BeforeEach
         internal fun setUp() {
-            every { applicantRepository.findByEmail(EMAIL) } returns createApplicant()
+            every { userRepository.findByEmail(EMAIL) } returns createUser()
             every { passwordGenerator.generate() } returns RANDOM_PASSWORD_TEXT
         }
 
         fun subject(): String {
-            return applicantService.resetPassword(request)
+            return userService.resetPassword(request)
         }
 
         @Test
@@ -121,7 +121,7 @@ internal class ApplicantServiceTest {
         @Test
         fun `만약 개인정보가 일치하지 않는다면 예외가 발생한다`() {
             request = ResetPasswordRequest("가짜 이름", EMAIL, BIRTHDAY)
-            assertThrows<ApplicantAuthenticationException> { subject() }
+            assertThrows<UserAuthenticationException> { subject() }
         }
     }
 
@@ -133,12 +133,12 @@ internal class ApplicantServiceTest {
         @BeforeEach
         internal fun setUp() {
             slot<Long>().also { slot ->
-                every { applicantRepository.getOne(capture(slot)) } answers { createApplicant(id = slot.captured) }
+                every { userRepository.getOne(capture(slot)) } answers { createUser(id = slot.captured) }
             }
         }
 
         fun subject() {
-            applicantService.editPassword(1L, request)
+            userService.editPassword(1L, request)
         }
 
         @Test
@@ -150,7 +150,7 @@ internal class ApplicantServiceTest {
         @Test
         fun `만약 기존 비밀번호가 일치하지 않다면 예외가 발생한다`() {
             request = EditPasswordRequest(WRONG_PASSWORD, Password("new_password"))
-            assertThrows<ApplicantAuthenticationException> { subject() }
+            assertThrows<UserAuthenticationException> { subject() }
         }
     }
 }

@@ -1,6 +1,6 @@
 package apply.ui.api
 
-import apply.domain.applicant.ApplicantAuthenticationException
+import apply.domain.user.UserAuthenticationException
 import apply.domain.applicationform.DuplicateApplicationException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -18,8 +18,8 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
             .body(ApiResponse.error(exception.message))
     }
 
-    @ExceptionHandler(ApplicantAuthenticationException::class)
-    fun handleUnauthorizedException(exception: ApplicantAuthenticationException): ResponseEntity<ApiResponse<Unit>> {
+    @ExceptionHandler(UserAuthenticationException::class)
+    fun handleUnauthorizedException(exception: UserAuthenticationException): ResponseEntity<ApiResponse<Unit>> {
         logger.error("message", exception)
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
             .body(ApiResponse.error(exception.message))

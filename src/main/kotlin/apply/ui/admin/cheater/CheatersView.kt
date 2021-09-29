@@ -1,6 +1,6 @@
 package apply.ui.admin.cheater
 
-import apply.application.ApplicantService
+import apply.application.UserService
 import apply.application.CheaterResponse
 import apply.application.CheaterService
 import apply.ui.admin.BaseLayout
@@ -21,7 +21,7 @@ import support.views.createPrimaryButton
 
 @Route(value = "admin/cheaters", layout = BaseLayout::class)
 class CheatersView(
-    private val applicantService: ApplicantService,
+    private val userService: UserService,
     private val cheaterService: CheaterService
 ) : VerticalLayout() {
     init {
@@ -38,7 +38,7 @@ class CheatersView(
     private fun createAddCheater(): Component {
         return HorizontalLayout(
             createPrimaryButton("추가") {
-                CheaterFormDialog(applicantService, cheaterService) {
+                CheaterFormDialog(userService, cheaterService) {
                     UI.getCurrent().page.reload()
                 }
             }

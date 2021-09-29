@@ -1,15 +1,15 @@
 package apply.ui.api
 
-import apply.application.ApplicantAndFormResponse
-import apply.application.ApplicantService
+import apply.application.UserAndFormResponse
+import apply.application.UserService
 import apply.application.ApplicationFormResponse
 import apply.application.ApplicationFormService
 import apply.application.CreateApplicationFormRequest
 import apply.application.MyApplicationFormResponse
 import apply.application.UpdateApplicationFormRequest
 import apply.application.mail.MailService
-import apply.domain.applicant.Applicant
-import apply.security.LoginApplicant
+import apply.domain.user.User
+import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
@@ -25,44 +25,44 @@ import javax.validation.Valid
 @RequestMapping("/api")
 class ApplicationFormRestController(
     private val applicationFormService: ApplicationFormService,
-    private val applicantService: ApplicantService,
+    private val userService: UserService,
     private val mailService: MailService
 ) {
     @GetMapping("/application-forms/me")
     fun getMyApplicationForms(
-        @LoginApplicant applicant: Applicant
+        @LoginUser user: User
     ): ResponseEntity<ApiResponse<List<MyApplicationFormResponse>>> {
-        val form = applicationFormService.getMyApplicationForms(applicant.id)
+        val form = applicationFormService.getMyApplicationForms(user.id)
         return ResponseEntity.ok().body(ApiResponse.success(form))
     }
 
     @GetMapping("/application-forms")
     fun getForm(
         @RequestParam recruitmentId: Long,
-        @LoginApplicant applicant: Applicant
+        @LoginUser user: User
     ): ResponseEntity<ApiResponse<ApplicationFormResponse>> {
-        val form = applicationFormService.getApplicationForm(applicant.id, recruitmentId)
+        val form = applicationFormService.getApplicationForm(user.id, recruitmentId)
         return ResponseEntity.ok().body(ApiResponse.success(form))
     }
 
     @PostMapping("/application-forms")
     fun create(
         @RequestBody @Valid request: CreateApplicationFormRequest,
-        @LoginApplicant applicant: Applicant
+        @LoginUser user: User
     ): ResponseEntity<Unit> {
-        applicationFormService.create(applicant.id, request)
+        applicationFormService.create(user.id, request)
         return ResponseEntity.ok().build()
     }
 
     @PatchMapping("/application-forms")
     fun update(
         @RequestBody @Valid request: UpdateApplicationFormRequest,
-        @LoginApplicant applicant: Applicant
+        @LoginUser user: User
     ): ResponseEntity<Unit> {
-        applicationFormService.update(applicant.id, request)
+        applicationFormService.update(user.id, request)
 
         // TODO: 차후 연결될 프론트 주소가 필요
-        mailService.sendFormSubmittedMail(applicant)
+        mailService.sendFormSubmittedMail(user)
         return ResponseEntity.ok().build()
     }
 
@@ -70,8 +70,8 @@ class ApplicationFormRestController(
     fun findAllByRecruitmentIdAndKeyword(
         @PathVariable recruitmentId: Long,
         @RequestParam keyword: String?
-    ): ResponseEntity<ApiResponse<List<ApplicantAndFormResponse>>> {
-        val applicants = applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId, keyword)
-        return ResponseEntity.ok(ApiResponse.success(applicants))
+    ): ResponseEntity<ApiResponse<List<UserAndFormResponse>>> {
+        val users = userService.findAllByRecruitmentIdAndKeyword(recruitmentId, keyword)
+        return ResponseEntity.ok(ApiResponse.success(users))
     }
 }

@@ -1,7 +1,7 @@
 package apply.ui.admin.selections
 
-import apply.application.ApplicantAndFormResponse
-import apply.application.ApplicantService
+import apply.application.UserAndFormResponse
+import apply.application.UserService
 import apply.application.EvaluationService
 import apply.application.EvaluationTargetCsvService
 import apply.application.EvaluationTargetResponse
@@ -48,7 +48,7 @@ import support.views.downloadFile
 
 @Route(value = "admin/selections", layout = BaseLayout::class)
 class SelectionView(
-    private val applicantService: ApplicantService,
+    private val userService: UserService,
     private val recruitmentService: RecruitmentService,
     private val recruitmentItemService: RecruitmentItemService,
     private val evaluationService: EvaluationService,
@@ -113,8 +113,8 @@ class SelectionView(
     private fun mapTabAndGrid(keyword: String): Map<Tab, Component> {
         val tabsToGrids = LinkedHashMap<Tab, Component>()
 
-        val applicantResponses = applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId, keyword)
-        tabsToGrids[Tab(TOTAL_APPLICANT_LABEL)] = createTotalApplicantsGrid(applicantResponses)
+        val userResponses = userService.findAllByRecruitmentIdAndKeyword(recruitmentId, keyword)
+        tabsToGrids[Tab(TOTAL_APPLICANT_LABEL)] = createTotalApplicantsGrid(userResponses)
 
         evaluations = evaluationService.findAllByRecruitmentId(recruitmentId)
         for (evaluation in evaluations) {
@@ -125,25 +125,25 @@ class SelectionView(
         return tabsToGrids
     }
 
-    private fun createTotalApplicantsGrid(applicants: List<ApplicantAndFormResponse>): Component {
-        return Grid<ApplicantAndFormResponse>(10).apply {
-            addSortableColumn("이름", ApplicantAndFormResponse::name)
-            addSortableColumn("이메일", ApplicantAndFormResponse::email)
-            addSortableColumn("전화번호", ApplicantAndFormResponse::phoneNumber)
+    private fun createTotalApplicantsGrid(users: List<UserAndFormResponse>): Component {
+        return Grid<UserAndFormResponse>(10).apply {
+            addSortableColumn("이름", UserAndFormResponse::name)
+            addSortableColumn("이메일", UserAndFormResponse::email)
+            addSortableColumn("전화번호", UserAndFormResponse::phoneNumber)
             addSortableColumn("성별") { it.gender.title }
-            addSortableDateColumn("생년월일", ApplicantAndFormResponse::birthday)
+            addSortableDateColumn("생년월일", UserAndFormResponse::birthday)
             addSortableDateTimeColumn("지원 일시") { it.applicationForm.submittedDateTime }
             addSortableColumn("부정 행위자") { if (it.isCheater) "O" else "X" }
             addColumn(createButtonRenderer()).apply { isAutoWidth = true }
-            setItems(applicants)
+            setItems(users)
         }
     }
 
-    private fun createButtonRenderer(): Renderer<ApplicantAndFormResponse> {
-        return ComponentRenderer<Component, ApplicantAndFormResponse> { applicant ->
+    private fun createButtonRenderer(): Renderer<UserAndFormResponse> {
+        return ComponentRenderer<Component, UserAndFormResponse> { user ->
             createPrimarySmallButton("지원서") {
                 val dialog = Dialog()
-                dialog.add(*createRecruitmentItems(applicant.applicationForm))
+                dialog.add(*createRecruitmentItems(user.applicationForm))
                 dialog.width = "800px"
                 dialog.height = "90%"
                 dialog.open()
@@ -234,7 +234,7 @@ class SelectionView(
     private fun createResultDownloadButton(): Button {
         return createSuccessButton("평가결과 다운로드") {
             if (isTotalApplicantTab(tabs.selectedTab)) {
-                val excel = excelService.createApplicantExcel(recruitmentId)
+                val excel = excelService.createUserExcel(recruitmentId)
                 downloadFile("${recruitmentService.getById(recruitmentId).title}.xlsx", excel)
             } else {
                 val evaluation = evaluations[tabs.selectedIndex - 1]

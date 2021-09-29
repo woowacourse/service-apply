@@ -1,4 +1,4 @@
-package apply.domain.applicant
+package apply.domain.user
 
 import support.domain.BaseEntity
 import java.time.LocalDate
@@ -8,9 +8,9 @@ import javax.persistence.Embedded
 import javax.persistence.Entity
 
 @Entity
-class Applicant(
+class User(
     @Embedded
-    val information: ApplicantInformation,
+    val information: UserInformation,
 
     @AttributeOverride(name = "value", column = Column(name = "password", nullable = false))
     @Embedded
@@ -41,12 +41,12 @@ class Applicant(
         password: Password,
         id: Long = 0L
     ) : this(
-        ApplicantInformation(name, email, phoneNumber, gender, birthday), password, id
+        UserInformation(name, email, phoneNumber, gender, birthday), password, id
     )
 
-    fun authenticate(applicant: Applicant) {
-        authenticate(applicant.password)
-        identify(this.information == applicant.information)
+    fun authenticate(user: User) {
+        authenticate(user.password)
+        identify(this.information == user.information)
     }
 
     fun authenticate(password: Password) {
@@ -66,7 +66,7 @@ class Applicant(
     private fun identify(value: Boolean, lazyMessage: () -> Any = {}) {
         if (!value) {
             val message = lazyMessage()
-            throw ApplicantAuthenticationException(message.toString())
+            throw UserAuthenticationException(message.toString())
         }
     }
 }

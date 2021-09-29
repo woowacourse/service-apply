@@ -12,18 +12,18 @@ import java.io.ByteArrayInputStream
 @Transactional
 @Service
 class ExcelService(
-    private val applicantService: ApplicantService,
+    private val userService: UserService,
     private val evaluationTargetService: EvaluationTargetService,
     private val recruitmentItemRepository: RecruitmentItemRepository,
     private val evaluationItemRepository: EvaluationItemRepository,
     private val excelGenerator: ExcelGenerator
 ) {
-    fun createApplicantExcel(recruitmentId: Long): ByteArrayInputStream {
-        val applicants = applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId)
+    fun createUserExcel(recruitmentId: Long): ByteArrayInputStream {
+        val users = userService.findAllByRecruitmentIdAndKeyword(recruitmentId)
         val titles =
             recruitmentItemRepository.findByRecruitmentIdOrderByPosition(recruitmentId).map { it.title }.toTypedArray()
         val headerTitles = arrayOf("이름", "이메일", "전화번호", "성별", "생년월일", "지원 일시", "부정 행위자", "포트폴리오 URL", *titles)
-        val excelRows = applicants.map {
+        val excelRows = users.map {
             ExcelRow(
                 it.name,
                 it.email,

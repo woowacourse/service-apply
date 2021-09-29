@@ -1,7 +1,7 @@
 package apply.ui.api
 
 import apply.NOTE
-import apply.application.ApplicantService
+import apply.application.UserService
 import apply.application.EvaluationTargetCsvService
 import apply.application.EvaluationItemResponse
 import apply.application.EvaluationItemScoreData
@@ -48,7 +48,7 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
     private lateinit var jwtTokenProvider: JwtTokenProvider
 
     @MockkBean
-    private lateinit var applicantService: ApplicantService
+    private lateinit var userService: UserService
 
     @MockkBean
     private lateinit var evaluationTargetService: EvaluationTargetService
