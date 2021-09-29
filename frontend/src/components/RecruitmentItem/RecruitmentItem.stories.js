@@ -2,7 +2,7 @@ import React from "react";
 import RecruitmentItem from "./RecruitmentItem";
 
 export default {
-  title: "RecruitmentItem",
+  title: "components/RecruitmentItem",
   component: RecruitmentItem,
 };
 
