@@ -259,9 +259,9 @@ const ApplicationRegister = () => {
             </Field>
 
             <div className={styles.buttons}>
-              <ResetButton>초기화</ResetButton>
+              <ResetButton />
               <SaveButton />
-              <SubmitButton>제출</SubmitButton>
+              <SubmitButton />
             </div>
           </Form>
         </FormProvider>
