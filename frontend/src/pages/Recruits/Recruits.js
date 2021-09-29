@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import classNames from "classnames";
 
@@ -26,6 +26,14 @@ const Recruits = () => {
   const selectedTab = query.get("status") ?? RECRUITS_TAB.ALL.name;
 
   const { recruitment } = useRecruitmentContext();
+
+  const sortedRecruitment = useMemo(
+    () =>
+      recruitment[selectedTab].sort((a, b) => {
+        return new Date(b.startDateTime) - new Date(a.startDateTime);
+      }),
+    [recruitment, selectedTab]
+  );
 
   const goToNewApplicationPage = (recruitmentId) => {
     history.push({
@@ -62,7 +70,7 @@ const Recruits = () => {
 
       {recruitment && (
         <div className={styles["recruitment-list"]} role="list">
-          {recruitment[selectedTab].map((recruitment) => (
+          {sortedRecruitment.map((recruitment) => (
             <RecruitmentItem
               key={recruitment.id}
               recruitment={recruitment}
