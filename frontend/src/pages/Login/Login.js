@@ -71,7 +71,7 @@ const Login = () => {
             </Button>
             <SubmitButton>확인</SubmitButton>
           </div>
-          <Link to="/find" className={styles["find-password"]}>
+          <Link to={PATH.FIND_PASSWORD} className={styles["find-password"]}>
             비밀번호 찾기
           </Link>
         </Form>
