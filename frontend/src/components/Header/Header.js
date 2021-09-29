@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 
 import useTokenContext from "../../hooks/useTokenContext";
 import PATH from "../../constants/path";
-import { CONFIRM_MESSAGE } from "../../constants/messages";
 
 import MemberIcon from "../../assets/icon/member-icon.svg";
 
@@ -19,10 +18,8 @@ const Header = () => {
   };
 
   const onLogout = () => {
-    if (window.confirm(CONFIRM_MESSAGE.LOGOUT)) {
-      setIsShowMemberMenu(false);
-      resetToken();
-    }
+    setIsShowMemberMenu(false);
+    resetToken();
   };
 
   return (
