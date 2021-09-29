@@ -54,3 +54,10 @@ data class MissionResponse(
         mission.status
     )
 }
+
+data class UpdateMissionRequest(
+    val title: String,
+    val submittable: Boolean,
+    val startDateTime: LocalDateTime,
+    val endDateTime: LocalDateTime
+)
