@@ -4,12 +4,17 @@ import classNames from "classnames";
 
 import styles from "./Box.module.css";
 
+export const BOX_SIZE = {
+  DEFAULT: "default",
+  NARROW: "narrow",
+};
+
 const Box = ({ title, size, children, className }) => {
   return (
     <div
       className={classNames(
         styles.box,
-        { [styles.narrow]: size === "narrow" },
+        { [styles.narrow]: size === BOX_SIZE.NARROW },
         className
       )}
     >

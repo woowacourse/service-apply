@@ -1,7 +1,7 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { fetchPasswordFind } from "../../api/applicants";
-import Box from "../../components/Box/Box";
+import Box, { BOX_SIZE } from "../../components/Box/Box";
 import { Form } from "../../components/form";
 import BirthField from "../../components/form/BirthField/BirthField";
 import Button from "../../components/form/Button/Button";
@@ -56,7 +56,7 @@ const PasswordFind = () => {
   });
 
   return (
-    <Box size="narrow" title="비밀번호 찾기">
+    <Box size={BOX_SIZE.NARROW} title="비밀번호 찾기">
       <FormProvider {...methods}>
         <Form onSubmit={handleSubmit}>
           <InputField

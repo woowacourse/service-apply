@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useHistory } from "react-router-dom";
 
-import Box from "../../components/Box/Box";
+import Box, { BOX_SIZE } from "../../components/Box/Box";
 import { Form } from "../../components/form";
 import Button from "../../components/form/Button/Button";
 
@@ -46,7 +46,7 @@ const Login = () => {
   });
 
   return (
-    <Box size="narrow" title="로그인">
+    <Box size={BOX_SIZE.NARROW} title="로그인">
       <FormProvider {...methods}>
         <Form onSubmit={handleSubmit}>
           <InputField

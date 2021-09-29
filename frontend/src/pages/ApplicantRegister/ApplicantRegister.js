@@ -9,7 +9,7 @@ import {
   SummaryCheckField,
 } from "../../components/form";
 import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
-import Box from "../../components/Box/Box";
+import Box, { BOX_SIZE } from "../../components/Box/Box";
 
 import useForm from "../../hooks/useForm";
 import useRecruitmentContext from "../../hooks/useRecruitmentContext";
@@ -102,7 +102,7 @@ const ApplicantRegister = () => {
         />
       )}
 
-      <Box title="회원가입" size="narrow">
+      <Box title="회원가입" size={BOX_SIZE.NARROW}>
         <FormProvider {...methods}>
           <Form onSubmit={handleSubmit}>
             <h2>지원자 정보</h2>

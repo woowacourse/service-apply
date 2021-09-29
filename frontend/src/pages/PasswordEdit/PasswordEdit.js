@@ -1,6 +1,6 @@
 import { useHistory } from "react-router-dom";
 import { fetchPasswordEdit } from "../../api/applicants";
-import Box from "../../components/Box/Box";
+import Box, { BOX_SIZE } from "../../components/Box/Box";
 import { Form } from "../../components/form";
 import Button from "../../components/form/Button/Button";
 import { SUCCESS_MESSAGE } from "../../constants/messages";
@@ -47,7 +47,7 @@ const PasswordEdit = () => {
   });
 
   return (
-    <Box size="narrow" title="비밀번호 변경">
+    <Box size={BOX_SIZE.NARROW} title="비밀번호 변경">
       <FormProvider {...methods}>
         <Form onSubmit={handleSubmit}>
           <InputField
