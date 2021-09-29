@@ -1,12 +1,12 @@
 import React from "react";
-import Box, { BOX_SIZE } from "./Box";
+import Container, { CONTAINER_SIZE } from "./Container";
 
 export default {
-  title: "components/Box",
-  component: Box,
+  title: "components/Container",
+  component: Container,
 };
 
-const Template = (args) => <Box {...args} />;
+const Template = (args) => <Container {...args} />;
 
 export const Default = Template.bind({});
 
@@ -18,5 +18,5 @@ export const Narrow = Template.bind({});
 
 Narrow.args = {
   children: "내용물",
-  size: BOX_SIZE.NARROW,
+  size: CONTAINER_SIZE.NARROW,
 };

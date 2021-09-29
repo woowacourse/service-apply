@@ -8,7 +8,7 @@
   user-select: none;
 }
 
-.container {
+.content-wrapper {
   width: var(--pc-main-width);
 }
 

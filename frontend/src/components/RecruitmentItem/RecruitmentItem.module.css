@@ -1,4 +1,4 @@
-.container {
+.content-wrapper {
   width: 100%;
   max-width: var(--pc-main-width);
   display: flex;

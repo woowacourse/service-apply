@@ -4,7 +4,9 @@ import { useHistory, useLocation } from "react-router-dom";
 import Form from "../../components/form/Form/Form";
 import Button from "../../components/form/Button/Button";
 import PATH from "../../constants/path";
-import Box, { BOX_SIZE } from "../../components/Box/Box";
+import Container, {
+  CONTAINER_SIZE,
+} from "../../components/Container/Container";
 
 import styles from "./PasswordFindResult.module.css";
 
@@ -16,7 +18,7 @@ const PasswordFindResult = () => {
   const history = useHistory();
 
   return (
-    <Box size={BOX_SIZE.NARROW} title="비밀번호 찾기">
+    <Container size={CONTAINER_SIZE.NARROW} title="비밀번호 찾기">
       <Form>
         <p className={styles.text}>
           임시 비밀번호가 <strong>{email}</strong> 으로 발송되었습니다.
@@ -25,7 +27,7 @@ const PasswordFindResult = () => {
           돌아가기
         </Button>
       </Form>
-    </Box>
+    </Container>
   );
 };
 

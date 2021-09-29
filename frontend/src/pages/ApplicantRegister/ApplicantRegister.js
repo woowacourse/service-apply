@@ -9,7 +9,9 @@ import {
   SummaryCheckField,
 } from "../../components/form";
 import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
-import Box, { BOX_SIZE } from "../../components/Box/Box";
+import Container, {
+  CONTAINER_SIZE,
+} from "../../components/Container/Container";
 
 import useForm from "../../hooks/useForm";
 import useRecruitmentContext from "../../hooks/useRecruitmentContext";
@@ -94,7 +96,7 @@ const ApplicantRegister = () => {
   });
 
   return (
-    <div className={styles.container}>
+    <div className={styles.box}>
       {currentRecruitment && (
         <RecruitmentItem
           recruitment={currentRecruitment}
@@ -102,7 +104,7 @@ const ApplicantRegister = () => {
         />
       )}
 
-      <Box title="회원가입" size={BOX_SIZE.NARROW}>
+      <Container title="회원가입" size={CONTAINER_SIZE.NARROW}>
         <FormProvider {...methods}>
           <Form onSubmit={handleSubmit}>
             <h2>지원자 정보</h2>
@@ -176,7 +178,7 @@ const ApplicantRegister = () => {
             </div>
           </Form>
         </FormProvider>
-      </Box>
+      </Container>
     </div>
   );
 };

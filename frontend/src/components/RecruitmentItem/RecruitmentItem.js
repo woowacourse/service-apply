@@ -35,7 +35,10 @@ const RecruitmentItem = ({
   );
 
   return (
-    <div className={classNames(styles.container, className)} {...props}>
+    <div
+      className={classNames(styles["content-wrapper"], className)}
+      {...props}
+    >
       <div className={styles["text-container"]}>
         <p className={styles.title}>
           <strong>{recruitment.title}</strong>

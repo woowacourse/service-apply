@@ -26,7 +26,7 @@ const Header = () => {
   };
 
   return (
-    <div className={styles.container}>
+    <div className={styles.box}>
       <header className={styles.header}>
         <div className={styles.content}>
           <h1>

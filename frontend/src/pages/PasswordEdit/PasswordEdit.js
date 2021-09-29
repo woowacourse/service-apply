@@ -1,10 +1,13 @@
 import { useHistory } from "react-router-dom";
+
 import { fetchPasswordEdit } from "../../api/applicants";
-import Box, { BOX_SIZE } from "../../components/Box/Box";
+
+import Container, {
+  CONTAINER_SIZE,
+} from "../../components/Container/Container";
 import { Form } from "../../components/form";
 import Button from "../../components/form/Button/Button";
-import { SUCCESS_MESSAGE } from "../../constants/messages";
-import PATH from "../../constants/path";
+
 import useForm from "../../hooks/useForm";
 import useTokenContext from "../../hooks/useTokenContext";
 import FormProvider from "../../provider/FormProvider/FormProvider";
@@ -14,6 +17,9 @@ import {
   validatePassword,
   validateRePassword,
 } from "../../utils/validation/password";
+import PATH from "../../constants/path";
+import { SUCCESS_MESSAGE } from "../../constants/messages";
+
 import styles from "./PasswordEdit.module.css";
 
 const PasswordEdit = () => {
@@ -47,7 +53,7 @@ const PasswordEdit = () => {
   });
 
   return (
-    <Box size={BOX_SIZE.NARROW} title="비밀번호 변경">
+    <Container size={CONTAINER_SIZE.NARROW} title="비밀번호 변경">
       <FormProvider {...methods}>
         <Form onSubmit={handleSubmit}>
           <InputField
@@ -79,7 +85,7 @@ const PasswordEdit = () => {
           </div>
         </Form>
       </FormProvider>
-    </Box>
+    </Container>
   );
 };
 

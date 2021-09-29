@@ -6,7 +6,7 @@ import {
   generatePath,
 } from "react-router-dom";
 
-import Box from "../../components/Box/Box";
+import Container from "../../components/Container/Container";
 import {
   Button,
   CheckBox,
@@ -204,12 +204,12 @@ const ApplicationRegister = () => {
   };
 
   return (
-    <div className={styles.container}>
+    <div className={styles.box}>
       {currentRecruitment && (
         <RecruitmentItem recruitment={currentRecruitment} />
       )}
 
-      <Box title="지원서 작성">
+      <Container title="지원서 작성">
         <FormProvider {...methods}>
           <Form onSubmit={handleSubmit}>
             {status === PARAM.APPLICATION_FORM_STATUS.EDIT && (
@@ -265,7 +265,7 @@ const ApplicationRegister = () => {
             </div>
           </Form>
         </FormProvider>
-      </Box>
+      </Container>
     </div>
   );
 };

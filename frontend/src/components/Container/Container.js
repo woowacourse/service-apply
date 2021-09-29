@@ -2,19 +2,19 @@ import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
-import styles from "./Box.module.css";
+import styles from "./Container.module.css";
 
-export const BOX_SIZE = {
+export const CONTAINER_SIZE = {
   DEFAULT: "default",
   NARROW: "narrow",
 };
 
-const Box = ({ title, size, children, className }) => {
+const Container = ({ title, size, children, className }) => {
   return (
     <div
       className={classNames(
         styles.box,
-        { [styles.narrow]: size === BOX_SIZE.NARROW },
+        { [styles.narrow]: size === CONTAINER_SIZE.NARROW },
         className
       )}
     >
@@ -24,14 +24,14 @@ const Box = ({ title, size, children, className }) => {
   );
 };
 
-export default Box;
+export default Container;
 
-Box.propTypes = {
+Container.propTypes = {
   title: PropTypes.string,
   size: PropTypes.oneOf(["default", "narrow"]),
   children: PropTypes.node.isRequired,
 };
 
-Box.defaultProps = {
+Container.defaultProps = {
   size: "default",
 };

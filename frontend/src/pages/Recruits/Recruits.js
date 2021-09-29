@@ -37,7 +37,7 @@ const Recruits = () => {
   };
 
   return (
-    <div className={styles.container}>
+    <div className={styles.box}>
       <nav className={styles.tab}>
         <ul className={styles["tab-list"]}>
           {RECRUITS_TAB_LIST.map(({ name, label }) => (
