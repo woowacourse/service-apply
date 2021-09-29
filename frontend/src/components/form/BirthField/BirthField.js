@@ -4,6 +4,20 @@ import TextInput from "../../@common/TextInput/TextInput";
 import useFormContext from "../../../hooks/useFormContext";
 import styles from "./BirthField.module.css";
 
+const currentYear = new Date().getFullYear();
+
+const years = Array(50)
+  .fill(null)
+  .map((_, idx) => currentYear - idx);
+
+const months = Array(12)
+  .fill(null)
+  .map((_, idx) => idx + 1);
+
+const days = Array(31)
+  .fill(null)
+  .map((_, idx) => idx + 1);
+
 const BirthField = () => {
   const { value, errorMessage, handleChange, register, unRegister } =
     useFormContext();
@@ -27,29 +41,53 @@ const BirthField = () => {
         <div className={styles.birth}>
           <TextInput
             className={styles.year}
+            type="number"
             id="year"
             name="year"
-            type="text"
+            list="years"
             placeholder="YYYY"
+            min="0"
+            max={currentYear}
             onChange={handleChange}
             value={value.year}
           />
+          <datalist id="years">
+            {years.map((year) => (
+              <option key={year}>{year}</option>
+            ))}
+          </datalist>
           <TextInput
             className={styles.month}
             name="month"
-            type="text"
+            list="months"
+            type="number"
             placeholder="MM"
+            min="1"
+            max="12"
             onChange={handleChange}
             value={value.month}
           />
+          <datalist id="months">
+            {months.map((month) => (
+              <option key={month}>{month}</option>
+            ))}
+          </datalist>
           <TextInput
             className={styles.day}
             name="day"
-            type="text"
+            list="days"
+            type="number"
+            min="1"
+            max="31"
             placeholder="DD"
             onChange={handleChange}
             value={value.day}
           />
+          <datalist id="days">
+            {days.map((day) => (
+              <option key={day}>{day}</option>
+            ))}
+          </datalist>
         </div>
       </div>
 

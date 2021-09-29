@@ -7,6 +7,7 @@ export const ERROR_MESSAGE = {
     NAME: "정확한 한글 이름을 입력해 주세요.",
     PASSWORD:
       "영문, 숫자, 특수문자 포함하여 8자에서 20자 이내로 입력해 주세요.",
+    PASSWORD_CAPSLOCK: "CapsLock이 켜져 있습니다.",
     RE_PASSWORD: "비밀번호를 확인해주세요.",
     PHONE_NUMBER: "정확한 전화번호를 입력해 주세요. ex) 010-1234-5678",
     REQUIRED: "필수 정보입니다.",
