@@ -38,6 +38,9 @@ class EvaluationTarget(
     val isPassed: Boolean
         get() = this.evaluationStatus == EvaluationStatus.PASS
 
+    val isWaiting: Boolean
+        get() = this.evaluationStatus == EvaluationStatus.WAITING
+
     fun submitted(): Boolean {
         return evaluationStatus != EvaluationStatus.FAIL || !evaluationAnswers.allZero()
     }
