@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import classNames from "classnames";
 
 import useTokenContext from "../../hooks/useTokenContext";
 import PATH from "../../constants/path";
@@ -41,15 +42,18 @@ const Header = () => {
             {token ? (
               <div className={styles["member-menu-container"]}>
                 <label
-                  className={styles["checkbox-label"]}
+                  className={classNames(styles["checkbox-label"], {
+                    [styles.checked]: isShowMemberMenu,
+                    [styles.unchecked]: !isShowMemberMenu,
+                  })}
                   aria-label="회원관리 툴팁"
                 >
+                  <img src={MemberIcon} alt="회원" />
                   <input
                     type="checkbox"
                     className={styles.checkbox}
                     onChange={onChange}
                   />
-                  <img src={MemberIcon} alt="회원" />
                 </label>
 
                 {isShowMemberMenu && (

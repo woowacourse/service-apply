@@ -49,6 +49,31 @@
 .checkbox-label {
   cursor: pointer;
   z-index: var(--tooltip-z-index);
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-label img {
+  cursor: pointer;
+}
+
+.checkbox-label.unchecked::after {
+  content: "▾";
+  display: block;
+  font-size: 1.25rem;
+  margin-left: 0.375rem;
+  padding-bottom: 0.125rem;
+  transition: transform 0.5s ease;
+}
+
+.checkbox-label.checked::after {
+  content: "▾";
+  display: block;
+  font-size: 1.25rem;
+  margin-left: 0.375rem;
+  padding-bottom: 0.125rem;
+  transform: rotateX(180deg);
+  transition: transform 0.5s ease;
 }
 
 .checkbox {
