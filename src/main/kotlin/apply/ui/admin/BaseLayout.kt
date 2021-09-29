@@ -3,6 +3,7 @@ package apply.ui.admin
 import apply.ui.admin.cheater.CheatersView
 import apply.ui.admin.evaluation.EvaluationsView
 import apply.ui.admin.mail.MailFormView
+import apply.ui.admin.mission.MissionSelectionsView
 import apply.ui.admin.recruitment.RecruitmentsView
 import apply.ui.admin.selections.SelectionsView
 import com.vaadin.flow.component.Component
@@ -25,6 +26,7 @@ class BaseLayout : AppLayout() {
     private val route: Map<String, Class<out Component>> = mapOf(
         "모집 관리" to RecruitmentsView::class.java,
         "평가 관리" to EvaluationsView::class.java,
+        "과제 관리" to MissionSelectionsView::class.java,
         "선발 과정" to SelectionsView::class.java,
         "부정 행위자" to CheatersView::class.java,
         "메일 발송" to MailFormView::class.java
