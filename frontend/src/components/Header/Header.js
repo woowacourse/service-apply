@@ -14,6 +14,10 @@ const Header = () => {
 
   const [isShowMemberMenu, setIsShowMemberMenu] = useState(false);
 
+  const onChange = ({ target }) => {
+    setIsShowMemberMenu(target.checked);
+  };
+
   const onLogout = () => {
     if (window.confirm(CONFIRM_MESSAGE.LOGOUT)) {
       setIsShowMemberMenu(false);
@@ -39,12 +43,17 @@ const Header = () => {
           <div className={styles["link-container"]}>
             {token ? (
               <div className={styles["member-menu-container"]}>
-                <button
-                  type="button"
-                  onClick={() => setIsShowMemberMenu(!isShowMemberMenu)}
+                <label
+                  className={styles["checkbox-label"]}
+                  aria-label="회원관리 툴팁"
                 >
+                  <input
+                    type="checkbox"
+                    className={styles.checkbox}
+                    onChange={onChange}
+                  />
                   <img src={MemberIcon} alt="회원" />
-                </button>
+                </label>
 
                 {isShowMemberMenu && (
                   <>

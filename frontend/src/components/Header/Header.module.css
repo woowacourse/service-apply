@@ -47,6 +47,15 @@
   position: relative;
 }
 
+.checkbox-label {
+  cursor: pointer;
+  z-index: var(--tooltip-z-index);
+}
+
+.checkbox {
+  display: none;
+}
+
 .member-menu-list {
   position: absolute;
   top: 100%;
