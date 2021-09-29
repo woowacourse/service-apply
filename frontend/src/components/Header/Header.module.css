@@ -37,7 +37,6 @@
 .link-container {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
   font-size: 0.875rem;
   font-weight: bold;
   margin-right: 1rem;
@@ -94,6 +93,7 @@
 .bar {
   width: 1px;
   height: 1.25rem;
+  margin: 0 0.75rem;
   background-color: var(--gray-008);
 }
 
