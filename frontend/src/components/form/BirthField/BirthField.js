@@ -42,10 +42,13 @@ const BirthField = () => {
         <div className={styles.birth}>
           <TextInput
             className={styles.year}
+            type="number"
             id="year"
             name="year"
             list="years"
             placeholder="YYYY"
+            min="0"
+            max={currentYear}
             onChange={handleChange}
             value={value.year}
           />
@@ -58,8 +61,10 @@ const BirthField = () => {
             className={styles.month}
             name="month"
             list="months"
-            type="text"
+            type="number"
             placeholder="MM"
+            min="1"
+            max="12"
             onChange={handleChange}
             value={value.month}
           />
@@ -72,7 +77,9 @@ const BirthField = () => {
             className={styles.day}
             name="day"
             list="days"
-            type="text"
+            type="number"
+            min="1"
+            max="31"
             placeholder="DD"
             onChange={handleChange}
             value={value.day}
