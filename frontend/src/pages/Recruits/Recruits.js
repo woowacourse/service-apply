@@ -27,7 +27,7 @@ const Recruits = () => {
 
   const { recruitment } = useRecruitmentContext();
 
-  const goApplicantsNewPage = (recruitmentId) => {
+  const goToNewApplicationPage = (recruitmentId) => {
     history.push({
       pathname: PATH.NEW_APPLICATION,
       state: {
@@ -70,7 +70,7 @@ const Recruits = () => {
                 recruitment.status === RECRUITMENT_STATUS.RECRUITING
               }
               buttonLabel={BUTTON_LABEL[recruitment.status]}
-              onClick={() => goApplicantsNewPage(recruitment.id)}
+              onClick={() => goToNewApplicationPage(recruitment.id)}
               role="listitem"
             />
           ))}
