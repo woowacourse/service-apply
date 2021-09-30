@@ -35,7 +35,12 @@ class MissionService(
         val evaluationIds = evaluations.map { it.key }
         val missions = missionRepository.findAllByEvaluationIdIn(evaluationIds)
 
-        return missions.map { MissionResponse(it, evaluations[it.evaluationId] ?: throw Exception()) }
+        return missions.map {
+            MissionResponse(
+                it,
+                evaluations[it.evaluationId] ?: throw IllegalArgumentException("해당 모집에 존재하지 않는 평가 id 입니다.")
+            )
+        }
     }
 
     fun deleteById(id: Long) {
