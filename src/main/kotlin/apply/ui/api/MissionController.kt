@@ -4,6 +4,7 @@ import apply.application.MissionData
 import apply.application.MissionResponse
 import apply.application.MissionService
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -30,5 +31,11 @@ class MissionController(
     fun findMissionsByRecruitmentId(@PathVariable recruitmentId: Long): ResponseEntity<ApiResponse<List<MissionResponse>>> {
         val missions = missionService.findAllByRecruitmentId(recruitmentId)
         return ResponseEntity.ok(ApiResponse.success(missions))
+    }
+
+    @DeleteMapping("/missions/{missionId}")
+    fun deleteMission(@PathVariable recruitmentId: Long, @PathVariable missionId: Long): ResponseEntity<Unit> {
+        missionService.deleteById(missionId)
+        return ResponseEntity.ok().build()
     }
 }
