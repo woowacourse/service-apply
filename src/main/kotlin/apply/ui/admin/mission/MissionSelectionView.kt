@@ -1,6 +1,7 @@
 package apply.ui.admin.mission
 
 import apply.application.MissionResponse
+import apply.application.MissionService
 import apply.application.RecruitmentService
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
@@ -25,7 +26,8 @@ import support.views.createPrimarySmallButton
 
 @Route(value = "admin/missions", layout = BaseLayout::class)
 class MissionSelectionView(
-    private val recruitmentService: RecruitmentService
+    private val recruitmentService: RecruitmentService,
+    private val missionService: MissionService
 ) : VerticalLayout(), HasUrlParameter<Long> {
     private var recruitmentId: Long = 0L
 
@@ -56,16 +58,17 @@ class MissionSelectionView(
         return Grid<MissionResponse>(10).apply {
             // TODO: 과제 관리 페이지 구현시 수정
             addSortableColumn("과제명", MissionResponse::title)
-            addSortableColumn("평가명") { MissionResponse::evaluationTitle }
+            addSortableColumn("평가명", MissionResponse::evaluationTitle)
             addSortableColumn("제출 가능 여부") { it.submittable.toText() }
             addSortableDateTimeColumn("시작일시", MissionResponse::startDateTime)
             addSortableDateTimeColumn("종료일시", MissionResponse::endDateTime)
             addColumn(createEditAndDeleteButton()).apply { isAutoWidth = true }
+            setItems(missionService.findAllByEvaluationId(recruitmentId))
         }
     }
 
     private fun createEditAndDeleteButton(): Renderer<MissionResponse> {
-        return ComponentRenderer<Component, MissionResponse> { it ->
+        return ComponentRenderer<Component, MissionResponse> { mission ->
             HorizontalLayout(
                 createPrimarySmallButton("수정") {
                     // TODO 수정 기능 구현

@@ -4,4 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface MissionRepository : JpaRepository<Mission, Long> {
     fun existsByEvaluationId(evaluationId: Long): Boolean
+
+    fun findAllByEvaluationIdIn(evaluationIds: List<Long>): List<Mission>
 }

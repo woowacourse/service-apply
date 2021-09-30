@@ -1,5 +1,7 @@
 package apply.application
 
+import apply.domain.evaluation.Evaluation
+import apply.domain.mission.Mission
 import java.time.LocalDateTime
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
@@ -37,4 +39,15 @@ data class MissionResponse(
     val submittable: Boolean,
     val startDateTime: LocalDateTime,
     val endDateTime: LocalDateTime
-)
+) {
+    constructor(mission: Mission, evaluation: Evaluation) : this(
+        mission.id,
+        mission.title,
+        mission.description,
+        evaluation.title,
+        evaluation.id,
+        mission.submittable,
+        mission.period.startDateTime,
+        mission.period.endDateTime
+    )
+}
