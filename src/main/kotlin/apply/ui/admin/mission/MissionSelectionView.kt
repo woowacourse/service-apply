@@ -56,14 +56,13 @@ class MissionSelectionView(
 
     private fun createGrid(): Component {
         return Grid<MissionResponse>(10).apply {
-            // TODO: 과제 관리 페이지 구현시 수정
             addSortableColumn("과제명", MissionResponse::title)
             addSortableColumn("평가명", MissionResponse::evaluationTitle)
             addSortableColumn("제출 가능 여부") { it.submittable.toText() }
             addSortableDateTimeColumn("시작일시", MissionResponse::startDateTime)
             addSortableDateTimeColumn("종료일시", MissionResponse::endDateTime)
             addColumn(createEditAndDeleteButton()).apply { isAutoWidth = true }
-            setItems(missionService.findAllByEvaluationId(recruitmentId))
+            setItems(missionService.findAllByRecruitmentId(recruitmentId))
         }
     }
 
@@ -74,7 +73,8 @@ class MissionSelectionView(
                     // TODO 수정 기능 구현
                 },
                 createDeleteButtonWithDialog("과제를 삭제하시겠습니까?") {
-                    // TODO 삭제 기능 구현
+                    missionService.deleteById(mission.id)
+                    UI.getCurrent().page.reload()
                 }
             )
         }

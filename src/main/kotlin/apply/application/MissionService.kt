@@ -27,13 +27,18 @@ class MissionService(
         )
     }
 
-    fun findAllByEvaluationId(recruitmentId: Long): List<MissionResponse> {
+    fun findAllByRecruitmentId(recruitmentId: Long): List<MissionResponse> {
         val evaluations = evaluationRepository.findAllByRecruitmentId(recruitmentId)
             .associateBy { it.id }
 
+        println(evaluations)
         val evaluationIds = evaluations.map { it.key }
         val missions = missionRepository.findAllByEvaluationIdIn(evaluationIds)
 
-        return missions.map { MissionResponse(it, evaluations[it.id] ?: throw Exception()) }
+        return missions.map { MissionResponse(it, evaluations[it.evaluationId] ?: throw Exception()) }
+    }
+
+    fun deleteById(id: Long) {
+        missionRepository.deleteById(id)
     }
 }
