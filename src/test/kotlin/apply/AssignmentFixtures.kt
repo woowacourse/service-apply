@@ -4,7 +4,7 @@ import apply.application.CreateAssignmentRequest
 import apply.domain.assignment.Assignment
 
 private const val GITHUB_ID: String = "ecsimsw"
-private const val URL: String = "https://github.com/woowacourse/service-apply/pull/366"
+private const val URL: String = "https://github.com/woowacourse/service-apply/pull/367"
 private const val IMPRESSION = "과제 소감입니다."
 
 fun createAssignment(

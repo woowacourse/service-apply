@@ -3,7 +3,7 @@ package apply.domain.evaluationtarget
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface EvaluationTargetRepository : JpaRepository<EvaluationTarget, Long> {
-    fun findByEvaluationIdAndApplicantId(id: Long, applicantId: Long): EvaluationTarget?
+    fun findByEvaluationIdAndApplicantId(evaluationId: Long, applicantId: Long): EvaluationTarget?
 
     fun findAllByEvaluationId(evaluationId: Long): List<EvaluationTarget>
 

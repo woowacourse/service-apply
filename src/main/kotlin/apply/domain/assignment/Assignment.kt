@@ -3,6 +3,7 @@ package apply.domain.assignment
 import support.domain.BaseEntity
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.Lob
 
 @Entity
 class Assignment(
@@ -18,7 +19,7 @@ class Assignment(
     @Column(nullable = false)
     val url: String,
 
-    @Column(nullable = false)
+    @Lob
     val impression: String,
 
     id: Long = 0L

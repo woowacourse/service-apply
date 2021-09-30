@@ -1,6 +1,5 @@
 package apply.application
 
-import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
@@ -13,6 +12,5 @@ data class CreateAssignmentRequest(
     @field:Size(min = 0, max = 255)
     val url: String = "",
 
-    @field:NotBlank
     var impression: String = ""
 )
