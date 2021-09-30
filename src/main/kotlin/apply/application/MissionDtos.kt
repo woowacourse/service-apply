@@ -56,8 +56,15 @@ data class MissionResponse(
 }
 
 data class UpdateMissionRequest(
+    @field:NotBlank
     val title: String,
+
+    @field:NotNull
     val submittable: Boolean,
+
+    @field:NotNull
     val startDateTime: LocalDateTime,
+
+    @field:NotNull
     val endDateTime: LocalDateTime
 )
