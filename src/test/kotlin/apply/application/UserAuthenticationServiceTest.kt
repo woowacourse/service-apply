@@ -12,7 +12,6 @@ import apply.createUser
 import apply.domain.authenticationcode.AuthenticationCode
 import apply.domain.authenticationcode.AuthenticationCodeRepository
 import apply.domain.authenticationcode.getLastByEmail
-import apply.domain.user.User
 import apply.domain.user.UserAuthenticationException
 import apply.domain.user.UserRepository
 import apply.domain.user.existsByEmail
@@ -49,33 +48,40 @@ internal class UserAuthenticationServiceTest {
         )
     }
 
-    @DisplayName("토큰 생성은")
+    @DisplayName("(회원 가입) 토큰 생성은")
     @Nested
-    inner class GenerateToken {
+    inner class GenerateTokenByRegister {
         private lateinit var request: RegisterUserRequest
 
         fun subject(): String {
-            return userAuthenticationService.generateToken(request)
+            return userAuthenticationService.generateTokenByRegister(request)
         }
 
         @Test
-        fun `회원이 존재하고 인증에 성공하면 유효한 토큰을 반환한다`() {
-            every { userRepository.findByEmail(any()) } answers { createUser() }
+        fun `가입된 이메일이라면 예외가 발생한다`() {
+            every { userRepository.existsByEmail(any()) } answers { true }
             request = RegisterUserRequest(NAME, EMAIL, PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD)
-            assertThat(subject()).isEqualTo(VALID_TOKEN)
+            assertThrows<IllegalStateException> { subject() }
         }
 
         @Test
-        fun `회원이 존재하지만 인증에 실패하면 예외가 발생한다`() {
-            every { userRepository.findByEmail(any()) } answers { createUser() }
-            request = RegisterUserRequest("가짜 이름", EMAIL, PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD)
-            assertThrows<UserAuthenticationException> { subject() }
+        fun `인증된 이메일이 아니라면 예외가 발생한다`() {
+            every { userRepository.existsByEmail(any()) } answers { false }
+            every { authenticationCodeRepository.getLastByEmail(any()) } answers { AuthenticationCode(EMAIL) }
+            request = RegisterUserRequest(NAME, EMAIL, PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD)
+            assertThrows<IllegalStateException> { subject() }
         }
 
         @Test
-        fun `회원이 존재하지 않다면 지원자를 저장한 뒤, 유효한 토큰을 반환한다`() {
-            every { userRepository.findByEmail(any()) } answers { null }
-            every { userRepository.save(any<User>()) } returns createUser()
+        fun `가입되지 않고 인증된 이메일이라면 지원자를 저장하고 토큰을 반환한다`() {
+            every { userRepository.existsByEmail(any()) } answers { false }
+            every { authenticationCodeRepository.getLastByEmail(any()) } answers {
+                AuthenticationCode(
+                    email = EMAIL,
+                    authenticated = true
+                )
+            }
+            every { userRepository.save(any()) } returns createUser()
             request = RegisterUserRequest(NAME, EMAIL, PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD)
             assertThat(subject()).isEqualTo(VALID_TOKEN)
         }
