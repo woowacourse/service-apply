@@ -3,6 +3,7 @@ package apply.ui.api
 import apply.application.ApplicantService
 import apply.application.MissionService
 import apply.createMissionData
+import apply.createMissionResponse
 import apply.domain.evaluation.EvaluationRepository
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
@@ -13,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
 import org.springframework.http.MediaType
+import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 
 @WebMvcTest(
@@ -36,7 +38,6 @@ internal class MissionControllerTest : RestControllerTest() {
 
     @Test
     fun `과제를 추가한다`() {
-        every { evaluationRepository.existsById(evaluationId) } returns true
         every { missionService.save(createMissionData()) } just Runs
 
         mockMvc.post(
@@ -48,6 +49,23 @@ internal class MissionControllerTest : RestControllerTest() {
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isOk }
+        }
+    }
+
+    @Test
+    fun `특정 모집의 모든 과제를 조회한다`() {
+        val recruitmentId = 1L
+        val missionResponses = listOf(
+            createMissionResponse(id = 1L, evaluationId = 1L, title = "과제1"),
+            createMissionResponse(id = 2L, evaluationId = 2L, title = "과제2")
+        )
+        every { missionService.findAllByRecruitmentId(recruitmentId) } returns missionResponses
+
+        mockMvc.get(
+            "/api/recruitments/{recruitmentId}/missions", recruitmentId
+        ).andExpect {
+            status { isOk }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(missionResponses))) }
         }
     }
 }
