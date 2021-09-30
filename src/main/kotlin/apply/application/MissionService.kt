@@ -31,7 +31,6 @@ class MissionService(
         val evaluations = evaluationRepository.findAllByRecruitmentId(recruitmentId)
             .associateBy { it.id }
 
-        println(evaluations)
         val evaluationIds = evaluations.map { it.key }
         val missions = missionRepository.findAllByEvaluationIdIn(evaluationIds)
 
@@ -44,6 +43,7 @@ class MissionService(
     }
 
     fun deleteById(id: Long) {
+        // todo: 과제 제출 기능이 생기면 제출자가 한명이라도 있는 평가는 삭제할 수 없도록 막는 기능
         missionRepository.deleteById(id)
     }
 }
