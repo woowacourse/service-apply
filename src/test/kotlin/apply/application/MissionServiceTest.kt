@@ -114,7 +114,7 @@ class MissionServiceTest {
         val updateMissionRequest = UpdateMissionRequest(
             title = "changedTitle",
             startDateTime = LocalDateTime.now(),
-            endDateTime = LocalDateTime.now(),
+            endDateTime = LocalDateTime.now().plusDays(1),
             submittable = false
         )
         every { missionRepository.findByIdOrNull(any()) } returns createMission()
@@ -127,7 +127,7 @@ class MissionServiceTest {
         val updateMissionRequest = UpdateMissionRequest(
             title = "changedTitle",
             startDateTime = LocalDateTime.now(),
-            endDateTime = LocalDateTime.now(),
+            endDateTime = LocalDateTime.now().plusDays(1),
             submittable = false
         )
         every { missionRepository.findByIdOrNull(any()) } returns null
