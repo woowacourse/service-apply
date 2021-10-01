@@ -24,28 +24,22 @@ class GroupMailTargetFormDialog(
     private val mailTargetService: MailTargetService,
     private val reloadComponent: (List<MailTargetResponse>) -> Unit
 ) : Dialog() {
-    private val evaluation = createEvaluationItem()
-    private val recruitment = createRecruitmentItem(evaluation)
-    private val evaluationStatus = createEvaluationStatusItem(evaluation)
+    private val evaluation: Select<Evaluation> = createItemSelect("평가")
+    private val recruitment: Select<RecruitmentResponse> = createRecruitmentItem(evaluation)
+    private val evaluationStatus: Select<EvaluationStatus> = createEvaluationStatusItem(evaluation)
     private val mailTargets: MutableList<MailTargetResponse> = mutableListOf()
     private val currentMailTargetsGrid: Grid<MailTargetResponse> = createMailTargetsGrid()
 
     init {
         add(
             H2("지원자 정보 조회"),
-            createRecipientFilter(),
+            createMailTargetFilter(),
             currentMailTargetsGrid,
             createButtons()
-        ).apply {
-            setWidthFull()
-        }
+        )
         width = "900px"
         height = "70%"
         open()
-    }
-
-    private fun createEvaluationItem(): Select<Evaluation> {
-        return createItemSelect("평가")
     }
 
     private fun createRecruitmentItem(evaluation: Select<Evaluation>): Select<RecruitmentResponse> {
@@ -94,7 +88,7 @@ class GroupMailTargetFormDialog(
         }
     }
 
-    private fun createRecipientFilter(): HorizontalLayout {
+    private fun createMailTargetFilter(): HorizontalLayout {
         return HorizontalLayout(
             recruitment, evaluation, evaluationStatus,
         ).apply {

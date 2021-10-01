@@ -26,11 +26,9 @@ class IndividualMailTargetFormDialog(
     init {
         add(
             H2("지원자 정보 조회"),
-            createRecipientFilter(),
+            createMailTargetFilter(),
             currentMailTargetsGrid
-        ).apply {
-            setWidthFull()
-        }
+        )
         width = "900px"
         height = "70%"
         open()
@@ -40,18 +38,18 @@ class IndividualMailTargetFormDialog(
         return Grid<ApplicantResponse>(10).apply {
             addSortableColumn("이름", ApplicantResponse::name)
             addSortableColumn("이메일", ApplicantResponse::email)
-            addColumn(createEditAndDeleteButton()).apply { isAutoWidth = true }
+            addColumn(createAddButton()).apply { isAutoWidth = true }
             setItems(applicantResponse)
         }
     }
 
-    private fun createEditAndDeleteButton(): Renderer<ApplicantResponse> {
+    private fun createAddButton(): Renderer<ApplicantResponse> {
         return ComponentRenderer<Component, ApplicantResponse> { applicantResponse ->
-            HorizontalLayout(createTargetAddButton(applicantResponse))
+            HorizontalLayout(createMailTargetAddButton(applicantResponse))
         }
     }
 
-    private fun createTargetAddButton(applicantResponse: ApplicantResponse): Button {
+    private fun createMailTargetAddButton(applicantResponse: ApplicantResponse): Button {
         return createPrimaryButton("추가") {
             reloadComponent(MailTargetResponse(applicantResponse))
         }.apply {
@@ -59,7 +57,7 @@ class IndividualMailTargetFormDialog(
         }
     }
 
-    private fun createRecipientFilter(): Component {
+    private fun createMailTargetFilter(): Component {
         return HorizontalLayout(
             createSearchBar {
                 val founds = applicantService.findAllByKeyword(it)

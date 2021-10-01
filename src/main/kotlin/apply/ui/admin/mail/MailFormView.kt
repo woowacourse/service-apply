@@ -44,7 +44,6 @@ class MailFormView(
 
     init {
         add(createTitle(), createMailForm())
-        setWidthFull()
         setResponsiveSteps(ResponsiveStep("0", 1))
         drawRequired()
     }
