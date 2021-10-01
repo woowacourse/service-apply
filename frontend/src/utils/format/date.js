@@ -7,25 +7,20 @@ export const formatDateTime = (value) => {
   const date = value.getDate();
   const hour = value.getHours();
   const minute = value.getMinutes();
-  const second = value.getSeconds();
 
   if (
     isNaN(year) ||
     isNaN(month) ||
     isNaN(date) ||
     isNaN(hour) ||
-    isNaN(minute) ||
-    isNaN(second)
+    isNaN(minute)
   )
     return value;
 
   return `${year}-${String(month).padStart(2, "0")}-${String(date).padStart(
     2,
     "0"
-  )} ${String(hour).padStart(2, "0")}:${String(minute).padStart(
-    2,
-    "0"
-  )}:${String(second).padStart(2, "0")}`;
+  )} ${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
 };
 
 export const formatBirthday = ({ year, month, day }) =>

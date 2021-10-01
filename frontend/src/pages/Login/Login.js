@@ -1,18 +1,22 @@
 import React from "react";
 import { Link, useHistory } from "react-router-dom";
+
+import Container, {
+  CONTAINER_SIZE,
+} from "../../components/Container/Container";
 import { Form } from "../../components/form";
 import Button from "../../components/form/Button/Button";
-import { SUCCESS_MESSAGE } from "../../constants/messages";
-import PATH from "../../constants/path";
-import { RECRUITS_TAB } from "../../constants/tab";
+
 import useForm from "../../hooks/useForm";
 import useTokenContext from "../../hooks/useTokenContext";
 import FormProvider from "../../provider/FormProvider/FormProvider";
 import InputField from "../../provider/FormProvider/InputField";
 import SubmitButton from "../../provider/FormProvider/SubmitButton";
-import { generateQuery } from "../../utils/route/query";
 import { validateEmail } from "../../utils/validation/email";
 import { validatePassword } from "../../utils/validation/password";
+import { SUCCESS_MESSAGE } from "../../constants/messages";
+import PATH from "../../constants/path";
+
 import styles from "./Login.module.css";
 
 const Login = () => {
@@ -28,18 +32,11 @@ const Login = () => {
       });
 
       alert(SUCCESS_MESSAGE.API.LOGIN);
-      history.push({
-        pathname: PATH.RECRUITS,
-        search: generateQuery({ status: RECRUITS_TAB.APPLIED.name }),
-      });
+
+      history.push(PATH.RECRUITS);
     } catch (e) {
       alert(e.response.data.message);
     }
-
-    await fetchLogin({
-      email: value.email,
-      password: value.password,
-    });
   };
 
   const { handleSubmit, ...methods } = useForm({
@@ -51,17 +48,9 @@ const Login = () => {
   });
 
   return (
-    <div className={styles.login}>
+    <Container size={CONTAINER_SIZE.NARROW} title="로그인">
       <FormProvider {...methods}>
-        <Form
-          onSubmit={handleSubmit}
-          footer={
-            <Link to="/find" className={styles["find-password"]}>
-              비밀번호 찾기
-            </Link>
-          }
-        >
-          <h2>내 지원서 보기</h2>
+        <Form onSubmit={handleSubmit}>
           <InputField
             name="email"
             type="email"
@@ -82,9 +71,12 @@ const Login = () => {
             </Button>
             <SubmitButton>확인</SubmitButton>
           </div>
+          <Link to={PATH.FIND_PASSWORD} className={styles["find-password"]}>
+            비밀번호 찾기
+          </Link>
         </Form>
       </FormProvider>
-    </div>
+    </Container>
   );
 };
 

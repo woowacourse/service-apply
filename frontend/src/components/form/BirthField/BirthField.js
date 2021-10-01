@@ -1,9 +1,12 @@
 import React, { useEffect } from "react";
+import PropTypes from "prop-types";
+
 import Field from "../Field/Field";
 import Label from "../Label/Label";
 import TextInput from "../TextInput/TextInput";
-import styles from "./BirthField.module.css";
 import useFormContext from "../../../hooks/useFormContext";
+
+import styles from "./BirthField.module.css";
 
 const currentYear = new Date().getFullYear();
 
@@ -19,7 +22,7 @@ const days = Array(31)
   .fill(null)
   .map((_, idx) => idx + 1);
 
-const BirthField = () => {
+const BirthField = ({ required }) => {
   const { value, errorMessage, handleChange, register, unRegister } =
     useFormContext();
 
@@ -38,7 +41,9 @@ const BirthField = () => {
   return (
     <>
       <Field className={styles["birth-field"]}>
-        <Label for="year">생년월일</Label>
+        <Label for="year" required={required}>
+          생년월일
+        </Label>
         <div className={styles.birth}>
           <TextInput
             className={styles.year}
@@ -51,6 +56,7 @@ const BirthField = () => {
             max={currentYear}
             onChange={handleChange}
             value={value.year}
+            required={required}
           />
           <datalist id="years">
             {years.map((year) => (
@@ -67,6 +73,7 @@ const BirthField = () => {
             max="12"
             onChange={handleChange}
             value={value.month}
+            required={required}
           />
           <datalist id="months">
             {months.map((month) => (
@@ -83,6 +90,7 @@ const BirthField = () => {
             placeholder="DD"
             onChange={handleChange}
             value={value.day}
+            required={required}
           />
           <datalist id="days">
             {days.map((day) => (
@@ -100,3 +108,11 @@ const BirthField = () => {
 };
 
 export default BirthField;
+
+BirthField.propTypes = {
+  required: PropTypes.bool,
+};
+
+BirthField.defaultProps = {
+  required: false,
+};
