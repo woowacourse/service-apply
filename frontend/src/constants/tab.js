@@ -15,10 +15,6 @@ export const RECRUITS_TAB = {
     name: "ended",
     label: "모집 종료",
   },
-  APPLIED: {
-    name: "applied",
-    label: "내 지원서",
-  },
 };
 
 export const RECRUITS_TAB_LIST = [
@@ -26,5 +22,4 @@ export const RECRUITS_TAB_LIST = [
   RECRUITS_TAB.RECRUITABLE,
   RECRUITS_TAB.RECRUITING,
   RECRUITS_TAB.ENDED,
-  RECRUITS_TAB.APPLIED,
 ];

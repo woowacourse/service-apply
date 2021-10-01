@@ -21,14 +21,13 @@ input[type="checkbox"]::before {
   width: 24px;
   height: 24px;
   border-radius: 24px;
-  border: 1px solid #ced6e0;
+  border: 1px solid var(--gray-003);
   margin-right: 5px;
-  background: #fff;
+  background: var(--white);
   transition-duration: 0.2s;
 }
 
 input[type="checkbox"]:checked::before {
-  background: #0078ff;
-  border: 1px solid #e2eaf4;
-  color: #fff;
+  background: var(--black);
+  color: var(--white);
 }

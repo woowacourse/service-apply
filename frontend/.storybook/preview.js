@@ -2,10 +2,14 @@ import { MemoryRouter } from "react-router-dom";
 import { addDecorator } from "@storybook/react";
 import { initializeWorker, mswDecorator } from "msw-storybook-addon";
 import axios from "axios";
+
 import "../src/api/api";
 import { RecruitmentContext } from "../src/hooks/useRecruitmentContext";
 import { recruitmentFilter } from "../src/provider/RecruitmentProvider";
+import FormProvider from "../src/provider/FormProvider/FormProvider";
 import TokenProvider from "../src/provider/TokenProvider";
+import useForm from "../src/hooks/useForm";
+
 import "../src/App.css";
 
 export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
@@ -55,17 +59,23 @@ const recruitmentDummy = [
 ];
 
 export const decorators = [
-  (Story) => (
-    <RecruitmentContext.Provider
-      value={{
-        recruitment: recruitmentFilter(recruitmentDummy),
-      }}
-    >
-      <TokenProvider>
-        <MemoryRouter>
-          <Story />
-        </MemoryRouter>
-      </TokenProvider>
-    </RecruitmentContext.Provider>
-  ),
+  (Story) => {
+    const method = useForm({});
+
+    return (
+      <RecruitmentContext.Provider
+        value={{
+          recruitment: recruitmentFilter(recruitmentDummy),
+        }}
+      >
+        <FormProvider {...method}>
+          <TokenProvider>
+            <MemoryRouter>
+              <Story />
+            </MemoryRouter>
+          </TokenProvider>
+        </FormProvider>
+      </RecruitmentContext.Provider>
+    );
+  },
 ];
