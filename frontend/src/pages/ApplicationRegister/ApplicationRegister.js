@@ -211,18 +211,18 @@ const ApplicationRegister = () => {
             )}
             {recruitmentItems.length !== 0 &&
               recruitmentItems.map((item, index) => (
-                <div key={item.id}>
-                  <FormTextarea
-                    name={`recruitment-item-${index}`}
-                    initialValue={initialFormData[`recruitment-item-${index}`]}
-                    label={`${index + 1}. ${item.title}`}
-                    description={item.description}
-                    placeholder="내용을 입력해 주세요."
-                    maxLength={item.maximumLength}
-                    required
-                  />
-                </div>
+                <FormTextarea
+                  key={`recruitment-item-${index}`}
+                  name={`recruitment-item-${index}`}
+                  initialValue={initialFormData[`recruitment-item-${index}`]}
+                  label={`${index + 1}. ${item.title}`}
+                  description={item.description}
+                  placeholder="내용을 입력해 주세요."
+                  maxLength={item.maximumLength}
+                  required
+                />
               ))}
+
             <FormInput
               name="url"
               type="url"

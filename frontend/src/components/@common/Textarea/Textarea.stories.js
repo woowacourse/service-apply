@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Textarea from "./Textarea";
 
 export default {
@@ -6,7 +6,17 @@ export default {
   component: Textarea,
 };
 
-const Template = (args) => <Textarea {...args} />;
+const Template = (args) => {
+  const [value, setValue] = useState("");
+
+  return (
+    <Textarea
+      value={value}
+      onChange={({ target }) => setValue(target.value)}
+      {...args}
+    />
+  );
+};
 
 export const Default = Template.bind({});
 Default.args = {
@@ -14,6 +24,7 @@ Default.args = {
 };
 
 export const ReadOnly = Template.bind({});
+
 ReadOnly.args = {
   maxLength: 100,
   readOnly: true,

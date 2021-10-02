@@ -1,18 +1,16 @@
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
-import Label from "../../@common/Label/Label";
-import Description from "../../@common/Description/Description";
-import styles from "./FormTextarea.module.css";
-import Textarea from "../../@common/Textarea/Textarea";
+
 import useFormContext from "../../../hooks/useFormContext";
+import MessageTextarea from "../../@common/MessageTextarea/MessageTextarea";
 
 const FormTextarea = ({
-  required,
   label,
   name,
   initialValue,
   description,
   maxLength,
+  required,
   ...props
 }) => {
   const { value, errorMessage, handleChange, register, unRegister } =
@@ -27,25 +25,17 @@ const FormTextarea = ({
   }, [name, initialValue]);
 
   return (
-    <>
-      <div className={styles["text-field"]}>
-        <Label required={required}>{label}</Label>
-        {description && <Description>{description}</Description>}
-        {maxLength && maxLength > 0 && (
-          <div className={styles["length-limit"]}>
-            {value.length} / {maxLength}
-          </div>
-        )}
-        <Textarea
-          required={required}
-          value={value[name]}
-          maxLength={maxLength}
-          onChange={handleChange}
-          {...props}
-        />
-      </div>
-      <p className={styles["rule-field"]}>{errorMessage[name]}</p>
-    </>
+    <MessageTextarea
+      name={name}
+      label={label}
+      value={value[name]}
+      onChange={handleChange}
+      errorMessage={errorMessage[name]}
+      description={description}
+      maxLength={maxLength}
+      required={required}
+      {...props}
+    />
   );
 };
 
@@ -60,10 +50,9 @@ FormTextarea.propTypes = {
 
 FormTextarea.defaultProps = {
   label: "",
-  value: "",
+  initialValue: "",
   required: false,
   description: "",
-  maxLength: undefined,
 };
 
 export default FormTextarea;

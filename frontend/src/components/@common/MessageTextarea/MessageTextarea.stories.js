@@ -1,12 +1,12 @@
 import React from "react";
-import FormTextarea from "./FormTextarea";
+import MessageTextarea from "./MessageTextarea";
 
 export default {
-  title: "form/FormTextarea",
-  component: FormTextarea,
+  title: "form/MessageTextarea",
+  component: MessageTextarea,
 };
 
-const Template = (args) => <FormTextarea {...args} />;
+const Template = (args) => <MessageTextarea {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {
