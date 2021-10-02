@@ -6,7 +6,7 @@ import CalendarIcon from "../../assets/icon/calendar-icon.svg";
 
 import { Button } from "../form";
 
-import { formatDateTime } from "../../utils/date";
+import { formatDateTime } from "../../utils/format/date";
 
 import styles from "./RecruitmentItem.module.css";
 
