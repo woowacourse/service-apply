@@ -114,7 +114,7 @@ class SelectionView(
         val tabsToGrids = LinkedHashMap<Tab, Component>()
 
         val userResponses = userService.findAllByRecruitmentIdAndKeyword(recruitmentId, keyword)
-        tabsToGrids[Tab(TOTAL_APPLICANT_LABEL)] = createTotalApplicantsGrid(userResponses)
+        tabsToGrids[Tab(TOTAL_APPLIED_USER_LABEL)] = createTotalUsersGrid(userResponses)
 
         evaluations = evaluationService.findAllByRecruitmentId(recruitmentId)
         for (evaluation in evaluations) {
@@ -125,7 +125,7 @@ class SelectionView(
         return tabsToGrids
     }
 
-    private fun createTotalApplicantsGrid(users: List<UserAndFormResponse>): Component {
+    private fun createTotalUsersGrid(users: List<UserAndFormResponse>): Component {
         return Grid<UserAndFormResponse>(10).apply {
             addSortableColumn("이름", UserAndFormResponse::name)
             addSortableColumn("이메일", UserAndFormResponse::email)
@@ -182,7 +182,7 @@ class SelectionView(
         val tabs = Tabs().apply {
             add(*(tabsToGrids.keys).toTypedArray())
             addSelectedChangeListener {
-                evaluationFileButtons.isVisible = !isTotalApplicantTab(it.selectedTab)
+                evaluationFileButtons.isVisible = !isTotalUserTab(it.selectedTab)
                 tabsToGrids.forEach { (tab, grid) ->
                     grid.isVisible = (tab == selectedTab)
                 }
@@ -233,7 +233,7 @@ class SelectionView(
 
     private fun createResultDownloadButton(): Button {
         return createSuccessButton("평가결과 다운로드") {
-            if (isTotalApplicantTab(tabs.selectedTab)) {
+            if (isTotalUserTab(tabs.selectedTab)) {
                 val excel = excelService.createUserExcel(recruitmentId)
                 downloadFile("${recruitmentService.getById(recruitmentId).title}.xlsx", excel)
             } else {
@@ -283,11 +283,11 @@ class SelectionView(
         }
     }
 
-    private fun isTotalApplicantTab(tab: Tab): Boolean {
-        return tab.label == TOTAL_APPLICANT_LABEL
+    private fun isTotalUserTab(tab: Tab): Boolean {
+        return tab.label == TOTAL_APPLIED_USER_LABEL
     }
 
     companion object {
-        private const val TOTAL_APPLICANT_LABEL: String = "전체 지원자"
+        private const val TOTAL_APPLIED_USER_LABEL: String = "전체 지원자"
     }
 }
