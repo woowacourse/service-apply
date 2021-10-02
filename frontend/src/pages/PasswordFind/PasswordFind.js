@@ -1,11 +1,13 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { fetchPasswordFind } from "../../api/applicants";
+import Container, {
+  CONTAINER_SIZE,
+} from "../../components/Container/Container";
 import BirthField from "../../components/form/BirthField/BirthField";
 import PATH from "../../constants/path";
 import useForm from "../../hooks/useForm";
-import FormProvider from "../../provider/FormProvider";
-import { formatBirthday } from "../../utils/date";
+import { formatBirthday } from "../../utils/format/date";
 import {
   validateDay,
   validateMonth,
@@ -14,9 +16,10 @@ import {
 import { validateEmail } from "../../utils/validation/email";
 import { validateName } from "../../utils/validation/name";
 import styles from "./PasswordFind.module.css";
-import Form from "../../components/form/Form/Form";
 import Button from "../../components/@common/Button/Button";
 import FormInput from "../../components/form/FormInput/FormInput";
+import Form from "../../components/form/Form/Form";
+import FormProvider from "../../provider/FormProvider";
 import SubmitButton from "../../components/form/SubmitButton";
 
 const PasswordFind = () => {
@@ -55,7 +58,7 @@ const PasswordFind = () => {
   });
 
   return (
-    <div className={styles["password-find"]}>
+    <Container size={CONTAINER_SIZE.NARROW} title="비밀번호 찾기">
       <FormProvider {...methods}>
         <Form onSubmit={handleSubmit}>
           <h2>비밀번호 찾기</h2>
@@ -73,16 +76,16 @@ const PasswordFind = () => {
             placeholder="이메일 주소를 입력해 주세요."
             required
           />
-          <BirthField />
+          <BirthField required />
           <div className={styles.buttons}>
             <Button type="button" cancel onClick={() => history.goBack()}>
               이전
             </Button>
-            <SubmitButton>확인</SubmitButton>
+            <SubmitButton />
           </div>
         </Form>
       </FormProvider>
-    </div>
+    </Container>
   );
 };
 

@@ -1,4 +1,6 @@
 import React, { useEffect } from "react";
+import PropTypes from "prop-types";
+
 import Label from "../../@common/Label/Label";
 import TextInput from "../../@common/TextInput/TextInput";
 import useFormContext from "../../../hooks/useFormContext";
@@ -18,7 +20,7 @@ const days = Array(31)
   .fill(null)
   .map((_, idx) => idx + 1);
 
-const BirthField = () => {
+const BirthField = ({ required }) => {
   const { value, errorMessage, handleChange, register, unRegister } =
     useFormContext();
 
@@ -50,6 +52,7 @@ const BirthField = () => {
             max={currentYear}
             onChange={handleChange}
             value={value.year}
+            required={required}
           />
           <datalist id="years">
             {years.map((year) => (
@@ -66,6 +69,7 @@ const BirthField = () => {
             max="12"
             onChange={handleChange}
             value={value.month}
+            required={required}
           />
           <datalist id="months">
             {months.map((month) => (
@@ -82,6 +86,7 @@ const BirthField = () => {
             placeholder="DD"
             onChange={handleChange}
             value={value.day}
+            required={required}
           />
           <datalist id="days">
             {days.map((day) => (
@@ -99,3 +104,11 @@ const BirthField = () => {
 };
 
 export default BirthField;
+
+BirthField.propTypes = {
+  required: PropTypes.bool,
+};
+
+BirthField.defaultProps = {
+  required: false,
+};

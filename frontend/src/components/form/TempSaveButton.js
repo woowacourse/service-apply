@@ -6,40 +6,7 @@ import useFormContext from "../../hooks/useFormContext";
 import { generateQuery } from "../../utils/route/query";
 import Button from "../@common/Button/Button";
 
-const pathToEdit = (recruitmentId) =>
-  generatePath(PATH.APPLICATION_FORM, {
-    status: PARAM.APPLICATION_FORM_STATUS.EDIT,
-  }) + generateQuery({ recruitmentId });
-
-const TempSaveButton = ({
-  recruitmentId,
-  recruitmentItems,
-  status,
-  onSave,
-}) => {
-  const history = useHistory();
-  const { value } = useFormContext();
-
-  const answers = recruitmentItems.map((item, index) => ({
-    contents: value[`recruitment-item-${index}`],
-    recruitmentItemId: item.id,
-  }));
-
-  const onSaveTemp = async () => {
-    try {
-      await onSave(answers, value.url, false);
-
-      alert(SUCCESS_MESSAGE.API.SAVE_APPLICATION);
-
-      if (status !== PARAM.APPLICATION_FORM_STATUS.EDIT) {
-        history.replace(pathToEdit(recruitmentId));
-      }
-    } catch (e) {
-      alert(e.response.data.message);
-      history.replace(PATH.HOME);
-    }
-  };
-
+const TempSaveButton = ({ onSaveTemp }) => {
   return (
     <Button type="button" onClick={onSaveTemp}>
       임시 저장

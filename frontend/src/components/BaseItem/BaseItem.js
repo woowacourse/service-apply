@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import PropTypes from "prop-types";
 
-import { formatDateTime } from "../../utils/date";
+import { formatDateTime } from "../../utils/format/date";
 
 import styles from "./BaseItem.module.css";
 

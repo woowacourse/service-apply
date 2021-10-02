@@ -1,8 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useHistory, useLocation, useParams } from "react-router-dom";
+import {
+  useHistory,
+  useLocation,
+  useParams,
+  generatePath,
+} from "react-router-dom";
 import * as Api from "../../api";
 
-import RecruitCard from "../../components/RecruitCard/RecruitCard";
 import {
   CONFIRM_MESSAGE,
   ERROR_MESSAGE,
@@ -13,9 +17,9 @@ import useForm from "../../hooks/useForm";
 import useRecruitmentContext from "../../hooks/useRecruitmentContext";
 import useTokenContext from "../../hooks/useTokenContext";
 import FormProvider from "../../provider/FormProvider";
-import { formatDateTime } from "../../utils/date";
-import { parseQuery } from "../../utils/route/query";
+import { generateQuery, parseQuery } from "../../utils/route/query";
 import { validateURL } from "../../utils/validation/url";
+
 import styles from "./ApplicationRegister.module.css";
 import Label from "../../components/@common/Label/Label";
 import Description from "../../components/@common/Description/Description";
@@ -26,6 +30,15 @@ import FormTextarea from "../../components/form/FormTextarea/FormTextarea";
 import ResetButton from "../../components/form/ResetButton";
 import SubmitButton from "../../components/form/SubmitButton";
 import TempSaveButton from "../../components/form/TempSaveButton";
+import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
+import Container from "../../components/Container/Container";
+import { formatDateTime } from "../../utils/format/date";
+import useFormContext from "../../hooks/useFormContext";
+
+const pathToEdit = (recruitmentId) =>
+  generatePath(PATH.APPLICATION_FORM, {
+    status: PARAM.APPLICATION_FORM_STATUS.EDIT,
+  }) + generateQuery({ recruitmentId });
 
 const ApplicationRegister = () => {
   const history = useHistory();
@@ -34,6 +47,7 @@ const ApplicationRegister = () => {
   const { status } = useParams();
 
   const { recruitmentId } = parseQuery(location.search);
+
   const { recruitment } = useRecruitmentContext();
   const currentRecruitment = recruitment.findById(Number(recruitmentId));
 
@@ -162,76 +176,90 @@ const ApplicationRegister = () => {
     fetchRecruitmentItems,
   ]);
 
+  const { value } = useFormContext();
+
+  const answers = recruitmentItems.map((item, index) => ({
+    contents: value[`recruitment-item-${index}`],
+    recruitmentItemId: item.id,
+  }));
+
+  const onSaveTemp = async () => {
+    try {
+      await save(answers, value.url, false);
+
+      alert(SUCCESS_MESSAGE.API.SAVE_APPLICATION);
+
+      if (status !== PARAM.APPLICATION_FORM_STATUS.EDIT) {
+        history.replace(pathToEdit(recruitmentId));
+      }
+    } catch (e) {
+      alert(e.response.data.message);
+      history.replace(PATH.HOME);
+    }
+  };
+
   return (
-    <div className={styles["application-register"]}>
+    <div className={styles.box}>
       {currentRecruitment && (
-        <RecruitCard
-          className={styles["recruit-card"]}
-          title={currentRecruitment.title}
-          startDateTime={currentRecruitment.startDateTime}
-          endDateTime={currentRecruitment.endDateTime}
-        />
+        <RecruitmentItem recruitment={currentRecruitment} />
       )}
-      <FormProvider {...methods}>
-        <Form className={styles["application-form"]} onSubmit={handleSubmit}>
-          <h2>지원서 작성</h2>
-          {status === PARAM.APPLICATION_FORM_STATUS.EDIT && (
-            <p className={styles["autosave-indicator"]}>
-              {`임시 저장되었습니다. (${modifiedDateTime})`}
-            </p>
-          )}
-          {recruitmentItems.length !== 0 &&
-            recruitmentItems.map((item, index) => (
-              <div key={item.id}>
-                <FormTextarea
-                  name={`recruitment-item-${index}`}
-                  type="textarea"
-                  initialValue={initialFormData[`recruitment-item-${index}`]}
-                  label={`${index + 1}. ${item.title}`}
-                  description={item.description}
-                  placeholder="내용을 입력해 주세요."
-                  maxLength={item.maximumLength}
-                  required
-                />
-              </div>
-            ))}
-          <FormInput
-            name="url"
-            type="url"
-            initialValue={initialFormData.referenceUrl}
-            description={
-              <>
-                자신을 드러낼 수 있는 개인 블로그, GitHub, 포트폴리오 주소 등이
-                있다면 입력해 주세요.
-                <div className={styles.description}>
-                  여러 개가 있는 경우 Notion, Google 문서 등을 사용하여 하나로
-                  묶어 주세요.
+
+      <Container title="지원서 작성">
+        <FormProvider {...methods}>
+          <Form onSubmit={handleSubmit}>
+            {status === PARAM.APPLICATION_FORM_STATUS.EDIT && (
+              <p className={styles["autosave-indicator"]}>
+                {`임시 저장되었습니다. (${modifiedDateTime})`}
+              </p>
+            )}
+            {recruitmentItems.length !== 0 &&
+              recruitmentItems.map((item, index) => (
+                <div key={item.id}>
+                  <FormTextarea
+                    name={`recruitment-item-${index}`}
+                    initialValue={initialFormData[`recruitment-item-${index}`]}
+                    label={`${index + 1}. ${item.title}`}
+                    description={item.description}
+                    placeholder="내용을 입력해 주세요."
+                    maxLength={item.maximumLength}
+                    required
+                  />
                 </div>
-              </>
-            }
-            label="URL"
-            placeholder="ex) https://woowacourse.github.io/javable"
-          />
-          <div>
-            <Label required>지원서 작성 내용 사실 확인</Label>
-            <Description>
-              기재한 사실 중 허위사실이 발견되는 즉시, 교육 대상자에서 제외되며
-              향후 지원도 불가능합니다.
-            </Description>
-            <CheckBox name="agree" label="동의합니다." />
-          </div>
-          <div className={styles["button-wrapper"]}>
-            <ResetButton>초기화</ResetButton>
-            <TempSaveButton
-              recruitmentId={recruitmentId}
-              recruitmentItems={recruitmentItems}
-              status={status}
-              onSave={save}
+              ))}
+            <FormInput
+              name="url"
+              type="url"
+              initialValue={initialFormData.referenceUrl}
+              description={
+                <>
+                  자신을 드러낼 수 있는 개인 블로그, GitHub, 포트폴리오 주소
+                  등이 있다면 입력해 주세요.
+                  <div className={styles.description}>
+                    여러 개가 있는 경우 Notion, Google 문서 등을 사용하여 하나로
+                    묶어 주세요.
+                  </div>
+                </>
+              }
+              label="URL"
+              placeholder="ex) https://tecoble.techcourse.co.kr/"
             />
-            <SubmitButton>제출</SubmitButton>
-          </div>
-        </Form>
-      </FormProvider>
+            <div>
+              <Label required>지원서 작성 내용 사실 확인</Label>
+              <Description>
+                기재한 사실 중 허위사실이 발견되는 즉시, 교육 대상자에서
+                제외되며 향후 지원도 불가능합니다.
+              </Description>
+              <CheckBox name="agree" label="동의합니다." />
+            </div>
+
+            <div className={styles.buttons}>
+              <ResetButton />
+              <TempSaveButton onSaveTemp={onSaveTemp} />
+              <SubmitButton />
+            </div>
+          </Form>
+        </FormProvider>
+      </Container>
     </div>
   );
 };

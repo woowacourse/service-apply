@@ -3,8 +3,11 @@ package apply.application
 import apply.createEvaluationItem
 import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.utils.CsvGenerator
+import io.mockk.Runs
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.just
+import io.mockk.verify
 import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -34,7 +37,6 @@ class EvaluationTargetCsvServiceTest {
 
     @Test
     fun `평가지 양식에 맞는 평가지 업로드 시 csv 읽기에 성공한다`() {
-        // TODO: 해당 테스트는 파일 읽기를 정상적으로 실행하는지 확인하는용으로, 업로드 기능 구현시 제거되어도 되는 테스트
         val inputStream = getInputStream("evaluation.csv")
         val evaluationItems = listOf(
             createEvaluationItem(maximumScore = 1, position = 1),
@@ -43,8 +45,26 @@ class EvaluationTargetCsvServiceTest {
         )
 
         every { evaluationItemRepository.findByEvaluationIdOrderByPosition(any()) } returns evaluationItems
+        every { evaluationTargetService.gradeAll(any(), any()) } just Runs
 
         assertDoesNotThrow { evaluationTargetCsvService.updateTarget(inputStream, 1L) }
+        verify(exactly = 1) { evaluationTargetService.gradeAll(any(), any()) }
+    }
+
+    @Test
+    fun `상태에 대해 대소문자 구분을 하지 않고 평가지 업로드 시 csv 읽기에 성공한다`() {
+        val inputStream = getInputStream("status_ignore_case_evaluation.csv")
+        val evaluationItems = listOf(
+            createEvaluationItem(maximumScore = 1, position = 1),
+            createEvaluationItem(maximumScore = 2, position = 2),
+            createEvaluationItem(maximumScore = 3, position = 3)
+        )
+
+        every { evaluationItemRepository.findByEvaluationIdOrderByPosition(any()) } returns evaluationItems
+        every { evaluationTargetService.gradeAll(any(), any()) } just Runs
+
+        assertDoesNotThrow { evaluationTargetCsvService.updateTarget(inputStream, 1L) }
+        verify(exactly = 1) { evaluationTargetService.gradeAll(any(), any()) }
     }
 
     @Test

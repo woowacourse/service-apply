@@ -159,4 +159,10 @@ class EvaluationTargetService(
             note = request.note
         )
     }
+
+    fun gradeAll(evaluationId: Long, evaluationTargetsData: Map<Long, EvaluationTargetData>) {
+        evaluationTargetRepository.findAllByEvaluationId(evaluationId)
+        evaluationTargetsData
+            .forEach { (evaluationTargetId, evaluationTargetData) -> grade(evaluationTargetId, evaluationTargetData) }
+    }
 }

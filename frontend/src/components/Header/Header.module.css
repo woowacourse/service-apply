@@ -1,0 +1,127 @@
+.box {
+  margin-bottom: 5.75rem;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 5.75rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-003);
+  z-index: var(--header-z-index);
+}
+
+.content {
+  width: var(--pc-main-width);
+  display: flex;
+  justify-content: space-between;
+}
+
+.title {
+  font-size: 1.375rem;
+  display: flex;
+  align-items: center;
+  color: var(--black);
+}
+
+.logo {
+  width: 200px;
+  margin-right: 0.25rem;
+  transform: translateX(-6px);
+}
+
+.link-container {
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem;
+  font-weight: bold;
+  margin-right: 1rem;
+}
+
+.member-menu-container {
+  position: relative;
+}
+
+.checkbox-label {
+  cursor: pointer;
+  z-index: var(--tooltip-z-index);
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-label img {
+  cursor: pointer;
+}
+
+.checkbox-label.unchecked::after {
+  content: "▾";
+  display: block;
+  font-size: 1.25rem;
+  margin-left: 0.375rem;
+  padding-bottom: 0.125rem;
+  transition: transform 0.5s ease;
+}
+
+.checkbox-label.checked::after {
+  content: "▾";
+  display: block;
+  font-size: 1.25rem;
+  margin-left: 0.375rem;
+  padding-bottom: 0.125rem;
+  transform: rotateX(180deg);
+  transition: transform 0.5s ease;
+}
+
+.checkbox {
+  display: none;
+}
+
+.member-menu-list {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 10rem;
+  background-color: var(--white);
+  border: 1px solid var(--gray-003);
+  z-index: var(--tooltip-z-index);
+}
+
+.member-menu-list > li {
+  padding: 1rem 0.875rem;
+  border-bottom: 1px solid var(--gray-003);
+  font-weight: 400;
+  cursor: pointer;
+  user-select: none;
+}
+
+.member-menu-list > li:last-child {
+  border: 0;
+}
+
+.member-menu-list > li:hover {
+  font-weight: bold;
+}
+
+.dimmed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: var(--tooltip-dimmed-z-index);
+}
+
+.bar {
+  width: 1px;
+  height: 1.25rem;
+  margin: 0 0.75rem;
+  background-color: var(--gray-008);
+}
+
+.link-container a {
+  color: var(--gray-008);
+}

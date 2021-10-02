@@ -1,24 +1,18 @@
 .button {
-  cursor: pointer;
-  outline: none;
-  border: 0;
-  background: #0078ff;
-  color: #fff;
-  border-radius: 3px;
-  padding: 10px;
-  min-width: 80px;
-  min-height: 28px;
-  margin: 5px;
+  background: var(--black);
+  color: var(--white);
+  border-radius: 0.25rem;
+  padding: 0.5rem 1.25rem;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
 }
 
 .button.cancel {
-  background: #999;
+  background: var(--gray-007);
 }
 
 .button:disabled {
   cursor: default;
-  background: #ccc;
+  background: var(--gray-004);
 }

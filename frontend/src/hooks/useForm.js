@@ -11,11 +11,10 @@ const useForm = ({ validators, submit }) => {
     Object.values(value).filter(Boolean).length < Object.values(value).length;
 
   const handleChange = ({ target }) => {
-    if (target.type === "checkbox") {
-      setValue((prev) => ({ ...prev, [target.name]: target.checked }));
-    } else {
-      setValue((prev) => ({ ...prev, [target.name]: target.value }));
-    }
+    setValue((prev) => ({
+      ...prev,
+      [target.name]: target.type === "checkbox" ? target.checked : target.value,
+    }));
 
     const validator = validators?.[target.name];
 
