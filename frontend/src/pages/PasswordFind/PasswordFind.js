@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { fetchPasswordFind } from "../../api/applicants";
 import Container, {
   CONTAINER_SIZE,
-} from "../../components/Container/Container";
+} from "../../components/@common/Container/Container";
 import BirthField from "../../components/form/BirthField/BirthField";
 import PATH from "../../constants/path";
 import useForm from "../../hooks/useForm";
@@ -61,7 +61,6 @@ const PasswordFind = () => {
     <Container size={CONTAINER_SIZE.NARROW} title="비밀번호 찾기">
       <FormProvider {...methods}>
         <Form onSubmit={handleSubmit}>
-          <h2>비밀번호 찾기</h2>
           <FormInput
             name="name"
             type="text"

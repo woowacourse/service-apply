@@ -31,9 +31,8 @@ import ResetButton from "../../components/form/ResetButton";
 import SubmitButton from "../../components/form/SubmitButton";
 import TempSaveButton from "../../components/form/TempSaveButton";
 import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
-import Container from "../../components/Container/Container";
+import Container from "../../components/@common/Container/Container";
 import { formatDateTime } from "../../utils/format/date";
-import useFormContext from "../../hooks/useFormContext";
 
 const pathToEdit = (recruitmentId) =>
   generatePath(PATH.APPLICATION_FORM, {
@@ -132,7 +131,7 @@ const ApplicationRegister = () => {
     }
   };
 
-  const { handleSubmit, ...methods } = useForm({
+  const { value, handleSubmit, ...methods } = useForm({
     validators: { url: validateURL },
     submit,
   });
@@ -176,8 +175,6 @@ const ApplicationRegister = () => {
     fetchRecruitmentItems,
   ]);
 
-  const { value } = useFormContext();
-
   const answers = recruitmentItems.map((item, index) => ({
     contents: value[`recruitment-item-${index}`],
     recruitmentItemId: item.id,
@@ -205,7 +202,7 @@ const ApplicationRegister = () => {
       )}
 
       <Container title="지원서 작성">
-        <FormProvider {...methods}>
+        <FormProvider value={value} {...methods}>
           <Form onSubmit={handleSubmit}>
             {status === PARAM.APPLICATION_FORM_STATUS.EDIT && (
               <p className={styles["autosave-indicator"]}>

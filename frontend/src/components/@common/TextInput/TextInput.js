@@ -25,7 +25,7 @@ const TextInput = ({
 
 TextInput.propTypes = {
   className: PropTypes.string,
-  type: PropTypes.oneOf(["text", "email", "password", "url"]),
+  type: PropTypes.oneOf(["text", "email", "password", "tel", "number", "url"]),
   readOnly: PropTypes.bool,
   value: PropTypes.string,
   maxLength: PropTypes.number,

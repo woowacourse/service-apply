@@ -31,9 +31,10 @@ import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
 import useApplicantRegisterForm from "../../hooks/useApplicantRegisterForm";
 import Container, {
   CONTAINER_SIZE,
-} from "../../components/Container/Container";
+} from "../../components/@common/Container/Container";
 import styles from "./ApplicantRegister.module.css";
 import { formatBirthday } from "../../utils/format/date";
+import MessageTextInput from "../../components/@common/MessageTextInput/MessageTextInput";
 
 const ApplicantRegister = () => {
   const location = useLocation();
@@ -103,7 +104,6 @@ const ApplicantRegister = () => {
       <Container title="회원가입" size={CONTAINER_SIZE.NARROW}>
         <FormProvider {...methods}>
           <Form onSubmit={handleSubmit}>
-            <h2>지원자 정보</h2>
             <div>
               <SummaryCheckField
                 name="policy"
@@ -123,7 +123,7 @@ const ApplicantRegister = () => {
               />
             </div>
             <div>
-              <FormInput
+              <MessageTextInput
                 name="phoneNumber"
                 type="tel"
                 label="전화번호"
@@ -161,7 +161,7 @@ const ApplicantRegister = () => {
               />
             </div>
             <div>
-              <BirthField />
+              <BirthField required />
             </div>
             <div>
               <GenderField />

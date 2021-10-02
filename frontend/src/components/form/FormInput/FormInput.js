@@ -1,10 +1,7 @@
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import useFormContext from "../../../hooks/useFormContext";
-import Label from "../../@common/Label/Label";
-import Description from "../../@common/Description/Description";
-import TextInput from "../../@common/TextInput/TextInput";
-import styles from "./FormInput.module.css";
+import MessageTextInput from "../../@common/MessageTextInput/MessageTextInput";
 
 const FormInput = ({
   label,
@@ -27,22 +24,18 @@ const FormInput = ({
   }, [name, initialValue]);
 
   return (
-    <>
-      <div className={styles["text-field"]}>
-        <Label required={required}>{label}</Label>
-        {description && <Description>{description}</Description>}
-        <TextInput
-          required={required}
-          value={value[name]}
-          name={name}
-          errorMessage={errorMessage[name]}
-          maxLength={maxLength}
-          onChange={handleChange}
-          {...props}
-        />
-      </div>
-      <p className={styles["rule-field"]}>{errorMessage[name]}</p>
-    </>
+    <MessageTextInput
+      value={value[name]}
+      onChange={handleChange}
+      errorMessage={errorMessage[name]}
+      label={label}
+      description={description}
+      initialValue={initialValue}
+      name={name}
+      maxLength={maxLength}
+      required={required}
+      {...props}
+    />
   );
 };
 

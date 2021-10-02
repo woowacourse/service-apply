@@ -5,7 +5,7 @@ import Form from "../../components/form/Form/Form";
 import PATH from "../../constants/path";
 import Container, {
   CONTAINER_SIZE,
-} from "../../components/Container/Container";
+} from "../../components/@common/Container/Container";
 
 import styles from "./PasswordFindResult.module.css";
 

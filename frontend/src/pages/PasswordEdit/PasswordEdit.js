@@ -6,7 +6,7 @@ import PATH from "../../constants/path";
 
 import Container, {
   CONTAINER_SIZE,
-} from "../../components/Container/Container";
+} from "../../components/@common/Container/Container";
 
 import useForm from "../../hooks/useForm";
 import useTokenContext from "../../hooks/useTokenContext";
@@ -56,7 +56,6 @@ const PasswordEdit = () => {
     <Container size={CONTAINER_SIZE.NARROW} title="비밀번호 변경">
       <FormProvider {...methods}>
         <Form onSubmit={handleSubmit}>
-          <h2>비밀번호 변경</h2>
           <FormInput
             name="oldPassword"
             type="password"

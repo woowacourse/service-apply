@@ -1,12 +1,12 @@
 import React from "react";
-import FormInput from "./FormInput";
+import MessageTextInput from "./MessageTextInput";
 
 export default {
-  title: "form/FormInput",
-  component: FormInput,
+  title: "form/MessageTextInput",
+  component: MessageTextInput,
 };
 
-const Template = (args) => <FormInput {...args} />;
+const Template = (args) => <MessageTextInput {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {

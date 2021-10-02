@@ -3,7 +3,7 @@ import { Link, useHistory } from "react-router-dom";
 
 import Container, {
   CONTAINER_SIZE,
-} from "../../components/Container/Container";
+} from "../../components/@common/Container/Container";
 
 import useForm from "../../hooks/useForm";
 import useTokenContext from "../../hooks/useTokenContext";
@@ -58,7 +58,6 @@ const Login = () => {
             </Link>
           }
         >
-          <h2>내 지원서 보기</h2>
           <FormInput
             name="email"
             type="email"

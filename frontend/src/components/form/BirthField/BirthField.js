@@ -39,11 +39,13 @@ const BirthField = ({ required }) => {
   return (
     <>
       <div className={styles.container}>
-        <Label for="year">생년월일</Label>
+        <Label for="year" required={required}>
+          생년월일
+        </Label>
         <div className={styles.birth}>
           <TextInput
             className={styles.year}
-            type="number"
+            type="text"
             id="year"
             name="year"
             list="years"
@@ -63,7 +65,7 @@ const BirthField = ({ required }) => {
             className={styles.month}
             name="month"
             list="months"
-            type="number"
+            type="text"
             placeholder="MM"
             min="1"
             max="12"
@@ -80,7 +82,7 @@ const BirthField = ({ required }) => {
             className={styles.day}
             name="day"
             list="days"
-            type="number"
+            type="text"
             min="1"
             max="31"
             placeholder="DD"
