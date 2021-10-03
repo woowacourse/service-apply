@@ -17,7 +17,7 @@ class AssignmentService(
     private val missionRepository: MissionRepository,
     private val evaluationTargetRepository: EvaluationTargetRepository
 ) {
-    fun create(missionId: Long, applicantId: Long, assignmentData: CreateAssignmentRequest) {
+    fun create(missionId: Long, applicantId: Long, request: CreateAssignmentRequest) {
         check(!assignmentRepository.existsByMissionIdAndApplicantId(missionId, applicantId)) {
             "이미 제출한 과제물이 존재합니다."
         }
@@ -36,9 +36,9 @@ class AssignmentService(
             Assignment(
                 applicantId,
                 missionId,
-                assignmentData.gitAccount,
-                assignmentData.url,
-                assignmentData.impression
+                request.gitAccount,
+                request.url,
+                request.impression
             )
         )
     }
