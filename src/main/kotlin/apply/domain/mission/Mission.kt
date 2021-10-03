@@ -1,6 +1,6 @@
 package apply.domain.mission
 
-import apply.application.UpdateMissionRequest
+import apply.application.MissionData
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
 import support.domain.BaseEntity
@@ -48,7 +48,7 @@ class Mission(
         id: Long = 0L
     ) : this(title, description, evaluationId, MissionPeriod(startDateTime, endDateTime), submittable, id)
 
-    fun update(request: UpdateMissionRequest) {
+    fun update(request: MissionData) {
         this.title = request.title
         this.period.startDateTime = request.startDateTime
         this.period.endDateTime = request.endDateTime

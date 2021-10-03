@@ -2,14 +2,12 @@ package apply.ui.api
 
 import apply.application.MissionData
 import apply.application.MissionService
-import apply.application.UpdateMissionRequest
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import javax.validation.Valid
 
 @RestController
 @RequestMapping("/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/missions")
@@ -24,14 +22,5 @@ class MissionController(
     ): ResponseEntity<Unit> {
         missionService.save(missionData)
         return ResponseEntity.ok().build()
-    }
-
-    @PostMapping("/{missionId}")
-    fun updateMission(
-        @PathVariable missionId: Long,
-        @RequestBody @Valid updateMissionRequest: UpdateMissionRequest
-    ): ResponseEntity<Unit> {
-        missionService.update(missionId, updateMissionRequest)
-        return ResponseEntity.noContent().build()
     }
 }
