@@ -30,11 +30,13 @@ data class MissionData(
 
     var id: Long = 0L
 ) {
-    constructor(mission: Mission) : this(
+    constructor(mission: Mission, evaluation: Evaluation) : this(
+        id = mission.id,
         title = mission.title,
-        description = mission.description,
+        evaluation = EvaluationSelectData(evaluation.title, evaluation.id),
         startDateTime = mission.period.startDateTime,
         endDateTime = mission.period.endDateTime,
+        description = mission.description,
         submittable = mission.submittable
     )
 }

@@ -1,6 +1,7 @@
 package apply.application
 
 import apply.domain.evaluation.EvaluationRepository
+import apply.domain.evaluation.getById
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionRepository
 import org.springframework.data.repository.findByIdOrNull
@@ -28,9 +29,10 @@ class MissionService(
         )
     }
 
-    fun getById(id: Long): MissionData {
+    fun getNotEndedDataById(id: Long): MissionData {
         val mission = missionRepository.getById(id)
-        return MissionData(mission)
+        val evaluation = evaluationRepository.getById(mission.evaluationId)
+        return MissionData(mission, evaluation)
     }
 
     fun update(missionId: Long, request: UpdateMissionRequest) {
