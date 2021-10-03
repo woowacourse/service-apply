@@ -16,7 +16,7 @@ const FormInput = ({
     useFormContext();
 
   useEffect(() => {
-    register(name, initialValue);
+    register(name, initialValue, required);
 
     return () => {
       unRegister(name);

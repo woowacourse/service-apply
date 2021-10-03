@@ -17,7 +17,7 @@ const FormTextarea = ({
     useFormContext();
 
   useEffect(() => {
-    register(name, initialValue);
+    register(name, initialValue, required);
 
     return () => {
       unRegister(name);

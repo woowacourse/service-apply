@@ -246,7 +246,7 @@ const ApplicationRegister = () => {
                 기재한 사실 중 허위사실이 발견되는 즉시, 교육 대상자에서
                 제외되며 향후 지원도 불가능합니다.
               </Description>
-              <CheckBox name="agree" label="동의합니다." />
+              <CheckBox name="agree" label="동의합니다." required />
             </div>
 
             <div className={styles.buttons}>
