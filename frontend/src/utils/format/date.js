@@ -17,7 +17,7 @@ export const formatDateTime = (value) => {
   )
     return value;
 
-  return `${year}-${String(month).padStart(2, "0")}-${String(date).padStart(
+  return `${year}-${String(month + 1).padStart(2, "0")}-${String(date).padStart(
     2,
     "0"
   )} ${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
