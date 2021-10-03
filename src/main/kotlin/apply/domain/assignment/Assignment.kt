@@ -14,7 +14,7 @@ class Assignment(
     val missionId: Long,
 
     @Column(nullable = false)
-    val githubId: String,
+    val gitAccount: String,
 
     @Column(nullable = false)
     val url: String,

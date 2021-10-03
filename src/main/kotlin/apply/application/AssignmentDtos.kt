@@ -7,7 +7,7 @@ class AssignmentDtos
 
 data class CreateAssignmentRequest(
     @field:NotNull
-    val githubId: String,
+    val gitAccount: String,
 
     @field:Size(min = 0, max = 255)
     val url: String = "",

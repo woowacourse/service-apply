@@ -2,7 +2,7 @@ create table assignment
 (
     id           bigint       not null auto_increment,
     applicant_id bigint       not null,
-    github_id    varchar(255) not null,
+    git_account    varchar(255) not null,
     impression   longtext,
     mission_id   bigint       not null,
     url          varchar(255) not null,

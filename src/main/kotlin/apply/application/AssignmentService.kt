@@ -36,7 +36,7 @@ class AssignmentService(
             Assignment(
                 applicantId,
                 missionId,
-                assignmentData.githubId,
+                assignmentData.gitAccount,
                 assignmentData.url,
                 assignmentData.impression
             )
