@@ -39,6 +39,7 @@ class MissionForm() : BindingIdentityFormLayout<MissionData>(MissionData::class)
     }
 
     override fun fill(data: MissionData) {
+        evaluation.isReadOnly = true
         fillDefault(data)
     }
 }
