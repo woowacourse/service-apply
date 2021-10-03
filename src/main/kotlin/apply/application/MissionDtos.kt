@@ -33,7 +33,7 @@ data class MissionData(
     constructor(mission: Mission, evaluation: Evaluation) : this(
         id = mission.id,
         title = mission.title,
-        evaluation = EvaluationSelectData(evaluation.title, evaluation.id),
+        evaluation = EvaluationSelectData(evaluation),
         startDateTime = mission.period.startDateTime,
         endDateTime = mission.period.endDateTime,
         description = mission.description,
