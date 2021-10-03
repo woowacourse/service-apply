@@ -43,7 +43,7 @@ class MissionsFormView(
             recruitmentId = id.toLong()
             setDisplayName(value.toDisplayName())
             if (value == EDIT_VALUE) {
-                // TODO: 수정 기능 구현
+                missionForm.fill(missionService.getById(id.toLong()))
             }
         } ?: UI.getCurrent().page.history.back()
         add(title, missionForm, buttons)

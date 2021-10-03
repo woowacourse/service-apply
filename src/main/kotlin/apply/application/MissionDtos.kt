@@ -29,7 +29,15 @@ data class MissionData(
     var submittable: Boolean = false,
 
     var id: Long = 0L
-)
+) {
+    constructor(mission: Mission) : this(
+        title = mission.title,
+        description = mission.description,
+        startDateTime = mission.period.startDateTime,
+        endDateTime = mission.period.endDateTime,
+        submittable = mission.submittable
+    )
+}
 
 data class MissionResponse(
     val id: Long,

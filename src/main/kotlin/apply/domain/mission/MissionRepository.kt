@@ -10,4 +10,7 @@ fun MissionRepository.getById(missionId: Long): Mission {
 interface MissionRepository : JpaRepository<Mission, Long> {
     fun existsByEvaluationId(evaluationId: Long): Boolean
     fun findAllByEvaluationIdIn(evaluationIds: Collection<Long>): List<Mission>
+    fun getById(id: Long): Mission {
+        return findByIdOrNull(id) ?: throw NoSuchElementException()
+    }
 }

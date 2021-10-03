@@ -3,7 +3,6 @@ package apply.application
 import apply.domain.evaluation.EvaluationRepository
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionRepository
-import apply.domain.mission.getById
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
@@ -27,6 +26,11 @@ class MissionService(
                 request.submittable
             )
         )
+    }
+
+    fun getById(id: Long): MissionData {
+        val mission = missionRepository.getById(id)
+        return MissionData(mission)
     }
 
     fun update(missionId: Long, request: UpdateMissionRequest) {
