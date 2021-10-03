@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 
 import useFormContext from "../../../hooks/useFormContext";
 import MessageTextarea from "../../@common/MessageTextarea/MessageTextarea";
+import styles from "./FormTextarea.module.css";
 
 const FormTextarea = ({
   label,
@@ -34,6 +35,7 @@ const FormTextarea = ({
       description={description}
       maxLength={maxLength}
       required={required}
+      className={styles["form-textarea"]}
       {...props}
     />
   );

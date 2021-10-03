@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import useFormContext from "../../../hooks/useFormContext";
 import MessageTextInput from "../../@common/MessageTextInput/MessageTextInput";
+import styles from "./FormInput.module.css";
 
 const FormInput = ({
   label,
@@ -34,6 +35,7 @@ const FormInput = ({
       name={name}
       maxLength={maxLength}
       required={required}
+      className={styles["form-input"]}
       {...props}
     />
   );
