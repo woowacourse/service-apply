@@ -15,7 +15,7 @@ import com.vaadin.flow.data.renderer.Renderer
 import support.views.addSortableColumn
 import support.views.createContrastButton
 import support.views.createPrimaryButton
-import support.views.createSearchBar
+import support.views.createSearchBox
 
 class IndividualMailTargetFormDialog(
     private val applicantService: ApplicantService,
@@ -59,7 +59,7 @@ class IndividualMailTargetFormDialog(
 
     private fun createMailTargetFilter(): Component {
         return HorizontalLayout(
-            createSearchBar {
+            createSearchBox {
                 val founds = applicantService.findAllByKeyword(it)
                 currentMailTargetsGrid.apply {
                     setItems(founds)

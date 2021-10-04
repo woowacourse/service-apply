@@ -68,7 +68,7 @@ private fun createBox(icon: VaadinIcon, labelText: String = "", eventListener: (
     }
 }
 
-fun createSearchBar(labelText: String = "", eventListener: (name: String) -> Unit): HorizontalLayout {
+fun createSearchBox(labelText: String = "", eventListener: (name: String) -> Unit): HorizontalLayout {
     return createBox(VaadinIcon.SEARCH, labelText, eventListener)
 }
 
