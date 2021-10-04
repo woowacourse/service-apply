@@ -1,4 +1,4 @@
-import { FormContext } from "../../hooks/useFormContext";
+import { FormContext } from "../hooks/useFormContext";
 import PropTypes from "prop-types";
 
 const FormProvider = ({ children, ...props }) => {

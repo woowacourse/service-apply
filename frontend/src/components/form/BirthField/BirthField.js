@@ -1,11 +1,9 @@
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 
-import Field from "../Field/Field";
-import Label from "../Label/Label";
-import TextInput from "../TextInput/TextInput";
+import Label from "../../@common/Label/Label";
+import TextInput from "../../@common/TextInput/TextInput";
 import useFormContext from "../../../hooks/useFormContext";
-
 import styles from "./BirthField.module.css";
 
 const currentYear = new Date().getFullYear();
@@ -40,14 +38,14 @@ const BirthField = ({ required }) => {
 
   return (
     <>
-      <Field className={styles["birth-field"]}>
+      <div className={styles.container}>
         <Label for="year" required={required}>
           생년월일
         </Label>
         <div className={styles.birth}>
           <TextInput
             className={styles.year}
-            type="number"
+            type="text"
             id="year"
             name="year"
             list="years"
@@ -67,7 +65,7 @@ const BirthField = ({ required }) => {
             className={styles.month}
             name="month"
             list="months"
-            type="number"
+            type="text"
             placeholder="MM"
             min="1"
             max="12"
@@ -84,7 +82,7 @@ const BirthField = ({ required }) => {
             className={styles.day}
             name="day"
             list="days"
-            type="number"
+            type="text"
             min="1"
             max="31"
             placeholder="DD"
@@ -98,7 +96,7 @@ const BirthField = ({ required }) => {
             ))}
           </datalist>
         </div>
-      </Field>
+      </div>
 
       <p className={styles["rule-field"]}>
         {errorMessage.year || errorMessage.month || errorMessage.day}

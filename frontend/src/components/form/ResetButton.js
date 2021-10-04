@@ -1,6 +1,6 @@
-import { Button } from "../../components/form";
 import useFormContext from "../../hooks/useFormContext";
 import { CONFIRM_MESSAGE } from "../../constants/messages";
+import Button from "../@common/Button/Button";
 
 const ResetButton = () => {
   const { reset } = useFormContext();

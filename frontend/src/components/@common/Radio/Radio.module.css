@@ -28,7 +28,7 @@ input[type="radio"]::before {
 }
 
 input[type="radio"]:checked::before {
-  background: #0078ff;
+  background: var(--black);
   border: 3px solid #d8e0ea;
   color: #fff;
 }
