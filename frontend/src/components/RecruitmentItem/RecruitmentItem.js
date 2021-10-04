@@ -4,11 +4,10 @@ import classNames from "classnames";
 
 import CalendarIcon from "../../assets/icon/calendar-icon.svg";
 
-import { Button } from "../form";
-
 import { formatDateTime } from "../../utils/format/date";
 
 import styles from "./RecruitmentItem.module.css";
+import Button from "../@common/Button/Button";
 
 const RecruitmentItem = ({
   recruitment,

@@ -3,21 +3,21 @@ import { Link, useHistory } from "react-router-dom";
 
 import Container, {
   CONTAINER_SIZE,
-} from "../../components/Container/Container";
-import { Form } from "../../components/form";
-import Button from "../../components/form/Button/Button";
+} from "../../components/@common/Container/Container";
 
 import useForm from "../../hooks/useForm";
 import useTokenContext from "../../hooks/useTokenContext";
-import FormProvider from "../../provider/FormProvider/FormProvider";
-import InputField from "../../provider/FormProvider/InputField";
-import SubmitButton from "../../provider/FormProvider/SubmitButton";
+import FormProvider from "../../provider/FormProvider";
 import { validateEmail } from "../../utils/validation/email";
 import { validatePassword } from "../../utils/validation/password";
 import { SUCCESS_MESSAGE } from "../../constants/messages";
 import PATH from "../../constants/path";
 
 import styles from "./Login.module.css";
+import Form from "../../components/form/Form/Form";
+import Button from "../../components/@common/Button/Button";
+import FormInput from "../../components/form/FormInput/FormInput";
+import SubmitButton from "../../components/form/SubmitButton";
 
 const Login = () => {
   const { fetchLogin } = useTokenContext();
@@ -50,15 +50,22 @@ const Login = () => {
   return (
     <Container size={CONTAINER_SIZE.NARROW} title="로그인">
       <FormProvider {...methods}>
-        <Form onSubmit={handleSubmit}>
-          <InputField
+        <Form
+          onSubmit={handleSubmit}
+          footer={
+            <Link to="/find" className={styles["find-password"]}>
+              비밀번호 찾기
+            </Link>
+          }
+        >
+          <FormInput
             name="email"
             type="email"
             label="이메일"
             placeholder="이메일 주소를 입력해 주세요."
             required
           />
-          <InputField
+          <FormInput
             name="password"
             type="password"
             label="비밀번호"
@@ -66,7 +73,7 @@ const Login = () => {
             required
           />
           <div className={styles.buttons}>
-            <Button cancel onClick={() => history.goBack()}>
+            <Button type="button" cancel onClick={() => history.goBack()}>
               이전
             </Button>
             <SubmitButton>확인</SubmitButton>

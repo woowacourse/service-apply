@@ -1,25 +1,12 @@
 import React from "react";
 import { useHistory, useLocation, generatePath } from "react-router-dom";
 
-import {
-  BirthField,
-  Button,
-  Form,
-  GenderField,
-  SummaryCheckField,
-} from "../../components/form";
-import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
-import Container, {
-  CONTAINER_SIZE,
-} from "../../components/Container/Container";
-
+import { ERROR_MESSAGE } from "../../constants/messages";
+import PATH, { PARAM } from "../../constants/path";
+import { POLICY_SUMMARY } from "../../constants/policySummary";
 import useForm from "../../hooks/useForm";
 import useRecruitmentContext from "../../hooks/useRecruitmentContext";
 import useTokenContext from "../../hooks/useTokenContext";
-import FormProvider from "../../provider/FormProvider/FormProvider";
-import InputField from "../../provider/FormProvider/InputField";
-import SubmitButton from "../../provider/FormProvider/SubmitButton";
-import useApplicantRegisterForm from "../../hooks/useApplicantRegisterForm";
 import {
   validateDay,
   validateMonth,
@@ -32,12 +19,22 @@ import {
   validateRePassword,
 } from "../../utils/validation/password";
 import { generateQuery } from "../../utils/route/query";
-import { formatBirthday } from "../../utils/format/date";
-import { ERROR_MESSAGE } from "../../constants/messages";
-import PATH, { PARAM } from "../../constants/path";
-import { POLICY_SUMMARY } from "../../constants/policySummary";
-
+import Form from "../../components/form/Form/Form";
+import BirthField from "../../components/form/BirthField/BirthField";
+import GenderField from "../../components/form/GenderField/GenderField";
+import Button from "../../components/@common/Button/Button";
+import SummaryCheckField from "../../components/form/SummaryCheckField/SummaryCheckField";
+import FormInput from "../../components/form/FormInput/FormInput";
+import FormProvider from "../../provider/FormProvider";
+import SubmitButton from "../../components/form/SubmitButton";
+import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
+import useApplicantRegisterForm from "../../hooks/useApplicantRegisterForm";
+import Container, {
+  CONTAINER_SIZE,
+} from "../../components/@common/Container/Container";
 import styles from "./ApplicantRegister.module.css";
+import { formatBirthday } from "../../utils/format/date";
+import MessageTextInput from "../../components/@common/MessageTextInput/MessageTextInput";
 
 const ApplicantRegister = () => {
   const location = useLocation();
@@ -107,7 +104,6 @@ const ApplicantRegister = () => {
       <Container title="회원가입" size={CONTAINER_SIZE.NARROW}>
         <FormProvider {...methods}>
           <Form onSubmit={handleSubmit}>
-            <h2>지원자 정보</h2>
             <div>
               <SummaryCheckField
                 name="policy"
@@ -118,7 +114,7 @@ const ApplicantRegister = () => {
               </SummaryCheckField>
             </div>
             <div>
-              <InputField
+              <FormInput
                 name="name"
                 type="text"
                 label="이름"
@@ -127,7 +123,7 @@ const ApplicantRegister = () => {
               />
             </div>
             <div>
-              <InputField
+              <MessageTextInput
                 name="phoneNumber"
                 type="tel"
                 label="전화번호"
@@ -138,7 +134,7 @@ const ApplicantRegister = () => {
               />
             </div>
             <div>
-              <InputField
+              <FormInput
                 name="email"
                 type="email"
                 label="이메일"
@@ -147,7 +143,7 @@ const ApplicantRegister = () => {
               />
             </div>
             <div>
-              <InputField
+              <FormInput
                 name="password"
                 type="password"
                 label="비밀번호"
@@ -156,7 +152,7 @@ const ApplicantRegister = () => {
               />
             </div>
             <div>
-              <InputField
+              <FormInput
                 name="rePassword"
                 type="password"
                 label="비밀번호 확인"
@@ -165,7 +161,7 @@ const ApplicantRegister = () => {
               />
             </div>
             <div>
-              <BirthField />
+              <BirthField required />
             </div>
             <div>
               <GenderField />

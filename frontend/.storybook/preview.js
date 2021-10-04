@@ -6,11 +6,11 @@ import axios from "axios";
 import "../src/api/api";
 import { RecruitmentContext } from "../src/hooks/useRecruitmentContext";
 import { recruitmentFilter } from "../src/provider/RecruitmentProvider";
-import FormProvider from "../src/provider/FormProvider/FormProvider";
 import TokenProvider from "../src/provider/TokenProvider";
-import useForm from "../src/hooks/useForm";
 
 import "../src/App.css";
+import FormProvider from "../src/provider/FormProvider";
+import useForm from "../src/hooks/useForm";
 
 export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 axios.defaults.baseURL = API_BASE_URL;

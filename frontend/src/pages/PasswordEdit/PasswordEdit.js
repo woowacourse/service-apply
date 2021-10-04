@@ -1,26 +1,26 @@
 import { useHistory } from "react-router-dom";
 
 import { fetchPasswordEdit } from "../../api/applicants";
+import { SUCCESS_MESSAGE } from "../../constants/messages";
+import PATH from "../../constants/path";
 
 import Container, {
   CONTAINER_SIZE,
-} from "../../components/Container/Container";
-import { Form } from "../../components/form";
-import Button from "../../components/form/Button/Button";
+} from "../../components/@common/Container/Container";
 
 import useForm from "../../hooks/useForm";
 import useTokenContext from "../../hooks/useTokenContext";
-import FormProvider from "../../provider/FormProvider/FormProvider";
-import InputField from "../../provider/FormProvider/InputField";
-import SubmitButton from "../../provider/FormProvider/SubmitButton";
+import FormProvider from "../../provider/FormProvider";
 import {
   validatePassword,
   validateRePassword,
 } from "../../utils/validation/password";
-import PATH from "../../constants/path";
-import { SUCCESS_MESSAGE } from "../../constants/messages";
 
 import styles from "./PasswordEdit.module.css";
+import Form from "../../components/form/Form/Form";
+import Button from "../../components/@common/Button/Button";
+import FormInput from "../../components/form/FormInput/FormInput";
+import SubmitButton from "../../components/form/SubmitButton";
 
 const PasswordEdit = () => {
   const { token, resetToken } = useTokenContext();
@@ -56,21 +56,21 @@ const PasswordEdit = () => {
     <Container size={CONTAINER_SIZE.NARROW} title="비밀번호 변경">
       <FormProvider {...methods}>
         <Form onSubmit={handleSubmit}>
-          <InputField
+          <FormInput
             name="oldPassword"
             type="password"
             label="기존 비밀번호"
             placeholder="기존 비밀번호를 입력해 주세요"
             required
           />
-          <InputField
+          <FormInput
             name="password"
             type="password"
             label="새 비밀번호"
             placeholder="비밀번호를 입력해 주세요"
             required
           />
-          <InputField
+          <FormInput
             name="rePassword"
             type="password"
             label="비밀번호 확인"
@@ -78,7 +78,7 @@ const PasswordEdit = () => {
             required
           />
           <div className={styles.buttons}>
-            <Button cancel onClick={() => history.goBack()}>
+            <Button type="button" cancel onClick={() => history.goBack()}>
               이전
             </Button>
             <SubmitButton>확인</SubmitButton>

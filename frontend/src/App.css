@@ -62,3 +62,10 @@ button {
   margin: 0 auto;
   padding: 2.5rem 0;
 }
+
+input,
+textarea {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}

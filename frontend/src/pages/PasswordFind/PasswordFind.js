@@ -3,15 +3,10 @@ import { useHistory } from "react-router-dom";
 import { fetchPasswordFind } from "../../api/applicants";
 import Container, {
   CONTAINER_SIZE,
-} from "../../components/Container/Container";
-import { Form } from "../../components/form";
+} from "../../components/@common/Container/Container";
 import BirthField from "../../components/form/BirthField/BirthField";
-import Button from "../../components/form/Button/Button";
 import PATH from "../../constants/path";
 import useForm from "../../hooks/useForm";
-import FormProvider from "../../provider/FormProvider/FormProvider";
-import InputField from "../../provider/FormProvider/InputField";
-import SubmitButton from "../../provider/FormProvider/SubmitButton";
 import { formatBirthday } from "../../utils/format/date";
 import {
   validateDay,
@@ -21,6 +16,11 @@ import {
 import { validateEmail } from "../../utils/validation/email";
 import { validateName } from "../../utils/validation/name";
 import styles from "./PasswordFind.module.css";
+import Button from "../../components/@common/Button/Button";
+import FormInput from "../../components/form/FormInput/FormInput";
+import Form from "../../components/form/Form/Form";
+import FormProvider from "../../provider/FormProvider";
+import SubmitButton from "../../components/form/SubmitButton";
 
 const PasswordFind = () => {
   const history = useHistory();
@@ -61,14 +61,14 @@ const PasswordFind = () => {
     <Container size={CONTAINER_SIZE.NARROW} title="비밀번호 찾기">
       <FormProvider {...methods}>
         <Form onSubmit={handleSubmit}>
-          <InputField
+          <FormInput
             name="name"
             type="text"
             label="이름"
             placeholder="이름을 입력해 주세요."
             required
           />
-          <InputField
+          <FormInput
             name="email"
             type="email"
             label="이메일"
@@ -77,10 +77,10 @@ const PasswordFind = () => {
           />
           <BirthField required />
           <div className={styles.buttons}>
-            <Button cancel onClick={() => history.goBack()}>
+            <Button type="button" cancel onClick={() => history.goBack()}>
               이전
             </Button>
-            <SubmitButton>확인</SubmitButton>
+            <SubmitButton />
           </div>
         </Form>
       </FormProvider>

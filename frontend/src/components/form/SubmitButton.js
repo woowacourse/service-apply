@@ -1,14 +1,11 @@
-import { Button } from "../../components/form";
+import { useEffect } from "react";
 import useFormContext from "../../hooks/useFormContext";
+import Button from "../@common/Button/Button";
 
 const SubmitButton = () => {
   const { isValid, isEmpty } = useFormContext();
 
-  return (
-    <Button type="submit" disabled={!isValid || isEmpty}>
-      제출
-    </Button>
-  );
+  return <Button disabled={!isValid || isEmpty}>제출</Button>;
 };
 
 export default SubmitButton;
