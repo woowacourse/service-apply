@@ -32,6 +32,20 @@ fun createSuccessButton(text: String, clickListener: ClickListener): Button {
     }
 }
 
+fun createUpload(
+    text: String,
+    receiver: MultiFileMemoryBuffer,
+    succeededListener: UploadSucceededListener
+): Upload {
+    return Upload(receiver).apply {
+        maxFileSize = 10_485_760
+        uploadButton = createPrimaryButton(text) { }
+        addSucceededListener {
+            succeededListener(receiver)
+        }
+    }
+}
+
 fun createCsvUpload(text: String, receiver: MemoryBuffer, finishedListener: UploadFinishedListener): Upload {
     return Upload(receiver).apply {
         setAcceptedFileTypes("text/csv")
@@ -41,20 +55,6 @@ fun createCsvUpload(text: String, receiver: MemoryBuffer, finishedListener: Uplo
         }
         addFailedListener {
             createNotification(it.reason.message!!).open()
-        }
-    }
-}
-
-fun createUploadButton(
-    text: String,
-    receiver: MultiFileMemoryBuffer,
-    uploadSucceededListener: UploadSucceededListener
-): Upload {
-    return Upload(receiver).apply {
-        maxFileSize = 10_485_760
-        uploadButton = createPrimaryButton(text) { }
-        addSucceededListener {
-            uploadSucceededListener(receiver)
         }
     }
 }

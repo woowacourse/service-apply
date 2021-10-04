@@ -5,12 +5,12 @@ import apply.application.EvaluationService
 import apply.application.MailTargetResponse
 import apply.application.MailTargetService
 import apply.application.RecruitmentService
-import apply.application.mail.MailSendData
+import apply.application.mail.MailData
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
+import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.grid.Grid
-import com.vaadin.flow.component.html.H1
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
@@ -22,144 +22,157 @@ import com.vaadin.flow.data.renderer.Renderer
 import com.vaadin.flow.router.Route
 import org.springframework.boot.autoconfigure.mail.MailProperties
 import support.views.BindingFormLayout
+import support.views.NO_NAME
+import support.views.Title
 import support.views.addSortableColumn
-import support.views.createErrorButton
+import support.views.createContrastButton
+import support.views.createEnterBox
+import support.views.createErrorSmallButton
 import support.views.createNormalButton
 import support.views.createPrimaryButton
-import support.views.createSearchBar
-import support.views.createUploadButton
+import support.views.createUpload
 
-@Route(value = "admin/emails", layout = BaseLayout::class)
+@Route(value = "admin/mails", layout = BaseLayout::class)
 class MailFormView(
     private val applicantService: ApplicantService,
     private val recruitmentService: RecruitmentService,
     private val evaluationService: EvaluationService,
     private val mailTargetService: MailTargetService,
     private val mailProperties: MailProperties
-) : BindingFormLayout<MailSendData>(MailSendData::class) {
-    private val subject: TextField = TextField("메일 제목")
-    private val content: TextArea = createMailBody()
-    private val mailTargetGrid: Grid<MailTargetResponse> = createMailTargetsGrid()
+) : BindingFormLayout<MailData>(MailData::class) {
+    private val subject: TextField = TextField("제목").apply { setWidthFull() }
+    private val body: TextArea = createMailBody()
     private val mailTargets: MutableSet<MailTargetResponse> = mutableSetOf()
+    private val mailTargetGrid: Grid<MailTargetResponse> = createMailTargetsGrid(mailTargets)
 
     init {
-        add(createTitle(), createMailForm())
+        add(Title("메일 발송"), createMailForm())
         setResponsiveSteps(ResponsiveStep("0", 1))
         drawRequired()
     }
 
-    private fun createTitle(): Component {
-        return HorizontalLayout(H1("메일 발송")).apply {
-            setSizeFull()
-            justifyContentMode = FlexComponent.JustifyContentMode.CENTER
-        }
-    }
-
     private fun createMailForm(): Component {
         return VerticalLayout(
-            subject.apply { setWidthFull() },
+            subject,
             createSender(),
             createRecipientFilter(),
             mailTargetGrid,
-            content,
-            createUploadButton("첨부파일", MultiFileMemoryBuffer()) {
-                /*
-                todo: 추후 업로드 된 파일을 메일로 첨부하는 로직이 추가되어야 함
-                 (uploadFiles 같은 필드를 두고 mail을 보내는 기능에 포함시키면 될 것 같음)
-                it.files.forEach { fileName ->
-                    val fileData = it.getFileData(fileName)
-                    val inputStream = it.getInputStream(fileName)
-                    val readBytes = inputStream.readBytes()
-                }
-                */
+            body,
+            createUpload("파일첨부", MultiFileMemoryBuffer()) {
+                // TODO: 추후 업로드 된 파일을 메일로 첨부하는 로직이 추가되어야 함
+                // (uploadFiles 같은 필드를 두고 mail을 보내는 기능에 포함시키면 될 것 같음)
+                // it.files.forEach { fileName ->
+                //     val fileData = it.getFileData(fileName)
+                //     val inputStream = it.getInputStream(fileName)
+                //     val readBytes = inputStream.readBytes()
+                // }
             },
-            createMailSendButton()
+            createButtons()
         ).apply {
             setSizeFull()
-            justifyContentMode = FlexComponent.JustifyContentMode.START
-            defaultHorizontalComponentAlignment = FlexComponent.Alignment.START
         }
     }
 
-    private fun createMailTargetsGrid(): Grid<MailTargetResponse> {
-        return Grid<MailTargetResponse>(10).apply {
-            addSortableColumn("이름", MailTargetResponse::name)
-            addSortableColumn("이메일", MailTargetResponse::email)
-            addColumn(createRemoveButtonRender())
-        }
-    }
-
-    private fun createRemoveButtonRender(): Renderer<MailTargetResponse> {
-        return ComponentRenderer<Component, MailTargetResponse> { response ->
-            createErrorButton("삭제") {
-                mailTargets.remove(response)
-                mailTargetGrid.setItems(mailTargets)
-            }
+    private fun createSender(): Component {
+        return TextField("보낸사람").apply {
+            value = mailProperties.username
+            isReadOnly = true
         }
     }
 
     private fun createRecipientFilter(): Component {
         return HorizontalLayout(
-            createSearchBar(labelText = "받는사람") {
+            createEnterBox(labelText = "받는사람") {
                 if (it.isNotBlank()) {
-                    mailTargets.add(MailTargetResponse("이름 없음", it))
-                    mailTargetGrid.setItems(mailTargets)
+                    mailTargets.addAndRefresh(MailTargetResponse(NO_NAME, it))
                 }
             },
-            createSearchTargetComponent(),
-            createGroupMailTargetComponent()
+            createIndividualLoadButton(),
+            createGroupLoadButton()
         ).apply { defaultVerticalComponentAlignment = FlexComponent.Alignment.END }
     }
 
-    private fun createSearchTargetComponent(): Button {
+    private fun createMailTargetsGrid(mailTargets: Set<MailTargetResponse>): Grid<MailTargetResponse> {
+        return Grid<MailTargetResponse>(10).apply {
+            addSortableColumn("이름", MailTargetResponse::name)
+            addSortableColumn("이메일", MailTargetResponse::email)
+            addColumn(createRemoveButton())
+            setItems(mailTargets)
+        }
+    }
+
+    private fun createRemoveButton(): Renderer<MailTargetResponse> {
+        return ComponentRenderer<Component, MailTargetResponse> { response ->
+            createErrorSmallButton("제거") {
+                mailTargets.removeAndRefresh(response)
+            }
+        }
+    }
+
+    private fun createIndividualLoadButton(): Button {
         return createNormalButton("불러오기") {
             IndividualMailTargetFormDialog(applicantService) {
-                mailTargets.add(it)
-                mailTargetGrid.setItems(mailTargets)
+                mailTargets.addAndRefresh(it)
             }
-        }.apply { isEnabled = true }
+        }
     }
 
-    private fun createGroupMailTargetComponent(): Component {
+    private fun createGroupLoadButton(): Component {
         return createNormalButton("그룹 불러오기") {
             GroupMailTargetFormDialog(recruitmentService, evaluationService, mailTargetService) {
-                mailTargets.addAll(it)
-                mailTargetGrid.setItems(mailTargets)
-            }.apply { isEnabled = true }
-        }
-    }
-
-    private fun createSender(): Component {
-        val sender = TextField("보낸사람").apply {
-            value = mailProperties.username
-            isReadOnly = true
-        }
-        return HorizontalLayout(sender)
-    }
-
-    private fun createMailSendButton(): Button {
-        return createPrimaryButton("전송") {
-            bindOrNull()?.let {
-                // todo: emailService.메일전송(it, uploadFile)
+                mailTargets.addAllAndRefresh(it)
             }
         }
     }
 
     private fun createMailBody(): TextArea {
-        return TextArea("메일 본문").apply {
+        return TextArea("본문").apply {
             setSizeFull()
             style.set("minHeight", "400px")
         }
     }
 
-    override fun bindOrNull(): MailSendData? {
-        return bindDefaultOrNull()?.apply {
-            targetMails = mailTargets.map { it.email }
-                .toList()
+    private fun createButtons(): Component {
+        return HorizontalLayout(createSubmitButton(), createCancelButton()).apply {
+            setSizeFull()
+            justifyContentMode = FlexComponent.JustifyContentMode.CENTER
         }
     }
 
-    override fun fill(data: MailSendData) {
+    private fun createSubmitButton(): Button {
+        return createPrimaryButton("보내기") {
+            bindOrNull()?.let {
+                // TODO: emailService.메일전송(it, uploadFile)
+                UI.getCurrent().navigate(MailFormView::class.java)
+            }
+        }
+    }
+
+    private fun createCancelButton(): Button {
+        return createContrastButton("취소") {
+            UI.getCurrent().navigate(MailFormView::class.java)
+        }
+    }
+
+    private fun MutableSet<MailTargetResponse>.addAndRefresh(element: MailTargetResponse) {
+        add(element).also { mailTargetGrid.dataProvider.refreshAll() }
+    }
+
+    private fun MutableSet<MailTargetResponse>.addAllAndRefresh(elements: Collection<MailTargetResponse>) {
+        addAll(elements).also { mailTargetGrid.dataProvider.refreshAll() }
+    }
+
+    private fun MutableSet<MailTargetResponse>.removeAndRefresh(element: MailTargetResponse) {
+        remove(element).also { mailTargetGrid.dataProvider.refreshAll() }
+    }
+
+    override fun bindOrNull(): MailData? {
+        return bindDefaultOrNull()?.apply {
+            recipients = mailTargets.map { it.email }.toList()
+        }
+    }
+
+    override fun fill(data: MailData) {
         fillDefault(data)
     }
 }
