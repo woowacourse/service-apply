@@ -10,9 +10,11 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.upload.Upload
 import com.vaadin.flow.component.upload.receivers.MemoryBuffer
+import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer
 
 typealias ClickListener = (ClickEvent<Button>) -> Unit
 typealias UploadFinishedListener = (MemoryBuffer) -> Unit
+typealias UploadSucceededListener = (MultiFileMemoryBuffer) -> Unit
 
 fun createNormalButton(text: String, clickListener: ClickListener): Button {
     return Button(text, clickListener)
@@ -27,6 +29,20 @@ fun createPrimaryButton(text: String = "", clickListener: ClickListener): Button
 fun createSuccessButton(text: String, clickListener: ClickListener): Button {
     return createPrimaryButton(text, clickListener).apply {
         addThemeVariants(ButtonVariant.LUMO_SUCCESS)
+    }
+}
+
+fun createUpload(
+    text: String,
+    receiver: MultiFileMemoryBuffer,
+    succeededListener: UploadSucceededListener
+): Upload {
+    return Upload(receiver).apply {
+        maxFileSize = 10_485_760
+        uploadButton = createPrimaryButton(text) { }
+        addSucceededListener {
+            succeededListener(receiver)
+        }
     }
 }
 

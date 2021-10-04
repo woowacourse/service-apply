@@ -8,6 +8,7 @@ import com.vaadin.flow.component.textfield.IntegerField
 import com.vaadin.flow.component.textfield.TextArea
 import support.views.BindingFormLayout
 import support.views.createItemSelect
+import support.views.toText
 
 class EvaluationTargetForm() : BindingFormLayout<EvaluationTargetData>(EvaluationTargetData::class) {
     private val evaluationItemScores: MutableList<EvaluationItemScoreForm> = mutableListOf()
@@ -35,14 +36,6 @@ class EvaluationTargetForm() : BindingFormLayout<EvaluationTargetData>(Evaluatio
     }
 
     private fun sumOfScore() = evaluationItemScores.map { it.score.value }.sum()
-
-    private fun EvaluationStatus.toText() =
-        when (this) {
-            EvaluationStatus.WAITING -> "평가 전"
-            EvaluationStatus.PASS -> "합격"
-            EvaluationStatus.FAIL -> "탈락"
-            EvaluationStatus.PENDING -> "보류"
-        }
 
     private fun getIndexOfLastAnswer() = (children.count() - FIXED_ADDED_COMPONENT_COUNT).toInt()
 
