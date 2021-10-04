@@ -14,62 +14,54 @@ import com.vaadin.flow.data.renderer.ComponentRenderer
 import com.vaadin.flow.data.renderer.Renderer
 import support.views.addSortableColumn
 import support.views.createContrastButton
-import support.views.createPrimaryButton
+import support.views.createPrimarySmallButton
 import support.views.createSearchBox
 
-class IndividualMailTargetFormDialog(
+class IndividualMailTargetDialog(
     private val applicantService: ApplicantService,
-    private val reloadComponent: (MailTargetResponse) -> Unit
+    private val accept: (MailTargetResponse) -> Unit
 ) : Dialog() {
-    private val currentMailTargetsGrid: Grid<ApplicantResponse> = createGrid()
+    private val mailTargetsGrid: Grid<ApplicantResponse> = createMailTargetsGrid()
 
     init {
-        add(
-            H2("지원자 정보 조회"),
-            createMailTargetFilter(),
-            currentMailTargetsGrid
-        )
+        add(H2("개별 불러오기"), createSearchFilter(), mailTargetsGrid, createButtons())
         width = "900px"
         height = "70%"
         open()
     }
 
-    private fun createGrid(applicantResponse: List<ApplicantResponse> = emptyList()): Grid<ApplicantResponse> {
+    private fun createSearchFilter(): Component {
+        return HorizontalLayout(
+            createSearchBox { mailTargetsGrid.setItems(applicantService.findAllByKeyword(it)) }
+        ).apply {
+            element.style.set("margin-top", "10px")
+            element.style.set("margin-bottom", "10px")
+        }
+    }
+
+    private fun createMailTargetsGrid(): Grid<ApplicantResponse> {
         return Grid<ApplicantResponse>(10).apply {
             addSortableColumn("이름", ApplicantResponse::name)
             addSortableColumn("이메일", ApplicantResponse::email)
             addColumn(createAddButton()).apply { isAutoWidth = true }
-            setItems(applicantResponse)
         }
     }
 
     private fun createAddButton(): Renderer<ApplicantResponse> {
         return ComponentRenderer<Component, ApplicantResponse> { applicantResponse ->
-            HorizontalLayout(createMailTargetAddButton(applicantResponse))
+            createPrimarySmallButton("추가") {
+                accept(MailTargetResponse(applicantResponse))
+            }.apply {
+                isDisableOnClick = true
+            }
         }
     }
 
-    private fun createMailTargetAddButton(applicantResponse: ApplicantResponse): Button {
-        return createPrimaryButton("추가") {
-            reloadComponent(MailTargetResponse(applicantResponse))
-        }.apply {
-            isDisableOnClick = true
-        }
-    }
-
-    private fun createMailTargetFilter(): Component {
-        return HorizontalLayout(
-            createSearchBox {
-                val founds = applicantService.findAllByKeyword(it)
-                currentMailTargetsGrid.apply {
-                    setItems(founds)
-                }
-            },
-            createCancelButton()
-        ).apply {
-            justifyContentMode = FlexComponent.JustifyContentMode.START
+    private fun createButtons(): Component {
+        return HorizontalLayout(createCancelButton()).apply {
+            setSizeFull()
+            justifyContentMode = FlexComponent.JustifyContentMode.CENTER
             element.style.set("margin-top", "10px")
-            element.style.set("margin-bottom", "10px")
         }
     }
 

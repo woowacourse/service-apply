@@ -41,9 +41,9 @@ class MailFormView(
     private val mailProperties: MailProperties
 ) : BindingFormLayout<MailData>(MailData::class) {
     private val subject: TextField = TextField("제목").apply { setWidthFull() }
-    private val body: TextArea = createMailBody()
+    private val body: TextArea = createBody()
     private val mailTargets: MutableSet<MailTargetResponse> = mutableSetOf()
-    private val mailTargetGrid: Grid<MailTargetResponse> = createMailTargetsGrid(mailTargets)
+    private val mailTargetsGrid: Grid<MailTargetResponse> = createMailTargetsGrid(mailTargets)
 
     init {
         add(Title("메일 발송"), createMailForm())
@@ -56,7 +56,7 @@ class MailFormView(
             subject,
             createSender(),
             createRecipientFilter(),
-            mailTargetGrid,
+            mailTargetsGrid,
             body,
             createUpload("파일첨부", MultiFileMemoryBuffer()) {
                 // TODO: 추후 업로드 된 파일을 메일로 첨부하는 로직이 추가되어야 함
@@ -110,8 +110,8 @@ class MailFormView(
     }
 
     private fun createIndividualLoadButton(): Button {
-        return createNormalButton("불러오기") {
-            IndividualMailTargetFormDialog(applicantService) {
+        return createNormalButton("개별 불러오기") {
+            IndividualMailTargetDialog(applicantService) {
                 mailTargets.addAndRefresh(it)
             }
         }
@@ -119,13 +119,13 @@ class MailFormView(
 
     private fun createGroupLoadButton(): Component {
         return createNormalButton("그룹 불러오기") {
-            GroupMailTargetFormDialog(recruitmentService, evaluationService, mailTargetService) {
+            GroupMailTargetDialog(recruitmentService, evaluationService, mailTargetService) {
                 mailTargets.addAllAndRefresh(it)
             }
         }
     }
 
-    private fun createMailBody(): TextArea {
+    private fun createBody(): TextArea {
         return TextArea("본문").apply {
             setSizeFull()
             style.set("minHeight", "400px")
@@ -155,15 +155,15 @@ class MailFormView(
     }
 
     private fun MutableSet<MailTargetResponse>.addAndRefresh(element: MailTargetResponse) {
-        add(element).also { mailTargetGrid.dataProvider.refreshAll() }
+        add(element).also { mailTargetsGrid.dataProvider.refreshAll() }
     }
 
     private fun MutableSet<MailTargetResponse>.addAllAndRefresh(elements: Collection<MailTargetResponse>) {
-        addAll(elements).also { mailTargetGrid.dataProvider.refreshAll() }
+        addAll(elements).also { mailTargetsGrid.dataProvider.refreshAll() }
     }
 
     private fun MutableSet<MailTargetResponse>.removeAndRefresh(element: MailTargetResponse) {
-        remove(element).also { mailTargetGrid.dataProvider.refreshAll() }
+        remove(element).also { mailTargetsGrid.dataProvider.refreshAll() }
     }
 
     override fun bindOrNull(): MailData? {
