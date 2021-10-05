@@ -1,28 +1,14 @@
 import React, { useCallback, useEffect, useState } from "react";
 import {
+  generatePath,
   useHistory,
   useLocation,
   useParams,
-  generatePath,
 } from "react-router-dom";
 import * as Api from "../../api";
-
-import {
-  CONFIRM_MESSAGE,
-  ERROR_MESSAGE,
-  SUCCESS_MESSAGE,
-} from "../../constants/messages";
-import PATH, { PARAM } from "../../constants/path";
-import useForm from "../../hooks/useForm";
-import useRecruitmentContext from "../../hooks/useRecruitmentContext";
-import useTokenContext from "../../hooks/useTokenContext";
-import FormProvider from "../../provider/FormProvider";
-import { generateQuery, parseQuery } from "../../utils/route/query";
-import { validateURL } from "../../utils/validation/url";
-
-import styles from "./ApplicationRegister.module.css";
-import Label from "../../components/@common/Label/Label";
+import Container from "../../components/@common/Container/Container";
 import Description from "../../components/@common/Description/Description";
+import Label from "../../components/@common/Label/Label";
 import CheckBox from "../../components/form/CheckBox/CheckBox";
 import Form from "../../components/form/Form/Form";
 import FormInput from "../../components/form/FormInput/FormInput";
@@ -31,8 +17,19 @@ import ResetButton from "../../components/form/ResetButton/ResetButton";
 import SubmitButton from "../../components/form/SubmitButton";
 import TempSaveButton from "../../components/form/TempSaveButton";
 import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
-import Container from "../../components/@common/Container/Container";
+import {
+  CONFIRM_MESSAGE,
+  ERROR_MESSAGE,
+  SUCCESS_MESSAGE,
+} from "../../constants/messages";
+import PATH, { PARAM } from "../../constants/path";
+import useForm from "../../hooks/useForm";
+import useTokenContext from "../../hooks/useTokenContext";
+import FormProvider from "../../provider/FormProvider";
 import { formatDateTime } from "../../utils/format/date";
+import { generateQuery, parseQuery } from "../../utils/route/query";
+import { validateURL } from "../../utils/validation/url";
+import styles from "./ApplicationRegister.module.css";
 
 const pathToEdit = (recruitmentId) =>
   generatePath(PATH.APPLICATION_FORM, {
@@ -46,9 +43,7 @@ const ApplicationRegister = () => {
   const { status } = useParams();
 
   const { recruitmentId } = parseQuery(location.search);
-
-  const { recruitment } = useRecruitmentContext();
-  const currentRecruitment = recruitment.findById(Number(recruitmentId));
+  const { currentRecruitment } = location.state;
 
   const [recruitmentItems, setRecruitmentItems] = useState([]);
   const [initialFormData, setInitialFormData] = useState({});
@@ -166,8 +161,8 @@ const ApplicationRegister = () => {
 
     init();
   }, [
-    recruitment,
     recruitmentId,
+    currentRecruitment,
     history,
     status,
     token,
