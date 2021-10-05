@@ -59,21 +59,21 @@ internal class UserAuthenticationServiceTest {
         }
 
         @Test
-        fun `지원자가 존재하고 인증에 성공하면 유효한 토큰을 반환한다`() {
+        fun `회원이 존재하고 인증에 성공하면 유효한 토큰을 반환한다`() {
             every { userRepository.findByEmail(any()) } answers { createUser() }
             request = RegisterUserRequest(NAME, EMAIL, PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD)
             assertThat(subject()).isEqualTo(VALID_TOKEN)
         }
 
         @Test
-        fun `지원자가 존재하지만 인증에 실패하면 예외가 발생한다`() {
+        fun `회원이 존재하지만 인증에 실패하면 예외가 발생한다`() {
             every { userRepository.findByEmail(any()) } answers { createUser() }
             request = RegisterUserRequest("가짜 이름", EMAIL, PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD)
             assertThrows<UserAuthenticationException> { subject() }
         }
 
         @Test
-        fun `지원자가 존재하지 않다면 지원자를 저장한 뒤, 유효한 토큰을 반환한다`() {
+        fun `회원이 존재하지 않다면 지원자를 저장한 뒤, 유효한 토큰을 반환한다`() {
             every { userRepository.findByEmail(any()) } answers { null }
             every { userRepository.save(any<User>()) } returns createUser()
             request = RegisterUserRequest(NAME, EMAIL, PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD)
@@ -91,21 +91,21 @@ internal class UserAuthenticationServiceTest {
         }
 
         @Test
-        fun `지원자가 존재하고 인증에 성공하면 유효한 토큰을 반환한다`() {
+        fun `회원이 존재하고 인증에 성공하면 유효한 토큰을 반환한다`() {
             every { userRepository.findByEmail(any()) } answers { createUser() }
             request = AuthenticateUserRequest(EMAIL, PASSWORD)
             assertThat(subject()).isEqualTo(VALID_TOKEN)
         }
 
         @Test
-        fun `지원자가 존재하지만 인증에 실패하면 예외가 발생한다`() {
+        fun `회원이 존재하지만 인증에 실패하면 예외가 발생한다`() {
             every { userRepository.findByEmail(any()) } answers { createUser() }
             request = AuthenticateUserRequest(EMAIL, WRONG_PASSWORD)
             assertThrows<UserAuthenticationException> { subject() }
         }
 
         @Test
-        fun `지원자가 존재하지 않다면 예외가 발생한다`() {
+        fun `회원이 존재하지 않다면 예외가 발생한다`() {
             every { userRepository.findByEmail(any()) } answers { null }
             request = AuthenticateUserRequest(EMAIL, PASSWORD)
             assertThrows<UserAuthenticationException> { subject() }
@@ -118,7 +118,7 @@ internal class UserAuthenticationServiceTest {
         private val authenticationCode = AuthenticationCode("test@email.com")
 
         @Test
-        fun `인증 코드가 일치한다면 인증된 사용자로 변경한다`() {
+        fun `인증 코드가 일치한다면 인증된 회원으로 변경한다`() {
             every { authenticationCodeRepository.getLastByEmail(any()) } returns authenticationCode
             userAuthenticationService.authenticateEmail(authenticationCode.email, authenticationCode.code)
             assertThat(authenticationCode.authenticated).isTrue()

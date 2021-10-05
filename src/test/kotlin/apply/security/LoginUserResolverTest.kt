@@ -53,7 +53,7 @@ internal class LoginUserResolverTest {
     }
 
     @Test
-    fun `요청의 Authorization 헤더로 저장된 지원자를 불러온다`() {
+    fun `요청의 Authorization 헤더로 저장된 회원을 불러온다`() {
         every { nativeWebRequest.getHeader(AUTHORIZATION) } returns "Bearer valid_token"
         every { jwtTokenProvider.isValidToken("valid_token") } returns true
         every { jwtTokenProvider.getSubject("valid_token") } returns "user_email@email.com"

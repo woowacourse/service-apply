@@ -67,7 +67,7 @@ internal class UserRestControllerTest : RestControllerTest() {
     private lateinit var jwtTokenProvider: JwtTokenProvider
 
     private val userRequest = RegisterUserRequest(
-        name = "지원자",
+        name = "회원",
         email = "test@email.com",
         phoneNumber = "010-0000-0000",
         gender = Gender.MALE,
@@ -108,7 +108,7 @@ internal class UserRestControllerTest : RestControllerTest() {
     )
 
     @Test
-    fun `유효한 지원자 생성 및 검증 요청에 대하여 응답으로 토큰이 반환된다`() {
+    fun `유효한 회원 생성 및 검증 요청에 대하여 응답으로 토큰이 반환된다`() {
         every { userAuthenticationService.generateToken(userRequest) } returns VALID_TOKEN
         every { mailService.sendAuthenticationCodeMail(any(), any()) } just Runs
         every { userService.getByEmail(userRequest.email) } returns userRequest.toEntity()
@@ -123,7 +123,7 @@ internal class UserRestControllerTest : RestControllerTest() {
     }
 
     @Test
-    fun `기존 지원자 정보와 일치하지 않는 지원자 생성 및 검증 요청에 응답으로 Unauthorized를 반환한다`() {
+    fun `기존 회원 정보와 일치하지 않는 회원 생성 및 검증 요청에 응답으로 Unauthorized를 반환한다`() {
         every {
             userAuthenticationService.generateToken(invalidUserRequest)
         } throws UserAuthenticationException()
@@ -133,12 +133,12 @@ internal class UserRestControllerTest : RestControllerTest() {
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isUnauthorized }
-            content { json(objectMapper.writeValueAsString(ApiResponse.error("요청 정보가 기존 지원자 정보와 일치하지 않습니다"))) }
+            content { json(objectMapper.writeValueAsString(ApiResponse.error("요청 정보가 기존 회원 정보와 일치하지 않습니다"))) }
         }
     }
 
     @Test
-    fun `올바른 지원자 로그인 요청에 응답으로 Token을 반환한다`() {
+    fun `올바른 회원 로그인 요청에 응답으로 Token을 반환한다`() {
         every {
             userAuthenticationService.generateTokenByLogin(userLoginRequest)
         } returns VALID_TOKEN
@@ -153,7 +153,7 @@ internal class UserRestControllerTest : RestControllerTest() {
     }
 
     @Test
-    fun `잘못된 지원자 로그인 요청에 응답으로 Unauthorized와 메시지를 반환한다`() {
+    fun `잘못된 회원 로그인 요청에 응답으로 Unauthorized와 메시지를 반환한다`() {
         every {
             userAuthenticationService.generateTokenByLogin(invalidUserLoginRequest)
         } throws UserAuthenticationException()
@@ -163,7 +163,7 @@ internal class UserRestControllerTest : RestControllerTest() {
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isUnauthorized }
-            content { json(objectMapper.writeValueAsString(ApiResponse.error("요청 정보가 기존 지원자 정보와 일치하지 않습니다"))) }
+            content { json(objectMapper.writeValueAsString(ApiResponse.error("요청 정보가 기존 회원 정보와 일치하지 않습니다"))) }
         }
     }
 
@@ -261,7 +261,7 @@ internal class UserRestControllerTest : RestControllerTest() {
     }
 
     @Test
-    fun `키워드(이름 or 이메일)로 지원자들을 조회한다`() {
+    fun `키워드(이름 or 이메일)로 회원들을 조회한다`() {
         every { userService.findAllByKeyword(userKeyword) } returns userResponses
 
         mockMvc.get(

@@ -44,29 +44,29 @@ internal class UserRepositoryTest(private val userRepository: UserRepository) {
 
     @ParameterizedTest
     @CsvSource("홍,3", "a@,1", "'',3", "4,0")
-    fun `이름 또는 이메일에 검색 키워드가 포함되는 지원자들을 모두 조회한다`(keyword: String, expectedSize: Int) {
+    fun `이름 또는 이메일에 검색 키워드가 포함되는 회원들을 모두 조회한다`(keyword: String, expectedSize: Int) {
         val result = userRepository.findAllByKeyword(keyword)
         assertThat(result).hasSize(expectedSize)
     }
 
     @Test
-    fun `이메일이 일치하는 지원자를 조회한다`() {
+    fun `이메일이 일치하는 회원을 조회한다`() {
         assertThat(userRepository.findByEmail("b@email.com")!!.name).isEqualTo("홍길동2")
     }
 
     @Test
-    fun `이메일이 일치하는 지원자가 존재하지 않을 때, null을 반환한다`() {
+    fun `이메일이 일치하는 회원이 존재하지 않을 때, null을 반환한다`() {
         assertThat(userRepository.findByEmail("notexist@email.com")).isNull()
     }
 
     @Test
-    fun `이메일이 일치하는 지원자들을 전부 조회한다`() {
+    fun `이메일이 일치하는 회원들을 전부 조회한다`() {
         val emails = listOf("b@email.com", "c@email.com")
         assertThat(userRepository.findAllByEmailIn(emails)).hasSize(2)
     }
 
     @Test
-    fun `이메일이 일치하는 지원자 있는지 확인한다`() {
+    fun `이메일이 일치하는 회원이 있는지 확인한다`() {
         assertAll(
             { assertThat(userRepository.existsByEmail("a@email.com")).isTrue() },
             { assertThat(userRepository.existsByEmail("non-exists@email.com")).isFalse() }
