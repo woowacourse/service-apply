@@ -13,14 +13,20 @@ Default.args = {
   children: "버튼",
 };
 
-export const Disabled = Template.bind({});
-Disabled.args = {
+export const Outlined = Template.bind({});
+Outlined.args = {
   children: "버튼",
-  disabled: true,
+  variant: "outlined",
 };
 
 export const Cancel = Template.bind({});
 Cancel.args = {
   children: "취소",
   cancel: true,
+};
+
+export const Disabled = Template.bind({});
+Disabled.args = {
+  children: "버튼",
+  disabled: true,
 };

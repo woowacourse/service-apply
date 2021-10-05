@@ -1,7 +1,6 @@
 import useFormContext from "../../../hooks/useFormContext";
 import { CONFIRM_MESSAGE } from "../../../constants/messages";
 import Button from "../../@common/Button/Button";
-import styles from "./ResetButton.module.css";
 
 const ResetButton = () => {
   const { reset } = useFormContext();
@@ -13,11 +12,7 @@ const ResetButton = () => {
   };
 
   return (
-    <Button
-      type="button"
-      onClick={handleClick}
-      className={styles["reset-button"]}
-    >
+    <Button type="reset" variant="outlined" onClick={handleClick}>
       초기화
     </Button>
   );
