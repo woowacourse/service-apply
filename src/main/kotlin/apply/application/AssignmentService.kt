@@ -44,7 +44,7 @@ class AssignmentService(
     }
 
     private fun findEvaluationTargetOf(evaluationId: Long, applicantId: Long): EvaluationTarget {
-        return evaluationTargetRepository.findByEvaluationIdAndApplicantId(evaluationId, applicantId)
+        return evaluationTargetRepository.findByEvaluationIdAndUserId(evaluationId, applicantId)
             ?: throw IllegalArgumentException("평가 대상자가 아닙니다.")
     }
 }

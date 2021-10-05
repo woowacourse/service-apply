@@ -2,8 +2,8 @@ package apply.ui.api
 
 import apply.application.AssignmentService
 import apply.application.CreateAssignmentRequest
-import apply.domain.applicant.Applicant
-import apply.security.LoginApplicant
+import apply.domain.user.User
+import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -22,7 +22,7 @@ class AssignmentRestController(
         @PathVariable recruitmentId: Long,
         @PathVariable missionId: Long,
         @RequestBody @Valid request: CreateAssignmentRequest,
-        @LoginApplicant applicant: Applicant
+        @LoginUser applicant: User
     ): ResponseEntity<Unit> {
         assignmentService.create(missionId, applicant.id, request)
         return ResponseEntity.ok().build()

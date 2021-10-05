@@ -42,7 +42,7 @@ class AssignmentServiceTest {
         every { assignmentRepository.existsByMissionIdAndApplicantId(any(), any()) } returns false
         every { missionRepository.getById(any()) } returns createMission()
         every {
-            evaluationTargetRepository.findByEvaluationIdAndApplicantId(any(), any())
+            evaluationTargetRepository.findByEvaluationIdAndUserId(any(), any())
         } returns createEvaluationTarget()
         every { assignmentRepository.save(any()) } returns createAssignment()
 
@@ -56,7 +56,7 @@ class AssignmentServiceTest {
             startDateTime = LocalDateTime.now().minusDays(2), endDateTime = LocalDateTime.now().minusDays(1)
         )
         every {
-            evaluationTargetRepository.findByEvaluationIdAndApplicantId(any(), any())
+            evaluationTargetRepository.findByEvaluationIdAndUserId(any(), any())
         } returns createEvaluationTarget()
         every { assignmentRepository.save(any()) } returns createAssignment()
 
@@ -68,7 +68,7 @@ class AssignmentServiceTest {
         every { assignmentRepository.existsByMissionIdAndApplicantId(any(), any()) } returns true
         every { missionRepository.getById(any()) } returns createMission()
         every {
-            evaluationTargetRepository.findByEvaluationIdAndApplicantId(any(), any())
+            evaluationTargetRepository.findByEvaluationIdAndUserId(any(), any())
         } returns createEvaluationTarget()
         every { assignmentRepository.save(any()) } returns createAssignment()
 
@@ -79,7 +79,7 @@ class AssignmentServiceTest {
     fun `평가 대상자가 아닌 경우 과제를 제출할 수 없다`() {
         every { assignmentRepository.existsByMissionIdAndApplicantId(any(), any()) } returns false
         every { missionRepository.getById(any()) } returns createMission()
-        every { evaluationTargetRepository.findByEvaluationIdAndApplicantId(any(), any()) } returns null
+        every { evaluationTargetRepository.findByEvaluationIdAndUserId(any(), any()) } returns null
         every { assignmentRepository.save(any()) } returns createAssignment()
 
         assertThrows<IllegalArgumentException> { assignmentService.create(1L, 1L, createAssignmentRequest()) }
@@ -91,7 +91,7 @@ class AssignmentServiceTest {
 
         every { assignmentRepository.existsByMissionIdAndApplicantId(any(), any()) } returns false
         every { missionRepository.getById(any()) } returns createMission()
-        every { evaluationTargetRepository.findByEvaluationIdAndApplicantId(any(), any()) } returns evaluationTarget
+        every { evaluationTargetRepository.findByEvaluationIdAndUserId(any(), any()) } returns evaluationTarget
         every { assignmentRepository.save(any()) } returns createAssignment()
 
         assignmentService.create(1L, 1L, createAssignmentRequest())

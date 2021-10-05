@@ -1,9 +1,9 @@
 package apply.ui.api
 
 import apply.application.AssignmentService
-import apply.createApplicant
 import apply.createAssignmentRequest
-import apply.security.LoginApplicantResolver
+import apply.createUser
+import apply.security.LoginUserResolver
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
 import io.mockk.every
@@ -24,7 +24,7 @@ internal class AssignmentRestControllerTest : RestControllerTest() {
     private lateinit var assignmentService: AssignmentService
 
     @MockkBean
-    private lateinit var loginApplicantResolver: LoginApplicantResolver
+    private lateinit var loginUserResolver: LoginUserResolver
 
     private val recruitmentId = 1L
     private val evaluationId = 1L
@@ -32,13 +32,13 @@ internal class AssignmentRestControllerTest : RestControllerTest() {
 
     @Test
     fun `과제물을 제출한다`() {
-        val loginApplicant = createApplicant()
-        every { loginApplicantResolver.supportsParameter(any()) } returns true
-        every { loginApplicantResolver.resolveArgument(any(), any(), any(), any()) } returns loginApplicant
+        val loginApplicant = createUser()
+        every { loginUserResolver.supportsParameter(any()) } returns true
+        every { loginUserResolver.resolveArgument(any(), any(), any(), any()) } returns loginApplicant
         every { assignmentService.create(missionId, loginApplicant.id, createAssignmentRequest()) } just Runs
 
         mockMvc.post(
-            "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/missions/{missionId}/assignments",
+            "/api/recruitments/{recruitmentId}/missions/{missionId}/assignments",
             recruitmentId,
             evaluationId,
             missionId
