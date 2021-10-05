@@ -13,8 +13,6 @@ import useForm from "../../hooks/useForm";
 import useTokenContext from "../../hooks/useTokenContext";
 import FormProvider from "../../provider/FormProvider";
 import { generateQuery } from "../../utils/route/query";
-import { validateEmail } from "../../utils/validation/email";
-import { validatePassword } from "../../utils/validation/password";
 import styles from "./Login.module.css";
 
 const Login = () => {
@@ -54,10 +52,6 @@ const Login = () => {
   };
 
   const { handleSubmit, ...methods } = useForm({
-    validators: {
-      email: validateEmail,
-      password: validatePassword,
-    },
     submit,
   });
 
