@@ -20,7 +20,9 @@ const MessageTextInput = ({
   return (
     <div className={className}>
       <div className={styles["text-field"]}>
-        <Label required={required}>{label}</Label>
+        <Label className={styles.label} required={required}>
+          {label}
+        </Label>
         {description && (
           <Description className={styles.description}>
             {description}

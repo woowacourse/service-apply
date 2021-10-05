@@ -4,6 +4,10 @@
   margin-bottom: 0.25rem;
 }
 
+.label {
+  margin-bottom: 0.375rem;
+}
+
 .length-limit {
   align-self: flex-end;
   color: var(--gray-007);
