@@ -1,8 +1,8 @@
 package apply.domain.applicationform
 
 import apply.createApplicationForm
-import apply.FAIL
-import apply.PASS
+import apply.fail
+import apply.pass
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
@@ -13,14 +13,14 @@ internal class ApplicationFormTest {
     @Test
     fun `지원서가 지원 정책을 충족하는 경우 생성한다`() {
         assertDoesNotThrow {
-            ApplicationForm(1L, 1L, PASS)
+            ApplicationForm(1L, 1L, pass)
         }
     }
 
     @Test
     fun `지원서가 지원 정책에 맞지 않으면 생성할 수 없다`() {
         assertThrows<DuplicateApplicationException> {
-            ApplicationForm(1L, 1L, FAIL)
+            ApplicationForm(1L, 1L, fail)
         }
     }
 
@@ -45,7 +45,7 @@ internal class ApplicationFormTest {
 
     @Test
     fun `지원서를 제출한다`() {
-        val applicationForm = createApplicationForm().apply { submit(PASS) }
+        val applicationForm = createApplicationForm().apply { submit(pass) }
 
         assertThat(applicationForm.submitted).isTrue()
         assertThat(applicationForm.submittedDateTime).isNotNull()
@@ -53,7 +53,7 @@ internal class ApplicationFormTest {
 
     @Test
     fun `제출한 지원서를 수정할 수 없다`() {
-        val applicationForm = createApplicationForm().apply { submit(PASS) }
+        val applicationForm = createApplicationForm().apply { submit(pass) }
 
         assertThrows<IllegalStateException> {
             applicationForm.update(

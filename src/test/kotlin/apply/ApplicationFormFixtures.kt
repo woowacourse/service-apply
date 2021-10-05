@@ -8,8 +8,8 @@ import apply.domain.applicationform.ApplicationValidator
 import apply.domain.applicationform.DuplicateApplicationException
 import java.time.LocalDateTime
 
-val PASS: ApplicationValidator = ApplicationValidator { _, _ -> }
-val FAIL: ApplicationValidator = ApplicationValidator { _, _ -> throw DuplicateApplicationException() }
+val pass: ApplicationValidator = ApplicationValidator { _, _ -> }
+val fail: ApplicationValidator = ApplicationValidator { _, _ -> throw DuplicateApplicationException() }
 
 fun createApplicationForm(
     userId: Long = 1L,

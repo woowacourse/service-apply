@@ -13,7 +13,7 @@ import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitmentitem.RecruitmentItem
 import apply.domain.recruitmentitem.RecruitmentItemRepository
-import apply.PASS
+import apply.pass
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
@@ -74,7 +74,7 @@ class ApplicationFormServiceTest {
 
         applicationForm2 = createApplicationForm(userId = 2L)
 
-        applicationFormSubmitted = createApplicationForm(userId = 3L).apply { submit(PASS) }
+        applicationFormSubmitted = createApplicationForm(userId = 3L).apply { submit(pass) }
 
         applicationForms = createApplicationForms()
 
