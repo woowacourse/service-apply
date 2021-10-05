@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React, { useEffect } from "react";
-import classNames from "../../../../node_modules/classnames/index";
+import classNames from "classnames";
 import useFormContext from "../../../hooks/useFormContext";
 import Label from "../../@common/Label/Label";
 import Radio from "../../@common/Radio/Radio";
