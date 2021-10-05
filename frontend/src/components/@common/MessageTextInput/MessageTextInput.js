@@ -1,7 +1,8 @@
+import classNames from "classnames";
 import PropTypes from "prop-types";
 import Description from "../Description/Description";
-import TextInput from "../TextInput/TextInput";
 import Label from "../Label/Label";
+import TextInput from "../TextInput/TextInput";
 import styles from "./MessageTextInput.module.css";
 
 const MessageTextInput = ({
@@ -15,10 +16,11 @@ const MessageTextInput = ({
   required,
   className,
   errorMessage,
+  rightButton,
   ...props
 }) => {
   return (
-    <div className={className}>
+    <div className={classNames(styles.box, className)}>
       <div className={styles["text-field"]}>
         <Label className={styles.label} required={required}>
           {label}
@@ -28,16 +30,19 @@ const MessageTextInput = ({
             {description}
           </Description>
         )}
-        <TextInput
-          required={required}
-          value={value}
-          name={name}
-          maxLength={maxLength}
-          onChange={onChange}
-          {...props}
-        />
+        <div class={styles["input-box"]}>
+          <TextInput
+            required={required}
+            value={value}
+            name={name}
+            maxLength={maxLength}
+            onChange={onChange}
+            {...props}
+          />
+          {rightButton}
+        </div>
       </div>
-      <p className={styles["rule-field"]}>{errorMessage}</p>
+      {errorMessage && <p className={styles["rule-field"]}>{errorMessage}</p>}
     </div>
   );
 };
@@ -50,6 +55,7 @@ MessageTextInput.propTypes = {
   description: PropTypes.node,
   maxLength: PropTypes.number,
   errorMessage: PropTypes.string,
+  rightButton: PropTypes.node,
 };
 
 MessageTextInput.defaultProps = {

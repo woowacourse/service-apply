@@ -1,7 +1,11 @@
+.box {
+  position: relative;
+}
+
 .text-field {
   display: flex;
   flex-direction: column;
-  margin-bottom: 0.25rem;
+  margin-bottom: 1rem;
 }
 
 .label {
@@ -15,12 +19,24 @@
 }
 
 .rule-field {
+  position: absolute;
+  bottom: 0;
+  left: 0;
   margin-left: 0.5rem;
   height: 0.75rem;
   font-size: 0.75rem;
-  color: #ff0000;
+  color: var(--red);
 }
 
 .description {
   margin-bottom: 1.125rem;
+}
+
+.input-box {
+  display: flex;
+  height: 2.5rem;
+}
+
+.input-box > input {
+  flex: 1;
 }

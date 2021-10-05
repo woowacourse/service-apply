@@ -11,6 +11,7 @@ const FormInput = ({
   name,
   maxLength,
   required,
+  rightButton,
   ...props
 }) => {
   const { value, errorMessage, handleChange, register, unRegister } =
@@ -35,6 +36,7 @@ const FormInput = ({
       name={name}
       maxLength={maxLength}
       required={required}
+      rightButton={rightButton}
       className={styles["form-input"]}
       {...props}
     />
@@ -49,6 +51,7 @@ FormInput.propTypes = {
   description: PropTypes.node,
   maxLength: PropTypes.number,
   errorMessage: PropTypes.string,
+  rightButton: PropTypes.node,
 };
 
 FormInput.defaultProps = {
