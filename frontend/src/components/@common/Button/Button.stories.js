@@ -13,8 +13,20 @@ Default.args = {
   children: "버튼",
 };
 
+export const Outlined = Template.bind({});
+Outlined.args = {
+  children: "버튼",
+  variant: "outlined",
+};
+
 export const Cancel = Template.bind({});
 Cancel.args = {
   children: "버튼",
   cancel: true,
+};
+
+export const Disabled = Template.bind({});
+Disabled.args = {
+  children: "버튼",
+  disabled: true,
 };

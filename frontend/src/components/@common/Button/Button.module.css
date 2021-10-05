@@ -1,6 +1,4 @@
-.button {
-  background: var(--black);
-  color: var(--white);
+button {
   border-radius: 0.25rem;
   padding: 0.5rem 1.25rem;
   -webkit-appearance: none;
@@ -9,11 +7,27 @@
   user-select: none;
 }
 
-.button.cancel {
-  background: var(--gray-007);
+.contained {
+  background-color: var(--black);
+  color: var(--white);
 }
 
-.button:disabled {
+.outlined {
+  color: var(--black);
+  background-color: var(--white);
+  border: 1px solid var(--black);
+}
+
+.outlined:hover {
+  background-color: var(--gray-001);
+}
+
+.cancel {
+  background: var(--gray-008);
+}
+
+button:disabled {
   cursor: default;
   background: var(--gray-004);
+  cursor: not-allowed;
 }

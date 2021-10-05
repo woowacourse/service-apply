@@ -1,12 +1,12 @@
-import React from "react";
-import PropTypes from "prop-types";
 import classNames from "classnames";
+import PropTypes from "prop-types";
+import React from "react";
 import styles from "./Button.module.css";
 
-const Button = ({ children, type, cancel, className, ...props }) => {
+const Button = ({ children, type, variant, cancel, className, ...props }) => {
   return (
     <button
-      className={classNames([styles.button], className, {
+      className={classNames(styles[variant], className, {
         [styles.cancel]: cancel,
       })}
       type={type}
@@ -20,11 +20,13 @@ const Button = ({ children, type, cancel, className, ...props }) => {
 Button.propTypes = {
   children: PropTypes.node.isRequired,
   type: PropTypes.oneOf(["button", "submit", "reset"]),
+  variant: PropTypes.oneOf(["contained", "outlined"]),
   cancel: PropTypes.bool,
   className: PropTypes.string,
 };
 
 Button.defaultProps = {
+  variant: "contained",
   cancel: false,
 };
 
