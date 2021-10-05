@@ -19,7 +19,7 @@ class ExcelController(
     private val recruitmentService: RecruitmentService,
     private val evaluationService: EvaluationService
 ) {
-    @GetMapping("/applicant/excel")
+    @GetMapping("/applicants/excel")
     fun createApplicantExcel(@PathVariable recruitmentId: Long): ResponseEntity<InputStreamResource> {
         val excel = excelService.createApplicantExcel(recruitmentId)
         val recruitment = recruitmentService.getById(recruitmentId)
