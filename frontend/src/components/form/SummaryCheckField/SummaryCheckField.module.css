@@ -1,7 +1,8 @@
-.container {
+.box {
   display: flex;
   flex-direction: column;
-  margin: 0.625rem;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
 }
 
 .summary {
