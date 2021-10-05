@@ -23,8 +23,8 @@ const val EVALUATION_ITEM_TITLE = "평가 항목 제목"
 const val EVALUATION_ITEM_DESCRIPTION = "평가 항목 설명"
 const val EVALUATION_ITEM_POSITION = 1
 
-const val NOTE = "평가 특이 사항"
-const val SCORE = 3
+private const val NOTE = "평가 특이 사항"
+private const val SCORE = 3
 private const val MAXIMUM_SCORE = 3
 
 fun createEvaluation(

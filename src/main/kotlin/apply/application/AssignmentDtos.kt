@@ -1,16 +1,17 @@
 package apply.application
 
-import javax.validation.constraints.NotNull
+import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Size
 
 class AssignmentDtos
 
 data class CreateAssignmentRequest(
-    @field:NotNull
-    val gitAccount: String,
+    @field:NotBlank
+    val githubUsername: String,
 
-    @field:Size(min = 0, max = 255)
-    val url: String = "",
+    @field:Size(min = 1, max = 255)
+    val pullRequestUrl: String = "",
 
-    var impression: String = ""
+    @field:NotBlank
+    var note: String = ""
 )

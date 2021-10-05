@@ -21,13 +21,13 @@ class Assignment(
     val missionId: Long,
 
     @Column(nullable = false)
-    val gitAccount: String,
+    val githubUsername: String,
 
     @Column(nullable = false)
-    val url: String,
+    val pullRequestUrl: String,
 
     @Lob
-    val impression: String,
+    val note: String,
 
     id: Long = 0L
 ) : BaseEntity(id)

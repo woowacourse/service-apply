@@ -36,9 +36,9 @@ class AssignmentService(
             Assignment(
                 applicantId,
                 missionId,
-                request.gitAccount,
-                request.url,
-                request.impression
+                request.githubUsername,
+                request.pullRequestUrl,
+                request.note
             )
         )
     }
