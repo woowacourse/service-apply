@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
 import Description from "../Description/Description";
 import TextInput from "../TextInput/TextInput";
-import styles from "./MessageTextInput.module.css";
 import Label from "../Label/Label";
+import styles from "./MessageTextInput.module.css";
 
 const MessageTextInput = ({
   label,
