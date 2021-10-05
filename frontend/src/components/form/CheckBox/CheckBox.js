@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
-import Label from "../Label/Label";
+import Label from "../../@common/Label/Label";
 import styles from "./CheckBox.module.css";
 import useFormContext from "../../../hooks/useFormContext";
 

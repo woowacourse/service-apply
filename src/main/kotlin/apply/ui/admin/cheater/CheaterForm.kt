@@ -9,7 +9,7 @@ import com.vaadin.flow.component.select.Select
 import com.vaadin.flow.component.textfield.TextArea
 import support.views.BindingFormLayout
 import support.views.createItemSelect
-import support.views.createSearchBar
+import support.views.createSearchBox
 
 class CheaterForm() : BindingFormLayout<CheaterData>(CheaterData::class) {
     private val users: Select<UserResponse> = createItemSelect<UserResponse>().apply {
@@ -26,7 +26,7 @@ class CheaterForm() : BindingFormLayout<CheaterData>(CheaterData::class) {
     }
 
     private fun createUserSearchBar(listener: (String) -> List<UserResponse>): Component {
-        val searchBar = createSearchBar("회원 검색") {
+        val searchBar = createSearchBox("회원 검색") {
             users.setItems(listener(it))
         }
         return HorizontalLayout(searchBar, users).apply {

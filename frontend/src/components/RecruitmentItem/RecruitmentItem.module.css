@@ -1,0 +1,28 @@
+.content-wrapper {
+  width: 100%;
+  max-width: var(--pc-main-width);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.5rem 1rem;
+  background-color: var(--white);
+  border: 1px solid var(--gray-003);
+}
+
+.text-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.date {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--gray-008);
+}

@@ -14,6 +14,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.data.renderer.ComponentRenderer
 import com.vaadin.flow.data.renderer.Renderer
 import com.vaadin.flow.router.Route
+import support.views.NO_NAME
 import support.views.addSortableColumn
 import support.views.addSortableDateTimeColumn
 import support.views.createDeleteButtonWithDialog
@@ -50,7 +51,7 @@ class CheatersView(
 
     private fun createCheaterGrid(): Grid<CheaterResponse> {
         return Grid<CheaterResponse>(10).apply {
-            addSortableColumn("이름") { it.name ?: "(이름 없음)" }
+            addSortableColumn("이름") { it.name ?: NO_NAME }
             addSortableColumn("이메일") { it.email }
             addSortableDateTimeColumn("등록일", CheaterResponse::createdDateTime)
             addSortableColumn("설명") { it.description }

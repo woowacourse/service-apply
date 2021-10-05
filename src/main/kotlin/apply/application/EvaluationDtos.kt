@@ -150,8 +150,11 @@ data class EvaluationTargetData(
 )
 
 data class MailTargetResponse(
+    val name: String,
     val email: String
-)
+) {
+    constructor(userResponse: UserResponse) : this(userResponse.name, userResponse.email)
+}
 
 data class EvaluationItemScoreData(
     @field:NotNull

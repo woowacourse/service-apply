@@ -42,7 +42,7 @@ import support.views.createCsvUpload
 import support.views.createNormalButton
 import support.views.createPrimaryButton
 import support.views.createPrimarySmallButton
-import support.views.createSearchBar
+import support.views.createSearchBox
 import support.views.createSuccessButton
 import support.views.downloadFile
 
@@ -78,7 +78,7 @@ class SelectionView(
         val tabsToGrids: Map<Tab, Component> = mapTabAndGrid(keyword)
         val (tabs, grids) = createTabComponents(tabsToGrids)
         val menu = HorizontalLayout(
-            createSearchBar {
+            createSearchBox {
                 removeAll()
                 add(
                     createTitle(),
