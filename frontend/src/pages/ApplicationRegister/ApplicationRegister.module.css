@@ -13,18 +13,18 @@
   color: var(--blue);
 }
 
-.description_url {
+.description-url {
   font-size: 16px;
   color: var(--gray-009);
 }
 
-.description_url-small {
+.description-url-small {
   margin-top: 10px;
   font-size: 14px;
   color: var(--gray-008);
 }
 
-.description_agree {
+.description-agree {
   color: inherit;
   margin-top: 12px;
   margin-bottom: 17px;

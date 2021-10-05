@@ -228,10 +228,10 @@ const ApplicationRegister = () => {
               type="url"
               initialValue={initialFormData.referenceUrl}
               description={
-                <div className={styles["description_url"]}>
+                <div className={styles["description-url"]}>
                   자신을 드러낼 수 있는 개인 블로그, GitHub, 포트폴리오 주소
                   등이 있다면 입력해 주세요.
-                  <div className={styles["description_url-small"]}>
+                  <div className={styles["description-url-small"]}>
                     여러 개가 있는 경우 Notion, Google 문서 등을 사용하여 하나로
                     묶어 주세요.
                   </div>
@@ -242,7 +242,7 @@ const ApplicationRegister = () => {
             />
             <div>
               <Label required>지원서 작성 내용 사실 확인</Label>
-              <Description className={styles.description_agree}>
+              <Description className={styles["description-agree"]}>
                 기재한 사실 중 허위사실이 발견되는 즉시, 교육 대상자에서
                 제외되며 향후 지원도 불가능합니다.
               </Description>
