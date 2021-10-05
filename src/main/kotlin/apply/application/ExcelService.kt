@@ -18,12 +18,12 @@ class ExcelService(
     private val evaluationItemRepository: EvaluationItemRepository,
     private val excelGenerator: ExcelGenerator
 ) {
-    fun createUserExcel(recruitmentId: Long): ByteArrayInputStream {
-        val users = userService.findAllByRecruitmentIdAndKeyword(recruitmentId)
+    fun createApplicantExcel(recruitmentId: Long): ByteArrayInputStream {
+        val applicants = userService.findAllByRecruitmentIdAndKeyword(recruitmentId)
         val titles =
             recruitmentItemRepository.findByRecruitmentIdOrderByPosition(recruitmentId).map { it.title }.toTypedArray()
         val headerTitles = arrayOf("이름", "이메일", "전화번호", "성별", "생년월일", "지원 일시", "부정 행위자", "포트폴리오 URL", *titles)
-        val excelRows = users.map {
+        val excelRows = applicants.map {
             ExcelRow(
                 it.name,
                 it.email,

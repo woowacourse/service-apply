@@ -8,7 +8,7 @@ import apply.createRecruitment
 import apply.createRecruitmentItem
 import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormRepository
-import apply.domain.applicationform.UserValidator
+import apply.domain.applicationform.ApplicationValidator
 import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitmentitem.RecruitmentItem
@@ -41,7 +41,7 @@ class ApplicationFormServiceTest {
     private lateinit var recruitmentItemRepository: RecruitmentItemRepository
 
     @MockK
-    private lateinit var userValidator: UserValidator
+    private lateinit var applicationValidator: ApplicationValidator
 
     private lateinit var applicationFormService: ApplicationFormService
 
@@ -67,7 +67,7 @@ class ApplicationFormServiceTest {
             applicationFormRepository,
             recruitmentRepository,
             recruitmentItemRepository,
-            userValidator
+            applicationValidator
         )
 
         applicationForm1 = createApplicationForm()
@@ -174,9 +174,25 @@ class ApplicationFormServiceTest {
         every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
         every { applicationFormRepository.existsByRecruitmentIdAndUserId(any(), any()) } returns false
         every { applicationFormRepository.save(any<ApplicationForm>()) } returns mockk()
-        every { userValidator.validate(any(), any()) } just Runs
+        every { applicationValidator.validate(any(), any()) } just Runs
 
         assertDoesNotThrow { applicationFormService.create(userId, createApplicationFormRequest) }
+    }
+
+    @Test
+    fun `이미 작성한 지원서가 있는 경우 지원할 수 없다`() {
+        every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
+        every { applicationFormRepository.existsByRecruitmentIdAndUserId(any(), any()) } returns true
+        every { applicationFormRepository.save(any<ApplicationForm>()) } returns mockk()
+        every { applicationValidator.validate(any(), any()) } just Runs
+
+        val message = assertThrows<IllegalStateException> {
+            applicationFormService.create(
+                userId,
+                createApplicationFormRequest
+            )
+        }.message
+        assertThat(message).isEqualTo("이미 작성한 지원서가 있습니다.")
     }
 
     @Test

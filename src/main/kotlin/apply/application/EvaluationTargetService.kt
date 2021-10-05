@@ -59,24 +59,24 @@ class EvaluationTargetService(
 
     fun load(evaluationId: Long) {
         val evaluation = evaluationRepository.getById(evaluationId)
-        val allUserIds = findUserIds(evaluation)
-        val loadedUserIds = findUserIdsFromEvaluation(evaluationId)
-        val allCheaterUserIds = findCheaterUserIds(allUserIds)
+        val allApplicantIds = findApplicantIds(evaluation)
+        val loadedApplicantIds = findUserIdsFromEvaluation(evaluationId)
+        val allCheaterApplicantIds = findCheaterUserIds(allApplicantIds)
 
-        val removedUserIds = loadedUserIds - allUserIds
+        val removedUserIds = loadedApplicantIds - allApplicantIds
         evaluationTargetRepository.deleteByEvaluationIdAndUserIdIn(evaluationId, removedUserIds)
 
-        val loadedCheaterUserIds = loadedUserIds intersect allCheaterUserIds
+        val loadedCheaterUserIds = loadedApplicantIds intersect allCheaterApplicantIds
         updateFail(loadedCheaterUserIds, evaluation)
 
-        val newUserIds = allUserIds - (loadedUserIds + allCheaterUserIds)
+        val newUserIds = allApplicantIds - (loadedApplicantIds + allCheaterApplicantIds)
         save(newUserIds, evaluation, EvaluationStatus.WAITING)
 
-        val newCheaterUserIds = allCheaterUserIds - loadedCheaterUserIds
+        val newCheaterUserIds = allCheaterApplicantIds - loadedCheaterUserIds
         save(newCheaterUserIds, evaluation, EvaluationStatus.FAIL)
     }
 
-    private fun findUserIds(evaluation: Evaluation): Set<Long> {
+    private fun findApplicantIds(evaluation: Evaluation): Set<Long> {
         return if (evaluation.hasBeforeEvaluation()) {
             findPassedUserIdsFromBeforeEvaluation(evaluation)
         } else {

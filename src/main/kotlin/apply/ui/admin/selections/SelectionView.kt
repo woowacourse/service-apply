@@ -234,7 +234,7 @@ class SelectionView(
     private fun createResultDownloadButton(): Button {
         return createSuccessButton("평가결과 다운로드") {
             if (isTotalUserTab(tabs.selectedTab)) {
-                val excel = excelService.createUserExcel(recruitmentId)
+                val excel = excelService.createApplicantExcel(recruitmentId)
                 downloadFile("${recruitmentService.getById(recruitmentId).title}.xlsx", excel)
             } else {
                 val evaluation = evaluations[tabs.selectedIndex - 1]

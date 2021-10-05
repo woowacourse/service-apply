@@ -4,12 +4,12 @@ import apply.application.AnswerRequest
 import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormAnswer
 import apply.domain.applicationform.ApplicationFormAnswers
-import apply.domain.applicationform.UserValidator
+import apply.domain.applicationform.ApplicationValidator
 import apply.domain.applicationform.DuplicateApplicationException
 import java.time.LocalDateTime
 
-val PASS: UserValidator = UserValidator { _, _ -> }
-val FAIL: UserValidator = UserValidator { _, _ -> throw DuplicateApplicationException() }
+val PASS: ApplicationValidator = ApplicationValidator { _, _ -> }
+val FAIL: ApplicationValidator = ApplicationValidator { _, _ -> throw DuplicateApplicationException() }
 
 fun createApplicationForm(
     userId: Long = 1L,

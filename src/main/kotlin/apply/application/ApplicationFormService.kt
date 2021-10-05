@@ -4,7 +4,7 @@ import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormAnswer
 import apply.domain.applicationform.ApplicationFormAnswers
 import apply.domain.applicationform.ApplicationFormRepository
-import apply.domain.applicationform.UserValidator
+import apply.domain.applicationform.ApplicationValidator
 import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitmentitem.RecruitmentItemRepository
@@ -18,14 +18,14 @@ class ApplicationFormService(
     private val applicationFormRepository: ApplicationFormRepository,
     private val recruitmentRepository: RecruitmentRepository,
     private val recruitmentItemRepository: RecruitmentItemRepository,
-    private val userValidator: UserValidator
+    private val applicationValidator: ApplicationValidator
 ) {
     fun create(userId: Long, request: CreateApplicationFormRequest) {
         val recruitment = findApplicableRecruitment(request.recruitmentId)
         check(!applicationFormRepository.existsByRecruitmentIdAndUserId(recruitment.id, userId)) {
             "이미 작성한 지원서가 있습니다."
         }
-        applicationFormRepository.save(ApplicationForm(userId, recruitment.id, userValidator))
+        applicationFormRepository.save(ApplicationForm(userId, recruitment.id, applicationValidator))
     }
 
     fun update(userId: Long, request: UpdateApplicationFormRequest) {
@@ -39,7 +39,7 @@ class ApplicationFormService(
         )
         applicationForm.update(request.referenceUrl, answers)
         if (request.submitted) {
-            applicationForm.submit(userValidator)
+            applicationForm.submit(applicationValidator)
         }
     }
 

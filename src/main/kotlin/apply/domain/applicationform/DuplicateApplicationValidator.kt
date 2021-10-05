@@ -5,10 +5,10 @@ import apply.domain.recruitment.getById
 import org.springframework.stereotype.Component
 
 @Component
-class DuplicateUserValidator(
+class DuplicateApplicationValidator(
     private val applicationFormRepository: ApplicationFormRepository,
     private val recruitmentRepository: RecruitmentRepository
-) : UserValidator {
+) : ApplicationValidator {
     override fun validate(userId: Long, recruitmentId: Long) {
         val appliedRecruitmentIds = applicationFormRepository.findAllByUserIdAndSubmittedTrue(userId)
             .map { it.recruitmentId }

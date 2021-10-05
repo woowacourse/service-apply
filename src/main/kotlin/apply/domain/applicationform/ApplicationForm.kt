@@ -58,9 +58,9 @@ class ApplicationForm(
     constructor(
         userId: Long,
         recruitmentId: Long,
-        userValidator: UserValidator
+        applicationValidator: ApplicationValidator
     ) : this(userId, recruitmentId) {
-        userValidator.validate(userId, recruitmentId)
+        applicationValidator.validate(userId, recruitmentId)
     }
 
     fun update(referenceUrl: String, applicationFormAnswers: ApplicationFormAnswers) {
@@ -72,8 +72,8 @@ class ApplicationForm(
         this.answers = applicationFormAnswers
     }
 
-    fun submit(userValidator: UserValidator) {
-        userValidator.validate(userId, recruitmentId)
+    fun submit(applicationValidator: ApplicationValidator) {
+        applicationValidator.validate(userId, recruitmentId)
         submitted = true
         submittedDateTime = LocalDateTime.now()
     }
