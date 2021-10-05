@@ -13,14 +13,13 @@ import org.springframework.web.bind.annotation.RestController
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/missions/{missionId}/assignments")
+@RequestMapping("/api/recruitments/{recruitmentId}/missions/{missionId}/assignments")
 class AssignmentRestController(
     private val assignmentService: AssignmentService
 ) {
     @PostMapping
     fun createAssignment(
         @PathVariable recruitmentId: Long,
-        @PathVariable evaluationId: Long,
         @PathVariable missionId: Long,
         @RequestBody @Valid request: CreateAssignmentRequest,
         @LoginApplicant applicant: Applicant
