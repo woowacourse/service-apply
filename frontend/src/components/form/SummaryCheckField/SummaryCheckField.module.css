@@ -7,16 +7,12 @@
 
 .summary {
   overflow-y: auto;
-  background: #fff;
+  background: var(--white);
   outline: none;
   margin: 0;
-  padding: 12px;
+  padding: 0.75rem;
   max-height: 140px;
-  border: 1px solid #ced6e0;
-  border-radius: 3px;
+  border: 1px solid var(--gray-006);
+  border-radius: 0.25rem;
   transition-duration: 0.5s;
-}
-
-.summary:focus {
-  border: 1px solid #1e90ff;
 }
