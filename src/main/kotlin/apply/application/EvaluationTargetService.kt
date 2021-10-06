@@ -57,26 +57,29 @@ class EvaluationTargetService(
             }
     }
 
+    /**
+     * @see [평가_대상자_불러오기](https://github.com/woowacourse/service-apply/issues/301)
+     */
     fun load(evaluationId: Long) {
         val evaluation = evaluationRepository.getById(evaluationId)
-        val allApplicantIds = findApplicantIds(evaluation)
-        val loadedApplicantIds = findUserIdsFromEvaluation(evaluationId)
-        val allCheaterApplicantIds = findCheaterUserIds(allApplicantIds)
+        val latestApplicants = findLatestApplicants(evaluation)
+        val loadedApplicants = findLoadedApplicants(evaluationId)
+        val cheaters = findCheatersIn(latestApplicants)
 
-        val removedUserIds = loadedApplicantIds - allApplicantIds
-        evaluationTargetRepository.deleteByEvaluationIdAndUserIdIn(evaluationId, removedUserIds)
+        val removedApplicants = loadedApplicants - latestApplicants
+        evaluationTargetRepository.deleteByEvaluationIdAndUserIdIn(evaluationId, removedApplicants)
 
-        val loadedCheaterUserIds = loadedApplicantIds intersect allCheaterApplicantIds
-        updateFail(loadedCheaterUserIds, evaluation)
+        val loadedCheaters = loadedApplicants intersect cheaters
+        updateFail(loadedCheaters, evaluation)
 
-        val newUserIds = allApplicantIds - (loadedApplicantIds + allCheaterApplicantIds)
-        save(newUserIds, evaluation, EvaluationStatus.WAITING)
+        val newApplicants = latestApplicants - (loadedApplicants + cheaters)
+        save(newApplicants, evaluation, EvaluationStatus.WAITING)
 
-        val newCheaterUserIds = allCheaterApplicantIds - loadedCheaterUserIds
-        save(newCheaterUserIds, evaluation, EvaluationStatus.FAIL)
+        val newCheaters = cheaters - loadedCheaters
+        save(newCheaters, evaluation, EvaluationStatus.FAIL)
     }
 
-    private fun findApplicantIds(evaluation: Evaluation): Set<Long> {
+    private fun findLatestApplicants(evaluation: Evaluation): Set<Long> {
         return if (evaluation.hasBeforeEvaluation()) {
             findPassedUserIdsFromBeforeEvaluation(evaluation)
         } else {
@@ -91,7 +94,7 @@ class EvaluationTargetService(
             .toSet()
     }
 
-    private fun findUserIdsFromEvaluation(evaluationId: Long): Set<Long> {
+    private fun findLoadedApplicants(evaluationId: Long): Set<Long> {
         return evaluationTargetRepository.findAllByEvaluationId(evaluationId)
             .map { it.userId }
             .toSet()
@@ -103,7 +106,7 @@ class EvaluationTargetService(
             .toSet()
     }
 
-    private fun findCheaterUserIds(userIds: Set<Long>): Set<Long> {
+    private fun findCheatersIn(userIds: Set<Long>): Set<Long> {
         return userRepository.findAllByEmailIn(cheaterRepository.findAll().map { it.email })
             .filter { userIds.contains(it.id) }
             .map { it.id }
