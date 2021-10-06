@@ -9,7 +9,6 @@ import io.mockk.Runs
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.just
-import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -84,8 +83,6 @@ class MissionServiceTest {
     fun `평가를 삭제한다`() {
         every { missionRepository.deleteById(any()) } just Runs
 
-        missionService.deleteById(1L)
-
-        verify { missionRepository.deleteById(any()) }
+        assertDoesNotThrow { missionService.deleteById(1L) }
     }
 }
