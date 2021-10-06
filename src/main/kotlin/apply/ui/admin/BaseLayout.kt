@@ -28,13 +28,13 @@ import com.vaadin.flow.theme.lumo.Lumo
 class BaseLayout(
     private val recruitmentService: RecruitmentService
 ) : AppLayout() {
-    private val route: Map<String, Any> = mapOf(
-        "모집 관리" to RecruitmentsView::class.java,
-        "평가 관리" to EvaluationsView::class.java,
-        "과제 관리" to "/admin/missions",
-        "선발 과정" to "/admin/selections",
-        "부정 행위자" to CheatersView::class.java,
-        "메일 발송" to MailFormView::class.java
+    private val routes: Map<String, Route> = mapOf(
+        "모집 관리" to ClassRoute(RecruitmentsView::class.java),
+        "평가 관리" to ClassRoute(EvaluationsView::class.java),
+        "과제 관리" to StringRoute("/admin/missions"),
+        "선발 과정" to StringRoute("/admin/selections"),
+        "부정 행위자" to ClassRoute(CheatersView::class.java),
+        "메일 발송" to ClassRoute(MailFormView::class.java)
     )
 
     init {
@@ -64,11 +64,10 @@ class BaseLayout(
 
     private fun createMenu(): Component {
         val recruitments = recruitmentService.findAll()
-        val menuItems = route.map {
+        val menuItems = routes.map {
             when (val target = it.value) {
-                is String -> createAccordion(it.key, recruitments.toTabs(target))
-                is Class<*> -> createRouterLinkTab(it.key, target)
-                else -> throw IllegalArgumentException()
+                is ClassRoute -> createRouterLinkTab(it.key, target.route)
+                is StringRoute -> createAccordion(it.key, recruitments.toTabs(target.route))
             }
         }
         return createTabs(menuItems)
@@ -85,9 +84,8 @@ class BaseLayout(
         }
     }
 
-    private fun createRouterLinkTab(text: String, navigationTarget: Class<*>): Component {
-        @Suppress("UNCHECKED_CAST")
-        return Tab(RouterLink(text, navigationTarget as Class<out Component>))
+    private fun createRouterLinkTab(text: String, navigationTarget: Class<out Component>): Component {
+        return Tab(RouterLink(text, navigationTarget))
     }
 
     private fun createTabs(components: List<Component>): Component {
