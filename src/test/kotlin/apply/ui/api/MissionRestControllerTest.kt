@@ -18,12 +18,12 @@ import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 
 @WebMvcTest(
-    controllers = [MissionController::class],
+    controllers = [MissionRestController::class],
     includeFilters = [
         ComponentScan.Filter(type = FilterType.REGEX, pattern = ["apply.security.*"])
     ]
 )
-internal class MissionControllerTest : RestControllerTest() {
+internal class MissionRestControllerTest : RestControllerTest() {
     @MockkBean
     private lateinit var applicantService: ApplicantService
 

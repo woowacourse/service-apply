@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/recruitments/{recruitmentId}")
-class MissionController(
+class MissionRestController(
     private val missionService: MissionService
 ) {
     @PostMapping("/evaluations/{evaluationId}/missions")
