@@ -28,3 +28,8 @@ export const formatBirthday = ({ year, month, day }) =>
     2,
     "0"
   )}T00:00:00`;
+
+export const formatTimerText = (seconds) =>
+  `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(
+    seconds % 60
+  ).padStart(2, "0")}`;

@@ -30,7 +30,7 @@ const MessageTextInput = ({
             {description}
           </Description>
         )}
-        <div class={styles["input-box"]}>
+        <div className={styles["input-box"]}>
           <TextInput
             required={required}
             value={value}

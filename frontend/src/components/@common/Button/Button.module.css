@@ -1,4 +1,4 @@
-button {
+.button {
   border-radius: 0.25rem;
   padding: 0.5rem 1.25rem;
   -webkit-appearance: none;
@@ -25,8 +25,7 @@ button {
   background: var(--gray-008);
 }
 
-button:disabled {
+.button:disabled {
   cursor: default;
   background: var(--gray-004);
-  cursor: not-allowed;
 }

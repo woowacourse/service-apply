@@ -6,7 +6,7 @@ import styles from "./Button.module.css";
 const Button = ({ children, type, variant, cancel, className, ...props }) => {
   return (
     <button
-      className={classNames(styles[variant], className, {
+      className={classNames(className, styles[variant], styles.button, {
         [styles.cancel]: cancel,
       })}
       type={type}

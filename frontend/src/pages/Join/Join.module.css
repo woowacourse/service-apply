@@ -9,8 +9,46 @@
   font-size: 0.75rem;
 }
 
+.input-button {
+  height: inherit;
+  padding: 0;
+  width: 2.75rem;
+  font-size: 0.75rem;
+  line-height: 0.875rem;
+  margin-left: 0.875rem;
+}
+
+.authenticated {
+  font-size: 2rem;
+  background-color: var(--black);
+  color: var(--white);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.25rem;
+  user-select: none;
+}
+
 .input-box {
   margin-bottom: 1.25rem;
+}
+
+.relative-box {
+  position: relative;
+}
+
+.timer {
+  color: var(--gray-008);
+  font-size: 0.75rem;
+  position: absolute;
+  top: 0.25rem;
+  right: 0;
+}
+
+.timer-time {
+  display: inline-block;
+  width: 2.5rem;
+  text-align: right;
 }
 
 .buttons {
