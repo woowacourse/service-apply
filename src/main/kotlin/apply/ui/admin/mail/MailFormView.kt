@@ -143,6 +143,7 @@ class MailFormView(
         return createPrimaryButton("보내기") {
             bindOrNull()?.let {
                 // TODO: emailService.메일전송(it, uploadFile)
+                mailTargetService.saveMailHistory()
                 UI.getCurrent().navigate(MailFormView::class.java)
             }
         }
@@ -150,7 +151,7 @@ class MailFormView(
 
     private fun createCancelButton(): Button {
         return createContrastButton("취소") {
-            UI.getCurrent().navigate(MailFormView::class.java)
+            UI.getCurrent().navigate(MailView::class.java)
         }
     }
 

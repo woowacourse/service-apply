@@ -19,6 +19,12 @@ class MailTargetService(
             .map { MailTargetResponse(it.name, it.email) }
     }
 
+    // todo: 메일 관리
+    fun saveMailHistory(){
+
+    }
+
+
     private fun findEvaluationTargets(evaluationId: Long, evaluationStatus: EvaluationStatus?): List<EvaluationTarget> {
         return if (evaluationStatus == null) {
             evaluationTargetRepository.findAllByEvaluationId(evaluationId)
