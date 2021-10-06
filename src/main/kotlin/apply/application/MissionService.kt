@@ -31,15 +31,10 @@ class MissionService(
         val evaluations = evaluationRepository.findAllByRecruitmentId(recruitmentId)
             .associateBy { it.id }
 
-        val evaluationIds = evaluations.map { it.key }
+        val evaluationIds = evaluations.keys.toList()
         val missions = missionRepository.findAllByEvaluationIdIn(evaluationIds)
 
-        return missions.map {
-            MissionResponse(
-                it,
-                evaluations[it.evaluationId] ?: throw IllegalArgumentException("해당 모집에 존재하지 않는 평가 id 입니다.")
-            )
-        }
+        return missions.map { MissionResponse(it, evaluations.getValue(it.evaluationId)) }
     }
 
     fun deleteById(id: Long) {
