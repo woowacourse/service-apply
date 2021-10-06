@@ -17,7 +17,7 @@ class UserService(
     private val passwordGenerator: PasswordGenerator
 ) {
     fun getByEmail(email: String): User {
-        return userRepository.findByEmail(email) ?: throw IllegalArgumentException("지원자가 존재하지 않습니다. email: $email")
+        return userRepository.findByEmail(email) ?: throw IllegalArgumentException("회원이 존재하지 않습니다. email: $email")
     }
 
     fun findAllByRecruitmentIdAndKeyword(
