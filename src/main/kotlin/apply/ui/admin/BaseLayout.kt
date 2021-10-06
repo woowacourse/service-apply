@@ -31,8 +31,8 @@ class BaseLayout(
     private val routes: Map<String, Route> = mapOf(
         "모집 관리" to ClassRoute(RecruitmentsView::class.java),
         "평가 관리" to ClassRoute(EvaluationsView::class.java),
-        "과제 관리" to StringRoute("/admin/missions"),
-        "선발 과정" to StringRoute("/admin/selections"),
+        "과제 관리" to StringRoute("admin/missions"),
+        "선발 과정" to StringRoute("admin/selections"),
         "부정 행위자" to ClassRoute(CheatersView::class.java),
         "메일 발송" to ClassRoute(MailFormView::class.java)
     )
