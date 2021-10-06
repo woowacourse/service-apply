@@ -80,7 +80,7 @@ class MissionServiceTest {
     }
 
     @Test
-    fun `평가를 삭제한다`() {
+    fun `과제를 삭제한다`() {
         every { missionRepository.deleteById(any()) } just Runs
 
         assertDoesNotThrow { missionService.deleteById(1L) }
