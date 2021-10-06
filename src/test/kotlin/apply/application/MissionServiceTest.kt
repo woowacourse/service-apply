@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
+import org.springframework.data.repository.findByIdOrNull
 import support.test.UnitTest
 
 @UnitTest
@@ -81,8 +82,28 @@ class MissionServiceTest {
 
     @Test
     fun `과제를 삭제한다`() {
+        val missionId = 1L
+        every { missionRepository.findByIdOrNull(missionId) } returns createMission()
         every { missionRepository.deleteById(any()) } just Runs
 
-        assertDoesNotThrow { missionService.deleteById(1L) }
+        assertDoesNotThrow { missionService.deleteById(missionId) }
+    }
+
+    @Test
+    fun `제출 불가능한 과제를 삭제하면 예외가 발생한다`() {
+        val missionId = 1L
+        every { missionRepository.findByIdOrNull(missionId) } returns createMission(submittable = false)
+        every { missionRepository.deleteById(any()) } just Runs
+
+        assertThrows<IllegalStateException> { missionService.deleteById(missionId) }
+    }
+
+    @Test
+    fun `존재하지 않는 과제를 삭제하면 예외가 발생한다`() {
+        val missionId = 1L
+        every { missionRepository.findByIdOrNull(missionId) } returns null
+        every { missionRepository.deleteById(any()) } just Runs
+
+        assertThrows<IllegalArgumentException> { missionService.deleteById(missionId) }
     }
 }

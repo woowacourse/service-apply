@@ -31,6 +31,12 @@ class Mission(
     @Column(nullable = false)
     private var deleted: Boolean = false
 
+    val status: MissionStatus
+        get() = MissionStatus.of(period, submittable)
+
+    val isSubmittable: Boolean
+        get() = status == MissionStatus.SUBMITTABLE
+
     constructor(
         title: String,
         description: String,

@@ -72,13 +72,16 @@ class MissionSelectionView(
                 createPrimarySmallButton("수정") {
                     // TODO 수정 기능 구현
                 },
-                createDeleteButtonWithDialog("과제를 삭제하시겠습니까?") {
-                    missionService.deleteById(mission.id)
-                    UI.getCurrent().page.reload()
-                }
+                createDeleteButton(mission)
             )
         }
     }
+
+    private fun createDeleteButton(mission: MissionResponse) =
+        createDeleteButtonWithDialog("과제를 삭제하시겠습니까?") {
+            missionService.deleteById(mission.id)
+            UI.getCurrent().page.reload()
+        }.apply { isEnabled = mission.submittable }
 
     private fun Boolean.toText(): String {
         return if (this) {

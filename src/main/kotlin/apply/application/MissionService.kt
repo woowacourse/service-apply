@@ -3,6 +3,7 @@ package apply.application
 import apply.domain.evaluation.EvaluationRepository
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionRepository
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 
@@ -38,7 +39,9 @@ class MissionService(
     }
 
     fun deleteById(id: Long) {
-        // todo: 과제 제출 기능이 생기면 제출자가 한명이라도 있는 평가는 삭제할 수 없도록 막는 기능
+        val mission = missionRepository.findByIdOrNull(id) ?: throw IllegalArgumentException("해당 id의 과제를 찾을 수 없습니다.")
+        check(mission.isSubmittable) { "현재 제출가능한 과제는 삭제할 수 없습니다." }
+
         missionRepository.deleteById(id)
     }
 }
