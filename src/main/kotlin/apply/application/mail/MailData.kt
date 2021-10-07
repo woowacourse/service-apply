@@ -1,5 +1,6 @@
 package apply.application.mail
 
+import apply.utils.DELIMITER
 import java.time.LocalDateTime
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
@@ -43,6 +44,10 @@ data class MailData(
     }
 
     fun recipientsToString(): String {
-        return recipients.joinToString(",")
+        return recipients.listToString()
     }
+}
+
+fun List<String>.listToString():String{
+    return this.joinToString(DELIMITER)
 }

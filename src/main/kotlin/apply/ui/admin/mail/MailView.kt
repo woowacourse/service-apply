@@ -1,6 +1,6 @@
 package apply.ui.admin.mail
 
-import apply.application.MailTargetService
+import apply.application.MailHistoryService
 import apply.application.mail.MailData
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
@@ -17,9 +17,10 @@ import support.views.addSortableColumn
 import support.views.createPrimaryButton
 import support.views.createPrimarySmallButton
 
-// todo: 페이지 만들기
 @Route(value = "admin/mail-history", layout = BaseLayout::class)
-class MailView(private val mailTargetService: MailTargetService) : VerticalLayout() {
+class MailView(
+    private val mailHistoryService: MailHistoryService
+) : VerticalLayout() {
     init {
         add(createTitle(), createButton(), createGrid())
     }
@@ -43,17 +44,15 @@ class MailView(private val mailTargetService: MailTargetService) : VerticalLayou
     }
 
     private fun createGrid(): Component {
-        // todo: 수정
         return Grid<MailData>(10).apply {
             addSortableColumn("메일 제목", MailData::subject)
             addSortableColumn("보낸 시간", MailData::sentTime)
             addSortableColumn("받은 사람 수", MailData::recipientsCount)
             addColumn(createButtonRenderer()).apply { isAutoWidth = true }
-            setItems(mailTargetService.findAll())
+            setItems(mailHistoryService.findAll())
         }
     }
 
-    // todo
     private fun createButtonRenderer(): Renderer<MailData> {
         return ComponentRenderer<Component, MailData> { response ->
             createDetailButton(response)

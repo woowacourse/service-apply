@@ -1,10 +1,12 @@
 package apply.application
 
+import apply.application.mail.MailData
 import apply.domain.applicant.ApplicantRepository
+import apply.domain.email.EmailHistory
+import apply.domain.email.EmailHistoryRepository
 import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
-import apply.domain.user.UserRepository
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 

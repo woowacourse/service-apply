@@ -1,10 +1,10 @@
 package apply.ui.admin.mail
 
+import apply.application.ApplicantService
 import apply.application.EvaluationService
 import apply.application.MailTargetResponse
 import apply.application.MailTargetService
 import apply.application.RecruitmentService
-import apply.application.UserService
 import apply.application.mail.MailData
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
@@ -38,6 +38,7 @@ class MailFormView(
     private val recruitmentService: RecruitmentService,
     private val evaluationService: EvaluationService,
     private val mailTargetService: MailTargetService,
+    private val mailHistoryService: MailHistoryService,
     private val mailProperties: MailProperties
 ) : BindingFormLayout<MailData>(MailData::class) {
     private val subject: TextField = TextField("제목").apply { setWidthFull() }
@@ -111,7 +112,7 @@ class MailFormView(
 
     private fun createIndividualLoadButton(): Button {
         return createNormalButton("개별 불러오기") {
-            IndividualMailTargetDialog(userService) {
+            IndividualMailTargetDialog(applicantService) {
                 mailTargets.addAndRefresh(it)
             }
         }
@@ -143,7 +144,7 @@ class MailFormView(
         return createPrimaryButton("보내기") {
             bindOrNull()?.let {
                 // TODO: emailService.메일전송(it, uploadFile)
-                mailTargetService.saveMailHistory(it)
+                mailHistoryService.save(it)
                 UI.getCurrent().navigate(MailFormView::class.java)
             }
         }
