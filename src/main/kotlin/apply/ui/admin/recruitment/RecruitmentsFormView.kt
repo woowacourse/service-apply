@@ -51,7 +51,7 @@ class RecruitmentsFormView(
         return createPrimaryButton {
             recruitmentForm.bindOrNull()?.let {
                 recruitmentService.save(it)
-                UI.getCurrent().navigate(RecruitmentsView::class.java)
+                UI.getCurrent().page.setLocation("admin/recruitments")
             }
         }
     }
