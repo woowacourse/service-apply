@@ -63,6 +63,10 @@ class User(
         this.password = Password(password)
     }
 
+    fun changePhoneNumber(phoneNumber: String) {
+        this.information.changePhoneNumber(phoneNumber)
+    }
+
     private fun identify(value: Boolean, lazyMessage: () -> Any = {}) {
         if (!value) {
             val message = lazyMessage()

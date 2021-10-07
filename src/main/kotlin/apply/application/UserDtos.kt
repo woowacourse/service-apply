@@ -102,3 +102,8 @@ data class EditPasswordRequest(
     @field:NotNull
     val newPassword: Password
 )
+
+data class EditInformationRequest(
+    @field:NotBlank
+    val phoneNumber: String
+)

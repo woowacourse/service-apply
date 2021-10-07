@@ -31,4 +31,10 @@ class UserService(
             changePassword(request.password, request.newPassword)
         }
     }
+
+    fun editInformation(id: Long, request: EditInformationRequest) {
+        userRepository.getOne(id).apply {
+            changePhoneNumber(request.phoneNumber)
+        }
+    }
 }

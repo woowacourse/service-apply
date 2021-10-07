@@ -4,6 +4,7 @@ import apply.BIRTHDAY
 import apply.EMAIL
 import apply.NAME
 import apply.PASSWORD
+import apply.PHONE_NUMBER
 import apply.RANDOM_PASSWORD_TEXT
 import apply.WRONG_PASSWORD
 import apply.createUser
@@ -93,5 +94,16 @@ internal class UserServiceTest {
             request = EditPasswordRequest(WRONG_PASSWORD, Password("new_password"))
             assertThrows<UserAuthenticationException> { subject() }
         }
+    }
+
+    @Test
+    fun `회원이 정보를 변경한다`() {
+        val request = EditInformationRequest("010-9999-9999")
+        val user = createUser()
+        every { userRepository.getOne(any()) } returns user
+
+        assertThat(user.phoneNumber).isEqualTo(PHONE_NUMBER)
+        assertDoesNotThrow { userService.editInformation(user.id, request) }
+        assertThat(user.phoneNumber).isEqualTo(request.phoneNumber)
     }
 }
