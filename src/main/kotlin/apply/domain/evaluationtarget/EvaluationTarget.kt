@@ -16,7 +16,7 @@ class EvaluationTarget(
     val administratorId: Long? = null,
 
     @Column(nullable = false)
-    val applicantId: Long,
+    val userId: Long,
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -29,10 +29,10 @@ class EvaluationTarget(
 
     id: Long = 0L
 ) : BaseEntity(id) {
-    constructor(evaluationId: Long, applicantId: Long) : this(
+    constructor(evaluationId: Long, userId: Long) : this(
         evaluationId = evaluationId,
         administratorId = 0L,
-        applicantId = applicantId
+        userId = userId
     )
 
     val isPassed: Boolean

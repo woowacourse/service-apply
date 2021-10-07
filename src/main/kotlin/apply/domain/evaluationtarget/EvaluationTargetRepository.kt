@@ -7,11 +7,11 @@ interface EvaluationTargetRepository : JpaRepository<EvaluationTarget, Long> {
 
     fun existsByEvaluationId(evaluationId: Long): Boolean
 
-    fun deleteByApplicantIdIn(applicantIds: Collection<Long>)
+    fun deleteByUserIdIn(userIds: Collection<Long>)
 
-    fun deleteByEvaluationIdAndApplicantIdIn(evaluationId: Long, applicantIds: Collection<Long>)
+    fun deleteByEvaluationIdAndUserIdIn(evaluationId: Long, userIds: Collection<Long>)
 
-    fun findAllByEvaluationIdAndApplicantIdIn(id: Long, applicantIds: Set<Long>): List<EvaluationTarget>
+    fun findAllByEvaluationIdAndUserIdIn(id: Long, userIds: Set<Long>): List<EvaluationTarget>
 
     fun findAllByEvaluationIdAndEvaluationStatus(
         evaluationId: Long,

@@ -16,6 +16,7 @@ import support.views.createNormalButton
 class MissionSelectionsView(private val recruitmentService: RecruitmentService) : VerticalLayout() {
     private val title: Component = createTitle()
     private val buttons: Array<Component> = createButtons()
+
     init {
         add(title, *buttons)
     }

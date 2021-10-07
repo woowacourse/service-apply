@@ -1,8 +1,8 @@
 package apply.ui.admin.mail
 
-import apply.application.ApplicantResponse
-import apply.application.ApplicantService
 import apply.application.MailTargetResponse
+import apply.application.UserResponse
+import apply.application.UserService
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.dialog.Dialog
@@ -18,10 +18,10 @@ import support.views.createPrimarySmallButton
 import support.views.createSearchBox
 
 class IndividualMailTargetDialog(
-    private val applicantService: ApplicantService,
+    private val userService: UserService,
     private val accept: (MailTargetResponse) -> Unit
 ) : Dialog() {
-    private val mailTargetsGrid: Grid<ApplicantResponse> = createMailTargetsGrid()
+    private val mailTargetsGrid: Grid<UserResponse> = createMailTargetsGrid()
 
     init {
         add(H2("개별 불러오기"), createSearchFilter(), mailTargetsGrid, createButtons())
@@ -32,23 +32,23 @@ class IndividualMailTargetDialog(
 
     private fun createSearchFilter(): Component {
         return HorizontalLayout(
-            createSearchBox { mailTargetsGrid.setItems(applicantService.findAllByKeyword(it)) }
+            createSearchBox { mailTargetsGrid.setItems(userService.findAllByKeyword(it)) }
         ).apply {
             element.style.set("margin-top", "10px")
             element.style.set("margin-bottom", "10px")
         }
     }
 
-    private fun createMailTargetsGrid(): Grid<ApplicantResponse> {
-        return Grid<ApplicantResponse>(10).apply {
-            addSortableColumn("이름", ApplicantResponse::name)
-            addSortableColumn("이메일", ApplicantResponse::email)
+    private fun createMailTargetsGrid(): Grid<UserResponse> {
+        return Grid<UserResponse>(10).apply {
+            addSortableColumn("이름", UserResponse::name)
+            addSortableColumn("이메일", UserResponse::email)
             addColumn(createAddButton()).apply { isAutoWidth = true }
         }
     }
 
-    private fun createAddButton(): Renderer<ApplicantResponse> {
-        return ComponentRenderer<Component, ApplicantResponse> { applicantResponse ->
+    private fun createAddButton(): Renderer<UserResponse> {
+        return ComponentRenderer<Component, UserResponse> { applicantResponse ->
             createPrimarySmallButton("추가") {
                 accept(MailTargetResponse(applicantResponse))
             }.apply {
