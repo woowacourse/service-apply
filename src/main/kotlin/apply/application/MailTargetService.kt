@@ -1,5 +1,6 @@
 package apply.application
 
+import apply.domain.applicant.ApplicantRepository
 import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository

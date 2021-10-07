@@ -1,3 +1,5 @@
 package apply.domain.email
 
-// interface EmailHistoryRepository : JpaRepository<EmailHistory, Long>
+import org.springframework.data.jpa.repository.JpaRepository
+
+interface EmailHistoryRepository : JpaRepository<EmailHistory, Long>

@@ -1,10 +1,8 @@
 package apply.ui.admin.mail
 
 import apply.application.MailTargetService
-import apply.application.RecruitmentResponse
-import apply.application.mail.MailHistoryData
+import apply.application.mail.MailData
 import apply.ui.admin.BaseLayout
-import apply.ui.admin.recruitment.RecruitmentsFormView
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.grid.Grid
@@ -15,7 +13,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.data.renderer.ComponentRenderer
 import com.vaadin.flow.data.renderer.Renderer
 import com.vaadin.flow.router.Route
-import support.views.EDIT_VALUE
 import support.views.addSortableColumn
 import support.views.createPrimaryButton
 import support.views.createPrimarySmallButton
@@ -47,29 +44,25 @@ class MailView(private val mailTargetService: MailTargetService) : VerticalLayou
 
     private fun createGrid(): Component {
         // todo: 수정
-        return Grid<MailHistoryData>(10).apply {
-            addSortableColumn("메일 제목", MailHistoryData::subject)
-            addSortableColumn("보낸 시간", MailHistoryData::sentTime)
-            addSortableColumn("받은 사람 수", MailHistoryData::recipientsCount)
-            // addColumn(createButtonRenderer()).apply { isAutoWidth = true }
-            //  setItems(mailTargetService.findAll())
+        return Grid<MailData>(10).apply {
+            addSortableColumn("메일 제목", MailData::subject)
+            addSortableColumn("보낸 시간", MailData::sentTime)
+            addSortableColumn("받은 사람 수", MailData::recipientsCount)
+            addColumn(createButtonRenderer()).apply { isAutoWidth = true }
+            setItems(mailTargetService.findAll())
         }
     }
 
     // todo
-    private fun createButtonRenderer(): Renderer<RecruitmentResponse> {
-        return ComponentRenderer<Component, RecruitmentResponse> { it -> createButtons(it) }
+    private fun createButtonRenderer(): Renderer<MailData> {
+        return ComponentRenderer<Component, MailData> { response ->
+            createDetailButton(response)
+        }
     }
 
-    private fun createButtons(recruitment: RecruitmentResponse): Component {
-        return HorizontalLayout(
-            createEditButton(recruitment)
-        )
-    }
-
-    private fun createEditButton(recruitment: RecruitmentResponse): Component {
-        return createPrimarySmallButton("수정") {
-            UI.getCurrent().navigate(RecruitmentsFormView::class.java, "${recruitment.id}/$EDIT_VALUE")
+    private fun createDetailButton(mailData: MailData): Component {
+        return createPrimarySmallButton("자세히 보기") {
+            MailHistoryDialog(mailData)
         }
     }
 }

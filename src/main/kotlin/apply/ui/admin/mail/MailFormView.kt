@@ -143,7 +143,7 @@ class MailFormView(
         return createPrimaryButton("보내기") {
             bindOrNull()?.let {
                 // TODO: emailService.메일전송(it, uploadFile)
-                mailTargetService.saveMailHistory()
+                mailTargetService.saveMailHistory(it)
                 UI.getCurrent().navigate(MailFormView::class.java)
             }
         }

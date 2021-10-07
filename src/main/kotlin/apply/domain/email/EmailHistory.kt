@@ -3,9 +3,11 @@ package apply.domain.email
 import support.domain.BaseEntity
 import java.time.LocalDateTime
 import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.Lob
 
-// TODO
-// @Entity
+// TODO : flyway 데이터타입 수정
+@Entity
 class EmailHistory(
     @Column(nullable = false)
     val subject: String,
