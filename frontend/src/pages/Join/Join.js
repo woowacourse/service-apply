@@ -1,7 +1,6 @@
 import classNames from "classnames";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { directive } from "../../../../../../../Library/Caches/typescript/4.4/node_modules/@babel/types/lib/index";
 import Button from "../../components/@common/Button/Button";
 import Container, {
   CONTAINER_SIZE,
@@ -64,6 +63,8 @@ const Join = () => {
     month,
     day,
   }) => {
+    // TODO: 인증 완료된 이메일인지 확인
+
     try {
       await postRegister({
         name,
@@ -235,7 +236,7 @@ const Join = () => {
             <Button cancel type="button">
               취소
             </Button>
-            <SubmitButton>회원가입</SubmitButton>
+            <SubmitButton>가입하기</SubmitButton>
           </div>
         </Form>
       </FormProvider>

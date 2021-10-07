@@ -81,10 +81,7 @@ const Login = () => {
             required
           />
           <div className={styles.buttons}>
-            <Button type="button" cancel onClick={() => history.goBack()}>
-              이전
-            </Button>
-            <SubmitButton>확인</SubmitButton>
+            <SubmitButton>로그인</SubmitButton>
           </div>
           <Link to={PATH.FIND_PASSWORD} className={styles["find-password"]}>
             비밀번호 찾기
