@@ -3,8 +3,6 @@ package apply.application
 import apply.domain.user.User
 import apply.domain.user.UserRepository
 import apply.domain.user.findByEmail
-import apply.domain.applicationform.ApplicationFormRepository
-import apply.domain.cheater.CheaterRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

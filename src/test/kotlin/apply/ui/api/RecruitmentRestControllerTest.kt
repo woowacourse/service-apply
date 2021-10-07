@@ -1,9 +1,9 @@
 package apply.ui.api
 
-import apply.application.UserService
 import apply.application.RecruitmentItemService
 import apply.application.RecruitmentResponse
 import apply.application.RecruitmentService
+import apply.application.UserService
 import apply.createRecruitment
 import apply.createRecruitmentData
 import apply.createRecruitmentItem

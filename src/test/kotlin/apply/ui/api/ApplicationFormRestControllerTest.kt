@@ -2,17 +2,17 @@ package apply.ui.api
 
 import apply.application.ApplicantAndFormResponse
 import apply.application.ApplicantService
-import apply.application.UserService
 import apply.application.ApplicationFormResponse
 import apply.application.ApplicationFormService
 import apply.application.MyApplicationFormResponse
+import apply.application.UserService
 import apply.application.mail.MailService
-import apply.createUser
 import apply.createApplicationForm
 import apply.createApplicationForms
-import apply.domain.user.User
+import apply.createUser
 import apply.domain.user.Gender
 import apply.domain.user.Password
+import apply.domain.user.User
 import apply.security.JwtTokenProvider
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every

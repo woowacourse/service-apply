@@ -1,9 +1,9 @@
 package apply.security
 
 import apply.application.UserService
-import apply.domain.user.User
 import apply.domain.user.Gender
 import apply.domain.user.Password
+import apply.domain.user.User
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk

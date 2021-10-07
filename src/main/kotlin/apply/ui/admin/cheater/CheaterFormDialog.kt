@@ -1,7 +1,7 @@
 package apply.ui.admin.cheater
 
-import apply.application.UserService
 import apply.application.CheaterService
+import apply.application.UserService
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.dialog.Dialog

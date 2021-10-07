@@ -1,8 +1,8 @@
 package apply.domain.cheater
 
-import apply.domain.user.User
 import apply.domain.user.Gender
 import apply.domain.user.Password
+import apply.domain.user.User
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

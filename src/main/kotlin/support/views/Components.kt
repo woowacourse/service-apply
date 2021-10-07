@@ -52,7 +52,11 @@ private fun createTextRenderer(trueText: String, falseText: String): ComponentRe
     }
 }
 
-private fun createBox(icon: VaadinIcon, labelText: String = "", eventListener: (name: String) -> Unit): HorizontalLayout {
+private fun createBox(
+    icon: VaadinIcon,
+    labelText: String = "",
+    eventListener: (name: String) -> Unit
+): HorizontalLayout {
     val textField = TextField().apply {
         label = labelText
     }

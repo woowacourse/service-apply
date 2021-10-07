@@ -1,9 +1,9 @@
 package apply.application
 
-import apply.domain.user.UserRepository
-import apply.domain.user.findByEmail
 import apply.domain.cheater.Cheater
 import apply.domain.cheater.CheaterRepository
+import apply.domain.user.UserRepository
+import apply.domain.user.findByEmail
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

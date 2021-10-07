@@ -1,9 +1,9 @@
 package apply.application
 
 import apply.createCheaterData
-import apply.domain.user.UserRepository
 import apply.domain.cheater.Cheater
 import apply.domain.cheater.CheaterRepository
+import apply.domain.user.UserRepository
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import org.junit.jupiter.api.BeforeEach

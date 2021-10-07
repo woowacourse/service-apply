@@ -1,14 +1,14 @@
 package apply.application
 
 import apply.EVALUATION_ID
-import apply.createUser
 import apply.createEvaluationTarget
-import apply.domain.user.UserRepository
+import apply.createUser
 import apply.domain.evaluationtarget.EvaluationStatus.FAIL
 import apply.domain.evaluationtarget.EvaluationStatus.PASS
 import apply.domain.evaluationtarget.EvaluationStatus.PENDING
 import apply.domain.evaluationtarget.EvaluationStatus.WAITING
 import apply.domain.evaluationtarget.EvaluationTargetRepository
+import apply.domain.user.UserRepository
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import org.assertj.core.api.Assertions.assertThat

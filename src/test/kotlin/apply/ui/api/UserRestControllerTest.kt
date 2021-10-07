@@ -1,18 +1,18 @@
 package apply.ui.api
 
-import apply.application.UserAuthenticationService
-import apply.application.UserResponse
-import apply.application.UserService
 import apply.application.AuthenticateUserRequest
 import apply.application.EditPasswordRequest
 import apply.application.RegisterUserRequest
 import apply.application.ResetPasswordRequest
+import apply.application.UserAuthenticationService
+import apply.application.UserResponse
+import apply.application.UserService
 import apply.application.mail.MailService
 import apply.createUser
-import apply.domain.user.UserAuthenticationException
+import apply.domain.authenticationcode.AuthenticationCode
 import apply.domain.user.Gender
 import apply.domain.user.Password
-import apply.domain.authenticationcode.AuthenticationCode
+import apply.domain.user.UserAuthenticationException
 import apply.security.JwtTokenProvider
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs

@@ -1,9 +1,9 @@
 package apply.ui.api
 
-import apply.application.UserService
 import apply.application.EvaluationData
 import apply.application.EvaluationResponse
 import apply.application.EvaluationService
+import apply.application.UserService
 import apply.createEvaluation
 import apply.createRecruitment
 import com.ninjasquad.springmockk.MockkBean

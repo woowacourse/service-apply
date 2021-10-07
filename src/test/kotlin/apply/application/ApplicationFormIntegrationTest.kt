@@ -1,12 +1,12 @@
 package apply.application
 
-import apply.createUser
 import apply.createApplicationForm
 import apply.createRecruitment
-import apply.domain.user.UserRepository
+import apply.createUser
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.applicationform.DuplicateApplicationException
 import apply.domain.recruitment.RecruitmentRepository
+import apply.domain.user.UserRepository
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow

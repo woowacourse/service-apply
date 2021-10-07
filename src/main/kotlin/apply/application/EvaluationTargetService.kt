@@ -1,7 +1,5 @@
 package apply.application
 
-import apply.domain.user.UserRepository
-import apply.domain.user.findAllByEmailIn
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.CheaterRepository
 import apply.domain.evaluation.Evaluation
@@ -13,6 +11,8 @@ import apply.domain.evaluationtarget.EvaluationAnswers
 import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
+import apply.domain.user.UserRepository
+import apply.domain.user.findAllByEmailIn
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional

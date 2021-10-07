@@ -1,7 +1,7 @@
 package apply.ui.api
 
-import apply.application.UserService
 import apply.application.MissionService
+import apply.application.UserService
 import apply.createMissionData
 import apply.domain.evaluation.EvaluationRepository
 import com.ninjasquad.springmockk.MockkBean

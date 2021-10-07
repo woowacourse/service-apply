@@ -1,7 +1,7 @@
 package apply.ui.admin.cheater
 
-import apply.application.UserResponse
 import apply.application.CheaterData
+import apply.application.UserResponse
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout

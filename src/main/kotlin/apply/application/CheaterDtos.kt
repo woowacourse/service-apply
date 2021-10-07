@@ -1,7 +1,7 @@
 package apply.application
 
-import apply.domain.user.User
 import apply.domain.cheater.Cheater
+import apply.domain.user.User
 import java.time.LocalDateTime
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotNull

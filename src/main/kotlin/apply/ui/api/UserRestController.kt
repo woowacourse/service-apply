@@ -1,12 +1,12 @@
 package apply.ui.api
 
-import apply.application.UserAuthenticationService
-import apply.application.UserResponse
-import apply.application.UserService
 import apply.application.AuthenticateUserRequest
 import apply.application.EditPasswordRequest
 import apply.application.RegisterUserRequest
 import apply.application.ResetPasswordRequest
+import apply.application.UserAuthenticationService
+import apply.application.UserResponse
+import apply.application.UserService
 import apply.application.mail.MailService
 import apply.domain.user.User
 import apply.security.LoginUser

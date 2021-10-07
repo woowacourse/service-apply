@@ -8,11 +8,6 @@ import apply.createEvaluation
 import apply.createEvaluationAnswer
 import apply.createEvaluationItem
 import apply.createEvaluationTarget
-import apply.domain.user.User
-import apply.domain.user.UserRepository
-import apply.domain.user.Gender
-import apply.domain.user.Password
-import apply.domain.user.findAllByEmailIn
 import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormAnswer
 import apply.domain.applicationform.ApplicationFormAnswers
@@ -28,6 +23,11 @@ import apply.domain.evaluationtarget.EvaluationStatus.PASS
 import apply.domain.evaluationtarget.EvaluationStatus.WAITING
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
+import apply.domain.user.Gender
+import apply.domain.user.Password
+import apply.domain.user.User
+import apply.domain.user.UserRepository
+import apply.domain.user.findAllByEmailIn
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import org.assertj.core.api.Assertions.assertThat

@@ -9,14 +9,14 @@ import apply.PHONE_NUMBER
 import apply.VALID_TOKEN
 import apply.WRONG_PASSWORD
 import apply.createUser
+import apply.domain.authenticationcode.AuthenticationCode
+import apply.domain.authenticationcode.AuthenticationCodeRepository
+import apply.domain.authenticationcode.getLastByEmail
 import apply.domain.user.User
 import apply.domain.user.UserAuthenticationException
 import apply.domain.user.UserRepository
 import apply.domain.user.existsByEmail
 import apply.domain.user.findByEmail
-import apply.domain.authenticationcode.AuthenticationCode
-import apply.domain.authenticationcode.AuthenticationCodeRepository
-import apply.domain.authenticationcode.getLastByEmail
 import apply.security.JwtTokenProvider
 import io.mockk.every
 import io.mockk.impl.annotations.MockK

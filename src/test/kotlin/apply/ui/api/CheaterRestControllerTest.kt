@@ -1,10 +1,10 @@
 package apply.ui.api
 
-import apply.application.UserService
 import apply.application.CheaterResponse
 import apply.application.CheaterService
-import apply.createUser
+import apply.application.UserService
 import apply.createCheaterData
+import apply.createUser
 import apply.domain.cheater.Cheater
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
