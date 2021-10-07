@@ -70,7 +70,7 @@ class MailFormView(
             val (id, value) = it.destructured
             setDisplayName(value.toDisplayName())
             if (value == DETAIL_VALUE) {
-                this.fill(mailHistoryService.findById(id.toLong()))
+                this.fill(mailHistoryService.getById(id.toLong()))
                 this.recipientFilter.isVisible = false
                 this.mailTargetsGrid.getColumnByKey(DELETE_BUTTON).isVisible = false
                 this.fileUpload.isVisible = false

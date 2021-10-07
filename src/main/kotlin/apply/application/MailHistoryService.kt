@@ -38,7 +38,7 @@ class MailHistoryService(
         }
     }
 
-    fun findById(emailHistoryId: Long): MailData {
+    fun getById(emailHistoryId: Long): MailData {
         val emailHistory = emailHistoryRepository.getById(emailHistoryId)
         return MailData(emailHistory)
     }
