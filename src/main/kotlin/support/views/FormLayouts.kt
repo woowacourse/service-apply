@@ -12,12 +12,16 @@ import kotlin.reflect.full.createInstance
 
 const val NEW_VALUE: String = "new"
 const val EDIT_VALUE: String = "edit"
-val FORM_URL_PATTERN: Regex = Regex("^(\\d*)/?($NEW_VALUE|$EDIT_VALUE)$")
+const val SEND_VALUE: String = "send"
+const val DETAIL_VALUE: String = "detail"
+val FORM_URL_PATTERN: Regex = Regex("^(\\d*)/?($NEW_VALUE|$EDIT_VALUE|$DETAIL_VALUE|$SEND_VALUE)$")
 
 fun String.toDisplayName(): String {
     return when (this) {
         NEW_VALUE -> "생성"
         EDIT_VALUE -> "수정"
+        SEND_VALUE -> "보내기"
+        DETAIL_VALUE -> "확인"
         else -> throw IllegalArgumentException()
     }
 }

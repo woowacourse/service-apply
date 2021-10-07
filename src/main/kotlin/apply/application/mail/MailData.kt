@@ -1,25 +1,11 @@
 package apply.application.mail
 
+import apply.domain.email.EmailHistory
 import apply.utils.DELIMITER
 import java.time.LocalDateTime
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
 
-data class SimpleMailData(
-    @field:NotEmpty
-    var subject: String = "",
-
-    @field:NotNull
-    var recipientsCount: Int = 0,
-
-    @field:NotNull
-    var sentTime: LocalDateTime = LocalDateTime.now(),
-
-    @field:NotNull
-    var id: Long = 0L
-)
-
-// todo
 data class MailData(
     @field:NotEmpty
     var subject: String = "",
@@ -39,6 +25,24 @@ data class MailData(
     @field:NotNull
     var id: Long = 0L
 ) {
+    constructor(
+        subject: String,
+        body: String,
+        sender: String,
+        recipients: String,
+        sentTime: LocalDateTime,
+        id: Long
+    ) : this(subject, body, sender, recipients.stringToList(), sentTime, id)
+
+    constructor(emailHistory: EmailHistory) : this(
+        emailHistory.subject,
+        emailHistory.body,
+        emailHistory.sender,
+        emailHistory.recipients.stringToList(),
+        emailHistory.sentTime,
+        emailHistory.id
+    )
+
     fun recipientsCount(): Int {
         return recipients.size
     }
@@ -50,4 +54,8 @@ data class MailData(
 
 fun List<String>.listToString(): String {
     return this.joinToString(DELIMITER)
+}
+
+fun String.stringToList(): List<String> {
+    return this.split(DELIMITER)
 }

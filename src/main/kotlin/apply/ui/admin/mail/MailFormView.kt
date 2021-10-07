@@ -17,12 +17,18 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.textfield.TextArea
 import com.vaadin.flow.component.textfield.TextField
+import com.vaadin.flow.component.upload.Upload
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer
 import com.vaadin.flow.data.renderer.ComponentRenderer
 import com.vaadin.flow.data.renderer.Renderer
+import com.vaadin.flow.router.BeforeEvent
+import com.vaadin.flow.router.HasUrlParameter
 import com.vaadin.flow.router.Route
+import com.vaadin.flow.router.WildcardParameter
 import org.springframework.boot.autoconfigure.mail.MailProperties
 import support.views.BindingFormLayout
+import support.views.DETAIL_VALUE
+import support.views.FORM_URL_PATTERN
 import support.views.NO_NAME
 import support.views.Title
 import support.views.addSortableColumn
@@ -32,6 +38,7 @@ import support.views.createErrorSmallButton
 import support.views.createNormalButton
 import support.views.createPrimaryButton
 import support.views.createUpload
+import support.views.toDisplayName
 
 @Route(value = "admin/mails", layout = BaseLayout::class)
 class MailFormView(
@@ -41,37 +48,64 @@ class MailFormView(
     private val mailTargetService: MailTargetService,
     private val mailHistoryService: MailHistoryService,
     private val mailProperties: MailProperties
-) : BindingFormLayout<MailData>(MailData::class) {
+) : BindingFormLayout<MailData>(MailData::class), HasUrlParameter<String> {
     private val subject: TextField = TextField("제목").apply { setWidthFull() }
     private val body: TextArea = createBody()
     private val mailTargets: MutableSet<MailTargetResponse> = mutableSetOf()
     private val mailTargetsGrid: Grid<MailTargetResponse> = createMailTargetsGrid(mailTargets)
+    private val recipientFilter: Component = createRecipientFilter()
+    private val fileUpload: Component = createFileUpload()
+    private var title: Title = Title()
+    private val submitButton: Component = createSubmitButton()
 
     init {
-        add(Title("메일 발송"), createMailForm())
+        add(title, createMailForm())
         setResponsiveSteps(ResponsiveStep("0", 1))
         drawRequired()
+    }
+
+    override fun setParameter(event: BeforeEvent, @WildcardParameter parameter: String) {
+        val result = FORM_URL_PATTERN.find(parameter)
+        result?.let {
+            val (id, value) = it.destructured
+            setDisplayName(value.toDisplayName())
+            if (value == DETAIL_VALUE) {
+                this.fill(mailHistoryService.findById(id.toLong()))
+                this.recipientFilter.isVisible = false
+                this.mailTargetsGrid.getColumnByKey(DELETE_BUTTON).isVisible = false
+                this.fileUpload.isVisible = false
+                this.submitButton.isVisible = false
+            }
+        } ?: UI.getCurrent().page.history.back() // TODO: 에러 화면을 구현한다.
+    }
+
+    private fun setDisplayName(displayName: String) {
+        title.text = "메일 $displayName"
     }
 
     private fun createMailForm(): Component {
         return VerticalLayout(
             subject,
             createSender(),
-            createRecipientFilter(),
+            recipientFilter,
             mailTargetsGrid,
             body,
-            createUpload("파일첨부", MultiFileMemoryBuffer()) {
-                // TODO: 추후 업로드 된 파일을 메일로 첨부하는 로직이 추가되어야 함
-                // (uploadFiles 같은 필드를 두고 mail을 보내는 기능에 포함시키면 될 것 같음)
-                // it.files.forEach { fileName ->
-                //     val fileData = it.getFileData(fileName)
-                //     val inputStream = it.getInputStream(fileName)
-                //     val readBytes = inputStream.readBytes()
-                // }
-            },
+            fileUpload,
             createButtons()
         ).apply {
             setSizeFull()
+        }
+    }
+
+    private fun createFileUpload(): Upload {
+        return createUpload("파일첨부", MultiFileMemoryBuffer()) {
+            // TODO: 추후 업로드 된 파일을 메일로 첨부하는 로직이 추가되어야 함
+            // (uploadFiles 같은 필드를 두고 mail을 보내는 기능에 포함시키면 될 것 같음)
+            // it.files.forEach { fileName ->
+            //     val fileData = it.getFileData(fileName)
+            //     val inputStream = it.getInputStream(fileName)
+            //     val readBytes = inputStream.readBytes()
+            // }
         }
     }
 
@@ -84,21 +118,25 @@ class MailFormView(
 
     private fun createRecipientFilter(): Component {
         return HorizontalLayout(
-            createEnterBox(labelText = "받는사람") {
-                if (it.isNotBlank()) {
-                    mailTargets.addAndRefresh(MailTargetResponse(NO_NAME, it))
-                }
-            },
+            createEnterBox(),
             createIndividualLoadButton(),
             createGroupLoadButton()
         ).apply { defaultVerticalComponentAlignment = FlexComponent.Alignment.END }
+    }
+
+    private fun createEnterBox(): HorizontalLayout {
+        return createEnterBox(labelText = "받는사람") {
+            if (it.isNotBlank()) {
+                mailTargets.addAndRefresh(MailTargetResponse(NO_NAME, it))
+            }
+        }
     }
 
     private fun createMailTargetsGrid(mailTargets: Set<MailTargetResponse>): Grid<MailTargetResponse> {
         return Grid<MailTargetResponse>(10).apply {
             addSortableColumn("이름", MailTargetResponse::name)
             addSortableColumn("이메일", MailTargetResponse::email)
-            addColumn(createRemoveButton())
+            addColumn(createRemoveButton()).key = DELETE_BUTTON
             setItems(mailTargets)
         }
     }
@@ -135,7 +173,7 @@ class MailFormView(
     }
 
     private fun createButtons(): Component {
-        return HorizontalLayout(createSubmitButton(), createCancelButton()).apply {
+        return HorizontalLayout(submitButton, createCancelButton()).apply {
             setSizeFull()
             justifyContentMode = FlexComponent.JustifyContentMode.CENTER
         }
@@ -144,9 +182,9 @@ class MailFormView(
     private fun createSubmitButton(): Button {
         return createPrimaryButton("보내기") {
             bindOrNull()?.let {
-                // TODO: emailService.메일전송(it, uploadFile)
                 mailHistoryService.save(it)
-                UI.getCurrent().navigate(MailFormView::class.java)
+                // TODO: emailService.메일전송(it, uploadFile)
+                UI.getCurrent().navigate(MailView::class.java)
             }
         }
     }
@@ -177,5 +215,14 @@ class MailFormView(
 
     override fun fill(data: MailData) {
         fillDefault(data)
+        subject.isReadOnly = true
+        body.isReadOnly = true
+        data.recipients.forEach {
+            mailTargets.add(userService.findMailTargetByEmail(it))
+        }
+    }
+
+    companion object {
+        const val DELETE_BUTTON: String = "삭제버튼"
     }
 }

@@ -31,4 +31,12 @@ class UserService(
             changePassword(request.password, request.newPassword)
         }
     }
+
+    fun findMailTargetByEmail(email: String): MailTargetResponse {
+        val user = userRepository.findByEmail(email)
+        if (user != null) {
+            return MailTargetResponse(user.name, user.email)
+        }
+        return MailTargetResponse(email = email)
+    }
 }

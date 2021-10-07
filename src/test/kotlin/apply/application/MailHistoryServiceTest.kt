@@ -25,6 +25,7 @@ class MailHistoryServiceTest {
         mailHistoryService = MailHistoryService(emailHistoryRepository)
     }
 
+    // todo: make test fixture
     @Test
     fun `메일 이력을 저장한다`() {
         val recipients = listOf("test@email.com", "test2@email.com")

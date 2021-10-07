@@ -3,7 +3,7 @@ package apply.application
 import apply.application.mail.MailData
 import apply.domain.email.EmailHistory
 import apply.domain.email.EmailHistoryRepository
-import apply.utils.DELIMITER
+import apply.domain.email.getById
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 
@@ -31,14 +31,15 @@ class MailHistoryService(
                 it.subject,
                 it.body,
                 it.sender,
-                it.recipients.toList(),
+                it.recipients,
                 it.sentTime,
                 it.id
             )
         }
     }
 
-    private fun String.toList(): List<String> {
-        return this.split(DELIMITER)
+    fun findById(emailHistoryId: Long): MailData {
+        val emailHistory = emailHistoryRepository.getById(emailHistoryId)
+        return MailData(emailHistory)
     }
 }
