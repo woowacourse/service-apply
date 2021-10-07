@@ -41,9 +41,16 @@ class AccordionMenuItem(
 ) : MenuItem(title) {
     override fun toComponent(): Component {
         return Accordion().apply {
-            add(title, createTabs(contents.toTabs(path))).addThemeVariants(DetailsVariant.REVERSE)
+            add(title, createTabs()).addThemeVariants(DetailsVariant.REVERSE)
             close()
         }
+    }
+
+    private fun createTabs(): Component? {
+        if (contents.isEmpty()) {
+            return null
+        }
+        return createTabs(contents.toTabs(path))
     }
 
     private fun List<AccordionContent>.toTabs(path: String): List<Component> {
