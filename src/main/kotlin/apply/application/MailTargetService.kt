@@ -1,12 +1,9 @@
 package apply.application
 
-import apply.application.mail.MailData
-import apply.domain.applicant.ApplicantRepository
-import apply.domain.email.EmailHistory
-import apply.domain.email.EmailHistoryRepository
 import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
+import apply.domain.user.UserRepository
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 
@@ -21,12 +18,6 @@ class MailTargetService(
         return userRepository.findAllById(userIds)
             .map { MailTargetResponse(it.name, it.email) }
     }
-
-    // todo: 메일 관리
-    fun saveMailHistory(){
-
-    }
-
 
     private fun findEvaluationTargets(evaluationId: Long, evaluationStatus: EvaluationStatus?): List<EvaluationTarget> {
         return if (evaluationStatus == null) {

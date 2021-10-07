@@ -19,7 +19,7 @@ data class SimpleMailData(
     var id: Long = 0L
 )
 
-//todo
+// todo
 data class MailData(
     @field:NotEmpty
     var subject: String = "",
@@ -48,6 +48,6 @@ data class MailData(
     }
 }
 
-fun List<String>.listToString():String{
+fun List<String>.listToString(): String {
     return this.joinToString(DELIMITER)
 }

@@ -1,10 +1,11 @@
 package apply.ui.admin.mail
 
-import apply.application.ApplicantService
 import apply.application.EvaluationService
+import apply.application.MailHistoryService
 import apply.application.MailTargetResponse
 import apply.application.MailTargetService
 import apply.application.RecruitmentService
+import apply.application.UserService
 import apply.application.mail.MailData
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
@@ -112,7 +113,7 @@ class MailFormView(
 
     private fun createIndividualLoadButton(): Button {
         return createNormalButton("개별 불러오기") {
-            IndividualMailTargetDialog(applicantService) {
+            IndividualMailTargetDialog(userService) {
                 mailTargets.addAndRefresh(it)
             }
         }
