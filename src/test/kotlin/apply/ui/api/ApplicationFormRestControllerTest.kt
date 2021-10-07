@@ -62,7 +62,7 @@ internal class ApplicationFormRestControllerTest : RestControllerTest() {
 
     private val userKeyword = "아마찌"
 
-    private val ApplicantAndFormResponses = listOf(
+    private val applicantAndFormResponses = listOf(
         ApplicantAndFormResponse(
             createUser(name = "로키"), false,
             createApplicationForms()[0]
@@ -73,7 +73,7 @@ internal class ApplicationFormRestControllerTest : RestControllerTest() {
         )
     )
 
-    private val userAndFormFindByUserKeywordResponses = listOf(ApplicantAndFormResponses[1])
+    private val applicantAndFormFindByUserKeywordResponses = listOf(applicantAndFormResponses[1])
 
     @Test
     fun `올바른 지원서 요청에 정상적으로 응답한다`() {
@@ -108,14 +108,14 @@ internal class ApplicationFormRestControllerTest : RestControllerTest() {
 
     @Test
     fun `특정 모집 id와 지원자에 대한 키워드(이름 or 이메일)로 지원서 정보들을 조회한다`() {
-        val recruitmentId = ApplicantAndFormResponses[0].applicationForm.recruitmentId
+        val recruitmentId = applicantAndFormResponses[0].applicationForm.recruitmentId
 
         every {
             applicantService.findAllByRecruitmentIdAndKeyword(
                 recruitmentId,
                 userKeyword
             )
-        } returns userAndFormFindByUserKeywordResponses
+        } returns applicantAndFormFindByUserKeywordResponses
 
         mockMvc.get("/api/recruitments/{recruitmentId}/application-forms", recruitmentId) {
             contentType = MediaType.APPLICATION_JSON
@@ -128,7 +128,7 @@ internal class ApplicationFormRestControllerTest : RestControllerTest() {
                     json(
                         objectMapper.writeValueAsString(
                             ApiResponse.success(
-                                userAndFormFindByUserKeywordResponses
+                                applicantAndFormFindByUserKeywordResponses
                             )
                         )
                     )
@@ -138,11 +138,11 @@ internal class ApplicationFormRestControllerTest : RestControllerTest() {
 
     @Test
     fun `특정 모집 id에 지원완료한 지원서 정보들을 조회한다`() {
-        val recruitmentId = ApplicantAndFormResponses[0].applicationForm.recruitmentId
+        val recruitmentId = applicantAndFormResponses[0].applicationForm.recruitmentId
 
         every {
             applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId)
-        } returns ApplicantAndFormResponses
+        } returns applicantAndFormResponses
 
         mockMvc.get(
             "/api/recruitments/{recruitmentId}/application-forms", recruitmentId
@@ -151,7 +151,7 @@ internal class ApplicationFormRestControllerTest : RestControllerTest() {
             header(AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(ApplicantAndFormResponses))) }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(applicantAndFormResponses))) }
         }
     }
 }

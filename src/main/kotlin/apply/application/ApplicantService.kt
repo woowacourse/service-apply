@@ -5,7 +5,7 @@ import apply.domain.cheater.CheaterRepository
 import apply.domain.user.User
 import apply.domain.user.UserRepository
 import org.springframework.stereotype.Service
-import javax.transaction.Transactional
+import org.springframework.transaction.annotation.Transactional
 
 @Transactional
 @Service
@@ -18,16 +18,16 @@ class ApplicantService(
         recruitmentId: Long,
         keyword: String? = null
     ): List<ApplicantAndFormResponse> {
-        val formsByUserId = applicationFormRepository
+        val formsByApplicantId = applicationFormRepository
             .findByRecruitmentIdAndSubmittedTrue(recruitmentId)
             .associateBy { it.userId }
-        val cheaterUserEmails = cheaterRepository.findAll().map { it.email }
-        return findAllByIdsAndKeyword(formsByUserId.keys, keyword)
+        val cheaterApplicantEmails = cheaterRepository.findAll().map { it.email }
+        return findAllByIdsAndKeyword(formsByApplicantId.keys, keyword)
             .map {
                 ApplicantAndFormResponse(
                     it,
-                    cheaterUserEmails.contains(it.email),
-                    formsByUserId.getValue(it.id)
+                    cheaterApplicantEmails.contains(it.email),
+                    formsByApplicantId.getValue(it.id)
                 )
             }
     }
