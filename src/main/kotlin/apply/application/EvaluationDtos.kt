@@ -153,7 +153,7 @@ data class MailTargetResponse(
     val name: String,
     val email: String
 ) {
-    constructor(applicantResponse: ApplicantResponse) : this(applicantResponse.name, applicantResponse.email)
+    constructor(userResponse: UserResponse) : this(userResponse.name, userResponse.email)
 }
 
 data class EvaluationItemScoreData(

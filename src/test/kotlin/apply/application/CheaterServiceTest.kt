@@ -1,9 +1,9 @@
 package apply.application
 
 import apply.createCheaterData
-import apply.domain.applicant.ApplicantRepository
 import apply.domain.cheater.Cheater
 import apply.domain.cheater.CheaterRepository
+import apply.domain.user.UserRepository
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import org.junit.jupiter.api.BeforeEach
@@ -15,7 +15,7 @@ import support.test.UnitTest
 @UnitTest
 internal class CheaterServiceTest {
     @MockK
-    private lateinit var applicantRepository: ApplicantRepository
+    private lateinit var userRepository: UserRepository
 
     @MockK
     private lateinit var cheaterRepository: CheaterRepository
@@ -23,7 +23,7 @@ internal class CheaterServiceTest {
 
     @BeforeEach
     internal fun setUp() {
-        cheaterService = CheaterService(applicantRepository, cheaterRepository)
+        cheaterService = CheaterService(userRepository, cheaterRepository)
     }
 
     @Test

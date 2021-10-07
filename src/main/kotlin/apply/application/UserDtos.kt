@@ -1,15 +1,15 @@
 package apply.application
 
-import apply.domain.applicant.Applicant
-import apply.domain.applicant.Gender
-import apply.domain.applicant.Password
 import apply.domain.applicationform.ApplicationForm
+import apply.domain.user.Gender
+import apply.domain.user.Password
+import apply.domain.user.User
 import java.time.LocalDate
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
-data class ApplicantResponse(
+data class UserResponse(
     val id: Long,
     val name: String,
     val email: String,
@@ -17,13 +17,13 @@ data class ApplicantResponse(
     val gender: Gender,
     val birthday: LocalDate
 ) {
-    constructor(applicant: Applicant) : this(
-        applicant.id,
-        applicant.name,
-        applicant.email,
-        applicant.phoneNumber,
-        applicant.gender,
-        applicant.birthday
+    constructor(user: User) : this(
+        user.id,
+        user.name,
+        user.email,
+        user.phoneNumber,
+        user.gender,
+        user.birthday
     )
 }
 
@@ -37,19 +37,19 @@ data class ApplicantAndFormResponse(
     val isCheater: Boolean,
     val applicationForm: ApplicationForm
 ) {
-    constructor(applicant: Applicant, isCheater: Boolean, applicationForm: ApplicationForm) : this(
-        applicant.id,
-        applicant.name,
-        applicant.email,
-        applicant.phoneNumber,
-        applicant.gender,
-        applicant.birthday,
+    constructor(user: User, isCheater: Boolean, applicationForm: ApplicationForm) : this(
+        user.id,
+        user.name,
+        user.email,
+        user.phoneNumber,
+        user.gender,
+        user.birthday,
         isCheater,
         applicationForm
     )
 }
 
-data class RegisterApplicantRequest(
+data class RegisterUserRequest(
     @field:NotBlank
     val name: String,
 
@@ -69,12 +69,12 @@ data class RegisterApplicantRequest(
     @field:NotNull
     val password: Password
 ) {
-    fun toEntity(): Applicant {
-        return Applicant(name, email, phoneNumber, gender, birthday, password)
+    fun toEntity(): User {
+        return User(name, email, phoneNumber, gender, birthday, password)
     }
 }
 
-data class AuthenticateApplicantRequest(
+data class AuthenticateUserRequest(
     @field:NotNull
     @field:Email
     val email: String,

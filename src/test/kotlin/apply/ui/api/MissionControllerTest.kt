@@ -1,7 +1,7 @@
 package apply.ui.api
 
-import apply.application.ApplicantService
 import apply.application.MissionService
+import apply.application.UserService
 import apply.createMissionData
 import apply.domain.evaluation.EvaluationRepository
 import com.ninjasquad.springmockk.MockkBean
@@ -23,7 +23,7 @@ import org.springframework.test.web.servlet.post
 )
 internal class MissionControllerTest : RestControllerTest() {
     @MockkBean
-    private lateinit var applicantService: ApplicantService
+    private lateinit var userService: UserService
 
     @MockkBean
     private lateinit var missionService: MissionService

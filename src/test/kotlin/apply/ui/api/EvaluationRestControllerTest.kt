@@ -1,9 +1,9 @@
 package apply.ui.api
 
-import apply.application.ApplicantService
 import apply.application.EvaluationData
 import apply.application.EvaluationResponse
 import apply.application.EvaluationService
+import apply.application.UserService
 import apply.createEvaluation
 import apply.createRecruitment
 import com.ninjasquad.springmockk.MockkBean
@@ -27,7 +27,7 @@ import org.springframework.test.web.servlet.post
 )
 internal class EvaluationRestControllerTest : RestControllerTest() {
     @MockkBean
-    private lateinit var applicantService: ApplicantService
+    private lateinit var userService: UserService
 
     @MockkBean
     private lateinit var evaluationService: EvaluationService

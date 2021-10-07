@@ -1,7 +1,7 @@
 package apply.security
 
-import apply.application.ApplicantService
-import apply.domain.applicant.Applicant
+import apply.application.UserService
+import apply.domain.user.User
 import org.springframework.core.MethodParameter
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.stereotype.Component
@@ -13,26 +13,26 @@ import org.springframework.web.method.support.ModelAndViewContainer
 private const val BEARER = "Bearer"
 
 @Component
-class LoginApplicantResolver(
+class LoginUserResolver(
     private val jwtTokenProvider: JwtTokenProvider,
-    private val applicantService: ApplicantService
+    private val userService: UserService
 ) : HandlerMethodArgumentResolver {
     override fun supportsParameter(parameter: MethodParameter) =
-        parameter.hasParameterAnnotation(LoginApplicant::class.java)
+        parameter.hasParameterAnnotation(LoginUser::class.java)
 
     override fun resolveArgument(
         parameter: MethodParameter,
         mavContainer: ModelAndViewContainer?,
         webRequest: NativeWebRequest,
         binderFactory: WebDataBinderFactory?
-    ): Applicant {
+    ): User {
         val token = extractBearerToken(webRequest)
         if (!jwtTokenProvider.isValidToken(token)) {
             throw IllegalArgumentException("로그인 정보가 정확하지 않습니다")
         }
-        val applicantEmail = jwtTokenProvider.getSubject(token)
+        val userEmail = jwtTokenProvider.getSubject(token)
 
-        return applicantService.getByEmail(applicantEmail)
+        return userService.getByEmail(userEmail)
     }
 
     private fun extractBearerToken(request: NativeWebRequest): String {

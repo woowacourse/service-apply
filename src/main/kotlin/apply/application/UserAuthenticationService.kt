@@ -1,40 +1,40 @@
 package apply.application
 
-import apply.domain.applicant.ApplicantAuthenticationException
-import apply.domain.applicant.ApplicantRepository
-import apply.domain.applicant.existsByEmail
-import apply.domain.applicant.findByEmail
 import apply.domain.authenticationcode.AuthenticationCode
 import apply.domain.authenticationcode.AuthenticationCodeRepository
 import apply.domain.authenticationcode.getLastByEmail
+import apply.domain.user.UserAuthenticationException
+import apply.domain.user.UserRepository
+import apply.domain.user.existsByEmail
+import apply.domain.user.findByEmail
 import apply.security.JwtTokenProvider
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Transactional
 @Service
-class ApplicantAuthenticationService(
-    private val applicantRepository: ApplicantRepository,
+class UserAuthenticationService(
+    private val userRepository: UserRepository,
     private val authenticationCodeRepository: AuthenticationCodeRepository,
     private val jwtTokenProvider: JwtTokenProvider
 ) {
-    fun generateToken(request: RegisterApplicantRequest): String {
+    fun generateToken(request: RegisterUserRequest): String {
         // todo: 회원 가입 시, email 이 authenticated 인지 확인하는 로직 추가
-        val applicant = applicantRepository.findByEmail(request.email)
+        val user = userRepository.findByEmail(request.email)
             ?.also { it.authenticate(request.toEntity()) }
-            ?: applicantRepository.save(request.toEntity())
-        return jwtTokenProvider.createToken(applicant.email)
+            ?: userRepository.save(request.toEntity())
+        return jwtTokenProvider.createToken(user.email)
     }
 
-    fun generateTokenByLogin(request: AuthenticateApplicantRequest): String {
-        val applicant = applicantRepository.findByEmail(request.email)
+    fun generateTokenByLogin(request: AuthenticateUserRequest): String {
+        val user = userRepository.findByEmail(request.email)
             ?.also { it.authenticate(request.password) }
-            ?: throw ApplicantAuthenticationException()
-        return jwtTokenProvider.createToken(applicant.email)
+            ?: throw UserAuthenticationException()
+        return jwtTokenProvider.createToken(user.email)
     }
 
     fun generateAuthenticationCode(email: String): String {
-        check(!applicantRepository.existsByEmail(email)) { "이미 등록된 이메일입니다." }
+        check(!userRepository.existsByEmail(email)) { "이미 등록된 이메일입니다." }
         val authenticationCode = authenticationCodeRepository.save(AuthenticationCode(email))
         return authenticationCode.code
     }
