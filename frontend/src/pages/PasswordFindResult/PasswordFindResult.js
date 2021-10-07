@@ -1,8 +1,12 @@
 import React from "react";
 import { useHistory, useLocation } from "react-router-dom";
+import Button from "../../components/@common/Button/Button";
 import Form from "../../components/form/Form/Form";
-import Button from "../../components/form/Button/Button";
 import PATH from "../../constants/path";
+import Container, {
+  CONTAINER_SIZE,
+} from "../../components/@common/Container/Container";
+
 import styles from "./PasswordFindResult.module.css";
 
 const PasswordFindResult = () => {
@@ -13,17 +17,16 @@ const PasswordFindResult = () => {
   const history = useHistory();
 
   return (
-    <div className={styles["password-find-result"]}>
+    <Container size={CONTAINER_SIZE.NARROW} title="비밀번호 찾기">
       <Form>
-        <h2>비밀번호 찾기</h2>
-        <div>
+        <p className={styles.text}>
           임시 비밀번호가 <strong>{email}</strong> 으로 발송되었습니다.
-        </div>
+        </p>
         <Button type="button" onClick={() => history.push(PATH.HOME)}>
           돌아가기
         </Button>
       </Form>
-    </div>
+    </Container>
   );
 };
 

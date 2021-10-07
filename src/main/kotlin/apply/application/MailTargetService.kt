@@ -1,9 +1,9 @@
 package apply.application
 
-import apply.domain.applicant.ApplicantRepository
 import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
+import apply.domain.user.UserRepository
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 
@@ -11,12 +11,12 @@ import javax.transaction.Transactional
 @Service
 class MailTargetService(
     private val evaluationTargetRepository: EvaluationTargetRepository,
-    private val applicantRepository: ApplicantRepository
+    private val userRepository: UserRepository
 ) {
     fun findMailTargets(evaluationId: Long, evaluationStatus: EvaluationStatus? = null): List<MailTargetResponse> {
-        val applicantIds = findEvaluationTargets(evaluationId, evaluationStatus).map { it.applicantId }
-        return applicantRepository.findAllById(applicantIds)
-            .map { MailTargetResponse(it.email) }
+        val userIds = findEvaluationTargets(evaluationId, evaluationStatus).map { it.userId }
+        return userRepository.findAllById(userIds)
+            .map { MailTargetResponse(it.name, it.email) }
     }
 
     private fun findEvaluationTargets(evaluationId: Long, evaluationStatus: EvaluationStatus?): List<EvaluationTarget> {
@@ -31,8 +31,9 @@ class MailTargetService(
         evaluationId: Long,
         evaluationStatus: EvaluationStatus
     ): List<EvaluationTarget> {
-        val evaluationTargets =
-            evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(evaluationId, evaluationStatus)
+        val evaluationTargets = evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(
+            evaluationId, evaluationStatus
+        )
         return if (evaluationStatus == EvaluationStatus.FAIL) {
             evaluationTargets.filter { it.submitted() }
         } else {

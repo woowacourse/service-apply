@@ -1,8 +1,8 @@
 package apply.domain.cheater
 
-import apply.domain.applicant.Applicant
-import apply.domain.applicant.Gender
-import apply.domain.applicant.Password
+import apply.domain.user.Gender
+import apply.domain.user.Password
+import apply.domain.user.User
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -14,7 +14,7 @@ import support.test.RepositoryTest
 internal class CheaterRepositoryTest(
     private val cheaterRepository: CheaterRepository
 ) {
-    private val cheater = Applicant(
+    private val cheater = User(
         id = 1L,
         name = "홍길동1",
         email = "a@email.com",
@@ -24,7 +24,7 @@ internal class CheaterRepositoryTest(
         password = Password("password")
     )
 
-    private val applicant = Applicant(
+    private val user = User(
         id = 2L,
         name = "홍길동2",
         email = "b@email.com",
@@ -43,7 +43,7 @@ internal class CheaterRepositoryTest(
     fun `지원자의 부정 행위 여부를 확인한다`() {
         assertAll(
             { assertThat(cheaterRepository.existsByEmail(cheater.email)).isTrue() },
-            { assertThat(cheaterRepository.existsByEmail(applicant.email)).isFalse() }
+            { assertThat(cheaterRepository.existsByEmail(user.email)).isFalse() }
         )
     }
 }

@@ -12,7 +12,7 @@ val pass: ApplicationValidator = ApplicationValidator { _, _ -> }
 val fail: ApplicationValidator = ApplicationValidator { _, _ -> throw DuplicateApplicationException() }
 
 fun createApplicationForm(
-    applicantId: Long = 1L,
+    userId: Long = 1L,
     recruitmentId: Long = 1L,
     referenceUrl: String = "https://example.com",
     applicationFormAnswers: ApplicationFormAnswers = createApplicationFormAnswers(),
@@ -20,7 +20,7 @@ fun createApplicationForm(
     submittedDateTime: LocalDateTime? = null
 ): ApplicationForm {
     return ApplicationForm(
-        applicantId,
+        userId,
         recruitmentId,
         referenceUrl,
         applicationFormAnswers,
@@ -61,7 +61,7 @@ fun createExceededAnswerRequest(
 
 fun createApplicationForms(
     applicationForm1: ApplicationForm = ApplicationForm(
-        applicantId = 1L,
+        userId = 1L,
         recruitmentId = 1L,
         referenceUrl = "http://example.com",
         answers = ApplicationFormAnswers(
@@ -72,7 +72,7 @@ fun createApplicationForms(
         )
     ),
     applicationForm2: ApplicationForm = ApplicationForm(
-        applicantId = 1L,
+        userId = 1L,
         recruitmentId = 2L,
         referenceUrl = "http://example2.com",
         answers = ApplicationFormAnswers(

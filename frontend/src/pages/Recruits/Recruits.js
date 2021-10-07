@@ -1,104 +1,89 @@
-import React, { useState, useEffect } from "react";
+import React, { useMemo } from "react";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import classNames from "classnames";
-import Box from "../../components/Box/Box";
-import RecruitItem from "../../components/RecruitItem/RecruitItem";
-import ApplicationFormItem from "../../components/ApplicationFormItem/ApplicationFormItem";
-import useTokenContext from "../../hooks/useTokenContext";
+
+import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
+
 import useRecruitmentContext from "../../hooks/useRecruitmentContext";
-import { RECRUITS_TAB, RECRUITS_TAB_LIST } from "../../constants/tab";
-import { ERROR_MESSAGE } from "../../constants/messages";
-import PATH from "../../constants/path";
-import styles from "./Recruits.module.css";
 import { generateQuery } from "../../utils/route/query";
+import PATH from "../../constants/path";
+import { RECRUITS_TAB, RECRUITS_TAB_LIST } from "../../constants/tab";
+import { RECRUITMENT_STATUS } from "../../constants/recruitment";
+
+import styles from "./Recruits.module.css";
+
+const BUTTON_LABEL = {
+  [RECRUITMENT_STATUS.RECRUITING]: "지원하기",
+  [RECRUITMENT_STATUS.RECRUITABLE]: "모집 예정",
+  [RECRUITMENT_STATUS.UNRECRUITABLE]: "일시 중지",
+  [RECRUITMENT_STATUS.ENDED]: "모집 종료",
+};
 
 const Recruits = () => {
+  const history = useHistory();
+
   const query = new URLSearchParams(useLocation().search);
   const selectedTab = query.get("status") ?? RECRUITS_TAB.ALL.name;
 
-  const [myApplication, setMyApplication] = useState([]);
+  const { recruitment } = useRecruitmentContext();
 
-  const { recruitment, fetchMyApplicationForms } = useRecruitmentContext();
-  const { token } = useTokenContext();
+  const sortedRecruitment = useMemo(
+    () =>
+      recruitment[selectedTab].sort((a, b) => {
+        return new Date(b.startDateTime) - new Date(a.startDateTime);
+      }),
+    [recruitment, selectedTab]
+  );
 
-  const history = useHistory();
-
-  useEffect(() => {
-    (async () => {
-      if (selectedTab !== RECRUITS_TAB.APPLIED.name) {
-        return;
-      }
-
-      if (token === "") {
-        alert(ERROR_MESSAGE.ACCESS.REQUIRED_LOGIN);
-        history.push(PATH.LOGIN);
-
-        return;
-      }
-
-      try {
-        const myApplicationFormData = await fetchMyApplicationForms(token);
-        const myRecruits = myApplicationFormData.map(
-          ({ recruitmentId, submitted }) => ({
-            ...recruitment.findById(recruitmentId),
-            submitted,
-          })
-        );
-
-        setMyApplication(myRecruits);
-      } catch (e) {
-        console.error(e);
-
-        alert(ERROR_MESSAGE.API.FETCHING_MY_APPLICATION);
-        history.push(PATH.LOGIN);
-      }
-    })();
-  }, [selectedTab, recruitment, fetchMyApplicationForms, token, history]);
+  const goToNewApplicationPage = (recruitmentId) => {
+    history.push({
+      pathname: PATH.NEW_APPLICATION,
+      state: {
+        recruitmentId,
+      },
+    });
+  };
 
   return (
-    <div className={styles.recruits}>
-      <Box>
+    <div className={styles.box}>
+      <nav className={styles.tab}>
         <ul className={styles["tab-list"]}>
           {RECRUITS_TAB_LIST.map(({ name, label }) => (
-            <li key={name} className={styles["tab-item"]}>
+            <li
+              key={name}
+              className={classNames(styles["tab-item"], {
+                [styles.active]: name === selectedTab,
+              })}
+            >
               <Link
                 to={{
                   pathname: PATH.RECRUITS,
                   search: generateQuery({ status: name }),
                 }}
-                className={classNames({
-                  [styles.active]: name === selectedTab,
-                })}
               >
                 {label}
               </Link>
             </li>
           ))}
-          {token && (
-            <li
-              className={classNames(
-                styles["tab-item"],
-                styles["edit-password"]
-              )}
-            >
-              <Link to={PATH.EDIT_PASSWORD}>비밀번호 변경</Link>
-            </li>
-          )}
         </ul>
-        {selectedTab === RECRUITS_TAB.APPLIED.name
-          ? myApplication.length !== 0 &&
-            myApplication.map((recruitment) => (
-              <ApplicationFormItem
-                className={styles["application-forms"]}
-                key={recruitment.id}
-                recruitment={recruitment}
-                submitted={recruitment.submitted}
-              />
-            ))
-          : recruitment[selectedTab].map((recruitment) => (
-              <RecruitItem key={recruitment.id} recruitment={recruitment} />
-            ))}
-      </Box>
+      </nav>
+
+      {recruitment && (
+        <div className={styles["recruitment-list"]} role="list">
+          {sortedRecruitment.map((recruitment) => (
+            <RecruitmentItem
+              key={recruitment.id}
+              recruitment={recruitment}
+              activeButton={
+                recruitment.status === RECRUITMENT_STATUS.RECRUITING
+              }
+              buttonLabel={BUTTON_LABEL[recruitment.status]}
+              onClick={() => goToNewApplicationPage(recruitment.id)}
+              role="listitem"
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

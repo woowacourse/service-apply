@@ -1,16 +1,16 @@
 package apply.ui.api
 
 import apply.NOTE
-import apply.application.ApplicantService
-import apply.application.EvaluationTargetCsvService
 import apply.application.EvaluationItemResponse
 import apply.application.EvaluationItemScoreData
+import apply.application.EvaluationTargetCsvService
 import apply.application.EvaluationTargetData
 import apply.application.EvaluationTargetResponse
 import apply.application.EvaluationTargetService
 import apply.application.GradeEvaluationResponse
 import apply.application.MailTargetResponse
 import apply.application.MailTargetService
+import apply.application.UserService
 import apply.createEvaluationItem
 import apply.domain.evaluationtarget.EvaluationAnswers
 import apply.domain.evaluationtarget.EvaluationStatus
@@ -48,7 +48,7 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
     private lateinit var jwtTokenProvider: JwtTokenProvider
 
     @MockkBean
-    private lateinit var applicantService: ApplicantService
+    private lateinit var userService: UserService
 
     @MockkBean
     private lateinit var evaluationTargetService: EvaluationTargetService
@@ -249,7 +249,7 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
                 evaluationId,
                 enumStatus
             )
-        } returns listOf(MailTargetResponse("roki@woowacourse.com"))
+        } returns listOf(MailTargetResponse("김경록", "roki@woowacourse.com"))
 
         mockMvc.perform(
             RestDocumentationRequestBuilders.get(
@@ -271,6 +271,7 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
                     ),
                     responseFields(
                         fieldWithPath("message").description("응답 메시지"),
+                        fieldWithPath("body.[].name").type(JsonFieldType.STRING).description("대상 이름"),
                         fieldWithPath("body.[].email").type(JsonFieldType.STRING).description("대상 E-MAIL")
                     )
                 )

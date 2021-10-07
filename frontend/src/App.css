@@ -1,36 +1,71 @@
+:root {
+  --gray-002: #eee;
+  --gray-003: #ddd;
+  --gray-004: #ccc;
+  --gray-005: #bbb;
+  --gray-006: #aaa;
+  --gray-007: #999;
+  --gray-008: #666;
+  --black: #333;
+  --white: #fff;
+  --light-blue-gray: #f1f2f6;
+  --blue: #279cf6;
+
+  --pc-main-width: 800px;
+  --pc-main-width-narrow: 512px;
+
+  --tooltip-z-index: 1000;
+  --tooltip-dimmed-z-index: 999;
+  --header-z-index: 998;
+  --nav-z-index: 997;
+}
+
 * {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
     "Apple SD Gothic Neo", Roboto, "Helvetica Neue", Arial, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 html,
 body {
-  margin: 0;
-  padding: 0;
   height: 100%;
-  background: #ced6e0;
+  background: var(--light-blue-gray);
+  color: var(--black);
 }
 
-#root {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+ul,
+ol {
+  list-style: none;
 }
 
-.main-view {
-  flex: 1 0 auto;
+a {
+  text-decoration: none;
 }
 
 button {
-  background-color: #ffffff;
-  border-radius: 10px;
-  font-size: 16px;
-  border: 0;
-  outline: 0;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
 }
 
-button:active {
-  background-color: #cccccc;
+#app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  flex: 1;
+  margin: 0 auto;
+  padding: 2.5rem 0;
+}
+
+input,
+textarea {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }

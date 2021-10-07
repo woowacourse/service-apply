@@ -1,8 +1,8 @@
 package apply.ui.admin.cheater
 
-import apply.application.ApplicantService
 import apply.application.CheaterResponse
 import apply.application.CheaterService
+import apply.application.UserService
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
@@ -14,6 +14,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.data.renderer.ComponentRenderer
 import com.vaadin.flow.data.renderer.Renderer
 import com.vaadin.flow.router.Route
+import support.views.NO_NAME
 import support.views.addSortableColumn
 import support.views.addSortableDateTimeColumn
 import support.views.createDeleteButtonWithDialog
@@ -21,7 +22,7 @@ import support.views.createPrimaryButton
 
 @Route(value = "admin/cheaters", layout = BaseLayout::class)
 class CheatersView(
-    private val applicantService: ApplicantService,
+    private val userService: UserService,
     private val cheaterService: CheaterService
 ) : VerticalLayout() {
     init {
@@ -38,7 +39,7 @@ class CheatersView(
     private fun createAddCheater(): Component {
         return HorizontalLayout(
             createPrimaryButton("추가") {
-                CheaterFormDialog(applicantService, cheaterService) {
+                CheaterFormDialog(userService, cheaterService) {
                     UI.getCurrent().page.reload()
                 }
             }
@@ -50,7 +51,7 @@ class CheatersView(
 
     private fun createCheaterGrid(): Grid<CheaterResponse> {
         return Grid<CheaterResponse>(10).apply {
-            addSortableColumn("이름") { it.name ?: "(이름 없음)" }
+            addSortableColumn("이름") { it.name ?: NO_NAME }
             addSortableColumn("이메일") { it.email }
             addSortableDateTimeColumn("등록일", CheaterResponse::createdDateTime)
             addSortableColumn("설명") { it.description }
