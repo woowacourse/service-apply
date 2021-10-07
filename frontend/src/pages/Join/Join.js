@@ -119,7 +119,6 @@ const Join = () => {
     if (emailStatus === EMAIL_STATUS.AUTHENTICATED) {
       return (
         <div
-          type="button"
           className={classNames(
             styles["authenticated"],
             styles["input-button"]
