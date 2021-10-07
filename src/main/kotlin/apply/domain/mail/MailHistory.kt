@@ -1,23 +1,25 @@
-package apply.domain.email
+package apply.domain.mail
 
 import support.domain.BaseEntity
 import java.time.LocalDateTime
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.Lob
 
-// TODO : flyway 데이터타입 수정
 @Entity
-class EmailHistory(
+class MailHistory(
     @Column(nullable = false)
     val subject: String,
 
     @Column(nullable = false)
+    @Lob
     val body: String,
 
     @Column(nullable = false)
     val sender: String,
 
     @Column(nullable = false)
+    @Lob
     val recipients: String,
 
     @Column(nullable = false)

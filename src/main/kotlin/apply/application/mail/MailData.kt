@@ -1,6 +1,6 @@
 package apply.application.mail
 
-import apply.domain.email.EmailHistory
+import apply.domain.mail.MailHistory
 import apply.utils.DELIMITER
 import java.time.LocalDateTime
 import javax.validation.constraints.NotEmpty
@@ -34,13 +34,13 @@ data class MailData(
         id: Long
     ) : this(subject, body, sender, recipients.stringToList(), sentTime, id)
 
-    constructor(emailHistory: EmailHistory) : this(
-        emailHistory.subject,
-        emailHistory.body,
-        emailHistory.sender,
-        emailHistory.recipients.stringToList(),
-        emailHistory.sentTime,
-        emailHistory.id
+    constructor(mailHistory: MailHistory) : this(
+        mailHistory.subject,
+        mailHistory.body,
+        mailHistory.sender,
+        mailHistory.recipients.stringToList(),
+        mailHistory.sentTime,
+        mailHistory.id
     )
 
     fun recipientsCount(): Int {

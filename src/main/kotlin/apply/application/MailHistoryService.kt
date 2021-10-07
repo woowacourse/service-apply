@@ -1,9 +1,9 @@
 package apply.application
 
 import apply.application.mail.MailData
-import apply.domain.email.EmailHistory
-import apply.domain.email.EmailHistoryRepository
-import apply.domain.email.getById
+import apply.domain.mail.MailHistory
+import apply.domain.mail.EmailHistoryRepository
+import apply.domain.mail.getById
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 
@@ -14,7 +14,7 @@ class MailHistoryService(
 ) {
     fun save(mailData: MailData) {
         emailHistoryRepository.save(
-            EmailHistory(
+            MailHistory(
                 mailData.subject,
                 mailData.body,
                 mailData.sender,
