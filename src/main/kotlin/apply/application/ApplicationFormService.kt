@@ -5,9 +5,12 @@ import apply.domain.applicationform.ApplicationFormAnswer
 import apply.domain.applicationform.ApplicationFormAnswers
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.applicationform.ApplicationValidator
+import apply.domain.cheater.CheaterRepository
 import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitmentitem.RecruitmentItemRepository
+import apply.domain.user.User
+import apply.domain.user.UserRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional

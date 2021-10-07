@@ -1,7 +1,7 @@
 package apply.ui.api
 
-import apply.application.UserAndFormResponse
-import apply.application.UserService
+import apply.application.ApplicantAndFormResponse
+import apply.application.ApplicantService
 import apply.application.ApplicationFormResponse
 import apply.application.ApplicationFormService
 import apply.application.CreateApplicationFormRequest
@@ -25,7 +25,7 @@ import javax.validation.Valid
 @RequestMapping("/api")
 class ApplicationFormRestController(
     private val applicationFormService: ApplicationFormService,
-    private val userService: UserService,
+    private val applicantService: ApplicantService,
     private val mailService: MailService
 ) {
     @GetMapping("/application-forms/me")
@@ -70,8 +70,8 @@ class ApplicationFormRestController(
     fun findAllByRecruitmentIdAndKeyword(
         @PathVariable recruitmentId: Long,
         @RequestParam keyword: String?
-    ): ResponseEntity<ApiResponse<List<UserAndFormResponse>>> {
-        val users = userService.findAllByRecruitmentIdAndKeyword(recruitmentId, keyword)
-        return ResponseEntity.ok(ApiResponse.success(users))
+    ): ResponseEntity<ApiResponse<List<ApplicantAndFormResponse>>> {
+        val applicants = applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId, keyword)
+        return ResponseEntity.ok(ApiResponse.success(applicants))
     }
 }

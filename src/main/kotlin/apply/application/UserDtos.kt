@@ -27,7 +27,7 @@ data class UserResponse(
     )
 }
 
-data class UserAndFormResponse(
+data class ApplicantAndFormResponse(
     val id: Long,
     val name: String,
     val email: String,

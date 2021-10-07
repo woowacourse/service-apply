@@ -14,8 +14,8 @@ class MailTargetService(
     private val userRepository: UserRepository
 ) {
     fun findMailTargets(evaluationId: Long, evaluationStatus: EvaluationStatus? = null): List<MailTargetResponse> {
-        val applicantIds = findEvaluationTargets(evaluationId, evaluationStatus).map { it.userId }
-        return userRepository.findAllById(applicantIds)
+        val userIds = findEvaluationTargets(evaluationId, evaluationStatus).map { it.userId }
+        return userRepository.findAllById(userIds)
             .map { MailTargetResponse(it.name, it.email) }
     }
 
@@ -31,8 +31,9 @@ class MailTargetService(
         evaluationId: Long,
         evaluationStatus: EvaluationStatus
     ): List<EvaluationTarget> {
-        val evaluationTargets =
-            evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(evaluationId, evaluationStatus)
+        val evaluationTargets = evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(
+            evaluationId, evaluationStatus
+        )
         return if (evaluationStatus == EvaluationStatus.FAIL) {
             evaluationTargets.filter { it.submitted() }
         } else {

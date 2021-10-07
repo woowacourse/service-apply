@@ -1,6 +1,7 @@
 package apply.ui.api
 
-import apply.application.UserAndFormResponse
+import apply.application.ApplicantAndFormResponse
+import apply.application.ApplicantService
 import apply.application.UserService
 import apply.application.ApplicationFormResponse
 import apply.application.ApplicationFormService
@@ -28,6 +29,9 @@ import support.createLocalDate
 internal class ApplicationFormRestControllerTest : RestControllerTest() {
     @MockkBean
     private lateinit var applicationFormService: ApplicationFormService
+
+    @MockkBean
+    private lateinit var applicantService: ApplicantService
 
     @MockkBean
     private lateinit var mailService: MailService
@@ -58,18 +62,18 @@ internal class ApplicationFormRestControllerTest : RestControllerTest() {
 
     private val userKeyword = "아마찌"
 
-    private val userAndFormResponses = listOf(
-        UserAndFormResponse(
+    private val ApplicantAndFormResponses = listOf(
+        ApplicantAndFormResponse(
             createUser(name = "로키"), false,
             createApplicationForms()[0]
         ),
-        UserAndFormResponse(
+        ApplicantAndFormResponse(
             createUser(name = userKeyword), false,
             createApplicationForms()[1]
         )
     )
 
-    private val userAndFormFindByUserKeywordResponses = listOf(userAndFormResponses[1])
+    private val userAndFormFindByUserKeywordResponses = listOf(ApplicantAndFormResponses[1])
 
     @Test
     fun `올바른 지원서 요청에 정상적으로 응답한다`() {
@@ -104,10 +108,10 @@ internal class ApplicationFormRestControllerTest : RestControllerTest() {
 
     @Test
     fun `특정 모집 id와 지원자에 대한 키워드(이름 or 이메일)로 지원서 정보들을 조회한다`() {
-        val recruitmentId = userAndFormResponses[0].applicationForm.recruitmentId
+        val recruitmentId = ApplicantAndFormResponses[0].applicationForm.recruitmentId
 
         every {
-            userService.findAllByRecruitmentIdAndKeyword(
+            applicantService.findAllByRecruitmentIdAndKeyword(
                 recruitmentId,
                 userKeyword
             )
@@ -134,11 +138,11 @@ internal class ApplicationFormRestControllerTest : RestControllerTest() {
 
     @Test
     fun `특정 모집 id에 지원완료한 지원서 정보들을 조회한다`() {
-        val recruitmentId = userAndFormResponses[0].applicationForm.recruitmentId
+        val recruitmentId = ApplicantAndFormResponses[0].applicationForm.recruitmentId
 
         every {
-            userService.findAllByRecruitmentIdAndKeyword(recruitmentId)
-        } returns userAndFormResponses
+            applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId)
+        } returns ApplicantAndFormResponses
 
         mockMvc.get(
             "/api/recruitments/{recruitmentId}/application-forms", recruitmentId
@@ -147,7 +151,7 @@ internal class ApplicationFormRestControllerTest : RestControllerTest() {
             header(AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(userAndFormResponses))) }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(ApplicantAndFormResponses))) }
         }
     }
 }
