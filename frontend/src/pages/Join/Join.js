@@ -81,7 +81,7 @@ const Join = () => {
     }
   };
 
-  const { handleSubmit, errorMessage, ...methods } = useForm({
+  const { handleSubmit, errorMessage, value, ...methods } = useForm({
     validators: {
       email: validateEmail,
       name: validateName,
@@ -106,6 +106,7 @@ const Join = () => {
           variant="outlined"
           onClick={onIssueEmailCode}
           className={styles["input-button"]}
+          disabled={value.email === "" || errorMessage.email !== null}
         >
           이메일
           <br />
@@ -131,7 +132,7 @@ const Join = () => {
   };
 
   const onIssueEmailCode = () => {
-    // TODO: 인증코드 이메일 발송 api 요청
+    // TODO: 인증코드 이메일 발송 api 요청(이메일 중복확인 메세지 필요)
 
     setEmailStatus(EMAIL_STATUS.WAITING_AUTHENTICATION);
     onStartTimer();
@@ -146,7 +147,7 @@ const Join = () => {
 
   return (
     <Container title="회원가입" size={CONTAINER_SIZE.NARROW}>
-      <FormProvider errorMessage={errorMessage} {...methods}>
+      <FormProvider errorMessage={errorMessage} value={value} {...methods}>
         <Form onSubmit={handleSubmit}>
           <SummaryCheckField
             name="policy"
