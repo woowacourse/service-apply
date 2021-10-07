@@ -29,6 +29,7 @@ class UserInformation(
     fun changePhoneNumber(phoneNumber: String) {
         this.phoneNumber = phoneNumber
     }
+
     fun same(name: String, birthday: LocalDate): Boolean {
         return this.name == name && this.birthday == birthday
     }
