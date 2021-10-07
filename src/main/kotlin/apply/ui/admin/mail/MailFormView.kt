@@ -1,10 +1,10 @@
 package apply.ui.admin.mail
 
-import apply.application.ApplicantService
 import apply.application.EvaluationService
 import apply.application.MailTargetResponse
 import apply.application.MailTargetService
 import apply.application.RecruitmentService
+import apply.application.UserService
 import apply.application.mail.MailData
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
@@ -34,7 +34,7 @@ import support.views.createUpload
 
 @Route(value = "admin/mails", layout = BaseLayout::class)
 class MailFormView(
-    private val applicantService: ApplicantService,
+    private val userService: UserService,
     private val recruitmentService: RecruitmentService,
     private val evaluationService: EvaluationService,
     private val mailTargetService: MailTargetService,
@@ -111,7 +111,7 @@ class MailFormView(
 
     private fun createIndividualLoadButton(): Button {
         return createNormalButton("개별 불러오기") {
-            IndividualMailTargetDialog(applicantService) {
+            IndividualMailTargetDialog(userService) {
                 mailTargets.addAndRefresh(it)
             }
         }

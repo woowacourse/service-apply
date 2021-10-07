@@ -2,7 +2,7 @@ package apply.application.mail
 
 import apply.application.ApplicationProperties
 import apply.application.ResetPasswordRequest
-import apply.domain.applicant.Applicant
+import apply.domain.user.User
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.thymeleaf.context.Context
@@ -33,18 +33,18 @@ class MailService(
     }
 
     @Async
-    fun sendFormSubmittedMail(applicant: Applicant) {
+    fun sendFormSubmittedMail(user: User) {
         val context = Context().apply {
             setVariables(
                 mapOf(
-                    "name" to applicant.name,
+                    "name" to user.name,
                     "url" to applicationProperties.url
                 )
             )
         }
         mailSender.send(
-            applicant.email,
-            "${applicant.name}님, 지원이 완료되었습니다.",
+            user.email,
+            "${user.name}님, 지원이 완료되었습니다.",
             templateEngine.process("mail/submission-complete", context)
         )
     }

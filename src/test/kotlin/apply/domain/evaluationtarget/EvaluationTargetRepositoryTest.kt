@@ -18,11 +18,11 @@ class EvaluationTargetRepositoryTest(
     private val evaluationTargets: List<EvaluationTarget> = listOf(
         EvaluationTarget(
             EVALUATION_ID,
-            applicantId = 1L
+            userId = 1L
         ),
         EvaluationTarget(
             EVALUATION_ID,
-            applicantId = 2L
+            userId = 2L
         )
     )
 
@@ -35,7 +35,7 @@ class EvaluationTargetRepositoryTest(
     fun `평가의 id로 평가 대상자를 찾는다`() {
         val results = evaluationTargetRepository.findAllByEvaluationId(EVALUATION_ID)
 
-        assertThat(results).usingElementComparatorOnFields("applicantId").isEqualTo(evaluationTargets)
+        assertThat(results).usingElementComparatorOnFields("userId").isEqualTo(evaluationTargets)
     }
 
     @CsvSource(value = ["1,true", "2,false"])
@@ -48,7 +48,7 @@ class EvaluationTargetRepositoryTest(
 
     @Test
     fun `지원자의 id들에 해당되는 평가 대상자를 제거한다`() {
-        evaluationTargetRepository.deleteByApplicantIdIn(setOf(1L, 2L))
+        evaluationTargetRepository.deleteByUserIdIn(setOf(1L, 2L))
 
         assertThat(evaluationTargetRepository.count()).isEqualTo(0)
     }
@@ -58,11 +58,11 @@ class EvaluationTargetRepositoryTest(
         evaluationTargetRepository.save(
             EvaluationTarget(
                 evaluationId = 2L,
-                applicantId = 1L
+                userId = 1L
             )
         )
 
-        evaluationTargetRepository.deleteByEvaluationIdAndApplicantIdIn(1L, setOf(1L, 2L))
+        evaluationTargetRepository.deleteByEvaluationIdAndUserIdIn(1L, setOf(1L, 2L))
 
         assertThat(evaluationTargetRepository.count()).isEqualTo(1)
     }
@@ -75,9 +75,9 @@ class EvaluationTargetRepositoryTest(
     ) {
         evaluationTargetRepository.saveAll(
             listOf(
-                EvaluationTarget(EVALUATION_ID, applicantId = 1L, evaluationStatus = EvaluationStatus.PASS),
-                EvaluationTarget(EVALUATION_ID, applicantId = 2L, evaluationStatus = EvaluationStatus.PASS),
-                EvaluationTarget(EVALUATION_ID, applicantId = 3L, evaluationStatus = EvaluationStatus.FAIL)
+                EvaluationTarget(EVALUATION_ID, userId = 1L, evaluationStatus = EvaluationStatus.PASS),
+                EvaluationTarget(EVALUATION_ID, userId = 2L, evaluationStatus = EvaluationStatus.PASS),
+                EvaluationTarget(EVALUATION_ID, userId = 3L, evaluationStatus = EvaluationStatus.FAIL)
             )
         )
         val actual =
