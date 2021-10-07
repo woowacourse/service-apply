@@ -9,13 +9,13 @@ import javax.persistence.UniqueConstraint
 
 @Table(
     uniqueConstraints = [
-        UniqueConstraint(name = "uk_assignment", columnNames = ["missionId", "applicantId"])
+        UniqueConstraint(name = "uk_assignment", columnNames = ["missionId", "userId"])
     ]
 )
 @Entity
 class Assignment(
     @Column(nullable = false)
-    val applicantId: Long,
+    val userId: Long,
 
     @Column(nullable = false)
     val missionId: Long,

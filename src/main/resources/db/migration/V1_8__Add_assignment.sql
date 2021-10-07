@@ -1,7 +1,7 @@
 create table assignment
 (
     id               bigint       not null auto_increment,
-    applicant_id     bigint       not null,
+    user_id          bigint       not null,
     github_username  varchar(255) not null,
     mission_id       bigint       not null,
     note             longtext,
@@ -11,4 +11,4 @@ create table assignment
   default charset = utf8mb4;
 
 alter table assignment
-    add constraint uk_assignment unique (mission_id, applicant_id);
+    add constraint uk_assignment unique (mission_id, user_id);

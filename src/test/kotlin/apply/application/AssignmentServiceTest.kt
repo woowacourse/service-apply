@@ -39,7 +39,7 @@ class AssignmentServiceTest {
 
     @Test
     fun `과제 제출물을 생성한다`() {
-        every { assignmentRepository.existsByMissionIdAndApplicantId(any(), any()) } returns false
+        every { assignmentRepository.existsByMissionIdAndUserId(any(), any()) } returns false
         every { missionRepository.getById(any()) } returns createMission()
         every {
             evaluationTargetRepository.findByEvaluationIdAndUserId(any(), any())
@@ -51,7 +51,7 @@ class AssignmentServiceTest {
 
     @Test
     fun `과제 제출 기간이 아니면 생성할 수 없다`() {
-        every { assignmentRepository.existsByMissionIdAndApplicantId(any(), any()) } returns false
+        every { assignmentRepository.existsByMissionIdAndUserId(any(), any()) } returns false
         every { missionRepository.getById(any()) } returns createMission(
             startDateTime = LocalDateTime.now().minusDays(2), endDateTime = LocalDateTime.now().minusDays(1)
         )
@@ -65,7 +65,7 @@ class AssignmentServiceTest {
 
     @Test
     fun `이미 제출한 이력이 있는 경우 새로 제출할 수 없다`() {
-        every { assignmentRepository.existsByMissionIdAndApplicantId(any(), any()) } returns true
+        every { assignmentRepository.existsByMissionIdAndUserId(any(), any()) } returns true
         every { missionRepository.getById(any()) } returns createMission()
         every {
             evaluationTargetRepository.findByEvaluationIdAndUserId(any(), any())
@@ -77,7 +77,7 @@ class AssignmentServiceTest {
 
     @Test
     fun `평가 대상자가 아닌 경우 과제를 제출할 수 없다`() {
-        every { assignmentRepository.existsByMissionIdAndApplicantId(any(), any()) } returns false
+        every { assignmentRepository.existsByMissionIdAndUserId(any(), any()) } returns false
         every { missionRepository.getById(any()) } returns createMission()
         every { evaluationTargetRepository.findByEvaluationIdAndUserId(any(), any()) } returns null
         every { assignmentRepository.save(any()) } returns createAssignment()
@@ -89,7 +89,7 @@ class AssignmentServiceTest {
     fun `평가 상태가 'Waiting'이라면, 'Pass'로 업데이트한다`() {
         var evaluationTarget = createEvaluationTarget()
 
-        every { assignmentRepository.existsByMissionIdAndApplicantId(any(), any()) } returns false
+        every { assignmentRepository.existsByMissionIdAndUserId(any(), any()) } returns false
         every { missionRepository.getById(any()) } returns createMission()
         every { evaluationTargetRepository.findByEvaluationIdAndUserId(any(), any()) } returns evaluationTarget
         every { assignmentRepository.save(any()) } returns createAssignment()
