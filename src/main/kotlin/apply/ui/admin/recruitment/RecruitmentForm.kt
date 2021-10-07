@@ -12,6 +12,7 @@ import support.views.BindingIdentityFormLayout
 import support.views.createBooleanRadioButtonGroup
 import support.views.createErrorSmallButton
 import support.views.createItemSelect
+import support.views.createPrimaryButton
 import support.views.createPrimarySmallButton
 import java.time.LocalDateTime
 
@@ -28,10 +29,22 @@ class RecruitmentForm() : BindingIdentityFormLayout<RecruitmentData>(Recruitment
     private val recruitmentItems: MutableList<RecruitmentItemForm> = mutableListOf()
 
     init {
-        add(title, term, startDateTime, endDateTime, recruitable, hidden)
+        val termButton = createTermManageButton()
+        add(title, term, termButton, startDateTime, endDateTime, recruitable, hidden)
         addFormItem(createAddButton(), "모집 항목")
-        setResponsiveSteps(ResponsiveStep("0", 1))
+        setResponsiveSteps(ResponsiveStep("0", 7))
+        children.forEach {
+            setColspan(it, 7)
+        }
+        setColspan(termButton,1)
+        setColspan(term, 6)
         drawRequired()
+    }
+
+    private fun createTermManageButton(): Button {
+        return createPrimaryButton("기수 관리") {
+
+        }
     }
 
     constructor(terms: List<TermSelectData>) : this() {
