@@ -19,7 +19,7 @@ import support.views.addSortableColumn
 import support.views.createPrimaryButton
 import support.views.createPrimarySmallButton
 
-@Route(value = "admin/mail-history", layout = BaseLayout::class)
+@Route(value = "admin/mails", layout = BaseLayout::class)
 class MailView(
     private val mailHistoryService: MailHistoryService
 ) : VerticalLayout() {

@@ -12,6 +12,7 @@ import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.grid.Grid
+import com.vaadin.flow.component.html.Label
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
@@ -53,9 +54,10 @@ class MailFormView(
     private val body: TextArea = createBody()
     private val mailTargets: MutableSet<MailTargetResponse> = mutableSetOf()
     private val mailTargetsGrid: Grid<MailTargetResponse> = createMailTargetsGrid(mailTargets)
+    private val mailTargetGridTitle: Label = Label()
     private val recipientFilter: Component = createRecipientFilter()
     private val fileUpload: Component = createFileUpload()
-    private var title: Title = Title()
+    private val title: Title = Title()
     private val submitButton: Component = createSubmitButton()
 
     init {
@@ -70,7 +72,9 @@ class MailFormView(
             val (id, value) = it.destructured
             setDisplayName(value.toDisplayName())
             if (value == DETAIL_VALUE) {
-                this.fill(mailHistoryService.getById(id.toLong()))
+                val mailData = mailHistoryService.getById(id.toLong())
+                setRowCount(mailData.recipientsCount())
+                this.fill(mailData)
                 this.recipientFilter.isVisible = false
                 this.mailTargetsGrid.getColumnByKey(DELETE_BUTTON).isVisible = false
                 this.fileUpload.isVisible = false
@@ -83,11 +87,16 @@ class MailFormView(
         title.text = "메일 $displayName"
     }
 
+    private fun setRowCount(count: Int) {
+        mailTargetGridTitle.text = "받는사람 (${count})"
+    }
+
     private fun createMailForm(): Component {
         return VerticalLayout(
             subject,
             createSender(),
             recipientFilter,
+            mailTargetGridTitle,
             mailTargetsGrid,
             body,
             fileUpload,
@@ -125,27 +134,11 @@ class MailFormView(
     }
 
     private fun createEnterBox(): HorizontalLayout {
-        return createEnterBox(labelText = "받는사람") {
+        return createEnterBox(labelText = "받는사람 추가") {
             if (it.isNotBlank()) {
                 mailTargets.addAndRefresh(MailTargetResponse(NO_NAME, it))
             }
-        }
-    }
-
-    private fun createMailTargetsGrid(mailTargets: Set<MailTargetResponse>): Grid<MailTargetResponse> {
-        return Grid<MailTargetResponse>(10).apply {
-            addSortableColumn("이름", MailTargetResponse::name)
-            addSortableColumn("이메일", MailTargetResponse::email)
-            addColumn(createRemoveButton()).key = DELETE_BUTTON
-            setItems(mailTargets)
-        }
-    }
-
-    private fun createRemoveButton(): Renderer<MailTargetResponse> {
-        return ComponentRenderer<Component, MailTargetResponse> { response ->
-            createErrorSmallButton("제거") {
-                mailTargets.removeAndRefresh(response)
-            }
+            setRowCount(mailTargets.size)
         }
     }
 
@@ -154,6 +147,7 @@ class MailFormView(
             IndividualMailTargetDialog(userService) {
                 mailTargets.addAndRefresh(it)
             }
+            setRowCount(mailTargets.size)
         }
     }
 
@@ -162,6 +156,7 @@ class MailFormView(
             GroupMailTargetDialog(recruitmentService, evaluationService, mailTargetService) {
                 mailTargets.addAllAndRefresh(it)
             }
+            setRowCount(mailTargets.size)
         }
     }
 
@@ -196,7 +191,9 @@ class MailFormView(
     }
 
     private fun MutableSet<MailTargetResponse>.addAndRefresh(element: MailTargetResponse) {
-        add(element).also { mailTargetsGrid.dataProvider.refreshAll() }
+        add(element).also {
+            mailTargetsGrid.dataProvider.refreshAll()
+        }
     }
 
     private fun MutableSet<MailTargetResponse>.addAllAndRefresh(elements: Collection<MailTargetResponse>) {
@@ -205,6 +202,23 @@ class MailFormView(
 
     private fun MutableSet<MailTargetResponse>.removeAndRefresh(element: MailTargetResponse) {
         remove(element).also { mailTargetsGrid.dataProvider.refreshAll() }
+    }
+
+    private fun createMailTargetsGrid(mailTargets: Set<MailTargetResponse>): Grid<MailTargetResponse> {
+        return Grid<MailTargetResponse>(10).apply {
+            addSortableColumn("이름", MailTargetResponse::name)
+            addSortableColumn("이메일", MailTargetResponse::email)
+            addColumn(createRemoveButton()).key = DELETE_BUTTON
+            setItems(mailTargets)
+        }
+    }
+
+    private fun createRemoveButton(): Renderer<MailTargetResponse> {
+        return ComponentRenderer<Component, MailTargetResponse> { response ->
+            createErrorSmallButton("제거") {
+                mailTargets.removeAndRefresh(response)
+            }
+        }
     }
 
     override fun bindOrNull(): MailData? {

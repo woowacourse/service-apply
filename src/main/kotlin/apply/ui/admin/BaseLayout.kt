@@ -3,7 +3,7 @@ package apply.ui.admin
 import apply.application.RecruitmentService
 import apply.ui.admin.cheater.CheatersView
 import apply.ui.admin.evaluation.EvaluationsView
-import apply.ui.admin.mail.MailFormView
+import apply.ui.admin.mail.MailView
 import apply.ui.admin.recruitment.RecruitmentsView
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.applayout.AppLayout
@@ -58,7 +58,7 @@ class BaseLayout(
             "과제 관리".accordionOf("admin/missions", recruitments),
             "선발 과정".accordionOf("admin/selections", recruitments),
             "부정 행위자" of CheatersView::class.java,
-            "메일 관리" of MailFormView::class.java
+            "메일 관리" of MailView::class.java
         )
     }
 }
