@@ -1,42 +1,26 @@
 package apply.ui.admin
 
-import apply.application.RecruitmentResponse
 import apply.application.RecruitmentService
 import apply.ui.admin.cheater.CheatersView
 import apply.ui.admin.evaluation.EvaluationsView
 import apply.ui.admin.mail.MailFormView
 import apply.ui.admin.recruitment.RecruitmentsView
 import com.vaadin.flow.component.Component
-import com.vaadin.flow.component.accordion.Accordion
 import com.vaadin.flow.component.applayout.AppLayout
 import com.vaadin.flow.component.applayout.DrawerToggle
-import com.vaadin.flow.component.details.DetailsVariant
-import com.vaadin.flow.component.html.Anchor
 import com.vaadin.flow.component.html.H1
 import com.vaadin.flow.component.html.Image
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
-import com.vaadin.flow.component.tabs.Tab
-import com.vaadin.flow.component.tabs.Tabs
-import com.vaadin.flow.component.tabs.TabsVariant
-import com.vaadin.flow.router.RouterLink
 import com.vaadin.flow.theme.Theme
 import com.vaadin.flow.theme.lumo.Lumo
+import support.views.createTabs
 
 @Theme(value = Lumo::class)
 class BaseLayout(
     private val recruitmentService: RecruitmentService
 ) : AppLayout() {
-    private val routes: Map<String, Route> = mapOf(
-        "모집 관리" to ClassRoute(RecruitmentsView::class.java),
-        "평가 관리" to ClassRoute(EvaluationsView::class.java),
-        "과제 관리" to StringRoute("admin/missions"),
-        "선발 과정" to StringRoute("admin/selections"),
-        "부정 행위자" to ClassRoute(CheatersView::class.java),
-        "메일 발송" to ClassRoute(MailFormView::class.java)
-    )
-
     init {
         primarySection = Section.DRAWER
         addToDrawer(createDrawer())
@@ -63,37 +47,18 @@ class BaseLayout(
     }
 
     private fun createMenu(): Component {
+        return createTabs(createMenuItems().map { it.toComponent() })
+    }
+
+    private fun createMenuItems(): List<MenuItem> {
         val recruitments = recruitmentService.findAll()
-        val menuItems = routes.map {
-            when (val target = it.value) {
-                is ClassRoute -> createRouterLinkTab(it.key, target.route)
-                is StringRoute -> createAccordion(it.key, recruitments.toTabs(target.route))
-            }
-        }
-        return createTabs(menuItems)
-    }
-
-    private fun List<RecruitmentResponse>.toTabs(path: String): Component {
-        return createTabs(map { Tab(Anchor("$path/${it.id}", it.title)) })
-    }
-
-    private fun createAccordion(summary: String, component: Component): Component {
-        return Accordion().apply {
-            add(summary, component).addThemeVariants(DetailsVariant.REVERSE)
-            close()
-        }
-    }
-
-    private fun createRouterLinkTab(text: String, navigationTarget: Class<out Component>): Component {
-        return Tab(RouterLink(text, navigationTarget))
-    }
-
-    private fun createTabs(components: List<Component>): Component {
-        return Tabs().apply {
-            orientation = Tabs.Orientation.VERTICAL
-            isAutoselect = false
-            addThemeVariants(TabsVariant.LUMO_MINIMAL)
-            add(*components.toTypedArray())
-        }
+        return listOf(
+            "모집 관리" of RecruitmentsView::class.java,
+            "평가 관리" of EvaluationsView::class.java,
+            "과제 관리".accordionOf("admin/missions", recruitments),
+            "선발 과정".accordionOf("admin/selections", recruitments),
+            "부정 행위자" of CheatersView::class.java,
+            "메일 발송" of MailFormView::class.java
+        )
     }
 }
