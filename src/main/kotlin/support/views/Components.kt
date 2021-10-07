@@ -13,6 +13,8 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup
 import com.vaadin.flow.component.select.Select
+import com.vaadin.flow.component.tabs.Tabs
+import com.vaadin.flow.component.tabs.TabsVariant
 import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.data.renderer.ComponentRenderer
 
@@ -84,6 +86,15 @@ fun createNotification(text: String, durationValue: Int = 1000): Notification {
     return Notification(text).apply {
         position = Notification.Position.MIDDLE
         duration = durationValue
+    }
+}
+
+fun createTabs(components: List<Component>): Component {
+    return Tabs().apply {
+        orientation = Tabs.Orientation.VERTICAL
+        isAutoselect = false
+        addThemeVariants(TabsVariant.LUMO_MINIMAL)
+        add(*components.toTypedArray())
     }
 }
 
