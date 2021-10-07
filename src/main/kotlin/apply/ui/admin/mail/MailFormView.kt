@@ -138,7 +138,6 @@ class MailFormView(
             if (it.isNotBlank()) {
                 mailTargets.addAndRefresh(MailTargetResponse(NO_NAME, it))
             }
-            setRowCount(mailTargets.size)
         }
     }
 
@@ -147,7 +146,6 @@ class MailFormView(
             IndividualMailTargetDialog(userService) {
                 mailTargets.addAndRefresh(it)
             }
-            setRowCount(mailTargets.size)
         }
     }
 
@@ -156,7 +154,6 @@ class MailFormView(
             GroupMailTargetDialog(recruitmentService, evaluationService, mailTargetService) {
                 mailTargets.addAllAndRefresh(it)
             }
-            setRowCount(mailTargets.size)
         }
     }
 
@@ -193,15 +190,22 @@ class MailFormView(
     private fun MutableSet<MailTargetResponse>.addAndRefresh(element: MailTargetResponse) {
         add(element).also {
             mailTargetsGrid.dataProvider.refreshAll()
+            setRowCount(mailTargets.size)
         }
     }
 
     private fun MutableSet<MailTargetResponse>.addAllAndRefresh(elements: Collection<MailTargetResponse>) {
-        addAll(elements).also { mailTargetsGrid.dataProvider.refreshAll() }
+        addAll(elements).also {
+            mailTargetsGrid.dataProvider.refreshAll()
+            setRowCount(mailTargets.size)
+        }
     }
 
     private fun MutableSet<MailTargetResponse>.removeAndRefresh(element: MailTargetResponse) {
-        remove(element).also { mailTargetsGrid.dataProvider.refreshAll() }
+        remove(element).also {
+            mailTargetsGrid.dataProvider.refreshAll()
+            setRowCount(mailTargets.size)
+        }
     }
 
     private fun createMailTargetsGrid(mailTargets: Set<MailTargetResponse>): Grid<MailTargetResponse> {
