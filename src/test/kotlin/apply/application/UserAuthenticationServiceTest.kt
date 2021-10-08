@@ -73,7 +73,7 @@ internal class UserAuthenticationServiceTest {
         }
 
         @Test
-        fun `가입되지 않고 인증된 이메일이라면 지원자를 저장하고 토큰을 반환한다`() {
+        fun `가입되지 않고 인증된 이메일이라면 회원을 저장하고 토큰을 반환한다`() {
             every { userRepository.existsByEmail(any()) } answers { false }
             every { authenticationCodeRepository.getLastByEmail(any()) } answers {
                 AuthenticationCode(
