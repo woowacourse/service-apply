@@ -1,6 +1,7 @@
 package apply.ui.api
 
 import apply.application.AuthenticateUserRequest
+import apply.application.EditInformationRequest
 import apply.application.EditPasswordRequest
 import apply.application.RegisterUserRequest
 import apply.application.ResetPasswordRequest
@@ -12,6 +13,7 @@ import apply.domain.user.User
 import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -79,5 +81,14 @@ class UserRestController(
     ): ResponseEntity<ApiResponse<List<UserResponse>>> {
         val users = userService.findAllByKeyword(keyword)
         return ResponseEntity.ok(ApiResponse.success(users))
+    }
+
+    @PatchMapping("/information")
+    fun editInformation(
+        @RequestBody @Valid request: EditInformationRequest,
+        @LoginUser user: User
+    ): ResponseEntity<Unit> {
+        userService.editInformation(user.id, request)
+        return ResponseEntity.noContent().build()
     }
 }

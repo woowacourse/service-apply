@@ -11,6 +11,7 @@ import apply.domain.user.Password
 import apply.domain.user.UserAuthenticationException
 import apply.domain.user.UserRepository
 import apply.domain.user.findByEmail
+import apply.domain.user.getById
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.slot
@@ -74,7 +75,7 @@ internal class UserServiceTest {
         @BeforeEach
         internal fun setUp() {
             slot<Long>().also { slot ->
-                every { userRepository.getOne(capture(slot)) } answers { createUser(id = slot.captured) }
+                every { userRepository.getById(capture(slot)) } answers { createUser(id = slot.captured) }
             }
         }
 
@@ -93,5 +94,14 @@ internal class UserServiceTest {
             request = EditPasswordRequest(WRONG_PASSWORD, Password("new_password"))
             assertThrows<UserAuthenticationException> { subject() }
         }
+    }
+
+    @Test
+    fun `회원이 정보(전화번호)를 변경한다`() {
+        val request = EditInformationRequest("010-9999-9999")
+        val user = createUser(phoneNumber = "010-0000-0000")
+        every { userRepository.getById(any()) } returns user
+        assertDoesNotThrow { userService.editInformation(user.id, request) }
+        assertThat(user.phoneNumber).isEqualTo(request.phoneNumber)
     }
 }

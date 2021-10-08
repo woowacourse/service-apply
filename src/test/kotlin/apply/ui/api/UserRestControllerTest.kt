@@ -1,6 +1,7 @@
 package apply.ui.api
 
 import apply.application.AuthenticateUserRequest
+import apply.application.EditInformationRequest
 import apply.application.EditPasswordRequest
 import apply.application.RegisterUserRequest
 import apply.application.ResetPasswordRequest
@@ -23,6 +24,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.get
+import org.springframework.test.web.servlet.patch
 import org.springframework.test.web.servlet.post
 import support.createLocalDate
 import support.test.TestEnvironment
@@ -274,6 +276,23 @@ internal class UserRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isOk }
             content { json(objectMapper.writeValueAsString(ApiResponse.success(userResponses))) }
+        }
+    }
+
+    @Test
+    fun `회원이 정보를 변경한다`() {
+        val request = EditInformationRequest("010-9999-9999")
+        every { jwtTokenProvider.isValidToken("valid_token") } returns true
+        every { jwtTokenProvider.getSubject("valid_token") } returns userRequest.email
+        every { userService.getByEmail(userRequest.email) } returns userRequest.toEntity()
+        every { userService.editInformation(any(), request) } just Runs
+
+        mockMvc.patch("/api/users/information") {
+            content = objectMapper.writeValueAsBytes(request)
+            contentType = MediaType.APPLICATION_JSON
+            header(AUTHORIZATION, "Bearer valid_token")
+        }.andExpect {
+            status { isNoContent }
         }
     }
 
