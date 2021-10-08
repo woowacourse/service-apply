@@ -3,6 +3,7 @@ package apply.application
 import apply.domain.user.User
 import apply.domain.user.UserRepository
 import apply.domain.user.findByEmail
+import apply.domain.user.getById
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -27,14 +28,10 @@ class UserService(
     }
 
     fun editPassword(id: Long, request: EditPasswordRequest) {
-        userRepository.getOne(id).apply {
-            changePassword(request.password, request.newPassword)
-        }
+        userRepository.getById(id).changePassword(request.password, request.newPassword)
     }
 
     fun editInformation(id: Long, request: EditInformationRequest) {
-        userRepository.getOne(id).apply {
-            changePhoneNumber(request.phoneNumber)
-        }
+        userRepository.getById(id).changePhoneNumber(request.phoneNumber)
     }
 }
