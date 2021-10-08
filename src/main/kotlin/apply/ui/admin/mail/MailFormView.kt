@@ -88,7 +88,7 @@ class MailFormView(
     }
 
     private fun setRowCount(count: Int) {
-        mailTargetGridTitle.text = "받는사람 (${count})"
+        mailTargetGridTitle.text = "받는사람 ($count)"
     }
 
     private fun createMailForm(): Component {

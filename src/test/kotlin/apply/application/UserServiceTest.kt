@@ -11,6 +11,7 @@ import apply.domain.user.Password
 import apply.domain.user.UserAuthenticationException
 import apply.domain.user.UserRepository
 import apply.domain.user.findByEmail
+import apply.domain.user.getById
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.slot
@@ -75,7 +76,7 @@ internal class UserServiceTest {
         @BeforeEach
         internal fun setUp() {
             slot<Long>().also { slot ->
-                every { userRepository.getOne(capture(slot)) } answers { createUser(id = slot.captured) }
+                every { userRepository.getById(capture(slot)) } answers { createUser(id = slot.captured) }
             }
         }
 
@@ -97,10 +98,18 @@ internal class UserServiceTest {
     }
 
     @Test
+    fun `회원이 정보(전화번호)를 변경한다`() {
+        val request = EditInformationRequest("010-9999-9999")
+        val user = createUser(phoneNumber = "010-0000-0000")
+        every { userRepository.getById(any()) } returns user
+        assertDoesNotThrow { userService.editInformation(user.id, request) }
+        assertThat(user.phoneNumber).isEqualTo(request.phoneNumber)
+    }
+
+    @Test
     fun `회원 중에서 해당하는 이메일이 있으면 이름과 이메일을 가져온다`() {
         val user = createUser()
         every { userRepository.findByEmail(user.email) } returns user
-
         val actual = userService.findMailTargetByEmail(user.email)
         assertThat(actual.name).isEqualTo(user.name)
     }
@@ -109,7 +118,6 @@ internal class UserServiceTest {
     fun `회원 중에서 해당하는 이메일이 없으면 (이름없음)과 이메일을 반환한다`() {
         val email = "email@email.com"
         every { userRepository.findByEmail(email) } returns null
-
         val actual = userService.findMailTargetByEmail(email)
         assertThat(actual.name).isEqualTo(NO_NAME)
     }
