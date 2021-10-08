@@ -22,9 +22,9 @@ class AssignmentRestController(
         @PathVariable recruitmentId: Long,
         @PathVariable missionId: Long,
         @RequestBody @Valid request: CreateAssignmentRequest,
-        @LoginUser applicant: User
+        @LoginUser user: User
     ): ResponseEntity<Unit> {
-        assignmentService.create(missionId, applicant.id, request)
+        assignmentService.create(missionId, user.id, request)
         return ResponseEntity.ok().build()
     }
 }
