@@ -19,8 +19,8 @@ import com.vaadin.flow.router.Route
 import support.views.EDIT_VALUE
 import support.views.NEW_VALUE
 import support.views.addSortableColumn
+import support.views.createContrastButton
 import support.views.createDeleteButtonWithDialog
-import support.views.createErrorButton
 import support.views.createPrimaryButton
 import support.views.createPrimarySmallButton
 import support.views.toDisplayName
@@ -29,7 +29,7 @@ import support.views.toDisplayName
 class TermsView(private val termService: TermService) : VerticalLayout() {
 
     init {
-        add(createTitle(), createButton(), createGrid())
+        add(createTitle(), createButtons(), createGrid())
     }
 
     private fun createTitle(): Component {
@@ -42,14 +42,17 @@ class TermsView(private val termService: TermService) : VerticalLayout() {
     private fun createGrid(): Component {
         return Grid<TermSelectData>(10).apply {
             addSortableColumn("기수 명", TermSelectData::name)
-            addColumn(createButtonRenderer()).apply { isAutoWidth = true }
+            addColumn(createButtonRenderer()).apply {
+                isAutoWidth = true
+                justifyContentMode = FlexComponent.JustifyContentMode.END
+            }
             setItems(termService.findAllTermSelectData())
         }
     }
 
-    private fun createButton(): Component {
+    private fun createButtons(): Component {
         return HorizontalLayout(
-            createErrorButton("돌아가기") {
+            createContrastButton("돌아가기") {
                 UI.getCurrent().navigate(RecruitmentsFormView::class.java, NEW_VALUE)
             },
             createPrimaryButton("생성") {
