@@ -31,6 +31,10 @@ class AuthenticationCode(
         authenticated = true
     }
 
+    fun same(code: String): Boolean {
+        return this.code == code
+    }
+
     companion object {
         private val EXPIRY_MINUTE_TIME: Duration = Duration.ofMinutes(10L)
     }

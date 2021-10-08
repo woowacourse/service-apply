@@ -1,5 +1,6 @@
 package apply.application
 
+import apply.AUTHENTICATE_CODE
 import apply.BIRTHDAY
 import apply.EMAIL
 import apply.GENDER
@@ -60,15 +61,33 @@ internal class UserAuthenticationServiceTest {
         @Test
         fun `가입된 이메일이라면 예외가 발생한다`() {
             every { userRepository.existsByEmail(any()) } answers { true }
-            request = RegisterUserRequest(NAME, EMAIL, PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD)
+            request = RegisterUserRequest(NAME, EMAIL, PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD, AUTHENTICATE_CODE)
+            assertThrows<IllegalStateException> { subject() }
+        }
+
+        @Test
+        fun `인증된 인증 코드와 일치하지 않는다면 예외가 발생한다`() {
+            every { userRepository.existsByEmail(any()) } answers { false }
+            every { authenticationCodeRepository.getLastByEmail(any()) } answers {
+                AuthenticationCode(
+                    EMAIL,
+                    "invalid_code"
+                )
+            }
+            request = RegisterUserRequest(NAME, EMAIL, PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD, AUTHENTICATE_CODE)
             assertThrows<IllegalStateException> { subject() }
         }
 
         @Test
         fun `인증된 이메일이 아니라면 예외가 발생한다`() {
             every { userRepository.existsByEmail(any()) } answers { false }
-            every { authenticationCodeRepository.getLastByEmail(any()) } answers { AuthenticationCode(EMAIL) }
-            request = RegisterUserRequest(NAME, EMAIL, PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD)
+            every { authenticationCodeRepository.getLastByEmail(any()) } answers {
+                AuthenticationCode(
+                    EMAIL,
+                    AUTHENTICATE_CODE
+                )
+            }
+            request = RegisterUserRequest(NAME, EMAIL, PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD, AUTHENTICATE_CODE)
             assertThrows<IllegalStateException> { subject() }
         }
 
@@ -78,11 +97,12 @@ internal class UserAuthenticationServiceTest {
             every { authenticationCodeRepository.getLastByEmail(any()) } answers {
                 AuthenticationCode(
                     email = EMAIL,
+                    code = AUTHENTICATE_CODE,
                     authenticated = true
                 )
             }
             every { userRepository.save(any()) } returns createUser()
-            request = RegisterUserRequest(NAME, EMAIL, PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD)
+            request = RegisterUserRequest(NAME, EMAIL, PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD, AUTHENTICATE_CODE)
             assertThat(subject()).isEqualTo(VALID_TOKEN)
         }
     }

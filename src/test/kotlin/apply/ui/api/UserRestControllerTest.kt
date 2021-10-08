@@ -43,7 +43,8 @@ private fun RegisterUserRequest.withPlainPassword(password: String): Map<String,
         "phoneNumber" to phoneNumber,
         "gender" to gender,
         "birthday" to birthday,
-        "password" to password
+        "password" to password,
+        "authenticateCode" to authenticateCode
     )
 }
 
@@ -74,7 +75,8 @@ internal class UserRestControllerTest : RestControllerTest() {
         phoneNumber = "010-0000-0000",
         gender = Gender.MALE,
         birthday = createLocalDate(1995, 2, 2),
-        password = Password(PASSWORD)
+        password = Password(PASSWORD),
+        authenticateCode = "3ea9fa6c"
     )
 
     private val userLoginRequest = AuthenticateUserRequest(
@@ -113,7 +115,6 @@ internal class UserRestControllerTest : RestControllerTest() {
     fun `유효한 회원 생성 및 검증 요청에 대하여 응답으로 토큰이 반환된다`() {
         every { userAuthenticationService.generateTokenByRegister(userRequest) } returns VALID_TOKEN
         every { mailService.sendAuthenticationCodeMail(any(), any()) } just Runs
-        every { userService.getByEmail(userRequest.email) } returns userRequest.toEntity()
 
         mockMvc.post("/api/users/register") {
             content = objectMapper.writeValueAsBytes(userRequest.withPlainPassword(PASSWORD))
@@ -121,21 +122,6 @@ internal class UserRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isOk }
             content { json(objectMapper.writeValueAsString(ApiResponse.success(VALID_TOKEN))) }
-        }
-    }
-
-    @Test
-    fun `기존 회원 정보와 일치하지 않는 회원 생성 및 검증 요청에 응답으로 Unauthorized를 반환한다`() {
-        every {
-            userAuthenticationService.generateTokenByRegister(invalidUserRequest)
-        } throws UserAuthenticationException()
-
-        mockMvc.post("/api/users/register") {
-            content = objectMapper.writeValueAsBytes(invalidUserRequest.withPlainPassword(INVALID_PASSWORD))
-            contentType = MediaType.APPLICATION_JSON
-        }.andExpect {
-            status { isUnauthorized }
-            content { json(objectMapper.writeValueAsString(ApiResponse.error("요청 정보가 기존 회원 정보와 일치하지 않습니다"))) }
         }
     }
 
