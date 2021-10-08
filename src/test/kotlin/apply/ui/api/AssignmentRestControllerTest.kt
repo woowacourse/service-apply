@@ -36,12 +36,12 @@ internal class AssignmentRestControllerTest : RestControllerTest() {
 
     @Test
     fun `과제물을 제출한다`() {
-        val loginApplicant = createUser()
+        val loginUser = createUser()
 
         every { jwtTokenProvider.isValidToken("valid_token") } returns true
-        every { jwtTokenProvider.getSubject("valid_token") } returns loginApplicant.email
-        every { userService.getByEmail(loginApplicant.email) } returns loginApplicant
-        every { assignmentService.create(missionId, loginApplicant.id, createAssignmentRequest()) } just Runs
+        every { jwtTokenProvider.getSubject("valid_token") } returns loginUser.email
+        every { userService.getByEmail(loginUser.email) } returns loginUser
+        every { assignmentService.create(missionId, loginUser.id, createAssignmentRequest()) } just Runs
 
         mockMvc.post("/api/recruitments/{recruitmentId}/missions/{missionId}/assignments", recruitmentId, missionId) {
             contentType = MediaType.APPLICATION_JSON

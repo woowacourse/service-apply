@@ -17,8 +17,8 @@ class AssignmentService(
     private val missionRepository: MissionRepository,
     private val evaluationTargetRepository: EvaluationTargetRepository
 ) {
-    fun create(missionId: Long, applicantId: Long, request: CreateAssignmentRequest) {
-        check(!assignmentRepository.existsByMissionIdAndUserId(missionId, applicantId)) {
+    fun create(missionId: Long, userId: Long, request: CreateAssignmentRequest) {
+        check(!assignmentRepository.existsByMissionIdAndUserId(missionId, userId)) {
             "이미 제출한 과제물이 존재합니다."
         }
 
@@ -27,14 +27,14 @@ class AssignmentService(
             "제출 불가능한 과제입니다."
         }
 
-        val evaluationTarget = findEvaluationTargetOf(mission.evaluationId, applicantId)
+        val evaluationTarget = findEvaluationTargetOf(mission.evaluationId, userId)
         if (evaluationTarget.isWaiting) {
             evaluationTarget.evaluationStatus = EvaluationStatus.PASS
         }
 
         assignmentRepository.save(
             Assignment(
-                applicantId,
+                userId,
                 missionId,
                 request.githubUsername,
                 request.pullRequestUrl,
