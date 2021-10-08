@@ -76,7 +76,7 @@ class TermsView(private val termService: TermService) : VerticalLayout() {
 
     private fun createEditButton(term: TermSelectData): Component {
         return createPrimarySmallButton("수정") {
-            TermFormDialog(termService, EDIT_VALUE.toDisplayName(), term.name)
+            TermFormDialog(termService, EDIT_VALUE.toDisplayName(), term)
         }.apply {
             if (term.id == Term.SINGLE.id) {
                 isEnabled = false

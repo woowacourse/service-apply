@@ -17,7 +17,7 @@ class TermForm() : BindingIdentityFormLayout<TermSelectData>(TermSelectData::cla
         return bindDefaultOrNull()
     }
 
-    override fun fill(data: TermSelectData) {
-        fillDefault(data)
+    override fun fill(term: TermSelectData) {
+        name.placeholder = term.name
     }
 }

@@ -1,5 +1,6 @@
 package apply.ui.admin.term
 
+import apply.application.TermSelectData
 import apply.application.TermService
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
@@ -28,10 +29,8 @@ class TermFormDialog(
         open()
     }
 
-    constructor(termService: TermService, displayName: String, name: String) : this(termService, displayName) {
-        termForm.apply {
-            this.name.placeholder = name
-        }
+    constructor(termService: TermService, displayName: String, term: TermSelectData) : this(termService, displayName) {
+        termForm.fill(term)
     }
 
     private fun createHeader(): VerticalLayout {
@@ -58,7 +57,6 @@ class TermFormDialog(
     private fun createSubmitButton(): Button {
         return createPrimaryButton {
             termForm.bindOrNull()?.let {
-                it.id
                 // TODO : save
                 UI.getCurrent().navigate(TermsView::class.java)
             }
