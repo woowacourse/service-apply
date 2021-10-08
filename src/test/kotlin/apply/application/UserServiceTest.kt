@@ -99,7 +99,7 @@ internal class UserServiceTest {
     @Test
     fun `회원이 정보(전화번호)를 변경한다`() {
         val request = EditInformationRequest("010-9999-9999")
-        val user = createUser()
+        val user = createUser(phoneNumber = "010-0000-0000")
         every { userRepository.getById(any()) } returns user
         assertDoesNotThrow { userService.editInformation(user.id, request) }
         assertThat(user.phoneNumber).isEqualTo(request.phoneNumber)
