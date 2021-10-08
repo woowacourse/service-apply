@@ -10,7 +10,7 @@ import javax.persistence.Entity
 @Entity
 class User(
     @Embedded
-    val information: UserInformation,
+    var information: UserInformation,
 
     @AttributeOverride(name = "value", column = Column(name = "password", nullable = false))
     @Embedded
@@ -61,6 +61,10 @@ class User(
     fun resetPassword(name: String, birthday: LocalDate, password: String) {
         identify(information.same(name, birthday))
         this.password = Password(password)
+    }
+
+    fun changePhoneNumber(phoneNumber: String) {
+        information = information.copy(phoneNumber = phoneNumber)
     }
 
     private fun identify(value: Boolean, lazyMessage: () -> Any = {}) {
