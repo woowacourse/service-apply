@@ -55,6 +55,7 @@ const BirthField = ({ required }) => {
             onChange={handleChange}
             value={value.year}
             required={required}
+            autoComplete="off"
           />
           <datalist id="years">
             {years.map((year) => (
@@ -72,6 +73,7 @@ const BirthField = ({ required }) => {
             onChange={handleChange}
             value={value.month}
             required={required}
+            autoComplete="off"
           />
           <datalist id="months">
             {months.map((month) => (
@@ -89,6 +91,7 @@ const BirthField = ({ required }) => {
             onChange={handleChange}
             value={value.day}
             required={required}
+            autoComplete="off"
           />
           <datalist id="days">
             {days.map((day) => (

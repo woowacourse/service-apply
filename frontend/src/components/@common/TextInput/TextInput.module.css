@@ -1,17 +1,16 @@
 .text-input {
-  padding: 12px;
-  border: 1px solid #ced6e0;
-  border-radius: 3px;
+  padding: 9px 16px;
+  border: 1px solid var(--gray-007);
+  border-radius: 4px;
   transition-duration: 0.5s;
-  line-height: 30px;
   font-size: 16px;
 }
 
 .text-input:focus {
-  border: 1px solid #1e90ff;
+  border: 1px solid var(--blue);
 }
 
 .text-input:read-only {
   cursor: default;
-  background: #ccc;
+  background: var(--gray-004);
 }

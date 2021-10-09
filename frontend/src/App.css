@@ -1,16 +1,6 @@
-:root {
-  --gray-002: #eee;
-  --gray-003: #ddd;
-  --gray-004: #ccc;
-  --gray-005: #bbb;
-  --gray-006: #aaa;
-  --gray-007: #999;
-  --gray-008: #666;
-  --black: #333;
-  --white: #fff;
-  --light-blue-gray: #f1f2f6;
-  --blue: #279cf6;
+@import "./color.css";
 
+:root {
   --pc-main-width: 800px;
   --pc-main-width-narrow: 512px;
 
