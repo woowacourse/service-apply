@@ -70,28 +70,22 @@ const Join = () => {
     }
   };
 
-  const { handleSubmit, errorMessage, value, handleChange, ...methods } =
-    useForm({
-      validators: {
-        email: validateEmail,
-        name: validateName,
-        password: validatePassword,
-        rePassword: validateRePassword,
-        year: validateYear,
-        month: validateMonth,
-        day: validateDay,
-      },
-      submit,
-    });
+  const { handleSubmit, ...methods } = useForm({
+    validators: {
+      email: validateEmail,
+      name: validateName,
+      password: validatePassword,
+      rePassword: validateRePassword,
+      year: validateYear,
+      month: validateMonth,
+      day: validateDay,
+    },
+    submit,
+  });
 
   return (
     <Container title="회원가입" size={CONTAINER_SIZE.NARROW}>
-      <FormProvider
-        value={value}
-        handleChange={handleChange}
-        errorMessage={errorMessage}
-        {...methods}
-      >
+      <FormProvider {...methods}>
         <Form onSubmit={handleSubmit}>
           <SummaryCheckField
             name="policy"
@@ -102,9 +96,6 @@ const Join = () => {
           </SummaryCheckField>
 
           <EmailField
-            email={value.email}
-            onChangeEmail={handleChange}
-            emailErrorMessage={errorMessage.email}
             emailCode={emailCode}
             setEmailCode={setEmailCode}
             emailStatus={emailStatus}

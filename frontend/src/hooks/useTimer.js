@@ -9,11 +9,16 @@ const useTimer = (initialSeconds) => {
     setSeconds(seconds - 1);
   }, delay);
 
-  const onStart = () => setDelay(1000);
+  const handleStart = () => setDelay(1000);
 
-  const onStop = () => setDelay(null);
+  const handleStop = () => setDelay(null);
 
-  return { timerSeconds: seconds, setTimer: setSeconds, onStart, onStop };
+  return {
+    timerSeconds: seconds,
+    setTimerSeconds: setSeconds,
+    handleStartTimer: handleStart,
+    handleStopTimer: handleStop,
+  };
 };
 
 export default useTimer;

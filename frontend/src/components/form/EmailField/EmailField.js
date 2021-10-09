@@ -1,5 +1,7 @@
 import classNames from "classnames";
 import PropTypes from "prop-types";
+import { useEffect } from "react";
+import useFormContext from "../../../hooks/useFormContext";
 import useTimer from "../../../hooks/useTimer";
 import { formatTimerText } from "../../../utils/format/date";
 import Button from "../../@common/Button/Button";
@@ -14,21 +16,16 @@ export const EMAIL_STATUS = {
 };
 
 const EmailField = ({
-  email,
-  onChangeEmail,
-  emailErrorMessage,
   emailCode,
   setEmailCode,
   emailStatus,
   setEmailStatus,
 }) => {
-  const {
-    timerSeconds,
-    onStart: onStartTimer,
-    onStop: onStopTimer,
-  } = useTimer(600);
+  const { value, errorMessage, handleChange, register, unRegister } =
+    useFormContext();
+  const { timerSeconds, handleStartTimer, handleStopTimer } = useTimer(600);
 
-  const getEmailRightButton = () => {
+  const getEmailButton = () => {
     if (emailStatus === EMAIL_STATUS.WAITING_AUTHENTICATION) {
       return null;
     }
@@ -40,7 +37,7 @@ const EmailField = ({
           variant="outlined"
           onClick={handleIssueEmailCode}
           className={styles["input-button"]}
-          disabled={email === "" || emailErrorMessage !== null}
+          disabled={value.email === "" || errorMessage.email !== null}
         >
           이메일
           <br />
@@ -68,15 +65,23 @@ const EmailField = ({
     // TODO: 인증코드 이메일 발송 api 요청(이메일 중복확인 메세지 필요)
 
     setEmailStatus(EMAIL_STATUS.WAITING_AUTHENTICATION);
-    onStartTimer();
+    handleStartTimer();
   };
 
   const handleAuthenticateEmail = () => {
     // TODO: 인증코드와 함께 이메일 인증 api 요청
 
     setEmailStatus(EMAIL_STATUS.AUTHENTICATED);
-    onStopTimer();
+    handleStopTimer();
   };
+
+  useEffect(() => {
+    register("email", "", true);
+
+    return () => {
+      unRegister("email");
+    };
+  }, []);
 
   return (
     <>
@@ -87,18 +92,18 @@ const EmailField = ({
           </Label>
           <div className={styles["input-box"]}>
             <TextInput
-              value={email}
+              value={value.email}
               name="email"
               type="email"
               placeholder="이메일 주소를 입력해 주세요."
-              onChange={onChangeEmail}
+              onChange={handleChange}
               required
             />
-            {getEmailRightButton()}
+            {getEmailButton()}
           </div>
         </div>
-        {emailErrorMessage && (
-          <p className={styles["rule-field"]}>{emailErrorMessage}</p>
+        {errorMessage.email && (
+          <p className={styles["rule-field"]}>{errorMessage.email}</p>
         )}
       </div>
 
@@ -141,13 +146,10 @@ const EmailField = ({
 };
 
 EmailField.propTypes = {
-  email: PropTypes.string.isRequired,
-  onChangeEmail: PropTypes.func.isRequired,
-  emailErrorMessage: PropTypes.string.isRequired,
   emailCode: PropTypes.string.isRequired,
-  setEmailCode: PropTypes.string.isRequired,
+  setEmailCode: PropTypes.func.isRequired,
   emailStatus: PropTypes.string.isRequired,
-  setEmailStatus: PropTypes.string.isRequired,
+  setEmailStatus: PropTypes.func.isRequired,
 };
 
 export default EmailField;
