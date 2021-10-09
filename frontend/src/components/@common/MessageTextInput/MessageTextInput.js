@@ -13,14 +13,19 @@ const MessageTextInput = ({
   name,
   maxLength,
   required,
+  className,
   errorMessage,
   ...props
 }) => {
   return (
-    <>
+    <div className={className}>
       <div className={styles["text-field"]}>
         <Label required={required}>{label}</Label>
-        {description && <Description>{description}</Description>}
+        {description && (
+          <Description className={styles.description}>
+            {description}
+          </Description>
+        )}
         <TextInput
           required={required}
           value={value}
@@ -31,7 +36,7 @@ const MessageTextInput = ({
         />
       </div>
       <p className={styles["rule-field"]}>{errorMessage}</p>
-    </>
+    </div>
   );
 };
 
