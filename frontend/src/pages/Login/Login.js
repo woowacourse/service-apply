@@ -17,7 +17,7 @@ import styles from "./Login.module.css";
 import Form from "../../components/form/Form/Form";
 import Button from "../../components/@common/Button/Button";
 import FormInput from "../../components/form/FormInput/FormInput";
-import SubmitButton from "../../components/form/SubmitButton";
+import SubmitButton from "../../components/form/SubmitButton/SubmitButton";
 
 const Login = () => {
   const { fetchLogin } = useTokenContext();
