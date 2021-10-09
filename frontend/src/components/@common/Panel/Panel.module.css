@@ -1,0 +1,13 @@
+.panel-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 34px 28px;
+  margin: 0;
+}
+
+.panel-body {
+  width: 100%;
+  margin: 0;
+  border-top: 0;
+}
