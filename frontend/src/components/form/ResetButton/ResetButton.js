@@ -5,7 +5,9 @@ import Button from "../../@common/Button/Button";
 const ResetButton = () => {
   const { reset } = useFormContext();
 
-  const handleClick = () => {
+  const handleClick = (event) => {
+    event.preventDefault();
+
     if (window.confirm(CONFIRM_MESSAGE.RESET_APPLICATION)) {
       reset();
     }
