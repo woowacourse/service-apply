@@ -1,13 +1,14 @@
 .panel-header {
-  width: 100%;
   display: flex;
   justify-content: space-between;
-  padding: 34px 28px;
-  margin: 0;
+  padding: 2.125rem 1.75rem;
+  cursor: pointer;
+}
+
+.title {
+  font-size: 1.5rem;
 }
 
 .panel-body {
-  width: 100%;
-  margin: 0;
   border-top: 0;
 }

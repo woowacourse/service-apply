@@ -13,6 +13,9 @@
 .title {
   font-size: 1.75rem;
   text-align: center;
+}
+
+.title-with-children {
   margin: 0.875rem 0 3rem;
 }
 

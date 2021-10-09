@@ -2,9 +2,8 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 
 import styles from "./Panel.module.css";
-import Container, { CONTAINER_SIZE } from "../Container/Container";
+import Container from "../Container/Container";
 import IconButton from "../IconButton/IconButton";
-import classNames from "../../../../node_modules/classnames/index";
 
 const Panel = ({ title, children, className }) => {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
@@ -14,9 +13,9 @@ const Panel = ({ title, children, className }) => {
   };
 
   return (
-    <>
-      <Container className={styles["panel-header"]}>
-        <h3>{title}</h3>
+    <div className={className}>
+      <Container className={styles["panel-header"]} onClick={toggleIsPanelOpen}>
+        <h3 className={styles.title}>{title}</h3>
         <IconButton
           src={
             isPanelOpen
@@ -24,15 +23,12 @@ const Panel = ({ title, children, className }) => {
               : "/assets/icon/arrow-down.svg"
           }
           aria-label={isPanelOpen ? "패널 닫기" : "패널 열기"}
-          onClick={toggleIsPanelOpen}
         />
       </Container>
       {isPanelOpen && (
-        <Container className={classNames(styles["panel-body"], className)}>
-          {children}
-        </Container>
+        <Container className={styles["panel-body"]}>{children}</Container>
       )}
-    </>
+    </div>
   );
 };
 
