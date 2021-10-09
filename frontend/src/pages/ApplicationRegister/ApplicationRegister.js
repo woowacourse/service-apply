@@ -14,8 +14,8 @@ import Form from "../../components/form/Form/Form";
 import FormInput from "../../components/form/FormInput/FormInput";
 import FormTextarea from "../../components/form/FormTextarea/FormTextarea";
 import ResetButton from "../../components/form/ResetButton/ResetButton";
-import SubmitButton from "../../components/form/SubmitButton";
-import TempSaveButton from "../../components/form/TempSaveButton";
+import SubmitButton from "../../components/form/SubmitButton/SubmitButton";
+import TempSaveButton from "../../components/form/TempSaveButton/TempSaveButton";
 import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
 import {
   CONFIRM_MESSAGE,

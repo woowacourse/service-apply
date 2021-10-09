@@ -6,7 +6,7 @@ import Container, {
 } from "../../components/@common/Container/Container";
 import Form from "../../components/form/Form/Form";
 import FormInput from "../../components/form/FormInput/FormInput";
-import SubmitButton from "../../components/form/SubmitButton";
+import SubmitButton from "../../components/form/SubmitButton/SubmitButton";
 import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
 import PATH, { PARAM } from "../../constants/path";
 import useForm from "../../hooks/useForm";

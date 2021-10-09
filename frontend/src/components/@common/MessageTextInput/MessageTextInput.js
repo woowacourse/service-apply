@@ -16,7 +16,6 @@ const MessageTextInput = ({
   required,
   className,
   errorMessage,
-  rightButton,
   ...props
 }) => {
   return (
@@ -39,7 +38,6 @@ const MessageTextInput = ({
             onChange={onChange}
             {...props}
           />
-          {rightButton}
         </div>
       </div>
       {errorMessage && <p className={styles["rule-field"]}>{errorMessage}</p>}
@@ -55,7 +53,6 @@ MessageTextInput.propTypes = {
   description: PropTypes.node,
   maxLength: PropTypes.number,
   errorMessage: PropTypes.string,
-  rightButton: PropTypes.node,
 };
 
 MessageTextInput.defaultProps = {
