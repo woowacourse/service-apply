@@ -77,16 +77,20 @@ const useForm = ({ validators, submit }) => {
 
   const reset = () => {
     setValue((prev) => {
-      for (const val in prev) {
-        prev[val] = "";
+      for (const name in prev) {
+        if (typeof prev[name] === "boolean") {
+          prev[name] = false;
+        }
+
+        prev[name] = "";
       }
 
       return { ...prev };
     });
 
     setErrorMessage((prev) => {
-      for (const val in prev) {
-        prev[val] = null;
+      for (const name in prev) {
+        prev[name] = null;
       }
 
       return { ...prev };

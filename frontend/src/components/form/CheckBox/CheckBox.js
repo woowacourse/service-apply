@@ -20,7 +20,7 @@ const CheckBox = ({ name, label, required, ...props }) => {
       <input
         type="checkbox"
         name={name}
-        value={value[name]}
+        checked={value[name]}
         onChange={handleChange}
         required={required}
         {...props}

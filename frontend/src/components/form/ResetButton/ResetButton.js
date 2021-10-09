@@ -14,7 +14,7 @@ const ResetButton = () => {
 
   return (
     <Button
-      type="reset"
+      type="button"
       onClick={handleClick}
       className={styles["reset-button"]}
     >
