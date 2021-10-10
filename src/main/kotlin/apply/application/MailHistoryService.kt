@@ -25,16 +25,7 @@ class MailHistoryService(
     }
 
     fun findAll(): List<MailData> {
-        return mailHistoryRepository.findAll().map {
-            MailData(
-                it.subject,
-                it.body,
-                it.sender,
-                it.recipients,
-                it.sentTime,
-                it.id
-            )
-        }
+        return mailHistoryRepository.findAll().map { MailData(it) }
     }
 
     fun getById(emailHistoryId: Long): MailData {

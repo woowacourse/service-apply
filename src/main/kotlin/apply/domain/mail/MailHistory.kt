@@ -27,6 +27,5 @@ class MailHistory(
 
     @Column(nullable = false)
     val sentTime: LocalDateTime = LocalDateTime.now(),
-
     id: Long = 0L
 ) : BaseEntity(id)
