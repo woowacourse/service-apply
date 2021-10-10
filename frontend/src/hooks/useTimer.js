@@ -1,15 +1,15 @@
 import { useState } from "react";
 import useInterval from "./useInterval";
 
-const useTimer = (initialSeconds) => {
+const useTimer = (initialSeconds, initialDelay = 1000) => {
   const [seconds, setSeconds] = useState(initialSeconds);
-  const [delay, setDelay] = useState(null);
+  const [delay, setDelay] = useState(initialDelay);
 
   useInterval(() => {
     setSeconds(seconds - 1);
   }, delay);
 
-  const handleStart = () => setDelay(1000);
+  const handleStart = () => setDelay(initialDelay);
 
   const handleStop = () => setDelay(null);
 
