@@ -41,9 +41,7 @@ class AssignmentServiceTest {
     fun `과제 제출물을 생성한다`() {
         every { assignmentRepository.existsByUserIdAndMissionId(any(), any()) } returns false
         every { missionRepository.getById(any()) } returns createMission()
-        every {
-            evaluationTargetRepository.findByEvaluationIdAndUserId(any(), any())
-        } returns createEvaluationTarget()
+        every { evaluationTargetRepository.findByEvaluationIdAndUserId(any(), any()) } returns createEvaluationTarget()
         every { assignmentRepository.save(any()) } returns createAssignment()
 
         assertDoesNotThrow { assignmentService.create(1L, 1L, createAssignmentRequest()) }
@@ -55,9 +53,7 @@ class AssignmentServiceTest {
         every { missionRepository.getById(any()) } returns createMission(
             startDateTime = LocalDateTime.now().minusDays(2), endDateTime = LocalDateTime.now().minusDays(1)
         )
-        every {
-            evaluationTargetRepository.findByEvaluationIdAndUserId(any(), any())
-        } returns createEvaluationTarget()
+        every { evaluationTargetRepository.findByEvaluationIdAndUserId(any(), any()) } returns createEvaluationTarget()
         every { assignmentRepository.save(any()) } returns createAssignment()
 
         assertThrows<IllegalStateException> { assignmentService.create(1L, 1L, createAssignmentRequest()) }
@@ -67,9 +63,7 @@ class AssignmentServiceTest {
     fun `이미 제출한 이력이 있는 경우 새로 제출할 수 없다`() {
         every { assignmentRepository.existsByUserIdAndMissionId(any(), any()) } returns true
         every { missionRepository.getById(any()) } returns createMission()
-        every {
-            evaluationTargetRepository.findByEvaluationIdAndUserId(any(), any())
-        } returns createEvaluationTarget()
+        every { evaluationTargetRepository.findByEvaluationIdAndUserId(any(), any()) } returns createEvaluationTarget()
         every { assignmentRepository.save(any()) } returns createAssignment()
 
         assertThrows<IllegalStateException> { assignmentService.create(1L, 1L, createAssignmentRequest()) }
