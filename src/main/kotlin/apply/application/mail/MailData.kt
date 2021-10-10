@@ -32,8 +32,4 @@ data class MailData(
         mailHistory.sentTime,
         mailHistory.id
     )
-
-    fun recipientsCount(): Int {
-        return recipients.size
-    }
 }

@@ -73,7 +73,7 @@ class MailFormView(
             setDisplayName(value.toDisplayName())
             if (value == DETAIL_VALUE) {
                 val mailData = mailHistoryService.getById(id.toLong())
-                setRowCount(mailData.recipientsCount())
+                setRowCount(mailData.recipients.size)
                 this.fill(mailData)
                 this.recipientFilter.isVisible = false
                 this.mailTargetsGrid.getColumnByKey(DELETE_BUTTON).isVisible = false
