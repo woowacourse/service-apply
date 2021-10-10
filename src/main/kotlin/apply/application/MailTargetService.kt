@@ -16,7 +16,7 @@ class MailTargetService(
     fun findMailTargets(evaluationId: Long, evaluationStatus: EvaluationStatus? = null): List<MailTargetResponse> {
         val userIds = findEvaluationTargets(evaluationId, evaluationStatus).map { it.userId }
         return userRepository.findAllById(userIds)
-            .map { MailTargetResponse(it.name, it.email) }
+            .map { MailTargetResponse(it.email, it.name) }
     }
 
     private fun findEvaluationTargets(evaluationId: Long, evaluationStatus: EvaluationStatus?): List<EvaluationTarget> {

@@ -249,7 +249,7 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
                 evaluationId,
                 enumStatus
             )
-        } returns listOf(MailTargetResponse("김경록", "roki@woowacourse.com"))
+        } returns listOf(MailTargetResponse("roki@woowacourse.com", "김경록"))
 
         mockMvc.perform(
             RestDocumentationRequestBuilders.get(

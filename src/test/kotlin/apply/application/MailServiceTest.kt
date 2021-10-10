@@ -5,7 +5,7 @@ import apply.createMailHistory
 import apply.createUser
 import apply.domain.mail.MailHistoryRepository
 import apply.domain.user.UserRepository
-import apply.domain.user.findByEmail
+import apply.domain.user.findAllByEmailIn
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import org.assertj.core.api.Assertions.assertThat
@@ -13,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import support.test.UnitTest
-import support.views.NO_NAME
 import java.time.LocalDateTime
 
 @UnitTest
@@ -50,18 +49,19 @@ class MailServiceTest {
     }
 
     @Test
-    fun `회원 중에서 해당하는 이메일이 있으면 이름과 이메일을 가져온다`() {
-        val user = createUser()
-        every { userRepository.findByEmail(user.email) } returns user
-        val actual = mailService.findMailTargetByEmail(user.email)
-        assertThat(actual.name).isEqualTo(user.name)
-    }
-
-    @Test
-    fun `회원 중에서 해당하는 이메일이 없으면 (이름없음)과 이메일을 반환한다`() {
-        val email = "email@email.com"
-        every { userRepository.findByEmail(email) } returns null
-        val actual = mailService.findMailTargetByEmail(email)
-        assertThat(actual.name).isEqualTo(NO_NAME)
+    fun `이메일 중에서 회원에 해당하는 이메일이 있으면 (회원이름, 이메일)을, 회원에 해당하는 이메일이 없으면 (공백, 이메일)을 반환한다`() {
+        val users = listOf(
+            createUser(name = "회원1", email = "test1@email.com"),
+            createUser(name = "회원3", email = "test3@email.com")
+        )
+        val emails = listOf("test1@email.com", "test2@email.com", "test3@email.com")
+        val mailTargetResponses = listOf(
+            MailTargetResponse("test1@email.com", "회원1"),
+            MailTargetResponse("test3@email.com", "회원3"),
+            MailTargetResponse("test2@email.com")
+        )
+        every { userRepository.findAllByEmailIn(emails) } returns users
+        val actual = mailService.findAllMailTargetsByEmails(emails)
+        assertThat(actual).isEqualTo(mailTargetResponses)
     }
 }

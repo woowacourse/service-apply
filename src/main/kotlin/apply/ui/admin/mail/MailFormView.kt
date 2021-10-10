@@ -129,7 +129,7 @@ class MailFormView(
     private fun createEnterBox(): Component {
         return createEnterBox(labelText = "받는사람 추가") {
             if (it.isNotBlank()) {
-                mailTargets.addAndRefresh(MailTargetResponse(NO_NAME, it))
+                mailTargets.addAndRefresh(MailTargetResponse(it, NO_NAME))
             }
         }
     }
@@ -203,7 +203,7 @@ class MailFormView(
 
     private fun createMailTargetsGrid(mailTargets: Set<MailTargetResponse>): Grid<MailTargetResponse> {
         return Grid<MailTargetResponse>(10).apply {
-            addSortableColumn("이름", MailTargetResponse::name)
+            addSortableColumn("이름") { it.name ?: NO_NAME }
             addSortableColumn("이메일", MailTargetResponse::email)
             addColumn(createRemoveButton()).key = DELETE_BUTTON
             setItems(mailTargets)
@@ -228,9 +228,7 @@ class MailFormView(
         fillDefault(data)
         subject.isReadOnly = true
         body.isReadOnly = true
-        data.recipients.forEach {
-            mailTargets.add(mailService.findMailTargetByEmail(it))
-        }
+        mailTargets.addAll(mailService.findAllMailTargetsByEmails(data.recipients))
     }
 
     companion object {
