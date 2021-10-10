@@ -1,0 +1,67 @@
+.box {
+  position: relative;
+  margin-bottom: 1.25rem;
+}
+
+.text-field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.label {
+  margin-bottom: 0.375rem;
+}
+
+.input-box {
+  display: flex;
+  height: 2.5rem;
+}
+
+.input-box > input {
+  flex: 1;
+}
+
+.input-button {
+  height: inherit;
+  padding: 0;
+  width: 2.75rem;
+  font-size: 0.75rem;
+  line-height: 0.875rem;
+  margin-left: 0.875rem;
+}
+
+.rule-field {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  margin-left: 0.5rem;
+  height: 0.75rem;
+  font-size: 0.75rem;
+  color: var(--red);
+}
+
+.authenticated {
+  font-size: 2rem;
+  background-color: var(--black);
+  color: var(--white);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.25rem;
+  user-select: none;
+}
+
+.timer {
+  color: var(--gray-008);
+  font-size: 0.75rem;
+  position: absolute;
+  top: 0.25rem;
+  right: 0;
+}
+
+.timer-time {
+  display: inline-block;
+  width: 2.5rem;
+  text-align: right;
+}

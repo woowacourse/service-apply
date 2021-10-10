@@ -6,8 +6,8 @@
 
 .text-input {
   padding: 12px;
-  border: 1px solid #ced6e0;
-  border-radius: 3px;
+  border: 1px solid var(--gray-006);
+  border-radius: 4px;
   transition-duration: 0.5s;
   line-height: 30px;
   font-size: 16px;

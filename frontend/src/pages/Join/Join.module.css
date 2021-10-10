@@ -5,20 +5,18 @@
   gap: 1rem;
 }
 
-.recruitment {
-  width: var(--pc-main-width-narrow);
+.summary-content {
+  font-size: 0.75rem;
 }
 
-.summary {
-  padding: 0;
-  margin: 0;
-  font-size: 0.75rem;
+.input-box {
+  margin-bottom: 1.25rem;
 }
 
 .buttons {
   display: flex;
   gap: 1rem;
-  margin-top: 16px;
+  margin-top: 1.5rem;
 }
 
 .buttons button {

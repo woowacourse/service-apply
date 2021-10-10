@@ -17,7 +17,7 @@ export const formatDateTime = (value) => {
   )
     return value;
 
-  return `${year}-${String(month).padStart(2, "0")}-${String(date).padStart(
+  return `${year}-${String(month + 1).padStart(2, "0")}-${String(date).padStart(
     2,
     "0"
   )} ${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
@@ -28,3 +28,8 @@ export const formatBirthday = ({ year, month, day }) =>
     2,
     "0"
   )}T00:00:00`;
+
+export const formatTimerText = (seconds) =>
+  `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(
+    seconds % 60
+  ).padStart(2, "0")}`;

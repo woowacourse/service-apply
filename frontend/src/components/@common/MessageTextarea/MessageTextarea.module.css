@@ -1,13 +1,13 @@
 .text-field {
   display: flex;
   flex-direction: column;
-  margin: 0.625rem;
 }
 
 .length-limit {
   align-self: flex-end;
-  color: #999999;
+  color: var(--gray-007);
   font-size: 13px;
+  margin-bottom: 4px;
 }
 
 .rule-field {
