@@ -5,6 +5,14 @@
   gap: 1rem;
 }
 
+.label-bold label {
+  font-weight: bold;
+}
+
+.text-bold {
+  font-weight: bold;
+}
+
 .text-field-container {
   margin-bottom: 30px;
 }

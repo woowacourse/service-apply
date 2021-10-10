@@ -1,11 +1,10 @@
 .label {
   display: flex;
   align-items: center;
-  font-weight: bold;
 }
 
 .required::after {
   content: "*";
-  margin: 0 3px;
+  margin-left: 0.25rem;
   color: var(--blue);
 }
