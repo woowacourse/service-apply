@@ -11,8 +11,8 @@ data class CreateAssignmentRequest(
     val githubUsername: String,
 
     @field:Size(min = 1, max = 255)
-    val pullRequestUrl: String = "",
+    val pullRequestUrl: String,
 
     @field:NotBlank
-    var note: String = ""
+    var note: String
 )

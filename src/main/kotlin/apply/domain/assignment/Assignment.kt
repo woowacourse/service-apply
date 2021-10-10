@@ -9,7 +9,7 @@ import javax.persistence.UniqueConstraint
 
 @Table(
     uniqueConstraints = [
-        UniqueConstraint(name = "uk_assignment", columnNames = ["missionId", "userId"])
+        UniqueConstraint(name = "uk_assignment", columnNames = ["userId", "missionId"])
     ]
 )
 @Entity

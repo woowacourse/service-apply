@@ -11,4 +11,4 @@ create table assignment
   default charset = utf8mb4;
 
 alter table assignment
-    add constraint uk_assignment unique (mission_id, user_id);
+    add constraint uk_assignment unique (user_id, mission_id);
