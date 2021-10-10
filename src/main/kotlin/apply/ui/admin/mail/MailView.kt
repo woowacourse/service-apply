@@ -56,9 +56,7 @@ class MailView(
     }
 
     private fun createButtonRenderer(): Renderer<MailData> {
-        return ComponentRenderer<Component, MailData> { response ->
-            createDetailButton(response)
-        }
+        return ComponentRenderer { response -> createDetailButton(response) }
     }
 
     private fun createDetailButton(mailData: MailData): Component {
