@@ -3,7 +3,6 @@ package apply.ui.admin.term
 import apply.application.TermSelectData
 import apply.application.TermService
 import com.vaadin.flow.component.Component
-import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.dialog.Dialog
 import com.vaadin.flow.component.html.H2
@@ -58,7 +57,7 @@ class TermFormDialog(
         return createPrimaryButton {
             termForm.bindOrNull()?.let {
                 // TODO : save
-                UI.getCurrent().navigate(TermsView::class.java)
+                close()
             }
         }
     }
