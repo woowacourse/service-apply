@@ -12,7 +12,7 @@ import javax.transaction.Transactional
 
 @Transactional
 @Service
-class MailService(
+class MailHistoryService(
     private val mailHistoryRepository: MailHistoryRepository,
     private val userRepository: UserRepository
 ) {

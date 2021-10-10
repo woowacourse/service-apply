@@ -1,7 +1,7 @@
 package apply.ui.admin.mail
 
 import apply.application.EvaluationService
-import apply.application.MailService
+import apply.application.MailHistoryService
 import apply.application.MailTargetService
 import apply.application.RecruitmentService
 import apply.application.UserService
@@ -29,7 +29,7 @@ class MailFormView(
     recruitmentService: RecruitmentService,
     evaluationService: EvaluationService,
     mailTargetService: MailTargetService,
-    private val mailService: MailService,
+    private val mailHistoryService: MailHistoryService,
     mailProperties: MailProperties
 ) : VerticalLayout(), HasUrlParameter<String> {
     private val mailForm: MailForm = MailForm(
@@ -37,7 +37,7 @@ class MailFormView(
         recruitmentService,
         evaluationService,
         mailTargetService,
-        mailService,
+        mailHistoryService,
         mailProperties
     )
     private val submitButton: Component = createSubmitButton()
@@ -51,7 +51,7 @@ class MailFormView(
         result?.let {
             val (id, value) = it.destructured
             if (value == EDIT_VALUE) {
-                val mailData = mailService.getById(id.toLong())
+                val mailData = mailHistoryService.getById(id.toLong())
                 mailForm.fill(mailData)
                 mailForm.toReadOnlyMode()
                 this.submitButton.isVisible = false
@@ -69,7 +69,7 @@ class MailFormView(
     private fun createSubmitButton(): Button {
         return createPrimaryButton("보내기") {
             mailForm.bindOrNull()?.let {
-                mailService.save(it)
+                mailHistoryService.save(it)
                 // TODO: emailService.메일전송(it, uploadFile)
                 UI.getCurrent().navigate(MailView::class.java)
             }

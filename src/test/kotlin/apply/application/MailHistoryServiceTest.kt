@@ -16,25 +16,25 @@ import support.test.UnitTest
 import java.time.LocalDateTime
 
 @UnitTest
-class MailServiceTest {
+class MailHistoryServiceTest {
     @MockK
     private lateinit var mailHistoryRepository: MailHistoryRepository
 
     @MockK
     private lateinit var userRepository: UserRepository
 
-    private lateinit var mailService: MailService
+    private lateinit var mailHistoryService: MailHistoryService
 
     @BeforeEach
     internal fun setUp() {
-        mailService = MailService(mailHistoryRepository, userRepository)
+        mailHistoryService = MailHistoryService(mailHistoryRepository, userRepository)
     }
 
     @Test
     fun `메일 이력을 저장한다`() {
         val mailData = createMailData()
         every { mailHistoryRepository.save(any()) } returns createMailHistory()
-        assertDoesNotThrow { mailService.save(mailData) }
+        assertDoesNotThrow { mailHistoryService.save(mailData) }
     }
 
     @Test
@@ -45,7 +45,7 @@ class MailServiceTest {
         val emailHistory1 = createMailHistory(subject = "제목1", sentTime = now)
         val emailHistory2 = createMailHistory(subject = "제목2", sentTime = now.plusSeconds(1))
         every { mailHistoryRepository.findAll() } returns listOf(emailHistory1, emailHistory2)
-        assertThat(mailService.findAll()).containsExactly(mailData1, mailData2)
+        assertThat(mailHistoryService.findAll()).containsExactly(mailData1, mailData2)
     }
 
     @Test
@@ -61,7 +61,7 @@ class MailServiceTest {
             MailTargetResponse("test2@email.com")
         )
         every { userRepository.findAllByEmailIn(emails) } returns users
-        val actual = mailService.findAllMailTargetsByEmails(emails)
+        val actual = mailHistoryService.findAllMailTargetsByEmails(emails)
         assertThat(actual).isEqualTo(mailTargetResponses)
     }
 }

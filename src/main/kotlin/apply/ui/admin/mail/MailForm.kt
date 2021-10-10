@@ -1,7 +1,7 @@
 package apply.ui.admin.mail
 
 import apply.application.EvaluationService
-import apply.application.MailService
+import apply.application.MailHistoryService
 import apply.application.MailTargetResponse
 import apply.application.MailTargetService
 import apply.application.RecruitmentService
@@ -32,7 +32,7 @@ class MailForm(
     private val recruitmentService: RecruitmentService,
     private val evaluationService: EvaluationService,
     private val mailTargetService: MailTargetService,
-    private val mailService: MailService,
+    private val mailHistoryService: MailHistoryService,
     private val mailProperties: MailProperties
 ) : BindingFormLayout<MailData>(MailData::class) {
     private val subject: TextField = TextField("제목").apply { setWidthFull() }
@@ -166,7 +166,7 @@ class MailForm(
     override fun fill(data: MailData) {
         setRowCount(data.recipients.size)
         fillDefault(data)
-        mailTargets.addAll(mailService.findAllMailTargetsByEmails(data.recipients))
+        mailTargets.addAll(mailHistoryService.findAllMailTargetsByEmails(data.recipients))
     }
 
     companion object {

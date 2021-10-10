@@ -8,7 +8,7 @@ import apply.application.ResetPasswordRequest
 import apply.application.UserAuthenticationService
 import apply.application.UserResponse
 import apply.application.UserService
-import apply.application.mail.MailSenderService
+import apply.application.mail.MailService
 import apply.createUser
 import apply.domain.authenticationcode.AuthenticationCode
 import apply.domain.user.Gender
@@ -64,7 +64,7 @@ internal class UserRestControllerTest : RestControllerTest() {
     private lateinit var userAuthenticationService: UserAuthenticationService
 
     @MockkBean
-    private lateinit var mailSenderService: MailSenderService
+    private lateinit var mailService: MailService
 
     @MockkBean
     private lateinit var jwtTokenProvider: JwtTokenProvider
@@ -114,7 +114,7 @@ internal class UserRestControllerTest : RestControllerTest() {
     @Test
     fun `유효한 회원 생성 및 검증 요청에 대하여 응답으로 토큰이 반환된다`() {
         every { userAuthenticationService.generateTokenByRegister(userRequest) } returns VALID_TOKEN
-        every { mailSenderService.sendAuthenticationCodeMail(any(), any()) } just Runs
+        every { mailService.sendAuthenticationCodeMail(any(), any()) } just Runs
 
         mockMvc.post("/api/users/register") {
             content = objectMapper.writeValueAsBytes(userRequest.withPlainPassword(PASSWORD))
@@ -161,7 +161,7 @@ internal class UserRestControllerTest : RestControllerTest() {
             userService.resetPassword(userPasswordFindRequest)
         } returns RANDOM_PASSWORD
 
-        every { mailSenderService.sendPasswordResetMail(userPasswordFindRequest, RANDOM_PASSWORD) } just Runs
+        every { mailService.sendPasswordResetMail(userPasswordFindRequest, RANDOM_PASSWORD) } just Runs
 
         mockMvc.post("/api/users/reset-password") {
             content = objectMapper.writeValueAsBytes(userPasswordFindRequest)
@@ -227,7 +227,7 @@ internal class UserRestControllerTest : RestControllerTest() {
     fun `이메일 인증 코드 요청에 응답으로 NoContent를 반환한다`() {
         val authenticationCode = AuthenticationCode("authentication-code@email.com")
         every { userAuthenticationService.generateAuthenticationCode(any()) } returns authenticationCode.code
-        every { mailSenderService.sendAuthenticationCodeMail(authenticationCode.email, authenticationCode.code) } just Runs
+        every { mailService.sendAuthenticationCodeMail(authenticationCode.email, authenticationCode.code) } just Runs
 
         mockMvc.post("/api/users/authentication-code") {
             param("email", authenticationCode.email)

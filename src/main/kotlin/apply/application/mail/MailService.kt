@@ -9,7 +9,7 @@ import org.thymeleaf.context.Context
 import org.thymeleaf.spring5.ISpringTemplateEngine
 
 @Service
-class MailSenderService(
+class MailService(
     private val applicationProperties: ApplicationProperties,
     private val templateEngine: ISpringTemplateEngine,
     private val mailSender: MailSender
