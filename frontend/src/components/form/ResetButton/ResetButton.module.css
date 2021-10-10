@@ -1,9 +1,0 @@
-.reset-button {
-  color: inherit;
-  background-color: var(--white);
-  border: 1px solid var(--black);
-}
-
-.reset-button:hover {
-  background-color: var(--gray-001);
-}

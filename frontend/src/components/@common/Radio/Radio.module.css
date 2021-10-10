@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   cursor: pointer;
-  margin-right: 10px;
+  margin-right: 0.625rem;
 }
 
 input[type="radio"] {
@@ -18,17 +18,15 @@ input[type="radio"] {
 
 input[type="radio"]::before {
   content: "";
-  width: 20px;
-  height: 20px;
-  border-radius: 20px;
-  border: 3px solid #ced6e0;
-  background: #fff;
-  margin-right: 5px;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 1.25rem;
+  border: 3px solid var(--gray-004);
+  background: var(--white);
+  margin-right: 0.25rem;
   transition-duration: 0.2s;
 }
 
 input[type="radio"]:checked::before {
   background: var(--black);
-  border: 3px solid #d8e0ea;
-  color: #fff;
 }

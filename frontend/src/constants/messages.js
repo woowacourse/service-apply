@@ -16,6 +16,8 @@ export const ERROR_MESSAGE = {
   API: {
     ALREADY_REGISTER: "이미 지원한 이력이 있습니다.",
     FETCHING_MY_APPLICATION: "내 지원서를 불러오는데 실패했습니다.",
+    JOIN_FAILURE: "회원가입에 실패했습니다. 잠시후 다시 시도해주세요.",
+    LOGIN_FAILURE: "아이디(E-mail) 또는 비밀번호를 확인해주세요.",
   },
   ACCESS: {
     REQUIRED_LOGIN: "로그인이 필요합니다.",

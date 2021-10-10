@@ -5,7 +5,7 @@ import styles from "./SummaryCheckField.module.css";
 
 const SummaryCheckField = ({ children, label, required, ...props }) => {
   return (
-    <div className={styles.container}>
+    <div className={styles.box}>
       <CheckBox label={label} required={required} {...props} />
       <div className={styles.summary}>
         <div className={styles.text}>{children}</div>
