@@ -9,7 +9,6 @@ import java.time.LocalDate
 const val NAME: String = "지원자"
 const val EMAIL: String = "test@email.com"
 const val PHONE_NUMBER: String = "010-0000-0000"
-const val AUTHENTICATION_CODE: String = "3ea9fa6c"
 val GENDER: Gender = Gender.MALE
 val BIRTHDAY: LocalDate = createLocalDate(1995, 2, 2)
 val PASSWORD: Password = Password("password")

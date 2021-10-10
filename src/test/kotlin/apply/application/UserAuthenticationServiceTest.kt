@@ -1,16 +1,17 @@
 package apply.application
 
-import apply.AUTHENTICATION_CODE
 import apply.BIRTHDAY
 import apply.EMAIL
 import apply.GENDER
+import apply.INVALID_CODE
 import apply.NAME
 import apply.PASSWORD
 import apply.PHONE_NUMBER
+import apply.VALID_CODE
 import apply.VALID_TOKEN
 import apply.WRONG_PASSWORD
+import apply.createAuthenticationCode
 import apply.createUser
-import apply.domain.authenticationcode.AuthenticationCode
 import apply.domain.authenticationcode.AuthenticationCodeRepository
 import apply.domain.authenticationcode.getLastByEmail
 import apply.domain.user.UserAuthenticationException
@@ -61,7 +62,7 @@ internal class UserAuthenticationServiceTest {
         @Test
         fun `가입된 이메일이라면 예외가 발생한다`() {
             every { userRepository.existsByEmail(any()) } returns true
-            request = RegisterUserRequest(NAME, EMAIL, PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD, AUTHENTICATION_CODE)
+            request = RegisterUserRequest(NAME, EMAIL, PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD, VALID_CODE)
             assertThrows<IllegalStateException> { subject() }
         }
 
@@ -69,11 +70,8 @@ internal class UserAuthenticationServiceTest {
         fun `인증된 인증 코드와 일치하지 않는다면 예외가 발생한다`() {
             every { userRepository.existsByEmail(any()) } returns false
             every { authenticationCodeRepository.getLastByEmail(any()) } returns
-                AuthenticationCode(
-                    EMAIL,
-                    "invalid_code"
-                )
-            request = RegisterUserRequest(NAME, EMAIL, PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD, AUTHENTICATION_CODE)
+                createAuthenticationCode(EMAIL, INVALID_CODE)
+            request = RegisterUserRequest(NAME, EMAIL, PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD, VALID_CODE)
             assertThrows<IllegalStateException> { subject() }
         }
 
@@ -81,11 +79,8 @@ internal class UserAuthenticationServiceTest {
         fun `인증된 이메일이 아니라면 예외가 발생한다`() {
             every { userRepository.existsByEmail(any()) } returns false
             every { authenticationCodeRepository.getLastByEmail(any()) } returns
-                AuthenticationCode(
-                    EMAIL,
-                    AUTHENTICATION_CODE
-                )
-            request = RegisterUserRequest(NAME, EMAIL, PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD, AUTHENTICATION_CODE)
+                createAuthenticationCode(EMAIL, INVALID_CODE)
+            request = RegisterUserRequest(NAME, "not@email.com", PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD, VALID_CODE)
             assertThrows<IllegalStateException> { subject() }
         }
 
@@ -93,14 +88,10 @@ internal class UserAuthenticationServiceTest {
         fun `가입되지 않고 인증된 이메일이라면 회원을 저장하고 토큰을 반환한다`() {
             every { userRepository.existsByEmail(any()) } returns false
             every { authenticationCodeRepository.getLastByEmail(any()) } returns
-                AuthenticationCode(
-                    email = EMAIL,
-                    code = AUTHENTICATION_CODE,
-                    authenticated = true
-                )
+                createAuthenticationCode(EMAIL, VALID_CODE, true)
 
             every { userRepository.save(any()) } returns createUser()
-            request = RegisterUserRequest(NAME, EMAIL, PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD, AUTHENTICATION_CODE)
+            request = RegisterUserRequest(NAME, EMAIL, PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD, VALID_CODE)
             assertThat(subject()).isEqualTo(VALID_TOKEN)
         }
     }
@@ -139,7 +130,7 @@ internal class UserAuthenticationServiceTest {
     @DisplayName("이메일 사용자 인증 시")
     @Nested
     inner class AuthenticateEmail {
-        private val authenticationCode = AuthenticationCode("test@email.com")
+        private val authenticationCode = createAuthenticationCode()
 
         @Test
         fun `인증 코드가 일치한다면 인증된 회원으로 변경한다`() {
@@ -152,7 +143,7 @@ internal class UserAuthenticationServiceTest {
         fun `인증 코드가 일치하지 않는다면 예외가 발생한다`() {
             every { authenticationCodeRepository.getLastByEmail(any()) } returns authenticationCode
             assertThrows<IllegalArgumentException> {
-                userAuthenticationService.authenticateEmail(authenticationCode.email, "INVALID")
+                userAuthenticationService.authenticateEmail(authenticationCode.email, INVALID_CODE)
             }
         }
 
