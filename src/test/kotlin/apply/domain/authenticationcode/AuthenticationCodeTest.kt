@@ -53,8 +53,8 @@ internal class AuthenticationCodeTest {
     }
 
     @Test
-    fun `인증되지 않은 코드를 검증한다`() {
-        val authenticationCode = AuthenticationCode(EMAIL, VALID_CODE)
+    fun `인증 여부를 검증한다`() {
+        val authenticationCode = AuthenticationCode(EMAIL, VALID_CODE, false)
         assertThrows<IllegalStateException> { authenticationCode.validate(VALID_CODE) }
     }
 }
