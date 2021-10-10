@@ -1,11 +1,11 @@
 package apply.domain.authenticationcode
 
+import apply.EMAIL
+import apply.createAuthenticationCode
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import support.test.RepositoryTest
 import java.time.LocalDateTime
-
-private const val EMAIL: String = "test@email.com"
 
 @RepositoryTest
 class AuthenticationCodeRepositoryTest(
@@ -16,9 +16,9 @@ class AuthenticationCodeRepositoryTest(
         val now = LocalDateTime.now()
         val authenticationCodes = authenticationCodeRepository.saveAll(
             listOf(
-                AuthenticationCode(EMAIL, createdDateTime = now),
-                AuthenticationCode(EMAIL, createdDateTime = now.plusSeconds(1L)),
-                AuthenticationCode(EMAIL, createdDateTime = now.plusSeconds(2L))
+                createAuthenticationCode(EMAIL),
+                createAuthenticationCode(EMAIL, createdDateTime = now.plusSeconds(1L)),
+                createAuthenticationCode(EMAIL, createdDateTime = now.plusSeconds(2L))
             )
         )
         val actual = authenticationCodeRepository.findFirstByEmailOrderByCreatedDateTimeDesc(EMAIL)

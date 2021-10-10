@@ -30,7 +30,7 @@ class UserRestController(
 ) {
     @PostMapping("/register")
     fun generateToken(@RequestBody @Valid request: RegisterUserRequest): ResponseEntity<ApiResponse<String>> {
-        val token = userAuthenticationService.generateToken(request)
+        val token = userAuthenticationService.generateTokenByRegister(request)
         return ResponseEntity.ok().body(ApiResponse.success(token))
     }
 
