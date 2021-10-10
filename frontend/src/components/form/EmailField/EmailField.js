@@ -103,7 +103,7 @@ const EmailField = ({
       <div className={styles.box}>
         <div className={styles["text-field"]}>
           <Label className={styles.label} required>
-            이메일 인증코드
+            이메일
           </Label>
           <div className={styles["input-box"]}>
             <TextInput
