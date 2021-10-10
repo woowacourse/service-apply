@@ -81,7 +81,7 @@ class MissionSelectionView(
         createDeleteButtonWithDialog("과제를 삭제하시겠습니까?") {
             missionService.deleteById(mission.id)
             UI.getCurrent().page.reload()
-        }.apply { isEnabled = mission.submittable }
+        }.apply { isEnabled = !mission.submittable }
 
     private fun Boolean.toText(): String {
         return if (this) {

@@ -38,7 +38,7 @@ data class MissionResponse(
     val evaluationId: Long,
     val submittable: Boolean,
     val startDateTime: LocalDateTime,
-    val endDateTime: LocalDateTime
+    val endDateTime: LocalDateTime,
 ) {
     constructor(mission: Mission, evaluation: Evaluation) : this(
         mission.id,
