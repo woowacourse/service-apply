@@ -33,7 +33,7 @@ class AuthenticationCode(
 
     fun validate(code: String) {
         check(this.code == code) { "인증 코드가 일치하지 않습니다." }
-        check(this.authenticated) { "인증되지 않았습니다." }
+        check(authenticated) { "인증되지 않았습니다." }
     }
 
     companion object {
