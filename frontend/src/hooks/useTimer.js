@@ -9,15 +9,15 @@ const useTimer = (initialSeconds, initialDelay = 1000) => {
     setSeconds(seconds - 1);
   }, delay);
 
-  const handleStart = () => setDelay(initialDelay);
+  const start = () => setDelay(initialDelay);
 
-  const handleStop = () => setDelay(null);
+  const stop = () => setDelay(null);
 
   return {
     timerSeconds: seconds,
     setTimerSeconds: setSeconds,
-    handleStartTimer: handleStart,
-    handleStopTimer: handleStop,
+    startTimer: start,
+    stopTimer: stop,
   };
 };
 

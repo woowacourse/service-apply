@@ -15,6 +15,8 @@ export const EMAIL_STATUS = {
   AUTHENTICATED: "authenticated",
 };
 
+const EMAIL_CODE_VALIDITY_SECONDS = 600;
+
 const EmailField = ({
   emailCode,
   setEmailCode,
@@ -23,7 +25,9 @@ const EmailField = ({
 }) => {
   const { value, errorMessage, handleChange, register, unRegister } =
     useFormContext();
-  const { timerSeconds, handleStartTimer, handleStopTimer } = useTimer(600);
+  const { timerSeconds, setTimerSeconds, startTimer, stopTimer } = useTimer(
+    EMAIL_CODE_VALIDITY_SECONDS
+  );
 
   const getEmailButton = () => {
     if (emailStatus === EMAIL_STATUS.WAITING_AUTHENTICATION) {
@@ -65,14 +69,16 @@ const EmailField = ({
     // TODO: 인증코드 이메일 발송 api 요청(이메일 중복확인 메세지 필요)
 
     setEmailStatus(EMAIL_STATUS.WAITING_AUTHENTICATION);
-    handleStartTimer();
+    setTimerSeconds(EMAIL_CODE_VALIDITY_SECONDS);
+    startTimer();
   };
 
   const handleAuthenticateEmail = () => {
     // TODO: 인증코드와 함께 이메일 인증 api 요청
 
     setEmailStatus(EMAIL_STATUS.AUTHENTICATED);
-    handleStopTimer();
+    stopTimer();
+    setTimerSeconds(EMAIL_CODE_VALIDITY_SECONDS);
   };
 
   useEffect(() => {
@@ -82,6 +88,15 @@ const EmailField = ({
       unRegister("email");
     };
   }, []);
+
+  useEffect(() => {
+    if (timerSeconds > 0) return;
+
+    stopTimer();
+    // TODO: 이메일 인증 코드 유효시간 만료 처리
+
+    setTimerSeconds(EMAIL_CODE_VALIDITY_SECONDS);
+  }, [timerSeconds]);
 
   return (
     <>
