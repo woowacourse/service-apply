@@ -1,7 +1,7 @@
 package apply.ui.admin.mail
 
 import apply.application.EvaluationService
-import apply.application.MailHistoryService
+import apply.application.MailService
 import apply.application.MailTargetResponse
 import apply.application.MailTargetService
 import apply.application.RecruitmentService
@@ -46,7 +46,7 @@ class MailFormView(
     private val recruitmentService: RecruitmentService,
     private val evaluationService: EvaluationService,
     private val mailTargetService: MailTargetService,
-    private val mailHistoryService: MailHistoryService,
+    private val mailService: MailService,
     private val mailProperties: MailProperties
 ) : BindingFormLayout<MailData>(MailData::class), HasUrlParameter<String> {
     private val subject: TextField = TextField("제목").apply { setWidthFull() }
@@ -69,7 +69,7 @@ class MailFormView(
         result?.let {
             val (id, value) = it.destructured
             if (value == EDIT_VALUE) {
-                val mailData = mailHistoryService.getById(id.toLong())
+                val mailData = mailService.getById(id.toLong())
                 setRowCount(mailData.recipients.size)
                 this.fill(mailData)
                 this.recipientFilter.isVisible = false
@@ -167,7 +167,7 @@ class MailFormView(
     private fun createSubmitButton(): Button {
         return createPrimaryButton("보내기") {
             bindOrNull()?.let {
-                mailHistoryService.save(it)
+                mailService.save(it)
                 // TODO: emailService.메일전송(it, uploadFile)
                 UI.getCurrent().navigate(MailView::class.java)
             }

@@ -8,7 +8,7 @@ import apply.application.ResetPasswordRequest
 import apply.application.UserAuthenticationService
 import apply.application.UserResponse
 import apply.application.UserService
-import apply.application.mail.MailService
+import apply.application.mail.MailSenderService
 import apply.domain.user.User
 import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
@@ -26,7 +26,7 @@ import javax.validation.Valid
 class UserRestController(
     private val userService: UserService,
     private val userAuthenticationService: UserAuthenticationService,
-    private val mailService: MailService,
+    private val mailSenderService: MailSenderService,
 ) {
     @PostMapping("/register")
     fun generateToken(@RequestBody @Valid request: RegisterUserRequest): ResponseEntity<ApiResponse<String>> {
@@ -43,7 +43,7 @@ class UserRestController(
     @PostMapping("/reset-password")
     fun resetPassword(@RequestBody @Valid request: ResetPasswordRequest): ResponseEntity<Unit> {
         val newPassword = userService.resetPassword(request)
-        mailService.sendPasswordResetMail(request, newPassword)
+        mailSenderService.sendPasswordResetMail(request, newPassword)
         return ResponseEntity.noContent().build()
     }
 
@@ -62,7 +62,7 @@ class UserRestController(
     ): ResponseEntity<Unit> {
         val authenticateCode = userAuthenticationService
             .generateAuthenticationCode(email)
-        mailService.sendAuthenticationCodeMail(email, authenticateCode)
+        mailSenderService.sendAuthenticationCodeMail(email, authenticateCode)
         return ResponseEntity.noContent().build()
     }
 

@@ -4,13 +4,15 @@ import apply.application.mail.MailData
 import apply.domain.mail.MailHistory
 import apply.domain.mail.MailHistoryRepository
 import apply.domain.mail.getById
+import apply.domain.user.UserRepository
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 
 @Transactional
 @Service
-class MailHistoryService(
-    private val mailHistoryRepository: MailHistoryRepository
+class MailService(
+    private val mailHistoryRepository: MailHistoryRepository,
+    private val userRepository: UserRepository
 ) {
     fun save(mailData: MailData) {
         mailHistoryRepository.save(

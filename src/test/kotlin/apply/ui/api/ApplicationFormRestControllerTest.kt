@@ -6,7 +6,7 @@ import apply.application.ApplicationFormResponse
 import apply.application.ApplicationFormService
 import apply.application.MyApplicationFormResponse
 import apply.application.UserService
-import apply.application.mail.MailService
+import apply.application.mail.MailSenderService
 import apply.createApplicationForm
 import apply.createApplicationForms
 import apply.createUser
@@ -34,7 +34,7 @@ internal class ApplicationFormRestControllerTest : RestControllerTest() {
     private lateinit var applicantService: ApplicantService
 
     @MockkBean
-    private lateinit var mailService: MailService
+    private lateinit var mailSenderService: MailSenderService
 
     @MockkBean
     private lateinit var jwtTokenProvider: JwtTokenProvider

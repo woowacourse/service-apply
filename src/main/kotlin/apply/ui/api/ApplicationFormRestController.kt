@@ -7,7 +7,7 @@ import apply.application.ApplicationFormService
 import apply.application.CreateApplicationFormRequest
 import apply.application.MyApplicationFormResponse
 import apply.application.UpdateApplicationFormRequest
-import apply.application.mail.MailService
+import apply.application.mail.MailSenderService
 import apply.domain.user.User
 import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
@@ -26,7 +26,7 @@ import javax.validation.Valid
 class ApplicationFormRestController(
     private val applicationFormService: ApplicationFormService,
     private val applicantService: ApplicantService,
-    private val mailService: MailService
+    private val mailSenderService: MailSenderService
 ) {
     @GetMapping("/application-forms/me")
     fun getMyApplicationForms(
@@ -62,7 +62,7 @@ class ApplicationFormRestController(
         applicationFormService.update(user.id, request)
 
         // TODO: 차후 연결될 프론트 주소가 필요
-        mailService.sendFormSubmittedMail(user)
+        mailSenderService.sendFormSubmittedMail(user)
         return ResponseEntity.ok().build()
     }
 

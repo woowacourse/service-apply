@@ -1,6 +1,6 @@
 package apply.ui.api
 
-import apply.application.MailHistoryService
+import apply.application.MailService
 import apply.application.mail.MailData
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -13,22 +13,22 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/mails")
 class MailHistoryRestController(
-    private val mailHistoryService: MailHistoryService
+    private val mailService: MailService
 ) {
     @PostMapping
     fun save(@RequestBody request: MailData): ResponseEntity<Unit> {
         // todo: 파일 첨부하여 보내는 로직 필요
-        mailHistoryService.save(request)
+        mailService.save(request)
         return ResponseEntity.ok().build()
     }
 
     @GetMapping("/{mailHistoryId}")
     fun getById(@PathVariable mailHistoryId: Long): ResponseEntity<ApiResponse<MailData>> {
-        return ResponseEntity.ok(ApiResponse.success(mailHistoryService.getById(mailHistoryId)))
+        return ResponseEntity.ok(ApiResponse.success(mailService.getById(mailHistoryId)))
     }
 
     @GetMapping
     fun findAll(): ResponseEntity<ApiResponse<List<MailData>>> {
-        return ResponseEntity.ok(ApiResponse.success(mailHistoryService.findAll()))
+        return ResponseEntity.ok(ApiResponse.success(mailService.findAll()))
     }
 }
