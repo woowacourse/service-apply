@@ -18,6 +18,6 @@ class TermForm() : BindingIdentityFormLayout<TermSelectData>(TermSelectData::cla
     }
 
     override fun fill(term: TermSelectData) {
-        name.placeholder = term.name
+        fillDefault(term)
     }
 }

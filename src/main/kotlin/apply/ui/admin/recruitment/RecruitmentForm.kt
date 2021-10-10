@@ -32,7 +32,7 @@ class RecruitmentForm() : BindingIdentityFormLayout<RecruitmentData>(Recruitment
 
     init {
         val termButton = createTermManageButton()
-        add(title, term, termButton, startDateTime, endDateTime, recruitable, hidden)
+        add(term, termButton, title, startDateTime, endDateTime, recruitable, hidden)
         addFormItem(createAddButton(), "모집 항목")
         setResponsiveSteps(ResponsiveStep("0", 7))
         children.forEach {
