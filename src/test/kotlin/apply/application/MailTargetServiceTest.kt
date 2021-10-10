@@ -1,8 +1,10 @@
 package apply.application
 
 import apply.EVALUATION_ID
+import apply.createEvaluationAnswer
 import apply.createEvaluationTarget
 import apply.createUser
+import apply.domain.evaluationtarget.EvaluationAnswers
 import apply.domain.evaluationtarget.EvaluationStatus.FAIL
 import apply.domain.evaluationtarget.EvaluationStatus.PASS
 import apply.domain.evaluationtarget.EvaluationStatus.PENDING
@@ -11,6 +13,7 @@ import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.user.UserRepository
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -73,6 +76,25 @@ class MailTargetServiceTest {
         val actual = mailTargetService.findMailTargets(EVALUATION_ID, FAIL)
         assertThat(actual).hasSize(1)
         assertThat(actual[0].email).isEqualTo("fail@email.com")
+    }
+
+    @Test
+    fun `평가 상태에 따라 (FAIL) 메일 발송 시 미제출자는 대상이 되지 않는다`() {
+        every { evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(any(), any()) } returns listOf(
+            createEvaluationTarget(
+                userId = 1L,
+                evaluationStatus = FAIL,
+                evaluationAnswers = EvaluationAnswers(emptyList())
+            ),
+            createEvaluationTarget(
+                userId = 2L,
+                evaluationStatus = FAIL,
+                evaluationAnswers = EvaluationAnswers(listOf(createEvaluationAnswer(score = 0)))
+            )
+        )
+        every { userRepository.findAllById(any()) } returns emptyList()
+        mailTargetService.findMailTargets(EVALUATION_ID, FAIL)
+        verify { userRepository.findAllById(emptyList()) }
     }
 
     @Test

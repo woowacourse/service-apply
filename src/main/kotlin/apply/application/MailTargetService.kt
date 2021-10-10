@@ -35,7 +35,7 @@ class MailTargetService(
             evaluationId, evaluationStatus
         )
         return if (evaluationStatus == EvaluationStatus.FAIL) {
-            evaluationTargets.filter { it.notSubmitted() }
+            evaluationTargets.filter { it.evaluated() }
         } else {
             evaluationTargets
         }
