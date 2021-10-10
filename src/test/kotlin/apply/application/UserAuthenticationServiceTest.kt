@@ -60,47 +60,45 @@ internal class UserAuthenticationServiceTest {
 
         @Test
         fun `가입된 이메일이라면 예외가 발생한다`() {
-            every { userRepository.existsByEmail(any()) } answers { true }
+            every { userRepository.existsByEmail(any()) } returns true
             request = RegisterUserRequest(NAME, EMAIL, PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD, AUTHENTICATION_CODE)
             assertThrows<IllegalStateException> { subject() }
         }
 
         @Test
         fun `인증된 인증 코드와 일치하지 않는다면 예외가 발생한다`() {
-            every { userRepository.existsByEmail(any()) } answers { false }
-            every { authenticationCodeRepository.getLastByEmail(any()) } answers {
+            every { userRepository.existsByEmail(any()) } returns false
+            every { authenticationCodeRepository.getLastByEmail(any()) } returns
                 AuthenticationCode(
                     EMAIL,
                     "invalid_code"
                 )
-            }
             request = RegisterUserRequest(NAME, EMAIL, PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD, AUTHENTICATION_CODE)
             assertThrows<IllegalStateException> { subject() }
         }
 
         @Test
         fun `인증된 이메일이 아니라면 예외가 발생한다`() {
-            every { userRepository.existsByEmail(any()) } answers { false }
-            every { authenticationCodeRepository.getLastByEmail(any()) } answers {
+            every { userRepository.existsByEmail(any()) } returns false
+            every { authenticationCodeRepository.getLastByEmail(any()) } returns
                 AuthenticationCode(
                     EMAIL,
                     AUTHENTICATION_CODE
                 )
-            }
             request = RegisterUserRequest(NAME, EMAIL, PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD, AUTHENTICATION_CODE)
             assertThrows<IllegalStateException> { subject() }
         }
 
         @Test
         fun `가입되지 않고 인증된 이메일이라면 회원을 저장하고 토큰을 반환한다`() {
-            every { userRepository.existsByEmail(any()) } answers { false }
-            every { authenticationCodeRepository.getLastByEmail(any()) } answers {
+            every { userRepository.existsByEmail(any()) } returns false
+            every { authenticationCodeRepository.getLastByEmail(any()) } returns
                 AuthenticationCode(
                     email = EMAIL,
                     code = AUTHENTICATION_CODE,
                     authenticated = true
                 )
-            }
+
             every { userRepository.save(any()) } returns createUser()
             request = RegisterUserRequest(NAME, EMAIL, PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD, AUTHENTICATION_CODE)
             assertThat(subject()).isEqualTo(VALID_TOKEN)
@@ -118,21 +116,21 @@ internal class UserAuthenticationServiceTest {
 
         @Test
         fun `회원이 존재하고 인증에 성공하면 유효한 토큰을 반환한다`() {
-            every { userRepository.findByEmail(any()) } answers { createUser() }
+            every { userRepository.findByEmail(any()) } returns createUser()
             request = AuthenticateUserRequest(EMAIL, PASSWORD)
             assertThat(subject()).isEqualTo(VALID_TOKEN)
         }
 
         @Test
         fun `회원이 존재하지만 인증에 실패하면 예외가 발생한다`() {
-            every { userRepository.findByEmail(any()) } answers { createUser() }
+            every { userRepository.findByEmail(any()) } returns createUser()
             request = AuthenticateUserRequest(EMAIL, WRONG_PASSWORD)
             assertThrows<UserAuthenticationException> { subject() }
         }
 
         @Test
         fun `회원이 존재하지 않다면 예외가 발생한다`() {
-            every { userRepository.findByEmail(any()) } answers { null }
+            every { userRepository.findByEmail(any()) } returns null
             request = AuthenticateUserRequest(EMAIL, PASSWORD)
             assertThrows<UserAuthenticationException> { subject() }
         }
