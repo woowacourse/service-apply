@@ -1,14 +1,13 @@
 package apply.domain.authenticationcode
 
+import apply.EMAIL
+import apply.INVALID_CODE
+import apply.VALID_CODE
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertThrows
 import java.time.LocalDateTime
-
-private const val EMAIL: String = "test@email.com"
-private const val VALID_CODE: String = "VALID"
-private const val INVALID_CODE: String = "INVALID"
 
 internal class AuthenticationCodeTest {
     @Test
@@ -45,5 +44,17 @@ internal class AuthenticationCodeTest {
         val now = LocalDateTime.now()
         val authenticationCode = AuthenticationCode(EMAIL, VALID_CODE, createdDateTime = now.minusMinutes(11L))
         assertThrows<IllegalStateException> { authenticationCode.authenticate(VALID_CODE) }
+    }
+
+    @Test
+    fun `일치하지 않은 코드로 검증한다`() {
+        val authenticationCode = AuthenticationCode(EMAIL, VALID_CODE, true)
+        assertThrows<IllegalStateException> { authenticationCode.validate(INVALID_CODE) }
+    }
+
+    @Test
+    fun `인증 여부를 검증한다`() {
+        val authenticationCode = AuthenticationCode(EMAIL, VALID_CODE, false)
+        assertThrows<IllegalStateException> { authenticationCode.validate(VALID_CODE) }
     }
 }
