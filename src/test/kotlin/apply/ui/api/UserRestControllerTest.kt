@@ -44,7 +44,7 @@ private fun RegisterUserRequest.withPlainPassword(password: String): Map<String,
         "gender" to gender,
         "birthday" to birthday,
         "password" to password,
-        "authenticateCode" to authenticateCode
+        "authenticationCode" to authenticationCode
     )
 }
 
@@ -76,7 +76,7 @@ internal class UserRestControllerTest : RestControllerTest() {
         gender = Gender.MALE,
         birthday = createLocalDate(1995, 2, 2),
         password = Password(PASSWORD),
-        authenticateCode = "3ea9fa6c"
+        authenticationCode = "3ea9fa6c"
     )
 
     private val userLoginRequest = AuthenticateUserRequest(

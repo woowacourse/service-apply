@@ -70,7 +70,7 @@ data class RegisterUserRequest(
     val password: Password,
 
     @field:NotBlank
-    val authenticateCode: String
+    val authenticationCode: String
 ) {
     fun toEntity(): User {
         return User(name, email, phoneNumber, gender, birthday, password)
