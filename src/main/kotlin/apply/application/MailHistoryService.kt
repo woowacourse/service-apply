@@ -18,15 +18,14 @@ class MailHistoryService(
                 mailData.subject,
                 mailData.body,
                 mailData.sender,
-                mailData.recipientsToString(),
+                mailData.recipients,
                 mailData.sentTime
             )
         )
     }
 
     fun findAll(): List<MailData> {
-        val emailHistory = mailHistoryRepository.findAll()
-        return emailHistory.map {
+        return mailHistoryRepository.findAll().map {
             MailData(
                 it.subject,
                 it.body,

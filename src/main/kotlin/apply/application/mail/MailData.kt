@@ -1,7 +1,6 @@
 package apply.application.mail
 
 import apply.domain.mail.MailHistory
-import apply.utils.DELIMITER
 import java.time.LocalDateTime
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
@@ -25,20 +24,11 @@ data class MailData(
     @field:NotNull
     var id: Long = 0L
 ) {
-    constructor(
-        subject: String,
-        body: String,
-        sender: String,
-        recipients: String,
-        sentTime: LocalDateTime,
-        id: Long
-    ) : this(subject, body, sender, recipients.stringToList(), sentTime, id)
-
     constructor(mailHistory: MailHistory) : this(
         mailHistory.subject,
         mailHistory.body,
         mailHistory.sender,
-        mailHistory.recipients.stringToList(),
+        mailHistory.recipients,
         mailHistory.sentTime,
         mailHistory.id
     )
@@ -46,16 +36,4 @@ data class MailData(
     fun recipientsCount(): Int {
         return recipients.size
     }
-
-    fun recipientsToString(): String {
-        return recipients.listToString()
-    }
-}
-
-fun List<String>.listToString(): String {
-    return this.joinToString(DELIMITER)
-}
-
-fun String.stringToList(): List<String> {
-    return this.split(DELIMITER)
 }
