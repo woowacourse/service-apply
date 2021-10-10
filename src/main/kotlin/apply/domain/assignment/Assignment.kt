@@ -28,6 +28,5 @@ class Assignment(
 
     @Lob
     val note: String,
-
     id: Long = 0L
 ) : BaseEntity(id)

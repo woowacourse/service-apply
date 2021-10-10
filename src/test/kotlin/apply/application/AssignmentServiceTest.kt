@@ -20,7 +20,6 @@ import java.time.LocalDateTime
 
 @UnitTest
 class AssignmentServiceTest {
-
     @MockK
     private lateinit var assignmentRepository: AssignmentRepository
 
