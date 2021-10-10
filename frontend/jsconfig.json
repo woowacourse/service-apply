@@ -3,6 +3,6 @@
     "module": "es6",
     "target": "esnext"
   },
-  "include": ["src/**/*", "mock"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules"]
 }
