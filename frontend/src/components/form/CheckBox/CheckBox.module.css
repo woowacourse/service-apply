@@ -2,6 +2,8 @@
   display: flex;
   align-items: center;
   cursor: pointer;
+  font-weight: 400;
+  line-height: 20px;
 }
 
 input[type="checkbox"] {
@@ -11,6 +13,7 @@ input[type="checkbox"] {
   outline: none;
   cursor: pointer;
   margin: 0;
+  margin-right: 8px;
 }
 
 input[type="checkbox"]::before {
@@ -22,7 +25,6 @@ input[type="checkbox"]::before {
   height: 24px;
   border-radius: 24px;
   border: 1px solid var(--gray-003);
-  margin-right: 5px;
   background: var(--white);
   transition-duration: 0.2s;
 }

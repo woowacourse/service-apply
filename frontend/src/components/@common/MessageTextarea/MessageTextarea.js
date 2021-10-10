@@ -13,10 +13,11 @@ const MessageTextarea = ({
   maxLength,
   required,
   errorMessage,
+  className,
   ...props
 }) => {
   return (
-    <>
+    <div className={className}>
       <div className={styles["text-field"]}>
         <Label required={required}>{label}</Label>
         {description && <Description>{description}</Description>}
@@ -35,7 +36,7 @@ const MessageTextarea = ({
         />
       </div>
       <p className={styles["rule-field"]}>{errorMessage}</p>
-    </>
+    </div>
   );
 };
 
