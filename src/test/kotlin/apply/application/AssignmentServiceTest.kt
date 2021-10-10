@@ -5,6 +5,7 @@ import apply.createAssignmentRequest
 import apply.createEvaluationTarget
 import apply.createMission
 import apply.domain.assignment.AssignmentRepository
+import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.mission.MissionRepository
 import apply.domain.mission.getById
@@ -86,7 +87,7 @@ class AssignmentServiceTest {
 
     @Test
     fun `평가 상태가 'Waiting'이라면, 'Pass'로 업데이트한다`() {
-        var evaluationTarget = createEvaluationTarget()
+        var evaluationTarget = createEvaluationTarget(evaluationStatus = EvaluationStatus.WAITING)
 
         every { assignmentRepository.existsByMissionIdAndUserId(any(), any()) } returns false
         every { missionRepository.getById(any()) } returns createMission()

@@ -14,5 +14,5 @@ data class CreateAssignmentRequest(
     val pullRequestUrl: String,
 
     @field:NotBlank
-    var note: String
+    val note: String
 )

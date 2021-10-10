@@ -79,7 +79,7 @@ class MailTargetServiceTest {
     }
 
     @Test
-    fun `평가 상태에 따라 (FAIL) 메일 발송 시 미제출자는 대상이 되지 않는다`() {
+    fun `평가 상태에 따라 (FAIL) 메일 발송 시 과제 미제출자는 대상이 되지 않는다`() {
         every { evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(any(), any()) } returns listOf(
             createEvaluationTarget(
                 userId = 1L,
