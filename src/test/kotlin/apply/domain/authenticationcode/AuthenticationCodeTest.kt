@@ -45,4 +45,16 @@ internal class AuthenticationCodeTest {
         val authenticationCode = AuthenticationCode(EMAIL, VALID_CODE, createdDateTime = now.minusMinutes(11L))
         assertThrows<IllegalStateException> { authenticationCode.authenticate(VALID_CODE) }
     }
+
+    @Test
+    fun `일치하지 않은 인증코드로 검증한다`() {
+        val authenticationCode = AuthenticationCode(EMAIL, VALID_CODE, true)
+        assertThrows<IllegalStateException> { authenticationCode.validate(INVALID_CODE) }
+    }
+
+    @Test
+    fun `인증되지 않은 인증코드를 검증한다`() {
+        val authenticationCode = AuthenticationCode(EMAIL, VALID_CODE)
+        assertThrows<IllegalStateException> { authenticationCode.validate(VALID_CODE) }
+    }
 }
