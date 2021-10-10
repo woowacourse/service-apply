@@ -32,8 +32,8 @@ class AuthenticationCode(
     }
 
     fun validate(code: String) {
-        check(this.code == code) { "인증된 인증 코드와 일치하지 않습니다." }
-        check(this.authenticated) { "인증되지 않은 이메일입니다." }
+        check(this.code == code) { "인증 코드가 일치하지 않습니다." }
+        check(this.authenticated) { "인증되지 않았습니다." }
     }
 
     companion object {
