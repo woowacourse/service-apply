@@ -40,7 +40,7 @@ class MissionService(
 
     fun deleteById(id: Long) {
         val mission = missionRepository.findByIdOrNull(id) ?: throw IllegalArgumentException("해당 id의 과제를 찾을 수 없습니다.")
-        check(mission.isSUBMITTING) { "현재 제출가능한 과제는 삭제할 수 없습니다." }
+        check(!mission.submittable) { "현재 제출가능한 과제는 삭제할 수 없습니다." }
 
         missionRepository.deleteById(id)
     }
