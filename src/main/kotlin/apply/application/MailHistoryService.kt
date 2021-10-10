@@ -2,7 +2,7 @@ package apply.application
 
 import apply.application.mail.MailData
 import apply.domain.mail.MailHistory
-import apply.domain.mail.EmailHistoryRepository
+import apply.domain.mail.MailHistoryRepository
 import apply.domain.mail.getById
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
@@ -10,10 +10,10 @@ import javax.transaction.Transactional
 @Transactional
 @Service
 class MailHistoryService(
-    private val emailHistoryRepository: EmailHistoryRepository
+    private val mailHistoryRepository: MailHistoryRepository
 ) {
     fun save(mailData: MailData) {
-        emailHistoryRepository.save(
+        mailHistoryRepository.save(
             MailHistory(
                 mailData.subject,
                 mailData.body,
@@ -25,7 +25,7 @@ class MailHistoryService(
     }
 
     fun findAll(): List<MailData> {
-        val emailHistory = emailHistoryRepository.findAll()
+        val emailHistory = mailHistoryRepository.findAll()
         return emailHistory.map {
             MailData(
                 it.subject,
@@ -39,7 +39,7 @@ class MailHistoryService(
     }
 
     fun getById(emailHistoryId: Long): MailData {
-        val emailHistory = emailHistoryRepository.getById(emailHistoryId)
+        val emailHistory = mailHistoryRepository.getById(emailHistoryId)
         return MailData(emailHistory)
     }
 }

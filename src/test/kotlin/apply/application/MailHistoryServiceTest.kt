@@ -2,7 +2,7 @@ package apply.application
 
 import apply.createMailData
 import apply.createMailHistory
-import apply.domain.mail.EmailHistoryRepository
+import apply.domain.mail.MailHistoryRepository
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import org.assertj.core.api.Assertions.assertThat
@@ -15,19 +15,19 @@ import java.time.LocalDateTime
 @UnitTest
 class MailHistoryServiceTest {
     @MockK
-    private lateinit var emailHistoryRepository: EmailHistoryRepository
+    private lateinit var mailHistoryRepository: MailHistoryRepository
 
     private lateinit var mailHistoryService: MailHistoryService
 
     @BeforeEach
     internal fun setUp() {
-        mailHistoryService = MailHistoryService(emailHistoryRepository)
+        mailHistoryService = MailHistoryService(mailHistoryRepository)
     }
 
     @Test
     fun `메일 이력을 저장한다`() {
         val mailData = createMailData()
-        every { emailHistoryRepository.save(any()) } returns createMailHistory()
+        every { mailHistoryRepository.save(any()) } returns createMailHistory()
         assertDoesNotThrow { mailHistoryService.save(mailData) }
     }
 
@@ -38,7 +38,7 @@ class MailHistoryServiceTest {
         val mailData2 = createMailData(subject = "제목2", sentTime = now.plusSeconds(1))
         val emailHistory1 = createMailHistory(subject = "제목1", sentTime = now)
         val emailHistory2 = createMailHistory(subject = "제목2", sentTime = now.plusSeconds(1))
-        every { emailHistoryRepository.findAll() } returns listOf(emailHistory1, emailHistory2)
+        every { mailHistoryRepository.findAll() } returns listOf(emailHistory1, emailHistory2)
         assertThat(mailHistoryService.findAll()).containsExactly(mailData1, mailData2)
     }
 }
