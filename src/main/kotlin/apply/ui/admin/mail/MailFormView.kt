@@ -28,7 +28,7 @@ import com.vaadin.flow.router.Route
 import com.vaadin.flow.router.WildcardParameter
 import org.springframework.boot.autoconfigure.mail.MailProperties
 import support.views.BindingFormLayout
-import support.views.DETAIL_VALUE
+import support.views.EDIT_VALUE
 import support.views.FORM_URL_PATTERN
 import support.views.NO_NAME
 import support.views.Title
@@ -39,7 +39,6 @@ import support.views.createErrorSmallButton
 import support.views.createNormalButton
 import support.views.createPrimaryButton
 import support.views.createUpload
-import support.views.toDisplayName
 
 @Route(value = "admin/mails", layout = BaseLayout::class)
 class MailFormView(
@@ -57,11 +56,10 @@ class MailFormView(
     private val mailTargetGridTitle: Label = Label()
     private val recipientFilter: Component = createRecipientFilter()
     private val fileUpload: Component = createFileUpload()
-    private val title: Title = Title()
     private val submitButton: Component = createSubmitButton()
 
     init {
-        add(title, createMailForm())
+        add(Title("메일"), createMailForm())
         setResponsiveSteps(ResponsiveStep("0", 1))
         drawRequired()
     }
@@ -70,8 +68,7 @@ class MailFormView(
         val result = FORM_URL_PATTERN.find(parameter)
         result?.let {
             val (id, value) = it.destructured
-            setDisplayName(value.toDisplayName())
-            if (value == DETAIL_VALUE) {
+            if (value == EDIT_VALUE) {
                 val mailData = mailHistoryService.getById(id.toLong())
                 setRowCount(mailData.recipients.size)
                 this.fill(mailData)
@@ -81,10 +78,6 @@ class MailFormView(
                 this.submitButton.isVisible = false
             }
         } ?: UI.getCurrent().page.history.back() // TODO: 에러 화면을 구현한다.
-    }
-
-    private fun setDisplayName(displayName: String) {
-        title.text = "메일 $displayName"
     }
 
     private fun setRowCount(count: Int) {
@@ -133,7 +126,7 @@ class MailFormView(
         ).apply { defaultVerticalComponentAlignment = FlexComponent.Alignment.END }
     }
 
-    private fun createEnterBox(): HorizontalLayout {
+    private fun createEnterBox(): Component {
         return createEnterBox(labelText = "받는사람 추가") {
             if (it.isNotBlank()) {
                 mailTargets.addAndRefresh(MailTargetResponse(NO_NAME, it))

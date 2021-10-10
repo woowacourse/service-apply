@@ -13,8 +13,8 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.data.renderer.ComponentRenderer
 import com.vaadin.flow.data.renderer.Renderer
 import com.vaadin.flow.router.Route
-import support.views.DETAIL_VALUE
-import support.views.SEND_VALUE
+import support.views.EDIT_VALUE
+import support.views.NEW_VALUE
 import support.views.addSortableColumn
 import support.views.createPrimaryButton
 import support.views.createPrimarySmallButton
@@ -37,7 +37,7 @@ class MailView(
     private fun createButton(): Component {
         return HorizontalLayout(
             createPrimaryButton("메일 보내기") {
-                UI.getCurrent().navigate(MailFormView::class.java, SEND_VALUE)
+                UI.getCurrent().navigate(MailFormView::class.java, NEW_VALUE)
             }
         ).apply {
             setSizeFull()
@@ -63,7 +63,7 @@ class MailView(
 
     private fun createDetailButton(mailData: MailData): Component {
         return createPrimarySmallButton("자세히 보기") {
-            UI.getCurrent().navigate(MailFormView::class.java, "${mailData.id}/$DETAIL_VALUE")
+            UI.getCurrent().navigate(MailFormView::class.java, "${mailData.id}/$EDIT_VALUE")
         }
     }
 }
