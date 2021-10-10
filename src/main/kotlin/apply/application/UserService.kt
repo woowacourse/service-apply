@@ -34,9 +34,4 @@ class UserService(
     fun editInformation(id: Long, request: EditInformationRequest) {
         userRepository.getById(id).changePhoneNumber(request.phoneNumber)
     }
-
-    fun findMailTargetByEmail(email: String): MailTargetResponse {
-        val user = userRepository.findByEmail(email) ?: return MailTargetResponse(email = email)
-        return MailTargetResponse(user.name, user.email)
-    }
 }

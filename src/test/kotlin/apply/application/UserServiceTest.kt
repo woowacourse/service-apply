@@ -23,7 +23,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import support.test.UnitTest
-import support.views.NO_NAME
 
 @UnitTest
 internal class UserServiceTest {
@@ -104,21 +103,5 @@ internal class UserServiceTest {
         every { userRepository.getById(any()) } returns user
         assertDoesNotThrow { userService.editInformation(user.id, request) }
         assertThat(user.phoneNumber).isEqualTo(request.phoneNumber)
-    }
-
-    @Test
-    fun `회원 중에서 해당하는 이메일이 있으면 이름과 이메일을 가져온다`() {
-        val user = createUser()
-        every { userRepository.findByEmail(user.email) } returns user
-        val actual = userService.findMailTargetByEmail(user.email)
-        assertThat(actual.name).isEqualTo(user.name)
-    }
-
-    @Test
-    fun `회원 중에서 해당하는 이메일이 없으면 (이름없음)과 이메일을 반환한다`() {
-        val email = "email@email.com"
-        every { userRepository.findByEmail(email) } returns null
-        val actual = userService.findMailTargetByEmail(email)
-        assertThat(actual.name).isEqualTo(NO_NAME)
     }
 }

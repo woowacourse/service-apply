@@ -229,7 +229,7 @@ class MailFormView(
         subject.isReadOnly = true
         body.isReadOnly = true
         data.recipients.forEach {
-            mailTargets.add(userService.findMailTargetByEmail(it))
+            mailTargets.add(mailService.findMailTargetByEmail(it))
         }
     }
 
