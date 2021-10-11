@@ -1,10 +1,10 @@
 import React from "react";
-import Container from "../../components/@common/Container/Container";
-import myPageImage from "../../assets/image/myPage.svg";
-import * as styles from "./MyPage.module.css";
-import Button, { BUTTON_VARIANT } from "../../components/@common/Button/Button";
 import { useHistory } from "react-router";
+import myPageImage from "../../assets/image/myPage.svg";
+import Button, { BUTTON_VARIANT } from "../../components/@common/Button/Button";
+import Container from "../../components/@common/Container/Container";
 import PATH from "../../constants/path";
+import * as styles from "./MyPage.module.css";
 
 const MyPage = () => {
   const history = useHistory();
