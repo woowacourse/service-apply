@@ -36,9 +36,10 @@ class MissionService(
         return MissionData(mission, evaluation)
     }
 
-    fun update(missionId: Long, request: UpdateMissionRequest) {
-        val mission = missionRepository.findByIdOrNull(missionId) ?: throw IllegalArgumentException("존재하지 않는 미션입니다.")
-        mission.update(request)
+    fun getNotEndedDataById(id: Long): MissionData {
+        val mission = missionRepository.getById(id)
+        val evaluation = evaluationRepository.getById(mission.evaluationId)
+        return MissionData(mission, evaluation)
     }
 
     fun findAllByRecruitmentId(recruitmentId: Long): List<MissionResponse> {
