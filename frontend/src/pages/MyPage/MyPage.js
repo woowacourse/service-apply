@@ -52,7 +52,7 @@ const MyPage = () => {
               비밀번호 변경
             </Button>
             <Button type="button" onClick={handleClickMyPageEdit}>
-              수정하기
+              내 정보 수정
             </Button>
           </div>
         </div>
