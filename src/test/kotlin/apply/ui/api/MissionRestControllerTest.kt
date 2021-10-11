@@ -1,6 +1,6 @@
 package apply.ui.api
 
-import apply.application.MissionResponse
+import apply.application.MissionAndEvaluationResponse
 import apply.application.MissionService
 import apply.application.UserService
 import apply.createEvaluation
@@ -51,17 +51,17 @@ internal class MissionRestControllerTest : RestControllerTest() {
 
     @Test
     fun `특정 모집의 모든 과제를 조회한다`() {
-        val missionResponses = listOf(
-            MissionResponse(createMission(), createEvaluation()),
-            MissionResponse(createMission(), createEvaluation())
+        val missionAndEvaluationRespons = listOf(
+            MissionAndEvaluationResponse(createMission(), createEvaluation()),
+            MissionAndEvaluationResponse(createMission(), createEvaluation())
         )
-        every { missionService.findAllByRecruitmentId(recruitmentId) } returns missionResponses
+        every { missionService.findAllByRecruitmentId(recruitmentId) } returns missionAndEvaluationRespons
 
         mockMvc.get(
             "/api/recruitments/{recruitmentId}/missions", recruitmentId
         ).andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(missionResponses))) }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(missionAndEvaluationRespons))) }
         }
     }
 

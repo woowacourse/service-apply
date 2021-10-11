@@ -73,8 +73,8 @@ class MissionServiceTest {
             { assertThat(actual).hasSize(2) },
             {
                 assertThat(actual).containsAnyOf(
-                    MissionResponse(firstMission, firstEvaluation),
-                    MissionResponse(secondMission, secondEvaluation)
+                    MissionAndEvaluationResponse(firstMission, firstEvaluation),
+                    MissionAndEvaluationResponse(secondMission, secondEvaluation)
                 )
             }
         )

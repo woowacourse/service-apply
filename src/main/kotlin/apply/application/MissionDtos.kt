@@ -31,7 +31,7 @@ data class MissionData(
     var id: Long = 0L
 )
 
-data class MissionResponse(
+data class MissionAndEvaluationResponse(
     val id: Long,
     val title: String,
     val description: String,

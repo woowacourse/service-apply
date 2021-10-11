@@ -1,7 +1,7 @@
 package apply.ui.api
 
 import apply.application.MissionData
-import apply.application.MissionResponse
+import apply.application.MissionAndEvaluationResponse
 import apply.application.MissionService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -27,7 +27,7 @@ class MissionRestController(
     }
 
     @GetMapping("/missions")
-    fun findMissionsByRecruitmentId(@PathVariable recruitmentId: Long): ResponseEntity<ApiResponse<List<MissionResponse>>> {
+    fun findMissionsByRecruitmentId(@PathVariable recruitmentId: Long): ResponseEntity<ApiResponse<List<MissionAndEvaluationResponse>>> {
         val missions = missionService.findAllByRecruitmentId(recruitmentId)
         return ResponseEntity.ok(ApiResponse.success(missions))
     }
