@@ -6,17 +6,10 @@ import Container from "../../components/@common/Container/Container";
 import MessageTextInput from "../../components/@common/MessageTextInput/MessageTextInput";
 import BirthField from "../../components/form/BirthField/BirthField";
 import Form from "../../components/form/Form/Form";
-import PATH from "../../constants/path";
 import * as styles from "./MyPageEdit.module.css";
 
 const MyPageEdit = () => {
   const history = useHistory();
-
-  const handleCancel = () => {
-    history.push({
-      pathname: PATH.MY_PAGE,
-    });
-  };
 
   return (
     <Container title="sun@woowa.com 님">
@@ -33,7 +26,7 @@ const MyPageEdit = () => {
             <Button
               type="button"
               variant={BUTTON_VARIANT.OUTLINED}
-              onClick={handleCancel}
+              onClick={() => history.goBack()}
             >
               취소
             </Button>
