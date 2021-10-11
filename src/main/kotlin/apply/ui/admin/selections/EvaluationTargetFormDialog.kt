@@ -1,5 +1,7 @@
 package apply.ui.admin.selections
 
+import apply.application.AssignmentData
+import apply.application.AssignmentService
 import apply.application.EvaluationTargetData
 import apply.application.EvaluationTargetService
 import com.vaadin.flow.component.Component
@@ -16,6 +18,7 @@ import support.views.createPrimaryButton
 
 class EvaluationTargetFormDialog(
     private val evaluationTargetService: EvaluationTargetService,
+    private val assignmentService: AssignmentService,
     private val evaluationTargetId: Long,
     reloadComponents: () -> Unit
 ) : Dialog() {
@@ -24,16 +27,24 @@ class EvaluationTargetFormDialog(
         setWidthFull()
         isReadOnly = true
     }
+    private val assignmentForm: BindingFormLayout<AssignmentData> = AssignmentForm()
     private val evaluationTargetForm: BindingFormLayout<EvaluationTargetData>
 
     init {
-        val response = evaluationTargetService.getGradeEvaluation(evaluationTargetId)
-        evaluationTargetForm = EvaluationTargetForm(response.evaluationItems)
-            .apply { fill(response.evaluationTarget) }
-        title.text = response.title
-        description.value = response.description
+        val evaluationResponse = evaluationTargetService.getGradeEvaluation(evaluationTargetId)
+        val assignmentData = assignmentService.findByEvaluationTargetId(evaluationTargetId)
+        evaluationTargetForm = EvaluationTargetForm(evaluationResponse.evaluationItems)
+            .apply { fill(evaluationResponse.evaluationTarget) }
+        assignmentData?.let {
+            assignmentForm
+                .apply { fill(it) }
+        } ?: assignmentForm.apply {
+            isVisible = false
+        }
+        title.text = evaluationResponse.title
+        description.value = evaluationResponse.description
 
-        add(createHeader(), evaluationTargetForm, createButtons(reloadComponents))
+        add(createHeader(), assignmentForm, evaluationTargetForm, createButtons(reloadComponents))
         width = "800px"
         height = "90%"
         open()

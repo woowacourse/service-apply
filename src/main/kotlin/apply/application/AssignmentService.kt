@@ -6,6 +6,7 @@ import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.mission.MissionRepository
 import apply.domain.mission.getById
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -24,6 +25,12 @@ class AssignmentService(
         assignmentRepository.save(
             Assignment(userId, missionId, request.githubUsername, request.pullRequestUrl, request.note)
         )
+    }
+
+    fun findByEvaluationTargetId(evaluationTargetId: Long): AssignmentData? {
+        return evaluationTargetRepository.findByIdOrNull(evaluationTargetId)?.let {
+            assignmentRepository.findByUserId(it.userId)
+        }?.let { AssignmentData(it) }
     }
 
     private fun findEvaluationTargetOf(evaluationId: Long, userId: Long): EvaluationTarget {
