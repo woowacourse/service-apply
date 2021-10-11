@@ -95,11 +95,11 @@ class MissionServiceTest {
         val recruitmentId = 1L
         val userId = 1L
         val missions = listOf(createMission(id = 1L), createMission(id = 2L))
-        every { evaluationRepository.findAllByRecruitmentId(recruitmentId) } returns
+        every { evaluationRepository.findAllByRecruitmentId(any()) } returns
             listOf(createEvaluation(id = 1L), createEvaluation(id = 2L))
-        every { evaluationTargetRepository.existsByUserIdAndEvaluationId(userId, any()) } returns true
-        every { missionRepository.findAllByEvaluationIdIn(listOf(1L, 2L)) } returns missions
-        every { assignmentRepository.existsByUserIdAndMissionId(userId, any()) } returns true
+        every { evaluationTargetRepository.existsByUserIdAndEvaluationId(any(), any()) } returns true
+        every { missionRepository.findAllByEvaluationIdIn(any()) } returns missions
+        every { assignmentRepository.existsByUserIdAndMissionId(any(), any()) } returns true
 
         val responses = missionService.findAllByUserIdAndRecruitmentId(userId, recruitmentId)
 
