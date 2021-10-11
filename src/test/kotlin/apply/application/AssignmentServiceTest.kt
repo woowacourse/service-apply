@@ -114,7 +114,7 @@ class AssignmentServiceTest {
         every { missionRepository.existsById(any()) } returns true
         every { assignmentRepository.findByUserIdAndMissionId(any(), any()) } returns null
 
-        assertThrows<IllegalArgumentException> { assignmentService.getAssignmentByUserIdAndMissionId(loginUser.id, recruitmentId) }
+        assertThrows<NoSuchElementException> { assignmentService.getAssignmentByUserIdAndMissionId(loginUser.id, recruitmentId) }
     }
 
     @Test

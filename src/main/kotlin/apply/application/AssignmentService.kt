@@ -2,6 +2,7 @@ package apply.application
 
 import apply.domain.assignment.Assignment
 import apply.domain.assignment.AssignmentRepository
+import apply.domain.assignment.getByUserIdAndMissionId
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.mission.MissionRepository
@@ -40,8 +41,7 @@ class AssignmentService(
 
     fun getAssignmentByUserIdAndMissionId(userId: Long, missionId: Long): AssignmentResponse {
         check(missionRepository.existsById(missionId)) { "존재하지 않는 과제입니다." }
-        val assignment = assignmentRepository.findByUserIdAndMissionId(userId, missionId)
-            ?: throw IllegalArgumentException("아직 제출하지 않았습니다.")
+        val assignment = assignmentRepository.getByUserIdAndMissionId(userId, missionId)
         return AssignmentResponse(assignment.githubUsername, assignment.pullRequestUrl, assignment.note)
     }
 }
