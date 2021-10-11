@@ -8,8 +8,8 @@ import javax.persistence.Column
 import javax.persistence.Embedded
 import javax.persistence.Entity
 
-@SQLDelete(sql = "update recruitment set deleted = true WHERE id=?")
-@Where(clause = "deleted=false")
+@SQLDelete(sql = "update recruitment set deleted = true where id = ?")
+@Where(clause = "deleted = false")
 @Entity
 class Recruitment(
     @Column(nullable = false)

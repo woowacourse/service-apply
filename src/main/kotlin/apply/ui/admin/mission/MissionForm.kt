@@ -20,7 +20,7 @@ class MissionForm() : BindingIdentityFormLayout<MissionData>(MissionData::class)
     }
     private val startDateTime: DateTimePicker = DateTimePicker("시작 일시")
     private val endDateTime: DateTimePicker = DateTimePicker("종료 일시")
-    private val submittable: RadioButtonGroup<Boolean> = createBooleanRadioButtonGroup("제출 가능 여부", "가능", "불가능", false)
+    private val submittable: RadioButtonGroup<Boolean> = createBooleanRadioButtonGroup("제출 여부", "제출 시작", "제출 중지", false)
 
     init {
         add(title, evaluation, startDateTime, endDateTime, description, submittable)
