@@ -21,7 +21,7 @@ Outlined.args = {
 
 export const Cancel = Template.bind({});
 Cancel.args = {
-  children: "버튼",
+  children: "취소",
   cancel: true,
 };
 

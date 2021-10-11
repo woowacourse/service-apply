@@ -15,6 +15,17 @@ export default {
           {
             pathname: "/application-forms/new",
             search: "?recruitmentId=3",
+            state: {
+              currentRecruitment: {
+                id: 3,
+                title: "웹 프론트엔드 3기",
+                recruitable: true,
+                hidden: false,
+                startDateTime: "2020-10-25T15:00:00",
+                endDateTime: "2021-11-30T10:00:00",
+                status: "RECRUITING",
+              },
+            },
           },
         ]}
       >

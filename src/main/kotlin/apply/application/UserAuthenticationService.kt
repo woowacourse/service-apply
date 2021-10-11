@@ -18,11 +18,10 @@ class UserAuthenticationService(
     private val authenticationCodeRepository: AuthenticationCodeRepository,
     private val jwtTokenProvider: JwtTokenProvider
 ) {
-    fun generateToken(request: RegisterUserRequest): String {
-        // todo: 회원 가입 시, email 이 authenticated 인지 확인하는 로직 추가
-        val user = userRepository.findByEmail(request.email)
-            ?.also { it.authenticate(request.toEntity()) }
-            ?: userRepository.save(request.toEntity())
+    fun generateTokenByRegister(request: RegisterUserRequest): String {
+        check(!userRepository.existsByEmail(request.email)) { "이미 가입된 이메일입니다." }
+        authenticationCodeRepository.getLastByEmail(request.email).validate(request.authenticationCode)
+        val user = userRepository.save(request.toEntity())
         return jwtTokenProvider.createToken(user.email)
     }
 

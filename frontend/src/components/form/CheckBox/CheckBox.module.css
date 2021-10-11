@@ -2,8 +2,7 @@
   display: flex;
   align-items: center;
   cursor: pointer;
-  font-weight: 400;
-  line-height: 20px;
+  line-height: 1.25rem;
 }
 
 input[type="checkbox"] {
@@ -13,7 +12,7 @@ input[type="checkbox"] {
   outline: none;
   cursor: pointer;
   margin: 0;
-  margin-right: 8px;
+  margin-right: 0.5rem;
 }
 
 input[type="checkbox"]::before {
@@ -21,10 +20,10 @@ input[type="checkbox"]::before {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 24px;
-  height: 24px;
-  border-radius: 24px;
-  border: 1px solid var(--gray-003);
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 1.5rem;
+  border: 1px solid var(--gray-006);
   background: var(--white);
   transition-duration: 0.2s;
 }

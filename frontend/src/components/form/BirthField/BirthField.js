@@ -1,9 +1,8 @@
-import React, { useEffect } from "react";
 import PropTypes from "prop-types";
-
+import React, { useEffect } from "react";
+import useFormContext from "../../../hooks/useFormContext";
 import Label from "../../@common/Label/Label";
 import TextInput from "../../@common/TextInput/TextInput";
-import useFormContext from "../../../hooks/useFormContext";
 import styles from "./BirthField.module.css";
 
 const currentYear = new Date().getFullYear();
@@ -20,7 +19,7 @@ const days = Array(31)
   .fill(null)
   .map((_, idx) => idx + 1);
 
-const BirthField = ({ required }) => {
+const BirthField = ({ required, className }) => {
   const { value, errorMessage, handleChange, register, unRegister } =
     useFormContext();
 
@@ -37,15 +36,15 @@ const BirthField = ({ required }) => {
   }, []);
 
   return (
-    <>
-      <div className={styles.container}>
+    <div className={className}>
+      <div className={styles.box}>
         <Label for="year" required={required}>
           생년월일
         </Label>
         <div className={styles.birth}>
           <TextInput
-            className={styles.year}
-            type="text"
+            className={styles["input-box"]}
+            type="number"
             id="year"
             name="year"
             list="years"
@@ -63,10 +62,10 @@ const BirthField = ({ required }) => {
             ))}
           </datalist>
           <TextInput
-            className={styles.month}
+            className={styles["input-box"]}
             name="month"
             list="months"
-            type="text"
+            type="number"
             placeholder="MM"
             min="1"
             max="12"
@@ -81,10 +80,10 @@ const BirthField = ({ required }) => {
             ))}
           </datalist>
           <TextInput
-            className={styles.day}
+            className={styles["input-box"]}
             name="day"
             list="days"
-            type="text"
+            type="number"
             min="1"
             max="31"
             placeholder="DD"
@@ -104,16 +103,17 @@ const BirthField = ({ required }) => {
       <p className={styles["rule-field"]}>
         {errorMessage.year || errorMessage.month || errorMessage.day}
       </p>
-    </>
+    </div>
   );
 };
 
-export default BirthField;
-
 BirthField.propTypes = {
   required: PropTypes.bool,
+  className: PropTypes.string,
 };
 
 BirthField.defaultProps = {
   required: false,
 };
+
+export default BirthField;

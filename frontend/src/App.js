@@ -7,7 +7,7 @@ import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
 
 import Recruits from "./pages/Recruits/Recruits";
-import ApplicantRegister from "./pages/ApplicantRegister/ApplicantRegister";
+import Join from "./pages/Join/Join";
 import ApplicationRegister from "./pages/ApplicationRegister/ApplicationRegister";
 import Login from "./pages/Login/Login";
 import PasswordEdit from "./pages/PasswordEdit/PasswordEdit";
@@ -36,7 +36,7 @@ const App = () => {
                   <Recruits />
                 </Route>
                 <Route path={PATH.NEW_APPLICATION} exact>
-                  <ApplicantRegister />
+                  <Join />
                 </Route>
                 <Route path={PATH.LOGIN} exact>
                   <Login />
