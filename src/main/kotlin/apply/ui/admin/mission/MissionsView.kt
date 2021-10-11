@@ -18,6 +18,7 @@ import com.vaadin.flow.router.BeforeEvent
 import com.vaadin.flow.router.HasUrlParameter
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.router.WildcardParameter
+import support.views.EDIT_VALUE
 import support.views.NEW_VALUE
 import support.views.Title
 import support.views.addSortableColumn
@@ -78,7 +79,7 @@ class MissionsView(
 
     private fun createEditButton(mission: MissionResponse): Component {
         return createPrimarySmallButton("수정") {
-            // TODO: 수정 기능 구현
+            UI.getCurrent().navigate(MissionsFormView::class.java, "${mission.id}/$EDIT_VALUE")
         }
     }
 
