@@ -10,10 +10,9 @@ import support.test.RepositoryTest
 
 @RepositoryTest
 class MissionRepositoryTest(
-    private val entityManager: TestEntityManager,
-    private val missionRepository: MissionRepository
+    private val missionRepository: MissionRepository,
+    private val entityManager: TestEntityManager
 ) {
-
     @Test
     fun `해당 평가에 이미 등록된 과제가 있는지 확인한다`() {
         val mission = createMission(evaluationId = 1L)
