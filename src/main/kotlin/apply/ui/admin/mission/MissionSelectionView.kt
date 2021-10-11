@@ -67,12 +67,12 @@ class MissionSelectionView(
     }
 
     private fun createEditAndDeleteButton(): Renderer<MissionResponse> {
-        return ComponentRenderer<Component, MissionResponse> { mission ->
+        return ComponentRenderer<Component, MissionResponse> { missionResponse ->
             HorizontalLayout(
                 createPrimarySmallButton("수정") {
                     // TODO 수정 기능 구현
                 },
-                createDeleteButton(mission)
+                createDeleteButton(missionResponse)
             )
         }
     }
