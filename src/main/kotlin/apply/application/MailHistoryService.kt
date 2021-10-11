@@ -38,7 +38,7 @@ class MailHistoryService(
 
     fun findAllMailTargetsByEmails(emails: List<String>): List<MailTargetResponse> {
         val users = userRepository.findAllByEmailIn(emails)
-        val anonymousEmails = emails.toSet() - users.map { it.email }.toSet()
+        val anonymousEmails = emails - users.map { it.email }
         return users.map { MailTargetResponse(it) } + anonymousEmails.map { MailTargetResponse(it) }
     }
 }
