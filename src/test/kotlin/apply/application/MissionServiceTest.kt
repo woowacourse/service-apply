@@ -82,20 +82,20 @@ class MissionServiceTest {
 
     @Test
     fun `과제를 삭제한다`() {
-        val missionId = 1L
-        every { missionRepository.findByIdOrNull(missionId) } returns createMission(submittable = false)
+        val mission = createMission(submittable = false)
+        every { missionRepository.findByIdOrNull(mission.id) } returns mission
         every { missionRepository.deleteById(any()) } just Runs
 
-        assertDoesNotThrow { missionService.deleteById(missionId) }
+        assertDoesNotThrow { missionService.deleteById(mission.id) }
     }
 
     @Test
     fun `제출 가능한 상태의 과제를 삭제하면 예외가 발생한다`() {
-        val missionId = 1L
-        every { missionRepository.findByIdOrNull(missionId) } returns createMission(submittable = true)
+        val mission = createMission(submittable = true)
+        every { missionRepository.findByIdOrNull(mission.id) } returns mission
         every { missionRepository.deleteById(any()) } just Runs
 
-        assertThrows<IllegalStateException> { missionService.deleteById(missionId) }
+        assertThrows<IllegalStateException> { missionService.deleteById(mission.id) }
     }
 
     @Test
