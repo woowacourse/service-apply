@@ -1,6 +1,7 @@
 package apply.application.mail
 
 import apply.domain.mail.MailHistory
+import support.createLocalDateTime
 import java.time.LocalDateTime
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
@@ -22,7 +23,7 @@ data class MailData(
     var recipients: List<String> = emptyList(),
 
     @field:NotNull
-    var sentTime: LocalDateTime = LocalDateTime.now(),
+    var sentTime: LocalDateTime = createLocalDateTime(LocalDateTime.now()),
 
     @field:NotNull
     var id: Long = 0L
