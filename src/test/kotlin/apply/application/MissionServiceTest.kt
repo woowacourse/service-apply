@@ -18,7 +18,6 @@ import org.junit.jupiter.api.assertThrows
 import org.springframework.data.repository.findByIdOrNull
 import support.test.UnitTest
 import java.time.LocalDateTime
-import java.util.Optional
 
 @UnitTest
 class MissionServiceTest {
@@ -118,7 +117,7 @@ class MissionServiceTest {
             endDateTime = LocalDateTime.now(),
             submittable = false
         )
-        every { missionRepository.findById(any()) } returns Optional.of(createMission())
+        every { missionRepository.findByIdOrNull(any()) } returns createMission()
         assertDoesNotThrow { missionService.update(mission.id, updateMissionRequest) }
     }
 
@@ -131,7 +130,7 @@ class MissionServiceTest {
             endDateTime = LocalDateTime.now(),
             submittable = false
         )
-        every { missionRepository.findById(any()) } returns Optional.empty()
+        every { missionRepository.findByIdOrNull(any()) } returns null
         assertThrows<IllegalArgumentException> { missionService.update(wrongMissionId, updateMissionRequest) }
     }
 }
