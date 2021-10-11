@@ -1,4 +1,5 @@
 import axios from "axios";
+import { headers } from "./api";
 
 const COMMON_PATH = "/api/users";
 
@@ -29,5 +30,19 @@ export const fetchPasswordEdit = ({ token, password, newPassword }) =>
   axios.post(
     `${COMMON_PATH}/edit-password`,
     { password, newPassword },
-    { headers: { Authorization: `Bearer ${token}` } }
+    headers({ token })
+  );
+
+export const fetch = ({ token, password, newPassword }) =>
+  axios.post(
+    `${COMMON_PATH}/edit-password`,
+    { password, newPassword },
+    headers({ token })
+  );
+
+export const fetchInformationEdit = ({ token, phoneNumber }) =>
+  axios.patch(
+    `${COMMON_PATH}/information`,
+    { phoneNumber },
+    headers({ token })
   );
