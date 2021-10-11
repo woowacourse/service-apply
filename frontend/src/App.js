@@ -21,6 +21,7 @@ import "./api/api";
 import PATH from "./constants/path";
 
 import "./App.css";
+import MyPage from "./pages/MyPage/MyPage";
 
 const App = () => {
   return (
@@ -52,6 +53,9 @@ const App = () => {
                 </PrivateRoute>
                 <PrivateRoute path={PATH.EDIT_PASSWORD} exact>
                   <PasswordEdit />
+                </PrivateRoute>
+                <PrivateRoute path={PATH.MY_PAGE} exact>
+                  <MyPage />
                 </PrivateRoute>
               </Switch>
             </ScrollToTop>

@@ -3,8 +3,24 @@ import Container from "../../components/@common/Container/Container";
 import myPageImage from "../../assets/image/myPage.svg";
 import * as styles from "./MyPage.module.css";
 import Button, { BUTTON_VARIANT } from "../../components/@common/Button/Button";
+import { useHistory } from "react-router";
+import PATH from "../../constants/path";
 
 const MyPage = () => {
+  const history = useHistory();
+
+  const handleClickPasswordEdit = () => {
+    history.push({
+      pathname: PATH.EDIT_PASSWORD,
+    });
+  };
+
+  const handleClickMyPageEdit = () => {
+    history.push({
+      pathname: PATH.EDIT_MY_PAGE,
+    });
+  };
+
   return (
     <Container title="sun@woowa.com 님">
       <div className={styles.box}>
@@ -28,10 +44,16 @@ const MyPage = () => {
           </ul>
 
           <div className={styles.buttons}>
-            <Button type="button" variant={BUTTON_VARIANT.OUTLINED}>
+            <Button
+              type="button"
+              variant={BUTTON_VARIANT.OUTLINED}
+              onClick={handleClickPasswordEdit}
+            >
               비밀번호 변경
             </Button>
-            <Button type="button">수정하기</Button>
+            <Button type="button" onClick={handleClickMyPageEdit}>
+              수정하기
+            </Button>
           </div>
         </div>
       </div>
