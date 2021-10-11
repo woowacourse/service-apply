@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import PropTypes from "prop-types";
 import { useEffect } from "react";
+import { fetchAuthenticationCode } from "../../../api";
 import useFormContext from "../../../hooks/useFormContext";
 import useTimer from "../../../hooks/useTimer";
 import { formatTimerText } from "../../../utils/format/date";
@@ -65,8 +66,18 @@ const EmailField = ({
     }
   };
 
-  const handleIssueEmailCode = () => {
-    // TODO: 인증코드 이메일 발송 api 요청(이메일 중복확인 메세지 필요)
+  const handleChangeEmail = (event) => {
+    setEmailStatus(EMAIL_STATUS.INPUT);
+
+    handleChange(event);
+  };
+
+  const handleIssueEmailCode = async () => {
+    try {
+      const response = await fetchAuthenticationCode(value.email);
+    } catch (e) {
+      console.error(e);
+    }
 
     setEmailStatus(EMAIL_STATUS.WAITING_AUTHENTICATION);
     setTimerSeconds(EMAIL_CODE_VALIDITY_SECONDS);
@@ -96,7 +107,7 @@ const EmailField = ({
     // TODO: 이메일 인증 코드 유효시간 만료 처리
 
     setTimerSeconds(EMAIL_CODE_VALIDITY_SECONDS);
-  }, [timerSeconds]);
+  }, [timerSeconds, setTimerSeconds, stopTimer]);
 
   return (
     <>
@@ -111,7 +122,7 @@ const EmailField = ({
               name="email"
               type="email"
               placeholder="이메일 주소를 입력해 주세요."
-              onChange={handleChange}
+              onChange={handleChangeEmail}
               required
             />
             {getEmailButton()}
