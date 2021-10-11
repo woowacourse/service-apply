@@ -12,8 +12,8 @@ import Button from "../@common/Button/Button";
 const RecruitmentItem = ({
   recruitment,
   buttonLabel,
-  activeButton,
-  onClick,
+  isButtonDisabled,
+  onClickButton,
   className,
   ...props
 }) => {
@@ -51,7 +51,11 @@ const RecruitmentItem = ({
       </div>
 
       {buttonLabel && (
-        <Button disabled={!activeButton} onClick={onClick}>
+        <Button
+          className={styles.button}
+          disabled={!isButtonDisabled}
+          onClick={onClickButton}
+        >
           {buttonLabel}
         </Button>
       )}
@@ -64,7 +68,7 @@ export default RecruitmentItem;
 RecruitmentItem.propTypes = {
   recruitment: PropTypes.object.isRequired,
   buttonLabel: PropTypes.string,
-  activeButton: PropTypes.bool,
-  onClick: PropTypes.func,
+  isButtonDisabled: PropTypes.bool,
+  onClickButton: PropTypes.func,
   className: PropTypes.string,
 };

@@ -8,7 +8,7 @@ const CheckBox = ({ name, label, required, ...props }) => {
   const { value, handleChange, register, unRegister } = useFormContext();
 
   useEffect(() => {
-    register(name);
+    register(name, "", required);
 
     return () => {
       unRegister(name);
@@ -16,11 +16,11 @@ const CheckBox = ({ name, label, required, ...props }) => {
   }, []);
 
   return (
-    <Label className={styles.checkbox} required={required}>
+    <Label className={styles.checkbox}>
       <input
         type="checkbox"
         name={name}
-        value={value[name]}
+        checked={value[name]}
         onChange={handleChange}
         required={required}
         {...props}

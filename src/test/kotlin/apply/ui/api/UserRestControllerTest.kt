@@ -1,6 +1,7 @@
 package apply.ui.api
 
 import apply.application.AuthenticateUserRequest
+import apply.application.EditInformationRequest
 import apply.application.EditPasswordRequest
 import apply.application.RegisterUserRequest
 import apply.application.ResetPasswordRequest
@@ -23,6 +24,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.get
+import org.springframework.test.web.servlet.patch
 import org.springframework.test.web.servlet.post
 import support.createLocalDate
 import support.test.TestEnvironment
@@ -41,7 +43,8 @@ private fun RegisterUserRequest.withPlainPassword(password: String): Map<String,
         "phoneNumber" to phoneNumber,
         "gender" to gender,
         "birthday" to birthday,
-        "password" to password
+        "password" to password,
+        "authenticationCode" to authenticationCode
     )
 }
 
@@ -72,7 +75,8 @@ internal class UserRestControllerTest : RestControllerTest() {
         phoneNumber = "010-0000-0000",
         gender = Gender.MALE,
         birthday = createLocalDate(1995, 2, 2),
-        password = Password(PASSWORD)
+        password = Password(PASSWORD),
+        authenticationCode = "3ea9fa6c"
     )
 
     private val userLoginRequest = AuthenticateUserRequest(
@@ -109,9 +113,8 @@ internal class UserRestControllerTest : RestControllerTest() {
 
     @Test
     fun `유효한 회원 생성 및 검증 요청에 대하여 응답으로 토큰이 반환된다`() {
-        every { userAuthenticationService.generateToken(userRequest) } returns VALID_TOKEN
+        every { userAuthenticationService.generateTokenByRegister(userRequest) } returns VALID_TOKEN
         every { mailService.sendAuthenticationCodeMail(any(), any()) } just Runs
-        every { userService.getByEmail(userRequest.email) } returns userRequest.toEntity()
 
         mockMvc.post("/api/users/register") {
             content = objectMapper.writeValueAsBytes(userRequest.withPlainPassword(PASSWORD))
@@ -119,21 +122,6 @@ internal class UserRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isOk }
             content { json(objectMapper.writeValueAsString(ApiResponse.success(VALID_TOKEN))) }
-        }
-    }
-
-    @Test
-    fun `기존 회원 정보와 일치하지 않는 회원 생성 및 검증 요청에 응답으로 Unauthorized를 반환한다`() {
-        every {
-            userAuthenticationService.generateToken(invalidUserRequest)
-        } throws UserAuthenticationException()
-
-        mockMvc.post("/api/users/register") {
-            content = objectMapper.writeValueAsBytes(invalidUserRequest.withPlainPassword(INVALID_PASSWORD))
-            contentType = MediaType.APPLICATION_JSON
-        }.andExpect {
-            status { isUnauthorized }
-            content { json(objectMapper.writeValueAsString(ApiResponse.error("요청 정보가 기존 회원 정보와 일치하지 않습니다"))) }
         }
     }
 
@@ -274,6 +262,23 @@ internal class UserRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isOk }
             content { json(objectMapper.writeValueAsString(ApiResponse.success(userResponses))) }
+        }
+    }
+
+    @Test
+    fun `회원이 정보를 변경한다`() {
+        val request = EditInformationRequest("010-9999-9999")
+        every { jwtTokenProvider.isValidToken("valid_token") } returns true
+        every { jwtTokenProvider.getSubject("valid_token") } returns userRequest.email
+        every { userService.getByEmail(userRequest.email) } returns userRequest.toEntity()
+        every { userService.editInformation(any(), request) } just Runs
+
+        mockMvc.patch("/api/users/information") {
+            content = objectMapper.writeValueAsBytes(request)
+            contentType = MediaType.APPLICATION_JSON
+            header(AUTHORIZATION, "Bearer valid_token")
+        }.andExpect {
+            status { isNoContent }
         }
     }
 

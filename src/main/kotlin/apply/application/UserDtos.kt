@@ -67,7 +67,10 @@ data class RegisterUserRequest(
     val birthday: LocalDate,
 
     @field:NotNull
-    val password: Password
+    val password: Password,
+
+    @field:NotBlank
+    val authenticationCode: String
 ) {
     fun toEntity(): User {
         return User(name, email, phoneNumber, gender, birthday, password)
@@ -101,4 +104,9 @@ data class EditPasswordRequest(
 
     @field:NotNull
     val newPassword: Password
+)
+
+data class EditInformationRequest(
+    @field:NotBlank
+    val phoneNumber: String
 )

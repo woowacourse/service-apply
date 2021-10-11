@@ -1,11 +1,10 @@
 package apply.ui.admin
 
+import apply.application.RecruitmentService
 import apply.ui.admin.cheater.CheatersView
 import apply.ui.admin.evaluation.EvaluationsView
 import apply.ui.admin.mail.MailFormView
-import apply.ui.admin.mission.MissionSelectionsView
 import apply.ui.admin.recruitment.RecruitmentsView
-import apply.ui.admin.selections.SelectionsView
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.applayout.AppLayout
 import com.vaadin.flow.component.applayout.DrawerToggle
@@ -14,24 +13,14 @@ import com.vaadin.flow.component.html.Image
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
-import com.vaadin.flow.component.tabs.Tab
-import com.vaadin.flow.component.tabs.Tabs
-import com.vaadin.flow.component.tabs.TabsVariant
-import com.vaadin.flow.router.RouterLink
 import com.vaadin.flow.theme.Theme
 import com.vaadin.flow.theme.lumo.Lumo
+import support.views.createTabs
 
 @Theme(value = Lumo::class)
-class BaseLayout : AppLayout() {
-    private val route: Map<String, Class<out Component>> = mapOf(
-        "모집 관리" to RecruitmentsView::class.java,
-        "평가 관리" to EvaluationsView::class.java,
-        "과제 관리" to MissionSelectionsView::class.java,
-        "선발 과정" to SelectionsView::class.java,
-        "부정 행위자" to CheatersView::class.java,
-        "메일 발송" to MailFormView::class.java
-    )
-
+class BaseLayout(
+    private val recruitmentService: RecruitmentService
+) : AppLayout() {
     init {
         primarySection = Section.DRAWER
         addToDrawer(createDrawer())
@@ -58,20 +47,18 @@ class BaseLayout : AppLayout() {
     }
 
     private fun createMenu(): Component {
-        return Tabs().apply {
-            orientation = Tabs.Orientation.VERTICAL
-            addThemeVariants(TabsVariant.LUMO_MINIMAL)
-            add(*createMenuItems().toTypedArray())
-        }
+        return createTabs(createMenuItems().map { it.toComponent() })
     }
 
-    private fun createMenuItems(): List<Component> {
-        return route.map { (title, navigationTarget) ->
-            RouterLink(title, navigationTarget)
-        }.map(::createTab)
-    }
-
-    private fun createTab(component: Component): Component {
-        return Tab(component)
+    private fun createMenuItems(): List<MenuItem> {
+        val recruitments = recruitmentService.findAll()
+        return listOf(
+            "모집 관리" of RecruitmentsView::class.java,
+            "평가 관리" of EvaluationsView::class.java,
+            "과제 관리".accordionOf("admin/missions", recruitments),
+            "선발 과정".accordionOf("admin/selections", recruitments),
+            "부정 행위자" of CheatersView::class.java,
+            "메일 발송" of MailFormView::class.java
+        )
     }
 }

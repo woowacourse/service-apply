@@ -26,7 +26,7 @@ import Button from "../../components/@common/Button/Button";
 import SummaryCheckField from "../../components/form/SummaryCheckField/SummaryCheckField";
 import FormInput from "../../components/form/FormInput/FormInput";
 import FormProvider from "../../provider/FormProvider";
-import SubmitButton from "../../components/form/SubmitButton";
+import SubmitButton from "../../components/form/SubmitButton/SubmitButton";
 import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
 import useApplicantRegisterForm from "../../hooks/useApplicantRegisterForm";
 import Container, {

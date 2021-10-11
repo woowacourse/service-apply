@@ -1,0 +1,8 @@
+.button {
+  cursor: pointer;
+  user-select: none;
+}
+
+.button:disabled {
+  cursor: default;
+}

@@ -20,7 +20,7 @@ import Button from "../../components/@common/Button/Button";
 import FormInput from "../../components/form/FormInput/FormInput";
 import Form from "../../components/form/Form/Form";
 import FormProvider from "../../provider/FormProvider";
-import SubmitButton from "../../components/form/SubmitButton";
+import SubmitButton from "../../components/form/SubmitButton/SubmitButton";
 
 const PasswordFind = () => {
   const history = useHistory();

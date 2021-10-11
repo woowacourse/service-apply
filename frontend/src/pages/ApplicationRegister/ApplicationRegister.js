@@ -1,12 +1,22 @@
 import React, { useCallback, useEffect, useState } from "react";
 import {
+  generatePath,
   useHistory,
   useLocation,
   useParams,
-  generatePath,
 } from "react-router-dom";
 import * as Api from "../../api";
-
+import Container from "../../components/@common/Container/Container";
+import Description from "../../components/@common/Description/Description";
+import Label from "../../components/@common/Label/Label";
+import CheckBox from "../../components/form/CheckBox/CheckBox";
+import Form from "../../components/form/Form/Form";
+import FormInput from "../../components/form/FormInput/FormInput";
+import FormTextarea from "../../components/form/FormTextarea/FormTextarea";
+import ResetButton from "../../components/form/ResetButton/ResetButton";
+import SubmitButton from "../../components/form/SubmitButton/SubmitButton";
+import TempSaveButton from "../../components/form/TempSaveButton/TempSaveButton";
+import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
 import {
   CONFIRM_MESSAGE,
   ERROR_MESSAGE,
@@ -14,25 +24,12 @@ import {
 } from "../../constants/messages";
 import PATH, { PARAM } from "../../constants/path";
 import useForm from "../../hooks/useForm";
-import useRecruitmentContext from "../../hooks/useRecruitmentContext";
 import useTokenContext from "../../hooks/useTokenContext";
 import FormProvider from "../../provider/FormProvider";
+import { formatDateTime } from "../../utils/format/date";
 import { generateQuery, parseQuery } from "../../utils/route/query";
 import { validateURL } from "../../utils/validation/url";
-
 import styles from "./ApplicationRegister.module.css";
-import Label from "../../components/@common/Label/Label";
-import Description from "../../components/@common/Description/Description";
-import CheckBox from "../../components/form/CheckBox/CheckBox";
-import Form from "../../components/form/Form/Form";
-import FormInput from "../../components/form/FormInput/FormInput";
-import FormTextarea from "../../components/form/FormTextarea/FormTextarea";
-import ResetButton from "../../components/form/ResetButton";
-import SubmitButton from "../../components/form/SubmitButton";
-import TempSaveButton from "../../components/form/TempSaveButton";
-import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
-import Container from "../../components/@common/Container/Container";
-import { formatDateTime } from "../../utils/format/date";
 
 const pathToEdit = (recruitmentId) =>
   generatePath(PATH.APPLICATION_FORM, {
@@ -46,9 +43,7 @@ const ApplicationRegister = () => {
   const { status } = useParams();
 
   const { recruitmentId } = parseQuery(location.search);
-
-  const { recruitment } = useRecruitmentContext();
-  const currentRecruitment = recruitment.findById(Number(recruitmentId));
+  const { currentRecruitment } = location.state;
 
   const [recruitmentItems, setRecruitmentItems] = useState([]);
   const [initialFormData, setInitialFormData] = useState({});
@@ -166,8 +161,8 @@ const ApplicationRegister = () => {
 
     init();
   }, [
-    recruitment,
     recruitmentId,
+    currentRecruitment,
     history,
     status,
     token,
@@ -209,44 +204,47 @@ const ApplicationRegister = () => {
                 {`임시 저장되었습니다. (${modifiedDateTime})`}
               </p>
             )}
-            {recruitmentItems.length !== 0 &&
-              recruitmentItems.map((item, index) => (
-                <FormTextarea
-                  key={`recruitment-item-${index}`}
-                  name={`recruitment-item-${index}`}
-                  initialValue={initialFormData[`recruitment-item-${index}`]}
-                  label={`${index + 1}. ${item.title}`}
-                  description={item.description}
-                  placeholder="내용을 입력해 주세요."
-                  maxLength={item.maximumLength}
-                  required
-                />
-              ))}
+            <div className={styles["label-bold"]}>
+              {recruitmentItems.length !== 0 &&
+                recruitmentItems.map((item, index) => (
+                  <FormTextarea
+                    key={`recruitment-item-${index}`}
+                    name={`recruitment-item-${index}`}
+                    initialValue={initialFormData[`recruitment-item-${index}`]}
+                    label={`${index + 1}. ${item.title}`}
+                    description={item.description}
+                    placeholder="내용을 입력해 주세요."
+                    maxLength={item.maximumLength}
+                    required
+                  />
+                ))}
 
-            <FormInput
-              name="url"
-              type="url"
-              initialValue={initialFormData.referenceUrl}
-              description={
-                <>
-                  자신을 드러낼 수 있는 개인 블로그, GitHub, 포트폴리오 주소
-                  등이 있다면 입력해 주세요.
-                  <div className={styles.description}>
-                    여러 개가 있는 경우 Notion, Google 문서 등을 사용하여 하나로
-                    묶어 주세요.
+              <FormInput
+                name="url"
+                type="url"
+                initialValue={initialFormData.referenceUrl}
+                description={
+                  <div className={styles["description-url"]}>
+                    자신을 드러낼 수 있는 개인 블로그, GitHub, 포트폴리오 주소
+                    등이 있다면 입력해 주세요.
+                    <div className={styles["description-url-small"]}>
+                      여러 개가 있는 경우 Notion, Google 문서 등을 사용하여
+                      하나로 묶어 주세요.
+                    </div>
                   </div>
-                </>
-              }
-              label="URL"
-              placeholder="ex) https://tecoble.techcourse.co.kr/"
-            />
+                }
+                label="URL"
+                placeholder="ex) https://tecoble.techcourse.co.kr/"
+                boldLabel
+              />
+            </div>
             <div>
               <Label required>지원서 작성 내용 사실 확인</Label>
-              <Description>
+              <Description className={styles["description-agree"]}>
                 기재한 사실 중 허위사실이 발견되는 즉시, 교육 대상자에서
                 제외되며 향후 지원도 불가능합니다.
               </Description>
-              <CheckBox name="agree" label="동의합니다." />
+              <CheckBox name="agree" label="동의합니다." required />
             </div>
 
             <div className={styles.buttons}>

@@ -8,8 +8,8 @@ import javax.persistence.Column
 import javax.persistence.Embedded
 import javax.persistence.Entity
 
-@SQLDelete(sql = "update mission set deleted = true WHERE id=?")
-@Where(clause = "deleted=false")
+@SQLDelete(sql = "update mission set deleted = true where id = ?")
+@Where(clause = "deleted = false")
 @Entity
 class Mission(
     @Column(nullable = false)
@@ -33,6 +33,9 @@ class Mission(
 
     val status: MissionStatus
         get() = MissionStatus.of(period, submittable)
+
+    val isProgressing: Boolean
+        get() = status == MissionStatus.SUBMITTING
 
     constructor(
         title: String,

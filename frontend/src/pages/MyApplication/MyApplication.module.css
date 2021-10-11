@@ -1,0 +1,30 @@
+.box {
+  width: 50rem;
+  margin: 2.75rem auto;
+}
+
+.page-title {
+  margin-bottom: 2rem;
+}
+
+.recruit-panel {
+  margin-bottom: 1.25rem;
+}
+
+.subtitle {
+  font-size: 1.75rem;
+  margin-bottom: 3.5rem;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.hr {
+  margin: 1.625rem 0;
+  border: none;
+
+  border-top: 1.5px solid var(--gray-002);
+}
+
+.mission-recruit-item {
+  margin-bottom: 1.25rem;
+}

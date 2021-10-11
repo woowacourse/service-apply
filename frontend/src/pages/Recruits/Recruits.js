@@ -1,12 +1,13 @@
 import React, { useMemo } from "react";
-import { Link, useHistory, useLocation } from "react-router-dom";
+import { Link, useHistory, useLocation, generatePath } from "react-router-dom";
 import classNames from "classnames";
 
 import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
 
 import useRecruitmentContext from "../../hooks/useRecruitmentContext";
+import useTokenContext from "../../hooks/useTokenContext";
 import { generateQuery } from "../../utils/route/query";
-import PATH from "../../constants/path";
+import PATH, { PARAM } from "../../constants/path";
 import { RECRUITS_TAB, RECRUITS_TAB_LIST } from "../../constants/tab";
 import { RECRUITMENT_STATUS } from "../../constants/recruitment";
 
@@ -20,6 +21,7 @@ const BUTTON_LABEL = {
 };
 
 const Recruits = () => {
+  const { token } = useTokenContext();
   const history = useHistory();
 
   const query = new URLSearchParams(useLocation().search);
@@ -35,11 +37,25 @@ const Recruits = () => {
     [recruitment, selectedTab]
   );
 
-  const goToNewApplicationPage = (recruitmentId) => {
+  const goToNewApplicationFormPage = (recruitment) => {
+    if (!token) {
+      history.push({
+        pathname: PATH.LOGIN,
+        state: {
+          currentRecruitment: recruitment,
+        },
+      });
+
+      return;
+    }
+
     history.push({
-      pathname: PATH.NEW_APPLICATION,
+      pathname: generatePath(PATH.APPLICATION_FORM, {
+        status: PARAM.APPLICATION_FORM_STATUS.NEW,
+      }),
+      search: generateQuery({ recruitmentId: recruitment.id }),
       state: {
-        recruitmentId,
+        currentRecruitment: recruitment,
       },
     });
   };
@@ -78,7 +94,7 @@ const Recruits = () => {
                 recruitment.status === RECRUITMENT_STATUS.RECRUITING
               }
               buttonLabel={BUTTON_LABEL[recruitment.status]}
-              onClick={() => goToNewApplicationPage(recruitment.id)}
+              onClick={() => goToNewApplicationFormPage(recruitment)}
               role="listitem"
             />
           ))}

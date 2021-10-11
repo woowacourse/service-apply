@@ -31,6 +31,11 @@ class AuthenticationCode(
         authenticated = true
     }
 
+    fun validate(code: String) {
+        check(this.code == code) { "인증 코드가 일치하지 않습니다." }
+        check(authenticated) { "인증되지 않았습니다." }
+    }
+
     companion object {
         private val EXPIRY_MINUTE_TIME: Duration = Duration.ofMinutes(10L)
     }
