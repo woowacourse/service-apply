@@ -2,7 +2,6 @@ package apply
 
 import apply.application.EvaluationSelectData
 import apply.application.MissionData
-import apply.application.MissionResponse
 import apply.domain.mission.Mission
 import java.time.LocalDateTime
 
@@ -33,26 +32,4 @@ fun createMissionData(
     id: Long = 0L
 ): MissionData {
     return MissionData(title, evaluation, startDateTime, endDateTime, description, submittable, id)
-}
-
-fun createMissionResponse(
-    title: String = MISSION_TITLE,
-    description: String = MISSION_DESCRIPTION,
-    evaluationTitle: String = EVALUATION_TITLE1,
-    evaluationId: Long = 1L,
-    submittable: Boolean = true,
-    startDateTime: LocalDateTime = START_DATE_TIME,
-    endDateTime: LocalDateTime = END_DATE_TIME,
-    id: Long = 0L
-): MissionResponse {
-    return MissionResponse(
-        id,
-        title,
-        description,
-        evaluationTitle,
-        evaluationId,
-        submittable,
-        startDateTime,
-        endDateTime
-    )
 }

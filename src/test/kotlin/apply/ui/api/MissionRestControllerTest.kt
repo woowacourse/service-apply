@@ -1,9 +1,11 @@
 package apply.ui.api
 
+import apply.application.MissionResponse
 import apply.application.MissionService
 import apply.application.UserService
+import apply.createEvaluation
+import apply.createMission
 import apply.createMissionData
-import apply.createMissionResponse
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
 import io.mockk.every
@@ -50,8 +52,8 @@ internal class MissionRestControllerTest : RestControllerTest() {
     @Test
     fun `특정 모집의 모든 과제를 조회한다`() {
         val missionResponses = listOf(
-            createMissionResponse(id = 1L, evaluationId = 1L, title = "과제1"),
-            createMissionResponse(id = 2L, evaluationId = 2L, title = "과제2")
+            MissionResponse(createMission(), createEvaluation()),
+            MissionResponse(createMission(), createEvaluation())
         )
         every { missionService.findAllByRecruitmentId(recruitmentId) } returns missionResponses
 
