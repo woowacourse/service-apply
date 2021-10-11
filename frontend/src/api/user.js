@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "/api/applicants";
+const COMMON_PATH = "/api/users";
 
 export const fetchRegister = ({
   name,
@@ -10,7 +10,7 @@ export const fetchRegister = ({
   birthday,
   gender,
 }) =>
-  axios.post(`${BASE_URL}/register`, {
+  axios.post(`${COMMON_PATH}/register`, {
     name,
     phoneNumber,
     email,
@@ -20,18 +20,14 @@ export const fetchRegister = ({
   });
 
 export const fetchLogin = ({ email, password }) =>
-  axios.post(`${BASE_URL}/login`, { email, password });
+  axios.post(`${COMMON_PATH}/login`, { email, password });
 
 export const fetchPasswordFind = ({ name, email, birthday }) =>
-  axios.post("/api/applicants/reset-password", { name, email, birthday });
+  axios.post(`${COMMON_PATH}/reset-password`, { name, email, birthday });
 
 export const fetchPasswordEdit = ({ token, password, newPassword }) =>
   axios.post(
-    "/api/applicants/edit-password",
+    `${COMMON_PATH}/edit-password`,
     { password, newPassword },
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
+    { headers: { Authorization: `Bearer ${token}` } }
   );
