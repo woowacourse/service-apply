@@ -7,6 +7,8 @@ const PATH = {
   FIND_PASSWORD: "/find",
   FIND_PASSWORD_RESULT: "/find/result",
   EDIT_PASSWORD: "/edit",
+  MY_PAGE: "/mypage",
+  EDIT_MY_PAGE: "/mypage/edit",
 };
 
 export const PARAM = {
