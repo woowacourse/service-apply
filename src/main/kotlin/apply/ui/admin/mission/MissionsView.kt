@@ -3,9 +3,11 @@ package apply.ui.admin.mission
 import apply.application.MissionResponse
 import apply.application.MissionService
 import apply.application.RecruitmentService
+import apply.domain.mission.MissionStatus
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
+import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.html.H1
 import com.vaadin.flow.component.orderedlayout.FlexComponent
@@ -18,6 +20,7 @@ import com.vaadin.flow.router.HasUrlParameter
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.router.WildcardParameter
 import support.views.NEW_VALUE
+import support.views.Title
 import support.views.addSortableColumn
 import support.views.addSortableDateTimeColumn
 import support.views.createDeleteButtonWithDialog
@@ -25,22 +28,19 @@ import support.views.createPrimaryButton
 import support.views.createPrimarySmallButton
 
 @Route(value = "admin/missions", layout = BaseLayout::class)
-class MissionSelectionView(
+class MissionsView(
     private val recruitmentService: RecruitmentService,
     private val missionService: MissionService
 ) : VerticalLayout(), HasUrlParameter<Long> {
     private var recruitmentId: Long = 0L
 
     override fun setParameter(event: BeforeEvent, @WildcardParameter parameter: Long) {
-        this.recruitmentId = parameter
+        recruitmentId = parameter
         add(createTitle(), createButton(), createGrid())
     }
 
     private fun createTitle(): Component {
-        return HorizontalLayout(H1("${recruitmentService.getById(recruitmentId).title} 과제 관리")).apply {
-            setSizeFull()
-            justifyContentMode = FlexComponent.JustifyContentMode.CENTER
-        }
+        return Title("${recruitmentService.getById(recruitmentId).title} 과제 관리")
     }
 
     private fun createButton(): Component {
@@ -58,36 +58,43 @@ class MissionSelectionView(
         return Grid<MissionResponse>(10).apply {
             addSortableColumn("과제명", MissionResponse::title)
             addSortableColumn("평가명", MissionResponse::evaluationTitle)
-            addSortableColumn("제출 가능 여부") { it.submittable.toText() }
+            addSortableColumn("상태") { it.status.toText() }
             addSortableDateTimeColumn("시작일시", MissionResponse::startDateTime)
             addSortableDateTimeColumn("종료일시", MissionResponse::endDateTime)
-            addColumn(createEditAndDeleteButton()).apply { isAutoWidth = true }
+            addColumn(createButtonRenderer()).apply { isAutoWidth = true }
             setItems(missionService.findAllByRecruitmentId(recruitmentId))
         }
     }
 
-    private fun createEditAndDeleteButton(): Renderer<MissionResponse> {
-        return ComponentRenderer<Component, MissionResponse> { missionResponse ->
-            HorizontalLayout(
-                createPrimarySmallButton("수정") {
-                    // TODO 수정 기능 구현
-                },
-                createDeleteButton(missionResponse)
-            )
+    private fun createButtonRenderer(): Renderer<MissionResponse> {
+        return ComponentRenderer<Component, MissionResponse> { it -> createButtons(it) }
+    }
+
+    private fun createButtons(mission: MissionResponse): Component {
+        return HorizontalLayout(
+            createEditButton(mission),
+            createDeleteButton(mission).apply { isEnabled = !mission.submittable }
+        )
+    }
+
+    private fun createEditButton(mission: MissionResponse): Component {
+        return createPrimarySmallButton("수정") {
+            // TODO: 수정 기능 구현
         }
     }
 
-    private fun createDeleteButton(mission: MissionResponse) =
-        createDeleteButtonWithDialog("과제를 삭제하시겠습니까?") {
+    private fun createDeleteButton(mission: MissionResponse): Button {
+        return createDeleteButtonWithDialog("과제를 삭제하시겠습니까?") {
             missionService.deleteById(mission.id)
-            UI.getCurrent().page.reload()
-        }.apply { isEnabled = !mission.submittable }
+        }
+    }
 
-    private fun Boolean.toText(): String {
-        return if (this) {
-            "가능"
-        } else {
-            "불가능"
+    private fun MissionStatus.toText(): String {
+        return when (this) {
+            MissionStatus.SUBMITTABLE -> "제출 예정"
+            MissionStatus.SUBMITTING -> "제출 중"
+            MissionStatus.UNSUBMITTABLE -> "제출 중지"
+            MissionStatus.ENDED -> "제출 종료"
         }
     }
 }

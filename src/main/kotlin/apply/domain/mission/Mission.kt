@@ -34,7 +34,7 @@ class Mission(
     val status: MissionStatus
         get() = MissionStatus.of(period, submittable)
 
-    val isProgressing: Boolean
+    val isSubmitting: Boolean
         get() = status == MissionStatus.SUBMITTING
 
     constructor(

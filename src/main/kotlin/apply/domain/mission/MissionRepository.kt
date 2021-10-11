@@ -9,6 +9,5 @@ fun MissionRepository.getById(missionId: Long): Mission {
 
 interface MissionRepository : JpaRepository<Mission, Long> {
     fun existsByEvaluationId(evaluationId: Long): Boolean
-
-    fun findAllByEvaluationIdIn(evaluationIds: List<Long>): List<Mission>
+    fun findAllByEvaluationIdIn(evaluationIds: Collection<Long>): List<Mission>
 }
