@@ -111,13 +111,27 @@ class MissionServiceTest {
 
     @Test
     fun `과제를 수정한다`() {
-        val missionData = createMissionData(
+        val mission = createMission()
+        val updateMissionRequest = UpdateMissionRequest(
             title = "changedTitle",
             startDateTime = LocalDateTime.now(),
             endDateTime = LocalDateTime.now(),
             submittable = false
         )
         every { missionRepository.findById(any()) } returns Optional.of(createMission())
-        assertDoesNotThrow { missionService.update(missionData) }
+        assertDoesNotThrow { missionService.update(mission.id, updateMissionRequest) }
+    }
+
+    @Test
+    fun `과제를 찾을 수 없는 경우 예외를 던진다`() {
+        val wrongMissionId = Long.MAX_VALUE
+        val updateMissionRequest = UpdateMissionRequest(
+            title = "changedTitle",
+            startDateTime = LocalDateTime.now(),
+            endDateTime = LocalDateTime.now(),
+            submittable = false
+        )
+        every { missionRepository.findById(any()) } returns Optional.empty()
+        assertThrows<IllegalArgumentException> { missionService.update(wrongMissionId, updateMissionRequest) }
     }
 }

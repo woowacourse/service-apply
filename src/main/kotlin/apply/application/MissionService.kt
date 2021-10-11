@@ -29,8 +29,8 @@ class MissionService(
         )
     }
 
-    fun update(request: MissionData) {
-        val mission = missionRepository.findByIdOrNull(request.id) ?: throw IllegalArgumentException("존재하지 않는 미션입니다.")
+    fun update(missionId: Long, request: UpdateMissionRequest) {
+        val mission = missionRepository.findByIdOrNull(missionId) ?: throw IllegalArgumentException("존재하지 않는 미션입니다.")
         mission.update(request)
     }
 
