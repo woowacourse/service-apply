@@ -4,6 +4,7 @@ import apply.createEvaluation
 import apply.createMission
 import apply.createMissionData
 import apply.domain.evaluation.EvaluationRepository
+import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.mission.MissionRepository
 import io.mockk.Runs
 import io.mockk.every
@@ -26,11 +27,14 @@ class MissionServiceTest {
     @MockK
     lateinit var evaluationRepository: EvaluationRepository
 
+    @MockK
+    lateinit var evaluationTargetRepository: EvaluationTargetRepository
+
     private lateinit var missionService: MissionService
 
     @BeforeEach
     internal fun setUp() {
-        missionService = MissionService(missionRepository, evaluationRepository)
+        missionService = MissionService(missionRepository, evaluationRepository, evaluationTargetRepository)
     }
 
     @Test

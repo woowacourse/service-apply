@@ -54,3 +54,14 @@ data class MissionAndEvaluationResponse(
         mission.status
     )
 }
+
+data class MissionResponse(
+    val id: Long,
+    val title: String,
+    val description: String,
+    val submittable: Boolean,
+    val submitted: Boolean,
+    val startDateTime: LocalDateTime,
+    val endDateTime: LocalDateTime,
+    val status: MissionStatus
+)

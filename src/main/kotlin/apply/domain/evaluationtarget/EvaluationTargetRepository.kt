@@ -19,4 +19,6 @@ interface EvaluationTargetRepository : JpaRepository<EvaluationTarget, Long> {
         evaluationId: Long,
         evaluationStatus: EvaluationStatus
     ): List<EvaluationTarget>
+
+    fun existsByUserIdAndEvaluationId(userId: Long, evaluationId: Long): Boolean
 }

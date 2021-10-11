@@ -1,6 +1,7 @@
 package apply.application
 
 import apply.domain.evaluation.EvaluationRepository
+import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionRepository
 import apply.domain.mission.getById
@@ -11,7 +12,8 @@ import javax.transaction.Transactional
 @Service
 class MissionService(
     private val missionRepository: MissionRepository,
-    private val evaluationRepository: EvaluationRepository
+    private val evaluationRepository: EvaluationRepository,
+    private val evaluationTargetRepository: EvaluationTargetRepository
 ) {
     fun save(request: MissionData) {
         check(evaluationRepository.existsById(request.evaluation.id)) { "존재하지 않는 평가 id 입니다." }
@@ -38,5 +40,24 @@ class MissionService(
         val mission = missionRepository.getById(id)
         check(!mission.submittable) { "제출 가능한 과제는 삭제할 수 없습니다." }
         missionRepository.deleteById(id)
+    }
+
+    fun findAllByUserIdAndRecruitmentId(userId: Long, recruitmentId: Long): List<MissionResponse> {
+        val evaluations = evaluationRepository.findAllByRecruitmentId(recruitmentId).associateBy { it.id }
+        val filteredEvaluations = evaluations.filter {
+            evaluationTargetRepository.existsByUserIdAndEvaluationId(userId, it.key)
+        }
+        return missionRepository.findAllByEvaluationIdIn(filteredEvaluations.keys).map {
+            MissionResponse(
+                it.id,
+                it.title,
+                it.description,
+                it.submittable,
+                it.submittable,
+                it.period.startDateTime,
+                it.period.endDateTime,
+                it.status
+            )
+        }
     }
 }
