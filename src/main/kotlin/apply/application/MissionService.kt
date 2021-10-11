@@ -4,7 +4,6 @@ import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluation.getById
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionRepository
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 
@@ -28,12 +27,6 @@ class MissionService(
                 request.id
             )
         )
-    }
-
-    fun getNotEndedDataById(id: Long): MissionData {
-        val mission = missionRepository.getById(id)
-        val evaluation = evaluationRepository.getById(mission.evaluationId)
-        return MissionData(mission, evaluation)
     }
 
     fun getNotEndedDataById(id: Long): MissionData {
