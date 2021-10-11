@@ -1,8 +1,8 @@
-import Button from "../../@common/Button/Button";
+import Button, { BUTTON_VARIANT } from "../../@common/Button/Button";
 
 const CancelButton = ({ onClick }) => {
   return (
-    <Button type="button" variant="outlined" onClick={onClick}>
+    <Button type="button" variant={BUTTON_VARIANT.OUTLINED} onClick={onClick}>
       취소
     </Button>
   );
