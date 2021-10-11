@@ -63,24 +63,24 @@ internal class MissionRestControllerTest : RestControllerTest() {
 
     @Test
     fun `특정 모집의 모든 과제를 조회한다`() {
-        val missionAndEvaluationRespons = listOf(
+        val missionAndEvaluationResponses = listOf(
             MissionAndEvaluationResponse(createMission(), createEvaluation()),
             MissionAndEvaluationResponse(createMission(), createEvaluation())
         )
-        every { missionService.findAllByRecruitmentId(recruitmentId) } returns missionAndEvaluationRespons
+        every { missionService.findAllByRecruitmentId(recruitmentId) } returns missionAndEvaluationResponses
 
         mockMvc.get(
             "/api/recruitments/{recruitmentId}/missions", recruitmentId
         ).andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(missionAndEvaluationRespons))) }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(missionAndEvaluationResponses))) }
         }
     }
 
     @Test
     fun `나의 과제들을 조회한다`() {
-        val expected = listOf(createMissionResponse(id = 1L), createMissionResponse(id = 2L))
-        every { missionService.findAllByUserIdAndRecruitmentId(any(), any()) } returns expected
+        val missionResponses = listOf(createMissionResponse(id = 1L), createMissionResponse(id = 2L))
+        every { missionService.findAllByUserIdAndRecruitmentId(any(), any()) } returns missionResponses
         every { jwtTokenProvider.isValidToken(any()) } returns true
         every { jwtTokenProvider.getSubject(any()) } returns user.email
         every { userService.getByEmail(any()) } returns user
@@ -93,6 +93,7 @@ internal class MissionRestControllerTest : RestControllerTest() {
             header(AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isOk }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(missionResponses))) }
         }
     }
 

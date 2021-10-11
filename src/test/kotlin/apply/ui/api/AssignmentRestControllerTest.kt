@@ -60,11 +60,12 @@ internal class AssignmentRestControllerTest : RestControllerTest() {
 
     @Test
     fun `나의 과제 제출물을 조회한다`() {
+        val assignmentResponse = createAssignmentResponse()
         every { jwtTokenProvider.isValidToken(any()) } returns true
         every { jwtTokenProvider.getSubject(any()) } returns loginUser.email
         every { userService.getByEmail(any()) } returns loginUser
-        every { assignmentService.getAssignmentByUserIdAndMissionId(any(), any()) } returns
-            createAssignmentResponse()
+        every { assignmentService.getAssignmentByUserIdAndMissionId(any(), any()) } returns assignmentResponse
+
         mockMvc.get("/api/recruitments/{recruitmentId}/missions/{missionId}/assignments",
             recruitmentId,
             missionId
@@ -73,6 +74,7 @@ internal class AssignmentRestControllerTest : RestControllerTest() {
             header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isOk }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(assignmentResponse))) }
         }
     }
 
