@@ -104,6 +104,6 @@ class MissionServiceTest {
         every { missionRepository.findByIdOrNull(missionId) } returns null
         every { missionRepository.deleteById(any()) } just Runs
 
-        assertThrows<IllegalArgumentException> { missionService.deleteById(missionId) }
+        assertThrows<NoSuchElementException> { missionService.deleteById(missionId) }
     }
 }
