@@ -4,7 +4,6 @@ import apply.application.mail.MailData
 import apply.domain.mail.MailHistory
 import apply.domain.mail.MailHistoryRepository
 import apply.domain.mail.getById
-import apply.domain.user.User
 import apply.domain.user.UserRepository
 import apply.domain.user.findAllByEmailIn
 import org.springframework.stereotype.Service
@@ -38,8 +37,8 @@ class MailHistoryService(
     }
 
     fun findAllMailTargetsByEmails(emails: List<String>): List<MailTargetResponse> {
-        val users: List<User> = userRepository.findAllByEmailIn(emails)
-        val anonymousEmails: Set<String> = emails.toSet() - users.map { it.email }.toSet()
+        val users = userRepository.findAllByEmailIn(emails)
+        val anonymousEmails = emails.toSet() - users.map { it.email }.toSet()
         return users.map { MailTargetResponse(it) } + anonymousEmails.map { MailTargetResponse(it) }
     }
 }

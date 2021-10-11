@@ -61,7 +61,7 @@ class RecruitmentsView(private val recruitmentService: RecruitmentService) : Ver
     }
 
     private fun createButtonRenderer(): Renderer<RecruitmentResponse> {
-        return ComponentRenderer { it -> createButtons(it) }
+        return ComponentRenderer<Component, RecruitmentResponse> { it -> createButtons(it) }
     }
 
     private fun createButtons(recruitment: RecruitmentResponse): Component {
