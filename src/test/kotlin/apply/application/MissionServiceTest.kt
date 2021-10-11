@@ -17,6 +17,8 @@ import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import org.springframework.data.repository.findByIdOrNull
 import support.test.UnitTest
+import java.time.LocalDateTime
+import java.util.Optional
 
 @UnitTest
 class MissionServiceTest {
@@ -105,5 +107,17 @@ class MissionServiceTest {
         every { missionRepository.deleteById(any()) } just Runs
 
         assertThrows<NoSuchElementException> { missionService.deleteById(missionId) }
+    }
+
+    @Test
+    fun `과제를 수정한다`() {
+        val missionData = createMissionData(
+            title = "changedTitle",
+            startDateTime = LocalDateTime.now(),
+            endDateTime = LocalDateTime.now(),
+            submittable = false
+        )
+        every { missionRepository.findById(any()) } returns Optional.of(createMission())
+        assertDoesNotThrow { missionService.update(missionData) }
     }
 }
