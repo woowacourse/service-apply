@@ -27,7 +27,7 @@ class AssignmentService(
         )
     }
 
-    fun findByMissionIdAndEvaluationTargetId(missionId: Long, evaluationTargetId: Long): AssignmentData {
+    fun findByMissionIdAndEvaluationTargetId(evaluationTargetId: Long, missionId: Long): AssignmentData {
         val evaluationTarget = evaluationTargetRepository.getById(evaluationTargetId) // userId 뽑자
         val assignment = assignmentRepository.findByUserId(evaluationTarget.userId)
         return AssignmentData(assignment)

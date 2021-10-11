@@ -14,8 +14,10 @@ import io.mockk.impl.annotations.MockK
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
+import org.springframework.data.repository.findByIdOrNull
 import support.test.UnitTest
 import java.time.LocalDateTime
 
@@ -80,5 +82,44 @@ class AssignmentServiceTest {
 
         assignmentService.create(1L, 1L, createAssignmentRequest())
         assertThat(evaluationTarget.isPassed).isTrue
+    }
+
+    @Test
+    fun `과제 id와 평가 대상자 id로 과제물을 조회할때 평가 대상자가 존재하지 않으면 예외가 발생한다`() {
+        every { evaluationTargetRepository.findByIdOrNull(any()) } returns null
+
+        assertThrows<NoSuchElementException> {
+            assignmentService.findByMissionIdAndEvaluationTargetId(1L, 1L)
+        }
+    }
+
+    @Test
+    fun `과제 id와 평가 대상자 id로 과제물을 조회할때 평가 대상자가 제출한 과제물이 없으면 빈 과제물 데이터를 반환한다`() {
+        every { evaluationTargetRepository.findByIdOrNull(any()) } returns createEvaluationTarget()
+        every { assignmentRepository.findByUserId(any()) } returns null
+
+        val actual = assignmentService.findByMissionIdAndEvaluationTargetId(1L, 1L)
+
+        assertAll(
+            { assertThat(actual).isNotNull },
+            { assertThat(actual.githubUsername).isBlank() },
+            { assertThat(actual.pullRequestUrl).isBlank() },
+            { assertThat(actual.note).isBlank() }
+        )
+    }
+
+    @Test
+    fun `과제 id와 평가 대상자 id로 과제물을 조회할때 평가 대상자가 제출한 과제물 데이터를 반환한다`() {
+        every { evaluationTargetRepository.findByIdOrNull(any()) } returns createEvaluationTarget()
+        every { assignmentRepository.findByUserId(any()) } returns createAssignment()
+
+        val actual = assignmentService.findByMissionIdAndEvaluationTargetId(1L, 1L)
+
+        assertAll(
+            { assertThat(actual).isNotNull },
+            { assertThat(actual.githubUsername).isNotBlank() },
+            { assertThat(actual.pullRequestUrl).isNotBlank() },
+            { assertThat(actual.note).isNotBlank() }
+        )
     }
 }
