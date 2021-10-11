@@ -15,14 +15,14 @@ class MailHistoryService(
     private val mailHistoryRepository: MailHistoryRepository,
     private val userRepository: UserRepository
 ) {
-    fun save(mailData: MailData) {
+    fun save(request: MailData) {
         mailHistoryRepository.save(
             MailHistory(
-                mailData.subject,
-                mailData.body,
-                mailData.sender,
-                mailData.recipients,
-                mailData.sentTime
+                request.subject,
+                request.body,
+                request.sender,
+                request.recipients,
+                request.sentTime
             )
         )
     }
@@ -31,9 +31,9 @@ class MailHistoryService(
         return mailHistoryRepository.findAll().map { MailData(it) }
     }
 
-    fun getById(emailHistoryId: Long): MailData {
-        val emailHistory = mailHistoryRepository.getById(emailHistoryId)
-        return MailData(emailHistory)
+    fun getById(mailHistoryId: Long): MailData {
+        val mailHistory = mailHistoryRepository.getById(mailHistoryId)
+        return MailData(mailHistory)
     }
 
     fun findAllMailTargetsByEmails(emails: List<String>): List<MailTargetResponse> {

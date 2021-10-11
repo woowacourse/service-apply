@@ -33,7 +33,7 @@ class MailHistoryRestControllerTest : RestControllerTest() {
     fun `이메일 이력을 저장한다`() {
         every { mailHistoryService.save(any()) } just Runs
 
-        mockMvc.post("/api/mails") {
+        mockMvc.post("/api/mail-history") {
             content = objectMapper.writeValueAsString(createMailData())
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
@@ -46,7 +46,7 @@ class MailHistoryRestControllerTest : RestControllerTest() {
         val mailData: MailData = createMailData()
         every { mailHistoryService.getById(any()) } returns mailData
 
-        mockMvc.get("/api/mails/{mailHistoryId}", mailData.id)
+        mockMvc.get("/api/mail-history/{mailHistoryId}", mailData.id)
             .andExpect {
                 status { isOk }
                 content { json(objectMapper.writeValueAsString(ApiResponse.success(mailData))) }
@@ -58,7 +58,7 @@ class MailHistoryRestControllerTest : RestControllerTest() {
         val mailDataValues: List<MailData> = listOf(createMailData(), createMailData())
         every { mailHistoryService.findAll() } returns mailDataValues
 
-        mockMvc.get("/api/mails")
+        mockMvc.get("/api/mail-history")
             .andExpect {
                 status { isOk }
                 content { json(objectMapper.writeValueAsString(ApiResponse.success(mailDataValues))) }

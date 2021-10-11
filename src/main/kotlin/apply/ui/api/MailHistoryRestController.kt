@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/api/mails")
+@RequestMapping("/api/mail-history")
 class MailHistoryRestController(
     private val mailHistoryService: MailHistoryService
 ) {
