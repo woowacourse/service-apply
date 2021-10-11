@@ -25,6 +25,7 @@ class MissionService(
                 request.startDateTime,
                 request.endDateTime,
                 request.submittable,
+                request.hidden,
                 request.id
             )
         )

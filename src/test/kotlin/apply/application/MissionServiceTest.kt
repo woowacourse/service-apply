@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
+import org.springframework.data.repository.findByIdOrNull
 import support.test.UnitTest
 
 @UnitTest
@@ -104,31 +105,5 @@ class MissionServiceTest {
         every { missionRepository.deleteById(any()) } just Runs
 
         assertThrows<NoSuchElementException> { missionService.deleteById(missionId) }
-    }
-
-    @Test
-    fun `과제를 수정한다`() {
-        val mission = createMission()
-        val updateMissionRequest = UpdateMissionRequest(
-            title = "changedTitle",
-            startDateTime = LocalDateTime.now(),
-            endDateTime = LocalDateTime.now().plusDays(1),
-            submittable = false
-        )
-        every { missionRepository.findByIdOrNull(any()) } returns createMission()
-        assertDoesNotThrow { missionService.update(mission.id, updateMissionRequest) }
-    }
-
-    @Test
-    fun `과제를 찾을 수 없는 경우 예외를 던진다`() {
-        val wrongMissionId = Long.MAX_VALUE
-        val updateMissionRequest = UpdateMissionRequest(
-            title = "changedTitle",
-            startDateTime = LocalDateTime.now(),
-            endDateTime = LocalDateTime.now().plusDays(1),
-            submittable = false
-        )
-        every { missionRepository.findByIdOrNull(any()) } returns null
-        assertThrows<IllegalArgumentException> { missionService.update(wrongMissionId, updateMissionRequest) }
     }
 }

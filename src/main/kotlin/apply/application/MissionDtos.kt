@@ -28,6 +28,9 @@ data class MissionData(
     @field:NotNull
     var submittable: Boolean = false,
 
+    @field:NotNull
+    var hidden: Boolean = false,
+
     var id: Long = 0L
 ) {
     constructor(mission: Mission, evaluation: Evaluation) : this(
@@ -37,7 +40,8 @@ data class MissionData(
         startDateTime = mission.period.startDateTime,
         endDateTime = mission.period.endDateTime,
         description = mission.description,
-        submittable = mission.submittable
+        submittable = mission.submittable,
+        hidden = mission.hidden
     )
 }
 
@@ -50,7 +54,8 @@ data class MissionResponse(
     val submittable: Boolean,
     val startDateTime: LocalDateTime,
     val endDateTime: LocalDateTime,
-    val status: MissionStatus
+    val status: MissionStatus,
+    val hidden: Boolean
 ) {
     constructor(mission: Mission, evaluation: Evaluation) : this(
         mission.id,
@@ -61,6 +66,7 @@ data class MissionResponse(
         mission.submittable,
         mission.period.startDateTime,
         mission.period.endDateTime,
-        mission.status
+        mission.status,
+        mission.hidden
     )
 }
