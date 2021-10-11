@@ -15,9 +15,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
-import org.springframework.data.repository.findByIdOrNull
 import support.test.UnitTest
-import java.time.LocalDateTime
 
 @UnitTest
 class MissionServiceTest {
