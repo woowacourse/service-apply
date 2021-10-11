@@ -24,6 +24,13 @@ class Mission(
     var submittable: Boolean = false,
     id: Long = 0L
 ) : BaseEntity(id) {
+
+    val status: MissionStatus
+        get() = MissionStatus.of(period, submittable)
+
+    val isProgressing: Boolean
+        get() = status == MissionStatus.PROGRESSING
+
     constructor(
         title: String,
         description: String,
