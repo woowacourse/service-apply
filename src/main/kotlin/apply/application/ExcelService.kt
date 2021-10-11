@@ -14,6 +14,7 @@ import java.io.ByteArrayInputStream
 class ExcelService(
     private val applicantService: ApplicantService,
     private val evaluationTargetService: EvaluationTargetService,
+    private val assignmentService: AssignmentService,
     private val recruitmentItemRepository: RecruitmentItemRepository,
     private val evaluationItemRepository: EvaluationItemRepository,
     private val excelGenerator: ExcelGenerator
@@ -44,11 +45,35 @@ class ExcelService(
         val targets = evaluationTargetService.findAllByEvaluationIdAndKeyword(evaluationId)
         val titles =
             evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluationId).map { it.title }.toTypedArray()
-        val headerTitles = arrayOf("이름", "이메일", "합계", "평가상태", *titles, "기타 특이사항")
+        val headerTitles = arrayOf(NAME, EMAIL, TOTAL_SCORE, STATUS, *titles, NOTE)
         val excelRows = targets.map {
             ExcelRow(
                 it.name,
                 it.email,
+                it.totalScore.toString(),
+                it.evaluationStatus.toText(),
+                *it.answers.map { item -> item.score.toString() }.toTypedArray(),
+                it.note
+            )
+        }
+        return excelGenerator.generateBy(headerTitles, excelRows)
+    }
+
+    fun createTargetExcelWithAssignment(evaluationId: Long, missionId: Long): ByteArrayInputStream {
+        val targets = evaluationTargetService.findAllByEvaluationIdAndKeyword(evaluationId)
+        val assignments = assignmentService.findByEvaluationIdAndMissionId(evaluationId, missionId)
+        val titles =
+            evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluationId).map { it.title }.toTypedArray()
+        val headerTitles =
+            arrayOf(NAME, EMAIL, GITHUB_USERNAME, PULL_REQUEST_URL, ASSIGNMENT_NOTE, TOTAL_SCORE, STATUS, *titles, NOTE)
+        val excelRows = targets.map {
+            val assignment = assignments.find { each -> each.userId == it.userId }
+            ExcelRow(
+                it.name,
+                it.email,
+                assignment?.githubUsername ?: UNSUBMITTED,
+                assignment?.pullRequestUrl ?: UNSUBMITTED,
+                assignment?.note ?: UNSUBMITTED,
                 it.totalScore.toString(),
                 it.evaluationStatus.toText(),
                 *it.answers.map { item -> item.score.toString() }.toTypedArray(),
@@ -72,4 +97,16 @@ class ExcelService(
             EvaluationStatus.FAIL -> "탈락"
             EvaluationStatus.PENDING -> "보류"
         }
+
+    companion object {
+        private const val NAME: String = "이름"
+        private const val EMAIL: String = "이메일"
+        private const val STATUS: String = "평가 상태"
+        private const val NOTE: String = "기타 특이사항"
+        private const val TOTAL_SCORE: String = "합계"
+        private const val GITHUB_USERNAME: String = "Github 유저 네임"
+        private const val PULL_REQUEST_URL: String = "Pull Request URL"
+        private const val ASSIGNMENT_NOTE: String = "소감"
+        private const val UNSUBMITTED: String = "(미제출)"
+    }
 }

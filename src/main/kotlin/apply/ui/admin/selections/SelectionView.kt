@@ -247,7 +247,10 @@ class SelectionView(
                 downloadFile("${recruitmentService.getById(recruitmentId).title}.xlsx", excel)
             } else {
                 val evaluation = evaluations[tabs.selectedIndex - 1]
-                val excel = excelService.createTargetExcel(evaluation.id)
+                val mission = missionService.findByEvaluationId(evaluation.id)
+                val excel = mission?.let {
+                    excelService.createTargetExcelWithAssignment(evaluation.id, it.id)
+                } ?: excelService.createTargetExcel(evaluation.id)
                 downloadFile("${evaluation.title}.xlsx", excel)
             }
         }
