@@ -17,17 +17,17 @@ data class CreateAssignmentRequest(
 
 data class AssignmentData(
     @field:NotBlank
-    val githubUsername: String,
+    val githubUsername: String?,
 
     @field:Size(min = 1, max = 255)
-    val pullRequestUrl: String,
+    val pullRequestUrl: String?,
 
     @field:NotBlank
-    val note: String
+    val note: String?
 ) {
-    constructor(assignment: Assignment) : this(
-        assignment.githubUsername,
-        assignment.pullRequestUrl,
-        assignment.note
+    constructor(assignment: Assignment?) : this(
+        assignment?.githubUsername,
+        assignment?.pullRequestUrl,
+        assignment?.note
     )
 }

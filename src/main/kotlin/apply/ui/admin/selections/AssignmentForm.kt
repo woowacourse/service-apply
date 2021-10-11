@@ -15,6 +15,12 @@ class AssignmentForm() : BindingFormLayout<AssignmentData>(AssignmentData::class
         setResponsiveSteps(ResponsiveStep("0", 1))
     }
 
+    fun toReadOnlyMode() {
+        this.githubUsername.isReadOnly = true
+        this.pullRequestUrl.isReadOnly = true
+        this.note.isReadOnly = false
+    }
+
     override fun bindOrNull(): AssignmentData? {
         return bindDefaultOrNull()
     }

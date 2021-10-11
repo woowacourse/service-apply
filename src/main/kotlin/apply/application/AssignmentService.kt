@@ -4,9 +4,9 @@ import apply.domain.assignment.Assignment
 import apply.domain.assignment.AssignmentRepository
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
+import apply.domain.evaluationtarget.getById
 import apply.domain.mission.MissionRepository
 import apply.domain.mission.getById
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -27,10 +27,10 @@ class AssignmentService(
         )
     }
 
-    fun findByEvaluationTargetId(evaluationTargetId: Long): AssignmentData? {
-        return evaluationTargetRepository.findByIdOrNull(evaluationTargetId)?.let {
-            assignmentRepository.findByUserId(it.userId)
-        }?.let { AssignmentData(it) }
+    fun findByMissionIdAndEvaluationTargetId(missionId: Long, evaluationTargetId: Long): AssignmentData {
+        val evaluationTarget = evaluationTargetRepository.getById(evaluationTargetId) // userId 뽑자
+        val assignment = assignmentRepository.findByUserId(evaluationTarget.userId)
+        return AssignmentData(assignment)
     }
 
     private fun findEvaluationTargetOf(evaluationId: Long, userId: Long): EvaluationTarget {

@@ -39,4 +39,8 @@ class MissionService(
         check(!mission.submittable) { "제출 가능한 과제는 삭제할 수 없습니다." }
         missionRepository.deleteById(id)
     }
+
+    fun findByEvaluationId(evaluationId: Long): Mission? {
+        return missionRepository.findByEvaluationId(evaluationId)
+    }
 }

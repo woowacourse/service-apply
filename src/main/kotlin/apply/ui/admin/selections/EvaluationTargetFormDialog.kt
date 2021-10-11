@@ -4,6 +4,7 @@ import apply.application.AssignmentData
 import apply.application.AssignmentService
 import apply.application.EvaluationTargetData
 import apply.application.EvaluationTargetService
+import apply.domain.mission.Mission
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.dialog.Dialog
@@ -19,6 +20,7 @@ import support.views.createPrimaryButton
 class EvaluationTargetFormDialog(
     private val evaluationTargetService: EvaluationTargetService,
     private val assignmentService: AssignmentService,
+    private val mission: Mission?,
     private val evaluationTargetId: Long,
     reloadComponents: () -> Unit
 ) : Dialog() {
@@ -27,27 +29,33 @@ class EvaluationTargetFormDialog(
         setWidthFull()
         isReadOnly = true
     }
-    private val assignmentForm: BindingFormLayout<AssignmentData> = AssignmentForm()
+    private val assignmentForm: BindingFormLayout<AssignmentData>
     private val evaluationTargetForm: BindingFormLayout<EvaluationTargetData>
 
     init {
-        val evaluationResponse = evaluationTargetService.getGradeEvaluation(evaluationTargetId)
-        val assignmentData = assignmentService.findByEvaluationTargetId(evaluationTargetId)
-        evaluationTargetForm = EvaluationTargetForm(evaluationResponse.evaluationItems)
-            .apply { fill(evaluationResponse.evaluationTarget) }
-        assignmentData?.let {
-            assignmentForm
-                .apply { fill(it) }
-        } ?: assignmentForm.apply {
-            isVisible = false
-        }
-        title.text = evaluationResponse.title
-        description.value = evaluationResponse.description
+        assignmentForm = createAssignmentForm()
+        val response = evaluationTargetService.getGradeEvaluation(evaluationTargetId)
+        evaluationTargetForm = EvaluationTargetForm(response.evaluationItems)
+            .apply { fill(response.evaluationTarget) }
+        title.text = response.title
+        description.value = response.description
 
         add(createHeader(), assignmentForm, evaluationTargetForm, createButtons(reloadComponents))
         width = "800px"
         height = "90%"
         open()
+    }
+
+    private fun createAssignmentForm(): AssignmentForm {
+        return mission?.let {
+            val assignment = assignmentService.findByMissionIdAndEvaluationTargetId(it.id, evaluationTargetId)
+            AssignmentForm().apply {
+                fill(assignment)
+                toReadOnlyMode()
+            }
+        } ?: AssignmentForm().apply {
+            isVisible = false
+        }
     }
 
     private fun createHeader(): VerticalLayout {

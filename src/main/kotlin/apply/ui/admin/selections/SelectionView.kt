@@ -8,6 +8,7 @@ import apply.application.EvaluationTargetCsvService
 import apply.application.EvaluationTargetResponse
 import apply.application.EvaluationTargetService
 import apply.application.ExcelService
+import apply.application.MissionService
 import apply.application.RecruitmentItemService
 import apply.application.RecruitmentService
 import apply.domain.applicationform.ApplicationForm
@@ -56,6 +57,7 @@ class SelectionView(
     private val evaluationTargetService: EvaluationTargetService,
     private val excelService: ExcelService,
     private val evaluationTargetCsvService: EvaluationTargetCsvService,
+    private val missionService: MissionService,
     private val assignmentService: AssignmentService
 ) : VerticalLayout(), HasUrlParameter<Long> {
     private var recruitmentId: Long = 0L
@@ -168,7 +170,9 @@ class SelectionView(
     private fun createEvaluationButtonRenderer(): Renderer<EvaluationTargetResponse> {
         return ComponentRenderer<Component, EvaluationTargetResponse> { response ->
             createPrimarySmallButton("평가하기") {
-                EvaluationTargetFormDialog(evaluationTargetService, assignmentService, response.id) {
+                val evaluation = evaluations[tabs.selectedIndex - 1]
+                val mission = missionService.findByEvaluationId(evaluation.id)
+                EvaluationTargetFormDialog(evaluationTargetService, assignmentService, mission, response.id) {
                     selectedTabIndex = tabs.selectedIndex
                     removeAll()
                     add(
