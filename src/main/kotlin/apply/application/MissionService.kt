@@ -1,5 +1,6 @@
 package apply.application
 
+import apply.domain.assignment.AssignmentRepository
 import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.mission.Mission
@@ -13,7 +14,8 @@ import javax.transaction.Transactional
 class MissionService(
     private val missionRepository: MissionRepository,
     private val evaluationRepository: EvaluationRepository,
-    private val evaluationTargetRepository: EvaluationTargetRepository
+    private val evaluationTargetRepository: EvaluationTargetRepository,
+    private val assignmentRepository: AssignmentRepository
 ) {
     fun save(request: MissionData) {
         check(evaluationRepository.existsById(request.evaluation.id)) { "존재하지 않는 평가 id 입니다." }
@@ -43,17 +45,17 @@ class MissionService(
     }
 
     fun findAllByUserIdAndRecruitmentId(userId: Long, recruitmentId: Long): List<MissionResponse> {
-        val evaluations = evaluationRepository.findAllByRecruitmentId(recruitmentId).associateBy { it.id }
-        val filteredEvaluations = evaluations.filter {
-            evaluationTargetRepository.existsByUserIdAndEvaluationId(userId, it.key)
+        val evaluationIds = evaluationRepository.findAllByRecruitmentId(recruitmentId).map { it.id }
+        val filteredEvaluationIds = evaluationIds.filter {
+            evaluationTargetRepository.existsByUserIdAndEvaluationId(userId, it)
         }
-        return missionRepository.findAllByEvaluationIdIn(filteredEvaluations.keys).map {
+        return missionRepository.findAllByEvaluationIdIn(filteredEvaluationIds).map {
             MissionResponse(
                 it.id,
                 it.title,
                 it.description,
                 it.submittable,
-                it.submittable,
+                assignmentRepository.existsByUserIdAndMissionId(userId, it.id),
                 it.period.startDateTime,
                 it.period.endDateTime,
                 it.status

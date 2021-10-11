@@ -3,6 +3,7 @@ package apply.application
 import apply.createEvaluation
 import apply.createMission
 import apply.createMissionData
+import apply.domain.assignment.AssignmentRepository
 import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.mission.MissionRepository
@@ -30,11 +31,16 @@ class MissionServiceTest {
     @MockK
     lateinit var evaluationTargetRepository: EvaluationTargetRepository
 
+    @MockK
+    lateinit var assignmentRepository: AssignmentRepository
+
     private lateinit var missionService: MissionService
 
     @BeforeEach
     internal fun setUp() {
-        missionService = MissionService(missionRepository, evaluationRepository, evaluationTargetRepository)
+        missionService = MissionService(
+            missionRepository, evaluationRepository, evaluationTargetRepository, assignmentRepository
+        )
     }
 
     @Test
@@ -81,6 +87,31 @@ class MissionServiceTest {
                     MissionAndEvaluationResponse(secondMission, secondEvaluation)
                 )
             }
+        )
+    }
+
+    @Test
+    fun `특정 모집에 해당하는 나의 과제들을 조회한다`() {
+        val recruitmentId = 1L
+        val userId = 1L
+        val missions = listOf(createMission(id = 1L), createMission(id = 2L))
+        every { evaluationRepository.findAllByRecruitmentId(recruitmentId) } returns
+            listOf(createEvaluation(id = 1L), createEvaluation(id = 2L))
+        every { evaluationTargetRepository.existsByUserIdAndEvaluationId(userId, any()) } returns true
+        every { missionRepository.findAllByEvaluationIdIn(listOf(1L, 2L)) } returns missions
+        every { assignmentRepository.existsByUserIdAndMissionId(userId, any()) } returns true
+
+        val responses = missionService.findAllByUserIdAndRecruitmentId(userId, recruitmentId)
+
+        assertAll(
+            { assertThat(responses).hasSize(2) },
+            { assertThat(responses[0].title).isEqualTo(missions[0].title) },
+            { assertThat(responses[0].description).isEqualTo(missions[0].description) },
+            { assertThat(responses[0].submittable).isEqualTo(missions[0].submittable) },
+            { assertThat(responses[0].submitted).isEqualTo(true) },
+            { assertThat(responses[0].startDateTime).isEqualTo(missions[0].period.startDateTime) },
+            { assertThat(responses[0].endDateTime).isEqualTo(missions[0].period.endDateTime) },
+            { assertThat(responses[0].status).isEqualTo(missions[0].status) }
         )
     }
 

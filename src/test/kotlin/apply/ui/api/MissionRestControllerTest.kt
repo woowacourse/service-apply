@@ -6,6 +6,10 @@ import apply.application.UserService
 import apply.createEvaluation
 import apply.createMission
 import apply.createMissionData
+import apply.createMissionResponse
+import apply.createUser
+import apply.domain.evaluation.EvaluationRepository
+import apply.security.JwtTokenProvider
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
 import io.mockk.every
@@ -14,6 +18,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
+import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.get
@@ -32,7 +37,14 @@ internal class MissionRestControllerTest : RestControllerTest() {
     @MockkBean
     private lateinit var missionService: MissionService
 
+    @MockkBean
+    private lateinit var jwtTokenProvider: JwtTokenProvider
+
+    @MockkBean
+    private lateinit var evaluationRepository: EvaluationRepository
+
     private val recruitmentId = 1L
+    private val user = createUser(id = 1L)
 
     @Test
     fun `과제를 추가한다`() {
@@ -62,6 +74,25 @@ internal class MissionRestControllerTest : RestControllerTest() {
         ).andExpect {
             status { isOk }
             content { json(objectMapper.writeValueAsString(ApiResponse.success(missionAndEvaluationRespons))) }
+        }
+    }
+
+    @Test
+    fun `나의 과제들을 조회한다`() {
+        val expected = listOf(createMissionResponse(id = 1L), createMissionResponse(id = 2L))
+        every { missionService.findAllByUserIdAndRecruitmentId(user.id, recruitmentId) } returns expected
+        every { jwtTokenProvider.isValidToken("valid_token") } returns true
+        every { jwtTokenProvider.getSubject("valid_token") } returns user.email
+        every { userService.getByEmail(user.email) } returns user
+
+        mockMvc.get(
+            "/api/recruitments/{recruitmentId}/missions/me",
+            recruitmentId
+        ) {
+            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            contentType = MediaType.APPLICATION_JSON
+        }.andExpect {
+            status { isOk }
         }
     }
 
