@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import useFormContext from "../../../hooks/useFormContext";
 import useTimer from "../../../hooks/useTimer";
 import { formatTimerText } from "../../../utils/format/date";
-import Button from "../../@common/Button/Button";
+import Button, { BUTTON_VARIANT } from "../../@common/Button/Button";
 import Label from "../../@common/Label/Label";
 import TextInput from "../../@common/TextInput/TextInput";
 import * as styles from "./EmailField.module.css";
@@ -38,7 +38,7 @@ const EmailField = ({
       return (
         <Button
           type="button"
-          variant="outlined"
+          variant={BUTTON_VARIANT.OUTLINED}
           onClick={handleIssueEmailCode}
           className={styles["input-button"]}
           disabled={value.email === "" || errorMessage.email !== null}

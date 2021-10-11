@@ -38,7 +38,7 @@ const BirthField = ({ required, className }) => {
   return (
     <div className={className}>
       <div className={styles.box}>
-        <Label for="year" required={required}>
+        <Label for="year" required={required} className={styles.label}>
           생년월일
         </Label>
         <div className={styles.birth}>
