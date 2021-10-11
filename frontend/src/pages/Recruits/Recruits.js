@@ -94,7 +94,7 @@ const Recruits = () => {
                 recruitment.status === RECRUITMENT_STATUS.RECRUITING
               }
               buttonLabel={BUTTON_LABEL[recruitment.status]}
-              onClick={() => goToNewApplicationFormPage(recruitment)}
+              onClickButton={() => goToNewApplicationFormPage(recruitment)}
               role="listitem"
             />
           ))}
