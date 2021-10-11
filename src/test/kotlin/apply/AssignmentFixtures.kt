@@ -18,7 +18,7 @@ fun createAssignment(
     return Assignment(userId, missionId, githubUsername, pullRequestUrl, note, id)
 }
 
-fun createAssignmentRequest(
+fun createAssignmentData(
     githubUsername: String = GITHUB_USERNAME,
     pullRequestUrl: String = PULL_REQUEST_URL,
     note: String = NOTE,
