@@ -3,6 +3,11 @@ import PropTypes from "prop-types";
 import React from "react";
 import styles from "./Button.module.css";
 
+export const BUTTON_VARIANT = {
+  CONTAINED: "contained",
+  OUTLINED: "outlined",
+};
+
 const Button = ({ children, type, variant, cancel, className, ...props }) => {
   return (
     <button
@@ -20,13 +25,13 @@ const Button = ({ children, type, variant, cancel, className, ...props }) => {
 Button.propTypes = {
   children: PropTypes.node.isRequired,
   type: PropTypes.oneOf(["button", "submit", "reset"]),
-  variant: PropTypes.oneOf(["contained", "outlined"]),
+  variant: PropTypes.oneOf(Object.values(BUTTON_VARIANT)),
   cancel: PropTypes.bool,
   className: PropTypes.string,
 };
 
 Button.defaultProps = {
-  variant: "contained",
+  variant: BUTTON_VARIANT.CONTAINED,
   cancel: false,
 };
 
