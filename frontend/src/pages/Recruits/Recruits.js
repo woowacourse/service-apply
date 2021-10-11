@@ -90,7 +90,7 @@ const Recruits = () => {
             <RecruitmentItem
               key={recruitment.id}
               recruitment={recruitment}
-              activeButton={
+              isButtonDisabled={
                 recruitment.status === RECRUITMENT_STATUS.RECRUITING
               }
               buttonLabel={BUTTON_LABEL[recruitment.status]}
