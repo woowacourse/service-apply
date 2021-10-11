@@ -45,7 +45,7 @@ class EvaluationTarget(
     }
 
     fun evaluated(): Boolean {
-        return !evaluationAnswers.allZero() || evaluationStatus != EvaluationStatus.FAIL
+        return !evaluationAnswers.allZero()
     }
 
     fun update(evaluationStatus: EvaluationStatus, evaluationAnswers: EvaluationAnswers, note: String) {
