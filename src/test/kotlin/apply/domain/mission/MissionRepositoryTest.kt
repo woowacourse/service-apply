@@ -8,7 +8,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import org.springframework.data.repository.findByIdOrNull
 import support.test.RepositoryTest
 
-
 @RepositoryTest
 class MissionRepositoryTest(
     private val missionRepository: MissionRepository,
