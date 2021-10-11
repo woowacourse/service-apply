@@ -21,6 +21,7 @@ export const ERROR_MESSAGE = {
     EDIT_FAILURE: "변경에 실패했습니다. 잠시 후 다시 시도해주세요.",
     FETCHING_USER_INFO:
       "내 정보를 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요.",
+    NOT_AUTHENTICATED: "이메일 인증을 완료해주세요.",
   },
   ACCESS: {
     REQUIRED_LOGIN: "로그인이 필요합니다.",

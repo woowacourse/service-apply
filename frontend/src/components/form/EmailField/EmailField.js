@@ -1,7 +1,10 @@
 import classNames from "classnames";
 import PropTypes from "prop-types";
 import { useEffect } from "react";
-import { fetchAuthenticationCode } from "../../../api";
+import {
+  fetchAuthenticationCode,
+  fetchVerifyAuthenticationCode,
+} from "../../../api";
 import useFormContext from "../../../hooks/useFormContext";
 import useTimer from "../../../hooks/useTimer";
 import { formatTimerText } from "../../../utils/format/date";
@@ -18,12 +21,7 @@ export const EMAIL_STATUS = {
 
 const EMAIL_CODE_VALIDITY_SECONDS = 600;
 
-const EmailField = ({
-  emailCode,
-  setEmailCode,
-  emailStatus,
-  setEmailStatus,
-}) => {
+const EmailField = ({ emailStatus, setEmailStatus }) => {
   const { value, errorMessage, handleChange, register, unRegister } =
     useFormContext();
   const { timerSeconds, setTimerSeconds, startTimer, stopTimer } = useTimer(
@@ -74,9 +72,11 @@ const EmailField = ({
 
   const handleIssueEmailCode = async () => {
     try {
-      const response = await fetchAuthenticationCode(value.email);
-    } catch (e) {
-      console.error(e);
+      await fetchAuthenticationCode(value.email);
+    } catch (error) {
+      console.error(error);
+
+      return;
     }
 
     setEmailStatus(EMAIL_STATUS.WAITING_AUTHENTICATION);
@@ -84,8 +84,17 @@ const EmailField = ({
     startTimer();
   };
 
-  const handleAuthenticateEmail = () => {
-    // TODO: 인증코드와 함께 이메일 인증 api 요청
+  const handleAuthenticateEmail = async () => {
+    try {
+      await fetchVerifyAuthenticationCode({
+        email: value.email,
+        authenticationCode: value.authenticationCode,
+      });
+    } catch (error) {
+      console.error(error);
+
+      return;
+    }
 
     setEmailStatus(EMAIL_STATUS.AUTHENTICATED);
     stopTimer();
@@ -94,9 +103,11 @@ const EmailField = ({
 
   useEffect(() => {
     register("email", "", true);
+    register("authenticationCode", "", false);
 
     return () => {
       unRegister("email");
+      unRegister("authenticationCode");
     };
   }, []);
 
@@ -148,9 +159,9 @@ const EmailField = ({
               </Label>
               <div className={styles["input-box"]}>
                 <TextInput
-                  value={emailCode}
-                  name="email-code"
-                  onChange={({ target }) => setEmailCode(target.value)}
+                  value={value.authenticationCode}
+                  name="authenticationCode"
+                  onChange={handleChange}
                   required
                 />
                 <Button
@@ -172,8 +183,6 @@ const EmailField = ({
 };
 
 EmailField.propTypes = {
-  emailCode: PropTypes.string.isRequired,
-  setEmailCode: PropTypes.func.isRequired,
   emailStatus: PropTypes.string.isRequired,
   setEmailStatus: PropTypes.func.isRequired,
 };

@@ -45,3 +45,8 @@ export const fetchUserInfoEdit = ({ token, phoneNumber }) =>
 
 export const fetchAuthenticationCode = (email) =>
   axios.post(`${COMMON_PATH}/authentication-code?email=${email}`);
+
+export const fetchVerifyAuthenticationCode = ({ email, authenticationCode }) =>
+  axios.post(
+    `/api/users/authenticate-email?email=${email}&authenticationCode=${authenticationCode}`
+  );

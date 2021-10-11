@@ -41,23 +41,30 @@ const Join = () => {
   const { postRegister } = useTokenContext();
   const { phoneNumber, handlePhoneNumberChange } = useApplicantRegisterForm();
 
-  const [emailStatus, setEmailStatus] = useState(EMAIL_STATUS.INPUT); // TODO: useForm() 사용 고려
-  const [emailCode, setEmailCode] = useState("");
+  const [emailStatus, setEmailStatus] = useState(EMAIL_STATUS.INPUT);
 
   const submit = async ({
     name,
     email,
+    authenticationCode,
     password,
     gender,
     year,
     month,
     day,
   }) => {
+    if (emailStatus !== EMAIL_STATUS.AUTHENTICATED) {
+      alert(ERROR_MESSAGE.API.NOT_AUTHENTICATED);
+
+      return;
+    }
+
     try {
       await postRegister({
         name,
         phoneNumber,
         email,
+        authenticationCode,
         password,
         gender,
         birthday: formatBirthday({ year, month, day }),
@@ -66,7 +73,6 @@ const Join = () => {
       history.push(PATH.RECRUITS);
     } catch (e) {
       alert(ERROR_MESSAGE.API.JOIN_FAILURE);
-      history.push(PATH.LOGIN);
     }
   };
 
@@ -96,8 +102,6 @@ const Join = () => {
           </SummaryCheckField>
 
           <EmailField
-            emailCode={emailCode}
-            setEmailCode={setEmailCode}
             emailStatus={emailStatus}
             setEmailStatus={setEmailStatus}
           />
