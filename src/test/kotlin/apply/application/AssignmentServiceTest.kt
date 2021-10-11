@@ -90,7 +90,7 @@ class AssignmentServiceTest {
     @Nested
     inner class Find {
         fun subject(): AssignmentData {
-            return assignmentService.findByMissionIdAndEvaluationTargetId(1L, 1L)
+            return assignmentService.findByEvaluationTargetIdAndMissionId(1L, 1L)
         }
 
         @Test

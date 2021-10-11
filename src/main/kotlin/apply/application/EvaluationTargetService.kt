@@ -48,6 +48,7 @@ class EvaluationTargetService(
                     it.id,
                     user.name,
                     user.email,
+                    user.id,
                     it.evaluationAnswers.countTotalScore(),
                     it.evaluationStatus,
                     it.administratorId,

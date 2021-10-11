@@ -48,7 +48,7 @@ class EvaluationTargetFormDialog(
 
     private fun createAssignmentForm(): AssignmentForm {
         return mission?.let {
-            val assignment = assignmentService.findByMissionIdAndEvaluationTargetId(evaluationTargetId, it.id)
+            val assignment = assignmentService.findByEvaluationTargetIdAndMissionId(evaluationTargetId, it.id)
             AssignmentForm().apply {
                 fill(assignment)
                 toReadOnlyMode()

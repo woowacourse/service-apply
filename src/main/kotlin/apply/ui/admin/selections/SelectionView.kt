@@ -220,7 +220,10 @@ class SelectionView(
     private fun createEvaluationFileDownloadButton(): Button {
         return createSuccessButton("평가지 다운로드") {
             val evaluation = evaluations[tabs.selectedIndex - 1]
-            val csv = evaluationTargetCsvService.createTargetCsv(evaluation.id)
+            val mission = missionService.findByEvaluationId(evaluation.id)
+            val csv = mission?.let {
+                evaluationTargetCsvService.createTargetCsvWithAssignment(evaluation.id, it.id)
+            } ?: evaluationTargetCsvService.createTargetCsv(evaluation.id)
             downloadFile("${evaluation.title}.csv", csv)
         }
     }

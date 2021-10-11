@@ -17,6 +17,7 @@ import javax.transaction.Transactional
 @Service
 class EvaluationTargetCsvService(
     private val evaluationTargetService: EvaluationTargetService,
+    private val assignmentService: AssignmentService,
     private val evaluationItemRepository: EvaluationItemRepository,
     private val csvGenerator: CsvGenerator
 ) {
@@ -31,6 +32,40 @@ class EvaluationTargetCsvService(
                 target.id.toString(),
                 target.name,
                 target.email,
+                target.evaluationStatus.name,
+                *scores(target.answers, evaluationItems).toTypedArray(),
+                target.note
+            )
+        }
+        return csvGenerator.generateBy(headerTitles, csvRows)
+    }
+
+    fun createTargetCsvWithAssignment(evaluationId: Long, missionId: Long): ByteArrayInputStream {
+        val targets = evaluationTargetService.findAllByEvaluationIdAndKeyword(evaluationId)
+        val evaluationItems = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluationId)
+        val evaluationItemHeaders = evaluationItems.map { it.toHeader() }.toTypedArray()
+
+        val headerTitles = arrayOf(
+            ID,
+            NAME,
+            EMAIL,
+            GITHUB_USERNAME,
+            PULL_REQUEST_URL,
+            ASSIGNMENT_NOTE,
+            STATUS,
+            *evaluationItemHeaders,
+            NOTE
+        )
+        val assignments = assignmentService.findByEvaluationIdAndMissionId(evaluationId, missionId)
+        val csvRows = targets.map { target ->
+            val assignment = assignments.find { each -> each.userId == target.userId }
+            CsvRow(
+                target.id.toString(),
+                target.name,
+                target.email,
+                assignment?.githubUsername ?: UNSUBMITTED,
+                assignment?.pullRequestUrl ?: UNSUBMITTED,
+                assignment?.note ?: UNSUBMITTED,
                 target.evaluationStatus.name,
                 *scores(target.answers, evaluationItems).toTypedArray(),
                 target.note
@@ -96,5 +131,9 @@ class EvaluationTargetCsvService(
         private const val EMAIL: String = "이메일"
         private const val STATUS: String = "평가 상태"
         private const val NOTE: String = "기타 특이사항"
+        private const val GITHUB_USERNAME: String = "Github 유저 네임"
+        private const val PULL_REQUEST_URL: String = "Pull Request URL"
+        private const val ASSIGNMENT_NOTE: String = "소감"
+        private const val UNSUBMITTED: String = "(미제출)"
     }
 }
