@@ -21,6 +21,11 @@ class UserService(
         return userRepository.findAllByKeyword(keyword).map(::UserResponse)
     }
 
+    fun getInformation(id: Long): UserResponse {
+        val user = userRepository.getById(id)
+        return UserResponse(user)
+    }
+
     fun resetPassword(request: ResetPasswordRequest): String {
         return passwordGenerator.generate().also {
             getByEmail(request.email).resetPassword(request.name, request.birthday, it)

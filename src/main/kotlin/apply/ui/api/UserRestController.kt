@@ -83,6 +83,14 @@ class UserRestController(
         return ResponseEntity.ok(ApiResponse.success(users))
     }
 
+    @GetMapping("/information")
+    fun getMyInformation(
+        @LoginUser user: User
+    ): ResponseEntity<ApiResponse<UserResponse>> {
+        val user = userService.getInformation(user.id)
+        return ResponseEntity.ok(ApiResponse.success(user))
+    }
+
     @PatchMapping("/information")
     fun editInformation(
         @RequestBody @Valid request: EditInformationRequest,
