@@ -60,7 +60,7 @@ internal class AssignmentRestControllerTest : RestControllerTest() {
         every { jwtTokenProvider.isValidToken("valid_token") } returns true
         every { jwtTokenProvider.getSubject("valid_token") } returns loginUser.email
         every { userService.getByEmail(loginUser.email) } returns loginUser
-        every { assignmentService.create(missionId, loginUser.id, createAssignmentData()) } just Runs
+        every { assignmentService.update(missionId, loginUser.id, createAssignmentData()) } just Runs
 
         mockMvc.patch("/api/recruitments/{recruitmentId}/missions/{missionId}/assignments", recruitmentId, missionId) {
             contentType = MediaType.APPLICATION_JSON
