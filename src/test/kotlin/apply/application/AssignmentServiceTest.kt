@@ -13,6 +13,8 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertDoesNotThrow
@@ -84,42 +86,48 @@ class AssignmentServiceTest {
         assertThat(evaluationTarget.isPassed).isTrue
     }
 
-    @Test
-    fun `과제 id와 평가 대상자 id로 과제물을 조회할때 평가 대상자가 존재하지 않으면 예외가 발생한다`() {
-        every { evaluationTargetRepository.findByIdOrNull(any()) } returns null
-
-        assertThrows<NoSuchElementException> {
-            assignmentService.findByMissionIdAndEvaluationTargetId(1L, 1L)
+    @DisplayName("과제 id와 평가 대상자 id로 과제물 조회는")
+    @Nested
+    inner class Find {
+        fun subject(): AssignmentData {
+            return assignmentService.findByMissionIdAndEvaluationTargetId(1L, 1L)
         }
-    }
 
-    @Test
-    fun `과제 id와 평가 대상자 id로 과제물을 조회할때 평가 대상자가 제출한 과제물이 없으면 빈 과제물 데이터를 반환한다`() {
-        every { evaluationTargetRepository.findByIdOrNull(any()) } returns createEvaluationTarget()
-        every { assignmentRepository.findByUserId(any()) } returns null
+        @Test
+        fun `평가 대상자가 존재하지 않으면 예외가 발생한다`() {
+            every { evaluationTargetRepository.findByIdOrNull(any()) } returns null
 
-        val actual = assignmentService.findByMissionIdAndEvaluationTargetId(1L, 1L)
+            assertThrows<NoSuchElementException> { subject() }
+        }
 
-        assertAll(
-            { assertThat(actual).isNotNull },
-            { assertThat(actual.githubUsername).isBlank() },
-            { assertThat(actual.pullRequestUrl).isBlank() },
-            { assertThat(actual.note).isBlank() }
-        )
-    }
+        @Test
+        fun `평가 대상자가 제출한 과제물이 없으면 빈 과제물 데이터를 반환한다`() {
+            every { evaluationTargetRepository.findByIdOrNull(any()) } returns createEvaluationTarget()
+            every { assignmentRepository.findByUserId(any()) } returns null
 
-    @Test
-    fun `과제 id와 평가 대상자 id로 과제물을 조회할때 평가 대상자가 제출한 과제물 데이터를 반환한다`() {
-        every { evaluationTargetRepository.findByIdOrNull(any()) } returns createEvaluationTarget()
-        every { assignmentRepository.findByUserId(any()) } returns createAssignment()
+            val actual = subject()
 
-        val actual = assignmentService.findByMissionIdAndEvaluationTargetId(1L, 1L)
+            assertAll(
+                { assertThat(actual).isNotNull },
+                { assertThat(actual.githubUsername).isBlank() },
+                { assertThat(actual.pullRequestUrl).isBlank() },
+                { assertThat(actual.note).isBlank() }
+            )
+        }
 
-        assertAll(
-            { assertThat(actual).isNotNull },
-            { assertThat(actual.githubUsername).isNotBlank() },
-            { assertThat(actual.pullRequestUrl).isNotBlank() },
-            { assertThat(actual.note).isNotBlank() }
-        )
+        @Test
+        fun `평가 대상자가 제출한 과제물이 있으면 평가 대상자가 제출한 과제물 데이터를 반환한다`() {
+            every { evaluationTargetRepository.findByIdOrNull(any()) } returns createEvaluationTarget()
+            every { assignmentRepository.findByUserId(any()) } returns createAssignment()
+
+            val actual = subject()
+
+            assertAll(
+                { assertThat(actual).isNotNull },
+                { assertThat(actual.githubUsername).isNotBlank() },
+                { assertThat(actual.pullRequestUrl).isNotBlank() },
+                { assertThat(actual.note).isNotBlank() }
+            )
+        }
     }
 }
