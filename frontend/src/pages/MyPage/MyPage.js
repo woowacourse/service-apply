@@ -9,13 +9,13 @@ import * as styles from "./MyPage.module.css";
 const MyPage = () => {
   const history = useHistory();
 
-  const handleClickPasswordEdit = () => {
+  const routeToPasswordEdit = () => {
     history.push({
       pathname: PATH.EDIT_PASSWORD,
     });
   };
 
-  const handleClickMyPageEdit = () => {
+  const routeToMyPageEdit = () => {
     history.push({
       pathname: PATH.EDIT_MY_PAGE,
     });
@@ -47,11 +47,11 @@ const MyPage = () => {
             <Button
               type="button"
               variant={BUTTON_VARIANT.OUTLINED}
-              onClick={handleClickPasswordEdit}
+              onClick={routeToPasswordEdit}
             >
               비밀번호 변경
             </Button>
-            <Button type="button" onClick={handleClickMyPageEdit}>
+            <Button type="button" onClick={routeToMyPageEdit}>
               내 정보 수정
             </Button>
           </div>
