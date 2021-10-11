@@ -5,6 +5,7 @@ import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluation.getById
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionRepository
+import apply.domain.mission.getById
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 
@@ -16,7 +17,7 @@ class MissionService(
 ) {
     fun save(request: MissionData) {
         check(evaluationRepository.existsById(request.evaluation.id)) { "존재하지 않는 평가 id 입니다." }
-        // check(!missionRepository.existsByEvaluationId(request.evaluation.id)) { "해당 평가에 이미 등록된 과제가 있습니다." }
+        check(!(missionRepository.existsByEvaluationId(request.evaluation.id) && request.id == 0L)) { "해당 평가에 이미 등록된 과제가 있습니다." }
         missionRepository.save(
             Mission(
                 request.title,
