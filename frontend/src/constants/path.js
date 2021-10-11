@@ -2,6 +2,7 @@ const PATH = {
   HOME: "/",
   RECRUITS: "/recruits",
   NEW_APPLICATION: "/applicants/new",
+  MY_APPLICATION: "/applications/me",
   APPLICATION_FORM: "/application-forms/:status(new|edit)",
   LOGIN: "/login",
   FIND_PASSWORD: "/find",
