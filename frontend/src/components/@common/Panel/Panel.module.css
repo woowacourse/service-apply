@@ -1,0 +1,14 @@
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 2.125rem 1.75rem;
+  cursor: pointer;
+}
+
+.title {
+  font-size: 1.5rem;
+}
+
+.panel-body {
+  border-top: 0;
+}

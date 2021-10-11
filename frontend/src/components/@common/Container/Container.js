@@ -9,7 +9,7 @@ export const CONTAINER_SIZE = {
   NARROW: "narrow",
 };
 
-const Container = ({ title, size, children, className }) => {
+const Container = ({ title, size, children, className, ...props }) => {
   return (
     <div
       className={classNames(
@@ -17,8 +17,17 @@ const Container = ({ title, size, children, className }) => {
         { [styles.narrow]: size === CONTAINER_SIZE.NARROW },
         className
       )}
+      {...props}
     >
-      {title && <h2 className={styles.title}>{title}</h2>}
+      {title && (
+        <h2
+          className={classNames(styles.title, {
+            [styles["title-with-children"]]: children,
+          })}
+        >
+          {title}
+        </h2>
+      )}
       {children}
     </div>
   );
