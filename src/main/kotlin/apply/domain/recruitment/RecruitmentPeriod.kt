@@ -18,9 +18,9 @@ data class RecruitmentPeriod(
     @Column(nullable = false)
     val endDateTime: LocalDateTime
 ) {
-    fun contains(value: LocalDateTime): Boolean = (startDateTime..endDateTime).contains(value)
-
     init {
         require(endDateTime >= startDateTime)
     }
+
+    fun contains(value: LocalDateTime): Boolean = (startDateTime..endDateTime).contains(value)
 }

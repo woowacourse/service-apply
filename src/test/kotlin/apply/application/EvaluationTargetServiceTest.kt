@@ -365,8 +365,9 @@ class EvaluationTargetServiceTest(
         val evaluation = createEvaluation(id = EVALUATION_ID, beforeEvaluationId = 1L)
         val evaluationItem = createEvaluationItem(id = EVALUATION_ITEM_ID)
         val answers = EvaluationAnswers(mutableListOf(createEvaluationAnswer()))
-        val evaluationTarget =
-            evaluationTargetRepository.save(createEvaluationTarget(EVALUATION_ID, 1L, PASS, EVALUATION_TARGET_NOTE, answers))
+        val evaluationTarget = evaluationTargetRepository.save(
+            createEvaluationTarget(EVALUATION_ID, 1L, PASS, EVALUATION_TARGET_NOTE, answers)
+        )
 
         every { evaluationRepository.findByIdOrNull(EVALUATION_ID) } returns evaluation
         every {
