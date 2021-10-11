@@ -1,11 +1,13 @@
 package apply.ui.api
 
 import apply.application.AssignmentRequest
+import apply.application.AssignmentResponse
 import apply.application.AssignmentService
 import apply.domain.user.User
 import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PatchMapping
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -27,6 +29,17 @@ class AssignmentRestController(
     ): ResponseEntity<Unit> {
         assignmentService.create(missionId, user.id, request)
         return ResponseEntity.ok().build()
+    }
+
+    @GetMapping
+    fun getAssignmentByUserIdAndMissionId(
+        @PathVariable recruitmentId: Long,
+        @PathVariable missionId: Long,
+        @LoginUser user: User
+    ): ResponseEntity<ApiResponse<AssignmentResponse>> {
+        return ResponseEntity.ok(ApiResponse.success(
+            assignmentService.getAssignmentByUserIdAndMissionId(user.id, missionId))
+        )
     }
 
     @PatchMapping

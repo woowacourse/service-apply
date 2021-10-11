@@ -43,7 +43,7 @@ fun createMissionResponse(
     submitted: Boolean = true,
     startDateTime: LocalDateTime = START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
-    missionStatus: MissionStatus = MissionStatus.PROGRESSING,
+    missionStatus: MissionStatus = MissionStatus.SUBMITTING,
     id: Long = 0L
 ): MissionResponse {
     return MissionResponse(id, title, description, submittable, submitted, startDateTime, endDateTime, missionStatus)

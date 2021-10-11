@@ -65,4 +65,3 @@ data class MissionResponse(
     val endDateTime: LocalDateTime,
     val status: MissionStatus
 )
-

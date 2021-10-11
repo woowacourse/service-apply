@@ -37,4 +37,11 @@ class AssignmentService(
         return evaluationTargetRepository.findByEvaluationIdAndUserId(evaluationId, userId)
             ?: throw IllegalArgumentException("평가 대상자가 아닙니다.")
     }
+
+    fun getAssignmentByUserIdAndMissionId(userId: Long, missionId: Long): AssignmentResponse {
+        check(missionRepository.existsById(missionId)) { "존재하지 않는 과제입니다." }
+        val assignment = assignmentRepository.findByUserIdAndMissionId(userId, missionId)
+            ?: throw IllegalArgumentException("아직 제출하지 않았습니다.")
+        return AssignmentResponse(assignment.githubUsername, assignment.pullRequestUrl, assignment.note)
+    }
 }

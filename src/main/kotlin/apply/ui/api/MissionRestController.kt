@@ -36,7 +36,7 @@ class MissionRestController(
     }
 
     @GetMapping("/missions/me")
-    fun getMyMissions(
+    fun findMyMissionsByRecruitmentId(
         @PathVariable recruitmentId: Long,
         @LoginUser user: User
     ): ResponseEntity<ApiResponse<List<MissionResponse>>> {
