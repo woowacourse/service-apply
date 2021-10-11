@@ -31,16 +31,14 @@ internal class MissionRestControllerTest : RestControllerTest() {
     private lateinit var missionService: MissionService
 
     private val recruitmentId = 1L
-    private val evaluationId = 1L
 
     @Test
     fun `과제를 추가한다`() {
         every { missionService.save(createMissionData()) } just Runs
 
         mockMvc.post(
-            "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/missions",
-            recruitmentId,
-            evaluationId
+            "/api/recruitments/{recruitmentId}/missions",
+            recruitmentId
         ) {
             content = objectMapper.writeValueAsString(createMissionData())
             contentType = MediaType.APPLICATION_JSON

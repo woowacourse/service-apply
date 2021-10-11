@@ -17,10 +17,9 @@ import org.springframework.web.bind.annotation.RestController
 class MissionRestController(
     private val missionService: MissionService
 ) {
-    @PostMapping("/evaluations/{evaluationId}/missions")
+    @PostMapping("/missions")
     fun createMission(
         @PathVariable recruitmentId: Long,
-        @PathVariable evaluationId: Long,
         @RequestBody missionData: MissionData
     ): ResponseEntity<Unit> {
         missionService.save(missionData)
