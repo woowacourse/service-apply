@@ -22,6 +22,9 @@ class EvaluationTargetCsvServiceTest {
     private lateinit var evaluationTargetService: EvaluationTargetService
 
     @MockK
+    private lateinit var assignmentService: AssignmentService
+
+    @MockK
     private lateinit var evaluationItemRepository: EvaluationItemRepository
 
     @MockK
@@ -32,7 +35,12 @@ class EvaluationTargetCsvServiceTest {
     @BeforeEach
     internal fun setUp() {
         evaluationTargetCsvService =
-            EvaluationTargetCsvService(evaluationTargetService, evaluationItemRepository, csvGenerator)
+            EvaluationTargetCsvService(
+                evaluationTargetService,
+                assignmentService,
+                evaluationItemRepository,
+                csvGenerator
+            )
     }
 
     @Test

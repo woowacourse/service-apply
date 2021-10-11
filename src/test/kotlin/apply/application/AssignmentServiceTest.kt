@@ -86,6 +86,25 @@ class AssignmentServiceTest {
         assertThat(evaluationTarget.isPassed).isTrue
     }
 
+    @Test
+    fun `평가 id와 과제 id로 과제물들을 조회한다`() {
+        val evaluationTargets = listOf(
+            createEvaluationTarget(userId = 1L),
+            createEvaluationTarget(userId = 2L),
+            createEvaluationTarget(userId = 3L),
+        )
+        val assignments = listOf(
+            createAssignment(userId = 1L),
+            createAssignment(userId = 2L)
+        )
+        every { evaluationTargetRepository.findAllByEvaluationId(any()) } returns evaluationTargets
+        every { assignmentRepository.findAllByUserIdIn(any()) } returns assignments
+
+        val actual = assignmentService.findByEvaluationIdAndMissionId(1L, 1L)
+
+        assertThat(actual).hasSize(2)
+    }
+
     @DisplayName("과제 id와 평가 대상자 id로 과제물 조회는")
     @Nested
     inner class Find {
