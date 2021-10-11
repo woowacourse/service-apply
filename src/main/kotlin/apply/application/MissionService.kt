@@ -44,6 +44,12 @@ class MissionService(
         return missions.map { MissionResponse(it, evaluationsById.getValue(it.evaluationId)) }
     }
 
+    fun findAllNotHiddenByRecruitmentId(recruitmentId: Long): List<MissionResponse> {
+        val evaluationsById = evaluationRepository.findAllByRecruitmentId(recruitmentId).associateBy { it.id }
+        val missions = missionRepository.findAllByHiddenFalseAndEvaluationIdIn(evaluationsById.keys)
+        return missions.map { MissionResponse(it, evaluationsById.getValue(it.evaluationId)) }
+    }
+
     fun deleteById(id: Long) {
         val mission = missionRepository.getById(id)
         check(!mission.submittable) { "제출 가능한 과제는 삭제할 수 없습니다." }

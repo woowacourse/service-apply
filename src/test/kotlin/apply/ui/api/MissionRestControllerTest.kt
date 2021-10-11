@@ -50,18 +50,28 @@ internal class MissionRestControllerTest : RestControllerTest() {
     }
 
     @Test
-    fun `특정 모집의 모든 과제를 조회한다`() {
+    fun `특정 모집의 모든 공개된 과제를 조회한다`() {
         val missionResponses = listOf(
             MissionResponse(createMission(), createEvaluation()),
             MissionResponse(createMission(), createEvaluation())
         )
-        every { missionService.findAllByRecruitmentId(recruitmentId) } returns missionResponses
-
+        every { missionService.findAllNotHiddenByRecruitmentId(recruitmentId) } returns missionResponses
         mockMvc.get(
             "/api/recruitments/{recruitmentId}/missions", recruitmentId
         ).andExpect {
             status { isOk }
             content { json(objectMapper.writeValueAsString(ApiResponse.success(missionResponses))) }
+        }
+    }
+
+    @Test
+    fun `공개된 미션이 없을 경우에는 과제 조회 결과가 없다`() {
+        every { missionService.findAllNotHiddenByRecruitmentId(recruitmentId) } returns listOf()
+        mockMvc.get(
+            "/api/recruitments/{recruitmentId}/missions", recruitmentId
+        ).andExpect {
+            status { isOk }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(listOf<MissionResponse>()))) }
         }
     }
 

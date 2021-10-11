@@ -27,8 +27,8 @@ class MissionRestController(
     }
 
     @GetMapping("/missions")
-    fun findMissionsByRecruitmentId(@PathVariable recruitmentId: Long): ResponseEntity<ApiResponse<List<MissionResponse>>> {
-        val missions = missionService.findAllByRecruitmentId(recruitmentId)
+    fun findMissionsNotHiddenByRecruitmentId(@PathVariable recruitmentId: Long): ResponseEntity<ApiResponse<List<MissionResponse>>> {
+        val missions = missionService.findAllNotHiddenByRecruitmentId(recruitmentId)
         return ResponseEntity.ok(ApiResponse.success(missions))
     }
 

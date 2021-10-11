@@ -81,6 +81,28 @@ class MissionServiceTest {
     }
 
     @Test
+    fun `특정 모집의 모든 공개된 과제를 찾는다`() {
+        val recruitmentId = 1L
+        val firstEvaluation = createEvaluation(id = 1L, title = "평가1", recruitmentId = recruitmentId)
+        val secondEvaluation = createEvaluation(id = 2L, title = "평가2", recruitmentId = recruitmentId)
+        every { evaluationRepository.findAllByRecruitmentId(any()) } returns listOf(firstEvaluation, secondEvaluation)
+
+        val firstMission = createMission(title = "과제1", evaluationId = 1L, hidden = false)
+        val secondMission = createMission(title = "과제1", evaluationId = 2L, hidden = true)
+        every { missionRepository.findAllByHiddenFalseAndEvaluationIdIn(any()) } returns listOf(firstMission)
+
+        val actual = missionService.findAllNotHiddenByRecruitmentId(recruitmentId)
+        assertAll(
+            { assertThat(actual).hasSize(1) },
+            {
+                assertThat(actual).containsAnyOf(
+                    MissionResponse(firstMission, firstEvaluation),
+                )
+            }
+        )
+    }
+
+    @Test
     fun `과제를 삭제한다`() {
         val mission = createMission(submittable = false)
         every { missionRepository.findByIdOrNull(mission.id) } returns mission
