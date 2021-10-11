@@ -1,5 +1,6 @@
 package apply.application
 
+import apply.domain.evaluation.Evaluation
 import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluation.getById
 import apply.domain.mission.Mission
@@ -29,7 +30,7 @@ class MissionService(
         )
     }
 
-    fun getNotEndedDataById(id: Long): MissionData {
+    fun getDataById(id: Long): MissionData {
         val mission = missionRepository.getById(id)
         val evaluation = evaluationRepository.getById(mission.evaluationId)
         return MissionData(mission, evaluation)
@@ -45,5 +46,11 @@ class MissionService(
         val mission = missionRepository.getById(id)
         check(!mission.submittable) { "제출 가능한 과제는 삭제할 수 없습니다." }
         missionRepository.deleteById(id)
+    }
+
+    fun getEvaluationByMissionId(id: Long): Evaluation {
+        val mission = missionRepository.getById(id)
+        val evaluation = evaluationRepository.getById(mission.evaluationId)
+        return evaluation
     }
 }
