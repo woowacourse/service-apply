@@ -59,6 +59,7 @@ class MissionsView(
             addSortableColumn("과제명", MissionResponse::title)
             addSortableColumn("평가명", MissionResponse::evaluationTitle)
             addSortableColumn("상태") { it.status.toText() }
+            addSortableColumn("공개 여부") { it.hidden.toText() }
             addSortableDateTimeColumn("시작일시", MissionResponse::startDateTime)
             addSortableDateTimeColumn("종료일시", MissionResponse::endDateTime)
             addColumn(createButtonRenderer()).apply { isAutoWidth = true }
@@ -95,6 +96,14 @@ class MissionsView(
             MissionStatus.SUBMITTING -> "제출 중"
             MissionStatus.UNSUBMITTABLE -> "제출 중지"
             MissionStatus.ENDED -> "제출 종료"
+        }
+    }
+
+    private fun Boolean.toText(): String {
+        return if (this) {
+            "비공개"
+        } else {
+            "공개"
         }
     }
 }

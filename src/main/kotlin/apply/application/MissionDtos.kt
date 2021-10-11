@@ -29,7 +29,7 @@ data class MissionData(
     var submittable: Boolean = false,
 
     @field:NotNull
-    var hidden: Boolean = false,
+    var hidden: Boolean = true,
 
     var id: Long = 0L
 ) {
