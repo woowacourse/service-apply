@@ -50,11 +50,11 @@ class MailService(
     }
 
     @Async
-    fun sendAuthenticationCodeMail(email: String, authenticateCode: String) {
+    fun sendAuthenticationCodeMail(email: String, authenticationCode: String) {
         val context = Context().apply {
             setVariables(
                 mapOf(
-                    "authenticationCode" to authenticateCode
+                    "authenticationCode" to authenticationCode
                 )
             )
         }

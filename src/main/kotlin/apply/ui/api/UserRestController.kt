@@ -60,18 +60,18 @@ class UserRestController(
     fun generateAuthenticationCode(
         @RequestParam email: String
     ): ResponseEntity<Unit> {
-        val authenticateCode = userAuthenticationService
+        val authenticationCode = userAuthenticationService
             .generateAuthenticationCode(email)
-        mailService.sendAuthenticationCodeMail(email, authenticateCode)
+        mailService.sendAuthenticationCodeMail(email, authenticationCode)
         return ResponseEntity.noContent().build()
     }
 
     @PostMapping("/authenticate-email")
     fun authenticateEmail(
         @RequestParam email: String,
-        @RequestParam authenticateCode: String
+        @RequestParam authenticationCode: String
     ): ResponseEntity<Unit> {
-        userAuthenticationService.authenticateEmail(email, authenticateCode)
+        userAuthenticationService.authenticateEmail(email, authenticationCode)
         return ResponseEntity.noContent().build()
     }
 

@@ -242,7 +242,7 @@ internal class UserRestControllerTest : RestControllerTest() {
 
         mockMvc.post("/api/users/authenticate-email") {
             param("email", userRequest.email)
-            param("authenticateCode", "code")
+            param("authenticationCode", "code")
         }.andExpect {
             status { isNoContent }
         }
