@@ -27,6 +27,7 @@ export const ERROR_MESSAGE = {
     ALREADY_EXIST_EMAIL: "이미 가입된 이메일입니다.",
     INVALID_AUTHENTICATION_CODE: "인증코드가 일치하지 않습니다.",
     SUBMIT_ASSIGNMENT: "과제 제출에 실패했습니다. 잠시 후 다시 시도해주세요.",
+    FIND_PASSWORD: "입력된 정보가 올바르지 않습니다. 다시 확인해주세요.",
   },
   ACCESS: {
     REQUIRED_LOGIN: "로그인이 필요합니다.",
