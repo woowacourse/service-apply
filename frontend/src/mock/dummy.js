@@ -50,10 +50,6 @@ export const myApplicationDummy = [
     recruitmentId: 2,
     submitted: true,
   },
-  {
-    recruitmentId: 4,
-    submitted: false,
-  },
 ];
 
 export const missionDummy = [
