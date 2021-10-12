@@ -19,6 +19,7 @@
 
 .autosave-indicator {
   color: var(--blue);
+  margin-bottom: 1.5rem;
 }
 
 .description-url {
