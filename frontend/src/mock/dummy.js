@@ -86,3 +86,12 @@ export const missionDummy = [
     submitted: false,
   },
 ];
+
+export const userInfoDummy = {
+  id: 1,
+  name: "썬",
+  email: "sun@woowa.com",
+  phoneNumber: "010-1234-1234",
+  gender: "FEMALE",
+  birthday: "2000-01-01",
+};

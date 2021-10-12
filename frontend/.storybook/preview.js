@@ -1,17 +1,16 @@
-import { MemoryRouter } from "react-router-dom";
 import { addDecorator } from "@storybook/react";
-import { initializeWorker, mswDecorator } from "msw-storybook-addon";
 import axios from "axios";
-
+import { initializeWorker, mswDecorator } from "msw-storybook-addon";
+import { MemoryRouter } from "react-router-dom";
 import "../src/api/api";
+import "../src/App.css";
+import useForm from "../src/hooks/useForm";
 import { RecruitmentContext } from "../src/hooks/useRecruitmentContext";
+import { UserInfoContext } from "../src/hooks/useUserInfoContext";
+import { recruitmentDummy, userInfoDummy } from "../src/mock/dummy";
+import FormProvider from "../src/provider/FormProvider";
 import { recruitmentFilter } from "../src/provider/RecruitmentProvider";
 import TokenProvider from "../src/provider/TokenProvider";
-
-import "../src/App.css";
-import FormProvider from "../src/provider/FormProvider";
-import useForm from "../src/hooks/useForm";
-import { recruitmentDummy } from "../src/mock/dummy";
 
 export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 axios.defaults.baseURL = API_BASE_URL;
@@ -41,9 +40,11 @@ export const decorators = [
       >
         <FormProvider {...method}>
           <TokenProvider>
-            <MemoryRouter>
-              <Story />
-            </MemoryRouter>
+            <UserInfoContext.Provider value={{ userInfo: userInfoDummy }}>
+              <MemoryRouter>
+                <Story />
+              </MemoryRouter>
+            </UserInfoContext.Provider>
           </TokenProvider>
         </FormProvider>
       </RecruitmentContext.Provider>
