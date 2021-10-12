@@ -28,8 +28,6 @@ const Login = () => {
         password: value.password,
       });
 
-      alert(SUCCESS_MESSAGE.API.LOGIN);
-
       if (currentRecruitment) {
         history.push({
           pathname: generatePath(PATH.APPLICATION_FORM, {
