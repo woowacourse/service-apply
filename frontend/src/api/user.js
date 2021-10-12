@@ -3,22 +3,8 @@ import { headers } from "./api";
 
 const COMMON_PATH = "/api/users";
 
-export const fetchRegister = ({
-  name,
-  phoneNumber,
-  email,
-  password,
-  birthday,
-  gender,
-}) =>
-  axios.post(`${COMMON_PATH}/register`, {
-    name,
-    phoneNumber,
-    email,
-    password,
-    birthday,
-    gender,
-  });
+export const fetchRegister = (userInfo) =>
+  axios.post(`${COMMON_PATH}/register`, userInfo);
 
 export const fetchLogin = ({ email, password }) =>
   axios.post(`${COMMON_PATH}/login`, { email, password });
