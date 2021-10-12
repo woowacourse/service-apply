@@ -131,7 +131,7 @@ class EvaluationTargetCsvService(
         private const val EMAIL: String = "이메일"
         private const val STATUS: String = "평가 상태"
         private const val NOTE: String = "기타 특이사항"
-        private const val GITHUB_USERNAME: String = "Github 유저 네임"
+        private const val GITHUB_USERNAME: String = "Github Username"
         private const val PULL_REQUEST_URL: String = "Pull Request URL"
         private const val ASSIGNMENT_NOTE: String = "소감"
         private const val UNSUBMITTED: String = "(미제출)"

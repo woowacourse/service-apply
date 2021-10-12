@@ -35,7 +35,7 @@ internal class AssignmentRestControllerTest : RestControllerTest() {
     private val missionId = 1L
 
     @Test
-    fun `과제물을 제출한다`() {
+    fun `과제 제출물을 제출한다`() {
         val loginUser = createUser()
 
         every { jwtTokenProvider.isValidToken("valid_token") } returns true

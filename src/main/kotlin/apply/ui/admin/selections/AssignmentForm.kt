@@ -7,10 +7,10 @@ import com.vaadin.flow.component.textfield.TextField
 import support.views.BindingFormLayout
 
 class AssignmentForm() : BindingFormLayout<AssignmentData>(AssignmentData::class) {
-    private val githubUsername: TextField = TextField("Github 유저 네임")
-    private val pullRequestUrl: TextField = TextField("PR URL")
+    private val githubUsername: TextField = TextField("Github Username")
+    private val pullRequestUrl: TextField = TextField("Pull Request URL")
     private val note: TextArea = TextArea("소감")
-    private val title: H3 = H3("과제물")
+    private val title: H3 = H3("과제 제출물")
 
     init {
         add(title, githubUsername, pullRequestUrl, note)

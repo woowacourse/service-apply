@@ -18,7 +18,7 @@ class AssignmentService(
     private val evaluationTargetRepository: EvaluationTargetRepository
 ) {
     fun create(missionId: Long, userId: Long, request: CreateAssignmentRequest) {
-        check(!assignmentRepository.existsByUserIdAndMissionId(userId, missionId)) { "이미 제출한 과제물이 존재합니다." }
+        check(!assignmentRepository.existsByUserIdAndMissionId(userId, missionId)) { "이미 제출한 과제 제출물이 존재합니다." }
         val mission = missionRepository.getById(missionId)
         check(mission.isSubmitting) { "제출 불가능한 과제입니다." }
         findEvaluationTargetOf(mission.evaluationId, userId).passIfBeforeEvaluation()
@@ -28,12 +28,12 @@ class AssignmentService(
     }
 
     fun findByEvaluationIdAndMissionId(evaluationId: Long, missionId: Long): List<Assignment> {
-        val evaluationTargets = evaluationTargetRepository.findAllByEvaluationId(evaluationId) // userId 뽑자
+        val evaluationTargets = evaluationTargetRepository.findAllByEvaluationId(evaluationId)
         return assignmentRepository.findAllByUserIdIn(evaluationTargets.map { it.userId })
     }
 
     fun findByEvaluationTargetIdAndMissionId(evaluationTargetId: Long, missionId: Long): AssignmentData {
-        val evaluationTarget = evaluationTargetRepository.getById(evaluationTargetId) // userId 뽑자
+        val evaluationTarget = evaluationTargetRepository.getById(evaluationTargetId)
         val assignment = assignmentRepository.findByUserId(evaluationTarget.userId)
         return AssignmentData(assignment)
     }

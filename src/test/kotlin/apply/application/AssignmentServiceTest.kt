@@ -87,7 +87,7 @@ class AssignmentServiceTest {
     }
 
     @Test
-    fun `평가 id와 과제 id로 과제물들을 조회한다`() {
+    fun `평가 id와 과제 id로 과제 제출물들을 조회한다`() {
         val evaluationTargets = listOf(
             createEvaluationTarget(userId = 1L),
             createEvaluationTarget(userId = 2L),
@@ -105,7 +105,7 @@ class AssignmentServiceTest {
         assertThat(actual).hasSize(2)
     }
 
-    @DisplayName("과제 id와 평가 대상자 id로 과제물 조회는")
+    @DisplayName("과제 id와 평가 대상자 id로 과제 제출물 조회는")
     @Nested
     inner class Find {
         fun subject(): AssignmentData {
@@ -120,7 +120,7 @@ class AssignmentServiceTest {
         }
 
         @Test
-        fun `평가 대상자가 제출한 과제물이 없으면 빈 과제물 데이터를 반환한다`() {
+        fun `평가 대상자가 제출한 과제 제출물이 없으면 빈 과제 제출물 데이터를 반환한다`() {
             every { evaluationTargetRepository.findByIdOrNull(any()) } returns createEvaluationTarget()
             every { assignmentRepository.findByUserId(any()) } returns null
 
@@ -135,7 +135,7 @@ class AssignmentServiceTest {
         }
 
         @Test
-        fun `평가 대상자가 제출한 과제물이 있으면 평가 대상자가 제출한 과제물 데이터를 반환한다`() {
+        fun `평가 대상자가 제출한 과제 제출물이 있으면 평가 대상자가 제출한 과제 제출물 데이터를 반환한다`() {
             every { evaluationTargetRepository.findByIdOrNull(any()) } returns createEvaluationTarget()
             every { assignmentRepository.findByUserId(any()) } returns createAssignment()
 
