@@ -29,7 +29,6 @@ class Mission(
 
     @Column(nullable = false)
     var hidden: Boolean = true,
-
     id: Long = 0L
 ) : BaseEntity(id) {
     @Column(nullable = false)

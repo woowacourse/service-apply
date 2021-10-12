@@ -16,20 +16,40 @@ class MissionService(
     private val evaluationRepository: EvaluationRepository
 ) {
     fun save(request: MissionData) {
-        check(evaluationRepository.existsById(request.evaluation.id)) { "존재하지 않는 평가 id 입니다." }
-        check(!(missionRepository.existsByEvaluationId(request.evaluation.id) && request.id == 0L)) { "해당 평가에 이미 등록된 과제가 있습니다." }
+        validate(request)
         missionRepository.save(
-            Mission(
-                request.title,
-                request.description,
-                request.evaluation.id,
-                request.startDateTime,
-                request.endDateTime,
-                request.submittable,
-                request.hidden,
-                request.id
-            )
+            request.let {
+                Mission(
+                    it.title,
+                    it.description,
+                    it.evaluation.id,
+                    it.startDateTime,
+                    it.endDateTime,
+                    it.submittable,
+                    it.hidden,
+                    it.id
+                )
+            }
         )
+    }
+
+    private fun validate(request: MissionData) {
+        val evaluationId = request.evaluation.id
+        require(evaluationRepository.existsById(evaluationId)) { "평가가 존재하지 않습니다. id: $evaluationId" }
+        if (isNew(request)) {
+            check(!missionRepository.existsByEvaluationId(evaluationId)) {
+                "이미 과제가 등록된 평가입니다. evaluationId: $evaluationId"
+            }
+        } else {
+            val mission = missionRepository.getById(request.id)
+            check(mission.evaluationId != evaluationId) {
+                "평가는 수정할 수 없습니다."
+            }
+        }
+    }
+
+    private fun isNew(request: MissionData): Boolean {
+        return request.id == 0L || !missionRepository.existsById(request.id)
     }
 
     fun getDataById(id: Long): MissionData {
