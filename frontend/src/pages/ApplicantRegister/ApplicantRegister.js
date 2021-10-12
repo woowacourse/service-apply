@@ -1,12 +1,27 @@
 import React from "react";
-import { useHistory, useLocation, generatePath } from "react-router-dom";
-
+import { generatePath, useHistory, useLocation } from "react-router-dom";
+import Button from "../../components/@common/Button/Button";
+import Container, {
+  CONTAINER_SIZE,
+} from "../../components/@common/Container/Container";
+import MessageTextInput from "../../components/@common/MessageTextInput/MessageTextInput";
+import BirthField from "../../components/form/BirthField/BirthField";
+import Form from "../../components/form/Form/Form";
+import FormInput from "../../components/form/FormInput/FormInput";
+import GenderField from "../../components/form/GenderField/GenderField";
+import SubmitButton from "../../components/form/SubmitButton/SubmitButton";
+import SummaryCheckField from "../../components/form/SummaryCheckField/SummaryCheckField";
+import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
 import { ERROR_MESSAGE } from "../../constants/messages";
 import PATH, { PARAM } from "../../constants/path";
 import { POLICY_SUMMARY } from "../../constants/policySummary";
+import useApplicantRegisterForm from "../../hooks/useApplicantRegisterForm";
 import useForm from "../../hooks/useForm";
 import useRecruitmentContext from "../../hooks/useRecruitmentContext";
 import useTokenContext from "../../hooks/useTokenContext";
+import FormProvider from "../../provider/FormProvider";
+import { formatBirthday } from "../../utils/format/date";
+import { generateQuery } from "../../utils/route/query";
 import {
   validateDay,
   validateMonth,
@@ -18,23 +33,7 @@ import {
   validatePassword,
   validateRePassword,
 } from "../../utils/validation/password";
-import { generateQuery } from "../../utils/route/query";
-import Form from "../../components/form/Form/Form";
-import BirthField from "../../components/form/BirthField/BirthField";
-import GenderField from "../../components/form/GenderField/GenderField";
-import Button from "../../components/@common/Button/Button";
-import SummaryCheckField from "../../components/form/SummaryCheckField/SummaryCheckField";
-import FormInput from "../../components/form/FormInput/FormInput";
-import FormProvider from "../../provider/FormProvider";
-import SubmitButton from "../../components/form/SubmitButton/SubmitButton";
-import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
-import useApplicantRegisterForm from "../../hooks/useApplicantRegisterForm";
-import Container, {
-  CONTAINER_SIZE,
-} from "../../components/@common/Container/Container";
 import styles from "./ApplicantRegister.module.css";
-import { formatBirthday } from "../../utils/format/date";
-import MessageTextInput from "../../components/@common/MessageTextInput/MessageTextInput";
 
 const ApplicantRegister = () => {
   const location = useLocation();

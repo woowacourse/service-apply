@@ -13,11 +13,17 @@ const useTimer = (initialSeconds, initialDelay = 1000) => {
 
   const stop = () => setDelay(null);
 
+  const reset = () => {
+    stop();
+    setSeconds(initialSeconds);
+  };
+
   return {
     timerSeconds: seconds,
     setTimerSeconds: setSeconds,
     startTimer: start,
     stopTimer: stop,
+    resetTimer: reset,
   };
 };
 
