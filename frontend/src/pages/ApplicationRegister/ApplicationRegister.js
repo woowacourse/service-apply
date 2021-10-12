@@ -31,11 +31,6 @@ import { generateQuery, parseQuery } from "../../utils/route/query";
 import { validateURL } from "../../utils/validation/url";
 import styles from "./ApplicationRegister.module.css";
 
-const pathToEdit = (recruitmentId) =>
-  generatePath(PATH.APPLICATION_FORM, {
-    status: PARAM.APPLICATION_FORM_STATUS.EDIT,
-  }) + generateQuery({ recruitmentId });
-
 const ApplicationRegister = () => {
   const history = useHistory();
   const location = useLocation();
@@ -94,15 +89,12 @@ const ApplicationRegister = () => {
     }
   }, [history, token, recruitmentId]);
 
-  const save = async (answers, referenceUrl, submitted) => {
+  const save = async (answers, referenceUrl = "", submitted) => {
+    console.log(referenceUrl);
+
     Api.updateForm({
       token,
-      data: {
-        recruitmentId,
-        referenceUrl,
-        submitted,
-        answers,
-      },
+      data: { recruitmentId, referenceUrl, submitted, answers },
     });
 
     setModifiedDateTime(formatDateTime(new Date()));
@@ -153,8 +145,13 @@ const ApplicationRegister = () => {
         if (isAlreadyRegister) {
           await fetchApplicationForm();
         } else {
-          alert(error.response.data.message);
-          history.replace(PATH.HOME);
+          history.replace({
+            pathname: generatePath(PATH.APPLICATION_FORM, {
+              status: PARAM.APPLICATION_FORM_STATUS.EDIT,
+            }),
+            search: generateQuery({ recruitmentId }),
+            state: { currentRecruitment },
+          });
         }
       }
     };
@@ -171,7 +168,7 @@ const ApplicationRegister = () => {
   ]);
 
   const answers = recruitmentItems.map((item, index) => ({
-    contents: value[`recruitment-item-${index}`],
+    contents: value[`recruitment-item-${index}`] || "",
     recruitmentItemId: item.id,
   }));
 
@@ -181,8 +178,17 @@ const ApplicationRegister = () => {
 
       alert(SUCCESS_MESSAGE.API.SAVE_APPLICATION);
 
+      console.dir(currentRecruitment);
+      console.dir(recruitmentId);
+
       if (status !== PARAM.APPLICATION_FORM_STATUS.EDIT) {
-        history.replace(pathToEdit(recruitmentId));
+        history.replace({
+          pathname: generatePath(PATH.APPLICATION_FORM, {
+            status: PARAM.APPLICATION_FORM_STATUS.EDIT,
+          }),
+          state: { currentRecruitment },
+          search: generateQuery({ recruitmentId }),
+        });
       }
     } catch (e) {
       alert(e.response.data.message);

@@ -5,7 +5,7 @@
 .text-field {
   display: flex;
   flex-direction: column;
-  margin-bottom: 1rem;
+  margin-bottom: 3rem;
 }
 
 .label {
@@ -20,7 +20,7 @@
 
 .rule-field {
   position: absolute;
-  bottom: 0;
+  bottom: -20px;
   left: 0;
   margin-left: 0.5rem;
   height: 0.75rem;
