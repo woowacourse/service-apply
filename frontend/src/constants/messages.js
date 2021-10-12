@@ -39,7 +39,7 @@ export const SUCCESS_MESSAGE = {
     CHANGE_PASSWORD: "비밀번호가 변경되었습니다. 다시 로그인해주세요.",
     SUBMIT_APPLICATION: "정상적으로 제출되었습니다.",
     SAVE_APPLICATION: "정상적으로 저장되었습니다.",
-    EIDT_MY_PAGE: "정상적으로 변경되었습니다.",
+    EDIT_MY_PAGE: "정상적으로 변경되었습니다.",
   },
 };
 

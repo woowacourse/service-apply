@@ -23,7 +23,7 @@ const MyPageEdit = () => {
   const submit = async (value) => {
     try {
       await setUserInfo(value);
-      alert(SUCCESS_MESSAGE.API.EIDT_MY_PAGE);
+      alert(SUCCESS_MESSAGE.API.EDIT_MY_PAGE);
     } catch (e) {
       alert(ERROR_MESSAGE.API.EDIT_FAILURE);
     }
