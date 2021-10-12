@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { generatePath, useHistory } from "react-router";
 import { fetchMyApplicationForms } from "../../api/application-forms";
 import Container from "../../components/@common/Container/Container";
@@ -100,48 +100,42 @@ const MyApplication = () => {
   return (
     <div className={styles.box}>
       <Container title="내 지원 현황" className={styles["page-title"]} />
-      {myRecruitments.map(
-        ({ submitted, ...recruitment }, index) =>
-          !recruitment.hidden && (
-            <Panel
-              key={`recruitment-${recruitment.id}`}
-              title={recruitment.title}
-              initialOpen={index === 0}
-              className={styles["recruit-panel"]}
-            >
-              <div className={styles["recruit-panel-inner"]}>
+      {myRecruitments.map(({ submitted, ...recruitment }, index) => (
+        <Panel
+          key={`recruitment-${recruitment.id}`}
+          title={recruitment.title}
+          initialOpen={index === 0}
+          className={styles["recruit-panel"]}
+        >
+          <div className={styles["recruit-panel-inner"]}>
+            <RecruitmentItem
+              recruitment={{ ...recruitment, title: "내 지원서" }}
+              buttonLabel={submitted ? "제출완료" : "수정하기"}
+              isButtonDisabled={submitted}
+              onClickButton={routeToApplicationForm(recruitment)}
+            />
+
+            <hr className={styles.hr} />
+
+            {missions &&
+              missions[recruitment.id] &&
+              missions[recruitment.id].map((mission) => (
                 <RecruitmentItem
-                  recruitment={{ ...recruitment, title: "내 지원서" }}
-                  buttonLabel={submitted ? "제출완료" : "수정하기"}
-                  isButtonDisabled={submitted}
-                  onClickButton={routeToApplicationForm(recruitment)}
+                  key={`mission-${recruitment.id}-${mission.id}`}
+                  className={styles["mission-recruit-item"]}
+                  recruitment={mission}
+                  buttonLabel={missionLabel(mission.submitted, mission.status)}
+                  isButtonDisabled={mission.status !== "SUBMITTING"}
+                  onClickButton={routeToAssignmentSubmit({
+                    recruitmentId: recruitment.id,
+                    mission,
+                    submitted: mission.submitted,
+                  })}
                 />
-
-                <hr className={styles.hr} />
-
-                {missions &&
-                  missions[recruitment.id] &&
-                  missions[recruitment.id].map((mission) => (
-                    <RecruitmentItem
-                      key={`mission-${recruitment.id}-${mission.id}`}
-                      className={styles["mission-recruit-item"]}
-                      recruitment={mission}
-                      buttonLabel={missionLabel(
-                        mission.submitted,
-                        mission.status
-                      )}
-                      isButtonDisabled={mission.status !== "SUBMITTING"}
-                      onClickButton={routeToAssignmentSubmit({
-                        recruitmentId: recruitment.id,
-                        mission,
-                        submitted: mission.submitted,
-                      })}
-                    />
-                  ))}
-              </div>
-            </Panel>
-          )
-      )}
+              ))}
+          </div>
+        </Panel>
+      ))}
     </div>
   );
 };
