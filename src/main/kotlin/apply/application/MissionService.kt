@@ -42,8 +42,8 @@ class MissionService(
             }
         } else {
             val mission = missionRepository.getById(request.id)
-            check(mission.evaluationId != evaluationId) {
-                "평가는 수정할 수 없습니다."
+            check(mission.evaluationId == evaluationId) {
+                "과제의 평가는 수정할 수 없습니다."
             }
         }
     }
