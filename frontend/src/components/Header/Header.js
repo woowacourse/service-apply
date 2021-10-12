@@ -58,13 +58,18 @@ const Header = () => {
                 {isShowMemberMenu && (
                   <>
                     <ul className={styles["member-menu-list"]}>
-                      <li>
+                      <li className={styles["member-menu-listitem"]}>
                         <Link to={PATH.MY_PAGE}>마이페이지</Link>
                       </li>
-                      <li>
+                      <li className={styles["member-menu-listitem"]}>
                         <Link to={PATH.MY_APPLICATION}>내 지원 현황</Link>
                       </li>
-                      <li onClick={onLogout}>로그아웃</li>
+                      <li
+                        className={styles["member-menu-listitem"]}
+                        onClick={onLogout}
+                      >
+                        로그아웃
+                      </li>
                     </ul>
                     <div
                       className={styles.dimmed}
