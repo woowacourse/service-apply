@@ -1,6 +1,6 @@
 import { useHistory } from "react-router-dom";
 
-import { fetchPasswordEdit } from "../../api/applicants";
+import { fetchPasswordEdit } from "../../api/user";
 import { SUCCESS_MESSAGE } from "../../constants/messages";
 import PATH from "../../constants/path";
 
@@ -31,9 +31,10 @@ const PasswordEdit = () => {
     try {
       await fetchPasswordEdit({
         token,
-        password: value.password,
-        newPassword: value.newPassword,
+        password: value.oldPassword,
+        newPassword: value.password,
       });
+
       alert(SUCCESS_MESSAGE.API.CHANGE_PASSWORD);
 
       resetToken();
@@ -45,7 +46,6 @@ const PasswordEdit = () => {
 
   const { handleSubmit, ...methods } = useForm({
     validators: {
-      oldPassword: validatePassword,
       password: validatePassword,
       rePassword: validateRePassword,
     },
