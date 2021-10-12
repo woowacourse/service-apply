@@ -164,16 +164,17 @@ class AssignmentServiceTest {
 
         @Test
         fun `평가 대상자가 제출한 과제 제출물이 있으면 평가 대상자가 제출한 과제 제출물 데이터를 반환한다`() {
+            val assignment = createAssignment()
             every { evaluationTargetRepository.findByIdOrNull(any()) } returns createEvaluationTarget()
-            every { assignmentRepository.findByUserIdAndMissionId(any(), any()) } returns createAssignment()
+            every { assignmentRepository.findByUserIdAndMissionId(any(), any()) } returns assignment
 
             val actual = subject()
 
             assertAll(
                 { assertThat(actual).isNotNull },
-                { assertThat(actual.githubUsername).isNotBlank() },
-                { assertThat(actual.pullRequestUrl).isNotBlank() },
-                { assertThat(actual.note).isNotBlank() }
+                { assertThat(actual.githubUsername).isEqualTo(assignment.githubUsername) },
+                { assertThat(actual.pullRequestUrl).isEqualTo(assignment.pullRequestUrl) },
+                { assertThat(actual.note).isEqualTo(assignment.note) }
             )
         }
     }
