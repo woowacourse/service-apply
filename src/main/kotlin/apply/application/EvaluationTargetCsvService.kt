@@ -58,7 +58,7 @@ class EvaluationTargetCsvService(
         )
         val assignments = assignmentService.findAllByEvaluationId(evaluationId)
         val csvRows = targets.map { target ->
-            val assignment = assignments.find { each -> each.userId == target.userId }
+            val assignment = assignments.find { assignment -> assignment.userId == target.userId }
             CsvRow(
                 target.id.toString(),
                 target.name,

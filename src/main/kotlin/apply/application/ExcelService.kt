@@ -67,7 +67,7 @@ class ExcelService(
         val headerTitles =
             arrayOf(NAME, EMAIL, GITHUB_USERNAME, PULL_REQUEST_URL, ASSIGNMENT_NOTE, TOTAL_SCORE, STATUS, *titles, NOTE)
         val excelRows = targets.map {
-            val assignment = assignments.find { each -> each.userId == it.userId }
+            val assignment = assignments.find { assignment -> assignment.userId == it.userId }
             ExcelRow(
                 it.name,
                 it.email,
