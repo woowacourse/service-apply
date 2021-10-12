@@ -1,7 +1,7 @@
 package apply.application
 
 import apply.createAssignment
-import apply.createAssignmentRequest
+import apply.createAssignmentData
 import apply.createEvaluationTarget
 import apply.createMission
 import apply.domain.assignment.AssignmentRepository
@@ -43,7 +43,7 @@ class AssignmentServiceTest {
         every { missionRepository.getById(any()) } returns createMission()
         every { evaluationTargetRepository.findByEvaluationIdAndUserId(any(), any()) } returns createEvaluationTarget()
         every { assignmentRepository.save(any()) } returns createAssignment()
-        assertDoesNotThrow { assignmentService.create(1L, 1L, createAssignmentRequest()) }
+        assertDoesNotThrow { assignmentService.create(1L, 1L, createAssignmentData()) }
     }
 
     @Test
@@ -52,13 +52,13 @@ class AssignmentServiceTest {
         every { missionRepository.getById(any()) } returns createMission(
             startDateTime = LocalDateTime.now().minusDays(2), endDateTime = LocalDateTime.now().minusDays(1)
         )
-        assertThrows<IllegalStateException> { assignmentService.create(1L, 1L, createAssignmentRequest()) }
+        assertThrows<IllegalStateException> { assignmentService.create(1L, 1L, createAssignmentData()) }
     }
 
     @Test
     fun `이미 제출한 이력이 있는 경우 새로 제출할 수 없다`() {
         every { assignmentRepository.existsByUserIdAndMissionId(any(), any()) } returns true
-        assertThrows<IllegalStateException> { assignmentService.create(1L, 1L, createAssignmentRequest()) }
+        assertThrows<IllegalStateException> { assignmentService.create(1L, 1L, createAssignmentData()) }
     }
 
     @Test
@@ -66,7 +66,7 @@ class AssignmentServiceTest {
         every { assignmentRepository.existsByUserIdAndMissionId(any(), any()) } returns false
         every { missionRepository.getById(any()) } returns createMission()
         every { evaluationTargetRepository.findByEvaluationIdAndUserId(any(), any()) } returns null
-        assertThrows<IllegalArgumentException> { assignmentService.create(1L, 1L, createAssignmentRequest()) }
+        assertThrows<IllegalArgumentException> { assignmentService.create(1L, 1L, createAssignmentData()) }
     }
 
     @Test
@@ -78,7 +78,35 @@ class AssignmentServiceTest {
         every { evaluationTargetRepository.findByEvaluationIdAndUserId(any(), any()) } returns evaluationTarget
         every { assignmentRepository.save(any()) } returns createAssignment()
 
-        assignmentService.create(1L, 1L, createAssignmentRequest())
+        assignmentService.create(1L, 1L, createAssignmentData())
         assertThat(evaluationTarget.isPassed).isTrue
+    }
+
+    @Test
+    fun `제출한 과제물을 수정할 수 있다`() {
+        every { missionRepository.getById(any()) } returns createMission()
+        every { assignmentRepository.findByUserIdAndMissionId(any(), any()) } returns createAssignment()
+        assertDoesNotThrow { assignmentService.update(1L, 1L, createAssignmentData()) }
+    }
+
+    @Test
+    fun `제출 불가능한 과제의 과제물을 수정할 수 없다`() {
+        every { missionRepository.getById(any()) } returns createMission(submittable = false)
+        assertThrows<IllegalStateException> { assignmentService.update(1L, 1L, createAssignmentData()) }
+    }
+
+    @Test
+    fun `과제 제출 기간이 아니면 과제물을 수정할 수 없다`() {
+        every { missionRepository.getById(any()) } returns createMission(
+            startDateTime = LocalDateTime.now().minusDays(2), endDateTime = LocalDateTime.now().minusDays(1)
+        )
+        assertThrows<IllegalStateException> { assignmentService.update(1L, 1L, createAssignmentData()) }
+    }
+
+    @Test
+    fun `제출한 과제물이 없는 경우 수정할 수 없다`() {
+        every { missionRepository.getById(any()) } returns createMission()
+        every { assignmentRepository.findByUserIdAndMissionId(any(), any()) } returns null
+        assertThrows<IllegalArgumentException> { assignmentService.update(1L, 1L, createAssignmentData()) }
     }
 }

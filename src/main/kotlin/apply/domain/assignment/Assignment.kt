@@ -21,12 +21,18 @@ class Assignment(
     val missionId: Long,
 
     @Column(nullable = false)
-    val githubUsername: String,
+    var githubUsername: String,
 
     @Column(nullable = false)
-    val pullRequestUrl: String,
+    var pullRequestUrl: String,
 
     @Lob
-    val note: String,
+    var note: String,
     id: Long = 0L
-) : BaseEntity(id)
+) : BaseEntity(id) {
+    fun update(githubUsername: String, pullRequestUrl: String, note: String) {
+        this.githubUsername = githubUsername
+        this.pullRequestUrl = pullRequestUrl
+        this.note = note
+    }
+}

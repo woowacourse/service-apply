@@ -98,7 +98,7 @@ class MailTargetServiceTest {
     }
 
     @Test
-    fun `평가 상태에 따라 (평가전) 메일 발송 대상들의 이메일 정보를 불러온다`() {
+    fun `평가 상태에 따라 (WAITING) 메일 발송 대상들의 이메일 정보를 불러온다`() {
         every { evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(any(), any()) } returns listOf(
             createEvaluationTarget(userId = 1L, evaluationStatus = WAITING)
         )
