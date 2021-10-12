@@ -5,22 +5,22 @@ import useTokenContext from "../hooks/useTokenContext";
 import { UserInfoContext } from "../hooks/useUserInfoContext";
 
 const UserInfoProvider = ({ children }) => {
-  const [userInfo, _setUserInfo] = useState(null);
+  const [userInfo, setUserInfo] = useState(null);
   const { token } = useTokenContext();
 
   const initUserInfo = async () => {
     try {
       const { data } = await Api.fetchUserInfo({ token });
 
-      _setUserInfo(data);
+      setUserInfo(data);
     } catch (e) {
       alert(ERROR_MESSAGE.API.FETCHING_USER_INFO);
     }
   };
 
-  const setUserInfo = async (payload) => {
+  const updateUserInfo = async (payload) => {
     await Api.fetchUserInfoEdit({ token, ...payload });
-    _setUserInfo((prev) => ({ ...prev, ...payload }));
+    setUserInfo((prev) => ({ ...prev, ...payload }));
   };
 
   useEffect(() => {
@@ -28,7 +28,7 @@ const UserInfoProvider = ({ children }) => {
   }, [token]);
 
   return (
-    <UserInfoContext.Provider value={{ userInfo, setUserInfo }}>
+    <UserInfoContext.Provider value={{ userInfo, updateUserInfo }}>
       {children}
     </UserInfoContext.Provider>
   );

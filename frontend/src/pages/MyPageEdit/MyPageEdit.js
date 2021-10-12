@@ -18,11 +18,11 @@ import { validatePhoneNumber } from "../../utils/validation/phoneNumber";
 
 const MyPageEdit = () => {
   const history = useHistory();
-  const { userInfo, setUserInfo } = useUserInfoContext();
+  const { userInfo, updateUserInfo } = useUserInfoContext();
 
   const submit = async (value) => {
     try {
-      await setUserInfo(value);
+      await updateUserInfo(value);
       alert(SUCCESS_MESSAGE.API.EDIT_MY_PAGE);
     } catch (e) {
       alert(ERROR_MESSAGE.API.EDIT_FAILURE);
