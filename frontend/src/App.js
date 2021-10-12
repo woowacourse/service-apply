@@ -8,6 +8,7 @@ import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
 import PATH from "./constants/path";
 import ApplicationRegister from "./pages/ApplicationRegister/ApplicationRegister";
+import AssignmentSubmit from "./pages/AssignmentSubmit/AssignmentSubmit";
 import Join from "./pages/Join/Join";
 import Login from "./pages/Login/Login";
 import MyApplication from "./pages/MyApplication/MyApplication";
@@ -55,6 +56,9 @@ const App = () => {
                 </PrivateRoute>
                 <PrivateRoute path={PATH.MY_APPLICATION} exact>
                   <MyApplication />
+                </PrivateRoute>
+                <PrivateRoute path={PATH.ASSIGNMENT_SUBMIT} exact>
+                  <AssignmentSubmit />
                 </PrivateRoute>
 
                 <UserInfoProvider>

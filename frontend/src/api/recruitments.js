@@ -10,3 +10,27 @@ export const fetchRecruitments = () => axios.get(COMMON_PATH);
 
 export const fetchMyMissions = ({ recruitmentId, token }) =>
   axios.get(`${COMMON_PATH}/${recruitmentId}/missions/me`, headers({ token }));
+
+export const postAssignment = ({
+  recruitmentId,
+  missionId,
+  token,
+  assignmentData,
+}) =>
+  axios.post(
+    `${COMMON_PATH}/${recruitmentId}/missions/${missionId}/assignments`,
+    assignmentData,
+    headers({ token })
+  );
+
+export const patchAssignment = ({
+  recruitmentId,
+  missionId,
+  token,
+  assignmentData,
+}) =>
+  axios.patch(
+    `${COMMON_PATH}/${recruitmentId}/missions/${missionId}/assignments`,
+    assignmentData,
+    headers({ token })
+  );

@@ -56,6 +56,18 @@ const MyApplication = () => {
     });
   };
 
+  const routeToAssignmentSubmit =
+    ({ recruitmentId, mission }) =>
+    () => {
+      history.push({
+        pathname: PATH.ASSIGNMENT_SUBMIT,
+        state: {
+          recruitmentId,
+          currentMission: mission,
+        },
+      });
+    };
+
   useEffect(() => {
     try {
       const fetchMyRecruitments = async () => {
@@ -105,6 +117,10 @@ const MyApplication = () => {
                         mission.status
                       )}
                       isButtonDisabled={mission.status !== "SUBMITTING"}
+                      onClickButton={routeToAssignmentSubmit({
+                        recruitmentId: recruitment.id,
+                        mission,
+                      })}
                     />
                   ))}
               </div>

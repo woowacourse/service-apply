@@ -3,6 +3,7 @@ const PATH = {
   RECRUITS: "/recruits",
   NEW_APPLICATION: "/applicants/new",
   MY_APPLICATION: "/applications/me",
+  ASSIGNMENT_SUBMIT: "/assignment",
   APPLICATION_FORM: "/application-forms/:status(new|edit)",
   LOGIN: "/login",
   FIND_PASSWORD: "/find",
