@@ -1,0 +1,33 @@
+package apply.ui.api
+
+import apply.application.TermData
+import apply.application.TermService
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
+
+@RestController
+@RequestMapping("/api/terms")
+class TermRestController(
+    private val termService: TermService
+) {
+    @PostMapping
+    fun create(
+        @RequestBody termData: TermData
+    ): ResponseEntity<Unit> {
+        termService.save(termData)
+        return ResponseEntity.ok().build()
+    }
+
+    @DeleteMapping("/{termId}")
+    fun delete(
+        @PathVariable termId: Long
+    ): ResponseEntity<Unit> {
+        termService.deleteById(termId)
+        return ResponseEntity.ok().build()
+    }
+}

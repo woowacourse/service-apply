@@ -12,15 +12,6 @@ import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
-data class TermSelectData(
-    @field:NotBlank
-    @field:Size(min = 1, max = 31)
-    var name: String = "",
-    var id: Long = 0L
-) {
-    constructor(term: Term) : this(term.name, term.id)
-}
-
 data class RecruitmentData(
     @field:NotBlank
     @field:Size(min = 1, max = 31)
@@ -106,11 +97,4 @@ data class RecruitmentResponse(
         recruitment.endDateTime,
         recruitment.status
     )
-}
-
-data class TermResponse(
-    val id: Long,
-    val name: String
-) {
-    constructor(term: Term) : this(term.id, term.name)
 }
