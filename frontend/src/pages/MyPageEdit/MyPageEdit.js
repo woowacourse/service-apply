@@ -45,6 +45,7 @@ const MyPageEdit = () => {
         <FormProvider {...methods}>
           <Form className={styles["input-box"]} onSubmit={handleSubmit}>
             <MessageTextInput
+              name="name"
               label="이름"
               className={styles.input}
               value={userInfo?.name}
