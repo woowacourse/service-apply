@@ -61,7 +61,7 @@ class ExcelService(
 
     fun createTargetExcelWithAssignment(evaluationId: Long, missionId: Long): ByteArrayInputStream {
         val targets = evaluationTargetService.findAllByEvaluationIdAndKeyword(evaluationId)
-        val assignments = assignmentService.findByEvaluationIdAndMissionId(evaluationId, missionId)
+        val assignments = assignmentService.findAllByEvaluationId(evaluationId)
         val titles =
             evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluationId).map { it.title }.toTypedArray()
         val headerTitles =

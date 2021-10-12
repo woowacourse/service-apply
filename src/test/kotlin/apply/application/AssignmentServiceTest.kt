@@ -100,7 +100,7 @@ class AssignmentServiceTest {
         every { evaluationTargetRepository.findAllByEvaluationId(any()) } returns evaluationTargets
         every { assignmentRepository.findAllByUserIdIn(any()) } returns assignments
 
-        val actual = assignmentService.findByEvaluationIdAndMissionId(1L, 1L)
+        val actual = assignmentService.findAllByEvaluationId(1L)
 
         assertThat(actual).hasSize(2)
     }
@@ -109,7 +109,7 @@ class AssignmentServiceTest {
     @Nested
     inner class Find {
         fun subject(): AssignmentData {
-            return assignmentService.findByEvaluationTargetIdAndMissionId(1L, 1L)
+            return assignmentService.findByEvaluationTargetId(1L)
         }
 
         @Test

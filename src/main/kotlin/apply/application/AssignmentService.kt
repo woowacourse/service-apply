@@ -27,12 +27,12 @@ class AssignmentService(
         )
     }
 
-    fun findByEvaluationIdAndMissionId(evaluationId: Long, missionId: Long): List<Assignment> {
+    fun findAllByEvaluationId(evaluationId: Long): List<Assignment> {
         val evaluationTargets = evaluationTargetRepository.findAllByEvaluationId(evaluationId)
         return assignmentRepository.findAllByUserIdIn(evaluationTargets.map { it.userId })
     }
 
-    fun findByEvaluationTargetIdAndMissionId(evaluationTargetId: Long, missionId: Long): AssignmentData {
+    fun findByEvaluationTargetId(evaluationTargetId: Long): AssignmentData {
         val evaluationTarget = evaluationTargetRepository.getById(evaluationTargetId)
         val assignment = assignmentRepository.findByUserId(evaluationTarget.userId)
         return AssignmentData(assignment)
