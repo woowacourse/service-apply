@@ -19,7 +19,7 @@ const Header = () => {
   const onLogout = () => {
     setIsShowMemberMenu(false);
     resetToken();
-    history.push("/");
+    history.push(PATH.HOME);
   };
 
   return (
