@@ -31,6 +31,11 @@ class UserService(
         userRepository.getById(id).changePassword(request.password, request.newPassword)
     }
 
+    fun getInformation(id: Long): UserResponse {
+        val user = userRepository.getById(id)
+        return UserResponse(user)
+    }
+
     fun editInformation(id: Long, request: EditInformationRequest) {
         userRepository.getById(id).changePhoneNumber(request.phoneNumber)
     }

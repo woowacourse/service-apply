@@ -242,7 +242,7 @@ internal class UserRestControllerTest : RestControllerTest() {
 
         mockMvc.post("/api/users/authenticate-email") {
             param("email", userRequest.email)
-            param("authenticateCode", "code")
+            param("authenticationCode", "code")
         }.andExpect {
             status { isNoContent }
         }
@@ -262,6 +262,23 @@ internal class UserRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isOk }
             content { json(objectMapper.writeValueAsString(ApiResponse.success(userResponses))) }
+        }
+    }
+
+    @Test
+    fun `회원이 자신의 정보를 조회한다`() {
+        val response = UserResponse(createUser())
+        every { jwtTokenProvider.isValidToken("valid_token") } returns true
+        every { jwtTokenProvider.getSubject("valid_token") } returns userRequest.email
+        every { userService.getByEmail(userRequest.email) } returns userRequest.toEntity()
+        every { userService.getInformation(any()) } returns response
+
+        mockMvc.get("/api/users/me") {
+            contentType = MediaType.APPLICATION_JSON
+            header(AUTHORIZATION, "Bearer valid_token")
+        }.andExpect {
+            status { isOk }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(response))) }
         }
     }
 
