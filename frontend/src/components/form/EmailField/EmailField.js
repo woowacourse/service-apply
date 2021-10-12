@@ -81,6 +81,8 @@ const EmailField = ({ emailStatus, setEmailStatus }) => {
       await fetchAuthenticationCode(value.email);
     } catch (error) {
       alert(ERROR_MESSAGE.API.ALREADY_EXIST_EMAIL);
+
+      return;
     }
 
     setEmailStatus(EMAIL_STATUS.WAITING_AUTHENTICATION);
@@ -97,6 +99,8 @@ const EmailField = ({ emailStatus, setEmailStatus }) => {
     } catch (error) {
       alert(ERROR_MESSAGE.API.INVALID_AUTHENTICATION_CODE);
       reset(INPUT_NAME.AUTHENTICATED_CODE);
+
+      return;
     }
 
     setEmailStatus(EMAIL_STATUS.AUTHENTICATED);

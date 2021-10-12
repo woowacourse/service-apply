@@ -48,5 +48,5 @@ export const fetchAuthenticationCode = (email) =>
 
 export const fetchVerifyAuthenticationCode = ({ email, authenticationCode }) =>
   axios.post(
-    `/api/users/authenticate-email?email=${email}&authenticationCode=${authenticationCode}`
+    `${COMMON_PATH}/authenticate-email?email=${email}&authenticationCode=${authenticationCode}`
   );
