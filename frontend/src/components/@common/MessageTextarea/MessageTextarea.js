@@ -1,6 +1,7 @@
+import classNames from "classnames";
 import PropTypes from "prop-types";
-import Label from "../Label/Label";
 import Description from "../Description/Description";
+import Label from "../Label/Label";
 import Textarea from "../Textarea/Textarea";
 import styles from "./MessageTextarea.module.css";
 
@@ -17,7 +18,7 @@ const MessageTextarea = ({
   ...props
 }) => {
   return (
-    <div className={className}>
+    <div className={classNames(styles.box, className)}>
       <div className={styles["text-field"]}>
         <Label required={required}>{label}</Label>
         {description && <Description>{description}</Description>}

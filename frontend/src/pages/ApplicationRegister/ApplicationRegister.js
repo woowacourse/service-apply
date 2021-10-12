@@ -210,41 +210,44 @@ const ApplicationRegister = () => {
                 {`임시 저장되었습니다. (${modifiedDateTime})`}
               </p>
             )}
-            <div className={styles["label-bold"]}>
-              {recruitmentItems.length !== 0 &&
-                recruitmentItems.map((item, index) => (
-                  <FormTextarea
-                    key={`recruitment-item-${index}`}
-                    name={`recruitment-item-${index}`}
-                    initialValue={initialFormData[`recruitment-item-${index}`]}
-                    label={`${index + 1}. ${item.title}`}
-                    description={item.description}
-                    placeholder="내용을 입력해 주세요."
-                    maxLength={item.maximumLength}
-                    required
-                  />
-                ))}
+            {recruitmentItems.length !== 0 &&
+              recruitmentItems.map((item, index) => (
+                <FormTextarea
+                  key={`recruitment-item-${index}`}
+                  name={`recruitment-item-${index}`}
+                  initialValue={initialFormData[`recruitment-item-${index}`]}
+                  label={`${index + 1}. ${item.title}`}
+                  description={item.description}
+                  placeholder="내용을 입력해 주세요."
+                  maxLength={item.maximumLength}
+                  className={styles["label-bold"]}
+                  required
+                />
+              ))}
 
-              <FormInput
-                name="url"
-                type="url"
-                initialValue={initialFormData.referenceUrl}
-                description={
-                  <div className={styles["description-url"]}>
-                    자신을 드러낼 수 있는 개인 블로그, GitHub, 포트폴리오 주소
-                    등이 있다면 입력해 주세요.
-                    <div className={styles["description-url-small"]}>
-                      여러 개가 있는 경우 Notion, Google 문서 등을 사용하여
-                      하나로 묶어 주세요.
-                    </div>
+            <FormInput
+              name="url"
+              type="url"
+              initialValue={initialFormData.referenceUrl}
+              description={
+                <div className={styles["description-url"]}>
+                  자신을 드러낼 수 있는 개인 블로그, GitHub, 포트폴리오 주소
+                  등이 있다면 입력해 주세요.
+                  <div className={styles["description-url-small"]}>
+                    여러 개가 있는 경우 Notion, Google 문서 등을 사용하여 하나로
+                    묶어 주세요.
                   </div>
-                }
-                label="URL"
-                placeholder="ex) https://tecoble.techcourse.co.kr/"
-              />
-            </div>
-            <div>
-              <Label required>지원서 작성 내용 사실 확인</Label>
+                </div>
+              }
+              label="URL"
+              className={styles["label-bold"]}
+              placeholder="ex) https://tecoble.techcourse.co.kr/"
+            />
+
+            <div className={styles["box-agree"]}>
+              <Label className={styles["text-bold"]} required>
+                지원서 작성 내용 사실 확인
+              </Label>
               <Description className={styles["description-agree"]}>
                 기재한 사실 중 허위사실이 발견되는 즉시, 교육 대상자에서
                 제외되며 향후 지원도 불가능합니다.
