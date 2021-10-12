@@ -5,28 +5,29 @@ import Container from "../../components/@common/Container/Container";
 import Panel from "../../components/@common/Panel/Panel";
 import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
 import PATH, { PARAM } from "../../constants/path";
+import useMissions from "../../hooks/useMissions";
 import useRecruitmentContext from "../../hooks/useRecruitmentContext";
 import useTokenContext from "../../hooks/useTokenContext";
-import { missionDummy } from "../../mock/dummy";
 import { generateQuery } from "../../utils/route/query";
 import styles from "./MyApplication.module.css";
 
-const isBeforeDeadline = (endDate) => new Date() < new Date(endDate);
+const missionLabel = (submitted, missionStatus) => {
+  const labelMap = {
+    SUBMITTABLE: "시작 전",
+    SUBMITTING: submitted ? "수정하기" : "제출하기",
+    UNSUBMITTABLE: "제출불가",
+    ENDED: submitted ? "제출완료" : "미제출",
+  };
 
-const missionLabel = (submitted, isBeforeDeadline) => {
-  if (isBeforeDeadline) {
-    return submitted ? "수정하기" : "제출하기";
-  }
-
-  return submitted ? "제출완료" : "미제출";
+  return labelMap[missionStatus];
 };
 
 const MyApplication = () => {
   const history = useHistory();
   const { token } = useTokenContext();
   const { recruitment } = useRecruitmentContext();
-  const [myApplications, setMyApplications] = useState([]);
 
+  const [myApplications, setMyApplications] = useState([]);
   const myRecruitments = useMemo(
     () =>
       myApplications.map(({ recruitmentId, submitted }) => ({
@@ -35,6 +36,13 @@ const MyApplication = () => {
       })),
     [myApplications, recruitment]
   );
+
+  const recruitmentIds = useMemo(
+    () => myApplications.map(({ recruitmentId }) => recruitmentId),
+    [myApplications]
+  );
+
+  const { missions } = useMissions(recruitmentIds);
 
   const routeToApplicationForm = (recruitment) => () => {
     history.push({
@@ -79,24 +87,26 @@ const MyApplication = () => {
                 <RecruitmentItem
                   recruitment={{ ...recruitment, title: "내 지원서" }}
                   buttonLabel={submitted ? "제출완료" : "수정하기"}
-                  isButtonDisabled={!submitted}
+                  isButtonDisabled={submitted}
                   onClickButton={routeToApplicationForm(recruitment)}
                 />
 
                 <hr className={styles.hr} />
 
-                {missionDummy.map(({ submitted, ...mission }, index) => (
-                  <RecruitmentItem
-                    key={`mission-${recruitment.id}-${index}`}
-                    className={styles["mission-recruit-item"]}
-                    recruitment={mission}
-                    buttonLabel={missionLabel(
-                      submitted,
-                      isBeforeDeadline(mission.endDateTime)
-                    )}
-                    isButtonDisabled={isBeforeDeadline(mission.endDateTime)}
-                  />
-                ))}
+                {missions &&
+                  missions[recruitment.id] &&
+                  missions[recruitment.id].map((mission) => (
+                    <RecruitmentItem
+                      key={`mission-${recruitment.id}-${mission.id}`}
+                      className={styles["mission-recruit-item"]}
+                      recruitment={mission}
+                      buttonLabel={missionLabel(
+                        mission.submitted,
+                        mission.status
+                      )}
+                      isButtonDisabled={mission.status !== "SUBMITTING"}
+                    />
+                  ))}
               </div>
             </Panel>
           )
