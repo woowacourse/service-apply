@@ -16,8 +16,11 @@ export const ERROR_MESSAGE = {
   API: {
     ALREADY_REGISTER: "이미 지원한 이력이 있습니다.",
     FETCHING_MY_APPLICATION: "내 지원서를 불러오는데 실패했습니다.",
-    JOIN_FAILURE: "회원가입에 실패했습니다. 잠시후 다시 시도해주세요.",
+    JOIN_FAILURE: "회원가입에 실패했습니다. 잠시 후 다시 시도해주세요.",
     LOGIN_FAILURE: "아이디(E-mail) 또는 비밀번호를 확인해주세요.",
+    EDIT_FAILURE: "변경에 실패했습니다. 잠시 후 다시 시도해주세요.",
+    FETCHING_USER_INFO:
+      "내 정보를 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요.",
   },
   ACCESS: {
     REQUIRED_LOGIN: "로그인이 필요합니다.",
@@ -36,6 +39,7 @@ export const SUCCESS_MESSAGE = {
     CHANGE_PASSWORD: "비밀번호가 변경되었습니다. 다시 로그인해주세요.",
     SUBMIT_APPLICATION: "정상적으로 제출되었습니다.",
     SAVE_APPLICATION: "정상적으로 저장되었습니다.",
+    EIDT_MY_PAGE: "정상적으로 변경되었습니다.",
   },
 };
 

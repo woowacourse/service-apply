@@ -1,28 +1,38 @@
 import React from "react";
 import { useHistory } from "react-router";
 import myPageImage from "../../assets/image/myPage.svg";
-import Button, { BUTTON_VARIANT } from "../../components/@common/Button/Button";
 import Container from "../../components/@common/Container/Container";
 import MessageTextInput from "../../components/@common/MessageTextInput/MessageTextInput";
-import TextInput from "../../components/@common/TextInput/TextInput";
 import BirthField from "../../components/form/BirthField/BirthField";
 import Form from "../../components/form/Form/Form";
 import FormInput from "../../components/form/FormInput/FormInput";
+import SubmitButton from "../../components/form/SubmitButton/SubmitButton";
+import CancelButton from "../../components/form/CancelButton/CancelButton";
+import PATH from "../../constants/path";
 import useForm from "../../hooks/useForm";
 import useUserInfoContext from "../../hooks/useUserInfoContext";
 import FormProvider from "../../provider/FormProvider";
 import * as styles from "./MyPageEdit.module.css";
+import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
+import { validatePhoneNumber } from "../../utils/validation/phoneNumber";
 
 const MyPageEdit = () => {
   const history = useHistory();
   const { userInfo, setUserInfo } = useUserInfoContext();
 
   const submit = async (value) => {
-    await setUserInfo(value);
-    alert("정보 변경에 성공했습니다.");
+    try {
+      await setUserInfo(value);
+      alert(SUCCESS_MESSAGE.API.EIDT_MY_PAGE);
+    } catch (e) {
+      alert(ERROR_MESSAGE.API.EDIT_FAILURE);
+    }
+
+    history.push(PATH.MY_PAGE);
   };
 
   const { handleSubmit, ...methods } = useForm({
+    phoneNumber: validatePhoneNumber,
     submit,
   });
 
@@ -33,7 +43,7 @@ const MyPageEdit = () => {
           <img src={myPageImage} alt="자기소개서 일러스트" />
         </div>
         <FormProvider {...methods}>
-          <Form className={styles["input-box"]}>
+          <Form className={styles["input-box"]} onSubmit={handleSubmit}>
             <MessageTextInput
               label="이름"
               className={styles.input}
@@ -49,14 +59,8 @@ const MyPageEdit = () => {
             <BirthField initialValue={userInfo?.birthday} readOnly />
 
             <div className={styles.buttons}>
-              <Button
-                type="button"
-                variant={BUTTON_VARIANT.OUTLINED}
-                onClick={() => history.goBack()}
-              >
-                취소
-              </Button>
-              <Button>확인</Button>
+              <CancelButton onClick={history.goBack} />
+              <SubmitButton>확인</SubmitButton>
             </div>
           </Form>
         </FormProvider>
