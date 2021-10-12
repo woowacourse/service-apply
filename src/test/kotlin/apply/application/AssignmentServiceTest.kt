@@ -109,7 +109,7 @@ class AssignmentServiceTest {
     @Nested
     inner class Find {
         fun subject(): AssignmentData {
-            return assignmentService.findByEvaluationTargetId(1L)
+            return assignmentService.findByEvaluationTargetIdAndMissionId(1L, 1L)
         }
 
         @Test
@@ -122,7 +122,7 @@ class AssignmentServiceTest {
         @Test
         fun `평가 대상자가 제출한 과제 제출물이 없으면 빈 과제 제출물 데이터를 반환한다`() {
             every { evaluationTargetRepository.findByIdOrNull(any()) } returns createEvaluationTarget()
-            every { assignmentRepository.findByUserId(any()) } returns null
+            every { assignmentRepository.findByUserIdAndMissionId(any(), any()) } returns null
 
             val actual = subject()
 
@@ -137,7 +137,7 @@ class AssignmentServiceTest {
         @Test
         fun `평가 대상자가 제출한 과제 제출물이 있으면 평가 대상자가 제출한 과제 제출물 데이터를 반환한다`() {
             every { evaluationTargetRepository.findByIdOrNull(any()) } returns createEvaluationTarget()
-            every { assignmentRepository.findByUserId(any()) } returns createAssignment()
+            every { assignmentRepository.findByUserIdAndMissionId(any(), any()) } returns createAssignment()
 
             val actual = subject()
 

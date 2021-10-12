@@ -32,9 +32,9 @@ class AssignmentService(
         return assignmentRepository.findAllByUserIdIn(evaluationTargets.map { it.userId })
     }
 
-    fun findByEvaluationTargetId(evaluationTargetId: Long): AssignmentData {
+    fun findByEvaluationTargetIdAndMissionId(evaluationTargetId: Long, missionId: Long): AssignmentData {
         val evaluationTarget = evaluationTargetRepository.getById(evaluationTargetId)
-        val assignment = assignmentRepository.findByUserId(evaluationTarget.userId)
+        val assignment = assignmentRepository.findByUserIdAndMissionId(evaluationTarget.userId, missionId)
         return AssignmentData(assignment)
     }
 
