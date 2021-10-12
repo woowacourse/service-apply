@@ -1,11 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useHistory } from "react-router";
 import myPageImage from "../../assets/image/myPage.svg";
 import Container from "../../components/@common/Container/Container";
 import MessageTextInput from "../../components/@common/MessageTextInput/MessageTextInput";
 import BirthField from "../../components/form/BirthField/BirthField";
 import Form from "../../components/form/Form/Form";
-import FormInput from "../../components/form/FormInput/FormInput";
 import SubmitButton from "../../components/form/SubmitButton/SubmitButton";
 import CancelButton from "../../components/form/CancelButton/CancelButton";
 import PATH from "../../constants/path";
@@ -15,14 +14,17 @@ import FormProvider from "../../provider/FormProvider";
 import * as styles from "./MyPageEdit.module.css";
 import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
 import { validatePhoneNumber } from "../../utils/validation/phoneNumber";
+import usePhoneNumber from "../../hooks/usePhoneNumber";
 
 const MyPageEdit = () => {
   const history = useHistory();
   const { userInfo, updateUserInfo } = useUserInfoContext();
+  const { phoneNumber, setPhoneNumber, handlePhoneNumberChange } =
+    usePhoneNumber();
 
   const submit = async (value) => {
     try {
-      await updateUserInfo(value);
+      await updateUserInfo({ ...value, phoneNumber });
       alert(SUCCESS_MESSAGE.API.EDIT_MY_PAGE);
     } catch (e) {
       alert(ERROR_MESSAGE.API.EDIT_FAILURE);
@@ -35,6 +37,10 @@ const MyPageEdit = () => {
     phoneNumber: validatePhoneNumber,
     submit,
   });
+
+  useEffect(() => {
+    setPhoneNumber(userInfo?.phoneNumber);
+  }, [userInfo]);
 
   return (
     <Container title={`${userInfo?.email} 님`}>
@@ -51,9 +57,11 @@ const MyPageEdit = () => {
               value={userInfo?.name}
               readOnly
             />
-            <FormInput
+            <MessageTextInput
               name="phoneNumber"
               initialValue={userInfo?.phoneNumber}
+              value={phoneNumber}
+              onChange={handlePhoneNumberChange}
               type="tel"
               label="전화번호"
             />

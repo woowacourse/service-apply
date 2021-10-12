@@ -17,7 +17,7 @@ import SummaryCheckField from "../../components/form/SummaryCheckField/SummaryCh
 import { ERROR_MESSAGE } from "../../constants/messages";
 import PATH from "../../constants/path";
 import { POLICY_SUMMARY } from "../../constants/policySummary";
-import useApplicantRegisterForm from "../../hooks/useApplicantRegisterForm";
+import usePhoneNumber from "../../hooks/usePhoneNumber";
 import useForm from "../../hooks/useForm";
 import useTokenContext from "../../hooks/useTokenContext";
 import FormProvider from "../../provider/FormProvider";
@@ -39,7 +39,7 @@ const Join = () => {
   const history = useHistory();
 
   const { postRegister } = useTokenContext();
-  const { phoneNumber, handlePhoneNumberChange } = useApplicantRegisterForm();
+  const { phoneNumber, handlePhoneNumberChange } = usePhoneNumber();
 
   const [emailStatus, setEmailStatus] = useState(EMAIL_STATUS.INPUT);
 

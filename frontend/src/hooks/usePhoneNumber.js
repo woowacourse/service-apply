@@ -5,7 +5,7 @@ const MAX_PHONE_NUMBER_LENGTH = 13;
 const MAX_LENGTH_PHONE_NUMBER_HYPHEN_IDX = [3, 7];
 const PHONE_NUMBER_HYPHEN_IDX = [2, 6];
 
-const useApplicantRegisterForm = () => {
+const usePhoneNumber = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
 
   const handlePhoneNumberChange = ({
@@ -24,7 +24,7 @@ const useApplicantRegisterForm = () => {
     setPhoneNumber(result);
   };
 
-  return { phoneNumber, handlePhoneNumberChange };
+  return { phoneNumber, handlePhoneNumberChange, setPhoneNumber };
 };
 
-export default useApplicantRegisterForm;
+export default usePhoneNumber;
