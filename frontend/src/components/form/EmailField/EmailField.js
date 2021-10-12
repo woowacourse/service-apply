@@ -79,15 +79,13 @@ const EmailField = ({ emailStatus, setEmailStatus }) => {
   const handleIssueEmailCode = async () => {
     try {
       await fetchAuthenticationCode(value.email);
+
+      setEmailStatus(EMAIL_STATUS.WAITING_AUTHENTICATION);
+      setTimerSeconds(EMAIL_CODE_VALIDITY_SECONDS);
+      startTimer();
     } catch (error) {
       alert(ERROR_MESSAGE.API.ALREADY_EXIST_EMAIL);
-
-      return;
     }
-
-    setEmailStatus(EMAIL_STATUS.WAITING_AUTHENTICATION);
-    setTimerSeconds(EMAIL_CODE_VALIDITY_SECONDS);
-    startTimer();
   };
 
   const handleAuthenticateEmail = async () => {
@@ -96,16 +94,14 @@ const EmailField = ({ emailStatus, setEmailStatus }) => {
         email: value.email,
         authenticationCode: value.authenticationCode,
       });
+
+      setEmailStatus(EMAIL_STATUS.AUTHENTICATED);
+      stopTimer();
+      setTimerSeconds(EMAIL_CODE_VALIDITY_SECONDS);
     } catch (error) {
       alert(ERROR_MESSAGE.API.INVALID_AUTHENTICATION_CODE);
       reset(INPUT_NAME.AUTHENTICATED_CODE);
-
-      return;
     }
-
-    setEmailStatus(EMAIL_STATUS.AUTHENTICATED);
-    stopTimer();
-    setTimerSeconds(EMAIL_CODE_VALIDITY_SECONDS);
   };
 
   useEffect(() => {
