@@ -25,13 +25,13 @@ const INPUT_NAME = {
   AUTHENTICATED_CODE: "authenticationCode",
 };
 
-const EMAIL_CODE_VALIDITY_SECONDS = 600;
+const AUTHENTICATED_CODE_VALIDITY_SECONDS = 600;
 
 const EmailField = ({ emailStatus, setEmailStatus }) => {
   const { value, errorMessage, handleChange, reset, register, unRegister } =
     useFormContext();
-  const { timerSeconds, setTimerSeconds, startTimer, stopTimer } = useTimer(
-    EMAIL_CODE_VALIDITY_SECONDS
+  const { timerSeconds, setTimerSeconds, startTimer, resetTimer } = useTimer(
+    AUTHENTICATED_CODE_VALIDITY_SECONDS
   );
 
   const getEmailButton = () => {
@@ -81,7 +81,7 @@ const EmailField = ({ emailStatus, setEmailStatus }) => {
       await fetchAuthenticationCode(value.email);
 
       setEmailStatus(EMAIL_STATUS.WAITING_AUTHENTICATION);
-      setTimerSeconds(EMAIL_CODE_VALIDITY_SECONDS);
+      setTimerSeconds(AUTHENTICATED_CODE_VALIDITY_SECONDS);
       startTimer();
     } catch (error) {
       alert(ERROR_MESSAGE.API.ALREADY_EXIST_EMAIL);
@@ -96,8 +96,7 @@ const EmailField = ({ emailStatus, setEmailStatus }) => {
       });
 
       setEmailStatus(EMAIL_STATUS.AUTHENTICATED);
-      stopTimer();
-      setTimerSeconds(EMAIL_CODE_VALIDITY_SECONDS);
+      resetTimer();
     } catch (error) {
       alert(ERROR_MESSAGE.API.INVALID_AUTHENTICATION_CODE);
       reset(INPUT_NAME.AUTHENTICATED_CODE);
@@ -119,8 +118,7 @@ const EmailField = ({ emailStatus, setEmailStatus }) => {
 
     alert(ERROR_MESSAGE.VALIDATION.TIMEOUT_EMAIL_AUTHENTICATION_CODE);
 
-    stopTimer();
-    setTimerSeconds(EMAIL_CODE_VALIDITY_SECONDS);
+    resetTimer();
 
     setEmailStatus(EMAIL_STATUS.INPUT);
     reset(INPUT_NAME.AUTHENTICATED_CODE);
