@@ -19,7 +19,7 @@ class AssignmentRestController(
     private val assignmentService: AssignmentService
 ) {
     @PostMapping
-    fun createAssignment(
+    fun create(
         @PathVariable recruitmentId: Long,
         @PathVariable missionId: Long,
         @RequestBody @Valid request: AssignmentRequest,
@@ -30,7 +30,7 @@ class AssignmentRestController(
     }
 
     @PatchMapping
-    fun updateAssignment(
+    fun update(
         @PathVariable recruitmentId: Long,
         @PathVariable missionId: Long,
         @RequestBody @Valid request: AssignmentRequest,
