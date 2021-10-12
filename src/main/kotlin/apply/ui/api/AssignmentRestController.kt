@@ -1,6 +1,6 @@
 package apply.ui.api
 
-import apply.application.AssignmentData
+import apply.application.AssignmentRequest
 import apply.application.AssignmentService
 import apply.domain.user.User
 import apply.security.LoginUser
@@ -22,7 +22,7 @@ class AssignmentRestController(
     fun createAssignment(
         @PathVariable recruitmentId: Long,
         @PathVariable missionId: Long,
-        @RequestBody @Valid request: AssignmentData,
+        @RequestBody @Valid request: AssignmentRequest,
         @LoginUser user: User
     ): ResponseEntity<Unit> {
         assignmentService.create(missionId, user.id, request)
@@ -33,7 +33,7 @@ class AssignmentRestController(
     fun updateAssignment(
         @PathVariable recruitmentId: Long,
         @PathVariable missionId: Long,
-        @RequestBody @Valid request: AssignmentData,
+        @RequestBody @Valid request: AssignmentRequest,
         @LoginUser user: User
     ): ResponseEntity<Unit> {
         assignmentService.update(missionId, user.id, request)
