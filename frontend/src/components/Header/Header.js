@@ -1,12 +1,13 @@
 import classNames from "classnames";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import MemberIcon from "../../assets/icon/member-icon.svg";
 import PATH from "../../constants/path";
 import useTokenContext from "../../hooks/useTokenContext";
 import styles from "./Header.module.css";
 
 const Header = () => {
+  const history = useHistory();
   const { token, resetToken } = useTokenContext();
 
   const [isShowMemberMenu, setIsShowMemberMenu] = useState(false);
@@ -18,6 +19,7 @@ const Header = () => {
   const onLogout = () => {
     setIsShowMemberMenu(false);
     resetToken();
+    history.push(PATH.HOME);
   };
 
   return (

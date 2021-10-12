@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import useFormContext from "../../../hooks/useFormContext";
 import Label from "../../@common/Label/Label";
 import TextInput from "../../@common/TextInput/TextInput";
@@ -19,11 +19,21 @@ const days = Array(31)
   .fill(null)
   .map((_, idx) => idx + 1);
 
-const BirthField = ({ required, className }) => {
+const BirthField = ({ required, className, readOnly, initialValue }) => {
   const { value, errorMessage, handleChange, register, unRegister } =
     useFormContext();
 
+  const [initialDate, setInitialDate] = useState(null);
+
   useEffect(() => {
+    if (!initialValue) return;
+
+    setInitialDate(new Date(initialValue));
+  }, [initialValue]);
+
+  useEffect(() => {
+    if (readOnly) return;
+
     register("year");
     register("month");
     register("day");
@@ -52,8 +62,9 @@ const BirthField = ({ required, className }) => {
             min="0"
             max={currentYear}
             onChange={handleChange}
-            value={value.year}
+            value={initialDate?.getFullYear() ?? value.year}
             required={required}
+            readOnly={readOnly}
             autoComplete="off"
           />
           <datalist id="years">
@@ -70,8 +81,9 @@ const BirthField = ({ required, className }) => {
             min="1"
             max="12"
             onChange={handleChange}
-            value={value.month}
+            value={initialDate?.getMonth() + 1 ?? value.month}
             required={required}
+            readOnly={readOnly}
             autoComplete="off"
           />
           <datalist id="months">
@@ -88,8 +100,9 @@ const BirthField = ({ required, className }) => {
             max="31"
             placeholder="DD"
             onChange={handleChange}
-            value={value.day}
+            value={initialDate?.getDate() ?? value.day}
             required={required}
+            readOnly={readOnly}
             autoComplete="off"
           />
           <datalist id="days">
