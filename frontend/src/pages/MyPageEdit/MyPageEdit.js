@@ -6,10 +6,18 @@ import Container from "../../components/@common/Container/Container";
 import MessageTextInput from "../../components/@common/MessageTextInput/MessageTextInput";
 import BirthField from "../../components/form/BirthField/BirthField";
 import Form from "../../components/form/Form/Form";
+import useForm from "../../hooks/useForm";
+import FormProvider from "../../provider/FormProvider";
 import * as styles from "./MyPageEdit.module.css";
 
 const MyPageEdit = () => {
   const history = useHistory();
+
+  const submit = () => {};
+
+  const { handleSubmit, ...methods } = useForm({
+    submit,
+  });
 
   return (
     <Container title="sun@woowa.com 님">
@@ -17,22 +25,24 @@ const MyPageEdit = () => {
         <div className={styles["illust-box"]}>
           <img src={myPageImage} alt="자기소개서 일러스트" />
         </div>
-        <Form className={styles["input-box"]}>
-          <MessageTextInput label="이름" />
-          <MessageTextInput type="tel" label="전화번호" />
-          <BirthField />
+        <FormProvider {...methods}>
+          <Form className={styles["input-box"]}>
+            <MessageTextInput label="이름" />
+            <MessageTextInput type="tel" label="전화번호" />
+            <BirthField />
 
-          <div className={styles.buttons}>
-            <Button
-              type="button"
-              variant={BUTTON_VARIANT.OUTLINED}
-              onClick={() => history.goBack()}
-            >
-              취소
-            </Button>
-            <Button>확인</Button>
-          </div>
-        </Form>
+            <div className={styles.buttons}>
+              <Button
+                type="button"
+                variant={BUTTON_VARIANT.OUTLINED}
+                onClick={() => history.goBack()}
+              >
+                취소
+              </Button>
+              <Button>확인</Button>
+            </div>
+          </Form>
+        </FormProvider>
       </div>
     </Container>
   );

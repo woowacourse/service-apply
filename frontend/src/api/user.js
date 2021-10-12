@@ -33,10 +33,10 @@ export const fetchPasswordEdit = ({ token, password, newPassword }) =>
     headers({ token })
   );
 
-export const fetchInformation = ({ token }) =>
-  axios.get(`${COMMON_PATH}/information`, headers({ token }));
+export const fetchUserInfo = ({ token }) =>
+  axios.get(`${COMMON_PATH}/me`, headers({ token }));
 
-export const fetchInformationEdit = ({ token, phoneNumber }) =>
+export const fetchUserInfoEdit = ({ token, phoneNumber }) =>
   axios.patch(
     `${COMMON_PATH}/information`,
     { phoneNumber },

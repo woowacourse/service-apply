@@ -9,7 +9,7 @@ const UserInfoProvider = ({ children }) => {
 
   const initUserInfo = async () => {
     try {
-      const { data } = await Api.fetchUserInfo();
+      const { data } = await Api.fetchUserInfo({ token });
 
       _setUserInfo(data);
     } catch (e) {
@@ -20,7 +20,6 @@ const UserInfoProvider = ({ children }) => {
   const setUserInfo = async (payload) => {
     try {
       await Api.fetchUserInfoEdit({ token, ...payload });
-
       _setUserInfo((prev) => ({ ...prev, ...payload }));
     } catch (e) {
       alert("유저 정보를 수정하는데 실패했습니다. 잠시 후 다시 시도해주세요.");

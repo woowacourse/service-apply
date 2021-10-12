@@ -4,10 +4,13 @@ import myPageImage from "../../assets/image/myPage.svg";
 import Button, { BUTTON_VARIANT } from "../../components/@common/Button/Button";
 import Container from "../../components/@common/Container/Container";
 import PATH from "../../constants/path";
+import useUserInfoContext from "../../hooks/useUserInfoContext";
 import * as styles from "./MyPage.module.css";
 
 const MyPage = () => {
   const history = useHistory();
+
+  const { userInfo } = useUserInfoContext();
 
   const routeToPasswordEdit = () => {
     history.push({
@@ -31,15 +34,15 @@ const MyPage = () => {
           <ul>
             <li className={styles.info}>
               <div className={styles["info-title"]}>이름</div>
-              <div className={styles["info-data"]}>권선영</div>
+              <div className={styles["info-data"]}>{userInfo?.name}</div>
             </li>
             <li className={styles.info}>
               <div className={styles["info-title"]}>전화번호</div>
-              <div className={styles["info-data"]}>010-1234-5678</div>
+              <div className={styles["info-data"]}>{userInfo?.phoneNumber}</div>
             </li>
             <li className={styles.info}>
               <div className={styles["info-title"]}>생년월일</div>
-              <div className={styles["info-data"]}>1995년 01월 01일</div>
+              <div className={styles["info-data"]}>{userInfo?.birthday}</div>
             </li>
           </ul>
 

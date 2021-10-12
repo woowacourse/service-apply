@@ -23,6 +23,7 @@ import PATH from "./constants/path";
 
 import "./App.css";
 import MyPage from "./pages/MyPage/MyPage";
+import MyPageEdit from "./pages/MyPageEdit/MyPageEdit";
 
 const App = () => {
   return (
@@ -59,6 +60,9 @@ const App = () => {
                 <UserInfoProvider>
                   <PrivateRoute path={PATH.MY_PAGE} exact>
                     <MyPage />
+                  </PrivateRoute>
+                  <PrivateRoute path={PATH.EDIT_MY_PAGE} exact>
+                    <MyPageEdit />
                   </PrivateRoute>
                 </UserInfoProvider>
               </Switch>
