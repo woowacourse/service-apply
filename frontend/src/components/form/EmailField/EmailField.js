@@ -117,11 +117,14 @@ const EmailField = ({ emailStatus, setEmailStatus }) => {
   useEffect(() => {
     if (timerSeconds > 0) return;
 
-    stopTimer();
-    // TODO: 이메일 인증 코드 유효시간 만료 처리
+    alert(ERROR_MESSAGE.VALIDATION.TIMEOUT_EMAIL_AUTHENTICATION_CODE);
 
+    stopTimer();
     setTimerSeconds(EMAIL_CODE_VALIDITY_SECONDS);
-  }, [timerSeconds, setTimerSeconds, stopTimer]);
+
+    setEmailStatus(EMAIL_STATUS.INPUT);
+    reset(INPUT_NAME.AUTHENTICATED_CODE);
+  }, [timerSeconds]);
 
   return (
     <>

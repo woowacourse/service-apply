@@ -12,6 +12,8 @@ export const ERROR_MESSAGE = {
     PHONE_NUMBER: "정확한 전화번호를 입력해 주세요. ex) 010-1234-5678",
     REQUIRED: "필수 정보입니다.",
     URL: "http(s)를 포함한 정확한 URL을 입력해 주세요.",
+    TIMEOUT_EMAIL_AUTHENTICATION_CODE:
+      "이메일 인증 코드 유효시간이 초과되었습니다. 이메일 인증코드를 재발급해주세요.",
   },
   API: {
     ALREADY_REGISTER: "이미 지원한 이력이 있습니다.",
@@ -23,7 +25,7 @@ export const ERROR_MESSAGE = {
       "내 정보를 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요.",
     NOT_AUTHENTICATED: "이메일 인증을 완료해주세요.",
     ALREADY_EXIST_EMAIL: "이미 가입된 이메일입니다.",
-    INVALID_AUTHENTICATION_CODE: "인증 코드가 일치하지 않습니다.",
+    INVALID_AUTHENTICATION_CODE: "인증코드가 일치하지 않습니다.",
   },
   ACCESS: {
     REQUIRED_LOGIN: "로그인이 필요합니다.",
