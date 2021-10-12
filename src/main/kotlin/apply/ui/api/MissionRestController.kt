@@ -18,7 +18,7 @@ class MissionRestController(
     private val missionService: MissionService
 ) {
     @PostMapping("/missions")
-    fun createMission(
+    fun save(
         @PathVariable recruitmentId: Long,
         @RequestBody missionData: MissionData
     ): ResponseEntity<Unit> {
@@ -27,13 +27,13 @@ class MissionRestController(
     }
 
     @GetMapping("/missions")
-    fun findMissionsNotHiddenByRecruitmentId(@PathVariable recruitmentId: Long): ResponseEntity<ApiResponse<List<MissionResponse>>> {
-        val missions = missionService.findAllNotHiddenByRecruitmentId(recruitmentId)
+    fun findAllByRecruitmentId(@PathVariable recruitmentId: Long): ResponseEntity<ApiResponse<List<MissionResponse>>> {
+        val missions = missionService.findAllByRecruitmentId(recruitmentId)
         return ResponseEntity.ok(ApiResponse.success(missions))
     }
 
     @DeleteMapping("/missions/{missionId}")
-    fun deleteMission(@PathVariable recruitmentId: Long, @PathVariable missionId: Long): ResponseEntity<Unit> {
+    fun deleteById(@PathVariable recruitmentId: Long, @PathVariable missionId: Long): ResponseEntity<Unit> {
         missionService.deleteById(missionId)
         return ResponseEntity.ok().build()
     }

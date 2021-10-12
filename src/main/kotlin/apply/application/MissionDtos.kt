@@ -30,18 +30,17 @@ data class MissionData(
 
     @field:NotNull
     var hidden: Boolean = true,
-
     var id: Long = 0L
 ) {
     constructor(mission: Mission, evaluation: Evaluation) : this(
-        id = mission.id,
-        title = mission.title,
-        evaluation = EvaluationSelectData(evaluation),
-        startDateTime = mission.period.startDateTime,
-        endDateTime = mission.period.endDateTime,
-        description = mission.description,
-        submittable = mission.submittable,
-        hidden = mission.hidden
+        mission.title,
+        EvaluationSelectData(evaluation),
+        mission.period.startDateTime,
+        mission.period.endDateTime,
+        mission.description,
+        mission.submittable,
+        mission.hidden,
+        mission.id
     )
 }
 
