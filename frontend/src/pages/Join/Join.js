@@ -70,8 +70,6 @@ const Join = () => {
         birthday: formatBirthday({ year, month, day }),
       });
 
-      // console.log(response);
-
       history.push(PATH.RECRUITS);
     } catch (e) {
       alert(ERROR_MESSAGE.API.JOIN_FAILURE);

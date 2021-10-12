@@ -62,7 +62,7 @@ const Header = () => {
                         <Link to={PATH.MY_PAGE}>마이페이지</Link>
                       </li>
                       <li>
-                        <Link>내 지원 현황</Link>
+                        <Link to="">내 지원 현황</Link>
                       </li>
                       <li onClick={onLogout}>로그아웃</li>
                     </ul>
