@@ -83,7 +83,7 @@ class UserRestController(
         return ResponseEntity.ok(ApiResponse.success(users))
     }
 
-    @GetMapping("/information")
+    @GetMapping("/me")
     fun getMyInformation(
         @LoginUser user: User
     ): ResponseEntity<ApiResponse<UserResponse>> {
