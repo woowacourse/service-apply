@@ -57,7 +57,7 @@ const App = () => {
                 <PrivateRoute path={PATH.MY_APPLICATION} exact>
                   <MyApplication />
                 </PrivateRoute>
-                <PrivateRoute path={PATH.ASSIGNMENT_SUBMIT} exact>
+                <PrivateRoute path={PATH.ASSIGNMENT} exact>
                   <AssignmentSubmit />
                 </PrivateRoute>
 

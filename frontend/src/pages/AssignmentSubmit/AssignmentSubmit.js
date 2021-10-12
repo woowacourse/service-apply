@@ -1,13 +1,22 @@
-import { useHistory, useLocation } from "react-router";
-import { postAssignment } from "../../api/recruitments";
+import { useEffect, useState } from "react";
+import { useHistory, useLocation, useParams } from "react-router";
+import {
+  fetchAssignment,
+  patchAssignment,
+  postAssignment,
+} from "../../api/recruitments";
 import Container from "../../components/@common/Container/Container";
 import CancelButton from "../../components/form/CancelButton/CancelButton";
 import Form from "../../components/form/Form/Form";
 import FormInput from "../../components/form/FormInput/FormInput";
 import FormTextarea from "../../components/form/FormTextarea/FormTextarea";
 import SubmitButton from "../../components/form/SubmitButton/SubmitButton";
-import { CONFIRM_MESSAGE } from "../../constants/messages";
-import PATH from "../../constants/path";
+import {
+  CONFIRM_MESSAGE,
+  ERROR_MESSAGE,
+  SUCCESS_MESSAGE,
+} from "../../constants/messages";
+import PATH, { PARAM } from "../../constants/path";
 import useForm from "../../hooks/useForm";
 import useTokenContext from "../../hooks/useTokenContext";
 import FormProvider from "../../provider/FormProvider";
@@ -16,21 +25,40 @@ import styles from "./AssignmentSubmit.module.css";
 const AssignmentSubmit = () => {
   const history = useHistory();
   const location = useLocation();
+  const { status } = useParams();
   const { token } = useTokenContext();
 
   const { recruitmentId, currentMission } = location.state;
 
+  const [initialFormData, setInitialFormData] = useState({});
+
   const submit = async (assignmentData) => {
     try {
-      await postAssignment({
-        recruitmentId,
-        missionId: currentMission.id,
-        token,
-        assignmentData,
-      });
+      if (status === PARAM.ASSIGNMENT_STATUS.NEW) {
+        await postAssignment({
+          recruitmentId,
+          missionId: currentMission.id,
+          token,
+          assignmentData,
+        });
+      }
+
+      if (status === PARAM.APPLICATION_FORM_STATUS.EDIT) {
+        await patchAssignment({
+          recruitmentId,
+          missionId: currentMission.id,
+          token,
+          assignmentData,
+        });
+      }
+
+      alert(SUCCESS_MESSAGE.API.SUBMIT_ASSIGNMENT);
 
       history.push(PATH.MY_APPLICATION);
-    } catch (e) {}
+    } catch (e) {
+      console.error(e);
+      alert(ERROR_MESSAGE.API.SUBMIT_ASSIGNMENT);
+    }
   };
 
   const handleCancel = () => {
@@ -44,18 +72,45 @@ const AssignmentSubmit = () => {
     submit,
   });
 
+  useEffect(() => {
+    if (status !== PARAM.ASSIGNMENT_STATUS.EDIT) return;
+
+    const init = async () => {
+      const response = await fetchAssignment({
+        recruitmentId,
+        missionId: currentMission.id,
+        token,
+      });
+
+      setInitialFormData(response.data);
+    };
+
+    init();
+  }, []);
+
   return (
     <Container title={currentMission.title}>
       <FormProvider {...methods}>
         <Form onSubmit={handleSubmit} className={styles.form}>
-          <FormInput label="GitHub ID" name="githubUsername" required />
+          <FormInput
+            label="GitHub ID"
+            name="githubUsername"
+            initialValue={initialFormData?.githubUsername}
+            required
+          />
           <FormInput
             type="url"
             label="Pull Request 주소"
             name="pullRequestUrl"
+            initialValue={initialFormData?.pullRequestUrl}
             required
           />
-          <FormTextarea label="과제 진행 소감" name="note" required />
+          <FormTextarea
+            label="과제 진행 소감"
+            name="note"
+            initialValue={initialFormData?.note}
+            required
+          />
           <p className={styles["info-message"]}>
             작성하신 내용은 과제 제출 마감전까지 수정하실 수 있습니다.
           </p>

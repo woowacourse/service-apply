@@ -57,15 +57,29 @@ const MyApplication = () => {
   };
 
   const routeToAssignmentSubmit =
-    ({ recruitmentId, mission }) =>
+    ({ recruitmentId, mission, submitted }) =>
     () => {
-      history.push({
-        pathname: PATH.ASSIGNMENT_SUBMIT,
-        state: {
-          recruitmentId,
-          currentMission: mission,
-        },
-      });
+      if (submitted) {
+        history.push({
+          pathname: generatePath(PATH.ASSIGNMENT, {
+            status: PARAM.ASSIGNMENT_STATUS.EDIT,
+          }),
+          state: {
+            recruitmentId,
+            currentMission: mission,
+          },
+        });
+      } else {
+        history.push({
+          pathname: generatePath(PATH.ASSIGNMENT, {
+            status: PARAM.ASSIGNMENT_STATUS.NEW,
+          }),
+          state: {
+            recruitmentId,
+            currentMission: mission,
+          },
+        });
+      }
     };
 
   useEffect(() => {
@@ -120,6 +134,7 @@ const MyApplication = () => {
                       onClickButton={routeToAssignmentSubmit({
                         recruitmentId: recruitment.id,
                         mission,
+                        submitted: mission.submitted,
                       })}
                     />
                   ))}
