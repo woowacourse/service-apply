@@ -58,7 +58,6 @@ class MissionService(
 
     fun getEvaluationByMissionId(id: Long): Evaluation {
         val mission = missionRepository.getById(id)
-        val evaluation = evaluationRepository.getById(mission.evaluationId)
-        return evaluation
+        return evaluationRepository.getById(mission.evaluationId)
     }
 }

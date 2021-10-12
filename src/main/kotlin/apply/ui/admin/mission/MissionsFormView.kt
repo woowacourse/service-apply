@@ -27,6 +27,7 @@ class MissionsFormView(
     private val evaluationService: EvaluationService,
     private val missionService: MissionService
 ) : VerticalLayout(), HasUrlParameter<String> {
+    private var tabId: Long = 0L
     private var missionId: Long = 0L
     private var recruitmentId: Long = 0L
     private val title: Title = Title()
@@ -42,15 +43,16 @@ class MissionsFormView(
         val result = FORM_URL_PATTERN.find(parameter)
         result?.let {
             val (id, value) = it.destructured
-            missionId = id.toLong()
+            tabId = id.toLong()
             setDisplayName(value.toDisplayName())
             if (value == NEW_VALUE) {
-                recruitmentId = missionId
+                recruitmentId = tabId
             }
             if (value == EDIT_VALUE) {
+                missionId = tabId
                 val evaluation = missionService.getEvaluationByMissionId(missionId)
                 recruitmentId = evaluation.recruitmentId
-                missionForm.fill(missionService.getDataById(id.toLong()))
+                missionForm.fill(missionService.getDataById(missionId))
             }
         } ?: UI.getCurrent().page.history.back()
         add(title, missionForm, buttons)
