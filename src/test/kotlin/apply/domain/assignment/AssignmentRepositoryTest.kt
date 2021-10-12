@@ -25,11 +25,11 @@ class AssignmentRepositoryTest(
 
     @Test
     fun `지원자와 과제에 해당하는 제출물의 존재 여부를 조회힌다`() {
-        assertThat(assignmentRepository.existsByUserIdAndMissionId(1L, 1L)).isTrue
+        assertThat(assignmentRepository.existsByUserIdAndMissionId(assignment.userId, assignment.missionId)).isTrue
     }
 
     @Test
     fun `지원자와 과제에 해당하는 제출물을 반환한다`() {
-        assertThat(assignmentRepository.findByUserIdAndMissionId(1L, 1L)).isNotNull
+        assertThat(assignmentRepository.findByUserIdAndMissionId(assignment.userId, assignment.missionId)).isNotNull
     }
 }

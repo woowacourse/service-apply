@@ -32,14 +32,13 @@ class AssignmentRestController(
     }
 
     @GetMapping
-    fun getAssignmentByUserIdAndMissionId(
+    fun getAssignment(
         @PathVariable recruitmentId: Long,
         @PathVariable missionId: Long,
         @LoginUser user: User
     ): ResponseEntity<ApiResponse<AssignmentResponse>> {
-        return ResponseEntity.ok(ApiResponse.success(
-            assignmentService.getAssignmentByUserIdAndMissionId(user.id, missionId))
-        )
+        val assignment = assignmentService.getAssignmentByUserIdAndMissionId(user.id, missionId)
+        return ResponseEntity.ok(ApiResponse.success(assignment))
     }
 
     @PatchMapping

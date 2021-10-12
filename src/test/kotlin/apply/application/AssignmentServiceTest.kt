@@ -34,7 +34,7 @@ class AssignmentServiceTest {
     private lateinit var assignmentService: AssignmentService
 
     private val loginUser = createUser()
-    private val recruitmentId = 1L
+    private val missionId = 1L
 
     @BeforeEach
     internal fun setUp() {
@@ -47,7 +47,7 @@ class AssignmentServiceTest {
         every { missionRepository.getById(any()) } returns createMission()
         every { evaluationTargetRepository.findByEvaluationIdAndUserId(any(), any()) } returns createEvaluationTarget()
         every { assignmentRepository.save(any()) } returns createAssignment()
-        assertDoesNotThrow { assignmentService.create(1L, 1L, createAssignmentRequest()) }
+        assertDoesNotThrow { assignmentService.create(missionId, loginUser.id, createAssignmentRequest()) }
     }
 
     @Test
@@ -56,7 +56,7 @@ class AssignmentServiceTest {
         every { missionRepository.getById(any()) } returns createMission(
             startDateTime = LocalDateTime.now().minusDays(2), endDateTime = LocalDateTime.now().minusDays(1)
         )
-        assertThrows<IllegalStateException> { assignmentService.create(1L, 1L, createAssignmentRequest()) }
+        assertThrows<IllegalStateException> { assignmentService.create(missionId, loginUser.id, createAssignmentRequest()) }
     }
 
     @Test
@@ -70,7 +70,7 @@ class AssignmentServiceTest {
         every { assignmentRepository.existsByUserIdAndMissionId(any(), any()) } returns false
         every { missionRepository.getById(any()) } returns createMission()
         every { evaluationTargetRepository.findByEvaluationIdAndUserId(any(), any()) } returns null
-        assertThrows<IllegalArgumentException> { assignmentService.create(1L, 1L, createAssignmentRequest()) }
+        assertThrows<IllegalArgumentException> { assignmentService.create(missionId, loginUser.id, createAssignmentRequest()) }
     }
 
     @Test
@@ -82,7 +82,7 @@ class AssignmentServiceTest {
         every { evaluationTargetRepository.findByEvaluationIdAndUserId(any(), any()) } returns evaluationTarget
         every { assignmentRepository.save(any()) } returns createAssignment()
 
-        assignmentService.create(1L, 1L, createAssignmentRequest())
+        assignmentService.create(missionId, loginUser.id, createAssignmentRequest())
         assertThat(evaluationTarget.isPassed).isTrue
     }
 
@@ -95,26 +95,14 @@ class AssignmentServiceTest {
 
     @Test
     fun `과제를 제출한 적이 있는 경우 제출물 조회시 제출물을 반환한다`() {
-        every { missionRepository.existsById(any()) } returns true
         every { assignmentRepository.findByUserIdAndMissionId(any(), any()) } returns createAssignment()
-
-        assertDoesNotThrow { assignmentService.getAssignmentByUserIdAndMissionId(loginUser.id, recruitmentId) }
-    }
-
-    @Test
-    fun `과제가 존재하지 않는 경우 제출물 조회시 예외를 반환한다`() {
-        every { missionRepository.existsById(any()) } returns false
-        every { assignmentRepository.findByUserIdAndMissionId(any(), any()) } returns createAssignment()
-
-        assertThrows<IllegalStateException> { assignmentService.getAssignmentByUserIdAndMissionId(loginUser.id, recruitmentId) }
+        assertDoesNotThrow { assignmentService.getAssignmentByUserIdAndMissionId(loginUser.id, missionId) }
     }
 
     @Test
     fun `과제를 제출한 적이 없는 경우 제출물 조회시 예외를 반환한다`() {
-        every { missionRepository.existsById(any()) } returns true
         every { assignmentRepository.findByUserIdAndMissionId(any(), any()) } returns null
-
-        assertThrows<NoSuchElementException> { assignmentService.getAssignmentByUserIdAndMissionId(loginUser.id, recruitmentId) }
+        assertThrows<IllegalArgumentException> { assignmentService.getAssignmentByUserIdAndMissionId(loginUser.id, missionId) }
     }
 
     @Test
