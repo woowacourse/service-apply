@@ -16,13 +16,8 @@ data class AssignmentRequest(
 )
 
 data class AssignmentData(
-    @field:NotBlank
     val githubUsername: String?,
-
-    @field:Size(min = 1, max = 255)
     val pullRequestUrl: String?,
-
-    @field:NotBlank
     val note: String?
 ) {
     constructor(assignment: Assignment?) : this(

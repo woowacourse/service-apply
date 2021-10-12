@@ -51,7 +51,6 @@ class EvaluationTargetFormDialog(
             val assignment = assignmentService.findByEvaluationTargetIdAndMissionId(evaluationTargetId, it.id)
             AssignmentForm().apply {
                 fill(assignment)
-                toReadOnlyMode()
             }
         } ?: AssignmentForm().apply {
             isVisible = false
