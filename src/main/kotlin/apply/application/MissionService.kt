@@ -46,10 +46,10 @@ class MissionService(
 
     fun findAllByUserIdAndRecruitmentId(userId: Long, recruitmentId: Long): List<MissionResponse> {
         val evaluationIds = evaluationRepository.findAllByRecruitmentId(recruitmentId).map { it.id }
-        val filteredEvaluationIdsByUserId = evaluationIds.filter {
+        val includedEvaluationIds = evaluationIds.filter {
             evaluationTargetRepository.existsByUserIdAndEvaluationId(userId, it)
         }
-        return missionRepository.findAllByEvaluationIdIn(filteredEvaluationIdsByUserId).map {
+        return missionRepository.findAllByEvaluationIdIn(includedEvaluationIds).map {
             MissionResponse(
                 it.id,
                 it.title,
