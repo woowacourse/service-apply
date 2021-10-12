@@ -76,20 +76,18 @@ const useForm = ({ validators, submit }) => {
   };
 
   const reset = (name) => {
-    if (name) {
-      setValue((prev) => ({
-        ...prev,
-        [name]: "",
-      }));
+    setValue((prev) => ({
+      ...prev,
+      [name]: "",
+    }));
 
-      setErrorMessage((prev) => ({
-        ...prev,
-        [name]: null,
-      }));
+    setErrorMessage((prev) => ({
+      ...prev,
+      [name]: null,
+    }));
+  };
 
-      return;
-    }
-
+  const resetAll = () => {
     setValue((prev) => {
       for (const name in prev) {
         if (typeof prev[name] === "boolean") {
@@ -122,6 +120,7 @@ const useForm = ({ validators, submit }) => {
     register,
     unRegister,
     reset,
+    resetAll,
   };
 };
 
