@@ -20,6 +20,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import support.test.UnitTest
@@ -94,6 +95,23 @@ internal class UserServiceTest {
             request = EditPasswordRequest(WRONG_PASSWORD, Password("new_password"))
             assertThrows<UserAuthenticationException> { subject() }
         }
+    }
+
+    @Test
+    fun `회원이 정보를 조회한다`() {
+        val user = createUser()
+        every { userRepository.getById(any()) } returns user
+
+        val expected = userService.getInformation(user.id)
+
+        assertAll(
+            { assertThat(expected.id).isNotNull },
+            { assertThat(expected.name).isNotNull },
+            { assertThat(expected.email).isNotNull },
+            { assertThat(expected.phoneNumber).isNotNull },
+            { assertThat(expected.gender).isNotNull },
+            { assertThat(expected.birthday).isNotNull }
+        )
     }
 
     @Test
