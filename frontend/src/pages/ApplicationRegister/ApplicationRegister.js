@@ -235,7 +235,6 @@ const ApplicationRegister = () => {
                 }
                 label="URL"
                 placeholder="ex) https://tecoble.techcourse.co.kr/"
-                boldLabel
               />
             </div>
             <div>
