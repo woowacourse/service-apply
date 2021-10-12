@@ -1,0 +1,43 @@
+.box {
+  display: flex;
+}
+
+.illust-box {
+  flex: 1;
+  padding: 1.5rem;
+  user-select: none;
+}
+
+.info-box {
+  flex: 3;
+}
+
+.info {
+  margin: 1.625rem 0;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.info-title {
+  flex: 1;
+  color: var(--gray-007);
+  text-align: right;
+  padding: 0.5rem 0;
+}
+
+.info-data {
+  flex: 5;
+  border-bottom: 1px solid var(--gray-006);
+  padding: 0.5rem;
+}
+
+.buttons {
+  margin: 3.5rem 0 2rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.buttons button {
+  flex: 1;
+}

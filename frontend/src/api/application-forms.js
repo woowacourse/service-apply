@@ -1,38 +1,25 @@
 import axios from "axios";
+import { headers } from "./api";
 
-const BASE_URL = "/api/application-forms";
+const COMMON_PATH = "/api/application-forms";
 
 export const fetchMyApplicationForms = (token) =>
-  axios.get(`${BASE_URL}/me`, {
+  axios.get(`${COMMON_PATH}/me`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
 
 export const fetchForm = ({ token, recruitmentId }) =>
-  axios.get(`${BASE_URL}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+  axios.get(COMMON_PATH, {
+    ...headers({ token }),
     params: {
       recruitmentId,
     },
   });
 
 export const createForm = ({ token, recruitmentId }) =>
-  axios.post(
-    `${BASE_URL}`,
-    { recruitmentId },
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  axios.post(COMMON_PATH, { recruitmentId }, headers({ token }));
 
 export const updateForm = ({ token, data }) =>
-  axios.patch(`${BASE_URL}`, data, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  axios.patch(COMMON_PATH, data, headers({ token }));

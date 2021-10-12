@@ -10,3 +10,9 @@ axios.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+export const headers = ({ token }) => ({
+  headers: {
+    ...(token && { Authorization: `Bearer ${token}` }),
+  },
+});

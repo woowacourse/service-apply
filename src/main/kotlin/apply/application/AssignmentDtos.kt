@@ -4,7 +4,7 @@ import apply.domain.assignment.Assignment
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Size
 
-data class CreateAssignmentRequest(
+data class AssignmentRequest(
     @field:NotBlank
     val githubUsername: String,
 

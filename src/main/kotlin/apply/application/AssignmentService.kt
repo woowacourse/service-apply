@@ -17,7 +17,7 @@ class AssignmentService(
     private val missionRepository: MissionRepository,
     private val evaluationTargetRepository: EvaluationTargetRepository
 ) {
-    fun create(missionId: Long, userId: Long, request: CreateAssignmentRequest) {
+    fun create(missionId: Long, userId: Long, request: AssignmentRequest) {
         check(!assignmentRepository.existsByUserIdAndMissionId(userId, missionId)) { "이미 제출한 과제 제출물이 존재합니다." }
         val mission = missionRepository.getById(missionId)
         check(mission.isSubmitting) { "제출 불가능한 과제입니다." }
@@ -25,6 +25,13 @@ class AssignmentService(
         assignmentRepository.save(
             Assignment(userId, missionId, request.githubUsername, request.pullRequestUrl, request.note)
         )
+    }
+
+    fun update(missionId: Long, userId: Long, request: AssignmentRequest) {
+        check(missionRepository.getById(missionId).isSubmitting) { "제출 불가능한 과제입니다." }
+        val assignment = assignmentRepository.findByUserIdAndMissionId(userId, missionId)
+            ?: throw IllegalArgumentException("제출한 과제물이 존재하지 않습니다")
+        assignment.update(request.githubUsername, request.pullRequestUrl, request.note)
     }
 
     fun findAllByEvaluationId(evaluationId: Long): List<Assignment> {

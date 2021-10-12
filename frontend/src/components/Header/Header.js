@@ -1,15 +1,13 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import classNames from "classnames";
-
-import useTokenContext from "../../hooks/useTokenContext";
-import PATH from "../../constants/path";
-
+import React, { useState } from "react";
+import { Link, useHistory } from "react-router-dom";
 import MemberIcon from "../../assets/icon/member-icon.svg";
-
+import PATH from "../../constants/path";
+import useTokenContext from "../../hooks/useTokenContext";
 import styles from "./Header.module.css";
 
 const Header = () => {
+  const history = useHistory();
   const { token, resetToken } = useTokenContext();
 
   const [isShowMemberMenu, setIsShowMemberMenu] = useState(false);
@@ -21,6 +19,7 @@ const Header = () => {
   const onLogout = () => {
     setIsShowMemberMenu(false);
     resetToken();
+    history.push(PATH.HOME);
   };
 
   return (
@@ -60,7 +59,7 @@ const Header = () => {
                   <>
                     <ul className={styles["member-menu-list"]}>
                       <li>
-                        <Link>마이페이지</Link>
+                        <Link to={PATH.MY_PAGE}>마이페이지</Link>
                       </li>
                       <li>
                         <Link>내 지원 현황</Link>
