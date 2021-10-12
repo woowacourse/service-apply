@@ -80,7 +80,7 @@ class MissionsView(
 
     private fun createEditButton(mission: MissionResponse): Component {
         return createPrimarySmallButton("수정") {
-            UI.getCurrent().navigate(MissionsFormView::class.java, "${mission.id}/$EDIT_VALUE")
+            UI.getCurrent().navigate(MissionsFormView::class.java, "$recruitmentId/${mission.id}/$EDIT_VALUE")
         }
     }
 
