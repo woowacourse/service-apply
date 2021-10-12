@@ -77,11 +77,11 @@ const BirthField = ({ required, className, readOnly, initialValue }) => {
             name="month"
             list="months"
             type="number"
-            placeholder="MM"
             min="1"
             max="12"
+            placeholder="MM"
             onChange={handleChange}
-            value={initialDate?.getMonth() + 1 ?? value.month}
+            value={initialDate ? initialDate?.getMonth() + 1 : value.month}
             required={required}
             readOnly={readOnly}
             autoComplete="off"
