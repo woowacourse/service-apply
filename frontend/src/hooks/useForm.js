@@ -75,7 +75,21 @@ const useForm = ({ validators, submit }) => {
     setIsRequiredMap(newisRequired);
   };
 
-  const reset = () => {
+  const reset = (name) => {
+    if (name) {
+      setValue((prev) => ({
+        ...prev,
+        [name]: "",
+      }));
+
+      setErrorMessage((prev) => ({
+        ...prev,
+        [name]: null,
+      }));
+
+      return;
+    }
+
     setValue((prev) => {
       for (const name in prev) {
         if (typeof prev[name] === "boolean") {

@@ -22,6 +22,8 @@ export const ERROR_MESSAGE = {
     FETCHING_USER_INFO:
       "내 정보를 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요.",
     NOT_AUTHENTICATED: "이메일 인증을 완료해주세요.",
+    ALREADY_EXIST_EMAIL: "이미 가입된 이메일입니다.",
+    INVALID_AUTHENTICATION_CODE: "인증 코드가 일치하지 않습니다.",
   },
   ACCESS: {
     REQUIRED_LOGIN: "로그인이 필요합니다.",

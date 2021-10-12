@@ -5,6 +5,7 @@ import {
   fetchAuthenticationCode,
   fetchVerifyAuthenticationCode,
 } from "../../../api";
+import { ERROR_MESSAGE } from "../../../constants/messages";
 import useFormContext from "../../../hooks/useFormContext";
 import useTimer from "../../../hooks/useTimer";
 import { formatTimerText } from "../../../utils/format/date";
@@ -19,10 +20,15 @@ export const EMAIL_STATUS = {
   AUTHENTICATED: "authenticated",
 };
 
+const INPUT_NAME = {
+  EMAIL: "email",
+  AUTHENTICATED_CODE: "authenticationCode",
+};
+
 const EMAIL_CODE_VALIDITY_SECONDS = 600;
 
 const EmailField = ({ emailStatus, setEmailStatus }) => {
-  const { value, errorMessage, handleChange, register, unRegister } =
+  const { value, errorMessage, handleChange, reset, register, unRegister } =
     useFormContext();
   const { timerSeconds, setTimerSeconds, startTimer, stopTimer } = useTimer(
     EMAIL_CODE_VALIDITY_SECONDS
@@ -66,7 +72,7 @@ const EmailField = ({ emailStatus, setEmailStatus }) => {
 
   const handleChangeEmail = (event) => {
     setEmailStatus(EMAIL_STATUS.INPUT);
-
+    reset(INPUT_NAME.AUTHENTICATED_CODE);
     handleChange(event);
   };
 
@@ -74,7 +80,7 @@ const EmailField = ({ emailStatus, setEmailStatus }) => {
     try {
       await fetchAuthenticationCode(value.email);
     } catch (error) {
-      console.error(error);
+      alert(ERROR_MESSAGE.API.ALREADY_EXIST_EMAIL);
 
       return;
     }
@@ -91,7 +97,8 @@ const EmailField = ({ emailStatus, setEmailStatus }) => {
         authenticationCode: value.authenticationCode,
       });
     } catch (error) {
-      console.error(error);
+      alert(ERROR_MESSAGE.API.INVALID_AUTHENTICATION_CODE);
+      reset(INPUT_NAME.AUTHENTICATED_CODE);
 
       return;
     }
@@ -102,12 +109,12 @@ const EmailField = ({ emailStatus, setEmailStatus }) => {
   };
 
   useEffect(() => {
-    register("email", "", true);
-    register("authenticationCode", "", false);
+    register(INPUT_NAME.EMAIL, "", true);
+    register(INPUT_NAME.AUTHENTICATED_CODE, "", false);
 
     return () => {
-      unRegister("email");
-      unRegister("authenticationCode");
+      unRegister(INPUT_NAME.EMAIL);
+      unRegister(INPUT_NAME.AUTHENTICATED_CODE);
     };
   }, []);
 
@@ -130,7 +137,7 @@ const EmailField = ({ emailStatus, setEmailStatus }) => {
           <div className={styles["input-box"]}>
             <TextInput
               value={value.email}
-              name="email"
+              name={INPUT_NAME.EMAIL}
               type="email"
               placeholder="이메일 주소를 입력해 주세요."
               onChange={handleChangeEmail}
@@ -160,7 +167,7 @@ const EmailField = ({ emailStatus, setEmailStatus }) => {
               <div className={styles["input-box"]}>
                 <TextInput
                   value={value.authenticationCode}
-                  name="authenticationCode"
+                  name={INPUT_NAME.AUTHENTICATED_CODE}
                   onChange={handleChange}
                   required
                 />
