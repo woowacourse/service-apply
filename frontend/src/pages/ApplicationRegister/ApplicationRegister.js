@@ -90,8 +90,6 @@ const ApplicationRegister = () => {
   }, [history, token, recruitmentId]);
 
   const save = async (answers, referenceUrl = "", submitted) => {
-    console.log(referenceUrl);
-
     Api.updateForm({
       token,
       data: { recruitmentId, referenceUrl, submitted, answers },
@@ -177,9 +175,6 @@ const ApplicationRegister = () => {
       await save(answers, value.url, false);
 
       alert(SUCCESS_MESSAGE.API.SAVE_APPLICATION);
-
-      console.dir(currentRecruitment);
-      console.dir(recruitmentId);
 
       if (status !== PARAM.APPLICATION_FORM_STATUS.EDIT) {
         history.replace({

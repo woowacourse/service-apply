@@ -38,7 +38,7 @@ export default Container;
 Container.propTypes = {
   title: PropTypes.string,
   size: PropTypes.oneOf(["default", "narrow"]),
-  children: PropTypes.node.isRequired,
+  children: PropTypes.node,
 };
 
 Container.defaultProps = {
