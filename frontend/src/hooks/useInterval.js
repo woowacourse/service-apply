@@ -14,7 +14,7 @@ const useInterval = (callback, delay) => {
 
     if (typeof delay !== "number" || delay < 0) return;
 
-    let id = setInterval(tick, delay);
+    const id = setInterval(tick, delay);
 
     return () => clearInterval(id);
   }, [delay]);
