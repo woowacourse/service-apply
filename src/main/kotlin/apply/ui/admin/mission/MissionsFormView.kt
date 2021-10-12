@@ -71,7 +71,7 @@ class MissionsFormView(
                 } catch (e: Exception) {
                     createNotification(e.localizedMessage).open()
                 }
-                UI.getCurrent().page.history.back()
+                UI.getCurrent().navigate(MissionsView::class.java, recruitmentId)
             }
         }
     }
@@ -85,7 +85,7 @@ class MissionsFormView(
 
     private fun createCancelButton(): Button {
         return createContrastButton("취소") {
-            UI.getCurrent().page.history.back()
+            UI.getCurrent().navigate(MissionsView::class.java, recruitmentId)
         }
     }
 }
