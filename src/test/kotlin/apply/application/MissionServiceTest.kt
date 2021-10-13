@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.params.ParameterizedTest
 import org.springframework.data.repository.findByIdOrNull
 import support.test.UnitTest
 
@@ -35,6 +36,9 @@ class MissionServiceTest {
     lateinit var assignmentRepository: AssignmentRepository
 
     private lateinit var missionService: MissionService
+
+    private val recruitmentId = 1L
+    private val userId = 1L
 
     @BeforeEach
     internal fun setUp() {
@@ -91,9 +95,7 @@ class MissionServiceTest {
     }
 
     @Test
-    fun `특정 모집에 해당하는 나의 과제들을 조회한다`() {
-        val recruitmentId = 1L
-        val userId = 1L
+    fun `특정 모집에 해당하는 나의 숨겨지지 않은 과제들을 조회한다`() {
         val missions = listOf(createMission(id = 1L), createMission(id = 2L))
         every { evaluationRepository.findAllByRecruitmentId(any()) } returns
             listOf(createEvaluation(id = 1L), createEvaluation(id = 2L))
@@ -111,6 +113,22 @@ class MissionServiceTest {
                     MissionResponse(missions[1], true)
                 )
             }
+        )
+    }
+
+    @Test
+    fun `과제의 상태가 hidden인 경우 조회할 수 없다`() {
+        val missions = listOf(createMission(id = 1L, hidden = true), createMission(id = 2L, hidden = true))
+        every { evaluationRepository.findAllByRecruitmentId(any()) } returns
+            listOf(createEvaluation(id = 1L), createEvaluation(id = 2L))
+        every { evaluationTargetRepository.existsByUserIdAndEvaluationId(any(), any()) } returns true
+        every { missionRepository.findAllByEvaluationIdIn(any()) } returns missions
+        every { assignmentRepository.existsByUserIdAndMissionId(any(), any()) } returns true
+
+        val responses = missionService.findAllByUserIdAndRecruitmentId(userId, recruitmentId)
+
+        assertAll(
+            { assertThat(responses).isEmpty() },
         )
     }
 
