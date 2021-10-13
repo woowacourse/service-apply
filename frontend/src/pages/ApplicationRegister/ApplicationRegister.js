@@ -98,14 +98,17 @@ const ApplicationRegister = () => {
     setModifiedDateTime(formatDateTime(new Date()));
   };
 
+  const getAnswers = (value) =>
+    recruitmentItems.map((item, index) => ({
+      contents: value[`recruitment-item-${index}`] || "",
+      recruitmentItemId: item.id,
+    }));
+
   const submit = async (value) => {
     if (window.confirm(CONFIRM_MESSAGE.SUBMIT_APPLICATION)) {
-      const answers = recruitmentItems.map((item, index) => ({
-        contents: value[`recruitment-item-${index}`],
-        recruitmentItemId: item.id,
-      }));
-
       try {
+        const answers = getAnswers(value);
+
         await save(answers, value.url, true);
         alert(SUCCESS_MESSAGE.API.SUBMIT_APPLICATION);
       } catch (e) {
@@ -121,57 +124,10 @@ const ApplicationRegister = () => {
     submit,
   });
 
-  useEffect(() => {
-    const init = async () => {
-      try {
-        await fetchRecruitmentItems();
-
-        if (status === PARAM.APPLICATION_FORM_STATUS.EDIT) {
-          await fetchApplicationForm();
-        } else {
-          await Api.createForm({
-            token,
-            recruitmentId,
-          });
-        }
-      } catch (error) {
-        console.error(error);
-
-        const isAlreadyRegister =
-          error.response.data.message === ERROR_MESSAGE.API.ALREADY_REGISTER;
-
-        if (isAlreadyRegister) {
-          await fetchApplicationForm();
-        } else {
-          history.replace({
-            pathname: generatePath(PATH.APPLICATION_FORM, {
-              status: PARAM.APPLICATION_FORM_STATUS.EDIT,
-            }),
-            search: generateQuery({ recruitmentId }),
-            state: { currentRecruitment },
-          });
-        }
-      }
-    };
-
-    init();
-  }, [
-    recruitmentId,
-    currentRecruitment,
-    history,
-    status,
-    token,
-    fetchApplicationForm,
-    fetchRecruitmentItems,
-  ]);
-
-  const answers = recruitmentItems.map((item, index) => ({
-    contents: value[`recruitment-item-${index}`] || "",
-    recruitmentItemId: item.id,
-  }));
-
   const onSaveTemp = async () => {
     try {
+      const answers = getAnswers(value);
+
       await save(answers, value.url, false);
 
       alert(SUCCESS_MESSAGE.API.SAVE_APPLICATION);
@@ -190,6 +146,43 @@ const ApplicationRegister = () => {
       history.replace(PATH.HOME);
     }
   };
+
+  useEffect(() => {
+    const init = async () => {
+      try {
+        await fetchRecruitmentItems();
+
+        if (status === PARAM.APPLICATION_FORM_STATUS.EDIT) {
+          await fetchApplicationForm();
+        } else {
+          await Api.createForm({
+            token,
+            recruitmentId,
+          });
+        }
+      } catch (error) {
+        console.error(error);
+
+        history.replace({
+          pathname: generatePath(PATH.APPLICATION_FORM, {
+            status: PARAM.APPLICATION_FORM_STATUS.EDIT,
+          }),
+          search: generateQuery({ recruitmentId }),
+          state: { currentRecruitment },
+        });
+      }
+    };
+
+    init();
+  }, [
+    recruitmentId,
+    currentRecruitment,
+    history,
+    status,
+    token,
+    fetchApplicationForm,
+    fetchRecruitmentItems,
+  ]);
 
   return (
     <div className={styles.box}>
