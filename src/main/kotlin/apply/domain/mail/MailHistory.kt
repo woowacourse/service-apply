@@ -1,7 +1,7 @@
 package apply.domain.mail
 
 import support.domain.BaseEntity
-import support.domain.RecipientsConverter
+import support.domain.StringToListConverter
 import java.time.LocalDateTime
 import javax.persistence.Column
 import javax.persistence.Convert
@@ -21,7 +21,7 @@ class MailHistory(
     val sender: String,
 
     @Column(nullable = false)
-    @Convert(converter = RecipientsConverter::class)
+    @Convert(converter = StringToListConverter::class)
     @Lob
     val recipients: List<String>,
 

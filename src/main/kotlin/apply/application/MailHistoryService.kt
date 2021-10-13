@@ -5,7 +5,6 @@ import apply.domain.mail.MailHistory
 import apply.domain.mail.MailHistoryRepository
 import apply.domain.mail.getById
 import apply.domain.user.UserRepository
-import apply.domain.user.findAllByEmailIn
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 
@@ -34,11 +33,5 @@ class MailHistoryService(
     fun getById(mailHistoryId: Long): MailData {
         val mailHistory = mailHistoryRepository.getById(mailHistoryId)
         return MailData(mailHistory)
-    }
-
-    fun findAllMailTargetsByEmails(emails: List<String>): List<MailTargetResponse> {
-        val users = userRepository.findAllByEmailIn(emails)
-        val anonymousEmails = emails - users.map { it.email }
-        return users.map { MailTargetResponse(it) } + anonymousEmails.map { MailTargetResponse(it) }
     }
 }

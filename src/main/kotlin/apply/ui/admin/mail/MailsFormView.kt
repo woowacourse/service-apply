@@ -37,7 +37,6 @@ class MailsFormView(
         recruitmentService,
         evaluationService,
         mailTargetService,
-        mailHistoryService,
         mailProperties
     )
     private val submitButton: Component = createSubmitButton()
@@ -51,9 +50,7 @@ class MailsFormView(
         result?.let {
             val (id, value) = it.destructured
             if (value == EDIT_VALUE) {
-                val mailData = mailHistoryService.getById(id.toLong())
-                mailForm.fill(mailData)
-                mailForm.toReadOnlyMode()
+                mailForm.fill(mailHistoryService.getById(id.toLong()))
                 this.submitButton.isVisible = false
             }
         } ?: UI.getCurrent().page.history.back() // TODO: 에러 화면을 구현한다.

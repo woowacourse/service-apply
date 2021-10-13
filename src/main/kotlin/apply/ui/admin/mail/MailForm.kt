@@ -1,7 +1,6 @@
 package apply.ui.admin.mail
 
 import apply.application.EvaluationService
-import apply.application.MailHistoryService
 import apply.application.MailTargetResponse
 import apply.application.MailTargetService
 import apply.application.RecruitmentService
@@ -32,7 +31,6 @@ class MailForm(
     private val recruitmentService: RecruitmentService,
     private val evaluationService: EvaluationService,
     private val mailTargetService: MailTargetService,
-    private val mailHistoryService: MailHistoryService,
     private val mailProperties: MailProperties
 ) : BindingFormLayout<MailData>(MailData::class) {
     private val subject: TextField = TextField("제목").apply { setWidthFull() }
@@ -47,14 +45,6 @@ class MailForm(
         add(subject, createSender(), recipientFilter, mailTargetGridTitle, mailTargetsGrid, body, fileUpload)
         setResponsiveSteps(ResponsiveStep("0", 1))
         drawRequired()
-    }
-
-    fun toReadOnlyMode() {
-        this.subject.isReadOnly = true
-        this.body.isReadOnly = true
-        this.recipientFilter.isVisible = false
-        this.mailTargetsGrid.getColumnByKey(DELETE_BUTTON).isVisible = false
-        this.fileUpload.isVisible = false
     }
 
     private fun createSender(): Component {
@@ -166,7 +156,16 @@ class MailForm(
     override fun fill(data: MailData) {
         setRowCount(data.recipients.size)
         fillDefault(data)
-        mailTargets.addAll(mailHistoryService.findAllMailTargetsByEmails(data.recipients))
+        toReadOnlyMode()
+        mailTargets.addAll(mailTargetService.findAllByEmails(data.recipients))
+    }
+
+    private fun toReadOnlyMode() {
+        subject.isReadOnly = true
+        body.isReadOnly = true
+        recipientFilter.isVisible = false
+        mailTargetsGrid.getColumnByKey(DELETE_BUTTON).isVisible = false
+        fileUpload.isVisible = false
     }
 
     companion object {

@@ -4,7 +4,7 @@ import javax.persistence.AttributeConverter
 import javax.persistence.Converter
 
 @Converter
-class RecipientsConverter : AttributeConverter<List<String>, String> {
+class StringToListConverter : AttributeConverter<List<String>, String> {
     override fun convertToDatabaseColumn(recipients: List<String>): String {
         return recipients.joinToString(COMMA)
     }
