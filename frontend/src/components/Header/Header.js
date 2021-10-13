@@ -16,6 +16,14 @@ const Header = () => {
     setIsShowMemberMenu(target.checked);
   };
 
+  const routeTo = ({ pathname }) => {
+    history.push({
+      pathname,
+    });
+
+    setIsShowMemberMenu(false);
+  };
+
   const onLogout = () => {
     setIsShowMemberMenu(false);
     resetToken();
@@ -51,6 +59,7 @@ const Header = () => {
                   <input
                     type="checkbox"
                     className={styles.checkbox}
+                    checked={isShowMemberMenu}
                     onChange={onChange}
                   />
                 </label>
@@ -58,13 +67,30 @@ const Header = () => {
                 {isShowMemberMenu && (
                   <>
                     <ul className={styles["member-menu-list"]}>
-                      <li>
-                        <Link to={PATH.MY_PAGE}>마이페이지</Link>
+                      <li className={styles["member-menu-listitem"]}>
+                        <button
+                          type="button"
+                          onClick={() => routeTo({ pathname: PATH.MY_PAGE })}
+                        >
+                          마이페이지
+                        </button>
                       </li>
-                      <li>
-                        <Link>내 지원 현황</Link>
+                      <li className={styles["member-menu-listitem"]}>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            routeTo({ pathname: PATH.MY_APPLICATION })
+                          }
+                        >
+                          내 지원 현황
+                        </button>
                       </li>
-                      <li onClick={onLogout}>로그아웃</li>
+                      <li
+                        className={styles["member-menu-listitem"]}
+                        onClick={onLogout}
+                      >
+                        로그아웃
+                      </li>
                     </ul>
                     <div
                       className={styles.dimmed}

@@ -6,4 +6,5 @@ interface AssignmentRepository : JpaRepository<Assignment, Long> {
     fun existsByUserIdAndMissionId(userId: Long, missionId: Long): Boolean
     fun findByUserIdAndMissionId(userId: Long, missionId: Long): Assignment?
     fun findAllByUserIdIn(userId: List<Long>): List<Assignment>
+    fun findAllByUserId(userId: Long): List<Assignment>
 }

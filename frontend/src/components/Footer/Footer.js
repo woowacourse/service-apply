@@ -22,7 +22,7 @@ const Footer = () => {
         </p>
         <div className={styles.social}>
           <a
-            href="https://woowabros.github.io/techcourse/2020/10/06/woowacourse.html"
+            href="https://techblog.woowahan.com/5977/"
             target="_blank"
             className="ti-github"
             rel="noreferrer noopener"

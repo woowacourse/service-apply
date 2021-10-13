@@ -90,11 +90,11 @@ const Recruits = () => {
             <RecruitmentItem
               key={recruitment.id}
               recruitment={recruitment}
-              activeButton={
-                recruitment.status === RECRUITMENT_STATUS.RECRUITING
+              isButtonDisabled={
+                recruitment.status !== RECRUITMENT_STATUS.RECRUITING
               }
               buttonLabel={BUTTON_LABEL[recruitment.status]}
-              onClick={() => goToNewApplicationFormPage(recruitment)}
+              onClickButton={() => goToNewApplicationFormPage(recruitment)}
               role="listitem"
             />
           ))}

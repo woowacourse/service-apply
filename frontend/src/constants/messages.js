@@ -12,6 +12,8 @@ export const ERROR_MESSAGE = {
     PHONE_NUMBER: "정확한 전화번호를 입력해 주세요. ex) 010-1234-5678",
     REQUIRED: "필수 정보입니다.",
     URL: "http(s)를 포함한 정확한 URL을 입력해 주세요.",
+    TIMEOUT_EMAIL_AUTHENTICATION_CODE:
+      "이메일 인증코드 유효시간이 초과되었습니다. 이메일 인증코드를 재발급해주세요.",
   },
   API: {
     ALREADY_REGISTER: "이미 지원한 이력이 있습니다.",
@@ -21,6 +23,12 @@ export const ERROR_MESSAGE = {
     EDIT_FAILURE: "변경에 실패했습니다. 잠시 후 다시 시도해주세요.",
     FETCHING_USER_INFO:
       "내 정보를 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요.",
+    NOT_AUTHENTICATED: "이메일 인증을 완료해주세요.",
+    ALREADY_EXIST_EMAIL: "이미 가입된 이메일입니다.",
+    INVALID_AUTHENTICATION_CODE: "인증코드가 일치하지 않습니다.",
+    SUBMIT_ASSIGNMENT: "과제 제출에 실패했습니다. 잠시 후 다시 시도해주세요.",
+    FIND_PASSWORD: "입력된 정보가 올바르지 않습니다. 다시 확인해주세요.",
+    EDIT_PASSWORD: "입력된 정보가 올바르지 않습니다. 다시 확인해주세요.",
   },
   ACCESS: {
     REQUIRED_LOGIN: "로그인이 필요합니다.",
@@ -35,9 +43,9 @@ export const ERROR_MESSAGE = {
 
 export const SUCCESS_MESSAGE = {
   API: {
-    LOGIN: "로그인 성공",
     CHANGE_PASSWORD: "비밀번호가 변경되었습니다. 다시 로그인해주세요.",
     SUBMIT_APPLICATION: "정상적으로 제출되었습니다.",
+    SUBMIT_ASSIGNMENT: "정상적으로 제출되었습니다.",
     SAVE_APPLICATION: "정상적으로 저장되었습니다.",
     EDIT_MY_PAGE: "정상적으로 변경되었습니다.",
   },
@@ -47,4 +55,6 @@ export const CONFIRM_MESSAGE = {
   SUBMIT_APPLICATION:
     "제출하신 뒤에는 수정하실 수 없습니다. 정말로 제출하시겠습니까?",
   RESET_APPLICATION: "정말 초기화하시겠습니까?",
+  CANCEL_ASSIGNMENT_SUBMIT:
+    "정말 취소하시겠습니까? 작성하신 내용이 저장되지 않습니다.",
 };

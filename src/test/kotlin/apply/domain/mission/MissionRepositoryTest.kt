@@ -30,8 +30,22 @@ class MissionRepositoryTest(
         missionRepository.deleteById(mission.id)
         assertAll(
             { assertThat(missionRepository.findAll()).hasSize(0) },
-            { assertThat(missionRepository.findByIdOrNull(mission.id)).isNull() }
+            { assertThat(missionRepository.findByIdOrNull(mission.id)).isNull() },
+            { assertThat(missionRepository.existsById(mission.id)).isFalse() }
         )
+    }
+
+    @Test
+    fun `해당 평가들에 해당하는 모든 과제를 찾는다`() {
+        missionRepository.saveAll(
+            listOf(
+                createMission(evaluationId = 1L),
+                createMission(evaluationId = 2L),
+                createMission(evaluationId = 3L),
+                createMission(evaluationId = 4L)
+            )
+        )
+        assertThat(missionRepository.findAllByEvaluationIdIn(listOf(1, 2, 3, 4))).hasSize(4)
     }
 
     private fun flushAndClear() {

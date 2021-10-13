@@ -26,3 +26,9 @@ data class AssignmentData(
         assignment?.note
     )
 }
+
+data class AssignmentResponse(
+    val githubUsername: String,
+    val pullRequestUrl: String,
+    val note: String
+)
