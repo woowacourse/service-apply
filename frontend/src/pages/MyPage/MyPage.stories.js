@@ -9,5 +9,3 @@ export default {
 const Template = (args) => <MyPage {...args} />;
 
 export const Default = Template.bind({});
-
-Default.args = {};

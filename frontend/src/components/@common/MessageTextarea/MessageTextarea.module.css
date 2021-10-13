@@ -1,3 +1,7 @@
+.box {
+  margin-bottom: 1.25rem;
+}
+
 .text-field {
   display: flex;
   flex-direction: column;
