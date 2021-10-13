@@ -33,23 +33,20 @@ const AssignmentSubmit = () => {
   const [initialFormData, setInitialFormData] = useState({});
 
   const submit = async (assignmentData) => {
+    const payload = {
+      recruitmentId,
+      missionId: currentMission.id,
+      token,
+      assignmentData,
+    };
+
     try {
       if (status === PARAM.ASSIGNMENT_STATUS.NEW) {
-        await postAssignment({
-          recruitmentId,
-          missionId: currentMission.id,
-          token,
-          assignmentData,
-        });
+        await postAssignment(payload);
       }
 
       if (status === PARAM.APPLICATION_FORM_STATUS.EDIT) {
-        await patchAssignment({
-          recruitmentId,
-          missionId: currentMission.id,
-          token,
-          assignmentData,
-        });
+        await patchAssignment(payload);
       }
 
       alert(SUCCESS_MESSAGE.API.SUBMIT_ASSIGNMENT);
