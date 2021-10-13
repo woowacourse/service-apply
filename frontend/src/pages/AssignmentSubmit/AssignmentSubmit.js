@@ -69,18 +69,18 @@ const AssignmentSubmit = () => {
     submit,
   });
 
+  const init = async () => {
+    const response = await fetchAssignment({
+      recruitmentId,
+      missionId: currentMission.id,
+      token,
+    });
+
+    setInitialFormData(response.data);
+  };
+
   useEffect(() => {
     if (status !== PARAM.ASSIGNMENT_STATUS.EDIT) return;
-
-    const init = async () => {
-      const response = await fetchAssignment({
-        recruitmentId,
-        missionId: currentMission.id,
-        token,
-      });
-
-      setInitialFormData(response.data);
-    };
 
     init();
   }, []);

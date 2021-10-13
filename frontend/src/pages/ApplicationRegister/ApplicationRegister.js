@@ -124,7 +124,7 @@ const ApplicationRegister = () => {
     submit,
   });
 
-  const onSaveTemp = async () => {
+  const handelSaveTemp = async () => {
     try {
       const answers = getAnswers(value);
 
@@ -147,42 +147,34 @@ const ApplicationRegister = () => {
     }
   };
 
-  useEffect(() => {
-    const init = async () => {
-      try {
-        await fetchRecruitmentItems();
+  const init = async () => {
+    try {
+      await fetchRecruitmentItems();
 
-        if (status === PARAM.APPLICATION_FORM_STATUS.EDIT) {
-          await fetchApplicationForm();
-        } else {
-          await Api.createForm({
-            token,
-            recruitmentId,
-          });
-        }
-      } catch (error) {
-        console.error(error);
-
-        history.replace({
-          pathname: generatePath(PATH.APPLICATION_FORM, {
-            status: PARAM.APPLICATION_FORM_STATUS.EDIT,
-          }),
-          search: generateQuery({ recruitmentId }),
-          state: { currentRecruitment },
+      if (status === PARAM.APPLICATION_FORM_STATUS.EDIT) {
+        await fetchApplicationForm();
+      } else {
+        await Api.createForm({
+          token,
+          recruitmentId,
         });
       }
-    };
+    } catch (error) {
+      console.error(error);
 
+      history.replace({
+        pathname: generatePath(PATH.APPLICATION_FORM, {
+          status: PARAM.APPLICATION_FORM_STATUS.EDIT,
+        }),
+        search: generateQuery({ recruitmentId }),
+        state: { currentRecruitment },
+      });
+    }
+  };
+
+  useEffect(() => {
     init();
-  }, [
-    recruitmentId,
-    currentRecruitment,
-    history,
-    status,
-    token,
-    fetchApplicationForm,
-    fetchRecruitmentItems,
-  ]);
+  }, [status]);
 
   return (
     <div className={styles.box}>
@@ -245,7 +237,7 @@ const ApplicationRegister = () => {
 
             <div className={styles.buttons}>
               <ResetButton />
-              <TempSaveButton onSaveTemp={onSaveTemp} />
+              <TempSaveButton onSaveTemp={handelSaveTemp} />
               <SubmitButton />
             </div>
           </Form>
