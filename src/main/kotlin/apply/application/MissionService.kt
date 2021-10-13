@@ -78,10 +78,11 @@ class MissionService(
         val includedEvaluationIds = evaluationIds.filter {
             evaluationTargetRepository.existsByUserIdAndEvaluationId(userId, it)
         }
+        val assignments = assignmentRepository.findAllByUserId(userId)
         return missionRepository.findAllByEvaluationIdIn(includedEvaluationIds).filter {
             !it.hidden
-        }.map {
-            MissionResponse(it, assignmentRepository.existsByUserIdAndMissionId(userId, it.id))
+        }.map { mission ->
+            MissionResponse(mission, assignments.any { it.missionId == mission.id })
         }
     }
 }
