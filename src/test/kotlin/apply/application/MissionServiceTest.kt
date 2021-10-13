@@ -46,7 +46,7 @@ class MissionServiceTest {
     fun `존재하지 않는 평가 id인 경우 예외를 던진다`() {
         val missionData = createMissionData()
         every { evaluationRepository.existsById(any()) } returns false
-        assertThrows<IllegalStateException> { missionService.save(missionData) }
+        assertThrows<IllegalArgumentException> { missionService.save(missionData) }
     }
 
     @Test
