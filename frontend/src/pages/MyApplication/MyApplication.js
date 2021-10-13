@@ -117,8 +117,7 @@ const MyApplication = () => {
 
             <hr className={styles.hr} />
 
-            {missions &&
-              missions[recruitment.id] &&
+            {missions?.[recruitment.id] &&
               missions[recruitment.id].map((mission) => (
                 <RecruitmentItem
                   key={`mission-${recruitment.id}-${mission.id}`}
