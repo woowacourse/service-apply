@@ -2,6 +2,8 @@ const PATH = {
   HOME: "/",
   RECRUITS: "/recruits",
   NEW_APPLICATION: "/applicants/new",
+  MY_APPLICATION: "/applications/me",
+  ASSIGNMENT: "/assignment/:status(new|edit)",
   APPLICATION_FORM: "/application-forms/:status(new|edit)",
   LOGIN: "/login",
   FIND_PASSWORD: "/find",
@@ -13,6 +15,10 @@ const PATH = {
 
 export const PARAM = {
   APPLICATION_FORM_STATUS: {
+    EDIT: "edit",
+    NEW: "new",
+  },
+  ASSIGNMENT_STATUS: {
     EDIT: "edit",
     NEW: "new",
   },

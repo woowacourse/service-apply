@@ -19,7 +19,9 @@ const GenderField = ({ required, className }) => {
 
   return (
     <div className={classNames(styles["gender-field"], className)}>
-      <Label required={required}>성별</Label>
+      <Label className={styles.label} required={required}>
+        성별
+      </Label>
       <div className={styles["gender-group"]}>
         <Radio
           onChange={handleChange}

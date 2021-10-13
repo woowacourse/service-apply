@@ -108,7 +108,6 @@ const Join = () => {
 
           <FormInput
             name="name"
-            type="text"
             label="이름"
             placeholder="이름을 입력해 주세요."
             required

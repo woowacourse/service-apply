@@ -6,7 +6,7 @@ import Container, {
 import Form from "../../components/form/Form/Form";
 import FormInput from "../../components/form/FormInput/FormInput";
 import SubmitButton from "../../components/form/SubmitButton/SubmitButton";
-import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
+import { ERROR_MESSAGE } from "../../constants/messages";
 import PATH, { PARAM } from "../../constants/path";
 import useForm from "../../hooks/useForm";
 import useTokenContext from "../../hooks/useTokenContext";
@@ -58,7 +58,7 @@ const Login = () => {
         <Form
           onSubmit={handleSubmit}
           footer={
-            <Link to="/find" className={styles["find-password"]}>
+            <Link to={PATH.FIND_PASSWORD} className={styles["find-password"]}>
               비밀번호 찾기
             </Link>
           }

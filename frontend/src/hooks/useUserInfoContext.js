@@ -7,7 +7,7 @@ const useUserInfoContext = () => {
   const userInfoContext = useContext(UserInfoContext);
 
   if (!userInfoContext)
-    throw Error(ERROR_MESSAGE.HOOKS.CANNOT_FIND_RECRUITMENT_CONTEXT);
+    throw Error(ERROR_MESSAGE.HOOKS.CANNOT_FIND_USER_INFO_CONTEXT);
 
   return userInfoContext;
 };

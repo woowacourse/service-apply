@@ -1,8 +1,9 @@
 .box {
-  position: relative;
+  margin-bottom: 1.25rem;
 }
 
 .text-field {
+  position: relative;
   display: flex;
   flex-direction: column;
   margin-bottom: 1rem;
@@ -20,7 +21,7 @@
 
 .rule-field {
   position: absolute;
-  bottom: 0;
+  top: calc(100% + 0.25rem);
   left: 0;
   margin-left: 0.5rem;
   height: 0.75rem;
@@ -29,7 +30,7 @@
 }
 
 .description {
-  margin-bottom: 1.125rem;
+  margin-bottom: 0.75rem;
 }
 
 .input-box {

@@ -39,8 +39,8 @@ const MessageTextInput = ({
             {...props}
           />
         </div>
+        {errorMessage && <p className={styles["rule-field"]}>{errorMessage}</p>}
       </div>
-      {errorMessage && <p className={styles["rule-field"]}>{errorMessage}</p>}
     </div>
   );
 };
