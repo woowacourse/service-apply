@@ -24,7 +24,7 @@ import support.views.createContrastButton
 import support.views.createPrimaryButton
 
 @Route(value = "admin/mails", layout = BaseLayout::class)
-class MailFormView(
+class MailsFormView(
     userService: UserService,
     recruitmentService: RecruitmentService,
     evaluationService: EvaluationService,
@@ -71,14 +71,14 @@ class MailFormView(
             mailForm.bindOrNull()?.let {
                 mailHistoryService.save(it)
                 // TODO: emailService.메일전송(it, uploadFile)
-                UI.getCurrent().navigate(MailView::class.java)
+                UI.getCurrent().navigate(MailsView::class.java)
             }
         }
     }
 
     private fun createCancelButton(): Button {
         return createContrastButton("취소") {
-            UI.getCurrent().navigate(MailView::class.java)
+            UI.getCurrent().navigate(MailsView::class.java)
         }
     }
 }

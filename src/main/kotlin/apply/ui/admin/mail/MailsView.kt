@@ -20,7 +20,7 @@ import support.views.createPrimaryButton
 import support.views.createPrimarySmallButton
 
 @Route(value = "admin/mails", layout = BaseLayout::class)
-class MailView(
+class MailsView(
     private val mailHistoryService: MailHistoryService
 ) : VerticalLayout() {
     init {
@@ -37,7 +37,7 @@ class MailView(
     private fun createButton(): Component {
         return HorizontalLayout(
             createPrimaryButton("메일 보내기") {
-                UI.getCurrent().navigate(MailFormView::class.java, NEW_VALUE)
+                UI.getCurrent().navigate(MailsFormView::class.java, NEW_VALUE)
             }
         ).apply {
             setSizeFull()
@@ -61,7 +61,7 @@ class MailView(
 
     private fun createDetailButton(mailData: MailData): Component {
         return createPrimarySmallButton("자세히 보기") {
-            UI.getCurrent().navigate(MailFormView::class.java, "${mailData.id}/$EDIT_VALUE")
+            UI.getCurrent().navigate(MailsFormView::class.java, "${mailData.id}/$EDIT_VALUE")
         }
     }
 }
