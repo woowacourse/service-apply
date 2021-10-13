@@ -18,11 +18,6 @@ class AssignmentRepositoryTest(
         assignmentRepository.save(assignment)
     }
 
-    @AfterEach
-    fun tearDown() {
-        assignmentRepository.deleteAll()
-    }
-
     @Test
     fun `지원자와 과제에 해당하는 제출물의 존재 여부를 조회힌다`() {
         assertThat(assignmentRepository.existsByUserIdAndMissionId(assignment.userId, assignment.missionId)).isTrue

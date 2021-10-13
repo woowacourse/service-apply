@@ -33,11 +33,6 @@ class EvaluationTargetRepositoryTest(
         evaluationTargetRepository.saveAll(evaluationTargets)
     }
 
-    @AfterEach
-    fun tearDown() {
-        evaluationTargetRepository.deleteAll()
-    }
-
     @Test
     fun `평가의 id로 평가 대상자를 찾는다`() {
         val results = evaluationTargetRepository.findAllByEvaluationId(EVALUATION_ID)
