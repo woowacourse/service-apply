@@ -1,29 +1,30 @@
 package apply.ui.api
 
-import apply.application.TermResponse
 import apply.application.TermData
+import apply.application.TermResponse
 import apply.application.TermService
 import apply.application.UserService
 import apply.domain.term.Term
-import apply.security.JwtTokenProvider
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.context.annotation.ComponentScan
+import org.springframework.context.annotation.FilterType
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 
 @WebMvcTest(
-    controllers = [TermRestController::class]
+    controllers = [TermRestController::class],
+    includeFilters = [
+        ComponentScan.Filter(type = FilterType.REGEX, pattern = ["apply.security.*"])
+    ]
 )
 internal class TermRestControllerTest : RestControllerTest() {
-    @MockkBean
-    private lateinit var jwtTokenProvider: JwtTokenProvider
-
     @MockkBean
     private lateinit var userService: UserService
 
