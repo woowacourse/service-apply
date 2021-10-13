@@ -38,6 +38,10 @@ class TermService(
         return terms.map { TermResponse(it) }
     }
 
+    fun findAllTermData(): List<TermData> {
+        return findAll().map { TermData(it.name, it.id) }
+    }
+
     fun deleteById(id: Long) {
         check(!recruitmentRepository.existsByTermId(id)) { "모집이 존재하는 기수는 삭제할 수 없습니다." }
         require(termRepository.existsById(id)) { "존재하지 않는 기수는 삭제할 수 없습니다." }
