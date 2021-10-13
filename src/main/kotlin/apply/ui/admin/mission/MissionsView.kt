@@ -1,6 +1,6 @@
 package apply.ui.admin.mission
 
-import apply.application.MissionResponse
+import apply.application.MissionAndEvaluationResponse
 import apply.application.MissionService
 import apply.application.RecruitmentService
 import apply.domain.mission.MissionStatus
@@ -55,36 +55,36 @@ class MissionsView(
     }
 
     private fun createGrid(): Component {
-        return Grid<MissionResponse>(10).apply {
-            addSortableColumn("과제명", MissionResponse::title)
-            addSortableColumn("평가명", MissionResponse::evaluationTitle)
+        return Grid<MissionAndEvaluationResponse>(10).apply {
+            addSortableColumn("과제명", MissionAndEvaluationResponse::title)
+            addSortableColumn("평가명", MissionAndEvaluationResponse::evaluationTitle)
             addSortableColumn("상태") { it.status.toText() }
             addSortableColumn("공개 여부") { it.hidden.toText() }
-            addSortableDateTimeColumn("시작일시", MissionResponse::startDateTime)
-            addSortableDateTimeColumn("종료일시", MissionResponse::endDateTime)
+            addSortableDateTimeColumn("시작일시", MissionAndEvaluationResponse::startDateTime)
+            addSortableDateTimeColumn("종료일시", MissionAndEvaluationResponse::endDateTime)
             addColumn(createButtonRenderer()).apply { isAutoWidth = true }
             setItems(missionService.findAllByRecruitmentId(recruitmentId))
         }
     }
 
-    private fun createButtonRenderer(): Renderer<MissionResponse> {
-        return ComponentRenderer<Component, MissionResponse> { it -> createButtons(it) }
+    private fun createButtonRenderer(): Renderer<MissionAndEvaluationResponse> {
+        return ComponentRenderer<Component, MissionAndEvaluationResponse> { it -> createButtons(it) }
     }
 
-    private fun createButtons(mission: MissionResponse): Component {
+    private fun createButtons(mission: MissionAndEvaluationResponse): Component {
         return HorizontalLayout(
             createEditButton(mission),
             createDeleteButton(mission).apply { isEnabled = !mission.submittable }
         )
     }
 
-    private fun createEditButton(mission: MissionResponse): Component {
+    private fun createEditButton(mission: MissionAndEvaluationResponse): Component {
         return createPrimarySmallButton("수정") {
             UI.getCurrent().navigate(MissionsFormView::class.java, "$recruitmentId/${mission.id}/$EDIT_VALUE")
         }
     }
 
-    private fun createDeleteButton(mission: MissionResponse): Button {
+    private fun createDeleteButton(mission: MissionAndEvaluationResponse): Button {
         return createDeleteButtonWithDialog("과제를 삭제하시겠습니까?") {
             missionService.deleteById(mission.id)
         }

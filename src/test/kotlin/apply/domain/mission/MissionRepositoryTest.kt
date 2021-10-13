@@ -35,6 +35,19 @@ class MissionRepositoryTest(
         )
     }
 
+    @Test
+    fun `해당 평가들에 해당하는 모든 과제를 찾는다`() {
+        missionRepository.saveAll(
+            listOf(
+                createMission(evaluationId = 1L),
+                createMission(evaluationId = 2L),
+                createMission(evaluationId = 3L),
+                createMission(evaluationId = 4L)
+            )
+        )
+        assertThat(missionRepository.findAllByEvaluationIdIn(listOf(1, 2, 3, 4))).hasSize(4)
+    }
+
     private fun flushAndClear() {
         entityManager.flush()
         entityManager.clear()

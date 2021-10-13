@@ -3,9 +3,6 @@ package apply.application
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Size
 
-// TODO: 추가 data class 추가 시 interface 제거
-interface AssignmentDtos
-
 data class AssignmentRequest(
     @field:NotBlank
     val githubUsername: String,
@@ -14,5 +11,11 @@ data class AssignmentRequest(
     val pullRequestUrl: String,
 
     @field:NotBlank
+    val note: String
+)
+
+data class AssignmentResponse(
+    val githubUsername: String,
+    val pullRequestUrl: String,
     val note: String
 )
