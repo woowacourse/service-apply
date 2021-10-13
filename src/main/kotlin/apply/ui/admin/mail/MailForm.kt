@@ -9,7 +9,6 @@ import apply.application.mail.MailData
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.grid.Grid
-import com.vaadin.flow.component.html.Label
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.textfield.TextArea
@@ -38,12 +37,11 @@ class MailForm(
     private val body: TextArea = createBody()
     private val mailTargets: MutableSet<MailTargetResponse> = mutableSetOf()
     private val mailTargetsGrid: Grid<MailTargetResponse> = createMailTargetsGrid(mailTargets)
-    private val mailTargetGridTitle: Label = Label()
     private val recipientFilter: Component = createRecipientFilter()
     private val fileUpload: Component = createFileUpload()
 
     init {
-        add(subject, createSender(), recipientFilter, mailTargetGridTitle, mailTargetsGrid, body, fileUpload)
+        add(subject, createSender(), recipientFilter, mailTargetsGrid, body, fileUpload)
         setResponsiveSteps(ResponsiveStep("0", 1))
         drawRequired()
     }
