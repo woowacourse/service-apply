@@ -22,6 +22,7 @@ import org.springframework.boot.autoconfigure.mail.MailProperties
 import support.views.BindingFormLayout
 import support.views.NO_NAME
 import support.views.addSortableColumn
+import support.views.createEnterBox
 import support.views.createErrorSmallButton
 import support.views.createNormalButton
 import support.views.createUpload
@@ -56,14 +57,14 @@ class MailForm(
 
     private fun createRecipientFilter(): Component {
         return HorizontalLayout(
-            createEnterBox(),
+            createTargetEnterBox(),
             createIndividualLoadButton(),
             createGroupLoadButton()
         ).apply { defaultVerticalComponentAlignment = FlexComponent.Alignment.END }
     }
 
-    private fun createEnterBox(): Component {
-        return support.views.createEnterBox(labelText = "받는사람 추가") {
+    private fun createTargetEnterBox(): Component {
+        return createEnterBox(labelText = "받는사람") {
             if (it.isNotBlank()) {
                 mailTargets.addAndRefresh(MailTargetResponse(it, NO_NAME))
             }
@@ -86,13 +87,9 @@ class MailForm(
         }
     }
 
-    private fun setRowCount(count: Int) {
-        mailTargetGridTitle.text = "받는사람: $count 명"
-    }
-
     private fun createMailTargetsGrid(mailTargets: Set<MailTargetResponse>): Grid<MailTargetResponse> {
         return Grid<MailTargetResponse>(10).apply {
-            addSortableColumn("이름") { it.name ?: NO_NAME }
+            addSortableColumn("이름") { it.name ?: NO_NAME }.setFooter("받는사람: ${mailTargets.size}명")
             addSortableColumn("이메일", MailTargetResponse::email)
             addColumn(createRemoveButton()).key = DELETE_BUTTON
             setItems(mailTargets)
@@ -129,22 +126,26 @@ class MailForm(
     private fun MutableSet<MailTargetResponse>.addAndRefresh(element: MailTargetResponse) {
         add(element).also {
             mailTargetsGrid.dataProvider.refreshAll()
-            setRowCount(mailTargets.size)
+            refreshRowCount()
         }
     }
 
     private fun MutableSet<MailTargetResponse>.addAllAndRefresh(elements: Collection<MailTargetResponse>) {
         addAll(elements).also {
             mailTargetsGrid.dataProvider.refreshAll()
-            setRowCount(mailTargets.size)
+            refreshRowCount()
         }
     }
 
     private fun MutableSet<MailTargetResponse>.removeAndRefresh(element: MailTargetResponse) {
         remove(element).also {
             mailTargetsGrid.dataProvider.refreshAll()
-            setRowCount(mailTargets.size)
+            refreshRowCount()
         }
+    }
+
+    private fun refreshRowCount() {
+        mailTargetsGrid.columns.first().setFooter("받는사람: ${mailTargets.size}명")
     }
 
     override fun bindOrNull(): MailData? {
@@ -154,10 +155,10 @@ class MailForm(
     }
 
     override fun fill(data: MailData) {
-        setRowCount(data.recipients.size)
         fillDefault(data)
         toReadOnlyMode()
         mailTargets.addAll(mailTargetService.findAllByEmails(data.recipients))
+        refreshRowCount()
     }
 
     private fun toReadOnlyMode() {

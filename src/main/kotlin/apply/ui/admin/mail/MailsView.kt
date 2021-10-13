@@ -61,7 +61,7 @@ class MailsView(
     }
 
     private fun createDetailButton(mailData: MailData): Component {
-        return createPrimarySmallButton("자세히 보기") {
+        return createPrimarySmallButton("상세 보기") {
             UI.getCurrent().navigate(MailsFormView::class.java, "${mailData.id}/$EDIT_VALUE")
         }
     }
