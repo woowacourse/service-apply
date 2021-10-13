@@ -102,19 +102,17 @@
   user-select: none;
 }
 
-.member-menu-listitem > a {
+.member-menu-listitem > button {
   width: inherit;
   height: inherit;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .member-menu-listitem:last-child {
   border: 0;
 }
 
-.member-menu-listitem:hover {
+.member-menu-listitem:hover,
+.member-menu-listitem > button:hover {
   font-weight: bold;
 }
 
@@ -135,6 +133,6 @@
 }
 
 .link-container,
-.link-container a {
+.link-container button {
   color: var(--gray-008);
 }

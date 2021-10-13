@@ -16,6 +16,14 @@ const Header = () => {
     setIsShowMemberMenu(target.checked);
   };
 
+  const routeTo = ({ pathname }) => {
+    history.push({
+      pathname,
+    });
+
+    setIsShowMemberMenu(false);
+  };
+
   const onLogout = () => {
     setIsShowMemberMenu(false);
     resetToken();
@@ -51,6 +59,7 @@ const Header = () => {
                   <input
                     type="checkbox"
                     className={styles.checkbox}
+                    checked={isShowMemberMenu}
                     onChange={onChange}
                   />
                 </label>
@@ -59,10 +68,22 @@ const Header = () => {
                   <>
                     <ul className={styles["member-menu-list"]}>
                       <li className={styles["member-menu-listitem"]}>
-                        <Link to={PATH.MY_PAGE}>마이페이지</Link>
+                        <button
+                          type="button"
+                          onClick={() => routeTo({ pathname: PATH.MY_PAGE })}
+                        >
+                          마이페이지
+                        </button>
                       </li>
                       <li className={styles["member-menu-listitem"]}>
-                        <Link to={PATH.MY_APPLICATION}>내 지원 현황</Link>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            routeTo({ pathname: PATH.MY_APPLICATION })
+                          }
+                        >
+                          내 지원 현황
+                        </button>
                       </li>
                       <li
                         className={styles["member-menu-listitem"]}
