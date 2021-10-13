@@ -17,9 +17,10 @@ fun createMission(
     startDateTime: LocalDateTime = START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
     submittable: Boolean = true,
+    hidden: Boolean = false,
     id: Long = 0L
 ): Mission {
-    return Mission(title, description, evaluationId, startDateTime, endDateTime, submittable, id)
+    return Mission(title, description, evaluationId, startDateTime, endDateTime, submittable, hidden, id)
 }
 
 fun createMissionData(
@@ -29,7 +30,8 @@ fun createMissionData(
     endDateTime: LocalDateTime = END_DATE_TIME,
     description: String = MISSION_DESCRIPTION,
     submittable: Boolean = true,
+    hidden: Boolean = true,
     id: Long = 0L
 ): MissionData {
-    return MissionData(title, evaluation, startDateTime, endDateTime, description, submittable, id)
+    return MissionData(title, evaluation, startDateTime, endDateTime, description, submittable, hidden, id)
 }
