@@ -2,7 +2,7 @@ package apply.ui.admin.recruitment
 
 import apply.application.RecruitmentData
 import apply.application.RecruitmentItemData
-import apply.application.TermSelectData
+import apply.application.TermData
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.datetimepicker.DateTimePicker
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup
@@ -17,8 +17,8 @@ import java.time.LocalDateTime
 
 class RecruitmentForm() : BindingIdentityFormLayout<RecruitmentData>(RecruitmentData::class) {
     private val title: TextField = TextField("모집명")
-    private val term: Select<TermSelectData> = createItemSelect<TermSelectData>("기수").apply {
-        setItemLabelGenerator(TermSelectData::name)
+    private val term: Select<TermData> = createItemSelect<TermData>("기수").apply {
+        setItemLabelGenerator(TermData::name)
         isEmptySelectionAllowed = false
     }
     private val startDateTime: DateTimePicker = DateTimePicker("시작 일시")
@@ -34,13 +34,13 @@ class RecruitmentForm() : BindingIdentityFormLayout<RecruitmentData>(Recruitment
         drawRequired()
     }
 
-    constructor(terms: List<TermSelectData>) : this() {
+    constructor(terms: List<TermData>) : this() {
         term.setItems(terms)
     }
 
     constructor(
         title: String,
-        term: TermSelectData,
+        term: TermData,
         startDateTime: LocalDateTime,
         endDateTime: LocalDateTime,
         recruitable: Boolean,

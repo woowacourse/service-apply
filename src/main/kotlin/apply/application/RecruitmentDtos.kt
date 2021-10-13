@@ -18,7 +18,7 @@ data class RecruitmentData(
     var title: String = "",
 
     @field:NotNull
-    var term: TermSelectData = TermSelectData(),
+    var term: TermData = TermData(),
 
     @field:NotNull
     var startDateTime: LocalDateTime = LocalDateTime.MIN,
@@ -39,7 +39,7 @@ data class RecruitmentData(
 ) {
     constructor(recruitment: Recruitment, term: Term, recruitmentItems: List<RecruitmentItem>) : this(
         recruitment.title,
-        TermSelectData(term),
+        TermData(term),
         recruitment.startDateTime,
         recruitment.endDateTime,
         recruitment.recruitable,

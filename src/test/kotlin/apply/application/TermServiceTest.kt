@@ -7,8 +7,10 @@ import io.mockk.Runs
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.just
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import support.test.UnitTest
@@ -31,6 +33,7 @@ internal class TermServiceTest {
     @Test
     fun `기수를 생성한다`() {
         every { termRepository.save(any()) } returns Term("3기")
+        every { termRepository.existsByName(any()) } returns false
         assertDoesNotThrow { termService.save(TermData("3기")) }
     }
 
@@ -41,26 +44,53 @@ internal class TermServiceTest {
     }
 
     @Test
+    fun `중복된 기수명으로 기수를 생성할 수 없다`() {
+        every { termRepository.existsByName(any()) } returns true
+        assertThrows<IllegalStateException> { termService.save(TermData("3기")) }
+    }
+
+    @Test
+    fun `기수를 조회한다`() {
+        val terms = listOf(Term("3기"), Term("4기"))
+        every { termRepository.findAll() } returns terms
+        val responses = termService.findAll()
+        assertAll(
+            { assertThat(responses).hasSize(3) },
+            {
+                assertThat(responses).containsExactlyInAnyOrder(
+                    TermResponse(Term.SINGLE),
+                    TermResponse(terms[0]),
+                    TermResponse(terms[1])
+                )
+            }
+        )
+    }
+
+    @Test
+    fun `기수 조회시 단독 모집을 포함한다`() {
+        every { termRepository.findAll() } returns emptyList<Term>()
+        val responses = termService.findAll()
+        assertThat(responses).contains(TermResponse(Term.SINGLE))
+    }
+
+    @Test
     fun `기수를 삭제한다`() {
-        val termId = 1L
-        every { recruitmentRepository.existsByTermId(termId) } returns false
-        every { termRepository.existsById(termId) } returns true
+        every { recruitmentRepository.existsByTermId(any()) } returns false
+        every { termRepository.existsById(any()) } returns true
         every { termRepository.deleteById(any()) } just Runs
-        assertDoesNotThrow { termService.deleteById(termId) }
+        assertDoesNotThrow { termService.deleteById(1L) }
     }
 
     @Test
     fun `모집이 존재하는 기수는 삭제할 수 없다`() {
-        val termId = 1L
-        every { recruitmentRepository.existsByTermId(termId) } returns true
-        assertThrows<IllegalStateException> { termService.deleteById(termId) }
+        every { recruitmentRepository.existsByTermId(any()) } returns true
+        assertThrows<IllegalStateException> { termService.deleteById(1L) }
     }
 
     @Test
     fun `존재하지 않는 기수를 삭제하면 예외가 발생한다`() {
-        val termId = 1L
-        every { recruitmentRepository.existsByTermId(termId) } returns false
-        every { termRepository.existsById(termId) } returns false
-        assertThrows<IllegalStateException> { termService.deleteById(termId) }
+        every { recruitmentRepository.existsByTermId(any()) } returns false
+        every { termRepository.existsById(any()) } returns false
+        assertThrows<IllegalArgumentException> { termService.deleteById(1L) }
     }
 }

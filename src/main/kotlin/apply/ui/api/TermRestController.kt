@@ -1,9 +1,11 @@
 package apply.ui.api
 
+import apply.application.TermResponse
 import apply.application.TermData
 import apply.application.TermService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -21,6 +23,12 @@ class TermRestController(
     ): ResponseEntity<Unit> {
         termService.save(termData)
         return ResponseEntity.ok().build()
+    }
+
+    @GetMapping
+    fun findAll(): ResponseEntity<ApiResponse<List<TermResponse>>> {
+        val terms = termService.findAll()
+        return ResponseEntity.ok(ApiResponse.success(terms))
     }
 
     @DeleteMapping("/{termId}")

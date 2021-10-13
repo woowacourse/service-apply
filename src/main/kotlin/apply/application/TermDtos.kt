@@ -7,20 +7,12 @@ import javax.validation.constraints.Size
 data class TermData(
     @field:NotBlank
     @field:Size(min = 1, max = 31)
-    val name: String = "",
-) {
-    fun toEntity(): Term {
-        return Term(name)
-    }
-}
-
-data class TermSelectData(
-    @field:NotBlank
-    @field:Size(min = 1, max = 31)
     var name: String = "",
     var id: Long = 0L
 ) {
     constructor(term: Term) : this(term.name, term.id)
+
+    fun toEntity() = Term(name, id)
 }
 
 data class TermResponse(
