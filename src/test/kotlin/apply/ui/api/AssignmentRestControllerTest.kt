@@ -80,7 +80,7 @@ internal class AssignmentRestControllerTest : RestControllerTest() {
     }
 
     @Test
-    fun `과제물을 수정한다`() {
+    fun `과제 제출물을 수정한다`() {
         val loginUser = createUser()
 
         every { jwtTokenProvider.isValidToken("valid_token") } returns true
