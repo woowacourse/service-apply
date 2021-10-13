@@ -1,7 +1,7 @@
 package apply.ui.api
 
-import apply.application.MissionData
 import apply.application.MissionAndEvaluationResponse
+import apply.application.MissionData
 import apply.application.MissionResponse
 import apply.application.MissionService
 import apply.domain.user.User
@@ -21,7 +21,7 @@ class MissionRestController(
     private val missionService: MissionService
 ) {
     @PostMapping("/missions")
-    fun createMission(
+    fun save(
         @PathVariable recruitmentId: Long,
         @RequestBody missionData: MissionData
     ): ResponseEntity<Unit> {
@@ -30,7 +30,7 @@ class MissionRestController(
     }
 
     @GetMapping("/missions")
-    fun findMissionsByRecruitmentId(@PathVariable recruitmentId: Long): ResponseEntity<ApiResponse<List<MissionAndEvaluationResponse>>> {
+    fun findAllByRecruitmentId(@PathVariable recruitmentId: Long): ResponseEntity<ApiResponse<List<MissionAndEvaluationResponse>>> {
         val missions = missionService.findAllByRecruitmentId(recruitmentId)
         return ResponseEntity.ok(ApiResponse.success(missions))
     }
@@ -45,7 +45,7 @@ class MissionRestController(
     }
 
     @DeleteMapping("/missions/{missionId}")
-    fun deleteMission(@PathVariable recruitmentId: Long, @PathVariable missionId: Long): ResponseEntity<Unit> {
+    fun deleteById(@PathVariable recruitmentId: Long, @PathVariable missionId: Long): ResponseEntity<Unit> {
         missionService.deleteById(missionId)
         return ResponseEntity.ok().build()
     }

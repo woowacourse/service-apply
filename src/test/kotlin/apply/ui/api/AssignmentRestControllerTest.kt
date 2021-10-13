@@ -14,8 +14,8 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
-import org.springframework.test.web.servlet.patch
 import org.springframework.test.web.servlet.get
+import org.springframework.test.web.servlet.patch
 import org.springframework.test.web.servlet.post
 import support.test.TestEnvironment
 
@@ -66,7 +66,8 @@ internal class AssignmentRestControllerTest : RestControllerTest() {
         every { userService.getByEmail(any()) } returns loginUser
         every { assignmentService.getAssignmentByUserIdAndMissionId(any(), any()) } returns assignmentResponse
 
-        mockMvc.get("/api/recruitments/{recruitmentId}/missions/{missionId}/assignments",
+        mockMvc.get(
+            "/api/recruitments/{recruitmentId}/missions/{missionId}/assignments",
             recruitmentId,
             missionId
         ) {

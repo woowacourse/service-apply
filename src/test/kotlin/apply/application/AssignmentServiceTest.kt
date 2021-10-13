@@ -56,7 +56,13 @@ class AssignmentServiceTest {
         every { missionRepository.getById(any()) } returns createMission(
             startDateTime = LocalDateTime.now().minusDays(2), endDateTime = LocalDateTime.now().minusDays(1)
         )
-        assertThrows<IllegalStateException> { assignmentService.create(missionId, loginUser.id, createAssignmentRequest()) }
+        assertThrows<IllegalStateException> {
+            assignmentService.create(
+                missionId,
+                loginUser.id,
+                createAssignmentRequest()
+            )
+        }
     }
 
     @Test
@@ -70,7 +76,13 @@ class AssignmentServiceTest {
         every { assignmentRepository.existsByUserIdAndMissionId(any(), any()) } returns false
         every { missionRepository.getById(any()) } returns createMission()
         every { evaluationTargetRepository.findByEvaluationIdAndUserId(any(), any()) } returns null
-        assertThrows<IllegalArgumentException> { assignmentService.create(missionId, loginUser.id, createAssignmentRequest()) }
+        assertThrows<IllegalArgumentException> {
+            assignmentService.create(
+                missionId,
+                loginUser.id,
+                createAssignmentRequest()
+            )
+        }
     }
 
     @Test
@@ -102,7 +114,12 @@ class AssignmentServiceTest {
     @Test
     fun `과제를 제출한 적이 없는 경우 제출물 조회시 예외를 반환한다`() {
         every { assignmentRepository.findByUserIdAndMissionId(any(), any()) } returns null
-        assertThrows<IllegalArgumentException> { assignmentService.getAssignmentByUserIdAndMissionId(loginUser.id, missionId) }
+        assertThrows<IllegalArgumentException> {
+            assignmentService.getAssignmentByUserIdAndMissionId(
+                loginUser.id,
+                missionId
+            )
+        }
     }
 
     @Test

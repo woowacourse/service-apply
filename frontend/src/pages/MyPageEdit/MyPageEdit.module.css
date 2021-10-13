@@ -15,6 +15,10 @@
   gap: 1rem;
 }
 
+.input {
+  margin-bottom: 1.25rem;
+}
+
 .buttons {
   margin: 2rem 0;
   display: flex;

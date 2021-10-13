@@ -53,7 +53,7 @@ const RecruitmentItem = ({
       {buttonLabel && (
         <Button
           className={styles.button}
-          disabled={!isButtonDisabled}
+          disabled={isButtonDisabled}
           onClick={onClickButton}
         >
           {buttonLabel}

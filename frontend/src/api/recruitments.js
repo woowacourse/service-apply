@@ -1,8 +1,8 @@
 import axios from "axios";
 
-const BASE_URL = "/api/recruitments";
+const COMMON_PATH = "/api/recruitments";
 
 export const fetchItems = (recruitmentId) =>
-  axios.get(`${BASE_URL}/${recruitmentId}/items`);
+  axios.get(`${COMMON_PATH}/${recruitmentId}/items`);
 
-export const fetchRecruitments = () => axios.get(BASE_URL);
+export const fetchRecruitments = () => axios.get(COMMON_PATH);

@@ -1,6 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { fetchPasswordFind } from "../../api/applicants";
+import { fetchPasswordFind } from "../../api/user";
 import Container, {
   CONTAINER_SIZE,
 } from "../../components/@common/Container/Container";

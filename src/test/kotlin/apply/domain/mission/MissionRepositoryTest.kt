@@ -30,7 +30,8 @@ class MissionRepositoryTest(
         missionRepository.deleteById(mission.id)
         assertAll(
             { assertThat(missionRepository.findAll()).hasSize(0) },
-            { assertThat(missionRepository.findByIdOrNull(mission.id)).isNull() }
+            { assertThat(missionRepository.findByIdOrNull(mission.id)).isNull() },
+            { assertThat(missionRepository.existsById(mission.id)).isFalse() }
         )
     }
 

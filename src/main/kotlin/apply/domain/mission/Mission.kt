@@ -26,6 +26,9 @@ class Mission(
 
     @Column(nullable = false)
     var submittable: Boolean = false,
+
+    @Column(nullable = false)
+    var hidden: Boolean = true,
     id: Long = 0L
 ) : BaseEntity(id) {
     @Column(nullable = false)
@@ -44,6 +47,7 @@ class Mission(
         startDateTime: LocalDateTime,
         endDateTime: LocalDateTime,
         submittable: Boolean = false,
+        hidden: Boolean = true,
         id: Long = 0L
-    ) : this(title, description, evaluationId, MissionPeriod(startDateTime, endDateTime), submittable, id)
+    ) : this(title, description, evaluationId, MissionPeriod(startDateTime, endDateTime), submittable, hidden, id)
 }
