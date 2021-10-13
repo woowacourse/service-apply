@@ -12,11 +12,11 @@ const useInterval = (callback, delay) => {
       savedCallback.current();
     };
 
-    if (delay !== null || delay === undefined) {
-      let id = setInterval(tick, delay);
+    if (typeof delay !== "number" || delay < 0) return;
 
-      return () => clearInterval(id);
-    }
+    const id = setInterval(tick, delay);
+
+    return () => clearInterval(id);
   }, [delay]);
 };
 

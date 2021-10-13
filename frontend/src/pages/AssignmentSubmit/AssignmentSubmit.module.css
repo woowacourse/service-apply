@@ -1,0 +1,17 @@
+.form {
+  padding-top: 1.375rem;
+}
+
+.info-message {
+  margin-top: 2rem;
+}
+
+.buttons {
+  margin-top: 2.25rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.buttons button {
+  flex: 1;
+}

@@ -1,9 +1,9 @@
 package apply.application
 
+import apply.EVALUATION_ANSWER_SCORE
 import apply.EVALUATION_ID
 import apply.EVALUATION_ITEM_ID
-import apply.NOTE
-import apply.SCORE
+import apply.EVALUATION_TARGET_NOTE
 import apply.createEvaluation
 import apply.createEvaluationAnswer
 import apply.createEvaluationItem
@@ -365,8 +365,9 @@ class EvaluationTargetServiceTest(
         val evaluation = createEvaluation(id = EVALUATION_ID, beforeEvaluationId = 1L)
         val evaluationItem = createEvaluationItem(id = EVALUATION_ITEM_ID)
         val answers = EvaluationAnswers(mutableListOf(createEvaluationAnswer()))
-        val evaluationTarget =
-            evaluationTargetRepository.save(createEvaluationTarget(EVALUATION_ID, 1L, PASS, NOTE, answers))
+        val evaluationTarget = evaluationTargetRepository.save(
+            createEvaluationTarget(EVALUATION_ID, 1L, PASS, EVALUATION_TARGET_NOTE, answers)
+        )
 
         every { evaluationRepository.findByIdOrNull(EVALUATION_ID) } returns evaluation
         every {
@@ -378,9 +379,9 @@ class EvaluationTargetServiceTest(
             { assertThat(result.title).isEqualTo(evaluation.title) },
             { assertThat(result.description).isEqualTo(evaluation.description) },
             { assertThat(result.evaluationItems).hasSize(1) },
-            { assertThat(result.evaluationTarget.evaluationItemScores[0].score).isEqualTo(SCORE) },
+            { assertThat(result.evaluationTarget.evaluationItemScores[0].score).isEqualTo(EVALUATION_ANSWER_SCORE) },
             { assertThat(result.evaluationTarget.evaluationStatus).isEqualTo(PASS) },
-            { assertThat(result.evaluationTarget.note).isEqualTo(NOTE) }
+            { assertThat(result.evaluationTarget.note).isEqualTo(EVALUATION_TARGET_NOTE) }
         )
     }
 

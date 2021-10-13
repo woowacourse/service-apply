@@ -1,6 +1,6 @@
 package apply.ui.api
 
-import apply.NOTE
+import apply.EVALUATION_TARGET_NOTE
 import apply.application.EvaluationItemResponse
 import apply.application.EvaluationItemScoreData
 import apply.application.EvaluationTargetCsvService
@@ -76,7 +76,7 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
         totalScore = 100,
         evaluationStatus = EvaluationStatus.PASS,
         administratorId = 1L,
-        note = NOTE,
+        note = EVALUATION_TARGET_NOTE,
         answers = EvaluationAnswers(mutableListOf())
     )
 

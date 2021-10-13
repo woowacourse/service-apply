@@ -4,6 +4,22 @@
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
+  user-select: none;
+}
+
+.contained {
+  background-color: var(--black);
+  color: var(--white);
+}
+
+.outlined {
+  color: var(--black);
+  background-color: var(--white);
+  border: 1px solid var(--black);
+}
+
+.outlined:hover {
+  background-color: var(--gray-001);
 }
 
 .contained {
@@ -25,7 +41,8 @@
   background: var(--gray-008);
 }
 
-.button:disabled {
+button:disabled {
   cursor: default;
   background: var(--gray-004);
+  cursor: not-allowed;
 }

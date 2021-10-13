@@ -1,20 +1,24 @@
 import useFormContext from "../../../hooks/useFormContext";
 import { CONFIRM_MESSAGE } from "../../../constants/messages";
-import Button from "../../@common/Button/Button";
+import Button, { BUTTON_VARIANT } from "../../@common/Button/Button";
 
 const ResetButton = () => {
-  const { reset } = useFormContext();
+  const { resetAll } = useFormContext();
 
   const handleClick = (event) => {
     event.preventDefault();
 
     if (window.confirm(CONFIRM_MESSAGE.RESET_APPLICATION)) {
-      reset();
+      resetAll();
     }
   };
 
   return (
-    <Button type="reset" variant="outlined" onClick={handleClick}>
+    <Button
+      type="reset"
+      variant={BUTTON_VARIANT.OUTLINED}
+      onClick={handleClick}
+    >
       초기화
     </Button>
   );

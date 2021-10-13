@@ -1,13 +1,14 @@
 import { useHistory } from "react-router-dom";
-
-import { fetchPasswordEdit } from "../../api/applicants";
-import { SUCCESS_MESSAGE } from "../../constants/messages";
-import PATH from "../../constants/path";
-
+import { fetchPasswordEdit } from "../../api";
+import Button from "../../components/@common/Button/Button";
 import Container, {
   CONTAINER_SIZE,
 } from "../../components/@common/Container/Container";
-
+import Form from "../../components/form/Form/Form";
+import FormInput from "../../components/form/FormInput/FormInput";
+import SubmitButton from "../../components/form/SubmitButton/SubmitButton";
+import { SUCCESS_MESSAGE } from "../../constants/messages";
+import PATH from "../../constants/path";
 import useForm from "../../hooks/useForm";
 import useTokenContext from "../../hooks/useTokenContext";
 import FormProvider from "../../provider/FormProvider";
@@ -15,12 +16,7 @@ import {
   validatePassword,
   validateRePassword,
 } from "../../utils/validation/password";
-
 import styles from "./PasswordEdit.module.css";
-import Form from "../../components/form/Form/Form";
-import Button from "../../components/@common/Button/Button";
-import FormInput from "../../components/form/FormInput/FormInput";
-import SubmitButton from "../../components/form/SubmitButton/SubmitButton";
 
 const PasswordEdit = () => {
   const { token, resetToken } = useTokenContext();
@@ -31,9 +27,10 @@ const PasswordEdit = () => {
     try {
       await fetchPasswordEdit({
         token,
-        password: value.password,
-        newPassword: value.newPassword,
+        password: value.oldPassword,
+        newPassword: value.password,
       });
+
       alert(SUCCESS_MESSAGE.API.CHANGE_PASSWORD);
 
       resetToken();
@@ -45,7 +42,6 @@ const PasswordEdit = () => {
 
   const { handleSubmit, ...methods } = useForm({
     validators: {
-      oldPassword: validatePassword,
       password: validatePassword,
       rePassword: validateRePassword,
     },

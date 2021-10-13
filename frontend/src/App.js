@@ -16,11 +16,14 @@ import PasswordFindResult from "./pages/PasswordFindResult/PasswordFindResult";
 
 import RecruitmentProvider from "./provider/RecruitmentProvider";
 import TokenProvider from "./provider/TokenProvider";
+import UserInfoProvider from "./provider/UserInfoProvider";
 import "./api/api";
 
 import PATH from "./constants/path";
 
 import "./App.css";
+import MyPage from "./pages/MyPage/MyPage";
+import MyPageEdit from "./pages/MyPageEdit/MyPageEdit";
 
 const App = () => {
   return (
@@ -44,6 +47,7 @@ const App = () => {
                 <Route path={PATH.FIND_PASSWORD} exact>
                   <PasswordFind />
                 </Route>
+
                 <Route path={PATH.FIND_PASSWORD_RESULT} exact>
                   <PasswordFindResult />
                 </Route>
@@ -53,6 +57,14 @@ const App = () => {
                 <PrivateRoute path={PATH.EDIT_PASSWORD} exact>
                   <PasswordEdit />
                 </PrivateRoute>
+                <UserInfoProvider>
+                  <PrivateRoute path={PATH.MY_PAGE} exact>
+                    <MyPage />
+                  </PrivateRoute>
+                  <PrivateRoute path={PATH.EDIT_MY_PAGE} exact>
+                    <MyPageEdit />
+                  </PrivateRoute>
+                </UserInfoProvider>
               </Switch>
             </ScrollToTop>
           </main>

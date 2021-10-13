@@ -1,6 +1,5 @@
 import React from "react";
 import { generatePath, Link, useHistory, useLocation } from "react-router-dom";
-import Button from "../../components/@common/Button/Button";
 import Container, {
   CONTAINER_SIZE,
 } from "../../components/@common/Container/Container";
@@ -28,8 +27,6 @@ const Login = () => {
         email: value.email,
         password: value.password,
       });
-
-      alert(SUCCESS_MESSAGE.API.LOGIN);
 
       if (currentRecruitment) {
         history.push({

@@ -3,6 +3,8 @@ package apply.domain.evaluationtarget
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface EvaluationTargetRepository : JpaRepository<EvaluationTarget, Long> {
+    fun findByEvaluationIdAndUserId(evaluationId: Long, userId: Long): EvaluationTarget?
+
     fun findAllByEvaluationId(evaluationId: Long): List<EvaluationTarget>
 
     fun existsByEvaluationId(evaluationId: Long): Boolean
@@ -11,10 +13,12 @@ interface EvaluationTargetRepository : JpaRepository<EvaluationTarget, Long> {
 
     fun deleteByEvaluationIdAndUserIdIn(evaluationId: Long, userIds: Collection<Long>)
 
-    fun findAllByEvaluationIdAndUserIdIn(id: Long, userIds: Set<Long>): List<EvaluationTarget>
+    fun findAllByEvaluationIdAndUserIdIn(evaluationId: Long, userIds: Set<Long>): List<EvaluationTarget>
 
     fun findAllByEvaluationIdAndEvaluationStatus(
         evaluationId: Long,
         evaluationStatus: EvaluationStatus
     ): List<EvaluationTarget>
+
+    fun existsByUserIdAndEvaluationId(userId: Long, evaluationId: Long): Boolean
 }

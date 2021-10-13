@@ -122,6 +122,7 @@
   background-color: var(--gray-008);
 }
 
+.link-container,
 .link-container a {
   color: var(--gray-008);
 }

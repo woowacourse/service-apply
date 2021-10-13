@@ -21,11 +21,11 @@ const val EVALUATION_DESCRIPTION = "[리뷰 절차]\n" +
 const val EVALUATION_ITEM_ID = 2L
 const val EVALUATION_ITEM_TITLE = "평가 항목 제목"
 const val EVALUATION_ITEM_DESCRIPTION = "평가 항목 설명"
+const val EVALUATION_ITEM_MAXIMUM_SCORE = 3
 const val EVALUATION_ITEM_POSITION = 1
 
-const val NOTE = "평가 특이 사항"
-const val SCORE = 3
-private const val MAXIMUM_SCORE = 3
+const val EVALUATION_TARGET_NOTE = "평가 특이 사항"
+const val EVALUATION_ANSWER_SCORE = 3
 
 fun createEvaluation(
     title: String = EVALUATION_TITLE1,
@@ -41,7 +41,7 @@ fun createEvaluationItem(
     title: String = EVALUATION_ITEM_TITLE,
     description: String = EVALUATION_ITEM_DESCRIPTION,
     evaluationId: Long = EVALUATION_ID,
-    maximumScore: Int = MAXIMUM_SCORE,
+    maximumScore: Int = EVALUATION_ITEM_MAXIMUM_SCORE,
     position: Int = EVALUATION_ITEM_POSITION,
     id: Long = 0L
 ): EvaluationItem {
@@ -51,7 +51,7 @@ fun createEvaluationItem(
 fun createEvaluationItemData(
     title: String = EVALUATION_ITEM_TITLE,
     description: String = EVALUATION_ITEM_DESCRIPTION,
-    maximumScore: Int = MAXIMUM_SCORE,
+    maximumScore: Int = EVALUATION_ITEM_MAXIMUM_SCORE,
     position: Int = EVALUATION_ITEM_POSITION,
     id: Long = 0L
 ): EvaluationItemData {
@@ -62,7 +62,7 @@ fun createEvaluationTarget(
     evaluationId: Long = EVALUATION_ID,
     userId: Long = 1L,
     evaluationStatus: EvaluationStatus = EvaluationStatus.WAITING,
-    note: String = NOTE,
+    note: String = EVALUATION_TARGET_NOTE,
     evaluationAnswers: EvaluationAnswers = EvaluationAnswers(mutableListOf()),
     administratorId: Long? = null
 ): EvaluationTarget {
@@ -77,7 +77,7 @@ fun createEvaluationTarget(
 }
 
 fun createEvaluationAnswer(
-    score: Int = SCORE,
+    score: Int = EVALUATION_ANSWER_SCORE,
     evaluationItemId: Long = EVALUATION_ITEM_ID
 ): EvaluationAnswer {
     return EvaluationAnswer(score, evaluationItemId)
@@ -85,7 +85,7 @@ fun createEvaluationAnswer(
 
 fun createEvaluationItemForm(
     title: String = EVALUATION_ITEM_TITLE,
-    maximumScore: Int = MAXIMUM_SCORE,
+    maximumScore: Int = EVALUATION_ITEM_MAXIMUM_SCORE,
     position: Int = EVALUATION_ITEM_POSITION,
     description: String = EVALUATION_ITEM_DESCRIPTION
 ): EvaluationItemForm {
@@ -95,8 +95,8 @@ fun createEvaluationItemForm(
 fun createEvaluationAnswerForm(
     title: String = EVALUATION_ITEM_TITLE,
     description: String = EVALUATION_ITEM_DESCRIPTION,
-    maximumScore: Int = MAXIMUM_SCORE,
-    score: Int = SCORE,
+    maximumScore: Int = EVALUATION_ITEM_MAXIMUM_SCORE,
+    score: Int = EVALUATION_ANSWER_SCORE,
     evaluationItemId: Long = EVALUATION_ITEM_ID
 ): EvaluationItemScoreForm {
     return EvaluationItemScoreForm(title, description, maximumScore)

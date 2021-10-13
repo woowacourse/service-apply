@@ -1,10 +1,15 @@
 import classNames from "classnames";
 import PropTypes from "prop-types";
 import { useEffect } from "react";
+import {
+  fetchAuthenticationCode,
+  fetchVerifyAuthenticationCode,
+} from "../../../api";
+import { ERROR_MESSAGE } from "../../../constants/messages";
 import useFormContext from "../../../hooks/useFormContext";
 import useTimer from "../../../hooks/useTimer";
 import { formatTimerText } from "../../../utils/format/date";
-import Button from "../../@common/Button/Button";
+import Button, { BUTTON_VARIANT } from "../../@common/Button/Button";
 import Label from "../../@common/Label/Label";
 import TextInput from "../../@common/TextInput/TextInput";
 import * as styles from "./EmailField.module.css";
@@ -15,18 +20,18 @@ export const EMAIL_STATUS = {
   AUTHENTICATED: "authenticated",
 };
 
-const EMAIL_CODE_VALIDITY_SECONDS = 600;
+const INPUT_NAME = {
+  EMAIL: "email",
+  AUTHENTICATED_CODE: "authenticationCode",
+};
 
-const EmailField = ({
-  emailCode,
-  setEmailCode,
-  emailStatus,
-  setEmailStatus,
-}) => {
-  const { value, errorMessage, handleChange, register, unRegister } =
+const AUTHENTICATED_CODE_VALIDITY_SECONDS = 600;
+
+const EmailField = ({ emailStatus, setEmailStatus }) => {
+  const { value, errorMessage, handleChange, reset, register, unRegister } =
     useFormContext();
-  const { timerSeconds, setTimerSeconds, startTimer, stopTimer } = useTimer(
-    EMAIL_CODE_VALIDITY_SECONDS
+  const { timerSeconds, setTimerSeconds, startTimer, resetTimer } = useTimer(
+    AUTHENTICATED_CODE_VALIDITY_SECONDS
   );
 
   const getEmailButton = () => {
@@ -38,7 +43,7 @@ const EmailField = ({
       return (
         <Button
           type="button"
-          variant="outlined"
+          variant={BUTTON_VARIANT.OUTLINED}
           onClick={handleIssueEmailCode}
           className={styles["input-button"]}
           disabled={value.email === "" || errorMessage.email !== null}
@@ -65,37 +70,58 @@ const EmailField = ({
     }
   };
 
-  const handleIssueEmailCode = () => {
-    // TODO: 인증코드 이메일 발송 api 요청(이메일 중복확인 메세지 필요)
-
-    setEmailStatus(EMAIL_STATUS.WAITING_AUTHENTICATION);
-    setTimerSeconds(EMAIL_CODE_VALIDITY_SECONDS);
-    startTimer();
+  const handleChangeEmail = (event) => {
+    setEmailStatus(EMAIL_STATUS.INPUT);
+    reset(INPUT_NAME.AUTHENTICATED_CODE);
+    handleChange(event);
   };
 
-  const handleAuthenticateEmail = () => {
-    // TODO: 인증코드와 함께 이메일 인증 api 요청
+  const handleIssueEmailCode = async () => {
+    try {
+      await fetchAuthenticationCode(value.email);
 
-    setEmailStatus(EMAIL_STATUS.AUTHENTICATED);
-    stopTimer();
-    setTimerSeconds(EMAIL_CODE_VALIDITY_SECONDS);
+      setEmailStatus(EMAIL_STATUS.WAITING_AUTHENTICATION);
+      setTimerSeconds(AUTHENTICATED_CODE_VALIDITY_SECONDS);
+      startTimer();
+    } catch (error) {
+      alert(ERROR_MESSAGE.API.ALREADY_EXIST_EMAIL);
+    }
+  };
+
+  const handleAuthenticateEmail = async () => {
+    try {
+      await fetchVerifyAuthenticationCode({
+        email: value.email,
+        authenticationCode: value.authenticationCode,
+      });
+
+      setEmailStatus(EMAIL_STATUS.AUTHENTICATED);
+      resetTimer();
+    } catch (error) {
+      alert(ERROR_MESSAGE.API.INVALID_AUTHENTICATION_CODE);
+      reset(INPUT_NAME.AUTHENTICATED_CODE);
+    }
   };
 
   useEffect(() => {
-    register("email", "", true);
+    register(INPUT_NAME.EMAIL, "", true);
+    register(INPUT_NAME.AUTHENTICATED_CODE, "", false);
 
     return () => {
-      unRegister("email");
+      unRegister(INPUT_NAME.EMAIL);
+      unRegister(INPUT_NAME.AUTHENTICATED_CODE);
     };
   }, []);
 
   useEffect(() => {
     if (timerSeconds > 0) return;
 
-    stopTimer();
-    // TODO: 이메일 인증 코드 유효시간 만료 처리
+    alert(ERROR_MESSAGE.VALIDATION.TIMEOUT_EMAIL_AUTHENTICATION_CODE);
 
-    setTimerSeconds(EMAIL_CODE_VALIDITY_SECONDS);
+    resetTimer();
+
+    setEmailStatus(EMAIL_STATUS.INPUT);
+    reset(INPUT_NAME.AUTHENTICATED_CODE);
   }, [timerSeconds]);
 
   return (
@@ -108,10 +134,10 @@ const EmailField = ({
           <div className={styles["input-box"]}>
             <TextInput
               value={value.email}
-              name="email"
+              name={INPUT_NAME.EMAIL}
               type="email"
               placeholder="이메일 주소를 입력해 주세요."
-              onChange={handleChange}
+              onChange={handleChangeEmail}
               required
             />
             {getEmailButton()}
@@ -137,9 +163,9 @@ const EmailField = ({
               </Label>
               <div className={styles["input-box"]}>
                 <TextInput
-                  value={emailCode}
-                  name="email-code"
-                  onChange={({ target }) => setEmailCode(target.value)}
+                  value={value.authenticationCode}
+                  name={INPUT_NAME.AUTHENTICATED_CODE}
+                  onChange={handleChange}
                   required
                 />
                 <Button
@@ -161,8 +187,6 @@ const EmailField = ({
 };
 
 EmailField.propTypes = {
-  emailCode: PropTypes.string.isRequired,
-  setEmailCode: PropTypes.func.isRequired,
   emailStatus: PropTypes.string.isRequired,
   setEmailStatus: PropTypes.func.isRequired,
 };

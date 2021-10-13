@@ -38,8 +38,14 @@ class EvaluationTarget(
     val isPassed: Boolean
         get() = this.evaluationStatus == EvaluationStatus.PASS
 
-    fun submitted(): Boolean {
-        return evaluationStatus != EvaluationStatus.FAIL || !evaluationAnswers.allZero()
+    fun passIfBeforeEvaluation() {
+        if (evaluationStatus == EvaluationStatus.WAITING) {
+            evaluationStatus = EvaluationStatus.PASS
+        }
+    }
+
+    fun evaluated(): Boolean {
+        return !evaluationAnswers.allZero()
     }
 
     fun update(evaluationStatus: EvaluationStatus, evaluationAnswers: EvaluationAnswers, note: String) {
