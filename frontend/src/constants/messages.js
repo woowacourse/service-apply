@@ -26,6 +26,9 @@ export const ERROR_MESSAGE = {
     NOT_AUTHENTICATED: "이메일 인증을 완료해주세요.",
     ALREADY_EXIST_EMAIL: "이미 가입된 이메일입니다.",
     INVALID_AUTHENTICATION_CODE: "인증코드가 일치하지 않습니다.",
+    SUBMIT_ASSIGNMENT: "과제 제출에 실패했습니다. 잠시 후 다시 시도해주세요.",
+    FIND_PASSWORD: "입력된 정보가 올바르지 않습니다. 다시 확인해주세요.",
+    EDIT_PASSWORD: "입력된 정보가 올바르지 않습니다. 다시 확인해주세요.",
   },
   ACCESS: {
     REQUIRED_LOGIN: "로그인이 필요합니다.",
@@ -42,6 +45,7 @@ export const SUCCESS_MESSAGE = {
   API: {
     CHANGE_PASSWORD: "비밀번호가 변경되었습니다. 다시 로그인해주세요.",
     SUBMIT_APPLICATION: "정상적으로 제출되었습니다.",
+    SUBMIT_ASSIGNMENT: "정상적으로 제출되었습니다.",
     SAVE_APPLICATION: "정상적으로 저장되었습니다.",
     EDIT_MY_PAGE: "정상적으로 변경되었습니다.",
   },
@@ -51,4 +55,6 @@ export const CONFIRM_MESSAGE = {
   SUBMIT_APPLICATION:
     "제출하신 뒤에는 수정하실 수 없습니다. 정말로 제출하시겠습니까?",
   RESET_APPLICATION: "정말 초기화하시겠습니까?",
+  CANCEL_ASSIGNMENT_SUBMIT:
+    "정말 취소하시겠습니까? 작성하신 내용이 저장되지 않습니다.",
 };

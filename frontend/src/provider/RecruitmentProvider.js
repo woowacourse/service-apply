@@ -38,19 +38,10 @@ const RecruitmentProvider = ({ children }) => {
     }
   }, []);
 
-  const fetchMyApplicationForms = async (payload) => {
-    const { data: myApplicationForms } = await Api.fetchMyApplicationForms(
-      payload
-    );
-
-    return myApplicationForms;
-  };
-
   return (
     <RecruitmentContext.Provider
       value={{
         recruitment: recruitmentFilter(recruitments),
-        fetchMyApplicationForms,
       }}
     >
       {children}

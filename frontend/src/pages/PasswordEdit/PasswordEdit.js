@@ -7,7 +7,7 @@ import Container, {
 import Form from "../../components/form/Form/Form";
 import FormInput from "../../components/form/FormInput/FormInput";
 import SubmitButton from "../../components/form/SubmitButton/SubmitButton";
-import { SUCCESS_MESSAGE } from "../../constants/messages";
+import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
 import PATH from "../../constants/path";
 import useForm from "../../hooks/useForm";
 import useTokenContext from "../../hooks/useTokenContext";
@@ -36,7 +36,7 @@ const PasswordEdit = () => {
       resetToken();
       history.push(PATH.LOGIN);
     } catch (e) {
-      alert(e.response.data.message);
+      alert(ERROR_MESSAGE.API.EDIT_PASSWORD);
     }
   };
 

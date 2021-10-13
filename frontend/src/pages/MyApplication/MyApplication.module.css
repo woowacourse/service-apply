@@ -1,14 +1,18 @@
 .box {
   width: 50rem;
-  margin: 2.75rem auto;
+  margin: 0 auto;
 }
 
 .page-title {
-  margin-bottom: 2rem;
+  margin-bottom: 1.75rem;
 }
 
 .recruit-panel {
   margin-bottom: 1.25rem;
+}
+
+.recruit-panel:last-child {
+  margin: 0;
 }
 
 .subtitle {
