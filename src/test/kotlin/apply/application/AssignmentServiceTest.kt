@@ -108,14 +108,14 @@ class AssignmentServiceTest {
     @Test
     fun `과제를 제출한 적이 있는 경우 제출물 조회시 제출물을 반환한다`() {
         every { assignmentRepository.findByUserIdAndMissionId(any(), any()) } returns createAssignment()
-        assertDoesNotThrow { assignmentService.getAssignmentByUserIdAndMissionId(loginUser.id, missionId) }
+        assertDoesNotThrow { assignmentService.getByUserIdAndMissionId(loginUser.id, missionId) }
     }
 
     @Test
     fun `과제를 제출한 적이 없는 경우 제출물 조회시 예외를 반환한다`() {
         every { assignmentRepository.findByUserIdAndMissionId(any(), any()) } returns null
         assertThrows<IllegalArgumentException> {
-            assignmentService.getAssignmentByUserIdAndMissionId(
+            assignmentService.getByUserIdAndMissionId(
                 loginUser.id,
                 missionId
             )

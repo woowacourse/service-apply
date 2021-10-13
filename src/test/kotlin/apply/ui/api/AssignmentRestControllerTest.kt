@@ -64,7 +64,7 @@ internal class AssignmentRestControllerTest : RestControllerTest() {
         every { jwtTokenProvider.isValidToken(any()) } returns true
         every { jwtTokenProvider.getSubject(any()) } returns loginUser.email
         every { userService.getByEmail(any()) } returns loginUser
-        every { assignmentService.getAssignmentByUserIdAndMissionId(any(), any()) } returns assignmentResponse
+        every { assignmentService.getByUserIdAndMissionId(any(), any()) } returns assignmentResponse
 
         mockMvc.get(
             "/api/recruitments/{recruitmentId}/missions/{missionId}/assignments",
