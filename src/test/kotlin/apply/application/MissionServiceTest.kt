@@ -105,13 +105,12 @@ class MissionServiceTest {
 
         assertAll(
             { assertThat(responses).hasSize(2) },
-            { assertThat(responses[0].title).isEqualTo(missions[0].title) },
-            { assertThat(responses[0].description).isEqualTo(missions[0].description) },
-            { assertThat(responses[0].submittable).isEqualTo(missions[0].submittable) },
-            { assertThat(responses[0].submitted).isEqualTo(true) },
-            { assertThat(responses[0].startDateTime).isEqualTo(missions[0].period.startDateTime) },
-            { assertThat(responses[0].endDateTime).isEqualTo(missions[0].period.endDateTime) },
-            { assertThat(responses[0].status).isEqualTo(missions[0].status) }
+            {
+                assertThat(responses).containsExactlyInAnyOrder(
+                    MissionResponse(missions[0], true),
+                    MissionResponse(missions[1], true)
+                )
+            }
         )
     }
 

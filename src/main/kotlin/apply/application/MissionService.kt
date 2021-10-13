@@ -79,16 +79,7 @@ class MissionService(
             evaluationTargetRepository.existsByUserIdAndEvaluationId(userId, it)
         }
         return missionRepository.findAllByEvaluationIdIn(includedEvaluationIds).map {
-            MissionResponse(
-                it.id,
-                it.title,
-                it.description,
-                it.submittable,
-                assignmentRepository.existsByUserIdAndMissionId(userId, it.id),
-                it.period.startDateTime,
-                it.period.endDateTime,
-                it.status
-            )
+            MissionResponse(it, assignmentRepository.existsByUserIdAndMissionId(userId, it.id))
         }
     }
 }
