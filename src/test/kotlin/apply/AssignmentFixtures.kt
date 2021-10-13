@@ -1,6 +1,7 @@
 package apply
 
 import apply.application.AssignmentRequest
+import apply.application.AssignmentResponse
 import apply.domain.assignment.Assignment
 
 private const val GITHUB_USERNAME: String = "ecsimsw"
@@ -18,10 +19,18 @@ fun createAssignment(
     return Assignment(userId, missionId, githubUsername, pullRequestUrl, note, id)
 }
 
-fun createAssignmentData(
+fun createAssignmentRequest(
     githubUsername: String = GITHUB_USERNAME,
     pullRequestUrl: String = PULL_REQUEST_URL,
     note: String = NOTE,
 ): AssignmentRequest {
     return AssignmentRequest(githubUsername, pullRequestUrl, note)
+}
+
+fun createAssignmentResponse(
+    githubUsername: String = GITHUB_USERNAME,
+    pullRequestUrl: String = PULL_REQUEST_URL,
+    note: String = NOTE
+): AssignmentResponse {
+    return AssignmentResponse(githubUsername, pullRequestUrl, note)
 }

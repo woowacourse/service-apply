@@ -1,9 +1,12 @@
 package apply.application
 
+import apply.createAssignment
 import apply.createEvaluation
 import apply.createMission
 import apply.createMissionData
+import apply.domain.assignment.AssignmentRepository
 import apply.domain.evaluation.EvaluationRepository
+import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.mission.MissionRepository
 import io.mockk.Runs
 import io.mockk.every
@@ -26,11 +29,22 @@ class MissionServiceTest {
     @MockK
     lateinit var evaluationRepository: EvaluationRepository
 
+    @MockK
+    lateinit var evaluationTargetRepository: EvaluationTargetRepository
+
+    @MockK
+    lateinit var assignmentRepository: AssignmentRepository
+
     private lateinit var missionService: MissionService
+
+    private val recruitmentId = 1L
+    private val userId = 1L
 
     @BeforeEach
     internal fun setUp() {
-        missionService = MissionService(missionRepository, evaluationRepository)
+        missionService = MissionService(
+            missionRepository, evaluationRepository, evaluationTargetRepository, assignmentRepository
+        )
     }
 
     @Test
@@ -73,10 +87,54 @@ class MissionServiceTest {
             { assertThat(actual).hasSize(2) },
             {
                 assertThat(actual).containsAnyOf(
-                    MissionResponse(firstMission, firstEvaluation),
-                    MissionResponse(secondMission, secondEvaluation)
+                    MissionAndEvaluationResponse(firstMission, firstEvaluation),
+                    MissionAndEvaluationResponse(secondMission, secondEvaluation)
                 )
             }
+        )
+    }
+
+    @Test
+    fun `특정 모집에 해당하는 나의 숨겨지지 않은 과제들을 조회한다`() {
+        val missions = listOf(createMission(id = 1L), createMission(id = 2L))
+        every { evaluationRepository.findAllByRecruitmentId(any()) } returns
+            listOf(createEvaluation(id = 1L), createEvaluation(id = 2L))
+        every { evaluationTargetRepository.existsByUserIdAndEvaluationId(any(), any()) } returns true
+        every { missionRepository.findAllByEvaluationIdIn(any()) } returns missions
+        every { assignmentRepository.findAllByUserId(any()) } returns listOf(
+            createAssignment(userId = userId, missionId = 1L),
+            createAssignment(userId = userId, missionId = 2L)
+        )
+
+        val responses = missionService.findAllByUserIdAndRecruitmentId(userId, recruitmentId)
+
+        assertAll(
+            { assertThat(responses).hasSize(2) },
+            {
+                assertThat(responses).containsExactlyInAnyOrder(
+                    MissionResponse(missions[0], true),
+                    MissionResponse(missions[1], true)
+                )
+            }
+        )
+    }
+
+    @Test
+    fun `과제의 상태가 hidden인 경우 조회할 수 없다`() {
+        val missions = listOf(createMission(id = 1L, hidden = true), createMission(id = 2L, hidden = true))
+        every { evaluationRepository.findAllByRecruitmentId(any()) } returns
+            listOf(createEvaluation(id = 1L), createEvaluation(id = 2L))
+        every { evaluationTargetRepository.existsByUserIdAndEvaluationId(any(), any()) } returns true
+        every { missionRepository.findAllByEvaluationIdIn(any()) } returns missions
+        every { assignmentRepository.findAllByUserId(any()) } returns listOf(
+            createAssignment(userId = userId, missionId = 1L),
+            createAssignment(userId = userId, missionId = 2L)
+        )
+
+        val responses = missionService.findAllByUserIdAndRecruitmentId(userId, recruitmentId)
+
+        assertAll(
+            { assertThat(responses).isEmpty() },
         )
     }
 
