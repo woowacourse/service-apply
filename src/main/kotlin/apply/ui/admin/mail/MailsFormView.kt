@@ -46,14 +46,12 @@ class MailsFormView(
     }
 
     override fun setParameter(event: BeforeEvent, @WildcardParameter parameter: String) {
-        val result = FORM_URL_PATTERN.find(parameter)
-        result?.let {
-            val (id, value) = it.destructured
-            if (value == EDIT_VALUE) {
-                mailForm.fill(mailHistoryService.getById(id.toLong()))
-                submitButton.isVisible = false
-            }
-        } ?: UI.getCurrent().page.history.back() // TODO: 에러 화면을 구현한다.
+        val result = FORM_URL_PATTERN.find(parameter) ?: return UI.getCurrent().page.history.back()
+        val (id, value) = result.destructured
+        if (value == EDIT_VALUE) {
+            mailForm.fill(mailHistoryService.getById(id.toLong()))
+            submitButton.isVisible = false
+        }
     }
 
     private fun createButtons(): Component {
