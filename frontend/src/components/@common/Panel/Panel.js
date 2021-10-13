@@ -5,8 +5,8 @@ import styles from "./Panel.module.css";
 import Container from "../Container/Container";
 import IconButton from "../IconButton/IconButton";
 
-const Panel = ({ initialOpen, title, children, className }) => {
-  const [isPanelOpen, setIsPanelOpen] = useState(initialOpen);
+const Panel = ({ isOpen, title, children, className }) => {
+  const [isPanelOpen, setIsPanelOpen] = useState(isOpen);
 
   const toggleIsPanelOpen = () => {
     setIsPanelOpen((prev) => !prev);
@@ -33,12 +33,12 @@ const Panel = ({ initialOpen, title, children, className }) => {
 };
 
 Panel.propTypes = {
-  initialOpen: PropTypes.bool,
+  isOpen: PropTypes.bool,
   title: PropTypes.string,
 };
 
 Panel.defaultProps = {
-  initialOpen: false,
+  isOpen: false,
 };
 
 export default Panel;

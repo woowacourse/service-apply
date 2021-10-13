@@ -104,7 +104,7 @@ const MyApplication = () => {
         <Panel
           key={`recruitment-${recruitment.id}`}
           title={recruitment.title}
-          initialOpen={index === 0}
+          isOpen={index === 0}
           className={styles["recruit-panel"]}
         >
           <div className={styles["recruit-panel-inner"]}>
