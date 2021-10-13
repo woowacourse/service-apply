@@ -16,6 +16,7 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.select.Select
 import com.vaadin.flow.data.provider.ListDataProvider
+import support.views.NO_NAME
 import support.views.addSortableColumn
 import support.views.createContrastButton
 import support.views.createItemSelect
@@ -39,7 +40,7 @@ class GroupMailTargetDialog(
 
     private fun createMailTargetsGrid(): Grid<MailTargetResponse> {
         return Grid<MailTargetResponse>(10).apply {
-            addSortableColumn("이름", MailTargetResponse::name)
+            addSortableColumn("이름") { it.name ?: NO_NAME }
             addSortableColumn("이메일", MailTargetResponse::email)
         }
     }

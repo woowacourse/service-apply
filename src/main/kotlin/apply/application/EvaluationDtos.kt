@@ -4,6 +4,7 @@ import apply.domain.evaluation.Evaluation
 import apply.domain.evaluationItem.EvaluationItem
 import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.recruitment.Recruitment
+import apply.domain.user.User
 import javax.validation.Valid
 import javax.validation.constraints.Max
 import javax.validation.constraints.Min
@@ -150,10 +151,11 @@ data class EvaluationTargetData(
 )
 
 data class MailTargetResponse(
-    val name: String,
-    val email: String
+    val email: String,
+    val name: String? = null
 ) {
-    constructor(userResponse: UserResponse) : this(userResponse.name, userResponse.email)
+    constructor(userResponse: UserResponse) : this(userResponse.email, userResponse.name)
+    constructor(user: User) : this(user.email, user.name)
 }
 
 data class EvaluationItemScoreData(
