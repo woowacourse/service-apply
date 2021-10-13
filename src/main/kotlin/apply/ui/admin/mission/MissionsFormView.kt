@@ -14,12 +14,14 @@ import com.vaadin.flow.router.HasUrlParameter
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.router.WildcardParameter
 import support.views.EDIT_VALUE
-import support.views.FORM_URL_PATTERN
+import support.views.NEW_VALUE
 import support.views.Title
 import support.views.createContrastButton
 import support.views.createNotification
 import support.views.createPrimaryButton
 import support.views.toDisplayName
+
+private val MISSION_FORM_URL_PATTERN: Regex = Regex("^(\\d*)/?(\\d*)/?($NEW_VALUE|$EDIT_VALUE)$")
 
 @Route(value = "admin/missions", layout = BaseLayout::class)
 class MissionsFormView(
@@ -29,21 +31,19 @@ class MissionsFormView(
     private var recruitmentId: Long = 0L
     private val title: Title = Title()
     private val missionForm: MissionForm by lazy {
-        MissionForm(
-            evaluationService.getAllSelectDataByRecruitmentId(recruitmentId)
-        )
+        MissionForm(evaluationService.getAllSelectDataByRecruitmentId(recruitmentId))
     }
     private val submitButton: Button = createSubmitButton()
     private val buttons: Component = createButtons()
 
     override fun setParameter(event: BeforeEvent, @WildcardParameter parameter: String) {
-        val result = FORM_URL_PATTERN.find(parameter)
+        val result = MISSION_FORM_URL_PATTERN.find(parameter)
         result?.let {
-            val (id, value) = it.destructured
-            recruitmentId = id.toLong()
+            val (recruitmentId, missionId, value) = it.destructured
             setDisplayName(value.toDisplayName())
+            this.recruitmentId = recruitmentId.toLong()
             if (value == EDIT_VALUE) {
-                // TODO: 수정 기능 구현
+                missionForm.fill(missionService.getDataById(missionId.toLong()))
             }
         } ?: UI.getCurrent().page.history.back()
         add(title, missionForm, buttons)
