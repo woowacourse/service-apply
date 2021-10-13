@@ -1,5 +1,6 @@
 package apply.application
 
+import apply.createAssignment
 import apply.createEvaluation
 import apply.createMission
 import apply.createMissionData
@@ -100,7 +101,10 @@ class MissionServiceTest {
             listOf(createEvaluation(id = 1L), createEvaluation(id = 2L))
         every { evaluationTargetRepository.existsByUserIdAndEvaluationId(any(), any()) } returns true
         every { missionRepository.findAllByEvaluationIdIn(any()) } returns missions
-        every { assignmentRepository.existsByUserIdAndMissionId(any(), any()) } returns true
+        every { assignmentRepository.findAllByUserId(any()) } returns listOf(
+            createAssignment(userId = userId, missionId = 1L),
+            createAssignment(userId = userId, missionId = 2L)
+        )
 
         val responses = missionService.findAllByUserIdAndRecruitmentId(userId, recruitmentId)
 
@@ -122,7 +126,10 @@ class MissionServiceTest {
             listOf(createEvaluation(id = 1L), createEvaluation(id = 2L))
         every { evaluationTargetRepository.existsByUserIdAndEvaluationId(any(), any()) } returns true
         every { missionRepository.findAllByEvaluationIdIn(any()) } returns missions
-        every { assignmentRepository.existsByUserIdAndMissionId(any(), any()) } returns true
+        every { assignmentRepository.findAllByUserId(any()) } returns listOf(
+            createAssignment(userId = userId, missionId = 1L),
+            createAssignment(userId = userId, missionId = 2L)
+        )
 
         val responses = missionService.findAllByUserIdAndRecruitmentId(userId, recruitmentId)
 
