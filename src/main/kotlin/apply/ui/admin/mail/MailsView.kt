@@ -50,7 +50,7 @@ class MailsView(
         return Grid<MailData>(10).apply {
             addSortableColumn("메일 제목", MailData::subject)
             addSortableDateTimeColumn("보낸 시간", MailData::sentTime)
-            addSortableColumn("받는사람 수") { "${it.recipients.size} 명" }
+            addSortableColumn("받는사람 수") { "${it.recipients.size}명" }
             addColumn(createButtonRenderer()).apply { isAutoWidth = true }
             setItems(mailHistoryService.findAll())
         }

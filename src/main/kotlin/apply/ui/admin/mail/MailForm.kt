@@ -44,6 +44,7 @@ class MailForm(
         add(subject, createSender(), recipientFilter, mailTargetsGrid, body, fileUpload)
         setResponsiveSteps(ResponsiveStep("0", 1))
         drawRequired()
+        refreshGridFooter()
     }
 
     private fun createSender(): Component {
@@ -62,9 +63,9 @@ class MailForm(
     }
 
     private fun createTargetEnterBox(): Component {
-        return createEnterBox(labelText = "받는사람") {
+        return createEnterBox("받는사람") {
             if (it.isNotBlank()) {
-                mailTargets.addAndRefresh(MailTargetResponse(it, NO_NAME))
+                refreshGrid { mailTargets.add(MailTargetResponse(it, NO_NAME)) }
             }
         }
     }
@@ -72,7 +73,7 @@ class MailForm(
     private fun createIndividualLoadButton(): Button {
         return createNormalButton("개별 불러오기") {
             IndividualMailTargetDialog(userService) {
-                mailTargets.addAndRefresh(it)
+                refreshGrid { mailTargets.add(it) }
             }
         }
     }
@@ -80,16 +81,16 @@ class MailForm(
     private fun createGroupLoadButton(): Component {
         return createNormalButton("그룹 불러오기") {
             GroupMailTargetDialog(recruitmentService, evaluationService, mailTargetService) {
-                mailTargets.addAllAndRefresh(it)
+                refreshGrid { mailTargets.addAll(it) }
             }
         }
     }
 
     private fun createMailTargetsGrid(mailTargets: Set<MailTargetResponse>): Grid<MailTargetResponse> {
         return Grid<MailTargetResponse>(10).apply {
-            addSortableColumn("이름") { it.name ?: NO_NAME }.setFooter("받는사람: ${mailTargets.size}명")
+            addSortableColumn("이름") { it.name ?: NO_NAME }
             addSortableColumn("이메일", MailTargetResponse::email)
-            addColumn(createRemoveButton()).key = DELETE_BUTTON
+            addColumn(createRemoveButton())
             setItems(mailTargets)
         }
     }
@@ -116,34 +117,9 @@ class MailForm(
     private fun createRemoveButton(): Renderer<MailTargetResponse> {
         return ComponentRenderer<Component, MailTargetResponse> { response ->
             createErrorSmallButton("제거") {
-                mailTargets.removeAndRefresh(response)
+                refreshGrid { mailTargets.remove(response) }
             }
         }
-    }
-
-    private fun MutableSet<MailTargetResponse>.addAndRefresh(element: MailTargetResponse) {
-        add(element).also {
-            mailTargetsGrid.dataProvider.refreshAll()
-            refreshRowCount()
-        }
-    }
-
-    private fun MutableSet<MailTargetResponse>.addAllAndRefresh(elements: Collection<MailTargetResponse>) {
-        addAll(elements).also {
-            mailTargetsGrid.dataProvider.refreshAll()
-            refreshRowCount()
-        }
-    }
-
-    private fun MutableSet<MailTargetResponse>.removeAndRefresh(element: MailTargetResponse) {
-        remove(element).also {
-            mailTargetsGrid.dataProvider.refreshAll()
-            refreshRowCount()
-        }
-    }
-
-    private fun refreshRowCount() {
-        mailTargetsGrid.columns.first().setFooter("받는사람: ${mailTargets.size}명")
     }
 
     override fun bindOrNull(): MailData? {
@@ -155,19 +131,24 @@ class MailForm(
     override fun fill(data: MailData) {
         fillDefault(data)
         toReadOnlyMode()
-        mailTargets.addAll(mailTargetService.findAllByEmails(data.recipients))
-        refreshRowCount()
+        refreshGrid { mailTargets.addAll(mailTargetService.findAllByEmails(data.recipients)) }
     }
 
     private fun toReadOnlyMode() {
         subject.isReadOnly = true
         body.isReadOnly = true
+        mailTargetsGrid.columns.last().isVisible = false
         recipientFilter.isVisible = false
-        mailTargetsGrid.getColumnByKey(DELETE_BUTTON).isVisible = false
         fileUpload.isVisible = false
     }
 
-    companion object {
-        private const val DELETE_BUTTON: String = "삭제버튼"
+    private fun refreshGrid(action: MutableSet<MailTargetResponse>.() -> Unit = {}) {
+        mailTargets.action()
+        mailTargetsGrid.dataProvider.refreshAll()
+        refreshGridFooter()
+    }
+
+    private fun refreshGridFooter() {
+        mailTargetsGrid.columns.first().setFooter("받는사람: ${mailTargets.size}명")
     }
 }

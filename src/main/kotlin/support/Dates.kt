@@ -22,9 +22,3 @@ fun createLocalDate(
 ): LocalDate {
     return LocalDate.of(year, month, dayOfMonth)
 }
-
-fun createLocalDateTime(
-    now: LocalDateTime
-): LocalDateTime {
-    return LocalDateTime.of(now.year, now.month, now.dayOfMonth, now.hour, now.minute, now.second)
-}
