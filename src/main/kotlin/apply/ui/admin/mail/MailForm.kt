@@ -97,7 +97,7 @@ class MailForm(
     }
 
     private fun setRowCount(count: Int) {
-        mailTargetGridTitle.text = "받는사람 ($count)"
+        mailTargetGridTitle.text = "받는사람: $count 명"
     }
 
     private fun createMailTargetsGrid(mailTargets: Set<MailTargetResponse>): Grid<MailTargetResponse> {

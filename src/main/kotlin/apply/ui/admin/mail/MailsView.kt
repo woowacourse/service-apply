@@ -16,6 +16,7 @@ import com.vaadin.flow.router.Route
 import support.views.EDIT_VALUE
 import support.views.NEW_VALUE
 import support.views.addSortableColumn
+import support.views.addSortableDateTimeColumn
 import support.views.createPrimaryButton
 import support.views.createPrimarySmallButton
 
@@ -48,8 +49,8 @@ class MailsView(
     private fun createGrid(): Component {
         return Grid<MailData>(10).apply {
             addSortableColumn("메일 제목", MailData::subject)
-            addSortableColumn("보낸 시간", MailData::sentTime)
-            addSortableColumn("받은 사람 수") { it.recipients.size }
+            addSortableDateTimeColumn("보낸 시간", MailData::sentTime)
+            addSortableColumn("받는사람 수") { "${it.recipients.size} 명" }
             addColumn(createButtonRenderer()).apply { isAutoWidth = true }
             setItems(mailHistoryService.findAll())
         }
