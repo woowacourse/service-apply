@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
+import org.junit.jupiter.params.provider.ValueSource
 import support.test.RepositoryTest
 
 @RepositoryTest
@@ -27,7 +28,7 @@ class EvaluationTargetRepositoryTest(
     )
 
     @BeforeEach
-    internal fun setUp() {
+    fun setUp() {
         evaluationTargetRepository.saveAll(evaluationTargets)
     }
 
@@ -83,5 +84,12 @@ class EvaluationTargetRepositoryTest(
         val actual =
             evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(EVALUATION_ID, evaluationStatus)
         assertThat(actual).hasSize(expectedSize)
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = [1, 2])
+    fun `지정한 평가와 회원에 해당하는 대상자의 존재 여부를 확인한다`(userId: Long) {
+        val isExists = evaluationTargetRepository.existsByUserIdAndEvaluationId(userId, EVALUATION_ID)
+        assertThat(isExists).isTrue
     }
 }

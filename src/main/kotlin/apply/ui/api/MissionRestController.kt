@@ -1,8 +1,11 @@
 package apply.ui.api
 
+import apply.application.MissionAndEvaluationResponse
 import apply.application.MissionData
 import apply.application.MissionResponse
 import apply.application.MissionService
+import apply.domain.user.User
+import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -27,8 +30,17 @@ class MissionRestController(
     }
 
     @GetMapping("/missions")
-    fun findAllByRecruitmentId(@PathVariable recruitmentId: Long): ResponseEntity<ApiResponse<List<MissionResponse>>> {
+    fun findAllByRecruitmentId(@PathVariable recruitmentId: Long): ResponseEntity<ApiResponse<List<MissionAndEvaluationResponse>>> {
         val missions = missionService.findAllByRecruitmentId(recruitmentId)
+        return ResponseEntity.ok(ApiResponse.success(missions))
+    }
+
+    @GetMapping("/missions/me")
+    fun findMyMissionsByRecruitmentId(
+        @PathVariable recruitmentId: Long,
+        @LoginUser user: User
+    ): ResponseEntity<ApiResponse<List<MissionResponse>>> {
+        val missions = missionService.findAllByUserIdAndRecruitmentId(user.id, recruitmentId)
         return ResponseEntity.ok(ApiResponse.success(missions))
     }
 
