@@ -105,11 +105,11 @@ internal class AssignmentRestControllerTest : RestControllerTest() {
         val assignmentData = createAssignmentData()
         every { assignmentService.findByEvaluationTargetIdAndMissionId(targetId, missionId) } returns assignmentData
         mockMvc.get(
-            "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/{targetId}/missions/{missionId}/assignments",
+            "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/missions/{missionId}/targets/{targetId}/assignments",
             recruitmentId,
             evaluationId,
-            targetId,
-            missionId
+            missionId,
+            targetId
         ) {
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
