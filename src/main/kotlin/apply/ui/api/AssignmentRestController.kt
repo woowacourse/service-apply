@@ -4,7 +4,6 @@ import apply.application.AssignmentData
 import apply.application.AssignmentRequest
 import apply.application.AssignmentResponse
 import apply.application.AssignmentService
-import apply.domain.assignment.Assignment
 import apply.domain.user.User
 import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
@@ -52,16 +51,6 @@ class AssignmentRestController(
     ): ResponseEntity<Unit> {
         assignmentService.update(missionId, user.id, request)
         return ResponseEntity.ok().build()
-    }
-
-    @GetMapping("/evaluations/{evaluationId}/missions/{missionId}/assignments")
-    fun findAllByEvaluationId(
-        @PathVariable recruitmentId: Long,
-        @PathVariable evaluationId: Long,
-        @PathVariable missionId: Long
-    ): ResponseEntity<ApiResponse<List<Assignment>>> {
-        val assignments = assignmentService.findAllByEvaluationId(evaluationId)
-        return ResponseEntity.ok(ApiResponse.success(assignments))
     }
 
     @GetMapping("/evaluations/{evaluationId}/missions/{missionId}/targets/{targetId}/assignments")

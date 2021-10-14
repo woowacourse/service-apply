@@ -39,11 +39,6 @@ class AssignmentService(
             ?: throw IllegalArgumentException("평가 대상자가 아닙니다.")
     }
 
-    fun findAllByEvaluationId(evaluationId: Long): List<Assignment> {
-        val evaluationTargets = evaluationTargetRepository.findAllByEvaluationId(evaluationId)
-        return assignmentRepository.findAllByUserIdIn(evaluationTargets.map { it.userId })
-    }
-
     fun findByEvaluationTargetIdAndMissionId(evaluationTargetId: Long, missionId: Long): AssignmentData {
         val evaluationTarget = evaluationTargetRepository.getById(evaluationTargetId)
         val assignment = assignmentRepository.findByUserIdAndMissionId(evaluationTarget.userId, missionId)

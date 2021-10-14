@@ -1,7 +1,10 @@
 package apply.application
 
+import apply.domain.assignment.AssignmentRepository
 import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.evaluationtarget.EvaluationStatus
+import apply.domain.mission.Mission
+import apply.domain.mission.MissionRepository
 import apply.domain.recruitmentitem.RecruitmentItemRepository
 import apply.utils.ExcelGenerator
 import apply.utils.ExcelRow
@@ -14,9 +17,10 @@ import java.io.ByteArrayInputStream
 class ExcelService(
     private val applicantService: ApplicantService,
     private val evaluationTargetService: EvaluationTargetService,
-    private val assignmentService: AssignmentService,
     private val recruitmentItemRepository: RecruitmentItemRepository,
     private val evaluationItemRepository: EvaluationItemRepository,
+    private val missionRepository: MissionRepository,
+    private val assignmentRepository: AssignmentRepository,
     private val excelGenerator: ExcelGenerator
 ) {
     fun createApplicantExcel(recruitmentId: Long): ByteArrayInputStream {
@@ -43,29 +47,23 @@ class ExcelService(
 
     fun createTargetExcel(evaluationId: Long): ByteArrayInputStream {
         val targets = evaluationTargetService.findAllByEvaluationIdAndKeyword(evaluationId)
-        val titles =
-            evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluationId).map { it.title }.toTypedArray()
-        val headerTitles = arrayOf(NAME, EMAIL, TOTAL_SCORE, STATUS, *titles, NOTE)
-        val excelRows = targets.map {
-            ExcelRow(
-                it.name,
-                it.email,
-                it.totalScore.toString(),
-                it.evaluationStatus.toText(),
-                *it.answers.map { item -> item.score.toString() }.toTypedArray(),
-                it.note
-            )
-        }
-        return excelGenerator.generateBy(headerTitles, excelRows)
+        val titles = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluationId)
+            .map { it.title }
+            .toTypedArray()
+        val mission = missionRepository.findByEvaluationId(evaluationId)
+        return mission?.let { createTargetExcelWithAssignment(titles, targets, mission) }
+            ?: createTargetExcelDefault(titles, targets)
     }
 
-    fun createTargetExcelWithAssignment(evaluationId: Long, missionId: Long): ByteArrayInputStream {
-        val targets = evaluationTargetService.findAllByEvaluationIdAndKeyword(evaluationId)
-        val assignments = assignmentService.findAllByEvaluationId(evaluationId)
-        val titles =
-            evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluationId).map { it.title }.toTypedArray()
-        val headerTitles =
-            arrayOf(NAME, EMAIL, GITHUB_USERNAME, PULL_REQUEST_URL, ASSIGNMENT_NOTE, TOTAL_SCORE, STATUS, *titles, NOTE)
+    private fun createTargetExcelWithAssignment(
+        titles: Array<String>,
+        targets: List<EvaluationTargetResponse>,
+        mission: Mission
+    ): ByteArrayInputStream {
+        val headerTitles = arrayOf(
+            NAME, EMAIL, GITHUB_USERNAME, PULL_REQUEST_URL, ASSIGNMENT_NOTE, TOTAL_SCORE, STATUS, *titles, NOTE
+        )
+        val assignments = assignmentRepository.findAllByMissionId(mission.id)
         val excelRows = targets.map {
             val assignment = assignments.find { assignment -> assignment.userId == it.userId }
             ExcelRow(
@@ -83,6 +81,24 @@ class ExcelService(
         return excelGenerator.generateBy(headerTitles, excelRows)
     }
 
+    private fun createTargetExcelDefault(
+        titles: Array<String>,
+        targets: List<EvaluationTargetResponse>
+    ): ByteArrayInputStream {
+        val headerTitles = arrayOf(NAME, EMAIL, TOTAL_SCORE, STATUS, *titles, NOTE)
+        val excelRows = targets.map {
+            ExcelRow(
+                it.name,
+                it.email,
+                it.totalScore.toString(),
+                it.evaluationStatus.toText(),
+                *it.answers.map { item -> item.score.toString() }.toTypedArray(),
+                it.note
+            )
+        }
+        return excelGenerator.generateBy(headerTitles, excelRows)
+    }
+
     private fun Boolean.toText(): String {
         return when (this) {
             true -> "O"
@@ -90,13 +106,14 @@ class ExcelService(
         }
     }
 
-    private fun EvaluationStatus.toText() =
-        when (this) {
+    private fun EvaluationStatus.toText(): String {
+        return when (this) {
             EvaluationStatus.WAITING -> "평가 전"
             EvaluationStatus.PASS -> "합격"
             EvaluationStatus.FAIL -> "탈락"
             EvaluationStatus.PENDING -> "보류"
         }
+    }
 
     companion object {
         private const val NAME: String = "이름"

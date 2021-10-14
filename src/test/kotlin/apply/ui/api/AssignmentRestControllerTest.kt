@@ -2,7 +2,6 @@ package apply.ui.api
 
 import apply.application.AssignmentService
 import apply.application.UserService
-import apply.createAssignment
 import apply.createAssignmentData
 import apply.createAssignmentRequest
 import apply.createAssignmentResponse
@@ -77,24 +76,6 @@ internal class AssignmentRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isOk }
             content { json(objectMapper.writeValueAsString(ApiResponse.success(assignmentResponse))) }
-        }
-    }
-
-    @Test
-    fun `특정 평가의 모든 과제 제출물을 조회한다`() {
-        val evaluationId = 1L
-        val assignments = listOf(createAssignment(), createAssignment())
-        every { assignmentService.findAllByEvaluationId(evaluationId) } returns assignments
-        mockMvc.get(
-            "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/missions/{missionId}/assignments",
-            recruitmentId,
-            evaluationId,
-            missionId
-        ) {
-            contentType = MediaType.APPLICATION_JSON
-        }.andExpect {
-            status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(assignments))) }
         }
     }
 

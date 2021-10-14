@@ -220,11 +220,7 @@ class SelectionView(
     private fun createEvaluationFileDownloadButton(): Button {
         return createSuccessButton("평가지 다운로드") {
             val evaluation = evaluations[tabs.selectedIndex - 1]
-            val mission = missionService.findByEvaluationId(evaluation.id)
-            val csv = mission?.let {
-                evaluationTargetCsvService.createTargetCsvWithAssignment(evaluation.id, it.id)
-            } ?: evaluationTargetCsvService.createTargetCsv(evaluation.id)
-            downloadFile("${evaluation.title}.csv", csv)
+            downloadFile("${evaluation.title}.csv", evaluationTargetCsvService.createTargetCsv(evaluation.id))
         }
     }
 
@@ -247,11 +243,7 @@ class SelectionView(
                 downloadFile("${recruitmentService.getById(recruitmentId).title}.xlsx", excel)
             } else {
                 val evaluation = evaluations[tabs.selectedIndex - 1]
-                val mission = missionService.findByEvaluationId(evaluation.id)
-                val excel = mission?.let {
-                    excelService.createTargetExcelWithAssignment(evaluation.id, it.id)
-                } ?: excelService.createTargetExcel(evaluation.id)
-                downloadFile("${evaluation.title}.xlsx", excel)
+                downloadFile("${evaluation.title}.xlsx", excelService.createTargetExcel(evaluation.id))
             }
         }
     }

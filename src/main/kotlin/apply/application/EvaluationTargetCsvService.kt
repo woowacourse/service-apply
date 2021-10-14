@@ -1,8 +1,11 @@
 package apply.application
 
+import apply.domain.assignment.AssignmentRepository
 import apply.domain.evaluationItem.EvaluationItem
 import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.evaluationtarget.EvaluationStatus
+import apply.domain.mission.Mission
+import apply.domain.mission.MissionRepository
 import apply.utils.CsvGenerator
 import apply.utils.CsvRow
 import org.apache.commons.csv.CSVFormat
@@ -17,58 +20,61 @@ import javax.transaction.Transactional
 @Service
 class EvaluationTargetCsvService(
     private val evaluationTargetService: EvaluationTargetService,
-    private val assignmentService: AssignmentService,
     private val evaluationItemRepository: EvaluationItemRepository,
+    private val missionRepository: MissionRepository,
+    private val assignmentRepository: AssignmentRepository,
     private val csvGenerator: CsvGenerator
 ) {
     fun createTargetCsv(evaluationId: Long): ByteArrayInputStream {
         val targets = evaluationTargetService.findAllByEvaluationIdAndKeyword(evaluationId)
         val evaluationItems = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluationId)
         val evaluationItemHeaders = evaluationItems.map { it.toHeader() }.toTypedArray()
+        val mission = missionRepository.findByEvaluationId(evaluationId)
+        return mission?.let { createTargetCsvWithAssignment(evaluationItemHeaders, targets, evaluationItems, mission) }
+            ?: createTargetCsvDefault(evaluationItemHeaders, targets, evaluationItems)
+    }
 
-        val headerTitles = arrayOf(ID, NAME, EMAIL, STATUS, *evaluationItemHeaders, NOTE)
-        val csvRows = targets.map { target ->
+    private fun createTargetCsvWithAssignment(
+        evaluationItemHeaders: Array<String>,
+        targets: List<EvaluationTargetResponse>,
+        evaluationItems: List<EvaluationItem>,
+        mission: Mission
+    ): ByteArrayInputStream {
+        val headerTitles = arrayOf(
+            ID, NAME, EMAIL, GITHUB_USERNAME, PULL_REQUEST_URL, ASSIGNMENT_NOTE, STATUS, *evaluationItemHeaders, NOTE
+        )
+        val assignments = assignmentRepository.findAllByMissionId(mission.id)
+        val csvRows = targets.map {
+            val assignment = assignments.find { assignment -> assignment.userId == it.userId }
             CsvRow(
-                target.id.toString(),
-                target.name,
-                target.email,
-                target.evaluationStatus.name,
-                *scores(target.answers, evaluationItems).toTypedArray(),
-                target.note
+                it.id.toString(),
+                it.name,
+                it.email,
+                assignment?.githubUsername ?: UNSUBMITTED,
+                assignment?.pullRequestUrl ?: UNSUBMITTED,
+                assignment?.note ?: UNSUBMITTED,
+                it.evaluationStatus.name,
+                *scores(it.answers, evaluationItems).toTypedArray(),
+                it.note
             )
         }
         return csvGenerator.generateBy(headerTitles, csvRows)
     }
 
-    fun createTargetCsvWithAssignment(evaluationId: Long, missionId: Long): ByteArrayInputStream {
-        val targets = evaluationTargetService.findAllByEvaluationIdAndKeyword(evaluationId)
-        val evaluationItems = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluationId)
-        val evaluationItemHeaders = evaluationItems.map { it.toHeader() }.toTypedArray()
-
-        val headerTitles = arrayOf(
-            ID,
-            NAME,
-            EMAIL,
-            GITHUB_USERNAME,
-            PULL_REQUEST_URL,
-            ASSIGNMENT_NOTE,
-            STATUS,
-            *evaluationItemHeaders,
-            NOTE
-        )
-        val assignments = assignmentService.findAllByEvaluationId(evaluationId)
-        val csvRows = targets.map { target ->
-            val assignment = assignments.find { assignment -> assignment.userId == target.userId }
+    private fun createTargetCsvDefault(
+        evaluationItemHeaders: Array<String>,
+        targets: List<EvaluationTargetResponse>,
+        evaluationItems: List<EvaluationItem>
+    ): ByteArrayInputStream {
+        val headerTitles = arrayOf(ID, NAME, EMAIL, STATUS, *evaluationItemHeaders, NOTE)
+        val csvRows = targets.map {
             CsvRow(
-                target.id.toString(),
-                target.name,
-                target.email,
-                assignment?.githubUsername ?: UNSUBMITTED,
-                assignment?.pullRequestUrl ?: UNSUBMITTED,
-                assignment?.note ?: UNSUBMITTED,
-                target.evaluationStatus.name,
-                *scores(target.answers, evaluationItems).toTypedArray(),
-                target.note
+                it.id.toString(),
+                it.name,
+                it.email,
+                it.evaluationStatus.name,
+                *scores(it.answers, evaluationItems).toTypedArray(),
+                it.note
             )
         }
         return csvGenerator.generateBy(headerTitles, csvRows)

@@ -1,6 +1,5 @@
 package apply.ui.admin.selections
 
-import apply.application.AssignmentData
 import apply.application.AssignmentService
 import apply.application.EvaluationTargetData
 import apply.application.EvaluationTargetService
@@ -8,6 +7,7 @@ import apply.domain.mission.Mission
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.dialog.Dialog
+import com.vaadin.flow.component.formlayout.FormLayout
 import com.vaadin.flow.component.html.H2
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
@@ -29,32 +29,25 @@ class EvaluationTargetFormDialog(
         setWidthFull()
         isReadOnly = true
     }
-    private val assignmentForm: BindingFormLayout<AssignmentData>
     private val evaluationTargetForm: BindingFormLayout<EvaluationTargetData>
 
     init {
-        assignmentForm = createAssignmentForm()
         val response = evaluationTargetService.getGradeEvaluation(evaluationTargetId)
         evaluationTargetForm = EvaluationTargetForm(response.evaluationItems)
             .apply { fill(response.evaluationTarget) }
         title.text = response.title
         description.value = response.description
 
-        add(createHeader(), assignmentForm, evaluationTargetForm, createButtons(reloadComponents))
+        add(createHeader(), createAssignmentForm(), evaluationTargetForm, createButtons(reloadComponents))
         width = "800px"
         height = "90%"
         open()
     }
 
-    private fun createAssignmentForm(): AssignmentForm {
+    private fun createAssignmentForm(): Component {
         return mission?.let {
-            val assignment = assignmentService.findByEvaluationTargetIdAndMissionId(evaluationTargetId, it.id)
-            AssignmentForm().apply {
-                fill(assignment)
-            }
-        } ?: AssignmentForm().apply {
-            isVisible = false
-        }
+            AssignmentForm(assignmentService.findByEvaluationTargetIdAndMissionId(evaluationTargetId, it.id))
+        } ?: FormLayout()
     }
 
     private fun createHeader(): VerticalLayout {

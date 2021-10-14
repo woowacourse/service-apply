@@ -1,7 +1,9 @@
 package apply.application
 
 import apply.createEvaluationItem
+import apply.domain.assignment.AssignmentRepository
 import apply.domain.evaluationItem.EvaluationItemRepository
+import apply.domain.mission.MissionRepository
 import apply.utils.CsvGenerator
 import io.mockk.Runs
 import io.mockk.every
@@ -22,10 +24,13 @@ class EvaluationTargetCsvServiceTest {
     private lateinit var evaluationTargetService: EvaluationTargetService
 
     @MockK
-    private lateinit var assignmentService: AssignmentService
+    private lateinit var evaluationItemRepository: EvaluationItemRepository
 
     @MockK
-    private lateinit var evaluationItemRepository: EvaluationItemRepository
+    private lateinit var missionRepository: MissionRepository
+
+    @MockK
+    private lateinit var assignmentRepository: AssignmentRepository
 
     @MockK
     private lateinit var csvGenerator: CsvGenerator
@@ -37,8 +42,9 @@ class EvaluationTargetCsvServiceTest {
         evaluationTargetCsvService =
             EvaluationTargetCsvService(
                 evaluationTargetService,
-                assignmentService,
                 evaluationItemRepository,
+                missionRepository,
+                assignmentRepository,
                 csvGenerator
             )
     }
