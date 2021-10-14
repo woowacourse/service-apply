@@ -64,7 +64,10 @@ private fun createBox(
     }
     textField.addKeyDownListener(
         Key.ENTER,
-        { eventListener(textField.value) }
+        {
+            eventListener(textField.value)
+            textField.clear()
+        }
     )
     return HorizontalLayout(
         textField,
