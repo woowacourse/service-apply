@@ -4,6 +4,7 @@ import apply.application.MissionAndEvaluationResponse
 import apply.application.MissionData
 import apply.application.MissionResponse
 import apply.application.MissionService
+import apply.domain.mission.Mission
 import apply.domain.user.User
 import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
@@ -48,5 +49,14 @@ class MissionRestController(
     fun deleteById(@PathVariable recruitmentId: Long, @PathVariable missionId: Long): ResponseEntity<Unit> {
         missionService.deleteById(missionId)
         return ResponseEntity.ok().build()
+    }
+
+    @GetMapping("/evaluations/{evaluationId}/missions")
+    fun findByEvaluationId(
+        @PathVariable recruitmentId: Long,
+        @PathVariable evaluationId: Long
+    ): ResponseEntity<ApiResponse<Mission?>> {
+        val mission = missionService.findByEvaluationId(evaluationId)
+        return ResponseEntity.ok(ApiResponse.success(mission))
     }
 }

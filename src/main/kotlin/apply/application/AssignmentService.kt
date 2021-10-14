@@ -34,6 +34,11 @@ class AssignmentService(
         assignment.update(request.githubUsername, request.pullRequestUrl, request.note)
     }
 
+    private fun findEvaluationTargetOf(evaluationId: Long, userId: Long): EvaluationTarget {
+        return evaluationTargetRepository.findByEvaluationIdAndUserId(evaluationId, userId)
+            ?: throw IllegalArgumentException("평가 대상자가 아닙니다.")
+    }
+
     fun findAllByEvaluationId(evaluationId: Long): List<Assignment> {
         val evaluationTargets = evaluationTargetRepository.findAllByEvaluationId(evaluationId)
         return assignmentRepository.findAllByUserIdIn(evaluationTargets.map { it.userId })
@@ -43,11 +48,6 @@ class AssignmentService(
         val evaluationTarget = evaluationTargetRepository.getById(evaluationTargetId)
         val assignment = assignmentRepository.findByUserIdAndMissionId(evaluationTarget.userId, missionId)
         return AssignmentData(assignment)
-    }
-
-    private fun findEvaluationTargetOf(evaluationId: Long, userId: Long): EvaluationTarget {
-        return evaluationTargetRepository.findByEvaluationIdAndUserId(evaluationId, userId)
-            ?: throw IllegalArgumentException("평가 대상자가 아닙니다.")
     }
 
     fun getByUserIdAndMissionId(userId: Long, missionId: Long): AssignmentResponse {
