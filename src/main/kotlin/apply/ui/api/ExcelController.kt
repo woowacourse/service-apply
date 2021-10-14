@@ -49,4 +49,22 @@ class ExcelController(
             .headers(headers)
             .body(InputStreamResource((excel)))
     }
+
+    @GetMapping("/evaluations/{evaluationId}/missions/{missionId}/targets/excel")
+    fun createTargetExcelWithAssignment(
+        @PathVariable recruitmentId: Long,
+        @PathVariable evaluationId: Long,
+        @PathVariable missionId: Long
+    ): ResponseEntity<InputStreamResource> {
+        val excel = excelService.createTargetExcelWithAssignment(evaluationId, missionId)
+        val evaluation = evaluationService.findById(evaluationId)
+        val headers = HttpHeaders().apply {
+            contentDisposition = ContentDisposition.builder("attachment")
+                .filename("${evaluation?.title}.xlsx")
+                .build()
+        }
+        return ResponseEntity.ok()
+            .headers(headers)
+            .body(InputStreamResource((excel)))
+    }
 }
