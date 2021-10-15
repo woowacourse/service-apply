@@ -32,7 +32,7 @@ class AssignmentRestController(
         return ResponseEntity.ok().build()
     }
 
-    @GetMapping("/missions/{missionId}/assignments")
+    @GetMapping("/missions/{missionId}/assignments/me")
     fun getAssignment(
         @PathVariable recruitmentId: Long,
         @PathVariable missionId: Long,
@@ -53,11 +53,9 @@ class AssignmentRestController(
         return ResponseEntity.ok().build()
     }
 
-    @GetMapping("/evaluations/{evaluationId}/missions/{missionId}/targets/{targetId}/assignments")
+    @GetMapping("/targets/{targetId}/assignments")
     fun findByEvaluationTargetId(
         @PathVariable recruitmentId: Long,
-        @PathVariable evaluationId: String,
-        @PathVariable missionId: Long,
         @PathVariable targetId: Long
     ): ResponseEntity<ApiResponse<AssignmentData>> {
         val assignments = assignmentService.findByEvaluationTargetId(targetId)

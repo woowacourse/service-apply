@@ -67,7 +67,7 @@ internal class AssignmentRestControllerTest : RestControllerTest() {
         every { assignmentService.getByUserIdAndMissionId(any(), any()) } returns assignmentResponse
 
         mockMvc.get(
-            "/api/recruitments/{recruitmentId}/missions/{missionId}/assignments",
+            "/api/recruitments/{recruitmentId}/missions/{missionId}/assignments/me",
             recruitmentId,
             missionId
         ) {
@@ -81,19 +81,14 @@ internal class AssignmentRestControllerTest : RestControllerTest() {
 
     @Test
     fun `특정 평가 대상자의 특정 과제에 해당하는 과제 제출물을 조회한다`() {
-        val evaluationId = 1L
         val targetId = 1L
         val assignmentData = createAssignmentData()
         every { assignmentService.findByEvaluationTargetId(targetId) } returns assignmentData
         mockMvc.get(
-            "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/missions/{missionId}/targets/{targetId}/assignments",
+            "/api/recruitments/{recruitmentId}/targets/{targetId}/assignments",
             recruitmentId,
-            evaluationId,
-            missionId,
-            targetId
-        ) {
-            contentType = MediaType.APPLICATION_JSON
-        }.andExpect {
+            targetId,
+        ).andExpect {
             status { isOk }
             content { json(objectMapper.writeValueAsString(ApiResponse.success(assignmentData))) }
         }
