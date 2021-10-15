@@ -2,14 +2,21 @@ package apply.application.mail
 
 import apply.application.ApplicationProperties
 import apply.application.ResetPasswordRequest
-import apply.domain.user.User
+import apply.domain.applicationform.ApplicationFormSubmittedEvent
+import apply.domain.recruitment.RecruitmentRepository
+import apply.domain.recruitment.getById
+import apply.domain.user.UserRepository
+import apply.domain.user.getById
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
+import org.springframework.transaction.event.TransactionalEventListener
 import org.thymeleaf.context.Context
 import org.thymeleaf.spring5.ISpringTemplateEngine
 
 @Service
 class MailService(
+    private val userRepository: UserRepository,
+    private val recruitmentRepository: RecruitmentRepository,
     private val applicationProperties: ApplicationProperties,
     private val templateEngine: ISpringTemplateEngine,
     private val mailSender: MailSender
@@ -33,12 +40,15 @@ class MailService(
     }
 
     @Async
-    fun sendFormSubmittedMail(user: User) {
+    @TransactionalEventListener
+    fun sendFormSubmittedMail(event: ApplicationFormSubmittedEvent) {
+        val user = userRepository.getById(event.userId)
+        val recruitment = recruitmentRepository.getById(event.recruitmentId)
         val context = Context().apply {
             setVariables(
                 mapOf(
                     "name" to user.name,
-                    "url" to applicationProperties.url
+                    "recruit" to recruitment.title
                 )
             )
         }

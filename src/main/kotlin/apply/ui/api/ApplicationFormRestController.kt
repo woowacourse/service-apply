@@ -60,9 +60,6 @@ class ApplicationFormRestController(
         @LoginUser user: User
     ): ResponseEntity<Unit> {
         applicationFormService.update(user.id, request)
-
-        // TODO: 차후 연결될 프론트 주소가 필요
-        mailService.sendFormSubmittedMail(user)
         return ResponseEntity.ok().build()
     }
 
