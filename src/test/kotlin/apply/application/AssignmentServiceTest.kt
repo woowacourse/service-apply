@@ -151,7 +151,7 @@ class AssignmentServiceTest {
     @Nested
     inner class Find {
         fun subject(): AssignmentData {
-            return assignmentService.findByEvaluationTargetIdAndMissionId(1L, 1L)
+            return assignmentService.findByEvaluationTargetId(1L)!!
         }
 
         @Test
@@ -164,12 +164,12 @@ class AssignmentServiceTest {
         @Test
         fun `평가 대상자가 제출한 과제 제출물이 없으면 빈 과제 제출물 데이터를 반환한다`() {
             every { evaluationTargetRepository.findByIdOrNull(any()) } returns createEvaluationTarget()
+            every { missionRepository.findByEvaluationId(any()) } returns createMission()
             every { assignmentRepository.findByUserIdAndMissionId(any(), any()) } returns null
 
             val actual = subject()
 
             assertAll(
-                { assertThat(actual).isNotNull },
                 { assertThat(actual.githubUsername).isBlank() },
                 { assertThat(actual.pullRequestUrl).isBlank() },
                 { assertThat(actual.note).isBlank() }
@@ -180,12 +180,12 @@ class AssignmentServiceTest {
         fun `평가 대상자가 제출한 과제 제출물이 있으면 평가 대상자가 제출한 과제 제출물 데이터를 반환한다`() {
             val assignment = createAssignment()
             every { evaluationTargetRepository.findByIdOrNull(any()) } returns createEvaluationTarget()
+            every { missionRepository.findByEvaluationId(any()) } returns createMission()
             every { assignmentRepository.findByUserIdAndMissionId(any(), any()) } returns assignment
 
             val actual = subject()
 
             assertAll(
-                { assertThat(actual).isNotNull },
                 { assertThat(actual.githubUsername).isEqualTo(assignment.githubUsername) },
                 { assertThat(actual.pullRequestUrl).isEqualTo(assignment.pullRequestUrl) },
                 { assertThat(actual.note).isEqualTo(assignment.note) }

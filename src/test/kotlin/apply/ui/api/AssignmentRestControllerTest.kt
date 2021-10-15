@@ -84,7 +84,7 @@ internal class AssignmentRestControllerTest : RestControllerTest() {
         val evaluationId = 1L
         val targetId = 1L
         val assignmentData = createAssignmentData()
-        every { assignmentService.findByEvaluationTargetIdAndMissionId(targetId, missionId) } returns assignmentData
+        every { assignmentService.findByEvaluationTargetId(targetId) } returns assignmentData
         mockMvc.get(
             "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/missions/{missionId}/targets/{targetId}/assignments",
             recruitmentId,

@@ -39,14 +39,13 @@ class EvaluationTargetCsvServiceTest {
 
     @BeforeEach
     internal fun setUp() {
-        evaluationTargetCsvService =
-            EvaluationTargetCsvService(
-                evaluationTargetService,
-                evaluationItemRepository,
-                missionRepository,
-                assignmentRepository,
-                csvGenerator
-            )
+        evaluationTargetCsvService = EvaluationTargetCsvService(
+            evaluationTargetService,
+            evaluationItemRepository,
+            missionRepository,
+            assignmentRepository,
+            csvGenerator
+        )
     }
 
     @Test

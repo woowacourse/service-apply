@@ -3,7 +3,6 @@ package apply.ui.admin.selections
 import apply.application.AssignmentService
 import apply.application.EvaluationTargetData
 import apply.application.EvaluationTargetService
-import apply.domain.mission.Mission
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.dialog.Dialog
@@ -20,7 +19,6 @@ import support.views.createPrimaryButton
 class EvaluationTargetFormDialog(
     private val evaluationTargetService: EvaluationTargetService,
     private val assignmentService: AssignmentService,
-    private val mission: Mission?,
     private val evaluationTargetId: Long,
     reloadComponents: () -> Unit
 ) : Dialog() {
@@ -44,18 +42,18 @@ class EvaluationTargetFormDialog(
         open()
     }
 
-    private fun createAssignmentForm(): Component {
-        return mission?.let {
-            AssignmentForm(assignmentService.findByEvaluationTargetIdAndMissionId(evaluationTargetId, it.id))
-        } ?: FormLayout()
-    }
-
     private fun createHeader(): VerticalLayout {
         return VerticalLayout(title, description).apply {
             alignItems = FlexComponent.Alignment.CENTER
             isPadding = false
             element.style.set("margin-bottom", "20px")
         }
+    }
+
+    private fun createAssignmentForm(): Component {
+        return assignmentService.findByEvaluationTargetId(evaluationTargetId)
+            ?.let { AssignmentForm(it) }
+            ?: FormLayout()
     }
 
     private fun createButtons(reloadComponent: () -> Unit): Component {
