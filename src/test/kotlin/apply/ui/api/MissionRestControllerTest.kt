@@ -111,35 +111,4 @@ internal class MissionRestControllerTest : RestControllerTest() {
             status { isOk }
         }
     }
-
-    @Test
-    fun `과제가 있는 특정 평가의 과제를 조회한다`() {
-        val mission = createMission()
-        every { missionService.findByEvaluationId(missionId) } returns mission
-
-        mockMvc.get(
-            "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/missions",
-            recruitmentId,
-            evaluationId,
-            missionId
-        ).andExpect {
-            status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(mission))) }
-        }
-    }
-
-    @Test
-    fun `과제가 없는 특정 평가의 과제를 조회한다`() {
-        every { missionService.findByEvaluationId(missionId) } returns null
-
-        mockMvc.get(
-            "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/missions",
-            recruitmentId,
-            evaluationId,
-            missionId
-        ).andExpect {
-            status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(null))) }
-        }
-    }
 }

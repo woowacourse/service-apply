@@ -54,9 +54,9 @@ class SelectionView(
     private val recruitmentItemService: RecruitmentItemService,
     private val evaluationService: EvaluationService,
     private val evaluationTargetService: EvaluationTargetService,
+    private val assignmentService: AssignmentService,
     private val excelService: ExcelService,
-    private val evaluationTargetCsvService: EvaluationTargetCsvService,
-    private val assignmentService: AssignmentService
+    private val evaluationTargetCsvService: EvaluationTargetCsvService
 ) : VerticalLayout(), HasUrlParameter<Long> {
     private var recruitmentId: Long = 0L
     private var evaluations: List<Evaluation> = evaluationService.findAllByRecruitmentId(recruitmentId)

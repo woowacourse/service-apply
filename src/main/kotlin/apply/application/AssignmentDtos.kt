@@ -21,9 +21,9 @@ data class AssignmentData(
     val note: String
 ) {
     constructor(assignment: Assignment?) : this(
-        assignment?.githubUsername ?: "",
-        assignment?.pullRequestUrl ?: "",
-        assignment?.note ?: ""
+        assignment?.githubUsername.orEmpty(),
+        assignment?.pullRequestUrl.orEmpty(),
+        assignment?.note.orEmpty()
     )
 }
 

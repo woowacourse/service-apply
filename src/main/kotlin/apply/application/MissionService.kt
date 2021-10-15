@@ -73,10 +73,6 @@ class MissionService(
         missionRepository.deleteById(id)
     }
 
-    fun findByEvaluationId(evaluationId: Long): Mission? {
-        return missionRepository.findByEvaluationId(evaluationId)
-    }
-
     fun findAllByUserIdAndRecruitmentId(userId: Long, recruitmentId: Long): List<MissionResponse> {
         val evaluationIds = evaluationRepository.findAllByRecruitmentId(recruitmentId).map { it.id }
         val includedEvaluationIds = evaluationIds.filter {
