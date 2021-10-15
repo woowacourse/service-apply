@@ -1,6 +1,6 @@
 package apply.domain.applicationform
 
-import support.domain.BaseEntity
+import support.domain.BaseAggregateRoot
 import java.time.LocalDateTime
 import javax.persistence.Column
 import javax.persistence.Embedded
@@ -29,7 +29,7 @@ class ApplicationForm(
     val createdDateTime: LocalDateTime = LocalDateTime.now(),
     modifiedDateTime: LocalDateTime = LocalDateTime.now(),
     id: Long = 0L
-) : BaseEntity(id) {
+) : BaseAggregateRoot<ApplicationForm>(id) {
     var referenceUrl: String = referenceUrl
         private set
 
@@ -64,17 +64,21 @@ class ApplicationForm(
     }
 
     fun update(referenceUrl: String, applicationFormAnswers: ApplicationFormAnswers) {
-        check(!this.submitted) {
-            "이미 제출된 지원서입니다. 수정할 수 없습니다."
-        }
+        checkSubmitted()
         this.referenceUrl = referenceUrl
-        this.modifiedDateTime = LocalDateTime.now()
-        this.answers = applicationFormAnswers
+        modifiedDateTime = LocalDateTime.now()
+        answers = applicationFormAnswers
     }
 
     fun submit(applicationValidator: ApplicationValidator) {
+        checkSubmitted()
         applicationValidator.validate(userId, recruitmentId)
         submitted = true
         submittedDateTime = LocalDateTime.now()
+        registerEvent(ApplicationFormSubmittedEvent(id, userId, recruitmentId))
+    }
+
+    private fun checkSubmitted() {
+        check(!submitted) { "이미 제출된 지원서입니다. 수정할 수 없습니다." }
     }
 }

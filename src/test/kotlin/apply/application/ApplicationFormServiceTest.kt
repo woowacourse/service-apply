@@ -213,6 +213,7 @@ class ApplicationFormServiceTest {
         every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
         every { applicationFormRepository.findByRecruitmentIdAndUserId(any(), any()) } returns applicationForm1
         every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns recruitmentItems
+        every { applicationFormRepository.save(any()) } returns applicationForm1
 
         assertDoesNotThrow { applicationFormService.update(userId, updateApplicationFormRequest) }
     }
