@@ -58,7 +58,7 @@ data class RegisterUserRequest(
     @field:Email
     val email: String,
 
-    @field:Pattern(regexp = "^01([0|1])-([0-9]{3,4})-([0-9]{4})$")
+    @field:Pattern(regexp = "^[0|1]{3}-[0-9]{4}-[0-9]{4}$")
     val phoneNumber: String,
 
     @field:NotNull
@@ -108,6 +108,6 @@ data class EditPasswordRequest(
 )
 
 data class EditInformationRequest(
-    @field:Pattern(regexp = "^01([0|1])-([0-9]{3,4})-([0-9]{4})$")
+    @field:Pattern(regexp = "^[0|1]{3}-[0-9]{4}-[0-9]{4}$")
     val phoneNumber: String
 )
