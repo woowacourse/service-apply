@@ -29,7 +29,8 @@ class MailService(
                 mapOf(
                     "name" to event.name,
                     "tempPassword" to event.password,
-                    "loginPageUrl" to "${applicationProperties.url}/login"
+                    "loginPageUrl" to "${applicationProperties.url}/login",
+                    "url" to applicationProperties.url
                 )
             )
         }
@@ -49,7 +50,8 @@ class MailService(
             setVariables(
                 mapOf(
                     "name" to user.name,
-                    "recruit" to recruitment.title
+                    "recruit" to recruitment.title,
+                    "url" to applicationProperties.url
                 )
             )
         }
@@ -65,7 +67,8 @@ class MailService(
         val context = Context().apply {
             setVariables(
                 mapOf(
-                    "authenticationCode" to authenticationCode
+                    "authenticationCode" to authenticationCode,
+                    "url" to applicationProperties.url
                 )
             )
         }

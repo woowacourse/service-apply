@@ -35,7 +35,7 @@
                 style="height: 0; line-height: 0; padding: 0"
               >
                 <img
-                  src="https://raw.githubusercontent.com/woowacourse/service-apply/tree/master/src/main/resources/static/images/mail/header.jpg"
+                  th:src="${url}+'/static/images/mail/header.jpg'"
                   alt="우아한테크코스 로고"
                   style="display: block; width: 600px; height: 193px"
                   width="600"
@@ -152,7 +152,7 @@
                       "
                     >
                       <img
-                        src="https://raw.githubusercontent.com/woowacourse/service-apply/tree/master/src/main/resources/static/images/mail/footer_logo.png"
+                        th:src="${url}+'/assets/mail/footer_logo.png'"
                         alt="우아한테크코스 텍스트 로고"
                         style="display: block; width: 126px; height: 19px"
                         width="126"
