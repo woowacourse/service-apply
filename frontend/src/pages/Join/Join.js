@@ -34,6 +34,7 @@ import {
   validateRePassword,
 } from "../../utils/validation/password";
 import styles from "./Join.module.css";
+import CancelButton from "../../components/form/CancelButton/CancelButton";
 
 const Join = () => {
   const history = useHistory();
@@ -140,9 +141,7 @@ const Join = () => {
           <GenderField className={styles["input-box"]} required />
 
           <div className={styles.buttons}>
-            <Button cancel type="button">
-              취소
-            </Button>
+            <CancelButton onClick={history.goBack} />
             <SubmitButton>가입하기</SubmitButton>
           </div>
         </Form>
