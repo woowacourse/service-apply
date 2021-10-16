@@ -1,6 +1,6 @@
 package apply.domain.applicationform
 
-import support.domain.BaseAggregateRoot
+import support.domain.BaseRootEntity
 import java.time.LocalDateTime
 import javax.persistence.Column
 import javax.persistence.Embedded
@@ -29,7 +29,7 @@ class ApplicationForm(
     val createdDateTime: LocalDateTime = LocalDateTime.now(),
     modifiedDateTime: LocalDateTime = LocalDateTime.now(),
     id: Long = 0L
-) : BaseAggregateRoot<ApplicationForm>(id) {
+) : BaseRootEntity<ApplicationForm>(id) {
     var referenceUrl: String = referenceUrl
         private set
 

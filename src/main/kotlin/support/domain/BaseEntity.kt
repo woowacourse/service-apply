@@ -29,7 +29,7 @@ abstract class BaseEntity(
 }
 
 @MappedSuperclass
-abstract class BaseAggregateRoot<T : AbstractAggregateRoot<T>>(
+abstract class BaseRootEntity<T : AbstractAggregateRoot<T>>(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L
