@@ -42,8 +42,7 @@ class UserRestController(
 
     @PostMapping("/reset-password")
     fun resetPassword(@RequestBody @Valid request: ResetPasswordRequest): ResponseEntity<Unit> {
-        val newPassword = userService.resetPassword(request)
-        mailService.sendPasswordResetMail(request, newPassword)
+        userService.resetPassword(request)
         return ResponseEntity.noContent().build()
     }
 

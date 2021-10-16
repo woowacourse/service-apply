@@ -21,10 +21,10 @@ class UserService(
         return userRepository.findAllByKeyword(keyword).map(::UserResponse)
     }
 
-    fun resetPassword(request: ResetPasswordRequest): String {
-        return passwordGenerator.generate().also {
-            getByEmail(request.email).resetPassword(request.name, request.birthday, it)
-        }
+    fun resetPassword(request: ResetPasswordRequest) {
+        val user = getByEmail(request.email)
+        user.resetPassword(request.name, request.birthday, passwordGenerator.generate())
+        userRepository.save(user)
     }
 
     fun editPassword(id: Long, request: EditPasswordRequest) {

@@ -157,11 +157,7 @@ internal class UserRestControllerTest : RestControllerTest() {
 
     @Test
     fun `올바른 비밀번호 찾기 요청에 응답으로 NoContent를 반환한다`() {
-        every {
-            userService.resetPassword(userPasswordFindRequest)
-        } returns RANDOM_PASSWORD
-
-        every { mailService.sendPasswordResetMail(userPasswordFindRequest, RANDOM_PASSWORD) } just Runs
+        every { userService.resetPassword(userPasswordFindRequest) } just Runs
 
         mockMvc.post("/api/users/reset-password") {
             content = objectMapper.writeValueAsBytes(userPasswordFindRequest)
