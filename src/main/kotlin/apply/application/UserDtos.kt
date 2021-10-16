@@ -8,6 +8,7 @@ import java.time.LocalDate
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
+import javax.validation.constraints.Pattern
 
 data class UserResponse(
     val id: Long,
@@ -57,7 +58,7 @@ data class RegisterUserRequest(
     @field:Email
     val email: String,
 
-    @field:NotBlank
+    @field:Pattern(regexp = "^01([0|1])-([0-9]{3,4})-([0-9]{4})$")
     val phoneNumber: String,
 
     @field:NotNull
@@ -107,6 +108,6 @@ data class EditPasswordRequest(
 )
 
 data class EditInformationRequest(
-    @field:NotBlank
+    @field:Pattern(regexp = "^01([0|1])-([0-9]{3,4})-([0-9]{4})$")
     val phoneNumber: String
 )
