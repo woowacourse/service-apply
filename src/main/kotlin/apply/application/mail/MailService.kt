@@ -1,10 +1,10 @@
 package apply.application.mail
 
 import apply.application.ApplicationProperties
-import apply.application.ResetPasswordRequest
 import apply.domain.applicationform.ApplicationFormSubmittedEvent
 import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitment.getById
+import apply.domain.user.PasswordResetEvent
 import apply.domain.user.UserRepository
 import apply.domain.user.getById
 import org.springframework.scheduling.annotation.Async
@@ -22,19 +22,20 @@ class MailService(
     private val mailSender: MailSender
 ) {
     @Async
-    fun sendPasswordResetMail(request: ResetPasswordRequest, newPassword: String) {
+    @TransactionalEventListener
+    fun sendPasswordResetMail(event: PasswordResetEvent) {
         val context = Context().apply {
             setVariables(
                 mapOf(
-                    "name" to request.name,
-                    "password" to newPassword,
-                    "url" to applicationProperties.url
+                    "name" to event.name,
+                    "tempPassword" to event.password,
+                    "loginPageUrl" to "${applicationProperties.url}/login"
                 )
             )
         }
         mailSender.send(
-            request.email,
-            "${request.name}님, 임시 비밀번호를 발송해 드립니다.",
+            event.email,
+            "${event.name}님, 임시 비밀번호를 발송해 드립니다.",
             templateEngine.process("mail/password-reset", context)
         )
     }
