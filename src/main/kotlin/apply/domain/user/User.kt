@@ -44,11 +44,6 @@ class User(
         UserInformation(name, email, phoneNumber, gender, birthday), password, id
     )
 
-    fun authenticate(user: User) {
-        authenticate(user.password)
-        identify(this.information == user.information)
-    }
-
     fun authenticate(password: Password) {
         identify(this.password == password) { "비밀번호가 일치하지 않습니다." }
     }
