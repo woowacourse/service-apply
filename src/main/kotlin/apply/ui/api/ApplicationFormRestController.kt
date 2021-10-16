@@ -7,7 +7,6 @@ import apply.application.ApplicationFormService
 import apply.application.CreateApplicationFormRequest
 import apply.application.MyApplicationFormResponse
 import apply.application.UpdateApplicationFormRequest
-import apply.application.mail.MailService
 import apply.domain.user.User
 import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
@@ -25,8 +24,7 @@ import javax.validation.Valid
 @RequestMapping("/api")
 class ApplicationFormRestController(
     private val applicationFormService: ApplicationFormService,
-    private val applicantService: ApplicantService,
-    private val mailService: MailService
+    private val applicantService: ApplicantService
 ) {
     @GetMapping("/application-forms/me")
     fun getMyApplicationForms(
