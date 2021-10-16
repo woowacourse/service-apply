@@ -17,7 +17,8 @@ const useForm = ({ validators, submit }) => {
   const handleChange = ({ target }) => {
     setValue((prev) => ({
       ...prev,
-      [target.name]: target.type === "checkbox" ? target.checked : target.value,
+      [target.name]:
+        target.type === "checkbox" ? target.checked : target.value.trim(),
     }));
 
     const validator = validators?.[target.name];
