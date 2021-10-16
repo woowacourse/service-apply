@@ -17,6 +17,7 @@ import support.views.FORM_URL_PATTERN
 import support.views.Title
 import support.views.createContrastButton
 import support.views.createPrimaryButton
+import support.views.toDisplayName
 
 @Route(value = "admin/recruitments", layout = BaseLayout::class)
 class RecruitmentsFormView(
@@ -33,6 +34,7 @@ class RecruitmentsFormView(
     override fun setParameter(event: BeforeEvent, @WildcardParameter parameter: String) {
         val result = FORM_URL_PATTERN.find(parameter) ?: return UI.getCurrent().page.history.back()
         val (id, value) = result.destructured
+        setDisplayName(value.toDisplayName())
         if (value == EDIT_VALUE) {
             recruitmentForm.fill(recruitmentService.getNotEndedDataById(id.toLong()))
             submitButton.isVisible = false
