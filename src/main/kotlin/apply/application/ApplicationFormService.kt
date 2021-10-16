@@ -41,6 +41,7 @@ class ApplicationFormService(
         if (request.submitted) {
             applicationForm.submit(applicationValidator)
         }
+        applicationFormRepository.save(applicationForm)
     }
 
     fun getMyApplicationForms(userId: Long): List<MyApplicationFormResponse> =
