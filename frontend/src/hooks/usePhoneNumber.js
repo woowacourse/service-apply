@@ -2,8 +2,8 @@ import { useState } from "react";
 import { formatHyphen } from "../utils/format/phoneNumber";
 
 const MAX_PHONE_NUMBER_LENGTH = 13;
-const MAX_LENGTH_PHONE_NUMBER_HYPHEN_IDX = [3, 7];
-const PHONE_NUMBER_HYPHEN_IDX = [2, 6];
+const FIRST_HYPHEN_IDX = 3;
+const SECOND_HYPHEN_IDX = 7;
 
 const usePhoneNumber = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -12,14 +12,13 @@ const usePhoneNumber = () => {
     nativeEvent: { data },
     target: { value },
   }) => {
-    if (Number.isNaN(data) || value.length > MAX_PHONE_NUMBER_LENGTH) return;
+    if (isNaN(data) || value.length > MAX_PHONE_NUMBER_LENGTH) return;
 
-    const [firstHyphenIdx, secondHyphenIdx] =
-      value.length !== MAX_PHONE_NUMBER_LENGTH
-        ? PHONE_NUMBER_HYPHEN_IDX
-        : MAX_LENGTH_PHONE_NUMBER_HYPHEN_IDX;
-
-    const result = formatHyphen(value, firstHyphenIdx, secondHyphenIdx).trim();
+    const result = formatHyphen(
+      value,
+      FIRST_HYPHEN_IDX,
+      SECOND_HYPHEN_IDX
+    ).trim();
 
     setPhoneNumber(result);
   };

@@ -34,7 +34,6 @@ const MyPageEdit = () => {
   };
 
   const { handleSubmit, ...methods } = useForm({
-    phoneNumber: validatePhoneNumber,
     submit,
   });
 
@@ -63,7 +62,8 @@ const MyPageEdit = () => {
               value={phoneNumber}
               onChange={handlePhoneNumberChange}
               type="tel"
-              label="전화번호"
+              label="핸드폰 번호"
+              pattern="[0|1]{3}-[0-9]{4}-[0-9]{4}"
             />
             <BirthField initialValue={userInfo?.birthday} readOnly />
 

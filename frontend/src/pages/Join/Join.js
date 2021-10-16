@@ -115,11 +115,12 @@ const Join = () => {
           <MessageTextInput
             name="phoneNumber"
             type="tel"
-            label="전화번호"
+            label="휴대폰 번호"
             value={phoneNumber}
             onChange={handlePhoneNumberChange}
-            placeholder="연락 가능한 전화번호를 입력해 주세요."
+            placeholder="연락 가능한 휴대폰 번호를 입력해 주세요."
             className={styles["input-box"]}
+            pattern="[0|1]{3}-[0-9]{4}-[0-9]{4}"
             required
           />
           <FormInput
