@@ -1,10 +1,12 @@
 package apply.ui.admin.selections
 
+import apply.application.AssignmentService
 import apply.application.EvaluationTargetData
 import apply.application.EvaluationTargetService
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.dialog.Dialog
+import com.vaadin.flow.component.formlayout.FormLayout
 import com.vaadin.flow.component.html.H2
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
@@ -16,6 +18,7 @@ import support.views.createPrimaryButton
 
 class EvaluationTargetFormDialog(
     private val evaluationTargetService: EvaluationTargetService,
+    private val assignmentService: AssignmentService,
     private val evaluationTargetId: Long,
     reloadComponents: () -> Unit
 ) : Dialog() {
@@ -33,7 +36,7 @@ class EvaluationTargetFormDialog(
         title.text = response.title
         description.value = response.description
 
-        add(createHeader(), evaluationTargetForm, createButtons(reloadComponents))
+        add(createHeader(), createAssignmentForm(), evaluationTargetForm, createButtons(reloadComponents))
         width = "800px"
         height = "90%"
         open()
@@ -45,6 +48,12 @@ class EvaluationTargetFormDialog(
             isPadding = false
             element.style.set("margin-bottom", "20px")
         }
+    }
+
+    private fun createAssignmentForm(): Component {
+        return assignmentService.findByEvaluationTargetId(evaluationTargetId)
+            ?.let { AssignmentForm(it) }
+            ?: FormLayout()
     }
 
     private fun createButtons(reloadComponent: () -> Unit): Component {

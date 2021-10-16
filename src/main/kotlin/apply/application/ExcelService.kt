@@ -1,7 +1,10 @@
 package apply.application
 
+import apply.domain.assignment.AssignmentRepository
 import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.evaluationtarget.EvaluationStatus
+import apply.domain.mission.Mission
+import apply.domain.mission.MissionRepository
 import apply.domain.recruitmentitem.RecruitmentItemRepository
 import apply.utils.ExcelGenerator
 import apply.utils.ExcelRow
@@ -16,6 +19,8 @@ class ExcelService(
     private val evaluationTargetService: EvaluationTargetService,
     private val recruitmentItemRepository: RecruitmentItemRepository,
     private val evaluationItemRepository: EvaluationItemRepository,
+    private val missionRepository: MissionRepository,
+    private val assignmentRepository: AssignmentRepository,
     private val excelGenerator: ExcelGenerator
 ) {
     fun createApplicantExcel(recruitmentId: Long): ByteArrayInputStream {
@@ -42,9 +47,45 @@ class ExcelService(
 
     fun createTargetExcel(evaluationId: Long): ByteArrayInputStream {
         val targets = evaluationTargetService.findAllByEvaluationIdAndKeyword(evaluationId)
-        val titles =
-            evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluationId).map { it.title }.toTypedArray()
-        val headerTitles = arrayOf("이름", "이메일", "합계", "평가상태", *titles, "기타 특이사항")
+        val titles = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluationId)
+            .map { it.title }
+            .toTypedArray()
+        val mission = missionRepository.findByEvaluationId(evaluationId)
+        return mission?.let { createTargetExcelWithAssignment(titles, targets, mission) }
+            ?: createTargetExcelDefault(titles, targets)
+    }
+
+    private fun createTargetExcelWithAssignment(
+        titles: Array<String>,
+        targets: List<EvaluationTargetResponse>,
+        mission: Mission
+    ): ByteArrayInputStream {
+        val headerTitles = arrayOf(
+            NAME, EMAIL, GITHUB_USERNAME, PULL_REQUEST_URL, ASSIGNMENT_NOTE, TOTAL_SCORE, STATUS, *titles, NOTE
+        )
+        val assignments = assignmentRepository.findAllByMissionId(mission.id)
+        val excelRows = targets.map {
+            val assignment = assignments.find { assignment -> assignment.userId == it.userId }
+            ExcelRow(
+                it.name,
+                it.email,
+                assignment?.githubUsername ?: UNSUBMITTED,
+                assignment?.pullRequestUrl ?: UNSUBMITTED,
+                assignment?.note ?: UNSUBMITTED,
+                it.totalScore.toString(),
+                it.evaluationStatus.toText(),
+                *it.answers.map { item -> item.score.toString() }.toTypedArray(),
+                it.note
+            )
+        }
+        return excelGenerator.generateBy(headerTitles, excelRows)
+    }
+
+    private fun createTargetExcelDefault(
+        titles: Array<String>,
+        targets: List<EvaluationTargetResponse>
+    ): ByteArrayInputStream {
+        val headerTitles = arrayOf(NAME, EMAIL, TOTAL_SCORE, STATUS, *titles, NOTE)
         val excelRows = targets.map {
             ExcelRow(
                 it.name,
@@ -65,11 +106,24 @@ class ExcelService(
         }
     }
 
-    private fun EvaluationStatus.toText() =
-        when (this) {
+    private fun EvaluationStatus.toText(): String {
+        return when (this) {
             EvaluationStatus.WAITING -> "평가 전"
             EvaluationStatus.PASS -> "합격"
             EvaluationStatus.FAIL -> "탈락"
             EvaluationStatus.PENDING -> "보류"
         }
+    }
+
+    companion object {
+        private const val NAME: String = "이름"
+        private const val EMAIL: String = "이메일"
+        private const val STATUS: String = "평가 상태"
+        private const val NOTE: String = "기타 특이사항"
+        private const val TOTAL_SCORE: String = "합계"
+        private const val GITHUB_USERNAME: String = "Github 유저 네임"
+        private const val PULL_REQUEST_URL: String = "Pull Request URL"
+        private const val ASSIGNMENT_NOTE: String = "소감"
+        private const val UNSUBMITTED: String = "(미제출)"
+    }
 }

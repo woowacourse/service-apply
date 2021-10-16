@@ -1,5 +1,6 @@
 package apply.ui.api
 
+import apply.application.AssignmentData
 import apply.application.AssignmentRequest
 import apply.application.AssignmentResponse
 import apply.application.AssignmentService
@@ -16,11 +17,11 @@ import org.springframework.web.bind.annotation.RestController
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("/api/recruitments/{recruitmentId}/missions/{missionId}/assignments")
+@RequestMapping("/api/recruitments/{recruitmentId}")
 class AssignmentRestController(
     private val assignmentService: AssignmentService
 ) {
-    @PostMapping
+    @PostMapping("/missions/{missionId}/assignments")
     fun create(
         @PathVariable recruitmentId: Long,
         @PathVariable missionId: Long,
@@ -31,7 +32,7 @@ class AssignmentRestController(
         return ResponseEntity.ok().build()
     }
 
-    @GetMapping
+    @GetMapping("/missions/{missionId}/assignments/me")
     fun getAssignment(
         @PathVariable recruitmentId: Long,
         @PathVariable missionId: Long,
@@ -41,7 +42,7 @@ class AssignmentRestController(
         return ResponseEntity.ok(ApiResponse.success(assignment))
     }
 
-    @PatchMapping
+    @PatchMapping("/missions/{missionId}/assignments")
     fun update(
         @PathVariable recruitmentId: Long,
         @PathVariable missionId: Long,
@@ -50,5 +51,14 @@ class AssignmentRestController(
     ): ResponseEntity<Unit> {
         assignmentService.update(missionId, user.id, request)
         return ResponseEntity.ok().build()
+    }
+
+    @GetMapping("/targets/{targetId}/assignments")
+    fun findByEvaluationTargetId(
+        @PathVariable recruitmentId: Long,
+        @PathVariable targetId: Long
+    ): ResponseEntity<ApiResponse<AssignmentData>> {
+        val assignments = assignmentService.findByEvaluationTargetId(targetId)
+        return ResponseEntity.ok(ApiResponse.success(assignments))
     }
 }

@@ -44,6 +44,8 @@ internal class MissionRestControllerTest : RestControllerTest() {
     private lateinit var evaluationRepository: EvaluationRepository
 
     private val recruitmentId = 1L
+    private val evaluationId = 1L
+    private val missionId = 1L
     private val user = createUser(id = 1L)
 
     @Test
@@ -99,7 +101,6 @@ internal class MissionRestControllerTest : RestControllerTest() {
 
     @Test
     fun `과제를 삭제한다`() {
-        val missionId = 1L
         every { missionService.deleteById(missionId) } just Runs
 
         mockMvc.delete(

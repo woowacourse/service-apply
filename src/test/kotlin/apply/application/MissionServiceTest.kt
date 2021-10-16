@@ -133,9 +133,7 @@ class MissionServiceTest {
 
         val responses = missionService.findAllByUserIdAndRecruitmentId(userId, recruitmentId)
 
-        assertAll(
-            { assertThat(responses).isEmpty() },
-        )
+        assertThat(responses).isEmpty()
     }
 
     @Test
