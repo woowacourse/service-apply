@@ -8,6 +8,7 @@ import apply.RANDOM_PASSWORD_TEXT
 import apply.WRONG_PASSWORD
 import apply.createUser
 import apply.domain.user.Password
+import apply.domain.user.User
 import apply.domain.user.UserAuthenticationException
 import apply.domain.user.UserRepository
 import apply.domain.user.findByEmail
@@ -43,22 +44,26 @@ internal class UserServiceTest {
     @DisplayName("비밀번호 초기화는")
     @Nested
     inner class ResetPassword {
+        private lateinit var user: User
         private lateinit var request: ResetPasswordRequest
 
         @BeforeEach
         internal fun setUp() {
-            every { userRepository.findByEmail(EMAIL) } returns createUser()
+            user = createUser()
+            every { userRepository.findByEmail(EMAIL) } returns user
             every { passwordGenerator.generate() } returns RANDOM_PASSWORD_TEXT
         }
 
-        fun subject(): String {
-            return userService.resetPassword(request)
+        fun subject() {
+            userService.resetPassword(request)
         }
 
         @Test
         fun `만약 개인정보가 일치한다면 초기화한다`() {
+            every { userRepository.save(any()) } returns user
             request = ResetPasswordRequest(NAME, EMAIL, BIRTHDAY)
-            assertThat(subject()).isEqualTo(RANDOM_PASSWORD_TEXT)
+            subject()
+            assertThat(user.password).isEqualTo(Password(RANDOM_PASSWORD_TEXT))
         }
 
         @Test

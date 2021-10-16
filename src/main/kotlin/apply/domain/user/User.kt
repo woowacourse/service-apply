@@ -1,6 +1,6 @@
 package apply.domain.user
 
-import support.domain.BaseEntity
+import support.domain.BaseRootEntity
 import java.time.LocalDate
 import javax.persistence.AttributeOverride
 import javax.persistence.Column
@@ -16,7 +16,7 @@ class User(
     @Embedded
     var password: Password,
     id: Long = 0L
-) : BaseEntity(id) {
+) : BaseRootEntity<User>(id) {
     val name: String
         get() = information.name
 
@@ -61,6 +61,7 @@ class User(
     fun resetPassword(name: String, birthday: LocalDate, password: String) {
         identify(information.same(name, birthday))
         this.password = Password(password)
+        registerEvent(PasswordResetEvent(id, name, email, password))
     }
 
     fun changePhoneNumber(phoneNumber: String) {
