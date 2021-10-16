@@ -1,7 +1,9 @@
 package apply.application
 
 import apply.createEvaluationItem
+import apply.domain.assignment.AssignmentRepository
 import apply.domain.evaluationItem.EvaluationItemRepository
+import apply.domain.mission.MissionRepository
 import apply.utils.CsvGenerator
 import io.mockk.Runs
 import io.mockk.every
@@ -25,14 +27,25 @@ class EvaluationTargetCsvServiceTest {
     private lateinit var evaluationItemRepository: EvaluationItemRepository
 
     @MockK
+    private lateinit var missionRepository: MissionRepository
+
+    @MockK
+    private lateinit var assignmentRepository: AssignmentRepository
+
+    @MockK
     private lateinit var csvGenerator: CsvGenerator
 
     private lateinit var evaluationTargetCsvService: EvaluationTargetCsvService
 
     @BeforeEach
     internal fun setUp() {
-        evaluationTargetCsvService =
-            EvaluationTargetCsvService(evaluationTargetService, evaluationItemRepository, csvGenerator)
+        evaluationTargetCsvService = EvaluationTargetCsvService(
+            evaluationTargetService,
+            evaluationItemRepository,
+            missionRepository,
+            assignmentRepository,
+            csvGenerator
+        )
     }
 
     @Test

@@ -1,5 +1,6 @@
 package apply
 
+import apply.application.AssignmentData
 import apply.application.AssignmentRequest
 import apply.application.AssignmentResponse
 import apply.domain.assignment.Assignment
@@ -33,4 +34,12 @@ fun createAssignmentResponse(
     note: String = NOTE
 ): AssignmentResponse {
     return AssignmentResponse(githubUsername, pullRequestUrl, note)
+}
+
+fun createAssignmentData(
+    githubUsername: String = GITHUB_USERNAME,
+    pullRequestUrl: String = PULL_REQUEST_URL,
+    note: String = NOTE
+): AssignmentData {
+    return AssignmentData(githubUsername, pullRequestUrl, note)
 }

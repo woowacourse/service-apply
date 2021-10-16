@@ -1,8 +1,11 @@
 package apply.application
 
+import apply.domain.assignment.AssignmentRepository
 import apply.domain.evaluationItem.EvaluationItem
 import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.evaluationtarget.EvaluationStatus
+import apply.domain.mission.Mission
+import apply.domain.mission.MissionRepository
 import apply.utils.CsvGenerator
 import apply.utils.CsvRow
 import org.apache.commons.csv.CSVFormat
@@ -18,22 +21,60 @@ import javax.transaction.Transactional
 class EvaluationTargetCsvService(
     private val evaluationTargetService: EvaluationTargetService,
     private val evaluationItemRepository: EvaluationItemRepository,
+    private val missionRepository: MissionRepository,
+    private val assignmentRepository: AssignmentRepository,
     private val csvGenerator: CsvGenerator
 ) {
     fun createTargetCsv(evaluationId: Long): ByteArrayInputStream {
         val targets = evaluationTargetService.findAllByEvaluationIdAndKeyword(evaluationId)
         val evaluationItems = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluationId)
         val evaluationItemHeaders = evaluationItems.map { it.toHeader() }.toTypedArray()
+        val mission = missionRepository.findByEvaluationId(evaluationId)
+        return mission?.let { createTargetCsvWithAssignment(evaluationItemHeaders, targets, evaluationItems, mission) }
+            ?: createTargetCsvDefault(evaluationItemHeaders, targets, evaluationItems)
+    }
 
-        val headerTitles = arrayOf(ID, NAME, EMAIL, STATUS, *evaluationItemHeaders, NOTE)
-        val csvRows = targets.map { target ->
+    private fun createTargetCsvWithAssignment(
+        evaluationItemHeaders: Array<String>,
+        targets: List<EvaluationTargetResponse>,
+        evaluationItems: List<EvaluationItem>,
+        mission: Mission
+    ): ByteArrayInputStream {
+        val headerTitles = arrayOf(
+            ID, NAME, EMAIL, GITHUB_USERNAME, PULL_REQUEST_URL, ASSIGNMENT_NOTE, STATUS, *evaluationItemHeaders, NOTE
+        )
+        val assignments = assignmentRepository.findAllByMissionId(mission.id)
+        val csvRows = targets.map {
+            val assignment = assignments.find { assignment -> assignment.userId == it.userId }
             CsvRow(
-                target.id.toString(),
-                target.name,
-                target.email,
-                target.evaluationStatus.name,
-                *scores(target.answers, evaluationItems).toTypedArray(),
-                target.note
+                it.id.toString(),
+                it.name,
+                it.email,
+                assignment?.githubUsername ?: UNSUBMITTED,
+                assignment?.pullRequestUrl ?: UNSUBMITTED,
+                assignment?.note ?: UNSUBMITTED,
+                it.evaluationStatus.name,
+                *scores(it.answers, evaluationItems).toTypedArray(),
+                it.note
+            )
+        }
+        return csvGenerator.generateBy(headerTitles, csvRows)
+    }
+
+    private fun createTargetCsvDefault(
+        evaluationItemHeaders: Array<String>,
+        targets: List<EvaluationTargetResponse>,
+        evaluationItems: List<EvaluationItem>
+    ): ByteArrayInputStream {
+        val headerTitles = arrayOf(ID, NAME, EMAIL, STATUS, *evaluationItemHeaders, NOTE)
+        val csvRows = targets.map {
+            CsvRow(
+                it.id.toString(),
+                it.name,
+                it.email,
+                it.evaluationStatus.name,
+                *scores(it.answers, evaluationItems).toTypedArray(),
+                it.note
             )
         }
         return csvGenerator.generateBy(headerTitles, csvRows)
@@ -96,5 +137,9 @@ class EvaluationTargetCsvService(
         private const val EMAIL: String = "이메일"
         private const val STATUS: String = "평가 상태"
         private const val NOTE: String = "기타 특이사항"
+        private const val GITHUB_USERNAME: String = "Github Username"
+        private const val PULL_REQUEST_URL: String = "Pull Request URL"
+        private const val ASSIGNMENT_NOTE: String = "소감"
+        private const val UNSUBMITTED: String = "(미제출)"
     }
 }
