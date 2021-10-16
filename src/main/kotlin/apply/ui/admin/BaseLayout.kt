@@ -29,8 +29,8 @@ class BaseLayout(
 
     private fun createDrawer(): Component {
         return VerticalLayout().apply {
-            setWidthFull()
-            height = "auto"
+            setSizeFull()
+            element.style.set("overflow", "auto")
             themeList["dark"] = true
             alignItems = FlexComponent.Alignment.CENTER
             add(createTitle(), createLogo(width), createMenu())
