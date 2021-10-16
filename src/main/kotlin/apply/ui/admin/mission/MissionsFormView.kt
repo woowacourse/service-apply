@@ -37,15 +37,13 @@ class MissionsFormView(
     private val buttons: Component = createButtons()
 
     override fun setParameter(event: BeforeEvent, @WildcardParameter parameter: String) {
-        val result = MISSION_FORM_URL_PATTERN.find(parameter)
-        result?.let {
-            val (recruitmentId, missionId, value) = it.destructured
-            setDisplayName(value.toDisplayName())
-            this.recruitmentId = recruitmentId.toLong()
-            if (value == EDIT_VALUE) {
-                missionForm.fill(missionService.getDataById(missionId.toLong()))
-            }
-        } ?: UI.getCurrent().page.history.back()
+        val result = MISSION_FORM_URL_PATTERN.find(parameter) ?: return UI.getCurrent().page.history.back()
+        val (recruitmentId, missionId, value) = result.destructured
+        setDisplayName(value.toDisplayName())
+        this.recruitmentId = recruitmentId.toLong()
+        if (value == EDIT_VALUE) {
+            missionForm.fill(missionService.getDataById(missionId.toLong()))
+        }
         add(title, missionForm, buttons)
     }
 

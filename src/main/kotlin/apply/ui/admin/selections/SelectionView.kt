@@ -2,6 +2,7 @@ package apply.ui.admin.selections
 
 import apply.application.ApplicantAndFormResponse
 import apply.application.ApplicantService
+import apply.application.AssignmentService
 import apply.application.EvaluationService
 import apply.application.EvaluationTargetCsvService
 import apply.application.EvaluationTargetResponse
@@ -53,6 +54,7 @@ class SelectionView(
     private val recruitmentItemService: RecruitmentItemService,
     private val evaluationService: EvaluationService,
     private val evaluationTargetService: EvaluationTargetService,
+    private val assignmentService: AssignmentService,
     private val excelService: ExcelService,
     private val evaluationTargetCsvService: EvaluationTargetCsvService
 ) : VerticalLayout(), HasUrlParameter<Long> {
@@ -166,13 +168,10 @@ class SelectionView(
     private fun createEvaluationButtonRenderer(): Renderer<EvaluationTargetResponse> {
         return ComponentRenderer<Component, EvaluationTargetResponse> { response ->
             createPrimarySmallButton("평가하기") {
-                EvaluationTargetFormDialog(evaluationTargetService, response.id) {
+                EvaluationTargetFormDialog(evaluationTargetService, assignmentService, response.id) {
                     selectedTabIndex = tabs.selectedIndex
                     removeAll()
-                    add(
-                        createTitle(),
-                        createContent()
-                    )
+                    add(createTitle(), createContent())
                 }
             }
         }
@@ -214,8 +213,7 @@ class SelectionView(
     private fun createEvaluationFileDownloadButton(): Button {
         return createSuccessButton("평가지 다운로드") {
             val evaluation = evaluations[tabs.selectedIndex - 1]
-            val csv = evaluationTargetCsvService.createTargetCsv(evaluation.id)
-            downloadFile("${evaluation.title}.csv", csv)
+            downloadFile("${evaluation.title}.csv", evaluationTargetCsvService.createTargetCsv(evaluation.id))
         }
     }
 
@@ -238,8 +236,7 @@ class SelectionView(
                 downloadFile("${recruitmentService.getById(recruitmentId).title}.xlsx", excel)
             } else {
                 val evaluation = evaluations[tabs.selectedIndex - 1]
-                val excel = excelService.createTargetExcel(evaluation.id)
-                downloadFile("${evaluation.title}.xlsx", excel)
+                downloadFile("${evaluation.title}.xlsx", excelService.createTargetExcel(evaluation.id))
             }
         }
     }

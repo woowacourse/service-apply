@@ -14,9 +14,13 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
+import org.springframework.data.repository.findByIdOrNull
 import support.test.UnitTest
 import java.time.LocalDateTime
 
@@ -99,7 +103,7 @@ class AssignmentServiceTest {
     }
 
     @Test
-    fun `제출한 과제물을 수정할 수 있다`() {
+    fun `제출한 과제 제출물을 수정할 수 있다`() {
         every { missionRepository.getById(any()) } returns createMission()
         every { assignmentRepository.findByUserIdAndMissionId(any(), any()) } returns createAssignment()
         assertDoesNotThrow { assignmentService.update(1L, 1L, createAssignmentRequest()) }
@@ -123,13 +127,13 @@ class AssignmentServiceTest {
     }
 
     @Test
-    fun `제출 불가능한 과제의 과제물을 수정할 수 없다`() {
+    fun `제출 불가능한 과제의 과제 제출물을 수정할 수 없다`() {
         every { missionRepository.getById(any()) } returns createMission(submittable = false)
         assertThrows<IllegalStateException> { assignmentService.update(1L, 1L, createAssignmentRequest()) }
     }
 
     @Test
-    fun `과제 제출 기간이 아니면 과제물을 수정할 수 없다`() {
+    fun `과제 제출 기간이 아니면 과제 제출물을 수정할 수 없다`() {
         every { missionRepository.getById(any()) } returns createMission(
             startDateTime = LocalDateTime.now().minusDays(2), endDateTime = LocalDateTime.now().minusDays(1)
         )
@@ -137,9 +141,55 @@ class AssignmentServiceTest {
     }
 
     @Test
-    fun `제출한 과제물이 없는 경우 수정할 수 없다`() {
+    fun `제출한 과제 제출물이 없는 경우 수정할 수 없다`() {
         every { missionRepository.getById(any()) } returns createMission()
         every { assignmentRepository.findByUserIdAndMissionId(any(), any()) } returns null
         assertThrows<IllegalArgumentException> { assignmentService.update(1L, 1L, createAssignmentRequest()) }
+    }
+
+    @DisplayName("과제 id와 평가 대상자 id로 과제 제출물 조회는")
+    @Nested
+    inner class Find {
+        fun subject(): AssignmentData {
+            return assignmentService.findByEvaluationTargetId(1L)!!
+        }
+
+        @Test
+        fun `평가 대상자가 존재하지 않으면 예외가 발생한다`() {
+            every { evaluationTargetRepository.findByIdOrNull(any()) } returns null
+
+            assertThrows<NoSuchElementException> { subject() }
+        }
+
+        @Test
+        fun `평가 대상자가 제출한 과제 제출물이 없으면 빈 과제 제출물 데이터를 반환한다`() {
+            every { evaluationTargetRepository.findByIdOrNull(any()) } returns createEvaluationTarget()
+            every { missionRepository.findByEvaluationId(any()) } returns createMission()
+            every { assignmentRepository.findByUserIdAndMissionId(any(), any()) } returns null
+
+            val actual = subject()
+
+            assertAll(
+                { assertThat(actual.githubUsername).isBlank() },
+                { assertThat(actual.pullRequestUrl).isBlank() },
+                { assertThat(actual.note).isBlank() }
+            )
+        }
+
+        @Test
+        fun `평가 대상자가 제출한 과제 제출물이 있으면 평가 대상자가 제출한 과제 제출물 데이터를 반환한다`() {
+            val assignment = createAssignment()
+            every { evaluationTargetRepository.findByIdOrNull(any()) } returns createEvaluationTarget()
+            every { missionRepository.findByEvaluationId(any()) } returns createMission()
+            every { assignmentRepository.findByUserIdAndMissionId(any(), any()) } returns assignment
+
+            val actual = subject()
+
+            assertAll(
+                { assertThat(actual.githubUsername).isEqualTo(assignment.githubUsername) },
+                { assertThat(actual.pullRequestUrl).isEqualTo(assignment.pullRequestUrl) },
+                { assertThat(actual.note).isEqualTo(assignment.note) }
+            )
+        }
     }
 }

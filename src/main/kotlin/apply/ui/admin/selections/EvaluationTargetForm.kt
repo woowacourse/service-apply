@@ -3,6 +3,7 @@ package apply.ui.admin.selections
 import apply.application.EvaluationItemResponse
 import apply.application.EvaluationTargetData
 import apply.domain.evaluationtarget.EvaluationStatus
+import com.vaadin.flow.component.html.H3
 import com.vaadin.flow.component.select.Select
 import com.vaadin.flow.component.textfield.IntegerField
 import com.vaadin.flow.component.textfield.TextArea
@@ -20,7 +21,7 @@ class EvaluationTargetForm() : BindingFormLayout<EvaluationTargetData>(Evaluatio
     private val sumOfScore: IntegerField = IntegerField("합계").apply { isReadOnly = true }
 
     init {
-        add(note, evaluationStatus, sumOfScore)
+        add(H3("평가하기"), note, evaluationStatus, sumOfScore)
         setColspan(note, 2)
         drawRequired()
     }

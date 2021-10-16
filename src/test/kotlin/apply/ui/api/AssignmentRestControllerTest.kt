@@ -2,6 +2,7 @@ package apply.ui.api
 
 import apply.application.AssignmentService
 import apply.application.UserService
+import apply.createAssignmentData
 import apply.createAssignmentRequest
 import apply.createAssignmentResponse
 import apply.createUser
@@ -15,7 +16,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.get
-import org.springframework.test.web.servlet.patch
 import org.springframework.test.web.servlet.post
 import support.test.TestEnvironment
 
@@ -39,7 +39,7 @@ internal class AssignmentRestControllerTest : RestControllerTest() {
     private val loginUser = createUser()
 
     @Test
-    fun `과제물을 제출한다`() {
+    fun `과제 제출물을 제출한다`() {
         every { jwtTokenProvider.isValidToken(any()) } returns true
         every { jwtTokenProvider.getSubject(any()) } returns loginUser.email
         every { userService.getByEmail(any()) } returns loginUser
@@ -67,7 +67,7 @@ internal class AssignmentRestControllerTest : RestControllerTest() {
         every { assignmentService.getByUserIdAndMissionId(any(), any()) } returns assignmentResponse
 
         mockMvc.get(
-            "/api/recruitments/{recruitmentId}/missions/{missionId}/assignments",
+            "/api/recruitments/{recruitmentId}/missions/{missionId}/assignments/me",
             recruitmentId,
             missionId
         ) {
@@ -80,20 +80,17 @@ internal class AssignmentRestControllerTest : RestControllerTest() {
     }
 
     @Test
-    fun `과제물을 수정한다`() {
-        val loginUser = createUser()
-
-        every { jwtTokenProvider.isValidToken("valid_token") } returns true
-        every { jwtTokenProvider.getSubject("valid_token") } returns loginUser.email
-        every { userService.getByEmail(loginUser.email) } returns loginUser
-        every { assignmentService.update(missionId, loginUser.id, createAssignmentRequest()) } just Runs
-
-        mockMvc.patch("/api/recruitments/{recruitmentId}/missions/{missionId}/assignments", recruitmentId, missionId) {
-            contentType = MediaType.APPLICATION_JSON
-            content = objectMapper.writeValueAsString(createAssignmentRequest())
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
-        }.andExpect {
+    fun `특정 평가 대상자의 특정 과제에 해당하는 과제 제출물을 조회한다`() {
+        val targetId = 1L
+        val assignmentData = createAssignmentData()
+        every { assignmentService.findByEvaluationTargetId(targetId) } returns assignmentData
+        mockMvc.get(
+            "/api/recruitments/{recruitmentId}/targets/{targetId}/assignments",
+            recruitmentId,
+            targetId,
+        ).andExpect {
             status { isOk }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(assignmentData))) }
         }
     }
 }

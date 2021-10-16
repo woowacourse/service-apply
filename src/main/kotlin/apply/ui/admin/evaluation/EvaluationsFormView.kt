@@ -37,15 +37,13 @@ class EvaluationsFormView(
     }
 
     override fun setParameter(event: BeforeEvent, @WildcardParameter parameter: String) {
-        val result = FORM_URL_PATTERN.find(parameter)
-        result?.let {
-            val (id, value) = it.destructured
-            setDisplayName(value.toDisplayName())
-            if (value == EDIT_VALUE) {
-                val evaluationFormData = evaluationService.getDataById(id.toLong())
-                evaluationForm.fill(evaluationFormData)
-            }
-        } ?: UI.getCurrent().page.history.back() // TODO: 에러 화면을 구현한다.
+        val result = FORM_URL_PATTERN.find(parameter) ?: return UI.getCurrent().page.history.back()
+        val (id, value) = result.destructured
+        setDisplayName(value.toDisplayName())
+        if (value == EDIT_VALUE) {
+            evaluationForm.fill(evaluationService.getDataById(id.toLong()))
+            submitButton.isVisible = false
+        }
     }
 
     private fun setDisplayName(displayName: String) {
