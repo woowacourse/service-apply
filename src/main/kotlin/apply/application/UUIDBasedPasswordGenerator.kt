@@ -6,6 +6,6 @@ import java.util.UUID
 @Component
 class UUIDBasedPasswordGenerator : PasswordGenerator {
     override fun generate(): String {
-        return UUID.randomUUID().toString().substring(0, 18)
+        return UUID.randomUUID().toString().take(8)
     }
 }
