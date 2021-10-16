@@ -28,7 +28,7 @@ import {
   validateYear,
 } from "../../utils/validation/birth";
 import { validateEmail } from "../../utils/validation/email";
-import { validateName } from "../../utils/validation/name";
+import { NAME_MAX_LENGTH, validateName } from "../../utils/validation/name";
 import {
   validatePassword,
   validateRePassword,
@@ -110,6 +110,7 @@ const Join = () => {
             name="name"
             label="이름"
             placeholder="이름을 입력해 주세요."
+            maxLength={NAME_MAX_LENGTH}
             required
           />
           <MessageTextInput

@@ -5,6 +5,7 @@ export const ERROR_MESSAGE = {
     DAY: "태어난 일을 정확하게 입력해 주세요.",
     EMAIL: "정확한 이메일 양식을 입력해 주세요.",
     NAME: "정확한 한글 이름을 입력해 주세요.",
+    NAME_LENGTH: "입력 가능한 최대 길이는 255자입니다.",
     PASSWORD:
       "영문, 숫자, 특수문자 포함하여 8자에서 20자 이내로 입력해 주세요.",
     PASSWORD_CAPSLOCK: "CapsLock이 켜져 있습니다.",
