@@ -18,7 +18,9 @@ const useForm = ({ validators, submit }) => {
     setValue((prev) => ({
       ...prev,
       [target.name]:
-        target.type === "checkbox" ? target.checked : target.value.trim(),
+        { checkbox: target.checked, textarea: target.value.trimStart() }[
+          target.type
+        ] ?? target.value.trim(),
     }));
 
     const validator = validators?.[target.name];
@@ -91,10 +93,6 @@ const useForm = ({ validators, submit }) => {
   const resetAll = () => {
     setValue((prev) => {
       for (const name in prev) {
-        if (typeof prev[name] === "boolean") {
-          prev[name] = false;
-        }
-
         prev[name] = "";
       }
 
