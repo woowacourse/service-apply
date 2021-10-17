@@ -62,16 +62,12 @@ private fun createBox(
     val textField = TextField().apply {
         label = labelText
     }
-    textField.addKeyDownListener(
-        Key.ENTER,
-        {
-            eventListener(textField.value)
-            textField.clear()
-        }
-    )
     return HorizontalLayout(
         textField,
-        Button(Icon(icon)) { eventListener(textField.value) }
+        Button(Icon(icon)) {
+            eventListener(textField.value)
+            lazy { textField.clear() }
+        }.apply { addClickShortcut(Key.ENTER) }
     ).apply {
         defaultVerticalComponentAlignment = FlexComponent.Alignment.END
     }
