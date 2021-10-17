@@ -57,10 +57,10 @@ class MissionsFormView(
             missionForm.bindOrNull()?.let {
                 try {
                     missionService.save(it)
+                    UI.getCurrent().navigate(MissionsView::class.java, recruitmentId)
                 } catch (e: Exception) {
                     createNotification(e.localizedMessage).open()
                 }
-                UI.getCurrent().navigate(MissionsView::class.java, recruitmentId)
             }
         }
     }
