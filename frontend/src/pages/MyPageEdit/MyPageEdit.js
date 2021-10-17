@@ -63,7 +63,7 @@ const MyPageEdit = () => {
               onChange={handlePhoneNumberChange}
               type="tel"
               label="핸드폰 번호"
-              pattern="[0|1]{3}-[0-9]{4}-[0-9]{4}"
+              pattern="010-\d{4}-\d{4}"
             />
             <BirthField initialValue={userInfo?.birthday} readOnly />
 

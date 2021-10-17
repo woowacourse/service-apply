@@ -120,7 +120,7 @@ const Join = () => {
             onChange={handlePhoneNumberChange}
             placeholder="연락 가능한 휴대폰 번호를 입력해 주세요."
             className={styles["input-box"]}
-            pattern="[0|1]{3}-[0-9]{4}-[0-9]{4}"
+            pattern="010-\d{4}-\d{4}"
             required
           />
           <FormInput
