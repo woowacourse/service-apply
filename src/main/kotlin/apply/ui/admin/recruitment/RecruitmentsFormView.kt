@@ -37,7 +37,6 @@ class RecruitmentsFormView(
         setDisplayName(value.toDisplayName())
         if (value == EDIT_VALUE) {
             recruitmentForm.fill(recruitmentService.getNotEndedDataById(id.toLong()))
-            submitButton.isVisible = false
         }
     }
 
