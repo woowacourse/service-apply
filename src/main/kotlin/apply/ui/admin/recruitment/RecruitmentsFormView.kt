@@ -16,6 +16,7 @@ import support.views.EDIT_VALUE
 import support.views.FORM_URL_PATTERN
 import support.views.Title
 import support.views.createContrastButton
+import support.views.createNotification
 import support.views.createPrimaryButton
 import support.views.toDisplayName
 
@@ -48,8 +49,12 @@ class RecruitmentsFormView(
     private fun createSubmitButton(): Button {
         return createPrimaryButton {
             recruitmentForm.bindOrNull()?.let {
-                recruitmentService.save(it)
-                UI.getCurrent().page.setLocation("admin/recruitments")
+                try {
+                    recruitmentService.save(it)
+                    UI.getCurrent().page.setLocation("admin/recruitments")
+                } catch (e: Exception) {
+                    createNotification(e.localizedMessage).open()
+                }
             }
         }
     }
