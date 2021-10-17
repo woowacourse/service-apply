@@ -54,7 +54,7 @@ fun createCsvUpload(text: String, receiver: MemoryBuffer, finishedListener: Uplo
             finishedListener(receiver)
         }
         addFailedListener {
-            createNotification(it.reason.message!!).open()
+            createNotification(it.reason.localizedMessage)
         }
     }
 }
@@ -96,15 +96,15 @@ fun createContrastSmallButton(text: String, clickListener: ClickListener): Butto
 }
 
 fun createSuccessButtonWithDialog(text: String, message: String, clickListener: ClickListener): Button {
-    return createSuccessSmallButton(text) { createConfirmDialog(message, clickListener).open() }
+    return createSuccessSmallButton(text) { createConfirmDialog(message, clickListener) }
 }
 
 fun createContrastButtonWithDialog(text: String, message: String, clickListener: ClickListener): Button {
-    return createContrastSmallButton(text) { createConfirmDialog(message, clickListener).open() }
+    return createContrastSmallButton(text) { createConfirmDialog(message, clickListener) }
 }
 
 fun createDeleteButtonWithDialog(message: String, clickListener: ClickListener): Button {
-    return createErrorSmallButton("삭제") { createConfirmDialog(message, clickListener).open() }
+    return createErrorSmallButton("삭제") { createConfirmDialog(message, clickListener) }
 }
 
 private fun createConfirmDialog(
@@ -121,6 +121,7 @@ private fun createConfirmDialog(
                 justifyContentMode = FlexComponent.JustifyContentMode.CENTER
             }
         )
+        open()
     }
 }
 
