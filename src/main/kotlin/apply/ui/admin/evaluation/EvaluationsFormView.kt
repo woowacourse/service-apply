@@ -42,7 +42,6 @@ class EvaluationsFormView(
         setDisplayName(value.toDisplayName())
         if (value == EDIT_VALUE) {
             evaluationForm.fill(evaluationService.getDataById(id.toLong()))
-            submitButton.isVisible = false
         }
     }
 

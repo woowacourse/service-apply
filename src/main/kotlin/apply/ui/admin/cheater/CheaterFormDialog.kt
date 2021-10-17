@@ -53,9 +53,9 @@ class CheaterFormDialog(
                     close()
                 }
             } catch (e: IllegalArgumentException) {
-                createNotification("이미 등록된 부정 행위자입니다.").open()
+                createNotification("이미 등록된 부정 행위자입니다.")
             } catch (e: NullPointerException) {
-                createNotification("대상을 선택해야 합니다.").open()
+                createNotification("대상을 선택해야 합니다.")
             }
         }
     }
