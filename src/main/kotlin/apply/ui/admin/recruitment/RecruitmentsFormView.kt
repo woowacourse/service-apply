@@ -53,7 +53,7 @@ class RecruitmentsFormView(
                     recruitmentService.save(it)
                     UI.getCurrent().page.setLocation("admin/recruitments")
                 } catch (e: Exception) {
-                    createNotification(e.localizedMessage).open()
+                    createNotification(e.localizedMessage)
                 }
             }
         }

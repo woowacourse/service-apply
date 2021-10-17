@@ -89,6 +89,7 @@ fun createNotification(text: String, durationValue: Int = 1000): Notification {
     return Notification(text).apply {
         position = Notification.Position.BOTTOM_CENTER
         duration = durationValue
+        open()
     }
 }
 
