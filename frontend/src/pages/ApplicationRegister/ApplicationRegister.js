@@ -90,7 +90,7 @@ const ApplicationRegister = () => {
   }, [history, token, recruitmentId]);
 
   const save = async (answers, referenceUrl = "", submitted) => {
-    Api.updateForm({
+    await Api.updateForm({
       token,
       data: { recruitmentId, referenceUrl, submitted, answers },
     });
