@@ -2,6 +2,11 @@ import { ERROR_MESSAGE } from "../../constants/messages";
 
 export const PHONE_NUMBER_REGEX = /010-\d{4}-\d{4}/;
 
+export const PHONE_NUMBER_REGEX_STR = PHONE_NUMBER_REGEX.toString().slice(
+  1,
+  -1
+);
+
 export const isValidPhoneNumber = (v) => PHONE_NUMBER_REGEX.test(v);
 
 export const validatePhoneNumber = (v) => {

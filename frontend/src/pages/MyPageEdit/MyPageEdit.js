@@ -4,17 +4,17 @@ import myPageImage from "../../assets/image/myPage.svg";
 import Container from "../../components/@common/Container/Container";
 import MessageTextInput from "../../components/@common/MessageTextInput/MessageTextInput";
 import BirthField from "../../components/form/BirthField/BirthField";
+import CancelButton from "../../components/form/CancelButton/CancelButton";
 import Form from "../../components/form/Form/Form";
 import SubmitButton from "../../components/form/SubmitButton/SubmitButton";
-import CancelButton from "../../components/form/CancelButton/CancelButton";
+import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
 import PATH from "../../constants/path";
 import useForm from "../../hooks/useForm";
+import usePhoneNumber from "../../hooks/usePhoneNumber";
 import useUserInfoContext from "../../hooks/useUserInfoContext";
 import FormProvider from "../../provider/FormProvider";
+import { PHONE_NUMBER_REGEX_STR } from "../../utils/validation/phoneNumber";
 import * as styles from "./MyPageEdit.module.css";
-import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
-import { PHONE_NUMBER_REGEX } from "../../utils/validation/phoneNumber";
-import usePhoneNumber from "../../hooks/usePhoneNumber";
 
 const MyPageEdit = () => {
   const history = useHistory();
@@ -66,7 +66,9 @@ const MyPageEdit = () => {
               onChange={handlePhoneNumberChange}
               errorMessage={phoneNumberErrorMessage}
               label="핸드폰 번호"
-              pattern={PHONE_NUMBER_REGEX.toString()}
+              pattern={PHONE_NUMBER_REGEX_STR}
+              autoComplete="off"
+              required
             />
             <BirthField initialValue={userInfo?.birthday} readOnly />
 

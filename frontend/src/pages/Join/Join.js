@@ -17,8 +17,8 @@ import SummaryCheckField from "../../components/form/SummaryCheckField/SummaryCh
 import { ERROR_MESSAGE } from "../../constants/messages";
 import PATH from "../../constants/path";
 import { POLICY_SUMMARY } from "../../constants/policySummary";
-import usePhoneNumber from "../../hooks/usePhoneNumber";
 import useForm from "../../hooks/useForm";
+import usePhoneNumber from "../../hooks/usePhoneNumber";
 import useTokenContext from "../../hooks/useTokenContext";
 import FormProvider from "../../provider/FormProvider";
 import { formatBirthday } from "../../utils/format/date";
@@ -33,8 +33,8 @@ import {
   validatePassword,
   validateRePassword,
 } from "../../utils/validation/password";
+import { PHONE_NUMBER_REGEX_STR } from "../../utils/validation/phoneNumber";
 import styles from "./Join.module.css";
-import { PHONE_NUMBER_REGEX } from "../../utils/validation/phoneNumber";
 
 const Join = () => {
   const history = useHistory();
@@ -122,8 +122,9 @@ const Join = () => {
             onChange={handlePhoneNumberChange}
             placeholder="연락 가능한 휴대폰 번호를 입력해 주세요."
             className={styles["input-box"]}
-            pattern={PHONE_NUMBER_REGEX.toString()}
+            pattern={PHONE_NUMBER_REGEX_STR}
             errorMessage={phoneNumberErrorMessage}
+            autoComplete="off"
             required
           />
           <FormInput
