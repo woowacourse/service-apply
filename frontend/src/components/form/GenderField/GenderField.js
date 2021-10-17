@@ -10,7 +10,7 @@ const GenderField = ({ required, className }) => {
   const { handleChange, register, unRegister } = useFormContext();
 
   useEffect(() => {
-    register("gender");
+    register("gender", "", required);
 
     return () => {
       unRegister("gender");

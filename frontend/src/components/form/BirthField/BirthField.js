@@ -34,9 +34,9 @@ const BirthField = ({ required, className, readOnly, initialValue }) => {
   useEffect(() => {
     if (readOnly) return;
 
-    register("year");
-    register("month");
-    register("day");
+    register("year", "", required);
+    register("month", "", required);
+    register("day", "", required);
 
     return () => {
       unRegister("year");
