@@ -13,14 +13,18 @@ import useUserInfoContext from "../../hooks/useUserInfoContext";
 import FormProvider from "../../provider/FormProvider";
 import * as styles from "./MyPageEdit.module.css";
 import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
-import { validatePhoneNumber } from "../../utils/validation/phoneNumber";
+import { PHONE_NUMBER_REGEX } from "../../utils/validation/phoneNumber";
 import usePhoneNumber from "../../hooks/usePhoneNumber";
 
 const MyPageEdit = () => {
   const history = useHistory();
   const { userInfo, updateUserInfo } = useUserInfoContext();
-  const { phoneNumber, setPhoneNumber, handlePhoneNumberChange } =
-    usePhoneNumber();
+  const {
+    phoneNumber,
+    setPhoneNumber,
+    handlePhoneNumberChange,
+    phoneNumberErrorMessage,
+  } = usePhoneNumber();
 
   const submit = async (value) => {
     try {
@@ -33,9 +37,7 @@ const MyPageEdit = () => {
     history.push(PATH.MY_PAGE);
   };
 
-  const { handleSubmit, ...methods } = useForm({
-    submit,
-  });
+  const { handleSubmit, ...methods } = useForm({ submit });
 
   useEffect(() => {
     setPhoneNumber(userInfo?.phoneNumber);
@@ -57,13 +59,14 @@ const MyPageEdit = () => {
               readOnly
             />
             <MessageTextInput
+              type="tel"
               name="phoneNumber"
               initialValue={userInfo?.phoneNumber}
               value={phoneNumber}
               onChange={handlePhoneNumberChange}
-              type="tel"
+              errorMessage={phoneNumberErrorMessage}
               label="핸드폰 번호"
-              pattern="010-\d{4}-\d{4}"
+              pattern={PHONE_NUMBER_REGEX.toString()}
             />
             <BirthField initialValue={userInfo?.birthday} readOnly />
 

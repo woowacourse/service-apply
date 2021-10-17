@@ -34,12 +34,14 @@ import {
   validateRePassword,
 } from "../../utils/validation/password";
 import styles from "./Join.module.css";
+import { PHONE_NUMBER_REGEX } from "../../utils/validation/phoneNumber";
 
 const Join = () => {
   const history = useHistory();
 
   const { postRegister } = useTokenContext();
-  const { phoneNumber, handlePhoneNumberChange } = usePhoneNumber();
+  const { phoneNumber, handlePhoneNumberChange, phoneNumberErrorMessage } =
+    usePhoneNumber();
 
   const [emailStatus, setEmailStatus] = useState(EMAIL_STATUS.INPUT);
 
@@ -120,7 +122,8 @@ const Join = () => {
             onChange={handlePhoneNumberChange}
             placeholder="연락 가능한 휴대폰 번호를 입력해 주세요."
             className={styles["input-box"]}
-            pattern="010-\d{4}-\d{4}"
+            pattern={PHONE_NUMBER_REGEX.toString()}
+            errorMessage={phoneNumberErrorMessage}
             required
           />
           <FormInput
