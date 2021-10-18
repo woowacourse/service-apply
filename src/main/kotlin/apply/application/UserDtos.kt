@@ -69,6 +69,9 @@ data class RegisterUserRequest(
     @field:NotNull
     val password: Password,
 
+    @field:NotNull
+    val confirmPassword: Password,
+
     @field:NotBlank
     val authenticationCode: String
 ) {

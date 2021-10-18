@@ -19,6 +19,7 @@ class UserAuthenticationService(
     private val jwtTokenProvider: JwtTokenProvider
 ) {
     fun generateTokenByRegister(request: RegisterUserRequest): String {
+        check(request.password == request.confirmPassword) { "확인용 비밀번호가 일치하지 않습니다." }
         check(!userRepository.existsByEmail(request.email)) { "이미 가입된 이메일입니다." }
         authenticationCodeRepository.getLastByEmail(request.email).validate(request.authenticationCode)
         val user = userRepository.save(request.toEntity())
