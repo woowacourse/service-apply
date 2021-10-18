@@ -12,6 +12,7 @@ import CheckBox from "../../components/form/CheckBox/CheckBox";
 import Form from "../../components/form/Form/Form";
 import TempSaveButton from "../../components/form/TempSaveButton/TempSaveButton";
 import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
+import FORM from "../../constants/form";
 import { CONFIRM_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
 import PATH, { PARAM } from "../../constants/path";
 import useApplicationRegisterForm, {
@@ -156,6 +157,7 @@ const ApplicationRegister = () => {
             errorMessage={errorMessage[APPLICATION_REGISTER_FORM.REFERENCE_URL]}
             label="URL"
             className={styles["label-bold"]}
+            maxLength={FORM.REFERENCE_URL_MAX_LENGTH}
             placeholder="ex) https://tecoble.techcourse.co.kr/"
           />
 
