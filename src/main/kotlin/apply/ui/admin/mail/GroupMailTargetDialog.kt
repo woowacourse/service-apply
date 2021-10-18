@@ -20,6 +20,7 @@ import support.views.NO_NAME
 import support.views.addSortableColumn
 import support.views.createContrastButton
 import support.views.createItemSelect
+import support.views.createNotification
 import support.views.createPrimaryButton
 import support.views.toText
 
@@ -75,6 +76,9 @@ class GroupMailTargetDialog(
             setItemLabelGenerator { it.toText() }
             addValueChangeListener {
                 mailTargetsGrid.setItems(mailTargetService.findMailTargets(evaluationItem.value.id, it.value))
+                if (it.value == EvaluationStatus.FAIL) {
+                    createNotification("점수가 0인 탈락자는 나오지 않습니다.", 3000)
+                }
             }
         }
     }
