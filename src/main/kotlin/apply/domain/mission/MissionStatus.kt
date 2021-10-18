@@ -13,7 +13,7 @@ enum class MissionStatus {
                 now.isBetween(period) && submittable -> SUBMITTING
                 now.isBetween(period) && !submittable -> UNSUBMITTABLE
                 now.isAfter(period) -> ENDED
-                else -> throw IllegalArgumentException()
+                else -> throw IllegalArgumentException("해당하는 과제의 상태가 없습니다.")
             }
         }
     }
