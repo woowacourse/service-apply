@@ -1,7 +1,6 @@
 import classNames from "classnames";
 import PropTypes from "prop-types";
 import React from "react";
-import { SIGN_UP_FORM } from "../../../hooks/useSignUpForm";
 import { formatDate } from "../../../utils/format/date";
 import Label from "../../@common/Label/Label";
 import styles from "./BirthField.module.css";
@@ -16,7 +15,6 @@ const BirthField = ({ value, onChange, errorMessage, required, className, ...pro
         <input
           id="birthday"
           type="date"
-          name={SIGN_UP_FORM.BIRTHDAY}
           value={value}
           onChange={onChange}
           max={formatDate(new Date())}
