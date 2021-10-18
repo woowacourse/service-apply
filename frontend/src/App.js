@@ -9,7 +9,6 @@ import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
 import PATH from "./constants/path";
 import ApplicationRegister from "./pages/ApplicationRegister/ApplicationRegister";
 import AssignmentSubmit from "./pages/AssignmentSubmit/AssignmentSubmit";
-import Join from "./pages/Join/Join";
 import Login from "./pages/Login/Login";
 import MyApplication from "./pages/MyApplication/MyApplication";
 import MyPage from "./pages/MyPage/MyPage";
@@ -18,6 +17,7 @@ import PasswordEdit from "./pages/PasswordEdit/PasswordEdit";
 import PasswordFind from "./pages/PasswordFind/PasswordFind";
 import PasswordFindResult from "./pages/PasswordFindResult/PasswordFindResult";
 import Recruits from "./pages/Recruits/Recruits";
+import SignUp from "./pages/SignUp/SignUp";
 import RecruitmentProvider from "./provider/RecruitmentProvider";
 import TokenProvider from "./provider/TokenProvider";
 import UserInfoProvider from "./provider/UserInfoProvider";
@@ -35,8 +35,8 @@ const App = () => {
                 <Route path={[PATH.HOME, PATH.RECRUITS]} exact>
                   <Recruits />
                 </Route>
-                <Route path={PATH.NEW_APPLICATION} exact>
-                  <Join />
+                <Route path={PATH.SIGN_UP} exact>
+                  <SignUp />
                 </Route>
                 <Route path={PATH.LOGIN} exact>
                   <Login />

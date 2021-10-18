@@ -10,7 +10,7 @@ import PATH from "../../constants/path";
 import useForm from "../../hooks/useForm";
 import useTokenContext from "../../hooks/useTokenContext";
 import FormProvider from "../../provider/FormProvider";
-import { validatePassword, validateRePassword } from "../../utils/validation/password";
+import { validatePassword } from "../../utils/validation/password";
 import styles from "./PasswordEdit.module.css";
 
 const PasswordEdit = () => {
@@ -38,7 +38,6 @@ const PasswordEdit = () => {
   const { handleSubmit, ...methods } = useForm({
     validators: {
       password: validatePassword,
-      rePassword: validateRePassword,
     },
     submit,
   });
