@@ -8,7 +8,9 @@ import org.springframework.data.repository.query.Param
 fun UserRepository.findByEmail(email: String): User? = findByInformationEmail(email)
 fun UserRepository.findAllByEmailIn(emails: List<String>): List<User> = findAllByInformationEmailIn(emails)
 fun UserRepository.existsByEmail(email: String): Boolean = existsByInformationEmail(email)
-fun UserRepository.getById(id: Long): User = findByIdOrNull(id) ?: throw NoSuchElementException()
+fun UserRepository.getById(id: Long): User {
+    return findByIdOrNull(id) ?: throw NoSuchElementException("해당 내용은 존재하지 않습니다.")
+}
 
 interface UserRepository : JpaRepository<User, Long> {
     @Query("select a from User a where a.information.name like %:keyword% or a.information.email like %:keyword%")

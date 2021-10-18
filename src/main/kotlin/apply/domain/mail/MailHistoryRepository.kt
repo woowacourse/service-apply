@@ -3,6 +3,8 @@ package apply.domain.mail
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.repository.findByIdOrNull
 
-fun MailHistoryRepository.getById(id: Long): MailHistory = findByIdOrNull(id) ?: throw NoSuchElementException()
+fun MailHistoryRepository.getById(id: Long): MailHistory {
+    return findByIdOrNull(id) ?: throw NoSuchElementException("해당 내용은 존재하지 않습니다.")
+}
 
 interface MailHistoryRepository : JpaRepository<MailHistory, Long>
