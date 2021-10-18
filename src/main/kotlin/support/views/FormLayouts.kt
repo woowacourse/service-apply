@@ -18,7 +18,7 @@ fun String.toDisplayName(): String {
     return when (this) {
         NEW_VALUE -> "생성"
         EDIT_VALUE -> "수정"
-        else -> throw IllegalArgumentException("일치되는 urlPath가 없습니다.")
+        else -> throw IllegalArgumentException("일치하는 urlPath가 없습니다.")
     }
 }
 
