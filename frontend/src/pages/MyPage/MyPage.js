@@ -47,11 +47,7 @@ const MyPage = () => {
           </ul>
 
           <div className={styles.buttons}>
-            <Button
-              type="button"
-              variant={BUTTON_VARIANT.OUTLINED}
-              onClick={routeToPasswordEdit}
-            >
+            <Button type="button" variant={BUTTON_VARIANT.OUTLINED} onClick={routeToPasswordEdit}>
               비밀번호 변경
             </Button>
             <Button type="button" onClick={routeToMyPageEdit}>

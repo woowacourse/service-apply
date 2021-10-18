@@ -14,11 +14,7 @@ const ResetButton = () => {
   };
 
   return (
-    <Button
-      type="reset"
-      variant={BUTTON_VARIANT.OUTLINED}
-      onClick={handleClick}
-    >
+    <Button type="reset" variant={BUTTON_VARIANT.OUTLINED} onClick={handleClick}>
       초기화
     </Button>
   );

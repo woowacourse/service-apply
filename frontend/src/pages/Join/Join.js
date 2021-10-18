@@ -1,14 +1,10 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import Button from "../../components/@common/Button/Button";
-import Container, {
-  CONTAINER_SIZE,
-} from "../../components/@common/Container/Container";
+import Container, { CONTAINER_SIZE } from "../../components/@common/Container/Container";
 import MessageTextInput from "../../components/@common/MessageTextInput/MessageTextInput";
 import BirthField from "../../components/form/BirthField/BirthField";
-import EmailField, {
-  EMAIL_STATUS,
-} from "../../components/form/EmailField/EmailField";
+import EmailField, { EMAIL_STATUS } from "../../components/form/EmailField/EmailField";
 import Form from "../../components/form/Form/Form";
 import FormInput from "../../components/form/FormInput/FormInput";
 import GenderField from "../../components/form/GenderField/GenderField";
@@ -22,17 +18,10 @@ import useForm from "../../hooks/useForm";
 import useTokenContext from "../../hooks/useTokenContext";
 import FormProvider from "../../provider/FormProvider";
 import { formatBirthday } from "../../utils/format/date";
-import {
-  validateDay,
-  validateMonth,
-  validateYear,
-} from "../../utils/validation/birth";
+import { validateDay, validateMonth, validateYear } from "../../utils/validation/birth";
 import { validateEmail } from "../../utils/validation/email";
 import { validateName } from "../../utils/validation/name";
-import {
-  validatePassword,
-  validateRePassword,
-} from "../../utils/validation/password";
+import { validatePassword, validateRePassword } from "../../utils/validation/password";
 import styles from "./Join.module.css";
 
 const Join = () => {
@@ -93,25 +82,13 @@ const Join = () => {
     <Container title="회원가입" size={CONTAINER_SIZE.NARROW}>
       <FormProvider {...methods}>
         <Form onSubmit={handleSubmit}>
-          <SummaryCheckField
-            name="policy"
-            label="개인정보 수집 및 이용 동의"
-            required
-          >
+          <SummaryCheckField name="policy" label="개인정보 수집 및 이용 동의" required>
             <p className={styles["summary-content"]}>{POLICY_SUMMARY}</p>
           </SummaryCheckField>
 
-          <EmailField
-            emailStatus={emailStatus}
-            setEmailStatus={setEmailStatus}
-          />
+          <EmailField emailStatus={emailStatus} setEmailStatus={setEmailStatus} />
 
-          <FormInput
-            name="name"
-            label="이름"
-            placeholder="이름을 입력해 주세요."
-            required
-          />
+          <FormInput name="name" label="이름" placeholder="이름을 입력해 주세요." required />
           <MessageTextInput
             name="phoneNumber"
             type="tel"

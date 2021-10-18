@@ -3,14 +3,7 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 import styles from "./Textarea.module.css";
 
-const Textarea = ({
-  className,
-  readOnly,
-  value,
-  maxLength,
-  onChange,
-  ...props
-}) => {
+const Textarea = ({ className, readOnly, value, maxLength, onChange, ...props }) => {
   return (
     <textarea
       value={value}

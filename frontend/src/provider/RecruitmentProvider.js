@@ -5,19 +5,12 @@ import { RecruitmentContext } from "../hooks/useRecruitmentContext";
 
 export const recruitmentFilter = (recruitments) => ({
   all: recruitments,
-  recruitable: recruitments.filter(
-    ({ status }) => status === RECRUITMENT_STATUS.RECRUITABLE
-  ),
+  recruitable: recruitments.filter(({ status }) => status === RECRUITMENT_STATUS.RECRUITABLE),
   recruiting: recruitments.filter(({ status }) =>
-    [RECRUITMENT_STATUS.RECRUITING, RECRUITMENT_STATUS.UNRECRUITABLE].includes(
-      status
-    )
+    [RECRUITMENT_STATUS.RECRUITING, RECRUITMENT_STATUS.UNRECRUITABLE].includes(status)
   ),
-  ended: recruitments.filter(
-    ({ status }) => status === RECRUITMENT_STATUS.ENDED
-  ),
-  findById: (recruitmentId) =>
-    recruitments.find(({ id }) => id === recruitmentId),
+  ended: recruitments.filter(({ status }) => status === RECRUITMENT_STATUS.ENDED),
+  findById: (recruitmentId) => recruitments.find(({ id }) => id === recruitmentId),
 });
 
 const RecruitmentProvider = ({ children }) => {
