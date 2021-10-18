@@ -14,7 +14,7 @@ export const SIGN_UP_FORM = {
   PHONE_NUMBER: "phoneNumber",
   PASSWORD: "password",
   CONFIRM_PASSWORD: "confirmPassword",
-  BIRTH: "birthday",
+  BIRTHDAY: "birthday",
   GENDER: "gender",
   IS_TERM_AGREED: "isTermAgreed",
 };
@@ -26,7 +26,7 @@ const initialRequiredForm = {
   [SIGN_UP_FORM.PHONE_NUMBER]: "",
   [SIGN_UP_FORM.PASSWORD]: "",
   [SIGN_UP_FORM.CONFIRM_PASSWORD]: "",
-  [SIGN_UP_FORM.BIRTH]: "",
+  [SIGN_UP_FORM.BIRTHDAY]: "",
   [SIGN_UP_FORM.GENDER]: "",
   [SIGN_UP_FORM.IS_TERM_AGREED]: false,
 };
@@ -137,8 +137,8 @@ const useSignUpForm = () => {
     updateRequiredForm(SIGN_UP_FORM.CONFIRM_PASSWORD, target.value);
   };
 
-  const handleChangeBirth = ({ target }) => {
-    updateRequiredForm(SIGN_UP_FORM.BIRTH, target.value);
+  const handleChangeBirthday = ({ target }) => {
+    updateRequiredForm(SIGN_UP_FORM.BIRTHDAY, target.value);
   };
 
   const handleChangeGender = ({ target }) => {
@@ -191,7 +191,7 @@ const useSignUpForm = () => {
       [SIGN_UP_FORM.PHONE_NUMBER]: handleChangePhoneNumber,
       [SIGN_UP_FORM.PASSWORD]: handleChangePassword,
       [SIGN_UP_FORM.CONFIRM_PASSWORD]: handleChangeConfirmPassword,
-      [SIGN_UP_FORM.BIRTH]: handleChangeBirth,
+      [SIGN_UP_FORM.BIRTHDAY]: handleChangeBirthday,
       [SIGN_UP_FORM.GENDER]: handleChangeGender,
     },
   };

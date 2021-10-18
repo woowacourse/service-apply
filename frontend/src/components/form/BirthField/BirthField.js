@@ -10,13 +10,13 @@ const BirthField = ({ value, onChange, errorMessage, required, className, ...pro
   return (
     <div className={classNames(styles.box, className)}>
       <div className={styles["input-box"]}>
-        <Label for="birth" required={required} className={styles.label}>
+        <Label for="birthday" required={required} className={styles.label}>
           생년월일
         </Label>
         <input
-          id="birth"
+          id="birthday"
           type="date"
-          name={SIGN_UP_FORM.BIRTH}
+          name={SIGN_UP_FORM.BIRTHDAY}
           value={value}
           onChange={onChange}
           max={formatDate(new Date())}

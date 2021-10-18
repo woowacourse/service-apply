@@ -155,9 +155,9 @@ const Join = () => {
           required
         />
         <BirthField
-          name={SIGN_UP_FORM.BIRTH}
-          value={form[SIGN_UP_FORM.BIRTH]}
-          onChange={handleChange[SIGN_UP_FORM.BIRTH]}
+          name={SIGN_UP_FORM.BIRTHDAY}
+          value={form[SIGN_UP_FORM.BIRTHDAY]}
+          onChange={handleChange[SIGN_UP_FORM.BIRTHDAY]}
           required
         />
         <GenderField
