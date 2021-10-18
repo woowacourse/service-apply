@@ -104,7 +104,7 @@ internal class UserServiceTest {
         @Test
         fun `확인용 비밀번호가 일치하지 않으면 예외가 발생한다`() {
             request = EditPasswordRequest(WRONG_PASSWORD, Password("new_password"), Password("wrong_password"))
-            assertThrows<IllegalStateException> { subject() }
+            assertThrows<IllegalArgumentException> { subject() }
         }
     }
 

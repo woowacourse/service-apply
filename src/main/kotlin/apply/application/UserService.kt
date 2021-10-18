@@ -28,7 +28,7 @@ class UserService(
     }
 
     fun editPassword(id: Long, request: EditPasswordRequest) {
-        check(request.password == request.confirmPassword) { "확인용 비밀번호가 일치하지 않습니다." }
+        require(request.password == request.confirmPassword) { "새 비밀번호가 일치하지 않습니다." }
         userRepository.getById(id).changePassword(request.oldPassword, request.password)
     }
 

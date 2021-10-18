@@ -63,8 +63,9 @@ internal class UserAuthenticationServiceTest {
         @Test
         fun `가입된 이메일이라면 예외가 발생한다`() {
             every { userRepository.existsByEmail(any()) } returns true
-            request = RegisterUserRequest(NAME, EMAIL, PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD,
-                CONFIRM_PASSWORD, VALID_CODE)
+            request = RegisterUserRequest(
+                NAME, EMAIL, PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD, CONFIRM_PASSWORD, VALID_CODE
+            )
             assertThrows<IllegalStateException> { subject() }
         }
 
@@ -73,8 +74,9 @@ internal class UserAuthenticationServiceTest {
             every { userRepository.existsByEmail(any()) } returns false
             every { authenticationCodeRepository.getLastByEmail(any()) } returns
                 createAuthenticationCode(EMAIL, INVALID_CODE)
-            request = RegisterUserRequest(NAME, EMAIL, PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD,
-                CONFIRM_PASSWORD, VALID_CODE)
+            request = RegisterUserRequest(
+                NAME, EMAIL, PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD, CONFIRM_PASSWORD, VALID_CODE
+            )
             assertThrows<IllegalStateException> { subject() }
         }
 
@@ -83,8 +85,9 @@ internal class UserAuthenticationServiceTest {
             every { userRepository.existsByEmail(any()) } returns false
             every { authenticationCodeRepository.getLastByEmail(any()) } returns
                 createAuthenticationCode(EMAIL, INVALID_CODE)
-            request = RegisterUserRequest(NAME, "not@email.com", PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD,
-                CONFIRM_PASSWORD, VALID_CODE)
+            request = RegisterUserRequest(
+                NAME, "not@email.com", PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD, CONFIRM_PASSWORD, VALID_CODE
+            )
             assertThrows<IllegalStateException> { subject() }
         }
 
@@ -95,16 +98,18 @@ internal class UserAuthenticationServiceTest {
                 createAuthenticationCode(EMAIL, VALID_CODE, true)
 
             every { userRepository.save(any()) } returns createUser()
-            request = RegisterUserRequest(NAME, EMAIL, PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD,
-                CONFIRM_PASSWORD, VALID_CODE)
+            request = RegisterUserRequest(
+                NAME, EMAIL, PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD, CONFIRM_PASSWORD, VALID_CODE
+            )
             assertThat(subject()).isEqualTo(VALID_TOKEN)
         }
 
         @Test
         fun `확인용 비밀번호가 일치하지 않으면 예외가 발생한다`() {
-            request = RegisterUserRequest(NAME, EMAIL, PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD,
-                WRONG_PASSWORD, VALID_CODE)
-            assertThrows<IllegalStateException> { subject() }
+            request = RegisterUserRequest(
+                NAME, EMAIL, PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD, WRONG_PASSWORD, VALID_CODE
+            )
+            assertThrows<IllegalArgumentException> { subject() }
         }
     }
 
