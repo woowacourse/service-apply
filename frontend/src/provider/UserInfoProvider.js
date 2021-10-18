@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
+
 import * as Api from "../api";
 import { ERROR_MESSAGE } from "../constants/messages";
+import PATH from "../constants/path";
 import useTokenContext from "../hooks/useTokenContext";
 import { UserInfoContext } from "../hooks/useUserInfoContext";
 
 const UserInfoProvider = ({ children }) => {
   const [userInfo, setUserInfo] = useState(null);
+  const history = useHistory();
   const { token } = useTokenContext();
 
   const initUserInfo = async () => {
@@ -14,7 +18,12 @@ const UserInfoProvider = ({ children }) => {
 
       setUserInfo(data);
     } catch (e) {
-      alert(ERROR_MESSAGE.API.FETCHING_USER_INFO);
+      if (e.response.status === 401) {
+        alert(ERROR_MESSAGE.API.TOKEN_EXPIRED);
+        history.push(PATH.LOGIN);
+      } else {
+        alert(ERROR_MESSAGE.API.FETCHING_USER_INFO);
+      }
     }
   };
 

@@ -84,13 +84,18 @@ const ApplicationRegister = () => {
 
       fillForm(data);
     } catch (e) {
-      alert(e.response.data.message);
-      history.replace(PATH.HOME);
+      if (e.response.status === 401) {
+        alert(ERROR_MESSAGE.API.TOKEN_EXPIRED);
+        history.push(PATH.LOGIN);
+      } else {
+        alert(e.response.data.message);
+        history.replace(PATH.HOME);
+      }
     }
   }, [history, token, recruitmentId]);
 
   const save = async (answers, referenceUrl = "", submitted) => {
-    Api.updateForm({
+    await Api.updateForm({
       token,
       data: { recruitmentId, referenceUrl, submitted, answers },
     });
@@ -105,15 +110,22 @@ const ApplicationRegister = () => {
     }));
 
   const submit = async (value) => {
-    if (window.confirm(CONFIRM_MESSAGE.SUBMIT_APPLICATION)) {
-      try {
-        const answers = getAnswers(value);
+    if (!window.confirm(CONFIRM_MESSAGE.SUBMIT_APPLICATION)) {
+      return;
+    }
 
-        await save(answers, value.url, true);
-        alert(SUCCESS_MESSAGE.API.SUBMIT_APPLICATION);
-      } catch (e) {
+    try {
+      const answers = getAnswers(value);
+
+      await save(answers, value.url, true);
+      alert(SUCCESS_MESSAGE.API.SUBMIT_APPLICATION);
+      history.replace(PATH.HOME);
+    } catch (e) {
+      if (e.response.status === 401) {
+        alert(ERROR_MESSAGE.API.TOKEN_EXPIRED);
+        history.push(PATH.LOGIN);
+      } else {
         alert(e.response.data.message);
-      } finally {
         history.replace(PATH.HOME);
       }
     }
@@ -142,8 +154,13 @@ const ApplicationRegister = () => {
         });
       }
     } catch (e) {
-      alert(e.response.data.message);
-      history.replace(PATH.HOME);
+      if (e.response.status === 401) {
+        alert(ERROR_MESSAGE.API.TOKEN_EXPIRED);
+        history.push(PATH.LOGIN);
+      } else {
+        alert(e.response.data.message);
+        history.replace(PATH.HOME);
+      }
     }
   };
 
@@ -159,16 +176,19 @@ const ApplicationRegister = () => {
           recruitmentId,
         });
       }
-    } catch (error) {
-      console.error(error);
-
-      history.replace({
-        pathname: generatePath(PATH.APPLICATION_FORM, {
-          status: PARAM.APPLICATION_FORM_STATUS.EDIT,
-        }),
-        search: generateQuery({ recruitmentId }),
-        state: { currentRecruitment },
-      });
+    } catch (e) {
+      if (e.response.status === 401) {
+        alert(ERROR_MESSAGE.API.TOKEN_EXPIRED);
+        history.push(PATH.LOGIN);
+      } else {
+        history.replace({
+          pathname: generatePath(PATH.APPLICATION_FORM, {
+            status: PARAM.APPLICATION_FORM_STATUS.EDIT,
+          }),
+          search: generateQuery({ recruitmentId }),
+          state: { currentRecruitment },
+        });
+      }
     }
   };
 

@@ -53,8 +53,12 @@ const AssignmentSubmit = () => {
 
       history.push(PATH.MY_APPLICATION);
     } catch (e) {
-      console.error(e);
-      alert(ERROR_MESSAGE.API.SUBMIT_ASSIGNMENT);
+      if (e.response.status === 401) {
+        alert(ERROR_MESSAGE.API.TOKEN_EXPIRED);
+        history.push(PATH.LOGIN);
+      } else {
+        alert(ERROR_MESSAGE.API.SUBMIT_ASSIGNMENT);
+      }
     }
   };
 

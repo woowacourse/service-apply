@@ -4,6 +4,7 @@ import { fetchMyApplicationForms } from "../../api/application-forms";
 import Container from "../../components/@common/Container/Container";
 import Panel from "../../components/@common/Panel/Panel";
 import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
+import { ERROR_MESSAGE } from "../../constants/messages";
 import PATH, { PARAM } from "../../constants/path";
 import useMissions from "../../hooks/useMissions";
 import useRecruitmentContext from "../../hooks/useRecruitmentContext";
@@ -92,8 +93,13 @@ const MyApplication = () => {
 
       fetchMyRecruitments();
     } catch (e) {
-      console.error(e);
-      setMyApplications([]);
+      if (e.response.status === 401) {
+        alert(ERROR_MESSAGE.API.TOKEN_EXPIRED);
+        history.push(PATH.LOGIN);
+      } else {
+        alert(ERROR_MESSAGE.API.FETCHING_MY_APPLICATION);
+        setMyApplications([]);
+      }
     }
   }, [token]);
 

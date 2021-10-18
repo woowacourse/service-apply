@@ -24,11 +24,16 @@ const MyPageEdit = () => {
     try {
       await updateUserInfo(value);
       alert(SUCCESS_MESSAGE.API.EDIT_MY_PAGE);
+      history.push(PATH.MY_PAGE);
     } catch (e) {
-      alert(ERROR_MESSAGE.API.EDIT_FAILURE);
+      if (e.response.status === 401) {
+        alert(ERROR_MESSAGE.API.TOKEN_EXPIRED);
+        history.push(PATH.LOGIN);
+      } else {
+        alert(ERROR_MESSAGE.API.EDIT_FAILURE);
+        history.push(PATH.MY_PAGE);
+      }
     }
-
-    history.push(PATH.MY_PAGE);
   };
 
   const { handleSubmit, ...methods } = useForm({

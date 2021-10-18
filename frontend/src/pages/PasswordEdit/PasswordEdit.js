@@ -36,7 +36,12 @@ const PasswordEdit = () => {
       resetToken();
       history.push(PATH.LOGIN);
     } catch (e) {
-      alert(ERROR_MESSAGE.API.EDIT_PASSWORD);
+      if (e.response.status === 401) {
+        alert(ERROR_MESSAGE.API.TOKEN_EXPIRED);
+        history.push(PATH.LOGIN);
+      } else {
+        alert(ERROR_MESSAGE.API.EDIT_PASSWORD);
+      }
     }
   };
 
