@@ -12,18 +12,22 @@ const UserInfoProvider = ({ children }) => {
   const history = useHistory();
   const { token } = useTokenContext();
 
+  const handleFetchError = (e) => {
+    if (e.response.status === 401) {
+      alert(ERROR_MESSAGE.API.TOKEN_EXPIRED);
+      history.push(PATH.LOGIN);
+    } else {
+      alert(ERROR_MESSAGE.API.FETCHING_USER_INFO);
+    }
+  };
+
   const initUserInfo = async () => {
     try {
       const { data } = await Api.fetchUserInfo({ token });
 
       setUserInfo(data);
     } catch (e) {
-      if (e.response.status === 401) {
-        alert(ERROR_MESSAGE.API.TOKEN_EXPIRED);
-        history.push(PATH.LOGIN);
-      } else {
-        alert(ERROR_MESSAGE.API.FETCHING_USER_INFO);
-      }
+      handleFetchError(e);
     }
   };
 

@@ -75,6 +75,51 @@ const ApplicationRegister = () => {
     );
   };
 
+  const handleFetchFormError = (e) => {
+    if (e.response.status === 401) {
+      alert(ERROR_MESSAGE.API.TOKEN_EXPIRED);
+      history.push(PATH.LOGIN);
+    } else {
+      alert(e.response.data.message);
+      history.replace(PATH.HOME);
+    }
+  };
+
+  const handleSubmitError = (e) => {
+    if (e.response.status === 401) {
+      alert(ERROR_MESSAGE.API.TOKEN_EXPIRED);
+      history.push(PATH.LOGIN);
+    } else {
+      alert(e.response.data.message);
+      history.replace(PATH.HOME);
+    }
+  };
+
+  const handleSaveTempError = (e) => {
+    if (e.response.status === 401) {
+      alert(ERROR_MESSAGE.API.TOKEN_EXPIRED);
+      history.push(PATH.LOGIN);
+    } else {
+      alert(e.response.data.message);
+      history.replace(PATH.HOME);
+    }
+  };
+
+  const handleInitError = (e) => {
+    if (e.response.status === 401) {
+      alert(ERROR_MESSAGE.API.TOKEN_EXPIRED);
+      history.push(PATH.LOGIN);
+    } else {
+      history.replace({
+        pathname: generatePath(PATH.APPLICATION_FORM, {
+          status: PARAM.APPLICATION_FORM_STATUS.EDIT,
+        }),
+        search: generateQuery({ recruitmentId }),
+        state: { currentRecruitment },
+      });
+    }
+  };
+
   const fetchApplicationForm = useCallback(async () => {
     try {
       const { data } = await Api.fetchForm({
@@ -84,13 +129,7 @@ const ApplicationRegister = () => {
 
       fillForm(data);
     } catch (e) {
-      if (e.response.status === 401) {
-        alert(ERROR_MESSAGE.API.TOKEN_EXPIRED);
-        history.push(PATH.LOGIN);
-      } else {
-        alert(e.response.data.message);
-        history.replace(PATH.HOME);
-      }
+      handleFetchFormError(e);
     }
   }, [history, token, recruitmentId]);
 
@@ -121,13 +160,7 @@ const ApplicationRegister = () => {
       alert(SUCCESS_MESSAGE.API.SUBMIT_APPLICATION);
       history.replace(PATH.HOME);
     } catch (e) {
-      if (e.response.status === 401) {
-        alert(ERROR_MESSAGE.API.TOKEN_EXPIRED);
-        history.push(PATH.LOGIN);
-      } else {
-        alert(e.response.data.message);
-        history.replace(PATH.HOME);
-      }
+      handleSubmitError(e);
     }
   };
 
@@ -154,13 +187,7 @@ const ApplicationRegister = () => {
         });
       }
     } catch (e) {
-      if (e.response.status === 401) {
-        alert(ERROR_MESSAGE.API.TOKEN_EXPIRED);
-        history.push(PATH.LOGIN);
-      } else {
-        alert(e.response.data.message);
-        history.replace(PATH.HOME);
-      }
+      handleSaveTempError(e);
     }
   };
 
@@ -177,18 +204,7 @@ const ApplicationRegister = () => {
         });
       }
     } catch (e) {
-      if (e.response.status === 401) {
-        alert(ERROR_MESSAGE.API.TOKEN_EXPIRED);
-        history.push(PATH.LOGIN);
-      } else {
-        history.replace({
-          pathname: generatePath(PATH.APPLICATION_FORM, {
-            status: PARAM.APPLICATION_FORM_STATUS.EDIT,
-          }),
-          search: generateQuery({ recruitmentId }),
-          state: { currentRecruitment },
-        });
-      }
+      handleInitError(e);
     }
   };
 

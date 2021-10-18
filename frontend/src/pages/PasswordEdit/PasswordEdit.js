@@ -20,8 +20,16 @@ import styles from "./PasswordEdit.module.css";
 
 const PasswordEdit = () => {
   const { token, resetToken } = useTokenContext();
-
   const history = useHistory();
+
+  const handleSubmitError = (e) => {
+    if (e.response.status === 401) {
+      alert(ERROR_MESSAGE.API.TOKEN_EXPIRED);
+      history.push(PATH.LOGIN);
+    } else {
+      alert(ERROR_MESSAGE.API.EDIT_PASSWORD);
+    }
+  };
 
   const submit = async (value) => {
     try {
@@ -36,12 +44,7 @@ const PasswordEdit = () => {
       resetToken();
       history.push(PATH.LOGIN);
     } catch (e) {
-      if (e.response.status === 401) {
-        alert(ERROR_MESSAGE.API.TOKEN_EXPIRED);
-        history.push(PATH.LOGIN);
-      } else {
-        alert(ERROR_MESSAGE.API.EDIT_PASSWORD);
-      }
+      handleSubmitError(e);
     }
   };
 

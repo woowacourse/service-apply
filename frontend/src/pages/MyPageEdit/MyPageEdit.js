@@ -20,19 +20,23 @@ const MyPageEdit = () => {
   const history = useHistory();
   const { userInfo, updateUserInfo } = useUserInfoContext();
 
+  const handleSubmitError = (e) => {
+    if (e.response.status === 401) {
+      alert(ERROR_MESSAGE.API.TOKEN_EXPIRED);
+      history.push(PATH.LOGIN);
+    } else {
+      alert(ERROR_MESSAGE.API.EDIT_FAILURE);
+      history.push(PATH.MY_PAGE);
+    }
+  };
+
   const submit = async (value) => {
     try {
       await updateUserInfo(value);
       alert(SUCCESS_MESSAGE.API.EDIT_MY_PAGE);
       history.push(PATH.MY_PAGE);
     } catch (e) {
-      if (e.response.status === 401) {
-        alert(ERROR_MESSAGE.API.TOKEN_EXPIRED);
-        history.push(PATH.LOGIN);
-      } else {
-        alert(ERROR_MESSAGE.API.EDIT_FAILURE);
-        history.push(PATH.MY_PAGE);
-      }
+      handleSubmitError(e);
     }
   };
 

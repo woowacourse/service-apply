@@ -83,6 +83,16 @@ const MyApplication = () => {
       }
     };
 
+  const handleFetchError = (e) => {
+    if (e.response.status === 401) {
+      alert(ERROR_MESSAGE.API.TOKEN_EXPIRED);
+      history.push(PATH.LOGIN);
+    } else {
+      alert(ERROR_MESSAGE.API.FETCHING_MY_APPLICATION);
+      setMyApplications([]);
+    }
+  };
+
   useEffect(() => {
     try {
       const fetchMyRecruitments = async () => {
@@ -93,13 +103,7 @@ const MyApplication = () => {
 
       fetchMyRecruitments();
     } catch (e) {
-      if (e.response.status === 401) {
-        alert(ERROR_MESSAGE.API.TOKEN_EXPIRED);
-        history.push(PATH.LOGIN);
-      } else {
-        alert(ERROR_MESSAGE.API.FETCHING_MY_APPLICATION);
-        setMyApplications([]);
-      }
+      handleFetchError(e);
     }
   }, [token]);
 
