@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.repository.findByIdOrNull
 
 fun EvaluationTargetRepository.getById(evaluationTargetId: Long): EvaluationTarget {
-    return findByIdOrNull(evaluationTargetId) ?: throw NoSuchElementException("해당 평가대상자가 존재하지 않습니다.")
+    return findByIdOrNull(evaluationTargetId) ?: throw NoSuchElementException("해당 평가 대상자가 존재하지 않습니다.")
 }
 
 interface EvaluationTargetRepository : JpaRepository<EvaluationTarget, Long> {
