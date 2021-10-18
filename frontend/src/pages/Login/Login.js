@@ -7,7 +7,7 @@ import Form from "../../components/form/Form/Form";
 import { ERROR_MESSAGE } from "../../constants/messages";
 import PATH, { PARAM } from "../../constants/path";
 import useAuth from "../../hooks/useAuth";
-import useLoginForm from "../../hooks/useLoginForm";
+import useLoginForm, { LOGIN_FORM } from "../../hooks/useLoginForm";
 import { generateQuery } from "../../utils/route/query";
 import styles from "./Login.module.css";
 
@@ -17,7 +17,7 @@ const Login = () => {
   const currentRecruitment = location.state?.currentRecruitment;
 
   const { login } = useAuth();
-  const { form, handleFormChange, isEmpty } = useLoginForm();
+  const { form, handleChange, isEmpty } = useLoginForm();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -47,21 +47,21 @@ const Login = () => {
     <Container size={CONTAINER_SIZE.NARROW} title="로그인">
       <Form onSubmit={handleSubmit}>
         <MessageTextInput
-          name="email"
+          name={LOGIN_FORM.EMAIL}
           type="email"
           label="이메일"
           placeholder="이메일 주소를 입력해 주세요."
           value={form.email}
-          onChange={handleFormChange}
+          onChange={handleChange[LOGIN_FORM.EMAIL]}
           required
         />
         <MessageTextInput
-          name="password"
+          name={LOGIN_FORM.PASSWORD}
           type="password"
           label="비밀번호"
           placeholder="비밀번호를 입력해 주세요."
           value={form.password}
-          onChange={handleFormChange}
+          onChange={handleChange[LOGIN_FORM.PASSWORD]}
           required
         />
         <div className={styles.buttons}>
