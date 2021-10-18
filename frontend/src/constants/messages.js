@@ -1,6 +1,5 @@
 export const ERROR_MESSAGE = {
   VALIDATION: {
-    BIRTH: "정확한 날짜를 입력해주세요. ex) 2000-01-01",
     EMAIL: "정확한 이메일 양식을 입력해 주세요.",
     NAME: "정확한 한글 이름을 입력해 주세요.",
     PASSWORD: "영문, 숫자, 특수문자 포함하여 8자에서 20자 이내로 입력해 주세요.",
