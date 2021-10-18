@@ -69,7 +69,7 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
     ): ResponseEntity<Any> {
         logger.error("message", exception)
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body(ApiResponse.error("필수 요청값이 존재하지 않습니다."))
+            .body(ApiResponse.error(exception.message))
     }
 
     private fun MethodArgumentNotValidException.messages(): String =
