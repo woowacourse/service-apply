@@ -80,7 +80,9 @@ const useSignUpForm = () => {
   };
 
   const handleChangeAuthenticationCode = ({ target }) => {
-    updateRequiredForm(SIGN_UP_FORM.AUTHENTICATION_CODE, target.value);
+    const result = target.value.replaceAll(" ", "");
+
+    updateRequiredForm(SIGN_UP_FORM.AUTHENTICATION_CODE, result);
   };
 
   const handleChangeName = ({ target }) => {
