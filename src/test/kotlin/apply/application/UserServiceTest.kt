@@ -9,7 +9,7 @@ import apply.WRONG_PASSWORD
 import apply.createUser
 import apply.domain.user.Password
 import apply.domain.user.User
-import apply.domain.user.UserAuthenticationException
+import apply.domain.user.UnidentifiedUserException
 import apply.domain.user.UserRepository
 import apply.domain.user.findByEmail
 import apply.domain.user.getById
@@ -69,7 +69,7 @@ internal class UserServiceTest {
         @Test
         fun `만약 개인정보가 일치하지 않는다면 예외가 발생한다`() {
             request = ResetPasswordRequest("가짜 이름", EMAIL, BIRTHDAY)
-            assertThrows<UserAuthenticationException> { subject() }
+            assertThrows<UnidentifiedUserException> { subject() }
         }
     }
 
@@ -98,7 +98,7 @@ internal class UserServiceTest {
         @Test
         fun `만약 기존 비밀번호가 일치하지 않다면 예외가 발생한다`() {
             request = EditPasswordRequest(WRONG_PASSWORD, Password("new_password"))
-            assertThrows<UserAuthenticationException> { subject() }
+            assertThrows<UnidentifiedUserException> { subject() }
         }
     }
 

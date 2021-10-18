@@ -13,7 +13,7 @@ import apply.createUser
 import apply.domain.authenticationcode.AuthenticationCode
 import apply.domain.user.Gender
 import apply.domain.user.Password
-import apply.domain.user.UserAuthenticationException
+import apply.domain.user.UnidentifiedUserException
 import apply.security.JwtTokenProvider
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
@@ -141,17 +141,14 @@ internal class UserRestControllerTest : RestControllerTest() {
     }
 
     @Test
-    fun `잘못된 회원 로그인 요청에 응답으로 Unauthorized와 메시지를 반환한다`() {
-        every {
-            userAuthenticationService.generateTokenByLogin(invalidUserLoginRequest)
-        } throws UserAuthenticationException()
+    fun `잘못된 회원 로그인 요청에 응답으로 403 Forbidden을 반환한다`() {
+        every { userAuthenticationService.generateTokenByLogin(invalidUserLoginRequest) } throws UnidentifiedUserException()
 
         mockMvc.post("/api/users/login") {
             content = objectMapper.writeValueAsBytes(invalidUserLoginRequest.withPlainPassword(INVALID_PASSWORD))
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
-            status { isUnauthorized }
-            content { json(objectMapper.writeValueAsString(ApiResponse.error("요청 정보가 기존 회원 정보와 일치하지 않습니다"))) }
+            status { isForbidden }
         }
     }
 
@@ -168,16 +165,14 @@ internal class UserRestControllerTest : RestControllerTest() {
     }
 
     @Test
-    fun `잘못된 비밀번호 찾기 요청에 응답으로 Unauthorized를 반환한다`() {
-        every {
-            userService.resetPassword(inValidUserPasswordFindRequest)
-        } throws UserAuthenticationException()
+    fun `잘못된 비밀번호 찾기 요청에 응답으로 403 Forbidden을 반환한다`() {
+        every { userService.resetPassword(inValidUserPasswordFindRequest) } throws UnidentifiedUserException()
 
         mockMvc.post("/api/users/reset-password") {
             content = objectMapper.writeValueAsBytes(inValidUserPasswordFindRequest)
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
-            status { isUnauthorized }
+            status { isForbidden }
         }
     }
 
@@ -200,13 +195,11 @@ internal class UserRestControllerTest : RestControllerTest() {
     }
 
     @Test
-    fun `잘못된 비밀번호 변경 요청에 응답으로 Unauthorized를 반환한다`() {
+    fun `잘못된 비밀번호 변경 요청에 응답으로 403 Forbidden을 반환한다`() {
         every { jwtTokenProvider.isValidToken("valid_token") } returns true
         every { jwtTokenProvider.getSubject("valid_token") } returns userRequest.email
         every { userService.getByEmail(userRequest.email) } returns userRequest.toEntity()
-        every {
-            userService.editPassword(any(), eq(inValidEditPasswordRequest))
-        } throws UserAuthenticationException()
+        every { userService.editPassword(any(), eq(inValidEditPasswordRequest)) } throws UnidentifiedUserException()
 
         val actualInValidEditPasswordRequest = createInValidEditPasswordRequest()
 
@@ -215,7 +208,7 @@ internal class UserRestControllerTest : RestControllerTest() {
             contentType = MediaType.APPLICATION_JSON
             header(AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
-            status { isUnauthorized }
+            status { isForbidden }
         }
     }
 

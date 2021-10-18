@@ -8,9 +8,9 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import org.springframework.core.MethodParameter
@@ -80,18 +80,18 @@ internal class LoginUserResolverTest {
     fun `요청의 Authorization 헤더의 형식이 올바르지 않을 경우 예외가 발생한다`(header: String) {
         every { nativeWebRequest.getHeader(AUTHORIZATION) } returns header
 
-        assertThatIllegalArgumentException().isThrownBy {
+        assertThrows<LoginFailedException> {
             loginUserResolver.resolveArgument(methodParameter, null, nativeWebRequest, null)
-        }.withMessage("로그인 정보가 정확하지 않습니다")
+        }
     }
 
     @Test
     fun `요청의 Authorization 헤더가 존재하지 않을 경우 예외가 발생한다`() {
         every { nativeWebRequest.getHeader(AUTHORIZATION) } returns null
 
-        assertThatIllegalArgumentException().isThrownBy {
+        assertThrows<LoginFailedException> {
             loginUserResolver.resolveArgument(methodParameter, null, nativeWebRequest, null)
-        }.withMessage("로그인 정보가 정확하지 않습니다")
+        }
     }
 
     @Test
@@ -99,8 +99,8 @@ internal class LoginUserResolverTest {
         every { nativeWebRequest.getHeader(AUTHORIZATION) } returns "invalid_token"
         every { jwtTokenProvider.isValidToken("invalid_token") } returns false
 
-        assertThatIllegalArgumentException().isThrownBy {
+        assertThrows<LoginFailedException> {
             loginUserResolver.resolveArgument(methodParameter, null, nativeWebRequest, null)
-        }.withMessage("로그인 정보가 정확하지 않습니다")
+        }
     }
 }
