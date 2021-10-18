@@ -168,7 +168,7 @@ const Join = () => {
         />
 
         <div className={styles.buttons}>
-          <Button cancel type="button">
+          <Button type="button" onClick={history.goBack} cancel>
             취소
           </Button>
           <Button disabled={!isValid || isEmpty}>가입하기</Button>
