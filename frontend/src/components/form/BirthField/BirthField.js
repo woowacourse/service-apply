@@ -1,9 +1,9 @@
-import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
-import useFormContext from '../../../hooks/useFormContext';
-import Label from '../../@common/Label/Label';
-import TextInput from '../../@common/TextInput/TextInput';
-import styles from './BirthField.module.css';
+import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
+import useFormContext from "../../../hooks/useFormContext";
+import Label from "../../@common/Label/Label";
+import TextInput from "../../@common/TextInput/TextInput";
+import styles from "./BirthField.module.css";
 
 const currentYear = new Date().getFullYear();
 
@@ -33,14 +33,14 @@ const BirthField = ({ required, className, readOnly, initialValue }) => {
   useEffect(() => {
     if (readOnly) return;
 
-    register('year');
-    register('month');
-    register('day');
+    register("year");
+    register("month");
+    register("day");
 
     return () => {
-      unRegister('year');
-      unRegister('month');
-      unRegister('day');
+      unRegister("year");
+      unRegister("month");
+      unRegister("day");
     };
   }, []);
 
@@ -52,7 +52,7 @@ const BirthField = ({ required, className, readOnly, initialValue }) => {
         </Label>
         <div className={styles.birth}>
           <TextInput
-            className={styles['input-box']}
+            className={styles["input-box"]}
             type="number"
             id="year"
             name="year"
@@ -72,7 +72,7 @@ const BirthField = ({ required, className, readOnly, initialValue }) => {
             ))}
           </datalist>
           <TextInput
-            className={styles['input-box']}
+            className={styles["input-box"]}
             name="month"
             list="months"
             type="number"
@@ -91,7 +91,7 @@ const BirthField = ({ required, className, readOnly, initialValue }) => {
             ))}
           </datalist>
           <TextInput
-            className={styles['input-box']}
+            className={styles["input-box"]}
             name="day"
             list="days"
             type="number"
@@ -112,7 +112,7 @@ const BirthField = ({ required, className, readOnly, initialValue }) => {
         </div>
       </div>
 
-      <p className={styles['rule-field']}>
+      <p className={styles["rule-field"]}>
         {errorMessage.year || errorMessage.month || errorMessage.day}
       </p>
     </div>

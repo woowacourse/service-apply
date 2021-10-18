@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
-import PropTypes from 'prop-types';
-import useFormContext from '../../../hooks/useFormContext';
-import MessageTextInput from '../../@common/MessageTextInput/MessageTextInput';
+import React, { useEffect } from "react";
+import PropTypes from "prop-types";
+import useFormContext from "../../../hooks/useFormContext";
+import MessageTextInput from "../../@common/MessageTextInput/MessageTextInput";
 
 const FormInput = ({ label, description, initialValue, name, maxLength, required, ...props }) => {
   const { value, errorMessage, handleChange, register, unRegister } = useFormContext();
@@ -41,10 +41,10 @@ FormInput.propTypes = {
 };
 
 FormInput.defaultProps = {
-  label: '',
-  initialValue: '',
+  label: "",
+  initialValue: "",
   required: false,
-  description: '',
+  description: "",
 };
 
 export default FormInput;

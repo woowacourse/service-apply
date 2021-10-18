@@ -1,26 +1,26 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { generatePath, useHistory, useLocation, useParams } from 'react-router-dom';
-import * as Api from '../../api';
-import Container from '../../components/@common/Container/Container';
-import Description from '../../components/@common/Description/Description';
-import Label from '../../components/@common/Label/Label';
-import CheckBox from '../../components/form/CheckBox/CheckBox';
-import Form from '../../components/form/Form/Form';
-import FormInput from '../../components/form/FormInput/FormInput';
-import FormTextarea from '../../components/form/FormTextarea/FormTextarea';
-import ResetButton from '../../components/form/ResetButton/ResetButton';
-import SubmitButton from '../../components/form/SubmitButton/SubmitButton';
-import TempSaveButton from '../../components/form/TempSaveButton/TempSaveButton';
-import RecruitmentItem from '../../components/RecruitmentItem/RecruitmentItem';
-import { CONFIRM_MESSAGE, SUCCESS_MESSAGE } from '../../constants/messages';
-import PATH, { PARAM } from '../../constants/path';
-import useForm from '../../hooks/useForm';
-import useTokenContext from '../../hooks/useTokenContext';
-import FormProvider from '../../provider/FormProvider';
-import { formatDateTime } from '../../utils/format/date';
-import { generateQuery, parseQuery } from '../../utils/route/query';
-import { validateURL } from '../../utils/validation/url';
-import styles from './ApplicationRegister.module.css';
+import React, { useCallback, useEffect, useState } from "react";
+import { generatePath, useHistory, useLocation, useParams } from "react-router-dom";
+import * as Api from "../../api";
+import Container from "../../components/@common/Container/Container";
+import Description from "../../components/@common/Description/Description";
+import Label from "../../components/@common/Label/Label";
+import CheckBox from "../../components/form/CheckBox/CheckBox";
+import Form from "../../components/form/Form/Form";
+import FormInput from "../../components/form/FormInput/FormInput";
+import FormTextarea from "../../components/form/FormTextarea/FormTextarea";
+import ResetButton from "../../components/form/ResetButton/ResetButton";
+import SubmitButton from "../../components/form/SubmitButton/SubmitButton";
+import TempSaveButton from "../../components/form/TempSaveButton/TempSaveButton";
+import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
+import { CONFIRM_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
+import PATH, { PARAM } from "../../constants/path";
+import useForm from "../../hooks/useForm";
+import useTokenContext from "../../hooks/useTokenContext";
+import FormProvider from "../../provider/FormProvider";
+import { formatDateTime } from "../../utils/format/date";
+import { generateQuery, parseQuery } from "../../utils/route/query";
+import { validateURL } from "../../utils/validation/url";
+import styles from "./ApplicationRegister.module.css";
 
 const ApplicationRegister = () => {
   const history = useHistory();
@@ -33,7 +33,7 @@ const ApplicationRegister = () => {
 
   const [recruitmentItems, setRecruitmentItems] = useState([]);
   const [initialFormData, setInitialFormData] = useState({});
-  const [modifiedDateTime, setModifiedDateTime] = useState('');
+  const [modifiedDateTime, setModifiedDateTime] = useState("");
 
   const fetchRecruitmentItems = useCallback(async () => {
     try {
@@ -78,7 +78,7 @@ const ApplicationRegister = () => {
     }
   }, [history, token, recruitmentId]);
 
-  const save = async (answers, referenceUrl = '', submitted) => {
+  const save = async (answers, referenceUrl = "", submitted) => {
     Api.updateForm({
       token,
       data: { recruitmentId, referenceUrl, submitted, answers },
@@ -89,7 +89,7 @@ const ApplicationRegister = () => {
 
   const getAnswers = (value) =>
     recruitmentItems.map((item, index) => ({
-      contents: value[`recruitment-item-${index}`] || '',
+      contents: value[`recruitment-item-${index}`] || "",
       recruitmentItemId: item.id,
     }));
 
@@ -173,7 +173,7 @@ const ApplicationRegister = () => {
         <FormProvider value={value} {...methods}>
           <Form onSubmit={handleSubmit}>
             {status === PARAM.APPLICATION_FORM_STATUS.EDIT && (
-              <p className={styles['autosave-indicator']}>
+              <p className={styles["autosave-indicator"]}>
                 {`임시 저장되었습니다. (${modifiedDateTime})`}
               </p>
             )}
@@ -187,7 +187,7 @@ const ApplicationRegister = () => {
                   description={item.description}
                   placeholder="내용을 입력해 주세요."
                   maxLength={item.maximumLength}
-                  className={styles['label-bold']}
+                  className={styles["label-bold"]}
                   required
                 />
               ))}
@@ -197,24 +197,24 @@ const ApplicationRegister = () => {
               type="url"
               initialValue={initialFormData.referenceUrl}
               description={
-                <div className={styles['description-url']}>
+                <div className={styles["description-url"]}>
                   자신을 드러낼 수 있는 개인 블로그, GitHub, 포트폴리오 주소 등이 있다면 입력해
                   주세요.
-                  <div className={styles['description-url-small']}>
+                  <div className={styles["description-url-small"]}>
                     여러 개가 있는 경우 Notion, Google 문서 등을 사용하여 하나로 묶어 주세요.
                   </div>
                 </div>
               }
               label="URL"
-              className={styles['label-bold']}
+              className={styles["label-bold"]}
               placeholder="ex) https://tecoble.techcourse.co.kr/"
             />
 
-            <div className={styles['box-agree']}>
-              <Label className={styles['text-bold']} required>
+            <div className={styles["box-agree"]}>
+              <Label className={styles["text-bold"]} required>
                 지원서 작성 내용 사실 확인
               </Label>
-              <Description className={styles['description-agree']}>
+              <Description className={styles["description-agree"]}>
                 기재한 사실 중 허위사실이 발견되는 즉시, 교육 대상자에서 제외되며 향후 지원도
                 불가능합니다.
               </Description>

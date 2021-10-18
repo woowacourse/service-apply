@@ -1,6 +1,6 @@
-import useFormContext from '../../../hooks/useFormContext';
-import { CONFIRM_MESSAGE } from '../../../constants/messages';
-import Button, { BUTTON_VARIANT } from '../../@common/Button/Button';
+import useFormContext from "../../../hooks/useFormContext";
+import { CONFIRM_MESSAGE } from "../../../constants/messages";
+import Button, { BUTTON_VARIANT } from "../../@common/Button/Button";
 
 const ResetButton = () => {
   const { resetAll } = useFormContext();

@@ -1,7 +1,7 @@
-import axios from 'axios';
-import { headers } from './api';
+import axios from "axios";
+import { headers } from "./api";
 
-const COMMON_PATH = '/api/recruitments';
+const COMMON_PATH = "/api/recruitments";
 
 export const fetchItems = (recruitmentId) => axios.get(`${COMMON_PATH}/${recruitmentId}/items`);
 

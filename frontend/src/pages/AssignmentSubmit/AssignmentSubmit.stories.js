@@ -1,7 +1,7 @@
-import AssignmentSubmit from './AssignmentSubmit';
+import AssignmentSubmit from "./AssignmentSubmit";
 
 export default {
-  title: 'pages/AssignmentSubmit',
+  title: "pages/AssignmentSubmit",
   component: AssignmentSubmit,
 };
 

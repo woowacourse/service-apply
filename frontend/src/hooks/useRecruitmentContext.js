@@ -1,5 +1,5 @@
-import { useContext, createContext } from 'react';
-import { ERROR_MESSAGE } from '../constants/messages';
+import { useContext, createContext } from "react";
+import { ERROR_MESSAGE } from "../constants/messages";
 
 export const RecruitmentContext = createContext();
 

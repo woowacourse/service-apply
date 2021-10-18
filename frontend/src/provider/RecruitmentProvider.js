@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import * as Api from '../api';
-import { RECRUITMENT_STATUS } from '../constants/recruitment';
-import { RecruitmentContext } from '../hooks/useRecruitmentContext';
+import React, { useEffect, useState } from "react";
+import * as Api from "../api";
+import { RECRUITMENT_STATUS } from "../constants/recruitment";
+import { RecruitmentContext } from "../hooks/useRecruitmentContext";
 
 export const recruitmentFilter = (recruitments) => ({
   all: recruitments,

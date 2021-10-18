@@ -1,4 +1,4 @@
-import { ERROR_MESSAGE } from '../../constants/messages';
+import { ERROR_MESSAGE } from "../../constants/messages";
 
 const REGEX = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[*.!@#$%^&(){}[\]:;"'<>,?\\/~_+\-=|]).{8,20}$/;
 

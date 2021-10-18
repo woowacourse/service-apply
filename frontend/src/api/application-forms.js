@@ -1,7 +1,7 @@
-import axios from 'axios';
-import { headers } from './api';
+import axios from "axios";
+import { headers } from "./api";
 
-const COMMON_PATH = '/api/application-forms';
+const COMMON_PATH = "/api/application-forms";
 
 export const fetchMyApplicationForms = (token) =>
   axios.get(`${COMMON_PATH}/me`, {

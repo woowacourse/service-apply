@@ -1,18 +1,18 @@
-import { useEffect, useState } from 'react';
-import { useHistory, useLocation, useParams } from 'react-router';
-import { fetchAssignment, patchAssignment, postAssignment } from '../../api/recruitments';
-import Container from '../../components/@common/Container/Container';
-import CancelButton from '../../components/form/CancelButton/CancelButton';
-import Form from '../../components/form/Form/Form';
-import FormInput from '../../components/form/FormInput/FormInput';
-import FormTextarea from '../../components/form/FormTextarea/FormTextarea';
-import SubmitButton from '../../components/form/SubmitButton/SubmitButton';
-import { CONFIRM_MESSAGE, ERROR_MESSAGE, SUCCESS_MESSAGE } from '../../constants/messages';
-import PATH, { PARAM } from '../../constants/path';
-import useForm from '../../hooks/useForm';
-import useTokenContext from '../../hooks/useTokenContext';
-import FormProvider from '../../provider/FormProvider';
-import styles from './AssignmentSubmit.module.css';
+import { useEffect, useState } from "react";
+import { useHistory, useLocation, useParams } from "react-router";
+import { fetchAssignment, patchAssignment, postAssignment } from "../../api/recruitments";
+import Container from "../../components/@common/Container/Container";
+import CancelButton from "../../components/form/CancelButton/CancelButton";
+import Form from "../../components/form/Form/Form";
+import FormInput from "../../components/form/FormInput/FormInput";
+import FormTextarea from "../../components/form/FormTextarea/FormTextarea";
+import SubmitButton from "../../components/form/SubmitButton/SubmitButton";
+import { CONFIRM_MESSAGE, ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
+import PATH, { PARAM } from "../../constants/path";
+import useForm from "../../hooks/useForm";
+import useTokenContext from "../../hooks/useTokenContext";
+import FormProvider from "../../provider/FormProvider";
+import styles from "./AssignmentSubmit.module.css";
 
 const AssignmentSubmit = () => {
   const history = useHistory();
@@ -100,7 +100,7 @@ const AssignmentSubmit = () => {
             initialValue={initialFormData?.note}
             required
           />
-          <p className={styles['info-message']}>
+          <p className={styles["info-message"]}>
             작성하신 내용은 과제 제출 마감전까지 수정하실 수 있습니다.
           </p>
           <div className={styles.buttons}>

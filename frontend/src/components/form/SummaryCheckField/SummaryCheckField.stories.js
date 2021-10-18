@@ -1,8 +1,8 @@
-import React from 'react';
-import SummaryCheckField from './SummaryCheckField';
+import React from "react";
+import SummaryCheckField from "./SummaryCheckField";
 
 export default {
-  title: 'form/SummaryCheckField',
+  title: "form/SummaryCheckField",
   component: SummaryCheckField,
 };
 
@@ -10,7 +10,7 @@ const Template = (args) => <SummaryCheckField {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {
-  label: '약관 동의',
+  label: "약관 동의",
   children: (
     <p>
       Ullamco duis cillum adipisicing elit Lorem. Culpa veniam aliqua commodo esse culpa officia qui

@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState } from "react";
 
-import { ERROR_MESSAGE } from '../constants/messages';
+import { ERROR_MESSAGE } from "../constants/messages";
 
 const useForm = ({ validators, submit }) => {
   const [value, setValue] = useState({});
@@ -17,7 +17,7 @@ const useForm = ({ validators, submit }) => {
   const handleChange = ({ target }) => {
     setValue((prev) => ({
       ...prev,
-      [target.name]: target.type === 'checkbox' ? target.checked : target.value,
+      [target.name]: target.type === "checkbox" ? target.checked : target.value,
     }));
 
     const validator = validators?.[target.name];
@@ -27,7 +27,7 @@ const useForm = ({ validators, submit }) => {
     try {
       const result = validator(target.value);
 
-      if (typeof result === 'function') {
+      if (typeof result === "function") {
         result(value);
       }
 
@@ -38,11 +38,11 @@ const useForm = ({ validators, submit }) => {
   };
 
   const handleCapsLockState = (event) => {
-    if (event.target.type !== 'password') return;
+    if (event.target.type !== "password") return;
 
     setErrorMessage((prev) => ({
       ...prev,
-      [event.target.name]: event.getModifierState('CapsLock')
+      [event.target.name]: event.getModifierState("CapsLock")
         ? ERROR_MESSAGE.VALIDATION.PASSWORD_CAPSLOCK
         : prev[event.target.name],
     }));
@@ -56,7 +56,7 @@ const useForm = ({ validators, submit }) => {
     submit(value);
   };
 
-  const register = (name, initialValue = '', isRequired) => {
+  const register = (name, initialValue = "", isRequired) => {
     setValue((prev) => ({ ...prev, [name]: initialValue }));
     setErrorMessage((prev) => ({ ...prev, [name]: null }));
 
@@ -78,7 +78,7 @@ const useForm = ({ validators, submit }) => {
   const reset = (name) => {
     setValue((prev) => ({
       ...prev,
-      [name]: '',
+      [name]: "",
     }));
 
     setErrorMessage((prev) => ({
@@ -90,11 +90,11 @@ const useForm = ({ validators, submit }) => {
   const resetAll = () => {
     setValue((prev) => {
       for (const name in prev) {
-        if (typeof prev[name] === 'boolean') {
+        if (typeof prev[name] === "boolean") {
           prev[name] = false;
         }
 
-        prev[name] = '';
+        prev[name] = "";
       }
 
       return { ...prev };

@@ -1,4 +1,4 @@
-@import './color.css';
+@import "./color.css";
 
 :root {
   --pc-main-width: 800px;
@@ -11,9 +11,9 @@
 }
 
 * {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Apple SD Gothic Neo', Roboto,
-    'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-    'Noto Color Emoji';
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", Roboto,
+    "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+    "Noto Color Emoji";
   box-sizing: border-box;
   margin: 0;
   padding: 0;

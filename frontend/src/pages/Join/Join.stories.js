@@ -1,16 +1,16 @@
-import React from 'react';
-import { Route, MemoryRouter } from 'react-router-dom';
-import Join from './Join';
+import React from "react";
+import { Route, MemoryRouter } from "react-router-dom";
+import Join from "./Join";
 
 export default {
-  title: 'pages/Join',
+  title: "pages/Join",
   component: Join,
   decorators: [
     (Story) => (
       <MemoryRouter
         initialEntries={[
           {
-            pathname: '/applicants/new',
+            pathname: "/applicants/new",
             state: {
               recruitmentId: 3,
             },

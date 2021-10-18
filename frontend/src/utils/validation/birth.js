@@ -1,4 +1,4 @@
-import { ERROR_MESSAGE } from '../../constants/messages';
+import { ERROR_MESSAGE } from "../../constants/messages";
 
 const YEAR_REGEX = /^(19|20)\d{2}$/;
 const MONTH_REGEX = /^(0?[1-9]|1[012])$/;

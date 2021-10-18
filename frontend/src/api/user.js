@@ -1,7 +1,7 @@
-import axios from 'axios';
-import { headers } from './api';
+import axios from "axios";
+import { headers } from "./api";
 
-const COMMON_PATH = '/api/users';
+const COMMON_PATH = "/api/users";
 
 export const fetchRegister = (userInfo) => axios.post(`${COMMON_PATH}/register`, userInfo);
 

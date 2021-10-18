@@ -1,11 +1,11 @@
-import React from 'react';
+import React from "react";
 
-import styles from './Footer.module.css';
+import styles from "./Footer.module.css";
 
 const Footer = () => {
   return (
     <footer className={styles.footer}>
-      <div className={styles['content-wrapper']}>
+      <div className={styles["content-wrapper"]}>
         <a target="_blank" href="https://woowacourse.github.io/" rel="noreferrer noopener">
           <img
             className={styles.logo}

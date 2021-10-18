@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import useInterval from './useInterval';
+import { useState } from "react";
+import useInterval from "./useInterval";
 
 const useTimer = (initialSeconds, initialDelay = 1000) => {
   const [seconds, setSeconds] = useState(initialSeconds);

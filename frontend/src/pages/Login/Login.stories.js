@@ -1,8 +1,8 @@
-import React from 'react';
-import Login from './Login';
+import React from "react";
+import Login from "./Login";
 
 export default {
-  title: 'pages/Login',
+  title: "pages/Login",
   component: Login,
 };
 

@@ -1,8 +1,8 @@
-import React from 'react';
-import PasswordEdit from './PasswordEdit';
+import React from "react";
+import PasswordEdit from "./PasswordEdit";
 
 export default {
-  title: 'pages/PasswordEdit',
+  title: "pages/PasswordEdit",
   component: PasswordEdit,
 };
 

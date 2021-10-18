@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import * as Api from '../api';
-import { LOCAL_STORAGE_KEY } from '../constants/key';
-import { TokenContext } from '../hooks/useTokenContext';
+import React, { useState } from "react";
+import * as Api from "../api";
+import { LOCAL_STORAGE_KEY } from "../constants/key";
+import { TokenContext } from "../hooks/useTokenContext";
 
 const TokenProvider = ({ children }) => {
   const [token, setToken] = useState(
-    () => localStorage.getItem(LOCAL_STORAGE_KEY.ACCESS_TOKEN) || ''
+    () => localStorage.getItem(LOCAL_STORAGE_KEY.ACCESS_TOKEN) || ""
   );
 
   const postRegister = async (payload) => {
@@ -23,8 +23,8 @@ const TokenProvider = ({ children }) => {
   };
 
   const resetToken = () => {
-    setToken('');
-    localStorage.setItem(LOCAL_STORAGE_KEY.ACCESS_TOKEN, '');
+    setToken("");
+    localStorage.setItem(LOCAL_STORAGE_KEY.ACCESS_TOKEN, "");
   };
 
   return (
