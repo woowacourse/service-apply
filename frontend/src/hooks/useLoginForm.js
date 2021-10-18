@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ERROR_MESSAGE } from "../constants/messages";
 
 export const LOGIN_FORM = {
   EMAIL: "email",
@@ -8,6 +9,10 @@ export const LOGIN_FORM = {
 const useLoginForm = () => {
   const [requiredForm, setRequiredForm] = useState({
     [LOGIN_FORM.EMAIL]: "",
+    [LOGIN_FORM.PASSWORD]: "",
+  });
+
+  const [errorMessage, setErrorMessage] = useState({
     [LOGIN_FORM.PASSWORD]: "",
   });
 
@@ -29,12 +34,25 @@ const useLoginForm = () => {
     }));
   };
 
+  const handleCapsLockState = (name) => (event) => {
+    const newErrorMessage = event.getModifierState("CapsLock")
+      ? ERROR_MESSAGE.VALIDATION.PASSWORD_CAPSLOCK
+      : "";
+
+    setErrorMessage((prev) => ({
+      ...prev,
+      [name]: newErrorMessage,
+    }));
+  };
+
   return {
     form: requiredForm,
+    errorMessage,
     handleChange: {
       [LOGIN_FORM.EMAIL]: handleEmailChange,
       [LOGIN_FORM.PASSWORD]: handlePasswordChange,
     },
+    handleCapsLockState,
     isEmpty,
   };
 };

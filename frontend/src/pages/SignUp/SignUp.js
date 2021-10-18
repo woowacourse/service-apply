@@ -30,6 +30,7 @@ const Join = () => {
     form,
     errorMessage,
     handleChange,
+    handleCapsLockState,
     reset,
     setErrorMessage,
     isValid,
@@ -135,6 +136,7 @@ const Join = () => {
           name={SIGN_UP_FORM.PASSWORD}
           value={form[SIGN_UP_FORM.PASSWORD]}
           onChange={handleChange[SIGN_UP_FORM.PASSWORD]}
+          onKeyUp={handleCapsLockState(SIGN_UP_FORM.PASSWORD)}
           minLength={FORM.PASSWORD_MIN_LENGTH}
           maxLength={FORM.PASSWORD_MAX_LENGTH}
           errorMessage={errorMessage[SIGN_UP_FORM.PASSWORD]}

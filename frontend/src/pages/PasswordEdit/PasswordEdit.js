@@ -14,7 +14,8 @@ const PasswordEdit = () => {
   const { token, resetToken } = useTokenContext();
   const history = useHistory();
 
-  const { form, errorMessage, handleChange, isValid, isEmpty } = usePasswordEditForm();
+  const { form, errorMessage, handleChange, handleCapsLockState, isValid, isEmpty } =
+    usePasswordEditForm();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -44,6 +45,8 @@ const PasswordEdit = () => {
           name={PASSWORD_EDIT_FORM.OLD_PASSWORD}
           value={form[PASSWORD_EDIT_FORM.OLD_PASSWORD]}
           onChange={handleChange[PASSWORD_EDIT_FORM.OLD_PASSWORD]}
+          onKeyUp={handleCapsLockState(PASSWORD_EDIT_FORM.OLD_PASSWORD)}
+          errorMessage={errorMessage[PASSWORD_EDIT_FORM.OLD_PASSWORD]}
           required
         />
         <MessageTextInput
@@ -53,6 +56,7 @@ const PasswordEdit = () => {
           name={PASSWORD_EDIT_FORM.PASSWORD}
           value={form[PASSWORD_EDIT_FORM.PASSWORD]}
           onChange={handleChange[PASSWORD_EDIT_FORM.PASSWORD]}
+          onKeyUp={handleCapsLockState(PASSWORD_EDIT_FORM.PASSWORD)}
           errorMessage={errorMessage[PASSWORD_EDIT_FORM.PASSWORD]}
           required
         />

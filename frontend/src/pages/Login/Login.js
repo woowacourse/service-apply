@@ -17,7 +17,8 @@ const Login = () => {
   const currentRecruitment = location.state?.currentRecruitment;
 
   const { login } = useAuth();
-  const { form, handleChange, isEmpty } = useLoginForm();
+  const { form, errorMessage, handleChange, handleCapsLockState, isEmpty } =
+    useLoginForm();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -62,6 +63,8 @@ const Login = () => {
           placeholder="비밀번호를 입력해 주세요."
           value={form.password}
           onChange={handleChange[LOGIN_FORM.PASSWORD]}
+          onKeyUp={handleCapsLockState(LOGIN_FORM.PASSWORD)}
+          errorMessage={errorMessage[LOGIN_FORM.PASSWORD]}
           required
         />
         <div className={styles.buttons}>

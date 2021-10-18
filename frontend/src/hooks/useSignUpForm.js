@@ -46,7 +46,11 @@ const useSignUpForm = () => {
   const [requiredForm, setRequiredForm] = useState(initialRequiredForm);
   const [errorMessage, setErrorMessage] = useState(initialErrorMessage);
 
-  const isValid = Object.values(errorMessage).filter(Boolean).length === 0;
+  const isValid =
+    Object.values(errorMessage).filter(
+      (errMsg) =>
+        errMsg && errMsg !== ERROR_MESSAGE.VALIDATION.PASSWORD_CAPSLOCK
+    ).length === 0;
   const isEmpty =
     Object.values(requiredForm).filter(Boolean).length <
     Object.keys(requiredForm).length;
@@ -145,12 +149,12 @@ const useSignUpForm = () => {
     updateRequiredForm(SIGN_UP_FORM.IS_TERM_AGREED, target.checked);
   };
 
-  const handleCapsLockState = (event) => {
+  const handleCapsLockState = (name) => (event) => {
     const newErrorMessage = event.getModifierState("CapsLock")
       ? ERROR_MESSAGE.VALIDATION.PASSWORD_CAPSLOCK
-      : errorMessage[event.target.name];
+      : errorMessage[name];
 
-    updateErrorMessage(event.target.name, newErrorMessage);
+    updateErrorMessage(name, newErrorMessage);
   };
 
   const reset = (name) => {
