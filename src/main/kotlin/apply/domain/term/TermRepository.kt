@@ -7,7 +7,7 @@ fun TermRepository.getById(id: Long): Term {
     if (id == 0L) {
         return Term.SINGLE
     }
-    return findByIdOrNull(id) ?: throw NoSuchElementException("해당 내용은 존재하지 않습니다.")
+    return findByIdOrNull(id) ?: throw NoSuchElementException("해당 기수는 존재하지 않습니다.")
 }
 
 interface TermRepository : JpaRepository<Term, Long>

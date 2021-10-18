@@ -205,7 +205,7 @@ class ApplicationFormServiceTest {
                 createApplicationFormRequest
             )
         }.message
-        assertThat(message).isEqualTo("해당 내용은 존재하지 않습니다.")
+        assertThat(message).isEqualTo("해당 모집은 존재하지 않습니다.")
     }
 
     @Test
