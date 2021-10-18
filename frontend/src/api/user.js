@@ -11,8 +11,12 @@ export const fetchLogin = ({ email, password }) =>
 export const fetchPasswordFind = ({ name, email, birthday }) =>
   axios.post(`${COMMON_PATH}/reset-password`, { name, email, birthday });
 
-export const fetchPasswordEdit = ({ token, password, newPassword }) =>
-  axios.post(`${COMMON_PATH}/edit-password`, { password, newPassword }, headers({ token }));
+export const fetchPasswordEdit = ({ token, oldPassword, password, confirmPassword }) =>
+  axios.post(
+    `${COMMON_PATH}/edit-password`,
+    { oldPassword, password, confirmPassword },
+    headers({ token })
+  );
 
 export const fetchUserInfo = ({ token }) => axios.get(`${COMMON_PATH}/me`, headers({ token }));
 

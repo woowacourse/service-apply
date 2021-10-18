@@ -47,9 +47,11 @@ const useSignUpForm = () => {
   const [errorMessage, setErrorMessage] = useState(initialErrorMessage);
 
   const isValid = Object.values(errorMessage).filter(Boolean).length === 0;
-  const isEmpty = Object.values(requiredForm).filter(Boolean).length === 0;
+  const isEmpty =
+    Object.values(requiredForm).filter(Boolean).length <
+    Object.keys(requiredForm).length;
 
-  const updateForm = (name, value) => {
+  const updateRequiredForm = (name, value) => {
     setRequiredForm((prev) => ({
       ...prev,
       [name]: value,
@@ -69,11 +71,11 @@ const useSignUpForm = () => {
       : ERROR_MESSAGE.VALIDATION.EMAIL;
 
     updateErrorMessage(SIGN_UP_FORM.EMAIL, errorMessage);
-    updateForm(SIGN_UP_FORM.EMAIL, target.value);
+    updateRequiredForm(SIGN_UP_FORM.EMAIL, target.value);
   };
 
   const handleChangeAuthenticationCode = ({ target }) => {
-    updateForm(SIGN_UP_FORM.AUTHENTICATION_CODE, target.value);
+    updateRequiredForm(SIGN_UP_FORM.AUTHENTICATION_CODE, target.value);
   };
 
   const handleChangeName = ({ target }) => {
@@ -82,7 +84,7 @@ const useSignUpForm = () => {
       : ERROR_MESSAGE.VALIDATION.NAME;
 
     updateErrorMessage(SIGN_UP_FORM.NAME, errorMessage);
-    updateForm(SIGN_UP_FORM.NAME, target.value);
+    updateRequiredForm(SIGN_UP_FORM.NAME, target.value);
   };
 
   const handleChangePhoneNumber = ({
@@ -100,7 +102,7 @@ const useSignUpForm = () => {
       : ERROR_MESSAGE.VALIDATION.PHONE_NUMBER;
 
     updateErrorMessage(SIGN_UP_FORM.PHONE_NUMBER, errorMessage);
-    updateForm(SIGN_UP_FORM.PHONE_NUMBER, result);
+    updateRequiredForm(SIGN_UP_FORM.PHONE_NUMBER, result);
   };
 
   const handleChangePassword = ({ target }) => {
@@ -118,7 +120,7 @@ const useSignUpForm = () => {
       confirmPasswordErrorMessage
     );
     updateErrorMessage(SIGN_UP_FORM.PASSWORD, errorMessage);
-    updateForm(SIGN_UP_FORM.PASSWORD, target.value);
+    updateRequiredForm(SIGN_UP_FORM.PASSWORD, target.value);
   };
 
   const handleChangeConfirmPassword = ({ target }) => {
@@ -128,19 +130,19 @@ const useSignUpForm = () => {
         : ERROR_MESSAGE.VALIDATION.CONFIRM_PASSWORD;
 
     updateErrorMessage(SIGN_UP_FORM.CONFIRM_PASSWORD, errorMessage);
-    updateForm(SIGN_UP_FORM.CONFIRM_PASSWORD, target.value);
+    updateRequiredForm(SIGN_UP_FORM.CONFIRM_PASSWORD, target.value);
   };
 
   const handleChangeBirth = ({ target }) => {
-    updateForm(SIGN_UP_FORM.BIRTH, target.value);
+    updateRequiredForm(SIGN_UP_FORM.BIRTH, target.value);
   };
 
   const handleChangeGender = ({ target }) => {
-    updateForm(SIGN_UP_FORM.GENDER, target.value);
+    updateRequiredForm(SIGN_UP_FORM.GENDER, target.value);
   };
 
   const handleChangeIsTermAgreed = ({ target }) => {
-    updateForm(SIGN_UP_FORM.IS_TERM_AGREED, target.checked);
+    updateRequiredForm(SIGN_UP_FORM.IS_TERM_AGREED, target.checked);
   };
 
   const handleCapsLockState = (event) => {

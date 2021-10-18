@@ -44,10 +44,10 @@ const App = () => {
                 <Route path={PATH.FIND_PASSWORD} exact>
                   <PasswordFind />
                 </Route>
-
                 <Route path={PATH.FIND_PASSWORD_RESULT} exact>
                   <PasswordFindResult />
                 </Route>
+
                 <PrivateRoute path={PATH.APPLICATION_FORM} exact>
                   <ApplicationRegister />
                 </PrivateRoute>
