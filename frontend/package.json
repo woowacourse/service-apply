@@ -22,6 +22,10 @@
       "react-app",
       "react-app/jest"
     ],
+    "rules": {
+      "no-control-regex": "off",
+      "react-hooks/exhaustive-deps": "off"
+    },
     "overrides": [
       {
         "files": [
