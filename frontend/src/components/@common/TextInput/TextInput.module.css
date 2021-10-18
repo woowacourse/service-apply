@@ -12,5 +12,5 @@
 
 .text-input:read-only {
   cursor: default;
-  background: var(--gray-004);
+  background: var(--gray-003);
 }

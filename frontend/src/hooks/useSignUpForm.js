@@ -1,7 +1,10 @@
 import { useState } from "react";
 import FORM from "../constants/form";
 import { ERROR_MESSAGE } from "../constants/messages";
-import { formatHyphen } from "../utils/format/phoneNumber";
+import {
+  formatHyphen,
+  PHONE_NUMBER_HYPHEN_IDX,
+} from "../utils/format/phoneNumber";
 import { isValidEmail } from "../utils/validation/email";
 import { isValidName } from "../utils/validation/name";
 import { isValidPassword } from "../utils/validation/password";
@@ -39,8 +42,6 @@ const initialErrorMessage = {
   [SIGN_UP_FORM.PASSWORD]: "",
   [SIGN_UP_FORM.CONFIRM_PASSWORD]: "",
 };
-
-const PHONE_NUMBER_HYPHEN_IDX = [3, 7];
 
 const useSignUpForm = () => {
   const [requiredForm, setRequiredForm] = useState(initialRequiredForm);

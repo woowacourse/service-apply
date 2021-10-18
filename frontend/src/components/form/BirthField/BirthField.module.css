@@ -20,6 +20,10 @@
   border-radius: 0.25rem;
 }
 
+.input:read-only {
+  background-color: var(--gray-003);
+}
+
 .rule-field {
   margin: 0 0.5rem;
   height: 0.75rem;

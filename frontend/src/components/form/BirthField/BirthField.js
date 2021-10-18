@@ -32,6 +32,7 @@ BirthField.propTypes = {
   onChange: PropTypes.func.isRequired,
   errorMessage: PropTypes.string,
   required: PropTypes.bool,
+
   className: PropTypes.string,
 };
 
