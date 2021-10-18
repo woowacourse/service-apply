@@ -5,6 +5,7 @@ import apply.domain.user.UserAuthenticationException
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
@@ -58,6 +59,17 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
         logger.error("message", exception)
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body(ApiResponse.error(exception.messages()))
+    }
+
+    override fun handleHttpMessageNotReadable(
+        exception: HttpMessageNotReadableException,
+        headers: HttpHeaders,
+        status: HttpStatus,
+        request: WebRequest
+    ): ResponseEntity<Any> {
+        logger.error("message", exception)
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body(ApiResponse.error("필수 요청값이 존재하지 않습니다."))
     }
 
     private fun MethodArgumentNotValidException.messages(): String =
