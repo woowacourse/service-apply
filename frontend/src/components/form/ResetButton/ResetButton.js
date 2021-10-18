@@ -1,6 +1,6 @@
-import useFormContext from "../../../hooks/useFormContext";
-import { CONFIRM_MESSAGE } from "../../../constants/messages";
-import Button, { BUTTON_VARIANT } from "../../@common/Button/Button";
+import useFormContext from '../../../hooks/useFormContext';
+import { CONFIRM_MESSAGE } from '../../../constants/messages';
+import Button, { BUTTON_VARIANT } from '../../@common/Button/Button';
 
 const ResetButton = () => {
   const { resetAll } = useFormContext();
@@ -14,11 +14,7 @@ const ResetButton = () => {
   };
 
   return (
-    <Button
-      type="reset"
-      variant={BUTTON_VARIANT.OUTLINED}
-      onClick={handleClick}
-    >
+    <Button type="reset" variant={BUTTON_VARIANT.OUTLINED} onClick={handleClick}>
       초기화
     </Button>
   );

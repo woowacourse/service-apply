@@ -1,22 +1,22 @@
-import { useEffect, useMemo, useState } from "react";
-import { generatePath, useHistory } from "react-router";
-import { fetchMyApplicationForms } from "../../api/application-forms";
-import Container from "../../components/@common/Container/Container";
-import Panel from "../../components/@common/Panel/Panel";
-import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
-import PATH, { PARAM } from "../../constants/path";
-import useMissions from "../../hooks/useMissions";
-import useRecruitmentContext from "../../hooks/useRecruitmentContext";
-import useTokenContext from "../../hooks/useTokenContext";
-import { generateQuery } from "../../utils/route/query";
-import styles from "./MyApplication.module.css";
+import { useEffect, useMemo, useState } from 'react';
+import { generatePath, useHistory } from 'react-router';
+import { fetchMyApplicationForms } from '../../api/application-forms';
+import Container from '../../components/@common/Container/Container';
+import Panel from '../../components/@common/Panel/Panel';
+import RecruitmentItem from '../../components/RecruitmentItem/RecruitmentItem';
+import PATH, { PARAM } from '../../constants/path';
+import useMissions from '../../hooks/useMissions';
+import useRecruitmentContext from '../../hooks/useRecruitmentContext';
+import useTokenContext from '../../hooks/useTokenContext';
+import { generateQuery } from '../../utils/route/query';
+import styles from './MyApplication.module.css';
 
 const missionLabel = (submitted, missionStatus) => {
   const labelMap = {
-    SUBMITTABLE: "시작 전",
-    SUBMITTING: submitted ? "수정하기" : "제출하기",
-    UNSUBMITTABLE: "제출불가",
-    ENDED: submitted ? "제출완료" : "미제출",
+    SUBMITTABLE: '시작 전',
+    SUBMITTING: submitted ? '수정하기' : '제출하기',
+    UNSUBMITTABLE: '제출불가',
+    ENDED: submitted ? '제출완료' : '미제출',
   };
 
   return labelMap[missionStatus];
@@ -99,18 +99,18 @@ const MyApplication = () => {
 
   return (
     <div className={styles.box}>
-      <Container title="내 지원 현황" className={styles["page-title"]} />
+      <Container title="내 지원 현황" className={styles['page-title']} />
       {myRecruitments.map(({ submitted, ...recruitment }, index) => (
         <Panel
           key={`recruitment-${recruitment.id}`}
           title={recruitment.title}
           isOpen={index === 0}
-          className={styles["recruit-panel"]}
+          className={styles['recruit-panel']}
         >
-          <div className={styles["recruit-panel-inner"]}>
+          <div className={styles['recruit-panel-inner']}>
             <RecruitmentItem
-              recruitment={{ ...recruitment, title: "내 지원서" }}
-              buttonLabel={submitted ? "제출완료" : "수정하기"}
+              recruitment={{ ...recruitment, title: '내 지원서' }}
+              buttonLabel={submitted ? '제출완료' : '수정하기'}
               isButtonDisabled={submitted}
               onClickButton={routeToApplicationForm(recruitment)}
             />
@@ -121,10 +121,10 @@ const MyApplication = () => {
               missions[recruitment.id].map((mission) => (
                 <RecruitmentItem
                   key={`mission-${recruitment.id}-${mission.id}`}
-                  className={styles["mission-recruit-item"]}
+                  className={styles['mission-recruit-item']}
                   recruitment={mission}
                   buttonLabel={missionLabel(mission.submitted, mission.status)}
-                  isButtonDisabled={mission.status !== "SUBMITTING"}
+                  isButtonDisabled={mission.status !== 'SUBMITTING'}
                   onClickButton={routeToAssignmentSubmit({
                     recruitmentId: recruitment.id,
                     mission,

@@ -4,7 +4,7 @@
 }
 
 .required::after {
-  content: "*";
+  content: '*';
   margin-left: 0.25rem;
   color: var(--blue);
 }

@@ -1,10 +1,10 @@
-import React from "react";
-import Recruits from "./Recruits";
-import Header from "../../components/Header/Header";
-import "../../App.css";
+import React from 'react';
+import Recruits from './Recruits';
+import Header from '../../components/Header/Header';
+import '../../App.css';
 
 export default {
-  title: "pages/Recruits",
+  title: 'pages/Recruits',
   component: Recruits,
 };
 

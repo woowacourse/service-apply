@@ -5,7 +5,7 @@
   line-height: 1.25rem;
 }
 
-input[type="checkbox"] {
+input[type='checkbox'] {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -15,8 +15,8 @@ input[type="checkbox"] {
   margin-right: 0.5rem;
 }
 
-input[type="checkbox"]::before {
-  content: "✓";
+input[type='checkbox']::before {
+  content: '✓';
   display: flex;
   justify-content: center;
   align-items: center;
@@ -28,7 +28,7 @@ input[type="checkbox"]::before {
   transition-duration: 0.2s;
 }
 
-input[type="checkbox"]:checked::before {
+input[type='checkbox']:checked::before {
   background: var(--black);
   color: var(--white);
 }

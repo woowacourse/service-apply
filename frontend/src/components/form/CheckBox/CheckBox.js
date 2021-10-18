@@ -1,14 +1,14 @@
-import React, { useEffect } from "react";
-import PropTypes from "prop-types";
-import Label from "../../@common/Label/Label";
-import styles from "./CheckBox.module.css";
-import useFormContext from "../../../hooks/useFormContext";
+import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
+import Label from '../../@common/Label/Label';
+import styles from './CheckBox.module.css';
+import useFormContext from '../../../hooks/useFormContext';
 
 const CheckBox = ({ name, label, required, ...props }) => {
   const { value, handleChange, register, unRegister } = useFormContext();
 
   useEffect(() => {
-    register(name, "", required);
+    register(name, '', required);
 
     return () => {
       unRegister(name);
@@ -37,7 +37,7 @@ CheckBox.propTypes = {
 };
 
 CheckBox.defaultProps = {
-  label: "",
+  label: '',
   required: false,
 };
 

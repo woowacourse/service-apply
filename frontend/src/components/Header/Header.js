@@ -1,10 +1,10 @@
-import classNames from "classnames";
-import React, { useState } from "react";
-import { Link, useHistory } from "react-router-dom";
-import MemberIcon from "../../assets/icon/member-icon.svg";
-import PATH from "../../constants/path";
-import useTokenContext from "../../hooks/useTokenContext";
-import styles from "./Header.module.css";
+import classNames from 'classnames';
+import React, { useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
+import MemberIcon from '../../assets/icon/member-icon.svg';
+import PATH from '../../constants/path';
+import useTokenContext from '../../hooks/useTokenContext';
+import styles from './Header.module.css';
 
 const Header = () => {
   const history = useHistory();
@@ -45,11 +45,11 @@ const Header = () => {
             </Link>
           </h1>
 
-          <div className={styles["link-container"]}>
+          <div className={styles['link-container']}>
             {token ? (
-              <div className={styles["member-menu-container"]}>
+              <div className={styles['member-menu-container']}>
                 <label
-                  className={classNames(styles["checkbox-label"], {
+                  className={classNames(styles['checkbox-label'], {
                     [styles.checked]: isShowMemberMenu,
                     [styles.unchecked]: !isShowMemberMenu,
                   })}
@@ -66,36 +66,25 @@ const Header = () => {
 
                 {isShowMemberMenu && (
                   <>
-                    <ul className={styles["member-menu-list"]}>
-                      <li className={styles["member-menu-listitem"]}>
-                        <button
-                          type="button"
-                          onClick={() => routeTo({ pathname: PATH.MY_PAGE })}
-                        >
+                    <ul className={styles['member-menu-list']}>
+                      <li className={styles['member-menu-listitem']}>
+                        <button type="button" onClick={() => routeTo({ pathname: PATH.MY_PAGE })}>
                           마이페이지
                         </button>
                       </li>
-                      <li className={styles["member-menu-listitem"]}>
+                      <li className={styles['member-menu-listitem']}>
                         <button
                           type="button"
-                          onClick={() =>
-                            routeTo({ pathname: PATH.MY_APPLICATION })
-                          }
+                          onClick={() => routeTo({ pathname: PATH.MY_APPLICATION })}
                         >
                           내 지원 현황
                         </button>
                       </li>
-                      <li
-                        className={styles["member-menu-listitem"]}
-                        onClick={onLogout}
-                      >
+                      <li className={styles['member-menu-listitem']} onClick={onLogout}>
                         로그아웃
                       </li>
                     </ul>
-                    <div
-                      className={styles.dimmed}
-                      onMouseDown={() => setIsShowMemberMenu(false)}
-                    />
+                    <div className={styles.dimmed} onMouseDown={() => setIsShowMemberMenu(false)} />
                   </>
                 )}
               </div>

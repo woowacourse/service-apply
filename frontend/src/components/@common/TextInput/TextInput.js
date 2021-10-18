@@ -1,22 +1,15 @@
-import React from "react";
-import PropTypes from "prop-types";
-import classNames from "classnames";
-import styles from "./TextInput.module.css";
+import React from 'react';
+import PropTypes from 'prop-types';
+import classNames from 'classnames';
+import styles from './TextInput.module.css';
 
-const TextInput = ({
-  className,
-  type,
-  readOnly,
-  value,
-  maxLength,
-  ...props
-}) => {
+const TextInput = ({ className, type, readOnly, value, maxLength, ...props }) => {
   return (
     <input
       type={type}
       value={value}
       maxLength={maxLength}
-      className={classNames(styles["text-input"], className)}
+      className={classNames(styles['text-input'], className)}
       readOnly={readOnly}
       {...props}
     />
@@ -25,17 +18,17 @@ const TextInput = ({
 
 TextInput.propTypes = {
   className: PropTypes.string,
-  type: PropTypes.oneOf(["text", "email", "password", "tel", "number", "url"]),
+  type: PropTypes.oneOf(['text', 'email', 'password', 'tel', 'number', 'url']),
   readOnly: PropTypes.bool,
   value: PropTypes.string,
   maxLength: PropTypes.number,
 };
 
 TextInput.defaultProps = {
-  className: "",
-  type: "text",
+  className: '',
+  type: 'text',
   readOnly: false,
-  value: "",
+  value: '',
   maxLength: undefined,
 };
 

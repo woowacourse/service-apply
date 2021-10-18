@@ -1,7 +1,7 @@
-import React from "react";
-import PropTypes from "prop-types";
-import classNames from "classnames";
-import styles from "./Form.module.css";
+import React from 'react';
+import PropTypes from 'prop-types';
+import classNames from 'classnames';
+import styles from './Form.module.css';
 
 const Form = ({ children, actions, className, ...props }) => {
   return (
@@ -17,7 +17,7 @@ Form.propTypes = {
 };
 
 Form.defaultProps = {
-  className: "",
+  className: '',
 };
 
 export default Form;

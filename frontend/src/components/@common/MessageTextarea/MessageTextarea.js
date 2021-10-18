@@ -1,9 +1,9 @@
-import classNames from "classnames";
-import PropTypes from "prop-types";
-import Description from "../Description/Description";
-import Label from "../Label/Label";
-import Textarea from "../Textarea/Textarea";
-import styles from "./MessageTextarea.module.css";
+import classNames from 'classnames';
+import PropTypes from 'prop-types';
+import Description from '../Description/Description';
+import Label from '../Label/Label';
+import Textarea from '../Textarea/Textarea';
+import styles from './MessageTextarea.module.css';
 
 const MessageTextarea = ({
   label,
@@ -19,11 +19,11 @@ const MessageTextarea = ({
 }) => {
   return (
     <div className={classNames(styles.box, className)}>
-      <div className={styles["text-field"]}>
+      <div className={styles['text-field']}>
         <Label required={required}>{label}</Label>
         {description && <Description>{description}</Description>}
         {maxLength && maxLength > 0 && (
-          <div className={styles["length-limit"]}>
+          <div className={styles['length-limit']}>
             {value?.length} / {maxLength}
           </div>
         )}
@@ -36,7 +36,7 @@ const MessageTextarea = ({
           {...props}
         />
       </div>
-      <p className={styles["rule-field"]}>{errorMessage}</p>
+      <p className={styles['rule-field']}>{errorMessage}</p>
     </div>
   );
 };
@@ -51,9 +51,9 @@ MessageTextarea.propTypes = {
 };
 
 MessageTextarea.defaultProps = {
-  label: "",
+  label: '',
   required: false,
-  description: "",
+  description: '',
 };
 
 export default MessageTextarea;

@@ -1,20 +1,20 @@
-import React from "react";
-import { useHistory } from "react-router";
-import myPageImage from "../../assets/image/myPage.svg";
-import Container from "../../components/@common/Container/Container";
-import MessageTextInput from "../../components/@common/MessageTextInput/MessageTextInput";
-import BirthField from "../../components/form/BirthField/BirthField";
-import Form from "../../components/form/Form/Form";
-import FormInput from "../../components/form/FormInput/FormInput";
-import SubmitButton from "../../components/form/SubmitButton/SubmitButton";
-import CancelButton from "../../components/form/CancelButton/CancelButton";
-import PATH from "../../constants/path";
-import useForm from "../../hooks/useForm";
-import useUserInfoContext from "../../hooks/useUserInfoContext";
-import FormProvider from "../../provider/FormProvider";
-import * as styles from "./MyPageEdit.module.css";
-import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
-import { validatePhoneNumber } from "../../utils/validation/phoneNumber";
+import React from 'react';
+import { useHistory } from 'react-router';
+import myPageImage from '../../assets/image/myPage.svg';
+import Container from '../../components/@common/Container/Container';
+import MessageTextInput from '../../components/@common/MessageTextInput/MessageTextInput';
+import BirthField from '../../components/form/BirthField/BirthField';
+import Form from '../../components/form/Form/Form';
+import FormInput from '../../components/form/FormInput/FormInput';
+import SubmitButton from '../../components/form/SubmitButton/SubmitButton';
+import CancelButton from '../../components/form/CancelButton/CancelButton';
+import PATH from '../../constants/path';
+import useForm from '../../hooks/useForm';
+import useUserInfoContext from '../../hooks/useUserInfoContext';
+import FormProvider from '../../provider/FormProvider';
+import * as styles from './MyPageEdit.module.css';
+import { ERROR_MESSAGE, SUCCESS_MESSAGE } from '../../constants/messages';
+import { validatePhoneNumber } from '../../utils/validation/phoneNumber';
 
 const MyPageEdit = () => {
   const history = useHistory();
@@ -39,11 +39,11 @@ const MyPageEdit = () => {
   return (
     <Container title={`${userInfo?.email} 님`}>
       <div className={styles.box}>
-        <div className={styles["illust-box"]}>
+        <div className={styles['illust-box']}>
           <img src={myPageImage} alt="자기소개서 일러스트" />
         </div>
         <FormProvider {...methods}>
-          <Form className={styles["input-box"]} onSubmit={handleSubmit}>
+          <Form className={styles['input-box']} onSubmit={handleSubmit}>
             <MessageTextInput
               name="name"
               label="이름"

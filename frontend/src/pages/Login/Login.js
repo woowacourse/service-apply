@@ -1,18 +1,16 @@
-import React from "react";
-import { generatePath, Link, useHistory, useLocation } from "react-router-dom";
-import Container, {
-  CONTAINER_SIZE,
-} from "../../components/@common/Container/Container";
-import Form from "../../components/form/Form/Form";
-import FormInput from "../../components/form/FormInput/FormInput";
-import SubmitButton from "../../components/form/SubmitButton/SubmitButton";
-import { ERROR_MESSAGE } from "../../constants/messages";
-import PATH, { PARAM } from "../../constants/path";
-import useForm from "../../hooks/useForm";
-import useTokenContext from "../../hooks/useTokenContext";
-import FormProvider from "../../provider/FormProvider";
-import { generateQuery } from "../../utils/route/query";
-import styles from "./Login.module.css";
+import React from 'react';
+import { generatePath, Link, useHistory, useLocation } from 'react-router-dom';
+import Container, { CONTAINER_SIZE } from '../../components/@common/Container/Container';
+import Form from '../../components/form/Form/Form';
+import FormInput from '../../components/form/FormInput/FormInput';
+import SubmitButton from '../../components/form/SubmitButton/SubmitButton';
+import { ERROR_MESSAGE } from '../../constants/messages';
+import PATH, { PARAM } from '../../constants/path';
+import useForm from '../../hooks/useForm';
+import useTokenContext from '../../hooks/useTokenContext';
+import FormProvider from '../../provider/FormProvider';
+import { generateQuery } from '../../utils/route/query';
+import styles from './Login.module.css';
 
 const Login = () => {
   const history = useHistory();
@@ -58,7 +56,7 @@ const Login = () => {
         <Form
           onSubmit={handleSubmit}
           footer={
-            <Link to={PATH.FIND_PASSWORD} className={styles["find-password"]}>
+            <Link to={PATH.FIND_PASSWORD} className={styles['find-password']}>
               비밀번호 찾기
             </Link>
           }
@@ -80,7 +78,7 @@ const Login = () => {
           <div className={styles.buttons}>
             <SubmitButton>로그인</SubmitButton>
           </div>
-          <Link to={PATH.FIND_PASSWORD} className={styles["find-password"]}>
+          <Link to={PATH.FIND_PASSWORD} className={styles['find-password']}>
             비밀번호 찾기
           </Link>
         </Form>

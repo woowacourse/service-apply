@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
-import * as Api from "../api";
-import useTokenContext from "./useTokenContext";
+import { useState, useEffect } from 'react';
+import * as Api from '../api';
+import useTokenContext from './useTokenContext';
 
 const useMissions = (recruitmentIds) => {
   const { token } = useTokenContext();
@@ -9,15 +9,11 @@ const useMissions = (recruitmentIds) => {
 
   const initMissions = async () => {
     const responses = await Promise.all(
-      recruitmentIds.map((id) =>
-        Api.fetchMyMissions({ token, recruitmentId: id })
-      )
+      recruitmentIds.map((id) => Api.fetchMyMissions({ token, recruitmentId: id }))
     );
 
     const missionMap = {};
-    responses.forEach(
-      (response, index) => (missionMap[recruitmentIds[index]] = response.data)
-    );
+    responses.forEach((response, index) => (missionMap[recruitmentIds[index]] = response.data));
 
     setMissions(missionMap);
   };

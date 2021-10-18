@@ -1,8 +1,8 @@
-import React from "react";
-import TextInput from "./TextInput";
+import React from 'react';
+import TextInput from './TextInput';
 
 export default {
-  title: "form/TextInput",
+  title: 'form/TextInput',
   component: TextInput,
 };
 
@@ -17,5 +17,5 @@ export const ReadOnly = Template.bind({});
 ReadOnly.args = {
   maxLength: 100,
   readOnly: true,
-  value: "읽기전용 입력창입니다.",
+  value: '읽기전용 입력창입니다.',
 };

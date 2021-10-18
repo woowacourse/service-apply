@@ -1,8 +1,8 @@
-import React from "react";
-import PasswordFind from "./PasswordFind";
+import React from 'react';
+import PasswordFind from './PasswordFind';
 
 export default {
-  title: "pages/PasswordFind",
+  title: 'pages/PasswordFind',
   component: PasswordFind,
 };
 

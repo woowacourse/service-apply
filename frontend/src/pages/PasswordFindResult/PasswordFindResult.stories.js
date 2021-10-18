@@ -1,17 +1,17 @@
-import React from "react";
-import { MemoryRouter, Route } from "react-router-dom";
-import PasswordFindResult from "./PasswordFindResult";
+import React from 'react';
+import { MemoryRouter, Route } from 'react-router-dom';
+import PasswordFindResult from './PasswordFindResult';
 
 export default {
-  title: "pages/PasswordFindResult",
+  title: 'pages/PasswordFindResult',
   component: PasswordFindResult,
   decorators: [
     (Story) => (
       <MemoryRouter
         initialEntries={[
           {
-            pathname: "/find/result",
-            state: { email: "seojihwan213@naver.com" },
+            pathname: '/find/result',
+            state: { email: 'seojihwan213@naver.com' },
           },
         ]}
       >

@@ -1,4 +1,4 @@
-import Button, { BUTTON_VARIANT } from "../../@common/Button/Button";
+import Button, { BUTTON_VARIANT } from '../../@common/Button/Button';
 
 const CancelButton = ({ onClick }) => {
   return (

@@ -1,23 +1,23 @@
-import React, { useMemo } from "react";
-import { Link, useHistory, useLocation, generatePath } from "react-router-dom";
-import classNames from "classnames";
+import React, { useMemo } from 'react';
+import { Link, useHistory, useLocation, generatePath } from 'react-router-dom';
+import classNames from 'classnames';
 
-import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
+import RecruitmentItem from '../../components/RecruitmentItem/RecruitmentItem';
 
-import useRecruitmentContext from "../../hooks/useRecruitmentContext";
-import useTokenContext from "../../hooks/useTokenContext";
-import { generateQuery } from "../../utils/route/query";
-import PATH, { PARAM } from "../../constants/path";
-import { RECRUITS_TAB, RECRUITS_TAB_LIST } from "../../constants/tab";
-import { RECRUITMENT_STATUS } from "../../constants/recruitment";
+import useRecruitmentContext from '../../hooks/useRecruitmentContext';
+import useTokenContext from '../../hooks/useTokenContext';
+import { generateQuery } from '../../utils/route/query';
+import PATH, { PARAM } from '../../constants/path';
+import { RECRUITS_TAB, RECRUITS_TAB_LIST } from '../../constants/tab';
+import { RECRUITMENT_STATUS } from '../../constants/recruitment';
 
-import styles from "./Recruits.module.css";
+import styles from './Recruits.module.css';
 
 const BUTTON_LABEL = {
-  [RECRUITMENT_STATUS.RECRUITING]: "지원하기",
-  [RECRUITMENT_STATUS.RECRUITABLE]: "모집 예정",
-  [RECRUITMENT_STATUS.UNRECRUITABLE]: "일시 중지",
-  [RECRUITMENT_STATUS.ENDED]: "모집 종료",
+  [RECRUITMENT_STATUS.RECRUITING]: '지원하기',
+  [RECRUITMENT_STATUS.RECRUITABLE]: '모집 예정',
+  [RECRUITMENT_STATUS.UNRECRUITABLE]: '일시 중지',
+  [RECRUITMENT_STATUS.ENDED]: '모집 종료',
 };
 
 const Recruits = () => {
@@ -25,7 +25,7 @@ const Recruits = () => {
   const history = useHistory();
 
   const query = new URLSearchParams(useLocation().search);
-  const selectedTab = query.get("status") ?? RECRUITS_TAB.ALL.name;
+  const selectedTab = query.get('status') ?? RECRUITS_TAB.ALL.name;
 
   const { recruitment } = useRecruitmentContext();
 
@@ -63,11 +63,11 @@ const Recruits = () => {
   return (
     <div className={styles.box}>
       <nav className={styles.tab}>
-        <ul className={styles["tab-list"]}>
+        <ul className={styles['tab-list']}>
           {RECRUITS_TAB_LIST.map(({ name, label }) => (
             <li
               key={name}
-              className={classNames(styles["tab-item"], {
+              className={classNames(styles['tab-item'], {
                 [styles.active]: name === selectedTab,
               })}
             >
@@ -85,14 +85,12 @@ const Recruits = () => {
       </nav>
 
       {recruitment && (
-        <div className={styles["recruitment-list"]} role="list">
+        <div className={styles['recruitment-list']} role="list">
           {sortedRecruitment.map((recruitment) => (
             <RecruitmentItem
               key={recruitment.id}
               recruitment={recruitment}
-              isButtonDisabled={
-                recruitment.status !== RECRUITMENT_STATUS.RECRUITING
-              }
+              isButtonDisabled={recruitment.status !== RECRUITMENT_STATUS.RECRUITING}
               buttonLabel={BUTTON_LABEL[recruitment.status]}
               onClickButton={() => goToNewApplicationFormPage(recruitment)}
               role="listitem"

@@ -1,4 +1,4 @@
-import { ERROR_MESSAGE } from "../../constants/messages";
+import { ERROR_MESSAGE } from '../../constants/messages';
 
 const REGEX = /^[가-힣]+$/;
 

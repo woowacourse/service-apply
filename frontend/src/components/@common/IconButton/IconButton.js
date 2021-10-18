@@ -1,6 +1,6 @@
-import React from "react";
-import PropTypes from "prop-types";
-import styles from "./IconButton.module.css";
+import React from 'react';
+import PropTypes from 'prop-types';
+import styles from './IconButton.module.css';
 
 const IconButton = ({ children, type, className, src, alt, ...props }) => {
   return (
@@ -11,7 +11,7 @@ const IconButton = ({ children, type, className, src, alt, ...props }) => {
 };
 
 IconButton.propTypes = {
-  type: PropTypes.oneOf(["button", "submit", "reset"]),
+  type: PropTypes.oneOf(['button', 'submit', 'reset']),
   className: PropTypes.string,
   src: PropTypes.string.isRequired,
   alt: PropTypes.string,

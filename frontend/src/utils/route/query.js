@@ -3,9 +3,9 @@ export const parseQuery = (query) => {
 
   query
     .slice(1)
-    .split("&")
+    .split('&')
     .forEach((item) => {
-      const [key, value] = item.split("=");
+      const [key, value] = item.split('=');
 
       queryObj[key] = value;
     });
@@ -16,5 +16,5 @@ export const parseQuery = (query) => {
 export const generateQuery = (queryObj) => {
   const queryKeys = Object.keys(queryObj);
 
-  return `?${queryKeys.map((key) => `${key}=${queryObj[key]}`).join("&")}`;
+  return `?${queryKeys.map((key) => `${key}=${queryObj[key]}`).join('&')}`;
 };

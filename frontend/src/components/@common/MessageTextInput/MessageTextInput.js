@@ -1,9 +1,9 @@
-import classNames from "classnames";
-import PropTypes from "prop-types";
-import Description from "../Description/Description";
-import Label from "../Label/Label";
-import TextInput from "../TextInput/TextInput";
-import styles from "./MessageTextInput.module.css";
+import classNames from 'classnames';
+import PropTypes from 'prop-types';
+import Description from '../Description/Description';
+import Label from '../Label/Label';
+import TextInput from '../TextInput/TextInput';
+import styles from './MessageTextInput.module.css';
 
 const MessageTextInput = ({
   label,
@@ -20,16 +20,12 @@ const MessageTextInput = ({
 }) => {
   return (
     <div className={classNames(styles.box, className)}>
-      <div className={styles["text-field"]}>
+      <div className={styles['text-field']}>
         <Label className={styles.label} required={required}>
           {label}
         </Label>
-        {description && (
-          <Description className={styles.description}>
-            {description}
-          </Description>
-        )}
-        <div className={styles["input-box"]}>
+        {description && <Description className={styles.description}>{description}</Description>}
+        <div className={styles['input-box']}>
           <TextInput
             required={required}
             value={value}
@@ -39,7 +35,7 @@ const MessageTextInput = ({
             {...props}
           />
         </div>
-        {errorMessage && <p className={styles["rule-field"]}>{errorMessage}</p>}
+        {errorMessage && <p className={styles['rule-field']}>{errorMessage}</p>}
       </div>
     </div>
   );
@@ -56,10 +52,10 @@ MessageTextInput.propTypes = {
 };
 
 MessageTextInput.defaultProps = {
-  label: "",
-  initialValue: "",
+  label: '',
+  initialValue: '',
   required: false,
-  description: "",
+  description: '',
 };
 
 export default MessageTextInput;

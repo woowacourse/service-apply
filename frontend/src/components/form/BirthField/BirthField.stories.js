@@ -1,8 +1,8 @@
-import React from "react";
-import BirthField from "./BirthField";
+import React from 'react';
+import BirthField from './BirthField';
 
 export default {
-  title: "form/BirthField",
+  title: 'form/BirthField',
   component: BirthField,
 };
 

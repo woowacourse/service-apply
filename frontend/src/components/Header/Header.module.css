@@ -58,7 +58,7 @@
 }
 
 .checkbox-label.unchecked::after {
-  content: "▾";
+  content: '▾';
   display: block;
   font-size: 1.25rem;
   margin-left: 0.375rem;
@@ -67,7 +67,7 @@
 }
 
 .checkbox-label.checked::after {
-  content: "▾";
+  content: '▾';
   display: block;
   font-size: 1.25rem;
   margin-left: 0.375rem;

@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
-import PropTypes from "prop-types";
+import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 
-import useFormContext from "../../../hooks/useFormContext";
-import MessageTextarea from "../../@common/MessageTextarea/MessageTextarea";
+import useFormContext from '../../../hooks/useFormContext';
+import MessageTextarea from '../../@common/MessageTextarea/MessageTextarea';
 
 const FormTextarea = ({
   label,
@@ -13,8 +13,7 @@ const FormTextarea = ({
   required,
   ...props
 }) => {
-  const { value, errorMessage, handleChange, register, unRegister } =
-    useFormContext();
+  const { value, errorMessage, handleChange, register, unRegister } = useFormContext();
 
   useEffect(() => {
     register(name, initialValue, required);
@@ -49,10 +48,10 @@ FormTextarea.propTypes = {
 };
 
 FormTextarea.defaultProps = {
-  label: "",
-  initialValue: "",
+  label: '',
+  initialValue: '',
   required: false,
-  description: "",
+  description: '',
 };
 
 export default FormTextarea;

@@ -1,6 +1,6 @@
-import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import PropTypes from "prop-types";
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 const ScrollToTop = ({ children }) => {
   const { pathname } = useLocation();

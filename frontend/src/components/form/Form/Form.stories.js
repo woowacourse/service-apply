@@ -1,8 +1,8 @@
-import React from "react";
-import Form from "./Form";
+import React from 'react';
+import Form from './Form';
 
 export default {
-  title: "form/Form",
+  title: 'form/Form',
   component: Form,
 };
 

@@ -1,7 +1,7 @@
-import { Redirect, Route } from "react-router-dom";
-import { ERROR_MESSAGE } from "../../constants/messages";
-import PATH from "../../constants/path";
-import useTokenContext from "../../hooks/useTokenContext";
+import { Redirect, Route } from 'react-router-dom';
+import { ERROR_MESSAGE } from '../../constants/messages';
+import PATH from '../../constants/path';
+import useTokenContext from '../../hooks/useTokenContext';
 
 const PrivateRoute = ({ ...props }) => {
   const { token } = useTokenContext();
