@@ -199,13 +199,13 @@ class ApplicationFormServiceTest {
     fun `모집이 없는 경우 지원할 수 없다`() {
         every { recruitmentRepository.findByIdOrNull(any()) } returns null
 
-        val message = assertThrows<IllegalArgumentException> {
+        val message = assertThrows<NoSuchElementException> {
             applicationFormService.create(
                 userId,
                 createApplicationFormRequest
             )
         }.message
-        assertThat(message).isEqualTo("지원하는 모집이 존재하지 않습니다.")
+        assertThat(message).isEqualTo("해당 내용은 존재하지 않습니다.")
     }
 
     @Test
