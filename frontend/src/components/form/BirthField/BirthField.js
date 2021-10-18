@@ -20,8 +20,7 @@ const days = Array(31)
   .map((_, idx) => idx + 1);
 
 const BirthField = ({ required, className, readOnly, initialValue }) => {
-  const { value, errorMessage, handleChange, register, unRegister } =
-    useFormContext();
+  const { value, errorMessage, handleChange, register, unRegister } = useFormContext();
 
   const [initialDate, setInitialDate] = useState(null);
 

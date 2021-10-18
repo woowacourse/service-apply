@@ -1,10 +1,7 @@
 import classNames from "classnames";
 import PropTypes from "prop-types";
 import { useEffect } from "react";
-import {
-  fetchAuthenticationCode,
-  fetchVerifyAuthenticationCode,
-} from "../../../api";
+import { fetchAuthenticationCode, fetchVerifyAuthenticationCode } from "../../../api";
 import { ERROR_MESSAGE } from "../../../constants/messages";
 import useFormContext from "../../../hooks/useFormContext";
 import useTimer from "../../../hooks/useTimer";
@@ -28,8 +25,7 @@ const INPUT_NAME = {
 const AUTHENTICATED_CODE_VALIDITY_SECONDS = 600;
 
 const EmailField = ({ emailStatus, setEmailStatus }) => {
-  const { value, errorMessage, handleChange, reset, register, unRegister } =
-    useFormContext();
+  const { value, errorMessage, handleChange, reset, register, unRegister } = useFormContext();
   const { timerSeconds, setTimerSeconds, startTimer, resetTimer } = useTimer(
     AUTHENTICATED_CODE_VALIDITY_SECONDS
   );
@@ -57,13 +53,7 @@ const EmailField = ({ emailStatus, setEmailStatus }) => {
 
     if (emailStatus === EMAIL_STATUS.AUTHENTICATED) {
       return (
-        <div
-          className={classNames(
-            styles["authenticated"],
-            styles["input-button"]
-          )}
-          disabled
-        >
+        <div className={classNames(styles["authenticated"], styles["input-button"])} disabled>
           ✓
         </div>
       );
@@ -143,18 +133,14 @@ const EmailField = ({ emailStatus, setEmailStatus }) => {
             {getEmailButton()}
           </div>
         </div>
-        {errorMessage.email && (
-          <p className={styles["rule-field"]}>{errorMessage.email}</p>
-        )}
+        {errorMessage.email && <p className={styles["rule-field"]}>{errorMessage.email}</p>}
       </div>
 
       {emailStatus === EMAIL_STATUS.WAITING_AUTHENTICATION && (
         <div className={styles.box}>
           <div className={styles.timer}>
             인증코드 유효시간
-            <span className={styles["timer-time"]}>
-              {formatTimerText(timerSeconds)}
-            </span>
+            <span className={styles["timer-time"]}>{formatTimerText(timerSeconds)}</span>
           </div>
           <div className={styles.box}>
             <div className={styles["text-field"]}>

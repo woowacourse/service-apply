@@ -13,8 +13,7 @@ const FormTextarea = ({
   required,
   ...props
 }) => {
-  const { value, errorMessage, handleChange, register, unRegister } =
-    useFormContext();
+  const { value, errorMessage, handleChange, register, unRegister } = useFormContext();
 
   useEffect(() => {
     register(name, initialValue, required);

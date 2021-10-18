@@ -24,11 +24,7 @@ const MessageTextInput = ({
         <Label className={styles.label} required={required}>
           {label}
         </Label>
-        {description && (
-          <Description className={styles.description}>
-            {description}
-          </Description>
-        )}
+        {description && <Description className={styles.description}>{description}</Description>}
         <div className={styles["input-box"]}>
           <TextInput
             required={required}
