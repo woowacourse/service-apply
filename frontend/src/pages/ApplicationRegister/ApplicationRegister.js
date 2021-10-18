@@ -1,11 +1,6 @@
-<<<<<<< HEAD
-import React, { useCallback, useEffect, useState } from "react";
-import { generatePath, useHistory, useLocation, useParams } from "react-router-dom";
-=======
 import React from "react";
 import { generatePath, useHistory } from "react-router";
 import { useLocation, useParams } from "react-router-dom";
->>>>>>> a574861 (refactor: 지원서 작성 페이지 리팩토링)
 import * as Api from "../../api";
 import Button, { BUTTON_VARIANT } from "../../components/@common/Button/Button";
 import Container from "../../components/@common/Container/Container";
@@ -54,52 +49,25 @@ const ApplicationRegister = () => {
     status,
   });
 
-<<<<<<< HEAD
-  const [recruitmentItems, setRecruitmentItems] = useState([]);
-  const [initialFormData, setInitialFormData] = useState({});
-  const [modifiedDateTime, setModifiedDateTime] = useState("");
+  const combineAnswers = (answers) =>
+    recruitmentItems.map((item, index) => ({
+      contents: answers[index] ?? "",
+      recruitmentItemId: item.id,
+    }));
 
-  const fetchRecruitmentItems = useCallback(async () => {
-    try {
-      const { data } = await Api.fetchItems(recruitmentId);
-
-      setRecruitmentItems(data);
-    } catch (e) {
-      alert(e.response.data.message);
-      history.replace(PATH.HOME);
-    }
-  }, [history, recruitmentId]);
-
-  const fillForm = (applicationForm) => {
-    setInitialFormData((prev) => {
-      const answers = applicationForm.answers.reduce((acc, cur, index) => {
-        acc[`recruitment-item-${index}`] = cur.contents;
-
-        return acc;
-      }, {});
-
-      return {
-        ...prev,
-        referenceUrl: applicationForm.referenceUrl,
-        ...answers,
-      };
-    });
-
-    setModifiedDateTime(formatDateTime(new Date(applicationForm.modifiedDateTime)));
-  };
-
-  const fetchApplicationForm = useCallback(async () => {
-=======
   const save = async ({ referenceUrl, answers }) => {
->>>>>>> a574861 (refactor: 지원서 작성 페이지 리팩토링)
     try {
       await Api.updateForm({
         token,
-        data: { recruitmentId, referenceUrl, answers, submitted: true },
+        data: {
+          recruitmentId,
+          referenceUrl,
+          answers: combineAnswers(answers),
+          submitted: true,
+        },
       });
 
       setModifiedDateTime(formatDateTime(new Date()));
-
       alert(SUCCESS_MESSAGE.API.SUBMIT_APPLICATION);
     } catch (e) {
       alert(e.response.data.message);
@@ -112,15 +80,17 @@ const ApplicationRegister = () => {
     try {
       await Api.updateForm({
         token,
-        data: { recruitmentId, referenceUrl, answers, submitted: false },
+        data: {
+          recruitmentId,
+          referenceUrl,
+          answers: combineAnswers(answers),
+          submitted: false,
+        },
       });
 
       setModifiedDateTime(formatDateTime(new Date()));
-
       alert(SUCCESS_MESSAGE.API.SAVE_APPLICATION);
-
       if (status === PARAM.APPLICATION_FORM_STATUS.EDIT) return;
-
       const path = {
         pathname: generatePath(PATH.APPLICATION_FORM, {
           status: PARAM.APPLICATION_FORM_STATUS.EDIT,
@@ -128,7 +98,6 @@ const ApplicationRegister = () => {
         state: { currentRecruitment },
         search: generateQuery({ recruitmentId }),
       };
-
       history.replace(path);
     } catch (e) {
       alert(e.response.data.message);
@@ -136,7 +105,9 @@ const ApplicationRegister = () => {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
     if (!window.confirm(CONFIRM_MESSAGE.SUBMIT_APPLICATION)) return;
 
     save(form);
@@ -147,44 +118,6 @@ const ApplicationRegister = () => {
       {currentRecruitment && <RecruitmentItem recruitment={currentRecruitment} />}
 
       <Container title="지원서 작성">
-<<<<<<< HEAD
-        <FormProvider value={value} {...methods}>
-          <Form onSubmit={handleSubmit}>
-            {status === PARAM.APPLICATION_FORM_STATUS.EDIT && (
-              <p className={styles["autosave-indicator"]}>
-                {`임시 저장되었습니다. (${modifiedDateTime})`}
-              </p>
-            )}
-            {recruitmentItems.length !== 0 &&
-              recruitmentItems.map((item, index) => (
-                <FormTextarea
-                  key={`recruitment-item-${index}`}
-                  name={`recruitment-item-${index}`}
-                  initialValue={initialFormData[`recruitment-item-${index}`]}
-                  label={`${index + 1}. ${item.title}`}
-                  description={item.description}
-                  placeholder="내용을 입력해 주세요."
-                  maxLength={item.maximumLength}
-                  className={styles["label-bold"]}
-                  required
-                />
-              ))}
-
-            <FormInput
-              name="url"
-              type="url"
-              initialValue={initialFormData.referenceUrl}
-              description={
-                <div className={styles["description-url"]}>
-                  자신을 드러낼 수 있는 개인 블로그, GitHub, 포트폴리오 주소 등이 있다면 입력해
-                  주세요.
-                  <div className={styles["description-url-small"]}>
-                    여러 개가 있는 경우 Notion, Google 문서 등을 사용하여 하나로 묶어 주세요.
-                  </div>
-                </div>
-              }
-              label="URL"
-=======
         <Form onSubmit={handleSubmit}>
           {status === PARAM.APPLICATION_FORM_STATUS.EDIT && (
             <p className={styles["autosave-indicator"]}>
@@ -201,31 +134,9 @@ const ApplicationRegister = () => {
               description={item.description}
               placeholder="내용을 입력해 주세요."
               maxLength={item.maximumLength}
->>>>>>> a574861 (refactor: 지원서 작성 페이지 리팩토링)
               className={styles["label-bold"]}
               required
             />
-<<<<<<< HEAD
-
-            <div className={styles["box-agree"]}>
-              <Label className={styles["text-bold"]} required>
-                지원서 작성 내용 사실 확인
-              </Label>
-              <Description className={styles["description-agree"]}>
-                기재한 사실 중 허위사실이 발견되는 즉시, 교육 대상자에서 제외되며 향후 지원도
-                불가능합니다.
-              </Description>
-              <CheckBox name="agree" label="동의합니다." required />
-            </div>
-
-            <div className={styles.buttons}>
-              <ResetButton />
-              <TempSaveButton onSaveTemp={handelSaveTemp} />
-              <SubmitButton />
-            </div>
-          </Form>
-        </FormProvider>
-=======
           ))}
 
           <MessageTextInput
@@ -233,11 +144,10 @@ const ApplicationRegister = () => {
             type="url"
             description={
               <div className={styles["description-url"]}>
-                자신을 드러낼 수 있는 개인 블로그, GitHub, 포트폴리오 주소 등이
-                있다면 입력해 주세요.
+                자신을 드러낼 수 있는 개인 블로그, GitHub, 포트폴리오 주소 등이 있다면 입력해
+                주세요.
                 <div className={styles["description-url-small"]}>
-                  여러 개가 있는 경우 Notion, Google 문서 등을 사용하여 하나로
-                  묶어 주세요.
+                  여러 개가 있는 경우 Notion, Google 문서 등을 사용하여 하나로 묶어 주세요.
                 </div>
               </div>
             }
@@ -254,34 +164,26 @@ const ApplicationRegister = () => {
               지원서 작성 내용 사실 확인
             </Label>
             <Description className={styles["description-agree"]}>
-              기재한 사실 중 허위사실이 발견되는 즉시, 교육 대상자에서 제외되며
-              향후 지원도 불가능합니다.
+              기재한 사실 중 허위사실이 발견되는 즉시, 교육 대상자에서 제외되며 향후 지원도
+              불가능합니다.
             </Description>
             <CheckBox
               name="agree"
               label="동의합니다."
-              value={form[APPLICATION_REGISTER_FORM.IS_TERM_AGREED]}
+              checked={form[APPLICATION_REGISTER_FORM.IS_TERM_AGREED]}
               onChange={handleChange[APPLICATION_REGISTER_FORM.IS_TERM_AGREED]}
               required
             />
           </div>
 
           <div className={styles.buttons}>
-            <Button
-              type="reset"
-              variant={BUTTON_VARIANT.OUTLINED}
-              onClick={reset}
-            >
+            <Button type="reset" variant={BUTTON_VARIANT.OUTLINED} onClick={reset}>
               초기화
             </Button>
-            <TempSaveButton
-              onSaveTemp={() => tempSave(form)}
-              disabled={isEmpty}
-            />
-            <Button disabled={!isValid}>제출</Button>
+            <TempSaveButton onSaveTemp={() => tempSave(form)} disabled={!isValid} />
+            <Button disabled={!isValid || isEmpty}>제출</Button>
           </div>
         </Form>
->>>>>>> a574861 (refactor: 지원서 작성 페이지 리팩토링)
       </Container>
     </div>
   );

@@ -3,13 +3,13 @@ import React from "react";
 import Label from "../../@common/Label/Label";
 import styles from "./CheckBox.module.css";
 
-const CheckBox = ({ label, name, value, onChange, required, ...props }) => {
+const CheckBox = ({ label, name, checked, onChange, required, ...props }) => {
   return (
     <Label className={styles.checkbox}>
       <input
         type="checkbox"
         name={name}
-        checked={value}
+        checked={checked}
         onChange={onChange}
         required={required}
         {...props}
@@ -20,7 +20,7 @@ const CheckBox = ({ label, name, value, onChange, required, ...props }) => {
 };
 
 CheckBox.propTypes = {
-  value: PropTypes.bool.isRequired,
+  checked: PropTypes.bool.isRequired,
   onChange: PropTypes.func.isRequired,
   name: PropTypes.string,
   label: PropTypes.string,
@@ -30,6 +30,7 @@ CheckBox.propTypes = {
 CheckBox.defaultProps = {
   label: "",
   required: false,
+  checked: false,
 };
 
 export default CheckBox;

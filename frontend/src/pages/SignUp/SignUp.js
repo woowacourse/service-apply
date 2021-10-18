@@ -81,7 +81,7 @@ const Join = () => {
         <SummaryCheckField
           label="개인정보 수집 및 이용 동의"
           name={SIGN_UP_FORM.IS_TERM_AGREED}
-          value={form[SIGN_UP_FORM.IS_TERM_AGREED]}
+          checked={form[SIGN_UP_FORM.IS_TERM_AGREED]}
           onChange={handleChange[SIGN_UP_FORM.IS_TERM_AGREED]}
           required
         >

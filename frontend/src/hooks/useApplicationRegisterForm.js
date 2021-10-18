@@ -48,8 +48,7 @@ const useApplicationRegisterForm = ({
   const isEmpty =
     isAnswersEmpty || !requiredForm[APPLICATION_REGISTER_FORM.IS_TERM_AGREED];
 
-  const isValid =
-    !isEmpty && Object.values(errorMessage).filter(Boolean).length === 0;
+  const isValid = Object.values(errorMessage).filter(Boolean).length === 0;
 
   const handleChangeAnswer =
     (index) =>
@@ -92,7 +91,8 @@ const useApplicationRegisterForm = ({
       const { data } = await Api.fetchForm({ token, recruitmentId });
       const { answers, referenceUrl, modifiedDateTime } = data;
 
-      setForm({ referenceUrl, answers });
+      setRequiredForm({ answers: answers.map((answer) => answer.contents) });
+      setForm({ referenceUrl });
       setModifiedDateTime(formatDateTime(new Date(modifiedDateTime)));
     } catch (e) {
       alert(e.response.data.message);
@@ -123,7 +123,7 @@ const useApplicationRegisterForm = ({
 
   useEffect(() => {
     init();
-  }, []);
+  }, [status]);
 
   const reset = () => {
     setRequiredForm(RequiredFormInitialValue);
