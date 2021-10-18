@@ -77,7 +77,7 @@ class GroupMailTargetDialog(
             addValueChangeListener {
                 mailTargetsGrid.setItems(mailTargetService.findMailTargets(evaluationItem.value.id, it.value))
                 if (it.value == EvaluationStatus.FAIL) {
-                    createNotification("점수가 0인 탈락자는 나오지 않습니다.", 3000)
+                    createNotification("평가되지 않은 탈락자는 나오지 않습니다.", 3000)
                 }
             }
         }
