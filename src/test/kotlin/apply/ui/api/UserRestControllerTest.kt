@@ -44,6 +44,7 @@ private fun RegisterUserRequest.withPlainPassword(password: String): Map<String,
         "gender" to gender,
         "birthday" to birthday,
         "password" to password,
+        "confirmPassword" to password,
         "authenticationCode" to authenticationCode
     )
 }
@@ -76,6 +77,7 @@ internal class UserRestControllerTest : RestControllerTest() {
         gender = Gender.MALE,
         birthday = createLocalDate(1995, 2, 2),
         password = Password(PASSWORD),
+        confirmPassword = Password(PASSWORD),
         authenticationCode = "3ea9fa6c"
     )
 
@@ -98,11 +100,12 @@ internal class UserRestControllerTest : RestControllerTest() {
         userPasswordFindRequest.copy(birthday = createLocalDate(1995, 4, 4))
 
     private val validEditPasswordRequest = EditPasswordRequest(
-        password = Password(PASSWORD),
-        newPassword = Password(NEW_PASSWORD)
+        oldPassword = Password(PASSWORD),
+        password = Password(NEW_PASSWORD),
+        confirmPassword = Password(NEW_PASSWORD)
     )
 
-    private val inValidEditPasswordRequest = validEditPasswordRequest.copy(password = Password(WRONG_PASSWORD))
+    private val inValidEditPasswordRequest = validEditPasswordRequest.copy(oldPassword = Password(WRONG_PASSWORD))
 
     private val userKeyword = "아마찌"
 
@@ -297,15 +300,17 @@ internal class UserRestControllerTest : RestControllerTest() {
 
     private fun createValidEditPasswordRequest(): Map<String, String> {
         return mapOf(
-            "password" to PASSWORD,
-            "newPassword" to NEW_PASSWORD
+            "oldPassword" to PASSWORD,
+            "password" to NEW_PASSWORD,
+            "confirmPassword" to NEW_PASSWORD,
         )
     }
 
     private fun createInValidEditPasswordRequest(): Map<String, String> {
         return mapOf(
-            "password" to WRONG_PASSWORD,
-            "newPassword" to NEW_PASSWORD
+            "oldPassword" to WRONG_PASSWORD,
+            "password" to NEW_PASSWORD,
+            "confirmPassword" to NEW_PASSWORD
         )
     }
 }
