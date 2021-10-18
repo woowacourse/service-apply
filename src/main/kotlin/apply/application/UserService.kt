@@ -28,7 +28,8 @@ class UserService(
     }
 
     fun editPassword(id: Long, request: EditPasswordRequest) {
-        userRepository.getById(id).changePassword(request.password, request.newPassword)
+        require(request.password == request.confirmPassword) { "새 비밀번호가 일치하지 않습니다." }
+        userRepository.getById(id).changePassword(request.oldPassword, request.password)
     }
 
     fun getInformation(id: Long): UserResponse {
