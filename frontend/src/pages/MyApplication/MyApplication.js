@@ -22,6 +22,18 @@ const missionLabel = (submitted, missionStatus) => {
   return labelMap[missionStatus];
 };
 
+const applicationLabel = (submitted, recruitable) => {
+  if (!recruitable) {
+    return "제출불가";
+  }
+
+  return submitted ? "제출완료" : "수정하기";
+};
+
+const isApplicationDisabled = (submitted, recruitable) => {
+  return submitted || !recruitable;
+};
+
 const MyApplication = () => {
   const history = useHistory();
   const { token } = useTokenContext();
@@ -110,8 +122,8 @@ const MyApplication = () => {
           <div className={styles["recruit-panel-inner"]}>
             <RecruitmentItem
               recruitment={{ ...recruitment, title: "내 지원서" }}
-              buttonLabel={submitted ? "제출완료" : "수정하기"}
-              isButtonDisabled={submitted}
+              buttonLabel={applicationLabel(submitted, recruitment.recruitable)}
+              isButtonDisabled={isApplicationDisabled(submitted, recruitment.recruitable)}
               onClickButton={routeToApplicationForm(recruitment)}
             />
 
