@@ -10,6 +10,8 @@ export const ERROR_MESSAGE = {
     URL: "http(s)를 포함한 정확한 URL을 입력해 주세요.",
     TIMEOUT_EMAIL_AUTHENTICATION_CODE:
       "이메일 인증코드 유효시간이 초과되었습니다. 이메일 인증코드를 재발급해주세요.",
+    PULL_REQUEST_URL:
+      "정확한 Pull Request 주소를 입력해주세요. ex) https://github.com/woowacourse/mission/pull/1",
   },
   API: {
     ALREADY_REGISTER: "이미 지원한 이력이 있습니다.",
