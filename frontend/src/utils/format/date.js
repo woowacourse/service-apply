@@ -15,10 +15,6 @@ export const formatDateTime = (value) => {
   ).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
 };
 
-// TODO: 제거
-export const formatBirthday = ({ year, month, day }) =>
-  `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-
 export const formatDate = (value) => {
   const year = value.getFullYear();
   const month = value.getMonth();

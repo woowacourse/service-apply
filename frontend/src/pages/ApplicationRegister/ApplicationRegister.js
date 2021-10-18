@@ -10,7 +10,6 @@ import MessageTextarea from "../../components/@common/MessageTextarea/MessageTex
 import MessageTextInput from "../../components/@common/MessageTextInput/MessageTextInput";
 import CheckBox from "../../components/form/CheckBox/CheckBox";
 import Form from "../../components/form/Form/Form";
-import TempSaveButton from "../../components/form/TempSaveButton/TempSaveButton";
 import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
 import FORM from "../../constants/form";
 import { CONFIRM_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
@@ -182,7 +181,9 @@ const ApplicationRegister = () => {
             <Button type="reset" variant={BUTTON_VARIANT.OUTLINED} onClick={reset}>
               초기화
             </Button>
-            <TempSaveButton onSaveTemp={() => tempSave(form)} disabled={!isValid} />
+            <Button type="button" onClick={() => tempSave(form)} disabled={!isValid}>
+              임시 저장
+            </Button>
             <Button disabled={!isValid || isEmpty}>제출</Button>
           </div>
         </Form>
