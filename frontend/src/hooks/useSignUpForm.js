@@ -1,5 +1,4 @@
 import { useState } from "react";
-import FORM from "../constants/form";
 import { ERROR_MESSAGE } from "../constants/messages";
 import { formatHyphen, PHONE_NUMBER_HYPHEN_IDX } from "../utils/format/phoneNumber";
 import { isValidEmail } from "../utils/validation/email";

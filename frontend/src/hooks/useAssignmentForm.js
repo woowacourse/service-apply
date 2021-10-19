@@ -1,5 +1,4 @@
 import { useState } from "react";
-import FORM from "../constants/form";
 import { ERROR_MESSAGE } from "../constants/messages";
 import { isValidPullRequestUrl } from "../utils/validation/pullRequestUrl";
 
