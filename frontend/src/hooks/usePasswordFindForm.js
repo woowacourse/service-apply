@@ -1,4 +1,5 @@
 import { useState } from "react";
+import FORM from "../constants/form";
 import { ERROR_MESSAGE } from "../constants/messages";
 import { isValidEmail } from "../utils/validation/email";
 import { isValidName } from "../utils/validation/name";
@@ -43,6 +44,8 @@ const usePasswordFindForm = () => {
   };
 
   const handleChangeName = ({ target }) => {
+    if (target.value.length > FORM.NAME_MAX_LENGTH) return;
+
     const errorMessage = isValidName(target.value) ? "" : ERROR_MESSAGE.VALIDATION.NAME;
 
     updateErrorMessage(PASSWORD_FIND_FORM_NAME.NAME, errorMessage);
@@ -50,6 +53,8 @@ const usePasswordFindForm = () => {
   };
 
   const handleChangeEmail = ({ target }) => {
+    if (target.value.length > FORM.EMAIL_MAX_LENGTH) return;
+
     const errorMessage = isValidEmail(target.value) ? "" : ERROR_MESSAGE.VALIDATION.EMAIL;
 
     updateErrorMessage(PASSWORD_FIND_FORM_NAME.EMAIL, errorMessage);

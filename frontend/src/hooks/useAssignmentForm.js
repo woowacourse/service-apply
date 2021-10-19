@@ -1,4 +1,5 @@
 import { useState } from "react";
+import FORM from "../constants/form";
 import { ERROR_MESSAGE } from "../constants/messages";
 import { isValidPullRequestUrl } from "../utils/validation/pullRequestUrl";
 
@@ -45,6 +46,8 @@ const useAssignmentForm = () => {
   };
 
   const handleChangeGithubUsername = ({ target }) => {
+    if (target.value.length > FORM.GITHUB_USERNAME_MAX_LENGTH) return;
+
     updateRequiredForm(ASSIGNMENT_FORM_NAME.GITHUB_USERNAME, target.value);
   };
 
@@ -58,6 +61,8 @@ const useAssignmentForm = () => {
   };
 
   const handleChangeNote = ({ target }) => {
+    if (target.value.length > FORM.NOTE_MAX_LENGTH) return;
+
     updateRequiredForm(ASSIGNMENT_FORM_NAME.NOTE, target.value);
   };
 

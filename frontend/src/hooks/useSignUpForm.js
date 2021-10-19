@@ -66,6 +66,8 @@ const useSignUpForm = () => {
   };
 
   const handleChangeEmail = ({ target }) => {
+    if (target.value.length > FORM.EMAIL_MAX_LENGTH) return;
+
     const errorMessage = isValidEmail(target.value) ? "" : ERROR_MESSAGE.VALIDATION.EMAIL;
 
     updateErrorMessage(SIGN_UP_FORM_NAME.EMAIL, errorMessage);
@@ -79,6 +81,8 @@ const useSignUpForm = () => {
   };
 
   const handleChangeName = ({ target }) => {
+    if (target.value.length > FORM.NAME_MAX_LENGTH) return;
+
     const errorMessage = isValidName(target.value) ? "" : ERROR_MESSAGE.VALIDATION.NAME;
 
     updateErrorMessage(SIGN_UP_FORM_NAME.NAME, errorMessage);
@@ -98,6 +102,8 @@ const useSignUpForm = () => {
   };
 
   const handleChangePassword = ({ target }) => {
+    if (target.value.length > FORM.PASSWORD_MAX_LENGTH) return;
+
     const errorMessage = isValidPassword(target.value) ? "" : ERROR_MESSAGE.VALIDATION.PASSWORD;
 
     const confirmPasswordErrorMessage =

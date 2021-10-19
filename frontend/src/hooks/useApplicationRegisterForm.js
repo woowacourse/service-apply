@@ -3,6 +3,7 @@ import { generatePath, useHistory } from "react-router";
 import * as Api from "../api";
 import { ERROR_MESSAGE } from "../constants/messages";
 import PATH, { PARAM } from "../constants/path";
+import FORM from "../constants/form";
 import { formatDateTime } from "../utils/format/date";
 import { generateQuery } from "../utils/route/query";
 import { isValidURL } from "../utils/validation/url";
@@ -52,6 +53,8 @@ const useApplicationRegisterForm = ({
   const handleChangeAnswer =
     (index) =>
     ({ target }) => {
+      if (recruitmentItems[index].maximumLength < target.value.length) return;
+
       const newAnswers = [...requiredForm[APPLICATION_REGISTER_FORM_NAME.ANSWERS]];
 
       newAnswers[index] = target.value;
@@ -67,6 +70,8 @@ const useApplicationRegisterForm = ({
   };
 
   const handleChangeReferenceUrl = ({ target }) => {
+    if (target.value.length > FORM.REFERENCE_URL) return;
+
     const errorMessage = isValidURL(target.value) ? "" : ERROR_MESSAGE.VALIDATION.URL;
 
     updateErrorMessage(APPLICATION_REGISTER_FORM_NAME.REFERENCE_URL, errorMessage);
