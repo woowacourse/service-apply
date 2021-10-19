@@ -51,6 +51,7 @@ MessageTextarea.propTypes = {
 };
 
 MessageTextarea.defaultProps = {
+  value: "",
   label: "",
   required: false,
   description: "",
