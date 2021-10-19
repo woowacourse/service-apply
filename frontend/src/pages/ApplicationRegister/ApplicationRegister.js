@@ -12,7 +12,7 @@ import ResetButton from "../../components/form/ResetButton/ResetButton";
 import SubmitButton from "../../components/form/SubmitButton/SubmitButton";
 import TempSaveButton from "../../components/form/TempSaveButton/TempSaveButton";
 import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
-import { CONFIRM_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
+import { CONFIRM_MESSAGE, ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
 import PATH, { PARAM } from "../../constants/path";
 import useForm from "../../hooks/useForm";
 import useTokenContext from "../../hooks/useTokenContext";
@@ -67,21 +67,21 @@ const ApplicationRegister = () => {
   const handleFetchFormError = (error) => {
     if (!error) return;
 
-    alert(error.response.data.message);
+    alert(ERROR_MESSAGE.API.FETCHING_MY_APPLICATION);
     history.replace(PATH.HOME);
   };
 
   const handleSubmitError = (error) => {
     if (!error) return;
 
-    alert(error.response.data.message);
+    alert(ERROR_MESSAGE.API.SUBMIT_APPLICATION);
     history.replace(PATH.HOME);
   };
 
   const handleSaveTempError = (error) => {
     if (!error) return;
 
-    alert(error.response.data.message);
+    alert(ERROR_MESSAGE.API.SUBMIT_APPLICATION);
     history.replace(PATH.HOME);
   };
 

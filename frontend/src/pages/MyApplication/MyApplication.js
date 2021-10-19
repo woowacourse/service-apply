@@ -86,7 +86,7 @@ const MyApplication = () => {
   const handleFetchError = (error) => {
     if (!error) return;
 
-    alert(ERROR_MESSAGE.API.FETCHING_MY_APPLICATION);
+    alert(ERROR_MESSAGE.API.FETCHING_MY_APPLICATIONS);
     setMyApplications([]);
   };
 
