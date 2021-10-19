@@ -16,11 +16,12 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.select.Select
 import com.vaadin.flow.data.provider.ListDataProvider
+import dev.mett.vaadin.tooltip.Tooltips
+import dev.mett.vaadin.tooltip.config.TooltipConfiguration
 import support.views.NO_NAME
 import support.views.addSortableColumn
 import support.views.createContrastButton
 import support.views.createItemSelect
-import support.views.createNotification
 import support.views.createPrimaryButton
 import support.views.toText
 
@@ -72,13 +73,12 @@ class GroupMailTargetDialog(
         evaluationItem: Select<Evaluation>
     ): Select<EvaluationStatus> {
         return createItemSelect<EvaluationStatus>("평가 상태").apply {
+            val descriptionTooltip = TooltipConfiguration("평가되지 않은 탈락자는 나오지 않습니다.").apply { trigger = "mouseenter" }
+            Tooltips.getCurrent().setTooltip(this, descriptionTooltip)
             setItems(*EvaluationStatus.values())
             setItemLabelGenerator { it.toText() }
             addValueChangeListener {
                 mailTargetsGrid.setItems(mailTargetService.findMailTargets(evaluationItem.value.id, it.value))
-                if (it.value == EvaluationStatus.FAIL) {
-                    createNotification("평가되지 않은 탈락자는 나오지 않습니다.", 3000)
-                }
             }
         }
     }
