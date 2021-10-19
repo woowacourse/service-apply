@@ -15,8 +15,13 @@ import styles from "./PasswordEdit.module.css";
 
 const PasswordEdit = () => {
   const { token, resetToken } = useTokenContext();
-
   const history = useHistory();
+
+  const handleSubmitError = (error) => {
+    if (!error) return;
+
+    alert(ERROR_MESSAGE.API.EDIT_PASSWORD);
+  };
 
   const submit = async (value) => {
     try {
@@ -31,7 +36,7 @@ const PasswordEdit = () => {
       resetToken();
       history.push(PATH.LOGIN);
     } catch (e) {
-      alert(ERROR_MESSAGE.API.EDIT_PASSWORD);
+      handleSubmitError(e);
     }
   };
 
