@@ -1,6 +1,7 @@
 package apply.application.mail
 
 import apply.domain.mail.MailHistory
+import org.springframework.core.io.ByteArrayResource
 import java.time.LocalDateTime
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
@@ -24,15 +25,18 @@ data class MailData(
     @field:NotNull
     var sentTime: LocalDateTime = LocalDateTime.now(),
 
+    var attachFiles: Map<String, ByteArrayResource> = emptyMap(),
+
     @field:NotNull
     var id: Long = 0L
 ) {
+
     constructor(mailHistory: MailHistory) : this(
         mailHistory.subject,
         mailHistory.body,
         mailHistory.sender,
         mailHistory.recipients,
         mailHistory.sentTime,
-        mailHistory.id
+        id = mailHistory.id
     )
 }

@@ -5,6 +5,7 @@ import apply.application.MailHistoryService
 import apply.application.MailTargetService
 import apply.application.RecruitmentService
 import apply.application.UserService
+import apply.application.mail.MailService
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
@@ -30,6 +31,7 @@ class MailsFormView(
     evaluationService: EvaluationService,
     mailTargetService: MailTargetService,
     private val mailHistoryService: MailHistoryService,
+    private val mailService: MailService,
     mailProperties: MailProperties
 ) : VerticalLayout(), HasUrlParameter<String> {
     private val mailForm: MailForm = MailForm(
@@ -65,7 +67,7 @@ class MailsFormView(
         return createPrimaryButton("보내기") {
             mailForm.bindOrNull()?.let {
                 mailHistoryService.save(it)
-                // TODO: emailService.메일전송(it, uploadFile)
+                mailService.sendMailsByBCC(it, it.attachFiles)
                 UI.getCurrent().navigate(MailsView::class.java)
             }
         }
