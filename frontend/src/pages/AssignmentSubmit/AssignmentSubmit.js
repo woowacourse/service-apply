@@ -5,6 +5,7 @@ import Button, { BUTTON_VARIANT } from "../../components/@common/Button/Button";
 import Container from "../../components/@common/Container/Container";
 import MessageTextarea from "../../components/@common/MessageTextarea/MessageTextarea";
 import MessageTextInput from "../../components/@common/MessageTextInput/MessageTextInput";
+import CancelButton from "../../components/form/CancelButton/CancelButton";
 import Form from "../../components/form/Form/Form";
 import FORM from "../../constants/form";
 import { CONFIRM_MESSAGE, ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
@@ -58,12 +59,6 @@ const AssignmentSubmit = () => {
     }
   };
 
-  const handleCancel = () => {
-    if (window.confirm(CONFIRM_MESSAGE.CANCEL_ASSIGNMENT_SUBMIT)) {
-      history.goBack();
-    }
-  };
-
   const init = async () => {
     const response = await fetchAssignment({
       recruitmentId,
@@ -112,9 +107,7 @@ const AssignmentSubmit = () => {
           작성하신 내용은 과제 제출 마감전까지 수정하실 수 있습니다.
         </p>
         <div className={styles.buttons}>
-          <Button type="button" variant={BUTTON_VARIANT.OUTLINED} onClick={handleCancel}>
-            취소
-          </Button>
+          <CancelButton confirmMessage={CONFIRM_MESSAGE.CANCEL_ASSIGNMENT_SUBMIT} />
           <Button disabled={!isValid || isEmpty}>제출</Button>
         </div>
       </Form>

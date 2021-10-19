@@ -5,6 +5,7 @@ import Button from "../../components/@common/Button/Button";
 import Container, { CONTAINER_SIZE } from "../../components/@common/Container/Container";
 import MessageTextInput from "../../components/@common/MessageTextInput/MessageTextInput";
 import BirthField from "../../components/form/BirthField/BirthField";
+import CancelButton from "../../components/form/CancelButton/CancelButton";
 import Form from "../../components/form/Form/Form";
 import FORM from "../../constants/form";
 import { ERROR_MESSAGE } from "../../constants/messages";
@@ -63,9 +64,7 @@ const PasswordFind = () => {
           required
         />
         <div className={styles.buttons}>
-          <Button type="button" cancel onClick={history.goBack}>
-            이전
-          </Button>
+          <CancelButton />
           <Button disabled={!isValid || isEmpty}>제출</Button>
         </div>
       </Form>

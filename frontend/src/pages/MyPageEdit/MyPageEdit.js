@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
 import { useHistory } from "react-router";
 import myPageImage from "../../assets/image/myPage.svg";
-import Button, { BUTTON_VARIANT } from "../../components/@common/Button/Button";
+import Button from "../../components/@common/Button/Button";
 import Container from "../../components/@common/Container/Container";
 import MessageTextInput from "../../components/@common/MessageTextInput/MessageTextInput";
 import BirthField from "../../components/form/BirthField/BirthField";
+import CancelButton from "../../components/form/CancelButton/CancelButton";
 import Form from "../../components/form/Form/Form";
 import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
 import PATH from "../../constants/path";
@@ -66,9 +67,7 @@ const MyPageEdit = () => {
           <BirthField name={MY_PAGE_EDIT_FORM_NAME.BIRTHDAY} value={userInfo?.birthday} readOnly />
 
           <div className={styles.buttons}>
-            <Button type="button" variant={BUTTON_VARIANT.OUTLINED} onClick={history.goBack}>
-              취소
-            </Button>
+            <CancelButton />
             <Button disabled={!isValid || isEmpty}>확인</Button>
           </div>
         </Form>

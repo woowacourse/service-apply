@@ -3,6 +3,7 @@ import { fetchPasswordEdit } from "../../api";
 import Button from "../../components/@common/Button/Button";
 import Container, { CONTAINER_SIZE } from "../../components/@common/Container/Container";
 import MessageTextInput from "../../components/@common/MessageTextInput/MessageTextInput";
+import CancelButton from "../../components/form/CancelButton/CancelButton";
 import Form from "../../components/form/Form/Form";
 import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
 import PATH from "../../constants/path";
@@ -71,9 +72,7 @@ const PasswordEdit = () => {
           required
         />
         <div className={styles.buttons}>
-          <Button type="button" cancel onClick={history.goBack}>
-            이전
-          </Button>
+          <CancelButton />
           <Button disabled={!isValid || isEmpty}>확인</Button>
         </div>
       </Form>

@@ -4,6 +4,7 @@ import Button from "../../components/@common/Button/Button";
 import Container, { CONTAINER_SIZE } from "../../components/@common/Container/Container";
 import MessageTextInput from "../../components/@common/MessageTextInput/MessageTextInput";
 import BirthField from "../../components/form/BirthField/BirthField";
+import CancelButton from "../../components/form/CancelButton/CancelButton";
 import EmailField, { EMAIL_STATUS } from "../../components/form/EmailField/EmailField";
 import Form from "../../components/form/Form/Form";
 import GenderField from "../../components/form/GenderField/GenderField";
@@ -16,9 +17,8 @@ import useSignUpForm, { SIGN_UP_FORM_NAME } from "../../hooks/useSignUpForm";
 import useTokenContext from "../../hooks/useTokenContext";
 import styles from "./SignUp.module.css";
 
-const Join = () => {
+const SignUp = () => {
   const history = useHistory();
-
   const { postRegister } = useTokenContext();
 
   const [emailStatus, setEmailStatus] = useState(EMAIL_STATUS.INPUT);
@@ -43,28 +43,7 @@ const Join = () => {
     }
 
     try {
-      const {
-        email,
-        authenticationCode,
-        name,
-        password,
-        confirmPassword,
-        phoneNumber,
-        birthday,
-        gender,
-      } = form;
-
-      await postRegister({
-        email,
-        authenticationCode,
-        name,
-        password,
-        confirmPassword,
-        phoneNumber,
-        birthday,
-        gender,
-      });
-
+      await postRegister(form);
       history.push(PATH.RECRUITS);
     } catch (e) {
       alert(ERROR_MESSAGE.API.JOIN_FAILURE);
@@ -158,9 +137,7 @@ const Join = () => {
         />
 
         <div className={styles.buttons}>
-          <Button type="button" onClick={history.goBack} cancel>
-            취소
-          </Button>
+          <CancelButton />
           <Button disabled={!isValid || isEmpty}>가입하기</Button>
         </div>
       </Form>
@@ -168,4 +145,4 @@ const Join = () => {
   );
 };
 
-export default Join;
+export default SignUp;
