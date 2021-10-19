@@ -14,7 +14,7 @@ export const APPLICATION_REGISTER_FORM_NAME = {
   IS_TERM_AGREED: "isTermAgreed",
 };
 
-const RequiredFormInitialValue = {
+const requiredFormInitialValue = {
   [APPLICATION_REGISTER_FORM_NAME.ANSWERS]: [],
   [APPLICATION_REGISTER_FORM_NAME.IS_TERM_AGREED]: false,
 };
@@ -33,7 +33,7 @@ const useApplicationRegisterForm = ({
   recruitmentItems,
   status,
 }) => {
-  const [requiredForm, setRequiredForm] = useState(RequiredFormInitialValue);
+  const [requiredForm, setRequiredForm] = useState(requiredFormInitialValue);
   const [form, setForm] = useState(formInitialValue);
   const [errorMessage, setErrorMessage] = useState(errorMessageInitialValue);
 
@@ -123,7 +123,7 @@ const useApplicationRegisterForm = ({
   }, [status]);
 
   const reset = () => {
-    setRequiredForm(RequiredFormInitialValue);
+    setRequiredForm(requiredFormInitialValue);
     setForm(formInitialValue);
     setErrorMessage(errorMessageInitialValue);
   };
