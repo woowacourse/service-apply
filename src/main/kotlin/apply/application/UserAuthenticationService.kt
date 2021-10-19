@@ -28,8 +28,8 @@ class UserAuthenticationService(
 
     fun generateTokenByLogin(request: AuthenticateUserRequest): String {
         val user = userRepository.findByEmail(request.email)
-            ?.also { it.authenticate(request.password) }
-            ?: throw UnidentifiedUserException()
+            ?: throw UnidentifiedUserException("요청 정보가 기존 회원 정보와 일치하지 않습니다.")
+        user.authenticate(request.password)
         return jwtTokenProvider.createToken(user.email)
     }
 
