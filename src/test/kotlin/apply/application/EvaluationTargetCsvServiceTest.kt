@@ -10,7 +10,6 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.just
 import io.mockk.verify
-import org.assertj.core.api.AssertionsForInterfaceTypes.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
@@ -105,9 +104,7 @@ class EvaluationTargetCsvServiceTest {
 
         every { evaluationItemRepository.findByEvaluationIdOrderByPosition(any()) } returns evaluationItems
 
-        val message =
-            assertThrows<IllegalArgumentException> { evaluationTargetCsvService.updateTarget(inputStream, 1L) }.message
-        assertThat(message).isEqualTo("평가 항목의 최대 점수보다 높은 점수입니다.")
+        assertThrows<IllegalArgumentException> { evaluationTargetCsvService.updateTarget(inputStream, 1L) }
     }
 
     private fun getInputStream(fileName: String): InputStream {
