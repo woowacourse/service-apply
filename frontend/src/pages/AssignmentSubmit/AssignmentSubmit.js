@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useHistory, useLocation, useParams } from "react-router";
 import { fetchAssignment, patchAssignment, postAssignment } from "../../api/recruitments";
-import Button, { BUTTON_VARIANT } from "../../components/@common/Button/Button";
+import Button from "../../components/@common/Button/Button";
 import Container from "../../components/@common/Container/Container";
 import MessageTextarea from "../../components/@common/MessageTextarea/MessageTextarea";
 import MessageTextInput from "../../components/@common/MessageTextInput/MessageTextInput";
