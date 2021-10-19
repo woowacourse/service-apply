@@ -1,36 +1,35 @@
 import { useState } from "react";
 import { ERROR_MESSAGE } from "../constants/messages";
 
-export const LOGIN_FORM = {
+export const LOGIN_FORM_NAME = {
   EMAIL: "email",
   PASSWORD: "password",
 };
 
 const useLoginForm = () => {
   const [requiredForm, setRequiredForm] = useState({
-    [LOGIN_FORM.EMAIL]: "",
-    [LOGIN_FORM.PASSWORD]: "",
+    [LOGIN_FORM_NAME.EMAIL]: "",
+    [LOGIN_FORM_NAME.PASSWORD]: "",
   });
 
   const [errorMessage, setErrorMessage] = useState({
-    [LOGIN_FORM.PASSWORD]: "",
+    [LOGIN_FORM_NAME.PASSWORD]: "",
   });
 
   const isEmpty =
-    Object.values(requiredForm).filter(Boolean).length <
-    Object.keys(requiredForm).length;
+    Object.values(requiredForm).filter(Boolean).length < Object.keys(requiredForm).length;
 
   const handleEmailChange = ({ target }) => {
     setRequiredForm((prev) => ({
       ...prev,
-      [LOGIN_FORM.EMAIL]: target.value,
+      [LOGIN_FORM_NAME.EMAIL]: target.value,
     }));
   };
 
   const handlePasswordChange = ({ target }) => {
     setRequiredForm((prev) => ({
       ...prev,
-      [LOGIN_FORM.PASSWORD]: target.value,
+      [LOGIN_FORM_NAME.PASSWORD]: target.value,
     }));
   };
 
@@ -49,8 +48,8 @@ const useLoginForm = () => {
     form: requiredForm,
     errorMessage,
     handleChange: {
-      [LOGIN_FORM.EMAIL]: handleEmailChange,
-      [LOGIN_FORM.PASSWORD]: handlePasswordChange,
+      [LOGIN_FORM_NAME.EMAIL]: handleEmailChange,
+      [LOGIN_FORM_NAME.PASSWORD]: handlePasswordChange,
     },
     handleCapsLockState,
     isEmpty,

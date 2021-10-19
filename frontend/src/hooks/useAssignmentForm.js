@@ -2,20 +2,20 @@ import { useState } from "react";
 import { ERROR_MESSAGE } from "../constants/messages";
 import { isValidPullRequestUrl } from "../utils/validation/pullRequestUrl";
 
-export const ASSIGNMENT_FORM = {
+export const ASSIGNMENT_FORM_NAME = {
   GITHUB_USERNAME: "githubUsername",
   PULL_REQUEST_URL: "pullRequestUrl",
   NOTE: "note",
 };
 
 const initialRequiredForm = {
-  [ASSIGNMENT_FORM.GITHUB_USERNAME]: "",
-  [ASSIGNMENT_FORM.PULL_REQUEST_URL]: "",
-  [ASSIGNMENT_FORM.NOTE]: "",
+  [ASSIGNMENT_FORM_NAME.GITHUB_USERNAME]: "",
+  [ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL]: "",
+  [ASSIGNMENT_FORM_NAME.NOTE]: "",
 };
 
 const initialErrorMessage = {
-  [ASSIGNMENT_FORM.PULL_REQUEST_URL]: "",
+  [ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL]: "",
 };
 
 const useAssignmentForm = () => {
@@ -24,8 +24,7 @@ const useAssignmentForm = () => {
 
   const isValid = Object.values(errorMessage).filter(Boolean).length === 0;
   const isEmpty =
-    Object.values(requiredForm).filter(Boolean).length <
-    Object.keys(requiredForm).length;
+    Object.values(requiredForm).filter(Boolean).length < Object.keys(requiredForm).length;
 
   const init = ({ requiredForm }) => {
     setRequiredForm(requiredForm);
@@ -46,7 +45,7 @@ const useAssignmentForm = () => {
   };
 
   const handleChangeGithubUsername = ({ target }) => {
-    updateRequiredForm(ASSIGNMENT_FORM.GITHUB_USERNAME, target.value);
+    updateRequiredForm(ASSIGNMENT_FORM_NAME.GITHUB_USERNAME, target.value);
   };
 
   const handleChangePullRequestUrl = ({ target }) => {
@@ -54,12 +53,12 @@ const useAssignmentForm = () => {
       ? ""
       : ERROR_MESSAGE.VALIDATION.PULL_REQUEST_URL;
 
-    updateErrorMessage(ASSIGNMENT_FORM.PULL_REQUEST_URL, errorMessage);
-    updateRequiredForm(ASSIGNMENT_FORM.PULL_REQUEST_URL, target.value);
+    updateErrorMessage(ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL, errorMessage);
+    updateRequiredForm(ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL, target.value);
   };
 
   const handleChangeNote = ({ target }) => {
-    updateRequiredForm(ASSIGNMENT_FORM.NOTE, target.value);
+    updateRequiredForm(ASSIGNMENT_FORM_NAME.NOTE, target.value);
   };
 
   return {
@@ -67,9 +66,9 @@ const useAssignmentForm = () => {
     errorMessage,
     init,
     handleChange: {
-      [ASSIGNMENT_FORM.GITHUB_USERNAME]: handleChangeGithubUsername,
-      [ASSIGNMENT_FORM.PULL_REQUEST_URL]: handleChangePullRequestUrl,
-      [ASSIGNMENT_FORM.NOTE]: handleChangeNote,
+      [ASSIGNMENT_FORM_NAME.GITHUB_USERNAME]: handleChangeGithubUsername,
+      [ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL]: handleChangePullRequestUrl,
+      [ASSIGNMENT_FORM_NAME.NOTE]: handleChangeNote,
     },
     isValid,
     isEmpty,

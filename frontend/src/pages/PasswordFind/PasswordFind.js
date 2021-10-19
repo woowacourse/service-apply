@@ -9,7 +9,7 @@ import Form from "../../components/form/Form/Form";
 import FORM from "../../constants/form";
 import { ERROR_MESSAGE } from "../../constants/messages";
 import PATH from "../../constants/path";
-import usePasswordFindForm, { PASSWORD_FIND_FORM } from "../../hooks/usePasswordFind";
+import usePasswordFindForm, { PASSWORD_FIND_FORM_NAME } from "../../hooks/usePasswordFindForm";
 import styles from "./PasswordFind.module.css";
 
 const PasswordFind = () => {
@@ -25,7 +25,7 @@ const PasswordFind = () => {
 
       history.push({
         pathname: PATH.FIND_PASSWORD_RESULT,
-        state: { email: form[PASSWORD_FIND_FORM.EMAIL] },
+        state: { email: form[PASSWORD_FIND_FORM_NAME.EMAIL] },
       });
     } catch (e) {
       alert(ERROR_MESSAGE.API.FIND_PASSWORD);
@@ -38,28 +38,28 @@ const PasswordFind = () => {
         <MessageTextInput
           label="이름"
           placeholder="이름을 입력해 주세요."
-          name={PASSWORD_FIND_FORM.NAME}
-          value={form[PASSWORD_FIND_FORM.NAME]}
-          onChange={handleChange[PASSWORD_FIND_FORM.NAME]}
-          errorMessage={errorMessage[PASSWORD_FIND_FORM.NAME]}
+          name={PASSWORD_FIND_FORM_NAME.NAME}
+          value={form[PASSWORD_FIND_FORM_NAME.NAME]}
+          onChange={handleChange[PASSWORD_FIND_FORM_NAME.NAME]}
+          errorMessage={errorMessage[PASSWORD_FIND_FORM_NAME.NAME]}
           maxLength={FORM.NAME_MAX_LENGTH}
           required
         />
         <MessageTextInput
           label="이메일"
           placeholder="이메일 주소를 입력해 주세요."
-          name={PASSWORD_FIND_FORM.EMAIL}
-          value={form[PASSWORD_FIND_FORM.EMAIL]}
-          onChange={handleChange[PASSWORD_FIND_FORM.EMAIL]}
-          errorMessage={errorMessage[PASSWORD_FIND_FORM.EMAIL]}
+          name={PASSWORD_FIND_FORM_NAME.EMAIL}
+          value={form[PASSWORD_FIND_FORM_NAME.EMAIL]}
+          onChange={handleChange[PASSWORD_FIND_FORM_NAME.EMAIL]}
+          errorMessage={errorMessage[PASSWORD_FIND_FORM_NAME.EMAIL]}
           type="email"
           required
         />
 
         <BirthField
-          name={PASSWORD_FIND_FORM.BIRTHDAY}
-          value={form[PASSWORD_FIND_FORM.BIRTHDAY]}
-          onChange={handleChange[PASSWORD_FIND_FORM.BIRTHDAY]}
+          name={PASSWORD_FIND_FORM_NAME.BIRTHDAY}
+          value={form[PASSWORD_FIND_FORM_NAME.BIRTHDAY]}
+          onChange={handleChange[PASSWORD_FIND_FORM_NAME.BIRTHDAY]}
           required
         />
         <div className={styles.buttons}>

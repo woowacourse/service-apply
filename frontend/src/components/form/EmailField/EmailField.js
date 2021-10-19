@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { fetchAuthenticationCode, fetchVerifyAuthenticationCode } from "../../../api";
 import FORM from "../../../constants/form";
 import { ERROR_MESSAGE } from "../../../constants/messages";
-import { SIGN_UP_FORM } from "../../../hooks/useSignUpForm";
+import { SIGN_UP_FORM_NAME } from "../../../hooks/useSignUpForm";
 import useTimer from "../../../hooks/useTimer";
 import { formatTimerText } from "../../../utils/format/date";
 import Button, { BUTTON_VARIANT } from "../../@common/Button/Button";
@@ -96,7 +96,7 @@ const EmailField = ({
     } catch (error) {
       resetAuthenticationCode();
       setErrorMessage(
-        SIGN_UP_FORM.AUTHENTICATION_CODE,
+        SIGN_UP_FORM_NAME.AUTHENTICATION_CODE,
         ERROR_MESSAGE.API.INVALID_AUTHENTICATION_CODE
       );
     }
@@ -124,7 +124,7 @@ const EmailField = ({
             <TextInput
               type="email"
               placeholder="이메일 주소를 입력해 주세요."
-              name={SIGN_UP_FORM.EMAIL}
+              name={SIGN_UP_FORM_NAME.EMAIL}
               value={emailValue}
               onChange={handleChangeEmail}
               maxLength={FORM.EMAIL_MAX_LENGTH}
@@ -149,7 +149,7 @@ const EmailField = ({
               </Label>
               <div className={styles["input-box"]}>
                 <TextInput
-                  name={SIGN_UP_FORM.AUTHENTICATION_CODE}
+                  name={SIGN_UP_FORM_NAME.AUTHENTICATION_CODE}
                   value={authenticationCodeValue}
                   onChange={onChangeAuthenticationCode}
                   required

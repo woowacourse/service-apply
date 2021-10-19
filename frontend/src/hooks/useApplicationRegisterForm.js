@@ -8,23 +8,23 @@ import { generateQuery } from "../utils/route/query";
 import { isValidURL } from "../utils/validation/url";
 import useTokenContext from "./useTokenContext";
 
-export const APPLICATION_REGISTER_FORM = {
+export const APPLICATION_REGISTER_FORM_NAME = {
   ANSWERS: "answers",
   REFERENCE_URL: "referenceUrl",
   IS_TERM_AGREED: "isTermAgreed",
 };
 
 const RequiredFormInitialValue = {
-  [APPLICATION_REGISTER_FORM.ANSWERS]: [],
-  [APPLICATION_REGISTER_FORM.IS_TERM_AGREED]: false,
+  [APPLICATION_REGISTER_FORM_NAME.ANSWERS]: [],
+  [APPLICATION_REGISTER_FORM_NAME.IS_TERM_AGREED]: false,
 };
 
 const formInitialValue = {
-  [APPLICATION_REGISTER_FORM.REFERENCE_URL]: "",
+  [APPLICATION_REGISTER_FORM_NAME.REFERENCE_URL]: "",
 };
 
 const errorMessageInitialValue = {
-  [APPLICATION_REGISTER_FORM.REFERENCE_URL]: "",
+  [APPLICATION_REGISTER_FORM_NAME.REFERENCE_URL]: "",
 };
 
 const useApplicationRegisterForm = ({
@@ -42,24 +42,23 @@ const useApplicationRegisterForm = ({
   const { token } = useTokenContext();
 
   const isAnswersEmpty =
-    requiredForm[APPLICATION_REGISTER_FORM.ANSWERS].filter(Boolean).length <
+    requiredForm[APPLICATION_REGISTER_FORM_NAME.ANSWERS].filter(Boolean).length <
     recruitmentItems.length;
 
-  const isEmpty =
-    isAnswersEmpty || !requiredForm[APPLICATION_REGISTER_FORM.IS_TERM_AGREED];
+  const isEmpty = isAnswersEmpty || !requiredForm[APPLICATION_REGISTER_FORM_NAME.IS_TERM_AGREED];
 
   const isValid = Object.values(errorMessage).filter(Boolean).length === 0;
 
   const handleChangeAnswer =
     (index) =>
     ({ target }) => {
-      const newAnswers = [...requiredForm[APPLICATION_REGISTER_FORM.ANSWERS]];
+      const newAnswers = [...requiredForm[APPLICATION_REGISTER_FORM_NAME.ANSWERS]];
 
       newAnswers[index] = target.value;
 
       setRequiredForm((prev) => ({
         ...prev,
-        [APPLICATION_REGISTER_FORM.ANSWERS]: newAnswers,
+        [APPLICATION_REGISTER_FORM_NAME.ANSWERS]: newAnswers,
       }));
     };
 
@@ -68,21 +67,19 @@ const useApplicationRegisterForm = ({
   };
 
   const handleChangeReferenceUrl = ({ target }) => {
-    const errorMessage = isValidURL(target.value)
-      ? ""
-      : ERROR_MESSAGE.VALIDATION.URL;
+    const errorMessage = isValidURL(target.value) ? "" : ERROR_MESSAGE.VALIDATION.URL;
 
-    updateErrorMessage(APPLICATION_REGISTER_FORM.REFERENCE_URL, errorMessage);
+    updateErrorMessage(APPLICATION_REGISTER_FORM_NAME.REFERENCE_URL, errorMessage);
     setForm((prev) => ({
       ...prev,
-      [APPLICATION_REGISTER_FORM.REFERENCE_URL]: target.value,
+      [APPLICATION_REGISTER_FORM_NAME.REFERENCE_URL]: target.value,
     }));
   };
 
   const handleChangeIsTermAgreed = ({ target }) => {
     setRequiredForm((prev) => ({
       ...prev,
-      [APPLICATION_REGISTER_FORM.IS_TERM_AGREED]: target.checked,
+      [APPLICATION_REGISTER_FORM_NAME.IS_TERM_AGREED]: target.checked,
     }));
   };
 
@@ -135,9 +132,9 @@ const useApplicationRegisterForm = ({
     form: { ...form, ...requiredForm },
     errorMessage,
     handleChange: {
-      [APPLICATION_REGISTER_FORM.ANSWERS]: handleChangeAnswer,
-      [APPLICATION_REGISTER_FORM.REFERENCE_URL]: handleChangeReferenceUrl,
-      [APPLICATION_REGISTER_FORM.IS_TERM_AGREED]: handleChangeIsTermAgreed,
+      [APPLICATION_REGISTER_FORM_NAME.ANSWERS]: handleChangeAnswer,
+      [APPLICATION_REGISTER_FORM_NAME.REFERENCE_URL]: handleChangeReferenceUrl,
+      [APPLICATION_REGISTER_FORM_NAME.IS_TERM_AGREED]: handleChangeIsTermAgreed,
     },
     modifiedDateTime,
     setModifiedDateTime,

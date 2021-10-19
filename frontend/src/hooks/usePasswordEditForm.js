@@ -2,22 +2,22 @@ import { useState } from "react";
 import { ERROR_MESSAGE } from "../constants/messages";
 import { isValidPassword } from "../utils/validation/password";
 
-export const PASSWORD_EDIT_FORM = {
+export const PASSWORD_EDIT_FORM_NAME = {
   OLD_PASSWORD: "oldPassword",
   PASSWORD: "password",
   CONFIRM_PASSWORD: "confirmPassword",
 };
 
 const initialRequiredForm = {
-  [PASSWORD_EDIT_FORM.OLD_PASSWORD]: "",
-  [PASSWORD_EDIT_FORM.PASSWORD]: "",
-  [PASSWORD_EDIT_FORM.CONFIRM_PASSWORD]: "",
+  [PASSWORD_EDIT_FORM_NAME.OLD_PASSWORD]: "",
+  [PASSWORD_EDIT_FORM_NAME.PASSWORD]: "",
+  [PASSWORD_EDIT_FORM_NAME.CONFIRM_PASSWORD]: "",
 };
 
 const initialErrorMessage = {
-  [PASSWORD_EDIT_FORM.OLD_PASSWORD]: "",
-  [PASSWORD_EDIT_FORM.PASSWORD]: "",
-  [PASSWORD_EDIT_FORM.CONFIRM_PASSWORD]: "",
+  [PASSWORD_EDIT_FORM_NAME.OLD_PASSWORD]: "",
+  [PASSWORD_EDIT_FORM_NAME.PASSWORD]: "",
+  [PASSWORD_EDIT_FORM_NAME.CONFIRM_PASSWORD]: "",
 };
 
 const usePasswordEditForm = () => {
@@ -26,12 +26,10 @@ const usePasswordEditForm = () => {
 
   const isValid =
     Object.values(errorMessage).filter(
-      (errMsg) =>
-        errMsg && errMsg !== ERROR_MESSAGE.VALIDATION.PASSWORD_CAPSLOCK
+      (errMsg) => errMsg && errMsg !== ERROR_MESSAGE.VALIDATION.PASSWORD_CAPSLOCK
     ).length === 0;
   const isEmpty =
-    Object.values(requiredForm).filter(Boolean).length <
-    Object.keys(requiredForm).length;
+    Object.values(requiredForm).filter(Boolean).length < Object.keys(requiredForm).length;
 
   const updateRequiredForm = (name, value) => {
     setRequiredForm((prev) => ({
@@ -48,35 +46,28 @@ const usePasswordEditForm = () => {
   };
 
   const handleChangeOldPassword = ({ target }) => {
-    updateRequiredForm(PASSWORD_EDIT_FORM.OLD_PASSWORD, target.value);
+    updateRequiredForm(PASSWORD_EDIT_FORM_NAME.OLD_PASSWORD, target.value);
   };
 
   const handleChangePassword = ({ target }) => {
-    const errorMessage = isValidPassword(target.value)
-      ? ""
-      : ERROR_MESSAGE.VALIDATION.PASSWORD;
+    const errorMessage = isValidPassword(target.value) ? "" : ERROR_MESSAGE.VALIDATION.PASSWORD;
 
     const confirmPasswordErrorMessage =
       target.value === requiredForm.confirmPassword
         ? ""
         : ERROR_MESSAGE.VALIDATION.CONFIRM_PASSWORD;
 
-    updateErrorMessage(
-      PASSWORD_EDIT_FORM.CONFIRM_PASSWORD,
-      confirmPasswordErrorMessage
-    );
-    updateErrorMessage(PASSWORD_EDIT_FORM.PASSWORD, errorMessage);
-    updateRequiredForm(PASSWORD_EDIT_FORM.PASSWORD, target.value);
+    updateErrorMessage(PASSWORD_EDIT_FORM_NAME.CONFIRM_PASSWORD, confirmPasswordErrorMessage);
+    updateErrorMessage(PASSWORD_EDIT_FORM_NAME.PASSWORD, errorMessage);
+    updateRequiredForm(PASSWORD_EDIT_FORM_NAME.PASSWORD, target.value);
   };
 
   const handleChangeConfirmPassword = ({ target }) => {
     const errorMessage =
-      target.value === requiredForm.password
-        ? ""
-        : ERROR_MESSAGE.VALIDATION.CONFIRM_PASSWORD;
+      target.value === requiredForm.password ? "" : ERROR_MESSAGE.VALIDATION.CONFIRM_PASSWORD;
 
-    updateErrorMessage(PASSWORD_EDIT_FORM.CONFIRM_PASSWORD, errorMessage);
-    updateRequiredForm(PASSWORD_EDIT_FORM.CONFIRM_PASSWORD, target.value);
+    updateErrorMessage(PASSWORD_EDIT_FORM_NAME.CONFIRM_PASSWORD, errorMessage);
+    updateRequiredForm(PASSWORD_EDIT_FORM_NAME.CONFIRM_PASSWORD, target.value);
   };
 
   const handleCapsLockState = (name) => (event) => {
@@ -92,9 +83,9 @@ const usePasswordEditForm = () => {
     errorMessage,
     handleCapsLockState,
     handleChange: {
-      [PASSWORD_EDIT_FORM.OLD_PASSWORD]: handleChangeOldPassword,
-      [PASSWORD_EDIT_FORM.PASSWORD]: handleChangePassword,
-      [PASSWORD_EDIT_FORM.CONFIRM_PASSWORD]: handleChangeConfirmPassword,
+      [PASSWORD_EDIT_FORM_NAME.OLD_PASSWORD]: handleChangeOldPassword,
+      [PASSWORD_EDIT_FORM_NAME.PASSWORD]: handleChangePassword,
+      [PASSWORD_EDIT_FORM_NAME.CONFIRM_PASSWORD]: handleChangeConfirmPassword,
     },
     isValid,
     isEmpty,

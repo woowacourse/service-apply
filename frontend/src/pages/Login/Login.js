@@ -7,7 +7,7 @@ import Form from "../../components/form/Form/Form";
 import { ERROR_MESSAGE } from "../../constants/messages";
 import PATH, { PARAM } from "../../constants/path";
 import useAuth from "../../hooks/useAuth";
-import useLoginForm, { LOGIN_FORM } from "../../hooks/useLoginForm";
+import useLoginForm, { LOGIN_FORM_NAME } from "../../hooks/useLoginForm";
 import { generateQuery } from "../../utils/route/query";
 import styles from "./Login.module.css";
 
@@ -17,8 +17,7 @@ const Login = () => {
   const currentRecruitment = location.state?.currentRecruitment;
 
   const { login } = useAuth();
-  const { form, errorMessage, handleChange, handleCapsLockState, isEmpty } =
-    useLoginForm();
+  const { form, errorMessage, handleChange, handleCapsLockState, isEmpty } = useLoginForm();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -48,23 +47,23 @@ const Login = () => {
     <Container size={CONTAINER_SIZE.NARROW} title="로그인">
       <Form onSubmit={handleSubmit}>
         <MessageTextInput
-          name={LOGIN_FORM.EMAIL}
+          name={LOGIN_FORM_NAME.EMAIL}
           type="email"
           label="이메일"
           placeholder="이메일 주소를 입력해 주세요."
           value={form.email}
-          onChange={handleChange[LOGIN_FORM.EMAIL]}
+          onChange={handleChange[LOGIN_FORM_NAME.EMAIL]}
           required
         />
         <MessageTextInput
-          name={LOGIN_FORM.PASSWORD}
+          name={LOGIN_FORM_NAME.PASSWORD}
           type="password"
           label="비밀번호"
           placeholder="비밀번호를 입력해 주세요."
           value={form.password}
-          onChange={handleChange[LOGIN_FORM.PASSWORD]}
-          onKeyUp={handleCapsLockState(LOGIN_FORM.PASSWORD)}
-          errorMessage={errorMessage[LOGIN_FORM.PASSWORD]}
+          onChange={handleChange[LOGIN_FORM_NAME.PASSWORD]}
+          onKeyUp={handleCapsLockState(LOGIN_FORM_NAME.PASSWORD)}
+          errorMessage={errorMessage[LOGIN_FORM_NAME.PASSWORD]}
           required
         />
         <div className={styles.buttons}>

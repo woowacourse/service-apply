@@ -9,7 +9,7 @@ import Form from "../../components/form/Form/Form";
 import FORM from "../../constants/form";
 import { CONFIRM_MESSAGE, ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
 import PATH, { PARAM } from "../../constants/path";
-import useAssignmentForm, { ASSIGNMENT_FORM } from "../../hooks/useAssignmentForm";
+import useAssignmentForm, { ASSIGNMENT_FORM_NAME } from "../../hooks/useAssignmentForm";
 import useTokenContext from "../../hooks/useTokenContext";
 import styles from "./AssignmentSubmit.module.css";
 
@@ -85,26 +85,26 @@ const AssignmentSubmit = () => {
       <Form onSubmit={handleSubmit} className={styles.form}>
         <MessageTextInput
           label="GitHub ID"
-          name={ASSIGNMENT_FORM.GITHUB_USERNAME}
-          value={form[ASSIGNMENT_FORM.GITHUB_USERNAME]}
-          onChange={handleChange[ASSIGNMENT_FORM.GITHUB_USERNAME]}
+          name={ASSIGNMENT_FORM_NAME.GITHUB_USERNAME}
+          value={form[ASSIGNMENT_FORM_NAME.GITHUB_USERNAME]}
+          onChange={handleChange[ASSIGNMENT_FORM_NAME.GITHUB_USERNAME]}
           maxLength={FORM.GITHUB_USERNAME_MAX_LENGTH}
           required
         />
         <MessageTextInput
           label="Pull Request 주소"
           type="url"
-          name={ASSIGNMENT_FORM.PULL_REQUEST_URL}
-          value={form[ASSIGNMENT_FORM.PULL_REQUEST_URL]}
-          onChange={handleChange[ASSIGNMENT_FORM.PULL_REQUEST_URL]}
-          errorMessage={errorMessage[ASSIGNMENT_FORM.PULL_REQUEST_URL]}
+          name={ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL}
+          value={form[ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL]}
+          onChange={handleChange[ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL]}
+          errorMessage={errorMessage[ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL]}
           required
         />
         <MessageTextarea
           label="과제 진행 소감"
-          name={ASSIGNMENT_FORM.NOTE}
-          value={form[ASSIGNMENT_FORM.NOTE]}
-          onChange={handleChange[ASSIGNMENT_FORM.NOTE]}
+          name={ASSIGNMENT_FORM_NAME.NOTE}
+          value={form[ASSIGNMENT_FORM_NAME.NOTE]}
+          onChange={handleChange[ASSIGNMENT_FORM_NAME.NOTE]}
           maxLength={FORM.NOTE_MAX_LENGTH}
           required
         />

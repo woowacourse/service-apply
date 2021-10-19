@@ -6,7 +6,7 @@ import MessageTextInput from "../../components/@common/MessageTextInput/MessageT
 import Form from "../../components/form/Form/Form";
 import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
 import PATH from "../../constants/path";
-import usePasswordEditForm, { PASSWORD_EDIT_FORM } from "../../hooks/usePasswordEditForm";
+import usePasswordEditForm, { PASSWORD_EDIT_FORM_NAME } from "../../hooks/usePasswordEditForm";
 import useTokenContext from "../../hooks/useTokenContext";
 import styles from "./PasswordEdit.module.css";
 
@@ -42,32 +42,32 @@ const PasswordEdit = () => {
           label="기존 비밀번호"
           placeholder="기존 비밀번호를 입력해 주세요"
           type="password"
-          name={PASSWORD_EDIT_FORM.OLD_PASSWORD}
-          value={form[PASSWORD_EDIT_FORM.OLD_PASSWORD]}
-          onChange={handleChange[PASSWORD_EDIT_FORM.OLD_PASSWORD]}
-          onKeyUp={handleCapsLockState(PASSWORD_EDIT_FORM.OLD_PASSWORD)}
-          errorMessage={errorMessage[PASSWORD_EDIT_FORM.OLD_PASSWORD]}
+          name={PASSWORD_EDIT_FORM_NAME.OLD_PASSWORD}
+          value={form[PASSWORD_EDIT_FORM_NAME.OLD_PASSWORD]}
+          onChange={handleChange[PASSWORD_EDIT_FORM_NAME.OLD_PASSWORD]}
+          onKeyUp={handleCapsLockState(PASSWORD_EDIT_FORM_NAME.OLD_PASSWORD)}
+          errorMessage={errorMessage[PASSWORD_EDIT_FORM_NAME.OLD_PASSWORD]}
           required
         />
         <MessageTextInput
           label="새 비밀번호"
           placeholder="비밀번호를 입력해 주세요"
           type="password"
-          name={PASSWORD_EDIT_FORM.PASSWORD}
-          value={form[PASSWORD_EDIT_FORM.PASSWORD]}
-          onChange={handleChange[PASSWORD_EDIT_FORM.PASSWORD]}
-          onKeyUp={handleCapsLockState(PASSWORD_EDIT_FORM.PASSWORD)}
-          errorMessage={errorMessage[PASSWORD_EDIT_FORM.PASSWORD]}
+          name={PASSWORD_EDIT_FORM_NAME.PASSWORD}
+          value={form[PASSWORD_EDIT_FORM_NAME.PASSWORD]}
+          onChange={handleChange[PASSWORD_EDIT_FORM_NAME.PASSWORD]}
+          onKeyUp={handleCapsLockState(PASSWORD_EDIT_FORM_NAME.PASSWORD)}
+          errorMessage={errorMessage[PASSWORD_EDIT_FORM_NAME.PASSWORD]}
           required
         />
         <MessageTextInput
           label="비밀번호 확인"
           placeholder="비밀번호를 다시 한 번 입력해 주세요"
           type="password"
-          name={PASSWORD_EDIT_FORM.CONFIRM_PASSWORD}
-          value={form[PASSWORD_EDIT_FORM.CONFIRM_PASSWORD]}
-          onChange={handleChange[PASSWORD_EDIT_FORM.CONFIRM_PASSWORD]}
-          errorMessage={errorMessage[PASSWORD_EDIT_FORM.CONFIRM_PASSWORD]}
+          name={PASSWORD_EDIT_FORM_NAME.CONFIRM_PASSWORD}
+          value={form[PASSWORD_EDIT_FORM_NAME.CONFIRM_PASSWORD]}
+          onChange={handleChange[PASSWORD_EDIT_FORM_NAME.CONFIRM_PASSWORD]}
+          errorMessage={errorMessage[PASSWORD_EDIT_FORM_NAME.CONFIRM_PASSWORD]}
           required
         />
         <div className={styles.buttons}>

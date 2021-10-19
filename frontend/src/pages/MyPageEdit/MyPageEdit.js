@@ -8,9 +8,7 @@ import BirthField from "../../components/form/BirthField/BirthField";
 import Form from "../../components/form/Form/Form";
 import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
 import PATH from "../../constants/path";
-import useMyPageEditForm, {
-  MY_PAGE_EDIT_FORM,
-} from "../../hooks/useMyPageEditForm";
+import useMyPageEditForm, { MY_PAGE_EDIT_FORM_NAME } from "../../hooks/useMyPageEditForm";
 import useUserInfoContext from "../../hooks/useUserInfoContext";
 import * as styles from "./MyPageEdit.module.css";
 
@@ -18,8 +16,7 @@ const MyPageEdit = () => {
   const history = useHistory();
   const { userInfo, updateUserInfo } = useUserInfoContext();
 
-  const { form, errorMessage, init, handleChange, isEmpty, isValid } =
-    useMyPageEditForm();
+  const { form, errorMessage, init, handleChange, isEmpty, isValid } = useMyPageEditForm();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -38,7 +35,7 @@ const MyPageEdit = () => {
 
     init({
       requiredForm: {
-        [MY_PAGE_EDIT_FORM.PHONE_NUMBER]: userInfo.phoneNumber,
+        [MY_PAGE_EDIT_FORM_NAME.PHONE_NUMBER]: userInfo.phoneNumber,
       },
     });
   }, [userInfo]);
@@ -52,7 +49,7 @@ const MyPageEdit = () => {
         <Form className={styles["input-box"]} onSubmit={handleSubmit}>
           <MessageTextInput
             label="이메일"
-            name={MY_PAGE_EDIT_FORM.EMAIL}
+            name={MY_PAGE_EDIT_FORM_NAME.EMAIL}
             className={styles.input}
             value={userInfo?.email}
             readOnly
@@ -60,24 +57,16 @@ const MyPageEdit = () => {
           <MessageTextInput
             label="핸드폰번호"
             type="tel"
-            name={MY_PAGE_EDIT_FORM.PHONE_NUMBER}
-            value={form[MY_PAGE_EDIT_FORM.PHONE_NUMBER]}
-            onChange={handleChange[MY_PAGE_EDIT_FORM.PHONE_NUMBER]}
-            errorMessage={errorMessage[MY_PAGE_EDIT_FORM.PHONE_NUMBER]}
+            name={MY_PAGE_EDIT_FORM_NAME.PHONE_NUMBER}
+            value={form[MY_PAGE_EDIT_FORM_NAME.PHONE_NUMBER]}
+            onChange={handleChange[MY_PAGE_EDIT_FORM_NAME.PHONE_NUMBER]}
+            errorMessage={errorMessage[MY_PAGE_EDIT_FORM_NAME.PHONE_NUMBER]}
             initialValue={userInfo?.phoneNumber}
           />
-          <BirthField
-            name={MY_PAGE_EDIT_FORM.BIRTHDAY}
-            value={userInfo?.birthday}
-            readOnly
-          />
+          <BirthField name={MY_PAGE_EDIT_FORM_NAME.BIRTHDAY} value={userInfo?.birthday} readOnly />
 
           <div className={styles.buttons}>
-            <Button
-              type="button"
-              variant={BUTTON_VARIANT.OUTLINED}
-              onClick={history.goBack}
-            >
+            <Button type="button" variant={BUTTON_VARIANT.OUTLINED} onClick={history.goBack}>
               취소
             </Button>
             <Button disabled={!isValid || isEmpty}>확인</Button>
