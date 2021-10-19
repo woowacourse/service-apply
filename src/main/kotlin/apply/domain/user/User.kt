@@ -55,7 +55,7 @@ class User(
     }
 
     fun changePassword(oldPassword: Password, newPassword: Password) {
-        authenticate(oldPassword)
+        identify(this.password == oldPassword) { "기존 비밀번호가 일치하지 않습니다." }
         this.password = newPassword
     }
 

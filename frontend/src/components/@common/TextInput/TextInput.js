@@ -3,14 +3,7 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 import styles from "./TextInput.module.css";
 
-const TextInput = ({
-  className,
-  type,
-  readOnly,
-  value,
-  maxLength,
-  ...props
-}) => {
+const TextInput = ({ className, type, readOnly, value, maxLength, ...props }) => {
   return (
     <input
       type={type}

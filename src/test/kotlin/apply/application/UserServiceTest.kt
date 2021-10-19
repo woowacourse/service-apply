@@ -91,14 +91,20 @@ internal class UserServiceTest {
 
         @Test
         fun `만약 기존 비밀번호가 일치한다면 변경한다`() {
-            request = EditPasswordRequest(PASSWORD, Password("new_password"))
+            request = EditPasswordRequest(PASSWORD, Password("new_password"), Password("new_password"))
             assertDoesNotThrow { subject() }
         }
 
         @Test
         fun `만약 기존 비밀번호가 일치하지 않다면 예외가 발생한다`() {
-            request = EditPasswordRequest(WRONG_PASSWORD, Password("new_password"))
+            request = EditPasswordRequest(WRONG_PASSWORD, Password("new_password"), Password("new_password"))
             assertThrows<UnidentifiedUserException> { subject() }
+        }
+
+        @Test
+        fun `확인용 비밀번호가 일치하지 않으면 예외가 발생한다`() {
+            request = EditPasswordRequest(WRONG_PASSWORD, Password("new_password"), Password("wrong_password"))
+            assertThrows<IllegalArgumentException> { subject() }
         }
     }
 

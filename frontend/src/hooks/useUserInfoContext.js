@@ -6,8 +6,7 @@ export const UserInfoContext = createContext();
 const useUserInfoContext = () => {
   const userInfoContext = useContext(UserInfoContext);
 
-  if (!userInfoContext)
-    throw Error(ERROR_MESSAGE.HOOKS.CANNOT_FIND_USER_INFO_CONTEXT);
+  if (!userInfoContext) throw Error(ERROR_MESSAGE.HOOKS.CANNOT_FIND_USER_INFO_CONTEXT);
 
   return userInfoContext;
 };

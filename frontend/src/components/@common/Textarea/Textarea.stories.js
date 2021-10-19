@@ -9,13 +9,7 @@ export default {
 const Template = (args) => {
   const [value, setValue] = useState("");
 
-  return (
-    <Textarea
-      value={value}
-      onChange={({ target }) => setValue(target.value)}
-      {...args}
-    />
-  );
+  return <Textarea value={value} onChange={({ target }) => setValue(target.value)} {...args} />;
 };
 
 export const Default = Template.bind({});

@@ -1,8 +1,6 @@
 import React from "react";
 import { generatePath, Link, useHistory, useLocation } from "react-router-dom";
-import Container, {
-  CONTAINER_SIZE,
-} from "../../components/@common/Container/Container";
+import Container, { CONTAINER_SIZE } from "../../components/@common/Container/Container";
 import Form from "../../components/form/Form/Form";
 import FormInput from "../../components/form/FormInput/FormInput";
 import SubmitButton from "../../components/form/SubmitButton/SubmitButton";
