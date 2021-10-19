@@ -11,15 +11,36 @@ import useTokenContext from "../../hooks/useTokenContext";
 import { generateQuery } from "../../utils/route/query";
 import styles from "./MyApplication.module.css";
 
+const BUTTON_LABEL = {
+  BEFORE_SUBMISSION: "시작 전",
+  EDIT: "수정하기",
+  SUBMIT: "제출하기",
+  UNSUBMITTABLE: "제출불가",
+  COMPLETE: "제출완료",
+  UNSUBMITTED: "미제출",
+};
+
 const missionLabel = (submitted, missionStatus) => {
   const labelMap = {
-    SUBMITTABLE: "시작 전",
-    SUBMITTING: submitted ? "수정하기" : "제출하기",
-    UNSUBMITTABLE: "제출불가",
-    ENDED: submitted ? "제출완료" : "미제출",
+    SUBMITTABLE: BUTTON_LABEL.BEFORE_SUBMISSION,
+    SUBMITTING: submitted ? BUTTON_LABEL.EDIT : BUTTON_LABEL.SUBMIT,
+    UNSUBMITTABLE: BUTTON_LABEL.UNSUBMITTABLE,
+    ENDED: submitted ? BUTTON_LABEL.COMPLETE : BUTTON_LABEL.UNSUBMITTED,
   };
 
   return labelMap[missionStatus];
+};
+
+const applicationLabel = (submitted, recruitable) => {
+  if (!recruitable) {
+    return BUTTON_LABEL.UNSUBMITTABLE;
+  }
+
+  return submitted ? BUTTON_LABEL.COMPLETE : BUTTON_LABEL.EDIT;
+};
+
+const isApplicationDisabled = (submitted, recruitable) => {
+  return submitted || !recruitable;
 };
 
 const MyApplication = () => {
@@ -110,8 +131,8 @@ const MyApplication = () => {
           <div className={styles["recruit-panel-inner"]}>
             <RecruitmentItem
               recruitment={{ ...recruitment, title: "내 지원서" }}
-              buttonLabel={submitted ? "제출완료" : "수정하기"}
-              isButtonDisabled={submitted}
+              buttonLabel={applicationLabel(submitted, recruitment.recruitable)}
+              isButtonDisabled={isApplicationDisabled(submitted, recruitment.recruitable)}
               onClickButton={routeToApplicationForm(recruitment)}
             />
 
