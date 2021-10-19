@@ -45,7 +45,7 @@ const useMyPageEditForm = () => {
   };
 
   const handleChangePhoneNumber = ({ nativeEvent: { data }, target: { value } }) => {
-    if (Number.isNaN(data) || value.length > FORM.PHONE_NUMBER_MAX_LENGTH) return;
+    if (Number.isNaN(data)) return;
 
     const [firstHyphenIdx, secondHyphenIdx] = PHONE_NUMBER_HYPHEN_IDX;
     const result = formatHyphen(value, firstHyphenIdx, secondHyphenIdx).trim();

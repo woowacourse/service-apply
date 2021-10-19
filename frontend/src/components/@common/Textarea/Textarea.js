@@ -4,10 +4,16 @@ import classNames from "classnames";
 import styles from "./Textarea.module.css";
 
 const Textarea = ({ className, readOnly, value, maxLength, onChange, ...props }) => {
+  const handleChange = (event) => {
+    if (maxLength !== undefined && event.target.value.length > maxLength) return;
+
+    onChange(event);
+  };
+
   return (
     <textarea
       value={value}
-      onChange={onChange}
+      onChange={handleChange}
       maxLength={maxLength}
       className={classNames(styles["text-input"], className)}
       readOnly={readOnly}

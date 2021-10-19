@@ -66,8 +66,6 @@ const useSignUpForm = () => {
   };
 
   const handleChangeEmail = ({ target }) => {
-    if (target.value.length > FORM.EMAIL_MAX_LENGTH) return;
-
     const errorMessage = isValidEmail(target.value) ? "" : ERROR_MESSAGE.VALIDATION.EMAIL;
 
     updateErrorMessage(SIGN_UP_FORM_NAME.EMAIL, errorMessage);
@@ -81,8 +79,6 @@ const useSignUpForm = () => {
   };
 
   const handleChangeName = ({ target }) => {
-    if (target.value.length > FORM.NAME_MAX_LENGTH) return;
-
     const errorMessage = isValidName(target.value) ? "" : ERROR_MESSAGE.VALIDATION.NAME;
 
     updateErrorMessage(SIGN_UP_FORM_NAME.NAME, errorMessage);
@@ -90,7 +86,7 @@ const useSignUpForm = () => {
   };
 
   const handleChangePhoneNumber = ({ nativeEvent: { data }, target: { value } }) => {
-    if (Number.isNaN(data) || value.length > FORM.PHONE_NUMBER_MAX_LENGTH) return;
+    if (Number.isNaN(data)) return;
 
     const [firstHyphenIdx, secondHyphenIdx] = PHONE_NUMBER_HYPHEN_IDX;
     const result = formatHyphen(value, firstHyphenIdx, secondHyphenIdx).trim();
@@ -102,8 +98,6 @@ const useSignUpForm = () => {
   };
 
   const handleChangePassword = ({ target }) => {
-    if (target.value.length > FORM.PASSWORD_MAX_LENGTH) return;
-
     const errorMessage = isValidPassword(target.value) ? "" : ERROR_MESSAGE.VALIDATION.PASSWORD;
 
     const confirmPasswordErrorMessage =

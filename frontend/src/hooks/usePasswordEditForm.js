@@ -47,14 +47,10 @@ const usePasswordEditForm = () => {
   };
 
   const handleChangeOldPassword = ({ target }) => {
-    if (target.value.length > FORM.PASSWORD_MAX_LENGTH) return;
-
     updateRequiredForm(PASSWORD_EDIT_FORM_NAME.OLD_PASSWORD, target.value);
   };
 
   const handleChangePassword = ({ target }) => {
-    if (target.value.length > FORM.PASSWORD_MAX_LENGTH) return;
-
     const errorMessage = isValidPassword(target.value) ? "" : ERROR_MESSAGE.VALIDATION.PASSWORD;
 
     const confirmPasswordErrorMessage =
