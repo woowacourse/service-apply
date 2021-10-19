@@ -61,22 +61,19 @@ private fun createBox(
 ): HorizontalLayout {
     val textField = TextField().apply {
         label = labelText
+        isClearButtonVisible = true
     }
     textField.addKeyDownListener(
         Key.ENTER,
         {
-            if (it.isComposing) {
+            if (!it.isComposing) {
                 eventListener(textField.value)
-                textField.clear()
             }
         }
     )
     return HorizontalLayout(
         textField,
-        Button(Icon(icon)) {
-            eventListener(textField.value)
-            textField.clear()
-        }
+        Button(Icon(icon)) { eventListener(textField.value) }
     ).apply {
         defaultVerticalComponentAlignment = FlexComponent.Alignment.END
     }
