@@ -12,7 +12,7 @@ import ResetButton from "../../components/form/ResetButton/ResetButton";
 import SubmitButton from "../../components/form/SubmitButton/SubmitButton";
 import TempSaveButton from "../../components/form/TempSaveButton/TempSaveButton";
 import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
-import { CONFIRM_MESSAGE, ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
+import { CONFIRM_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
 import PATH, { PARAM } from "../../constants/path";
 import useForm from "../../hooks/useForm";
 import useTokenContext from "../../hooks/useTokenContext";
@@ -64,49 +64,37 @@ const ApplicationRegister = () => {
     setModifiedDateTime(formatDateTime(new Date(applicationForm.modifiedDateTime)));
   };
 
-  const handleFetchFormError = (e) => {
-    if (e.response.status === 401) {
-      alert(ERROR_MESSAGE.API.TOKEN_EXPIRED);
-      history.push(PATH.LOGIN);
-    } else {
-      alert(e.response.data.message);
-      history.replace(PATH.HOME);
-    }
+  const handleFetchFormError = (error) => {
+    if (!error) return;
+
+    alert(error.response.data.message);
+    history.replace(PATH.HOME);
   };
 
-  const handleSubmitError = (e) => {
-    if (e.response.status === 401) {
-      alert(ERROR_MESSAGE.API.TOKEN_EXPIRED);
-      history.push(PATH.LOGIN);
-    } else {
-      alert(e.response.data.message);
-      history.replace(PATH.HOME);
-    }
+  const handleSubmitError = (error) => {
+    if (!error) return;
+
+    alert(error.response.data.message);
+    history.replace(PATH.HOME);
   };
 
-  const handleSaveTempError = (e) => {
-    if (e.response.status === 401) {
-      alert(ERROR_MESSAGE.API.TOKEN_EXPIRED);
-      history.push(PATH.LOGIN);
-    } else {
-      alert(e.response.data.message);
-      history.replace(PATH.HOME);
-    }
+  const handleSaveTempError = (error) => {
+    if (!error) return;
+
+    alert(error.response.data.message);
+    history.replace(PATH.HOME);
   };
 
-  const handleInitError = (e) => {
-    if (e.response.status === 401) {
-      alert(ERROR_MESSAGE.API.TOKEN_EXPIRED);
-      history.push(PATH.LOGIN);
-    } else {
-      history.replace({
-        pathname: generatePath(PATH.APPLICATION_FORM, {
-          status: PARAM.APPLICATION_FORM_STATUS.EDIT,
-        }),
-        search: generateQuery({ recruitmentId }),
-        state: { currentRecruitment },
-      });
-    }
+  const handleInitError = (error) => {
+    if (!error) return;
+
+    history.replace({
+      pathname: generatePath(PATH.APPLICATION_FORM, {
+        status: PARAM.APPLICATION_FORM_STATUS.EDIT,
+      }),
+      search: generateQuery({ recruitmentId }),
+      state: { currentRecruitment },
+    });
   };
 
   const fetchApplicationForm = useCallback(async () => {

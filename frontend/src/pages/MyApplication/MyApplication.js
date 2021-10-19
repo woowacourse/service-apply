@@ -83,14 +83,11 @@ const MyApplication = () => {
       }
     };
 
-  const handleFetchError = (e) => {
-    if (e.response.status === 401) {
-      alert(ERROR_MESSAGE.API.TOKEN_EXPIRED);
-      history.push(PATH.LOGIN);
-    } else {
-      alert(ERROR_MESSAGE.API.FETCHING_MY_APPLICATION);
-      setMyApplications([]);
-    }
+  const handleFetchError = (error) => {
+    if (!error) return;
+
+    alert(ERROR_MESSAGE.API.FETCHING_MY_APPLICATION);
+    setMyApplications([]);
   };
 
   useEffect(() => {

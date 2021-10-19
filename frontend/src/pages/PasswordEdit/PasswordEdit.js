@@ -17,13 +17,10 @@ const PasswordEdit = () => {
   const { token, resetToken } = useTokenContext();
   const history = useHistory();
 
-  const handleSubmitError = (e) => {
-    if (e.response.status === 401) {
-      alert(ERROR_MESSAGE.API.TOKEN_EXPIRED);
-      history.push(PATH.LOGIN);
-    } else {
-      alert(ERROR_MESSAGE.API.EDIT_PASSWORD);
-    }
+  const handleSubmitError = (error) => {
+    if (!error) return;
+
+    alert(ERROR_MESSAGE.API.EDIT_PASSWORD);
   };
 
   const submit = async (value) => {

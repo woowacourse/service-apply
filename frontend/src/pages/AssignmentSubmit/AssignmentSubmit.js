@@ -24,13 +24,10 @@ const AssignmentSubmit = () => {
 
   const [initialFormData, setInitialFormData] = useState({});
 
-  const handleSubmitError = (e) => {
-    if (e.response.status === 401) {
-      alert(ERROR_MESSAGE.API.TOKEN_EXPIRED);
-      history.push(PATH.LOGIN);
-    } else {
-      alert(ERROR_MESSAGE.API.SUBMIT_ASSIGNMENT);
-    }
+  const handleSubmitError = (error) => {
+    if (!error) return;
+
+    alert(ERROR_MESSAGE.API.SUBMIT_ASSIGNMENT);
   };
 
   const submit = async (assignmentData) => {
