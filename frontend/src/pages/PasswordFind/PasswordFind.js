@@ -28,7 +28,7 @@ const PasswordFind = () => {
         pathname: PATH.FIND_PASSWORD_RESULT,
         state: { email: form[PASSWORD_FIND_FORM_NAME.EMAIL] },
       });
-    } catch (e) {
+    } catch (error) {
       alert(ERROR_MESSAGE.API.FIND_PASSWORD);
     }
   };

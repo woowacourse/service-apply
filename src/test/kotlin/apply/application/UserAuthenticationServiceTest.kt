@@ -15,7 +15,7 @@ import apply.createAuthenticationCode
 import apply.createUser
 import apply.domain.authenticationcode.AuthenticationCodeRepository
 import apply.domain.authenticationcode.getLastByEmail
-import apply.domain.user.UserAuthenticationException
+import apply.domain.user.UnidentifiedUserException
 import apply.domain.user.UserRepository
 import apply.domain.user.existsByEmail
 import apply.domain.user.findByEmail
@@ -133,14 +133,14 @@ internal class UserAuthenticationServiceTest {
         fun `회원이 존재하지만 인증에 실패하면 예외가 발생한다`() {
             every { userRepository.findByEmail(any()) } returns createUser()
             request = AuthenticateUserRequest(EMAIL, WRONG_PASSWORD)
-            assertThrows<UserAuthenticationException> { subject() }
+            assertThrows<UnidentifiedUserException> { subject() }
         }
 
         @Test
         fun `회원이 존재하지 않다면 예외가 발생한다`() {
             every { userRepository.findByEmail(any()) } returns null
             request = AuthenticateUserRequest(EMAIL, PASSWORD)
-            assertThrows<UserAuthenticationException> { subject() }
+            assertThrows<UnidentifiedUserException> { subject() }
         }
     }
 

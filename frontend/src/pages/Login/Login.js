@@ -38,7 +38,7 @@ const Login = () => {
         : PATH.RECRUITS;
 
       history.push(path);
-    } catch (e) {
+    } catch (error) {
       alert(ERROR_MESSAGE.API.LOGIN_FAILURE);
     }
   };

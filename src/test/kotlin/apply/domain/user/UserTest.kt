@@ -4,10 +4,10 @@ import apply.PASSWORD
 import apply.WRONG_PASSWORD
 import apply.createUser
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
+import org.junit.jupiter.api.assertThrows
 
 internal class UserTest {
     private lateinit var user: User
@@ -24,8 +24,7 @@ internal class UserTest {
 
     @Test
     fun `회원의 비밀번호와 다를 경우 예외가 발생한다`() {
-        assertThatThrownBy { user.authenticate(WRONG_PASSWORD) }
-            .isInstanceOf(UserAuthenticationException::class.java)
+        assertThrows<UnidentifiedUserException> { user.authenticate(WRONG_PASSWORD) }
     }
 
     @Test

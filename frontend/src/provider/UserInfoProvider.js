@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+
 import * as Api from "../api";
 import { ERROR_MESSAGE } from "../constants/messages";
 import useTokenContext from "../hooks/useTokenContext";
@@ -8,13 +9,19 @@ const UserInfoProvider = ({ children }) => {
   const [userInfo, setUserInfo] = useState(null);
   const { token } = useTokenContext();
 
+  const handleFetchError = (error) => {
+    if (!error) return;
+
+    alert(ERROR_MESSAGE.API.FETCHING_USER_INFO);
+  };
+
   const initUserInfo = async () => {
     try {
       const { data } = await Api.fetchUserInfo({ token });
 
       setUserInfo(data);
-    } catch (e) {
-      alert(ERROR_MESSAGE.API.FETCHING_USER_INFO);
+    } catch (error) {
+      handleFetchError(error);
     }
   };
 

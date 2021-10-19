@@ -28,7 +28,7 @@ class LoginUserResolver(
     ): User {
         val token = extractBearerToken(webRequest)
         if (!jwtTokenProvider.isValidToken(token)) {
-            throw IllegalArgumentException("로그인 정보가 정확하지 않습니다")
+            throw LoginFailedException()
         }
         val userEmail = jwtTokenProvider.getSubject(token)
 
@@ -36,12 +36,10 @@ class LoginUserResolver(
     }
 
     private fun extractBearerToken(request: NativeWebRequest): String {
-        val authorization = request.getHeader(AUTHORIZATION)
-            ?: throw IllegalArgumentException("로그인 정보가 정확하지 않습니다")
-
+        val authorization = request.getHeader(AUTHORIZATION) ?: throw LoginFailedException()
         val (tokenType, token) = splitToTokenFormat(authorization)
         if (tokenType != BEARER) {
-            throw IllegalArgumentException("로그인 정보가 정확하지 않습니다")
+            throw LoginFailedException()
         }
         return token
     }
@@ -51,7 +49,7 @@ class LoginUserResolver(
             val tokenFormat = authorization.split(" ")
             tokenFormat[0] to tokenFormat[1]
         } catch (e: IndexOutOfBoundsException) {
-            throw IllegalArgumentException("로그인 정보가 정확하지 않습니다")
+            throw LoginFailedException()
         }
     }
 }

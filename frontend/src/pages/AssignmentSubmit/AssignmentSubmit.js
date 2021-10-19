@@ -31,9 +31,14 @@ const AssignmentSubmit = () => {
     isEmpty,
   } = useAssignmentForm();
 
+  const handleSubmitError = (error) => {
+    if (!error) return;
+
+    alert(ERROR_MESSAGE.API.SUBMIT_ASSIGNMENT);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     const payload = {
       recruitmentId,
       missionId: currentMission.id,
@@ -53,9 +58,8 @@ const AssignmentSubmit = () => {
       alert(SUCCESS_MESSAGE.API.SUBMIT_ASSIGNMENT);
 
       history.push(PATH.MY_APPLICATION);
-    } catch (e) {
-      console.error(e);
-      alert(ERROR_MESSAGE.API.SUBMIT_ASSIGNMENT);
+    } catch (error) {
+      handleSubmitError(error);
     }
   };
 

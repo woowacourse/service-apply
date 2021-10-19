@@ -12,7 +12,7 @@ import CheckBox from "../../components/form/CheckBox/CheckBox";
 import Form from "../../components/form/Form/Form";
 import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
 import FORM from "../../constants/form";
-import { CONFIRM_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
+import { CONFIRM_MESSAGE, ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
 import PATH, { PARAM } from "../../constants/path";
 import useApplicationRegisterForm, {
   APPLICATION_REGISTER_FORM_NAME,
@@ -55,6 +55,13 @@ const ApplicationRegister = () => {
       recruitmentItemId: item.id,
     }));
 
+  const handleSaveError = (error) => {
+    if (!error) return;
+
+    alert(ERROR_MESSAGE.API.SUBMIT_APPLICATION);
+    history.replace(PATH.HOME);
+  };
+
   const save = async ({ referenceUrl, answers }) => {
     try {
       await Api.updateForm({
@@ -69,10 +76,9 @@ const ApplicationRegister = () => {
 
       setModifiedDateTime(formatDateTime(new Date()));
       alert(SUCCESS_MESSAGE.API.SUBMIT_APPLICATION);
-    } catch (e) {
-      alert(e.response.data.message);
-    } finally {
       history.replace(PATH.HOME);
+    } catch (error) {
+      handleSaveError(error);
     }
   };
 
@@ -90,7 +96,9 @@ const ApplicationRegister = () => {
 
       setModifiedDateTime(formatDateTime(new Date()));
       alert(SUCCESS_MESSAGE.API.SAVE_APPLICATION);
+
       if (status === PARAM.APPLICATION_FORM_STATUS.EDIT) return;
+
       const path = {
         pathname: generatePath(PATH.APPLICATION_FORM, {
           status: PARAM.APPLICATION_FORM_STATUS.EDIT,
@@ -98,10 +106,10 @@ const ApplicationRegister = () => {
         state: { currentRecruitment },
         search: generateQuery({ recruitmentId }),
       };
+
       history.replace(path);
-    } catch (e) {
-      alert(e.response.data.message);
-      history.replace(PATH.HOME);
+    } catch (error) {
+      handleSaveError(error);
     }
   };
 

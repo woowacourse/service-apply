@@ -18,9 +18,14 @@ const PasswordEdit = () => {
   const { form, errorMessage, handleChanges, handleCapsLockState, isValid, isEmpty } =
     usePasswordEditForm();
 
+  const handleSubmitError = (error) => {
+    if (!error) return;
+
+    alert(ERROR_MESSAGE.API.EDIT_PASSWORD);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     try {
       await fetchPasswordEdit({
         token,
@@ -31,8 +36,8 @@ const PasswordEdit = () => {
 
       resetToken();
       history.push(PATH.LOGIN);
-    } catch (e) {
-      alert(ERROR_MESSAGE.API.EDIT_PASSWORD);
+    } catch (error) {
+      handleSubmitError(error);
     }
   };
 

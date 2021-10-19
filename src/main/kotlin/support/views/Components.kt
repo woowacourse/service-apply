@@ -61,12 +61,14 @@ private fun createBox(
 ): HorizontalLayout {
     val textField = TextField().apply {
         label = labelText
+        isClearButtonVisible = true
     }
     textField.addKeyDownListener(
         Key.ENTER,
         {
-            eventListener(textField.value)
-            textField.clear()
+            if (!it.isComposing) {
+                eventListener(textField.value)
+            }
         }
     )
     return HorizontalLayout(

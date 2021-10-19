@@ -48,15 +48,15 @@ class User(
         identify(this.password == password) { "비밀번호가 일치하지 않습니다." }
     }
 
-    fun changePassword(oldPassword: Password, newPassword: Password) {
-        identify(this.password == oldPassword) { "기존 비밀번호가 일치하지 않습니다." }
-        this.password = newPassword
-    }
-
     fun resetPassword(name: String, birthday: LocalDate, password: String) {
         identify(information.same(name, birthday)) { "사용자 정보가 일치하지 않습니다." }
         this.password = Password(password)
         registerEvent(PasswordResetEvent(id, name, email, password))
+    }
+
+    fun changePassword(oldPassword: Password, newPassword: Password) {
+        identify(this.password == oldPassword) { "기존 비밀번호가 일치하지 않습니다." }
+        this.password = newPassword
     }
 
     fun changePhoneNumber(phoneNumber: String) {
@@ -66,7 +66,7 @@ class User(
     private fun identify(value: Boolean, lazyMessage: () -> Any = {}) {
         if (!value) {
             val message = lazyMessage()
-            throw UserAuthenticationException(message.toString())
+            throw UnidentifiedUserException(message.toString())
         }
     }
 }

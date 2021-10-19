@@ -45,7 +45,7 @@ const SignUp = () => {
     try {
       await postRegister(form);
       history.push(PATH.RECRUITS);
-    } catch (e) {
+    } catch (error) {
       alert(ERROR_MESSAGE.API.JOIN_FAILURE);
     }
   };

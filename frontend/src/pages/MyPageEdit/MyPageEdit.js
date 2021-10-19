@@ -19,15 +19,21 @@ const MyPageEdit = () => {
 
   const { form, errorMessage, init, handleChanges, isEmpty, isValid } = useMyPageEditForm();
 
+  const handleSubmitError = (error) => {
+    if (!error) return;
+
+    alert(ERROR_MESSAGE.API.EDIT_FAILURE);
+    history.push(PATH.MY_PAGE);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     try {
       await updateUserInfo(form);
       alert(SUCCESS_MESSAGE.API.EDIT_MY_PAGE);
       history.push(PATH.MY_PAGE);
-    } catch (e) {
-      alert(ERROR_MESSAGE.API.EDIT_FAILURE);
+    } catch (error) {
+      handleSubmitError(error);
     }
   };
 

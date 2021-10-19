@@ -88,6 +88,25 @@ const useApplicationRegisterForm = ({
     }));
   };
 
+  const handleInitError = (error) => {
+    if (!error) return;
+
+    history.replace({
+      pathname: generatePath(PATH.APPLICATION_FORM, {
+        status: PARAM.APPLICATION_FORM_STATUS.EDIT,
+      }),
+      search: generateQuery({ recruitmentId }),
+      state: { currentRecruitment },
+    });
+  };
+
+  const handleLoadFormError = (error) => {
+    if (!error) return;
+
+    alert(ERROR_MESSAGE.API.FETCHING_MY_APPLICATION);
+    history.replace(PATH.HOME);
+  };
+
   const loadForm = async () => {
     try {
       const { data } = await Api.fetchForm({ token, recruitmentId });
@@ -96,9 +115,8 @@ const useApplicationRegisterForm = ({
       setRequiredForm({ answers: answers.map((answer) => answer.contents) });
       setForm({ referenceUrl });
       setModifiedDateTime(formatDateTime(new Date(modifiedDateTime)));
-    } catch (e) {
-      alert(e.response.data.message);
-      history.replace(PATH.HOME);
+    } catch (error) {
+      handleLoadFormError(error);
     }
   };
 
@@ -106,15 +124,7 @@ const useApplicationRegisterForm = ({
     try {
       await Api.createForm({ token, recruitmentId });
     } catch (error) {
-      const path = {
-        pathname: generatePath(PATH.APPLICATION_FORM, {
-          status: PARAM.APPLICATION_FORM_STATUS.EDIT,
-        }),
-        search: generateQuery({ recruitmentId }),
-        state: { currentRecruitment },
-      };
-
-      history.replace(path);
+      handleInitError(error);
     }
   };
 
