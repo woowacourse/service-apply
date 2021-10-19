@@ -12,7 +12,9 @@ import com.amazonaws.services.simpleemail.model.Destination
 import com.amazonaws.services.simpleemail.model.Message
 import com.amazonaws.services.simpleemail.model.SendEmailRequest
 import org.springframework.boot.autoconfigure.mail.MailProperties
+import org.springframework.core.io.ByteArrayResource
 import org.springframework.stereotype.Component
+import javax.mail.Message as javaxMessage
 
 @Component
 class AwsMailSender(
@@ -42,6 +44,28 @@ class AwsMailSender(
                     .withBody(Body().withHtml(createContent(body)))
             )
         client.sendEmail(request)
+    }
+
+    override fun sendBcc(
+        toAddresses: Array<String>,
+        subject: String,
+        body: String,
+        files: Map<String, ByteArrayResource>
+    ) {
+        val multipartMimeMessage = message {
+            this.subject = subject
+            this.userName = mailProperties.username
+            this.recipient = Recipient(javaxMessage.RecipientType.BCC, toAddresses)
+            this.body = body
+            this.files = files
+        }.build()
+
+        val rawEmailRequest = multipartMimeMessage.getRawEmailRequest()
+        try {
+            client.sendRawEmail(rawEmailRequest)
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
     }
 
     private fun createContent(data: String): Content {

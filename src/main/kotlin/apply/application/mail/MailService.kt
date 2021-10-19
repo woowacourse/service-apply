@@ -7,6 +7,8 @@ import apply.domain.recruitment.getById
 import apply.domain.user.PasswordResetEvent
 import apply.domain.user.UserRepository
 import apply.domain.user.getById
+import org.springframework.boot.autoconfigure.mail.MailProperties
+import org.springframework.core.io.ByteArrayResource
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.springframework.transaction.event.TransactionalEventListener
@@ -19,8 +21,11 @@ class MailService(
     private val recruitmentRepository: RecruitmentRepository,
     private val applicationProperties: ApplicationProperties,
     private val templateEngine: ISpringTemplateEngine,
-    private val mailSender: MailSender
+    private val mailSender: MailSender,
+    private val mailProperties: MailProperties
 ) {
+    val MAIL_SENDING_UNIT = 50
+
     @Async
     @TransactionalEventListener
     fun sendPasswordResetMail(event: PasswordResetEvent) {
@@ -77,5 +82,13 @@ class MailService(
             "메일 인증 코드를 발송해 드립니다.",
             templateEngine.process("mail/email-authentication.html", context)
         )
+    }
+
+    @Async
+    fun sendMailsByBCC(request: MailData, files: Map<String, ByteArrayResource>) {
+        request.recipients.plus(mailProperties.username)
+        for (targetMailsPart in request.recipients.chunked(MAIL_SENDING_UNIT)) {
+            mailSender.sendBcc(targetMailsPart.toTypedArray(), request.subject, request.body, files)
+        }
     }
 }
