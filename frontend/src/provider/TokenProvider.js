@@ -28,9 +28,7 @@ const TokenProvider = ({ children }) => {
   };
 
   return (
-    <TokenContext.Provider
-      value={{ token, postRegister, fetchLogin, resetToken }}
-    >
+    <TokenContext.Provider value={{ token, postRegister, fetchLogin, resetToken }}>
       {children}
     </TokenContext.Provider>
   );

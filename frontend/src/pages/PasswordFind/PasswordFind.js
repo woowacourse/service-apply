@@ -1,18 +1,12 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { fetchPasswordFind } from "../../api/user";
-import Container, {
-  CONTAINER_SIZE,
-} from "../../components/@common/Container/Container";
+import Container, { CONTAINER_SIZE } from "../../components/@common/Container/Container";
 import BirthField from "../../components/form/BirthField/BirthField";
 import PATH from "../../constants/path";
 import useForm from "../../hooks/useForm";
 import { formatBirthday } from "../../utils/format/date";
-import {
-  validateDay,
-  validateMonth,
-  validateYear,
-} from "../../utils/validation/birth";
+import { validateDay, validateMonth, validateYear } from "../../utils/validation/birth";
 import { validateEmail } from "../../utils/validation/email";
 import { validateName } from "../../utils/validation/name";
 import styles from "./PasswordFind.module.css";

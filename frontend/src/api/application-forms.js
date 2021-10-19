@@ -21,5 +21,4 @@ export const fetchForm = ({ token, recruitmentId }) =>
 export const createForm = ({ token, recruitmentId }) =>
   axios.post(COMMON_PATH, { recruitmentId }, headers({ token }));
 
-export const updateForm = ({ token, data }) =>
-  axios.patch(COMMON_PATH, data, headers({ token }));
+export const updateForm = ({ token, data }) => axios.patch(COMMON_PATH, data, headers({ token }));
