@@ -9,7 +9,7 @@ fun UserRepository.findByEmail(email: String): User? = findByInformationEmail(em
 fun UserRepository.findAllByEmailIn(emails: List<String>): List<User> = findAllByInformationEmailIn(emails)
 fun UserRepository.existsByEmail(email: String): Boolean = existsByInformationEmail(email)
 fun UserRepository.getById(id: Long): User {
-    return findByIdOrNull(id) ?: throw NoSuchElementException("해당 회원은 존재하지 않습니다.")
+    return findByIdOrNull(id) ?: throw NoSuchElementException("회원이 존재하지 않습니다. id: $id")
 }
 
 interface UserRepository : JpaRepository<User, Long> {
