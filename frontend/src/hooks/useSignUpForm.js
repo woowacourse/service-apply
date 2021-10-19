@@ -86,7 +86,7 @@ const useSignUpForm = () => {
   };
 
   const handleChangePhoneNumber = ({ nativeEvent: { data }, target: { value } }) => {
-    if (Number.isNaN(data)) return;
+    if (isNaN(data)) return;
 
     const [firstHyphenIdx, secondHyphenIdx] = PHONE_NUMBER_HYPHEN_IDX;
     const result = formatHyphen(value, firstHyphenIdx, secondHyphenIdx).trim();
