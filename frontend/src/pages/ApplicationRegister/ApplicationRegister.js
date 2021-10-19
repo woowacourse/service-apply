@@ -12,7 +12,7 @@ import ResetButton from "../../components/form/ResetButton/ResetButton";
 import SubmitButton from "../../components/form/SubmitButton/SubmitButton";
 import TempSaveButton from "../../components/form/TempSaveButton/TempSaveButton";
 import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
-import { CONFIRM_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
+import { CONFIRM_MESSAGE, ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
 import PATH, { PARAM } from "../../constants/path";
 import useForm from "../../hooks/useForm";
 import useTokenContext from "../../hooks/useTokenContext";
@@ -64,6 +64,39 @@ const ApplicationRegister = () => {
     setModifiedDateTime(formatDateTime(new Date(applicationForm.modifiedDateTime)));
   };
 
+  const handleFetchFormError = (error) => {
+    if (!error) return;
+
+    alert(ERROR_MESSAGE.API.FETCHING_MY_APPLICATION);
+    history.replace(PATH.HOME);
+  };
+
+  const handleSubmitError = (error) => {
+    if (!error) return;
+
+    alert(ERROR_MESSAGE.API.SUBMIT_APPLICATION);
+    history.replace(PATH.HOME);
+  };
+
+  const handleSaveTempError = (error) => {
+    if (!error) return;
+
+    alert(ERROR_MESSAGE.API.SUBMIT_APPLICATION);
+    history.replace(PATH.HOME);
+  };
+
+  const handleInitError = (error) => {
+    if (!error) return;
+
+    history.replace({
+      pathname: generatePath(PATH.APPLICATION_FORM, {
+        status: PARAM.APPLICATION_FORM_STATUS.EDIT,
+      }),
+      search: generateQuery({ recruitmentId }),
+      state: { currentRecruitment },
+    });
+  };
+
   const fetchApplicationForm = useCallback(async () => {
     try {
       const { data } = await Api.fetchForm({
@@ -73,13 +106,12 @@ const ApplicationRegister = () => {
 
       fillForm(data);
     } catch (e) {
-      alert(e.response.data.message);
-      history.replace(PATH.HOME);
+      handleFetchFormError(e);
     }
   }, [history, token, recruitmentId]);
 
   const save = async (answers, referenceUrl = "", submitted) => {
-    Api.updateForm({
+    await Api.updateForm({
       token,
       data: { recruitmentId, referenceUrl, submitted, answers },
     });
@@ -94,17 +126,18 @@ const ApplicationRegister = () => {
     }));
 
   const submit = async (value) => {
-    if (window.confirm(CONFIRM_MESSAGE.SUBMIT_APPLICATION)) {
-      try {
-        const answers = getAnswers(value);
+    if (!window.confirm(CONFIRM_MESSAGE.SUBMIT_APPLICATION)) {
+      return;
+    }
 
-        await save(answers, value.url, true);
-        alert(SUCCESS_MESSAGE.API.SUBMIT_APPLICATION);
-      } catch (e) {
-        alert(e.response.data.message);
-      } finally {
-        history.replace(PATH.HOME);
-      }
+    try {
+      const answers = getAnswers(value);
+
+      await save(answers, value.url, true);
+      alert(SUCCESS_MESSAGE.API.SUBMIT_APPLICATION);
+      history.replace(PATH.HOME);
+    } catch (e) {
+      handleSubmitError(e);
     }
   };
 
@@ -131,8 +164,7 @@ const ApplicationRegister = () => {
         });
       }
     } catch (e) {
-      alert(e.response.data.message);
-      history.replace(PATH.HOME);
+      handleSaveTempError(e);
     }
   };
 
@@ -148,16 +180,8 @@ const ApplicationRegister = () => {
           recruitmentId,
         });
       }
-    } catch (error) {
-      console.error(error);
-
-      history.replace({
-        pathname: generatePath(PATH.APPLICATION_FORM, {
-          status: PARAM.APPLICATION_FORM_STATUS.EDIT,
-        }),
-        search: generateQuery({ recruitmentId }),
-        state: { currentRecruitment },
-      });
+    } catch (e) {
+      handleInitError(e);
     }
   };
 

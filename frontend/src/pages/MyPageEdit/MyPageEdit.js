@@ -20,15 +20,21 @@ const MyPageEdit = () => {
   const history = useHistory();
   const { userInfo, updateUserInfo } = useUserInfoContext();
 
+  const handleSubmitError = (error) => {
+    if (!error) return;
+
+    alert(ERROR_MESSAGE.API.EDIT_FAILURE);
+    history.push(PATH.MY_PAGE);
+  };
+
   const submit = async (value) => {
     try {
       await updateUserInfo(value);
       alert(SUCCESS_MESSAGE.API.EDIT_MY_PAGE);
+      history.push(PATH.MY_PAGE);
     } catch (e) {
-      alert(ERROR_MESSAGE.API.EDIT_FAILURE);
+      handleSubmitError(e);
     }
-
-    history.push(PATH.MY_PAGE);
   };
 
   const { handleSubmit, ...methods } = useForm({

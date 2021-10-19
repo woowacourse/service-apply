@@ -24,6 +24,12 @@ const AssignmentSubmit = () => {
 
   const [initialFormData, setInitialFormData] = useState({});
 
+  const handleSubmitError = (error) => {
+    if (!error) return;
+
+    alert(ERROR_MESSAGE.API.SUBMIT_ASSIGNMENT);
+  };
+
   const submit = async (assignmentData) => {
     const payload = {
       recruitmentId,
@@ -45,8 +51,7 @@ const AssignmentSubmit = () => {
 
       history.push(PATH.MY_APPLICATION);
     } catch (e) {
-      console.error(e);
-      alert(ERROR_MESSAGE.API.SUBMIT_ASSIGNMENT);
+      handleSubmitError(e);
     }
   };
 

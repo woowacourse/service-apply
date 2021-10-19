@@ -3,7 +3,7 @@ package apply.application
 import apply.domain.authenticationcode.AuthenticationCode
 import apply.domain.authenticationcode.AuthenticationCodeRepository
 import apply.domain.authenticationcode.getLastByEmail
-import apply.domain.user.UserAuthenticationException
+import apply.domain.user.UnidentifiedUserException
 import apply.domain.user.UserRepository
 import apply.domain.user.existsByEmail
 import apply.domain.user.findByEmail
@@ -28,8 +28,8 @@ class UserAuthenticationService(
 
     fun generateTokenByLogin(request: AuthenticateUserRequest): String {
         val user = userRepository.findByEmail(request.email)
-            ?.also { it.authenticate(request.password) }
-            ?: throw UserAuthenticationException()
+            ?: throw UnidentifiedUserException("요청 정보가 기존 회원 정보와 일치하지 않습니다.")
+        user.authenticate(request.password)
         return jwtTokenProvider.createToken(user.email)
     }
 

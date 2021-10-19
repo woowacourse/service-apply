@@ -4,6 +4,7 @@ import { fetchMyApplicationForms } from "../../api/application-forms";
 import Container from "../../components/@common/Container/Container";
 import Panel from "../../components/@common/Panel/Panel";
 import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
+import { ERROR_MESSAGE } from "../../constants/messages";
 import PATH, { PARAM } from "../../constants/path";
 import useMissions from "../../hooks/useMissions";
 import useRecruitmentContext from "../../hooks/useRecruitmentContext";
@@ -103,6 +104,13 @@ const MyApplication = () => {
       }
     };
 
+  const handleFetchError = (error) => {
+    if (!error) return;
+
+    alert(ERROR_MESSAGE.API.FETCHING_MY_APPLICATIONS);
+    setMyApplications([]);
+  };
+
   useEffect(() => {
     try {
       const fetchMyRecruitments = async () => {
@@ -113,8 +121,7 @@ const MyApplication = () => {
 
       fetchMyRecruitments();
     } catch (e) {
-      console.error(e);
-      setMyApplications([]);
+      handleFetchError(e);
     }
   }, [token]);
 
