@@ -9,13 +9,14 @@ const BirthField = ({ value, onChange, errorMessage, required, className, ...pro
   return (
     <div className={classNames(styles.box, className)}>
       <div className={styles["input-box"]}>
-        <Label for="birthday" required={required} className={styles.label}>
+        <Label htmlFor="birthday" required={required} className={styles.label}>
           생년월일
         </Label>
         <input
           id="birthday"
           type="date"
           value={value}
+          onKeyDown={(event) => event.preventDefault()}
           onChange={onChange}
           max={formatDate(new Date())}
           className={styles.input}
