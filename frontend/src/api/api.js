@@ -1,4 +1,5 @@
 import axios from "axios";
+import { LOCAL_STORAGE_KEY } from "../constants/key";
 import { ERROR_MESSAGE } from "../constants/messages";
 import PATH from "../constants/path";
 
@@ -11,6 +12,7 @@ axios.interceptors.response.use(
   function (error) {
     if (error.response.status === 401) {
       alert(ERROR_MESSAGE.API.TOKEN_EXPIRED);
+      localStorage.removeItem(LOCAL_STORAGE_KEY.ACCESS_TOKEN);
       document.location.href = PATH.LOGIN;
 
       return Promise.reject();
