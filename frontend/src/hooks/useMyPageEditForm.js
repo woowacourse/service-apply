@@ -60,7 +60,7 @@ const useMyPageEditForm = () => {
     form: requiredForm,
     errorMessage,
     init,
-    handleChange: {
+    handleChanges: {
       [MY_PAGE_EDIT_FORM_NAME.PHONE_NUMBER]: handleChangePhoneNumber,
     },
     isValid,

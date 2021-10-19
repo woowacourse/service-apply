@@ -25,7 +25,7 @@ const SignUp = () => {
   const {
     form,
     errorMessage,
-    handleChange,
+    handleChanges,
     handleCapsLockState,
     reset,
     setErrorMessage,
@@ -57,7 +57,7 @@ const SignUp = () => {
           label="개인정보 수집 및 이용 동의"
           name={SIGN_UP_FORM_NAME.IS_TERM_AGREED}
           checked={form[SIGN_UP_FORM_NAME.IS_TERM_AGREED]}
-          onChange={handleChange[SIGN_UP_FORM_NAME.IS_TERM_AGREED]}
+          onChange={handleChanges[SIGN_UP_FORM_NAME.IS_TERM_AGREED]}
           required
         >
           <p className={styles["summary-content"]}>{POLICY_SUMMARY}</p>
@@ -66,10 +66,10 @@ const SignUp = () => {
         <EmailField
           emailValue={form[SIGN_UP_FORM_NAME.EMAIL]}
           emailErrorMessage={errorMessage[SIGN_UP_FORM_NAME.EMAIL]}
-          onChangeEmail={handleChange[SIGN_UP_FORM_NAME.EMAIL]}
+          onChangeEmail={handleChanges[SIGN_UP_FORM_NAME.EMAIL]}
           authenticationCodeValue={form[SIGN_UP_FORM_NAME.AUTHENTICATION_CODE]}
           authenticationCodeErrorMessage={errorMessage[SIGN_UP_FORM_NAME.AUTHENTICATION_CODE]}
-          onChangeAuthenticationCode={handleChange[SIGN_UP_FORM_NAME.AUTHENTICATION_CODE]}
+          onChangeAuthenticationCode={handleChanges[SIGN_UP_FORM_NAME.AUTHENTICATION_CODE]}
           resetAuthenticationCode={() => reset(SIGN_UP_FORM_NAME.AUTHENTICATION_CODE)}
           emailStatus={emailStatus}
           setEmailStatus={setEmailStatus}
@@ -81,7 +81,7 @@ const SignUp = () => {
           placeholder="이름을 입력해 주세요."
           name={SIGN_UP_FORM_NAME.NAME}
           value={form[SIGN_UP_FORM_NAME.NAME]}
-          onChange={handleChange[SIGN_UP_FORM_NAME.NAME]}
+          onChange={handleChanges[SIGN_UP_FORM_NAME.NAME]}
           maxLength={FORM.NAME_MAX_LENGTH}
           errorMessage={errorMessage[SIGN_UP_FORM_NAME.NAME]}
           required
@@ -92,7 +92,7 @@ const SignUp = () => {
           type="tel"
           name={SIGN_UP_FORM_NAME.PHONE_NUMBER}
           value={form[SIGN_UP_FORM_NAME.PHONE_NUMBER]}
-          onChange={handleChange[SIGN_UP_FORM_NAME.PHONE_NUMBER]}
+          onChange={handleChanges[SIGN_UP_FORM_NAME.PHONE_NUMBER]}
           maxLength={FORM.PHONE_NUMBER_MAX_LENGTH}
           errorMessage={errorMessage[SIGN_UP_FORM_NAME.PHONE_NUMBER]}
           className={styles["input-box"]}
@@ -104,7 +104,7 @@ const SignUp = () => {
           type="password"
           name={SIGN_UP_FORM_NAME.PASSWORD}
           value={form[SIGN_UP_FORM_NAME.PASSWORD]}
-          onChange={handleChange[SIGN_UP_FORM_NAME.PASSWORD]}
+          onChange={handleChanges[SIGN_UP_FORM_NAME.PASSWORD]}
           onKeyUp={handleCapsLockState(SIGN_UP_FORM_NAME.PASSWORD)}
           minLength={FORM.PASSWORD_MIN_LENGTH}
           maxLength={FORM.PASSWORD_MAX_LENGTH}
@@ -117,7 +117,7 @@ const SignUp = () => {
           type="password"
           name={SIGN_UP_FORM_NAME.CONFIRM_PASSWORD}
           value={form[SIGN_UP_FORM_NAME.CONFIRM_PASSWORD]}
-          onChange={handleChange[SIGN_UP_FORM_NAME.CONFIRM_PASSWORD]}
+          onChange={handleChanges[SIGN_UP_FORM_NAME.CONFIRM_PASSWORD]}
           errorMessage={errorMessage[SIGN_UP_FORM_NAME.CONFIRM_PASSWORD]}
           minLength={FORM.PASSWORD_MIN_LENGTH}
           maxLength={FORM.PASSWORD_MAX_LENGTH}
@@ -126,13 +126,13 @@ const SignUp = () => {
         <BirthField
           name={SIGN_UP_FORM_NAME.BIRTHDAY}
           value={form[SIGN_UP_FORM_NAME.BIRTHDAY]}
-          onChange={handleChange[SIGN_UP_FORM_NAME.BIRTHDAY]}
+          onChange={handleChanges[SIGN_UP_FORM_NAME.BIRTHDAY]}
           required
         />
         <GenderField
           className={styles["input-box"]}
           value={form[SIGN_UP_FORM_NAME.GENDER]}
-          onChange={handleChange[SIGN_UP_FORM_NAME.GENDER]}
+          onChange={handleChanges[SIGN_UP_FORM_NAME.GENDER]}
           required
         />
 

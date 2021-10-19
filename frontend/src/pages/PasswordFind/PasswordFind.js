@@ -16,7 +16,7 @@ import styles from "./PasswordFind.module.css";
 const PasswordFind = () => {
   const history = useHistory();
 
-  const { form, errorMessage, handleChange, isValid, isEmpty } = usePasswordFindForm();
+  const { form, errorMessage, handleChanges, isValid, isEmpty } = usePasswordFindForm();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -41,7 +41,7 @@ const PasswordFind = () => {
           placeholder="이름을 입력해 주세요."
           name={PASSWORD_FIND_FORM_NAME.NAME}
           value={form[PASSWORD_FIND_FORM_NAME.NAME]}
-          onChange={handleChange[PASSWORD_FIND_FORM_NAME.NAME]}
+          onChange={handleChanges[PASSWORD_FIND_FORM_NAME.NAME]}
           errorMessage={errorMessage[PASSWORD_FIND_FORM_NAME.NAME]}
           maxLength={FORM.NAME_MAX_LENGTH}
           required
@@ -51,7 +51,7 @@ const PasswordFind = () => {
           placeholder="이메일 주소를 입력해 주세요."
           name={PASSWORD_FIND_FORM_NAME.EMAIL}
           value={form[PASSWORD_FIND_FORM_NAME.EMAIL]}
-          onChange={handleChange[PASSWORD_FIND_FORM_NAME.EMAIL]}
+          onChange={handleChanges[PASSWORD_FIND_FORM_NAME.EMAIL]}
           errorMessage={errorMessage[PASSWORD_FIND_FORM_NAME.EMAIL]}
           type="email"
           required
@@ -60,7 +60,7 @@ const PasswordFind = () => {
         <BirthField
           name={PASSWORD_FIND_FORM_NAME.BIRTHDAY}
           value={form[PASSWORD_FIND_FORM_NAME.BIRTHDAY]}
-          onChange={handleChange[PASSWORD_FIND_FORM_NAME.BIRTHDAY]}
+          onChange={handleChanges[PASSWORD_FIND_FORM_NAME.BIRTHDAY]}
           required
         />
         <div className={styles.buttons}>

@@ -170,7 +170,7 @@ const useSignUpForm = () => {
     reset,
     setErrorMessage: updateErrorMessage,
     handleCapsLockState,
-    handleChange: {
+    handleChanges: {
       [SIGN_UP_FORM_NAME.IS_TERM_AGREED]: handleChangeIsTermAgreed,
       [SIGN_UP_FORM_NAME.EMAIL]: handleChangeEmail,
       [SIGN_UP_FORM_NAME.AUTHENTICATION_CODE]: handleChangeAuthenticationCode,

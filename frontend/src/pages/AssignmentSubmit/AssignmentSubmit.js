@@ -26,7 +26,7 @@ const AssignmentSubmit = () => {
     form,
     errorMessage,
     init: initForm,
-    handleChange,
+    handleChanges,
     isValid,
     isEmpty,
   } = useAssignmentForm();
@@ -82,7 +82,7 @@ const AssignmentSubmit = () => {
           label="GitHub ID"
           name={ASSIGNMENT_FORM_NAME.GITHUB_USERNAME}
           value={form[ASSIGNMENT_FORM_NAME.GITHUB_USERNAME]}
-          onChange={handleChange[ASSIGNMENT_FORM_NAME.GITHUB_USERNAME]}
+          onChange={handleChanges[ASSIGNMENT_FORM_NAME.GITHUB_USERNAME]}
           maxLength={FORM.GITHUB_USERNAME_MAX_LENGTH}
           required
         />
@@ -91,7 +91,7 @@ const AssignmentSubmit = () => {
           type="url"
           name={ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL}
           value={form[ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL]}
-          onChange={handleChange[ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL]}
+          onChange={handleChanges[ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL]}
           errorMessage={errorMessage[ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL]}
           required
         />
@@ -99,7 +99,7 @@ const AssignmentSubmit = () => {
           label="과제 진행 소감"
           name={ASSIGNMENT_FORM_NAME.NOTE}
           value={form[ASSIGNMENT_FORM_NAME.NOTE]}
-          onChange={handleChange[ASSIGNMENT_FORM_NAME.NOTE]}
+          onChange={handleChanges[ASSIGNMENT_FORM_NAME.NOTE]}
           maxLength={FORM.NOTE_MAX_LENGTH}
           required
         />

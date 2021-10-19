@@ -35,7 +35,7 @@ const ApplicationRegister = () => {
 
   const {
     form,
-    handleChange,
+    handleChanges,
     errorMessage,
     modifiedDateTime,
     setModifiedDateTime,
@@ -128,7 +128,7 @@ const ApplicationRegister = () => {
             <MessageTextarea
               key={index}
               value={form[APPLICATION_REGISTER_FORM_NAME.ANSWERS][index]}
-              onChange={handleChange[APPLICATION_REGISTER_FORM_NAME.ANSWERS](index)}
+              onChange={handleChanges[APPLICATION_REGISTER_FORM_NAME.ANSWERS](index)}
               name={`recruitment-item-${index}`}
               label={`${index + 1}. ${item.title}`}
               description={item.description}
@@ -152,7 +152,7 @@ const ApplicationRegister = () => {
               </div>
             }
             value={form[APPLICATION_REGISTER_FORM_NAME.REFERENCE_URL]}
-            onChange={handleChange[APPLICATION_REGISTER_FORM_NAME.REFERENCE_URL]}
+            onChange={handleChanges[APPLICATION_REGISTER_FORM_NAME.REFERENCE_URL]}
             errorMessage={errorMessage[APPLICATION_REGISTER_FORM_NAME.REFERENCE_URL]}
             label="URL"
             className={styles["label-bold"]}
@@ -172,7 +172,7 @@ const ApplicationRegister = () => {
               name="agree"
               label="동의합니다."
               checked={form[APPLICATION_REGISTER_FORM_NAME.IS_TERM_AGREED]}
-              onChange={handleChange[APPLICATION_REGISTER_FORM_NAME.IS_TERM_AGREED]}
+              onChange={handleChanges[APPLICATION_REGISTER_FORM_NAME.IS_TERM_AGREED]}
               required
             />
           </div>

@@ -68,7 +68,7 @@ const usePasswordFindForm = () => {
   return {
     form: requiredForm,
     errorMessage,
-    handleChange: {
+    handleChanges: {
       [PASSWORD_FIND_FORM_NAME.NAME]: handleChangeName,
       [PASSWORD_FIND_FORM_NAME.EMAIL]: handleChangeEmail,
       [PASSWORD_FIND_FORM_NAME.BIRTHDAY]: handleChangeBirthday,

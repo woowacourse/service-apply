@@ -70,7 +70,7 @@ const useAssignmentForm = () => {
     form: requiredForm,
     errorMessage,
     init,
-    handleChange: {
+    handleChanges: {
       [ASSIGNMENT_FORM_NAME.GITHUB_USERNAME]: handleChangeGithubUsername,
       [ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL]: handleChangePullRequestUrl,
       [ASSIGNMENT_FORM_NAME.NOTE]: handleChangeNote,

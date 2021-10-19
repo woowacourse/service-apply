@@ -136,7 +136,7 @@ const useApplicationRegisterForm = ({
   return {
     form: { ...form, ...requiredForm },
     errorMessage,
-    handleChange: {
+    handleChanges: {
       [APPLICATION_REGISTER_FORM_NAME.ANSWERS]: handleChangeAnswer,
       [APPLICATION_REGISTER_FORM_NAME.REFERENCE_URL]: handleChangeReferenceUrl,
       [APPLICATION_REGISTER_FORM_NAME.IS_TERM_AGREED]: handleChangeIsTermAgreed,

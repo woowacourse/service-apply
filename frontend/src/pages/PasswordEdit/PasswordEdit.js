@@ -15,7 +15,7 @@ const PasswordEdit = () => {
   const { token, resetToken } = useTokenContext();
   const history = useHistory();
 
-  const { form, errorMessage, handleChange, handleCapsLockState, isValid, isEmpty } =
+  const { form, errorMessage, handleChanges, handleCapsLockState, isValid, isEmpty } =
     usePasswordEditForm();
 
   const handleSubmit = async (event) => {
@@ -45,7 +45,7 @@ const PasswordEdit = () => {
           type="password"
           name={PASSWORD_EDIT_FORM_NAME.OLD_PASSWORD}
           value={form[PASSWORD_EDIT_FORM_NAME.OLD_PASSWORD]}
-          onChange={handleChange[PASSWORD_EDIT_FORM_NAME.OLD_PASSWORD]}
+          onChange={handleChanges[PASSWORD_EDIT_FORM_NAME.OLD_PASSWORD]}
           onKeyUp={handleCapsLockState(PASSWORD_EDIT_FORM_NAME.OLD_PASSWORD)}
           errorMessage={errorMessage[PASSWORD_EDIT_FORM_NAME.OLD_PASSWORD]}
           required
@@ -56,7 +56,7 @@ const PasswordEdit = () => {
           type="password"
           name={PASSWORD_EDIT_FORM_NAME.PASSWORD}
           value={form[PASSWORD_EDIT_FORM_NAME.PASSWORD]}
-          onChange={handleChange[PASSWORD_EDIT_FORM_NAME.PASSWORD]}
+          onChange={handleChanges[PASSWORD_EDIT_FORM_NAME.PASSWORD]}
           onKeyUp={handleCapsLockState(PASSWORD_EDIT_FORM_NAME.PASSWORD)}
           errorMessage={errorMessage[PASSWORD_EDIT_FORM_NAME.PASSWORD]}
           required
@@ -67,7 +67,7 @@ const PasswordEdit = () => {
           type="password"
           name={PASSWORD_EDIT_FORM_NAME.CONFIRM_PASSWORD}
           value={form[PASSWORD_EDIT_FORM_NAME.CONFIRM_PASSWORD]}
-          onChange={handleChange[PASSWORD_EDIT_FORM_NAME.CONFIRM_PASSWORD]}
+          onChange={handleChanges[PASSWORD_EDIT_FORM_NAME.CONFIRM_PASSWORD]}
           errorMessage={errorMessage[PASSWORD_EDIT_FORM_NAME.CONFIRM_PASSWORD]}
           required
         />

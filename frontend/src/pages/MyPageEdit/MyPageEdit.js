@@ -17,7 +17,7 @@ const MyPageEdit = () => {
   const history = useHistory();
   const { userInfo, updateUserInfo } = useUserInfoContext();
 
-  const { form, errorMessage, init, handleChange, isEmpty, isValid } = useMyPageEditForm();
+  const { form, errorMessage, init, handleChanges, isEmpty, isValid } = useMyPageEditForm();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -60,7 +60,7 @@ const MyPageEdit = () => {
             type="tel"
             name={MY_PAGE_EDIT_FORM_NAME.PHONE_NUMBER}
             value={form[MY_PAGE_EDIT_FORM_NAME.PHONE_NUMBER]}
-            onChange={handleChange[MY_PAGE_EDIT_FORM_NAME.PHONE_NUMBER]}
+            onChange={handleChanges[MY_PAGE_EDIT_FORM_NAME.PHONE_NUMBER]}
             errorMessage={errorMessage[MY_PAGE_EDIT_FORM_NAME.PHONE_NUMBER]}
             initialValue={userInfo?.phoneNumber}
           />

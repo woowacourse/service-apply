@@ -17,7 +17,7 @@ const Login = () => {
   const currentRecruitment = location.state?.currentRecruitment;
 
   const { login } = useAuth();
-  const { form, errorMessage, handleChange, handleCapsLockState, isEmpty } = useLoginForm();
+  const { form, errorMessage, handleChanges, handleCapsLockState, isEmpty } = useLoginForm();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -52,7 +52,7 @@ const Login = () => {
           label="이메일"
           placeholder="이메일 주소를 입력해 주세요."
           value={form.email}
-          onChange={handleChange[LOGIN_FORM_NAME.EMAIL]}
+          onChange={handleChanges[LOGIN_FORM_NAME.EMAIL]}
           required
         />
         <MessageTextInput
@@ -61,7 +61,7 @@ const Login = () => {
           label="비밀번호"
           placeholder="비밀번호를 입력해 주세요."
           value={form.password}
-          onChange={handleChange[LOGIN_FORM_NAME.PASSWORD]}
+          onChange={handleChanges[LOGIN_FORM_NAME.PASSWORD]}
           onKeyUp={handleCapsLockState(LOGIN_FORM_NAME.PASSWORD)}
           errorMessage={errorMessage[LOGIN_FORM_NAME.PASSWORD]}
           required

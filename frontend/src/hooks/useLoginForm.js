@@ -47,7 +47,7 @@ const useLoginForm = () => {
   return {
     form: requiredForm,
     errorMessage,
-    handleChange: {
+    handleChanges: {
       [LOGIN_FORM_NAME.EMAIL]: handleEmailChange,
       [LOGIN_FORM_NAME.PASSWORD]: handlePasswordChange,
     },

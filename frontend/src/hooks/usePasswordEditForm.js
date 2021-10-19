@@ -87,7 +87,7 @@ const usePasswordEditForm = () => {
     form: requiredForm,
     errorMessage,
     handleCapsLockState,
-    handleChange: {
+    handleChanges: {
       [PASSWORD_EDIT_FORM_NAME.OLD_PASSWORD]: handleChangeOldPassword,
       [PASSWORD_EDIT_FORM_NAME.PASSWORD]: handleChangePassword,
       [PASSWORD_EDIT_FORM_NAME.CONFIRM_PASSWORD]: handleChangeConfirmPassword,
