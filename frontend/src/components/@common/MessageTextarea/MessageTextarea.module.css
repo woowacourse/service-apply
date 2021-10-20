@@ -7,6 +7,10 @@
   flex-direction: column;
 }
 
+.label {
+  margin-bottom: 0.375rem;
+}
+
 .length-limit {
   align-self: flex-end;
   color: var(--gray-007);
@@ -19,5 +23,5 @@
   margin-bottom: 10px;
   height: 12px;
   font-size: 12px;
-  color: #ff0000;
+  color: var(--red);
 }
