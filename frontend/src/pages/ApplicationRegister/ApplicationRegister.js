@@ -58,7 +58,8 @@ const ApplicationRegister = () => {
   const handleSaveError = (error) => {
     if (!error) return;
 
-    alert(ERROR_MESSAGE.API.SUBMIT_APPLICATION);
+    // TODO: 서버 에러응답을 클라이언트에서 분기처리하여 메시지 표시한다.
+    alert(error.response.data.message);
     history.replace(PATH.HOME);
   };
 
