@@ -21,7 +21,7 @@
 
 @media screen and (max-width: 800px) {
   .box {
-    width: 100vw;
-    margin: 1rem 0;
+    width: 100%;
+    margin: 0 0.5rem;
   }
 }
