@@ -17,6 +17,7 @@ import com.vaadin.flow.component.upload.Upload
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer
 import com.vaadin.flow.data.renderer.ComponentRenderer
 import com.vaadin.flow.data.renderer.Renderer
+import elemental.json.JsonObject
 import org.springframework.boot.autoconfigure.mail.MailProperties
 import org.springframework.core.io.ByteArrayResource
 import support.views.BindingFormLayout
@@ -40,7 +41,7 @@ class MailForm(
     private val uploadFile: MutableMap<String, ByteArrayResource> = LinkedHashMap()
     private val mailTargetsGrid: Grid<MailTargetResponse> = createMailTargetsGrid(mailTargets)
     private val recipientFilter: Component = createRecipientFilter()
-    private val fileUpload: Component = createFileUpload()
+    private val fileUpload: Upload = createFileUpload()
 
     init {
         add(subject, createSender(), recipientFilter, mailTargetsGrid, body, fileUpload)
@@ -105,12 +106,17 @@ class MailForm(
     }
 
     private fun createFileUpload(): Upload {
-        return createUpload("파일첨부", MultiFileMemoryBuffer()) {
+        val upload = createUpload("파일첨부", MultiFileMemoryBuffer()) {
             it.files.forEach { fileName ->
                 val byteArray = it.getInputStream(fileName).readBytes()
                 uploadFile[fileName] = ByteArrayResource(byteArray)
             }
         }
+        upload.element.addEventListener("file-remove") { event ->
+            val eventData: JsonObject = event.eventData
+            uploadFile.remove(eventData.getString("event.detail.file.name"))
+        }.addEventData("event.detail.file.name")
+        return upload
     }
 
     private fun createRemoveButton(): Renderer<MailTargetResponse> {
