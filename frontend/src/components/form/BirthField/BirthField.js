@@ -16,7 +16,6 @@ const BirthField = ({ value, onChange, errorMessage, required, className, ...pro
           id="birthday"
           type="date"
           value={value}
-          onKeyDown={(event) => event.preventDefault()}
           onChange={onChange}
           max={formatDate(new Date())}
           className={styles.input}
