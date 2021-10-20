@@ -13,6 +13,7 @@ export const ERROR_MESSAGE = {
     PULL_REQUEST_URL:
       "정확한 Pull Request 주소를 입력해 주세요. ex) https://github.com/woowacourse/mission/pull/1",
     GITHUB_USERNAME: "GitHub ID는 영어와 숫자 문자만 입력할 수 있습니다.",
+    BIRTHDAY: "유효하지 않은 날짜입니다. 정확한 날짜를 입력해주세요.",
   },
   API: {
     ALREADY_REGISTER: "이미 지원한 이력이 있습니다.",

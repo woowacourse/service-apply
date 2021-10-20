@@ -61,6 +61,7 @@ const PasswordFind = () => {
           name={PASSWORD_FIND_FORM_NAME.BIRTHDAY}
           value={form[PASSWORD_FIND_FORM_NAME.BIRTHDAY]}
           onChange={handleChanges[PASSWORD_FIND_FORM_NAME.BIRTHDAY]}
+          errorMessage={errorMessage[PASSWORD_FIND_FORM_NAME.BIRTHDAY]}
           required
         />
         <div className={styles.buttons}>
