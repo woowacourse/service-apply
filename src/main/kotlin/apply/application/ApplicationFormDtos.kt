@@ -2,31 +2,24 @@ package apply.application
 
 import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormAnswer
+import org.hibernate.validator.constraints.Length
 import java.time.LocalDateTime
-import javax.validation.constraints.NotNull
-import javax.validation.constraints.Size
 
 data class CreateApplicationFormRequest(
-    @field:NotNull
     val recruitmentId: Long
 )
 
 data class UpdateApplicationFormRequest(
-    @field:NotNull
     val recruitmentId: Long,
 
-    @field:Size(min = 0, max = 255)
+    @field:Length(max = 255)
     val referenceUrl: String = "",
-
     val submitted: Boolean = false,
-
     val answers: List<AnswerRequest> = emptyList()
 )
 
 data class AnswerRequest(
     val contents: String,
-
-    @field:NotNull
     val recruitmentItemId: Long
 )
 

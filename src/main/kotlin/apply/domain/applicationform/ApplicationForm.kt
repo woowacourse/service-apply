@@ -1,6 +1,7 @@
 package apply.domain.applicationform
 
 import support.domain.BaseRootEntity
+import java.net.URI
 import java.time.LocalDateTime
 import javax.persistence.Column
 import javax.persistence.Embedded
@@ -65,9 +66,20 @@ class ApplicationForm(
 
     fun update(referenceUrl: String, applicationFormAnswers: ApplicationFormAnswers) {
         checkSubmitted()
+        if (referenceUrl.isNotEmpty()) {
+            validateUrl(referenceUrl)
+        }
         this.referenceUrl = referenceUrl
         modifiedDateTime = LocalDateTime.now()
         answers = applicationFormAnswers
+    }
+
+    private fun validateUrl(referenceUrl: String) {
+        try {
+            URI.create(referenceUrl)
+        } catch (e: IllegalArgumentException) {
+            throw IllegalArgumentException("올바른 형식의 URL이 아닙니다.")
+        }
     }
 
     fun submit(applicationValidator: ApplicationValidator) {

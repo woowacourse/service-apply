@@ -2,13 +2,20 @@ package apply.application
 
 import apply.domain.assignment.Assignment
 import javax.validation.constraints.NotBlank
-import javax.validation.constraints.Size
+import javax.validation.constraints.Pattern
 
 data class AssignmentRequest(
-    @field:NotBlank
+    @field:Pattern(
+        regexp = "^[a-z\\d](?:[a-z\\d]|-(?=[a-z\\d])){0,38}",
+        flags = [Pattern.Flag.CASE_INSENSITIVE],
+        message = "올바른 형식의 이름이어야 합니다"
+    )
     val githubUsername: String,
 
-    @field:Size(min = 1, max = 255)
+    @field:Pattern(
+        regexp = "https://github\\.com(/[\\w\\-]+){2}/pull/[1-9]\\d*",
+        message = "올바른 형식의 URL이어야 합니다"
+    )
     val pullRequestUrl: String,
 
     @field:NotBlank
