@@ -52,10 +52,12 @@ const MyApplication = () => {
   const [myApplications, setMyApplications] = useState([]);
   const myRecruitments = useMemo(
     () =>
-      myApplications.map(({ recruitmentId, submitted }) => ({
-        ...recruitment.findById(recruitmentId),
-        submitted,
-      })),
+      myApplications
+        .map(({ recruitmentId, submitted }) => ({
+          ...recruitment.findById(recruitmentId),
+          submitted,
+        }))
+        .reverse(),
     [myApplications, recruitment]
   );
 
