@@ -7,6 +7,7 @@ import MessageTextInput from "../../components/@common/MessageTextInput/MessageT
 import BirthField from "../../components/form/BirthField/BirthField";
 import CancelButton from "../../components/form/CancelButton/CancelButton";
 import Form from "../../components/form/Form/Form";
+import FORM from "../../constants/form";
 import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
 import PATH from "../../constants/path";
 import useMyPageEditForm, { MY_PAGE_EDIT_FORM_NAME } from "../../hooks/useMyPageEditForm";
@@ -69,6 +70,7 @@ const MyPageEdit = () => {
             onChange={handleChanges[MY_PAGE_EDIT_FORM_NAME.PHONE_NUMBER]}
             errorMessage={errorMessage[MY_PAGE_EDIT_FORM_NAME.PHONE_NUMBER]}
             initialValue={userInfo?.phoneNumber}
+            maxLength={FORM.PHONE_NUMBER_MAX_LENGTH}
           />
           <BirthField name={MY_PAGE_EDIT_FORM_NAME.BIRTHDAY} value={userInfo?.birthday} readOnly />
 
