@@ -1,7 +1,7 @@
 package apply.domain.applicationform
 
 import support.domain.BaseRootEntity
-import java.net.URI
+import java.net.URL
 import java.time.LocalDateTime
 import javax.persistence.Column
 import javax.persistence.Embedded
@@ -74,10 +74,10 @@ class ApplicationForm(
         answers = applicationFormAnswers
     }
 
-    private fun validateUrl(referenceUrl: String) {
+    private fun validateUrl(url: String) {
         try {
-            URI.create(referenceUrl)
-        } catch (e: IllegalArgumentException) {
+            URL(url)
+        } catch (e: Exception) {
             throw IllegalArgumentException("올바른 형식의 URL이 아닙니다.")
         }
     }
