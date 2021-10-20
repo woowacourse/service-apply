@@ -5,9 +5,17 @@ import styles from "./TextInput.module.css";
 
 const TextInput = ({ className, type, readOnly, value, maxLength, onChange, ...props }) => {
   const handleChange = (event) => {
-    if (maxLength !== undefined && event.target.value.length > maxLength) return;
+    if (maxLength !== undefined && event.target.value.length > maxLength) {
+      return;
+    }
 
     onChange(event);
+  };
+
+  const handleWhiteSpace = (event) => {
+    if (event.key === "Tab" || event.key === " ") {
+      event.preventDefault();
+    }
   };
 
   return (
@@ -17,6 +25,7 @@ const TextInput = ({ className, type, readOnly, value, maxLength, onChange, ...p
       maxLength={maxLength}
       className={classNames(styles["text-input"], className)}
       readOnly={readOnly}
+      onKeyDown={handleWhiteSpace}
       onChange={handleChange}
       {...props}
     />
