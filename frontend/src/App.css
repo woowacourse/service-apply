@@ -33,10 +33,12 @@ ol {
 }
 
 a {
+  color: var(--black);
   text-decoration: none;
 }
 
 button {
+  font-size: 0.875rem;
   background-color: transparent;
   border: none;
   cursor: pointer;
