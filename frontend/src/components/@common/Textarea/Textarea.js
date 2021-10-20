@@ -10,7 +10,7 @@ const Textarea = ({ className, readOnly, value, maxLength, onChange, ...props })
     onChange(event);
   };
 
-  const handleEndWhiteSpace = (event) => {
+  const trimEnd = (event) => {
     event.target.value = event.target.value.trimEnd();
 
     onChange(event);
@@ -23,7 +23,7 @@ const Textarea = ({ className, readOnly, value, maxLength, onChange, ...props })
       maxLength={maxLength}
       className={classNames(styles["text-input"], className)}
       readOnly={readOnly}
-      onBlur={handleEndWhiteSpace}
+      onBlur={trimEnd}
       {...props}
     />
   );
