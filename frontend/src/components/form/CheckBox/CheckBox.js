@@ -14,6 +14,7 @@ const CheckBox = ({ label, name, checked, onChange, required, ...props }) => {
         required={required}
         {...props}
       />
+      <div className={styles["custom-checkbox"]} />
       {label}
     </Label>
   );
