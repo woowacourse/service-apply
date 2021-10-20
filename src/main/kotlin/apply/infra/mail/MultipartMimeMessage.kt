@@ -21,7 +21,9 @@ import javax.mail.internet.MimeMessage
 import javax.mail.internet.MimeMultipart
 import javax.mail.util.ByteArrayDataSource
 
-data class Recipient(val recipientType: Message.RecipientType, val toAddresses: Array<String>)
+data class Recipient(val recipientType: Message.RecipientType, val toAddresses: Array<String>) {
+    constructor() : this(Message.RecipientType.BCC, arrayOf())
+}
 
 class MultipartMimeMessage(
     session: Session,
@@ -32,7 +34,7 @@ class MultipartMimeMessage(
     val message: MimeMessage = MimeMessage(session)
 
     fun setSubject(subject: String) {
-        message.setSubject(subject, "UTF-8")
+        message.setSubject(subject, Charsets.UTF_8.name())
     }
 
     fun setFrom(userName: String) {
@@ -78,8 +80,7 @@ class MultipartMimeMessage(
     }
 
     private fun findMimeContentTypeByFileName(fileName: String): String {
-        return MimetypesFileTypeMap().getContentType(fileName)
-            ?: throw IllegalArgumentException("잘못된 확장자입니다.")
+        return MimetypesFileTypeMap().getContentType(fileName) ?: throw IllegalArgumentException("잘못된 확장자입니다.")
     }
 
     fun getRawEmailRequest(): SendRawEmailRequest {
@@ -101,21 +102,21 @@ data class MultipartMimeMessageBuilder(
     var mimeMixedPart: MimeMultipart = MimeMultipart("mixed"),
     var subject: String = "",
     var userName: String = "",
-    var recipient: Recipient? = null,
+    var recipient: Recipient = Recipient(),
     var body: String = "",
-    var files: Map<String, ByteArrayResource>? = null
+    var files: Map<String, ByteArrayResource> = mutableMapOf()
 ) {
     fun build(): MultipartMimeMessage {
         return MultipartMimeMessage(session, mimeMixedPart, applicationProperties, templateEngine).apply {
             setSubject(subject)
             setFrom(userName)
-            setRecipient(recipient!!)
+            setRecipient(recipient)
             addBody(body)
-            addAttachment(files!!)
+            addAttachment(files)
         }
     }
 }
 
-fun message(lambda: MultipartMimeMessageBuilder.() -> Unit): MultipartMimeMessageBuilder {
-    return MultipartMimeMessageBuilder().apply(lambda)
+fun message(lambda: MultipartMimeMessageBuilder.() -> Unit): MultipartMimeMessage {
+    return MultipartMimeMessageBuilder().apply(lambda).build()
 }

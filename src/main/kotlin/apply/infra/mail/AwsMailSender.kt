@@ -66,7 +66,7 @@ class AwsMailSender(
             this.recipient = Recipient(javaxMessage.RecipientType.BCC, toAddresses)
             this.body = body
             this.files = files
-        }.build()
+        }
 
         val rawEmailRequest = multipartMimeMessage.getRawEmailRequest()
         try {
@@ -77,6 +77,6 @@ class AwsMailSender(
     }
 
     private fun createContent(data: String): Content {
-        return Content(data).withCharset("UTF-8")
+        return Content(data).withCharset(Charsets.UTF_8.name())
     }
 }

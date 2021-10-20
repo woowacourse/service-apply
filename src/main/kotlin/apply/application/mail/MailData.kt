@@ -30,7 +30,6 @@ data class MailData(
     @field:NotNull
     var id: Long = 0L
 ) {
-
     constructor(mailHistory: MailHistory) : this(
         mailHistory.subject,
         mailHistory.body,

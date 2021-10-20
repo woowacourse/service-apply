@@ -38,18 +38,16 @@ class MailForm(
     private val subject: TextField = TextField("제목").apply { setWidthFull() }
     private val body: TextArea = createBody()
     private val mailTargets: MutableSet<MailTargetResponse> = mutableSetOf()
-    private val uploadFile: MutableMap<String, ByteArrayResource> = LinkedHashMap()
+    private val uploadFile: MutableMap<String, ByteArrayResource> = mutableMapOf()
     private val mailTargetsGrid: Grid<MailTargetResponse> = createMailTargetsGrid(mailTargets)
     private val recipientFilter: Component = createRecipientFilter()
     private val fileUpload: Upload = createFileUpload()
-
     init {
         add(subject, createSender(), recipientFilter, mailTargetsGrid, body, fileUpload)
         setResponsiveSteps(ResponsiveStep("0", 1))
         drawRequired()
         refreshGridFooter()
     }
-
     private fun createSender(): Component {
         return TextField("보낸사람").apply {
             value = mailProperties.username
