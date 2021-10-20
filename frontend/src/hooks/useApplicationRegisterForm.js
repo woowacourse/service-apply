@@ -43,8 +43,9 @@ const useApplicationRegisterForm = ({
   const { token } = useTokenContext();
 
   const isAnswersEmpty =
-    requiredForm[APPLICATION_REGISTER_FORM_NAME.ANSWERS].filter(Boolean).length <
-    recruitmentItems.length;
+    requiredForm[APPLICATION_REGISTER_FORM_NAME.ANSWERS]
+      .map((value) => value.trimEnd())
+      .filter(Boolean).length < recruitmentItems.length;
 
   const isEmpty = isAnswersEmpty || !requiredForm[APPLICATION_REGISTER_FORM_NAME.IS_TERM_AGREED];
 
