@@ -92,6 +92,7 @@ const EmailField = ({
       });
 
       setEmailStatus(EMAIL_STATUS.AUTHENTICATED);
+      setErrorMessage(SIGN_UP_FORM_NAME.AUTHENTICATION_CODE, "");
       resetTimer();
     } catch (error) {
       resetAuthenticationCode();
