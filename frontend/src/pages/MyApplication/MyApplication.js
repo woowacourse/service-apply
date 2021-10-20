@@ -143,7 +143,9 @@ const MyApplication = () => {
               onClickButton={routeToApplicationForm(recruitment)}
             />
 
-            <hr className={styles.hr} />
+            {missions?.[recruitment.id] && missions[recruitment.id].length > 0 && (
+              <hr className={styles.hr} />
+            )}
 
             {missions?.[recruitment.id] &&
               missions[recruitment.id].map((mission) => (
