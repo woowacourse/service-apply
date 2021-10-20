@@ -1,8 +1,12 @@
 package apply.infra.mail
 
+import apply.application.ApplicationProperties
 import com.amazonaws.services.simpleemail.model.RawMessage
 import com.amazonaws.services.simpleemail.model.SendRawEmailRequest
 import org.springframework.core.io.ByteArrayResource
+import org.thymeleaf.context.Context
+import org.thymeleaf.spring5.ISpringTemplateEngine
+import org.thymeleaf.spring5.SpringTemplateEngine
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 import java.util.Properties
@@ -19,7 +23,12 @@ import javax.mail.util.ByteArrayDataSource
 
 data class Recipient(val recipientType: Message.RecipientType, val toAddresses: Array<String>)
 
-class MultipartMimeMessage(session: Session, private val mimeMixedPart: MimeMultipart) {
+class MultipartMimeMessage(
+    session: Session,
+    private val mimeMixedPart: MimeMultipart,
+    private val applicationProperties: ApplicationProperties,
+    private val templateEngine: ISpringTemplateEngine
+) {
     val message: MimeMessage = MimeMessage(session)
 
     fun setSubject(subject: String) {
@@ -37,9 +46,19 @@ class MultipartMimeMessage(session: Session, private val mimeMixedPart: MimeMult
     fun addBody(body: String) {
         val messageBody = MimeMultipart("alternative")
         val wrap = MimeBodyPart()
-        val textPart = MimeBodyPart()
-        textPart.setContent(body, "text/plain; charset=UTF-8")
-        messageBody.addBodyPart(textPart)
+        val context = Context().apply {
+            setVariables(
+                mapOf(
+                    "email" to "email",
+                    "title" to "title",
+                    "content" to body,
+                    "url" to applicationProperties.url
+                )
+            )
+        }
+        val htmlPart = MimeBodyPart()
+        htmlPart.setContent(templateEngine.process("mail/common", context), "text/html; charset=UTF-8")
+        messageBody.addBodyPart(htmlPart)
         wrap.setContent(messageBody)
         message.setContent(mimeMixedPart)
         mimeMixedPart.addBodyPart(wrap)
@@ -77,6 +96,8 @@ class MultipartMimeMessage(session: Session, private val mimeMixedPart: MimeMult
 
 data class MultipartMimeMessageBuilder(
     var session: Session = Session.getDefaultInstance(Properties()),
+    var applicationProperties: ApplicationProperties = ApplicationProperties(""),
+    var templateEngine: ISpringTemplateEngine = SpringTemplateEngine(),
     var mimeMixedPart: MimeMultipart = MimeMultipart("mixed"),
     var subject: String = "",
     var userName: String = "",
@@ -85,7 +106,7 @@ data class MultipartMimeMessageBuilder(
     var files: Map<String, ByteArrayResource>? = null
 ) {
     fun build(): MultipartMimeMessage {
-        return MultipartMimeMessage(session, mimeMixedPart).apply {
+        return MultipartMimeMessage(session, mimeMixedPart, applicationProperties, templateEngine).apply {
             setSubject(subject)
             setFrom(userName)
             setRecipient(recipient!!)

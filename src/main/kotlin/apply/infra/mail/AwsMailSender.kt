@@ -1,5 +1,6 @@
 package apply.infra.mail
 
+import apply.application.ApplicationProperties
 import apply.application.mail.MailSender
 import com.amazonaws.auth.AWSStaticCredentialsProvider
 import com.amazonaws.auth.BasicAWSCredentials
@@ -14,11 +15,14 @@ import com.amazonaws.services.simpleemail.model.SendEmailRequest
 import org.springframework.boot.autoconfigure.mail.MailProperties
 import org.springframework.core.io.ByteArrayResource
 import org.springframework.stereotype.Component
+import org.thymeleaf.spring5.ISpringTemplateEngine
 import javax.mail.Message as javaxMessage
 
 @Component
 class AwsMailSender(
     private val mailProperties: MailProperties,
+    private val applicationProperties: ApplicationProperties,
+    private val templateEngine: ISpringTemplateEngine,
     awsProperties: AwsProperties
 ) : MailSender {
     private val client: AmazonSimpleEmailService = AmazonSimpleEmailServiceClientBuilder
@@ -52,7 +56,11 @@ class AwsMailSender(
         body: String,
         files: Map<String, ByteArrayResource>
     ) {
+        val applicationProperties = applicationProperties
+        val templateEngine = templateEngine
         val multipartMimeMessage = message {
+            this.applicationProperties = applicationProperties
+            this.templateEngine = templateEngine
             this.subject = subject
             this.userName = mailProperties.username
             this.recipient = Recipient(javaxMessage.RecipientType.BCC, toAddresses)
