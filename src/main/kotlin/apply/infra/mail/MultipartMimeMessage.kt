@@ -51,8 +51,6 @@ class MultipartMimeMessage(
         val context = Context().apply {
             setVariables(
                 mapOf(
-                    "email" to "email",
-                    "title" to "title",
                     "content" to body,
                     "url" to applicationProperties.url
                 )
