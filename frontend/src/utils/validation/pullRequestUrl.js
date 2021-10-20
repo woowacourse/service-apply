@@ -1,3 +1,3 @@
-const REGEX = /^(https:\/\/github\.com\/)([a-z0-9\-\w]+\/*)+(pull\/)[0-9]+/;
+const REGEX = /https:\/\/github\.com(\/[\w\-.]+){2}\/pull\/[1-9]\d*/;
 
 export const isValidPullRequestUrl = (v) => REGEX.test(v);
