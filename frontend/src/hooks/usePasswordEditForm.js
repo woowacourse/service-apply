@@ -53,7 +53,7 @@ const usePasswordEditForm = () => {
     const errorMessage = isValidPassword(target.value) ? "" : ERROR_MESSAGE.VALIDATION.PASSWORD;
 
     const confirmPasswordErrorMessage =
-      target.value === requiredForm.confirmPassword
+      !requiredForm.confirmPassword || target.value === requiredForm.confirmPassword
         ? ""
         : ERROR_MESSAGE.VALIDATION.CONFIRM_PASSWORD;
 
