@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ERROR_MESSAGE } from "../constants/messages";
+import { isValidGithubUsername } from "../utils/validation/githubUsername";
 import { isValidPullRequestUrl } from "../utils/validation/pullRequestUrl";
 
 export const ASSIGNMENT_FORM_NAME = {
@@ -45,6 +46,11 @@ const useAssignmentForm = () => {
   };
 
   const handleChangeGithubUsername = ({ target }) => {
+    const errorMessage = isValidGithubUsername(target.value)
+      ? ""
+      : ERROR_MESSAGE.VALIDATION.GITHUB_USERNAME;
+
+    updateErrorMessage(ASSIGNMENT_FORM_NAME.GITHUB_USERNAME, errorMessage);
     updateRequiredForm(ASSIGNMENT_FORM_NAME.GITHUB_USERNAME, target.value);
   };
 

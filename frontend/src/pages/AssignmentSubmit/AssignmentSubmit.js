@@ -88,6 +88,7 @@ const AssignmentSubmit = () => {
           value={form[ASSIGNMENT_FORM_NAME.GITHUB_USERNAME]}
           onChange={handleChanges[ASSIGNMENT_FORM_NAME.GITHUB_USERNAME]}
           maxLength={FORM.GITHUB_USERNAME_MAX_LENGTH}
+          errorMessage={errorMessage[ASSIGNMENT_FORM_NAME.GITHUB_USERNAME]}
           required
         />
         <MessageTextInput

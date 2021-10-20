@@ -12,6 +12,7 @@ export const ERROR_MESSAGE = {
       "이메일 인증 코드 유효시간이 초과하였습니다. 이메일 인증 코드를 재발급해 주세요.",
     PULL_REQUEST_URL:
       "정확한 Pull Request 주소를 입력해 주세요. ex) https://github.com/woowacourse/mission/pull/1",
+    GITHUB_USERNAME: "GitHub ID는 영어와 숫자 문자만 입력할 수 있습니다.",
   },
   API: {
     ALREADY_REGISTER: "이미 지원한 이력이 있습니다.",
