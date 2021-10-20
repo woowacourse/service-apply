@@ -22,7 +22,6 @@
 @media screen and (max-width: 800px) {
   .box {
     width: calc(100vw - 1rem);
-    margin: 0 0.5rem;
   }
 
   .narrow {
@@ -33,6 +32,5 @@
 @media screen and (max-width: 512px) {
   .narrow {
     width: calc(100vw - 1rem);
-    margin: 0 0.5rem;
   }
 }

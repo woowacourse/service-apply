@@ -123,7 +123,9 @@ const ApplicationRegister = () => {
 
   return (
     <div className={styles.box}>
-      {currentRecruitment && <RecruitmentItem recruitment={currentRecruitment} />}
+      {currentRecruitment && (
+        <RecruitmentItem className={styles["recruitment-item"]} recruitment={currentRecruitment} />
+      )}
 
       <Container title="지원서 작성">
         <Form onSubmit={handleSubmit}>
