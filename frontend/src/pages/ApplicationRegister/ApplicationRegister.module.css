@@ -51,10 +51,3 @@
 .buttons button {
   flex: 1;
 }
-
-@media screen and (max-width: 800px) {
-  .recruit-card,
-  .application-form {
-    width: 100vw;
-  }
-}

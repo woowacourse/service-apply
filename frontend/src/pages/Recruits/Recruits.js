@@ -1,16 +1,13 @@
-import React, { useMemo } from "react";
-import { Link, useHistory, useLocation, generatePath } from "react-router-dom";
 import classNames from "classnames";
-
+import React, { useMemo } from "react";
+import { generatePath, Link, useHistory, useLocation } from "react-router-dom";
 import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
-
+import PATH, { PARAM } from "../../constants/path";
+import { RECRUITMENT_STATUS } from "../../constants/recruitment";
+import { RECRUITS_TAB, RECRUITS_TAB_LIST } from "../../constants/tab";
 import useRecruitmentContext from "../../hooks/useRecruitmentContext";
 import useTokenContext from "../../hooks/useTokenContext";
 import { generateQuery } from "../../utils/route/query";
-import PATH, { PARAM } from "../../constants/path";
-import { RECRUITS_TAB, RECRUITS_TAB_LIST } from "../../constants/tab";
-import { RECRUITMENT_STATUS } from "../../constants/recruitment";
-
 import styles from "./Recruits.module.css";
 
 const BUTTON_LABEL = {
@@ -61,7 +58,7 @@ const Recruits = () => {
   };
 
   return (
-    <div className={styles.box}>
+    <>
       <nav className={styles.tab}>
         <ul className={styles["tab-list"]}>
           {RECRUITS_TAB_LIST.map(({ name, label }) => (
@@ -84,21 +81,23 @@ const Recruits = () => {
         </ul>
       </nav>
 
-      {recruitment && (
-        <div className={styles["recruitment-list"]} role="list">
-          {sortedRecruitment.map((recruitment) => (
-            <RecruitmentItem
-              key={recruitment.id}
-              recruitment={recruitment}
-              isButtonDisabled={recruitment.status !== RECRUITMENT_STATUS.RECRUITING}
-              buttonLabel={BUTTON_LABEL[recruitment.status]}
-              onClickButton={() => goToNewApplicationFormPage(recruitment)}
-              role="listitem"
-            />
-          ))}
-        </div>
-      )}
-    </div>
+      <div className={styles["recruitment-list-box"]}>
+        {recruitment && (
+          <div className={styles["recruitment-list"]} role="list">
+            {sortedRecruitment.map((recruitment) => (
+              <RecruitmentItem
+                key={recruitment.id}
+                recruitment={recruitment}
+                isButtonDisabled={recruitment.status !== RECRUITMENT_STATUS.RECRUITING}
+                buttonLabel={BUTTON_LABEL[recruitment.status]}
+                onClickButton={() => goToNewApplicationFormPage(recruitment)}
+                role="listitem"
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 

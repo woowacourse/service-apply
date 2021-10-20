@@ -21,7 +21,18 @@
 
 @media screen and (max-width: 800px) {
   .box {
-    width: 100%;
+    width: calc(100vw - 1rem);
+    margin: 0 0.5rem;
+  }
+
+  .narrow {
+    width: var(--pc-main-width-narrow);
+  }
+}
+
+@media screen and (max-width: 512px) {
+  .narrow {
+    width: calc(100vw - 1rem);
     margin: 0 0.5rem;
   }
 }
