@@ -67,6 +67,10 @@
 }
 
 @media screen and (max-width: 800px) {
+  .tab-item {
+    font-size: 0.875rem;
+  }
+
   .recruitment-list-box {
     width: calc(100vw - 1rem);
     margin: 3.625rem 0.5rem 0;
