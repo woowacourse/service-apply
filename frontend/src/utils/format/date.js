@@ -17,7 +17,7 @@ export const formatDateTime = (value) => {
 
 export const formatDate = (value) => {
   const year = value.getFullYear();
-  const month = value.getMonth();
+  const month = value.getMonth() + 1;
   const date = value.getDate();
 
   return `${year}-${String(month).padStart(2, "0")}-${String(date).padStart(2, "0")}`;
