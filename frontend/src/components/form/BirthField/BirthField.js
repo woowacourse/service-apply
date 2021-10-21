@@ -1,28 +1,34 @@
 import classNames from "classnames";
 import PropTypes from "prop-types";
-import React from "react";
+import React, { useState } from "react";
+import DatePicker, { registerLocale } from "react-datepicker";
 import { formatDate } from "../../../utils/format/date";
 import Label from "../../@common/Label/Label";
 import styles from "./BirthField.module.css";
+import "react-datepicker/dist/react-datepicker.css";
+import ko from "date-fns/locale/ko";
 
-const BirthField = ({ value, onChange, errorMessage, required, className, ...props }) => {
+registerLocale("ko", ko);
+
+const BirthField = ({ value, onChange, required, className, ...props }) => {
   return (
     <div className={classNames(styles.box, className)}>
       <div className={styles["input-box"]}>
         <Label htmlFor="birthday" required={required} className={styles.label}>
           생년월일
         </Label>
-        <input
+        <DatePicker
           id="birthday"
-          type="date"
-          value={value}
+          locale="ko"
+          dateFormat="yyyy-MM-dd"
+          selected={value}
           onChange={onChange}
-          max={formatDate(new Date())}
+          maxDate={new Date()}
           className={styles.input}
+          placeholderText="YYYY-MM-DD"
           {...props}
         />
       </div>
-      {errorMessage && <p className={styles["rule-field"]}>{errorMessage}</p>}
     </div>
   );
 };

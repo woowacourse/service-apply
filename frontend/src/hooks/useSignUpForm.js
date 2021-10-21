@@ -117,14 +117,8 @@ const useSignUpForm = () => {
     updateRequiredForm(SIGN_UP_FORM_NAME.CONFIRM_PASSWORD, target.value);
   };
 
-  const handleChangeBirthday = ({ target }) => {
-    const now = new Date();
-    const dateValue = new Date(target.value);
-
-    const errorMessage = dateValue < now ? "" : ERROR_MESSAGE.VALIDATION.BIRTHDAY;
-
-    updateErrorMessage(SIGN_UP_FORM_NAME.BIRTHDAY, errorMessage);
-    updateRequiredForm(SIGN_UP_FORM_NAME.BIRTHDAY, target.value);
+  const handleChangeBirthday = (date) => {
+    updateRequiredForm(SIGN_UP_FORM_NAME.BIRTHDAY, date);
   };
 
   const handleChangeGender = ({ target }) => {

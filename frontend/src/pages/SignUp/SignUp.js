@@ -127,7 +127,6 @@ const SignUp = () => {
           name={SIGN_UP_FORM_NAME.BIRTHDAY}
           value={form[SIGN_UP_FORM_NAME.BIRTHDAY]}
           onChange={handleChanges[SIGN_UP_FORM_NAME.BIRTHDAY]}
-          errorMessage={errorMessage[SIGN_UP_FORM_NAME.BIRTHDAY]}
           required
         />
         <GenderField

@@ -72,7 +72,11 @@ const MyPageEdit = () => {
             initialValue={userInfo?.phoneNumber}
             maxLength={FORM.PHONE_NUMBER_MAX_LENGTH}
           />
-          <BirthField name={MY_PAGE_EDIT_FORM_NAME.BIRTHDAY} value={userInfo?.birthday} readOnly />
+          <BirthField
+            name={MY_PAGE_EDIT_FORM_NAME.BIRTHDAY}
+            value={new Date(userInfo?.birthday)}
+            readOnly
+          />
 
           <div className={styles.buttons}>
             <CancelButton />

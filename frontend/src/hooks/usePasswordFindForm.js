@@ -56,14 +56,8 @@ const usePasswordFindForm = () => {
     updateRequiredForm(PASSWORD_FIND_FORM_NAME.EMAIL, target.value);
   };
 
-  const handleChangeBirthday = ({ target }) => {
-    const now = new Date();
-    const dateValue = new Date(target.value);
-
-    const errorMessage = dateValue < now ? "" : ERROR_MESSAGE.VALIDATION.BIRTHDAY;
-
-    updateErrorMessage(PASSWORD_FIND_FORM_NAME.BIRTHDAY, errorMessage);
-    updateRequiredForm(PASSWORD_FIND_FORM_NAME.BIRTHDAY, target.value);
+  const handleChangeBirthday = (date) => {
+    updateRequiredForm(PASSWORD_FIND_FORM_NAME.BIRTHDAY, date);
   };
 
   return {

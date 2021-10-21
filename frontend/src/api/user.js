@@ -1,15 +1,35 @@
 import axios from "axios";
 import { headers } from "./api";
+import { formatDate } from "../utils/format/date";
 
 const COMMON_PATH = "/api/users";
 
-export const fetchRegister = (userInfo) => axios.post(`${COMMON_PATH}/register`, userInfo);
+export const fetchRegister = ({
+  name,
+  email,
+  phoneNumber,
+  gender,
+  birthday,
+  password,
+  confirmPassword,
+  authenticationCode,
+}) =>
+  axios.post(`${COMMON_PATH}/register`, {
+    name,
+    email,
+    phoneNumber,
+    gender,
+    birthday: formatDate(birthday),
+    password,
+    confirmPassword,
+    authenticationCode,
+  });
 
 export const fetchLogin = ({ email, password }) =>
   axios.post(`${COMMON_PATH}/login`, { email, password });
 
 export const fetchPasswordFind = ({ name, email, birthday }) =>
-  axios.post(`${COMMON_PATH}/reset-password`, { name, email, birthday });
+  axios.post(`${COMMON_PATH}/reset-password`, { name, email, birthday: formatDate(birthday) });
 
 export const fetchPasswordEdit = ({ token, oldPassword, password, confirmPassword }) =>
   axios.post(
