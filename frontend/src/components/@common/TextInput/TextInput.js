@@ -13,7 +13,7 @@ const TextInput = ({ className, type, readOnly, value, maxLength, onChange, ...p
   };
 
   const handleWhiteSpace = (event) => {
-    if (event.key === "Tab" || event.key === " ") {
+    if (event.key === " ") {
       event.preventDefault();
     }
   };
