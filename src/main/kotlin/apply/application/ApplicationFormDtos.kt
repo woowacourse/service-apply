@@ -2,8 +2,8 @@ package apply.application
 
 import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormAnswer
+import org.hibernate.validator.constraints.URL
 import java.time.LocalDateTime
-import javax.validation.constraints.Size
 
 data class CreateApplicationFormRequest(
     val recruitmentId: Long
@@ -12,7 +12,7 @@ data class CreateApplicationFormRequest(
 data class UpdateApplicationFormRequest(
     val recruitmentId: Long,
 
-    @field:Size(max = 255)
+    @field:URL(regexp = ".{0,255}|", message = "공백이거나 올바른 URL이어야 합니다")
     val referenceUrl: String = "",
     val submitted: Boolean = false,
     val answers: List<AnswerRequest> = emptyList()
