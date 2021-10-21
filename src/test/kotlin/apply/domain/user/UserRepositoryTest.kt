@@ -31,7 +31,7 @@ internal class UserRepositoryTest(private val userRepository: UserRepository) {
                 Password("password")
             ),
             User(
-                "홍길동3",
+                "동해물과백두산이마르고닳도록하느님이보우하사우리나라만세무궁",
                 "c@email.com",
                 "010-0000-0000",
                 Gender.MALE,
@@ -43,7 +43,7 @@ internal class UserRepositoryTest(private val userRepository: UserRepository) {
     }
 
     @ParameterizedTest
-    @CsvSource("홍,3", "a@,1", "'',3", "4,0")
+    @CsvSource("홍,2", "a@,1", "'',3", "4,0")
     fun `이름 또는 이메일에 검색 키워드가 포함되는 회원들을 모두 조회한다`(keyword: String, expectedSize: Int) {
         val result = userRepository.findAllByKeyword(keyword)
         assertThat(result).hasSize(expectedSize)

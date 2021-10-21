@@ -8,13 +8,13 @@ import javax.persistence.Enumerated
 
 @Embeddable
 data class UserInformation(
-    @Column(nullable = false)
+    @Column(nullable = false, length = 30)
     val name: String,
 
     @Column(unique = true, nullable = false)
     val email: String,
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 13)
     val phoneNumber: String,
 
     @Column(nullable = false)

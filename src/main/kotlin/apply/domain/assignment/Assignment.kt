@@ -4,7 +4,6 @@ import support.domain.BaseEntity
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Index
-import javax.persistence.Lob
 import javax.persistence.Table
 import javax.persistence.UniqueConstraint
 
@@ -22,13 +21,13 @@ class Assignment(
     @Column(nullable = false)
     val missionId: Long,
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 39)
     var githubUsername: String,
 
     @Column(nullable = false)
     var pullRequestUrl: String,
 
-    @Lob
+    @Column(length = 1000)
     var note: String,
     id: Long = 0L
 ) : BaseEntity(id) {
