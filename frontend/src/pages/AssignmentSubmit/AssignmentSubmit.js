@@ -76,7 +76,7 @@ const AssignmentSubmit = () => {
 
   useEffect(() => {
     if (!recruitmentId || !currentMission) {
-      history.replace(PATH.MY_APPLICATION);
+      history.replace(PATH.RECRUITS);
 
       return;
     }
