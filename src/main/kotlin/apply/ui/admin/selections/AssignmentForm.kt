@@ -16,7 +16,7 @@ class AssignmentForm(assignmentData: AssignmentData) : FormLayout() {
                 value = assignmentData.githubUsername
                 isReadOnly = true
             },
-            HorizontalLayout(createUrlField(assignmentData)).apply {
+            HorizontalLayout(createUrlField(assignmentData.pullRequestUrl)).apply {
                 addClickListener {
                     UI.getCurrent().page.open(assignmentData.pullRequestUrl)
                 }
@@ -29,9 +29,9 @@ class AssignmentForm(assignmentData: AssignmentData) : FormLayout() {
         setResponsiveSteps(ResponsiveStep("0", 1))
     }
 
-    private fun createUrlField(assignmentData: AssignmentData): TextField {
+    private fun createUrlField(url: String): TextField {
         return TextField("Pull Request URL").apply {
-            value = assignmentData.pullRequestUrl
+            value = url
             isReadOnly = true
             setWidthFull()
         }
