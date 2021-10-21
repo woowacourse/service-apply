@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.http.HttpHeaders
 import org.springframework.mock.web.MockMultipartFile
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders
@@ -91,7 +92,9 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
                 "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets",
                 recruitmentId,
                 evaluationId,
-            ).param("keyword", keyword)
+            )
+                .param("keyword", keyword)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
         ).andExpect(status().isOk)
             .andExpect(
                 content().json(
@@ -127,6 +130,7 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
                 "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/renew",
                 recruitmentId, evaluationId,
             )
+                .header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
         ).andExpect(status().isOk)
             .andDo(
                 document(
@@ -150,6 +154,7 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
                 evaluationId,
                 targetId
             )
+                .header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
         ).andExpect(status().isOk)
             .andExpect(
                 content().json(
@@ -203,12 +208,10 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
                 recruitmentId,
                 evaluationId,
                 targetId
-            ).header("Content-Type", "application/json")
-                .content(
-                    objectMapper.writeValueAsString(
-                        gradeEvaluationRequest
-                    )
-                )
+            )
+                .header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+                .header(HttpHeaders.CONTENT_TYPE, "application/json")
+                .content(objectMapper.writeValueAsString(gradeEvaluationRequest))
         ).andExpect(status().isOk)
             .andDo(
                 document(
@@ -250,7 +253,9 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
                 recruitmentId,
                 evaluationId,
                 enumStatus.toString()
-            ).header("Content-Type", "application/json")
+            )
+                .header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+                .header(HttpHeaders.CONTENT_TYPE, "application/json")
         ).andExpect(status().isOk)
             .andDo(
                 document(
@@ -283,11 +288,13 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
             "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/grade",
             recruitmentId,
             evaluationId
-        ).file("file", file.bytes)
+        )
+            .file("file", file.bytes)
             .with { request ->
                 request.method = "PATCH"
                 request
             }
+            .header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
 
         mockMvc.perform(request)
             .andExpect(status().isOk)

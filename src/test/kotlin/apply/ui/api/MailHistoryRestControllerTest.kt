@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
+import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
@@ -29,8 +30,9 @@ class MailHistoryRestControllerTest : RestControllerTest() {
         every { mailHistoryService.save(any()) } just Runs
 
         mockMvc.post("/api/mail-history") {
-            content = objectMapper.writeValueAsString(createMailData())
+            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
             contentType = MediaType.APPLICATION_JSON
+            content = objectMapper.writeValueAsString(createMailData())
         }.andExpect {
             status { isOk }
         }
@@ -41,11 +43,12 @@ class MailHistoryRestControllerTest : RestControllerTest() {
         val mailData = createMailData()
         every { mailHistoryService.getById(any()) } returns mailData
 
-        mockMvc.get("/api/mail-history/{mailHistoryId}", mailData.id)
-            .andExpect {
-                status { isOk }
-                content { json(objectMapper.writeValueAsString(ApiResponse.success(mailData))) }
-            }
+        mockMvc.get("/api/mail-history/{mailHistoryId}", mailData.id) {
+            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+        }.andExpect {
+            status { isOk }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(mailData))) }
+        }
     }
 
     @Test
@@ -53,10 +56,11 @@ class MailHistoryRestControllerTest : RestControllerTest() {
         val mailDataValues = listOf(createMailData(), createMailData())
         every { mailHistoryService.findAll() } returns mailDataValues
 
-        mockMvc.get("/api/mail-history")
-            .andExpect {
-                status { isOk }
-                content { json(objectMapper.writeValueAsString(ApiResponse.success(mailDataValues))) }
-            }
+        mockMvc.get("/api/mail-history") {
+            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+        }.andExpect {
+            status { isOk }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(mailDataValues))) }
+        }
     }
 }

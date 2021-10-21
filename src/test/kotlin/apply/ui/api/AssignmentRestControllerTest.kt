@@ -70,7 +70,9 @@ internal class AssignmentRestControllerTest : RestControllerTest() {
             "/api/recruitments/{recruitmentId}/targets/{targetId}/assignments",
             recruitmentId,
             1L,
-        ).andExpect {
+        ) {
+            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+        }.andExpect {
             status { isOk }
             content { json(objectMapper.writeValueAsString(ApiResponse.success(assignmentData))) }
         }

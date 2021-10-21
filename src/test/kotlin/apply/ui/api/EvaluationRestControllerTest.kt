@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
+import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.get
@@ -37,10 +38,10 @@ internal class EvaluationRestControllerTest : RestControllerTest() {
                 EvaluationData(createEvaluation(), createRecruitment(), null, emptyList())
             )
             contentType = MediaType.APPLICATION_JSON
+            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+        }.andExpect {
+            status { isOk }
         }
-            .andExpect {
-                status { isOk }
-            }
     }
 
     @Test
@@ -48,11 +49,12 @@ internal class EvaluationRestControllerTest : RestControllerTest() {
         val evaluationData = EvaluationData(id = 1L)
         every { evaluationService.getDataById(any()) } returns evaluationData
 
-        mockMvc.get("/api/recruitments/{recruitmentId}/evaluations/{evaluationId}", 1L, evaluationData.id)
-            .andExpect {
-                status { isOk }
-                content { json(objectMapper.writeValueAsString(ApiResponse.success(evaluationData))) }
-            }
+        mockMvc.get("/api/recruitments/{recruitmentId}/evaluations/{evaluationId}", 1L, evaluationData.id) {
+            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+        }.andExpect {
+            status { isOk }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(evaluationData))) }
+        }
     }
 
     @Test
@@ -63,20 +65,22 @@ internal class EvaluationRestControllerTest : RestControllerTest() {
         )
         every { evaluationService.findAllWithRecruitment() } returns expected
 
-        mockMvc.get("/api/recruitments/{recruitmentId}/evaluations", 1L)
-            .andExpect {
-                status { isOk }
-                content { json(objectMapper.writeValueAsString(ApiResponse.success(expected))) }
-            }
+        mockMvc.get("/api/recruitments/{recruitmentId}/evaluations", 1L) {
+            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+        }.andExpect {
+            status { isOk }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(expected))) }
+        }
     }
 
     @Test
     fun `평가를 삭제한다`() {
         every { evaluationService.deleteById(any()) } just Runs
 
-        mockMvc.delete("/api/recruitments/{recruitmentId}/evaluations/{evaluationId}", 1L, 1L)
-            .andExpect {
-                status { isOk }
-            }
+        mockMvc.delete("/api/recruitments/{recruitmentId}/evaluations/{evaluationId}", 1L, 1L) {
+            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+        }.andExpect {
+            status { isOk }
+        }
     }
 }

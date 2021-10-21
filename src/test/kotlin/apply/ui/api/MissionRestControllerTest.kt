@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
-import org.springframework.http.HttpHeaders.AUTHORIZATION
+import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.get
@@ -40,8 +40,9 @@ internal class MissionRestControllerTest : RestControllerTest() {
             "/api/recruitments/{recruitmentId}/missions",
             recruitmentId
         ) {
-            content = objectMapper.writeValueAsString(createMissionData())
+            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
             contentType = MediaType.APPLICATION_JSON
+            content = objectMapper.writeValueAsString(createMissionData())
         }.andExpect {
             status { isOk }
         }
@@ -55,9 +56,9 @@ internal class MissionRestControllerTest : RestControllerTest() {
         )
         every { missionService.findAllByRecruitmentId(any()) } returns missionAndEvaluationResponses
 
-        mockMvc.get(
-            "/api/recruitments/{recruitmentId}/missions", recruitmentId
-        ).andExpect {
+        mockMvc.get("/api/recruitments/{recruitmentId}/missions", recruitmentId) {
+            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+        }.andExpect {
             status { isOk }
             content { json(objectMapper.writeValueAsString(ApiResponse.success(missionAndEvaluationResponses))) }
         }
@@ -72,8 +73,8 @@ internal class MissionRestControllerTest : RestControllerTest() {
             "/api/recruitments/{recruitmentId}/missions/me",
             recruitmentId
         ) {
+            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
             contentType = MediaType.APPLICATION_JSON
-            header(AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isOk }
             content { json(objectMapper.writeValueAsString(ApiResponse.success(missionResponses))) }
@@ -88,7 +89,9 @@ internal class MissionRestControllerTest : RestControllerTest() {
             "/api/recruitments/{recruitmentId}/missions/{missionId}",
             recruitmentId,
             1L
-        ).andExpect {
+        ) {
+            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+        }.andExpect {
             status { isOk }
         }
     }

@@ -14,6 +14,7 @@ import io.mockk.every
 import io.mockk.just
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.http.HttpHeaders
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders
 import org.springframework.restdocs.payload.JsonFieldType
@@ -99,10 +100,10 @@ internal class RecruitmentRestControllerTest : RestControllerTest() {
         mockMvc.perform(
             RestDocumentationRequestBuilders.post(
                 "/api/recruitments"
-            ).header("Content-Type", "application/json")
-                .content(
-                    objectMapper.writeValueAsString(recruitmentData)
-                )
+            )
+                .header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+                .header(HttpHeaders.CONTENT_TYPE, "application/json")
+                .content(objectMapper.writeValueAsString(recruitmentData))
         ).andExpect(status().isOk)
             .andDo(
                 document(
@@ -131,6 +132,7 @@ internal class RecruitmentRestControllerTest : RestControllerTest() {
                 "/api/recruitments/{id}",
                 recruitmentId
             )
+                .header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
         ).andExpect(status().isOk)
     }
 
@@ -143,6 +145,7 @@ internal class RecruitmentRestControllerTest : RestControllerTest() {
                 "/api/recruitments/{id}",
                 recruitmentId
             )
+                .header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
         ).andExpect(status().isOk)
             .andExpect(
                 content().json(
@@ -162,6 +165,7 @@ internal class RecruitmentRestControllerTest : RestControllerTest() {
                 "/api/recruitments/{recruitmentId}/detail",
                 recruitmentId
             )
+                .header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
         ).andExpect(status().isOk)
             .andExpect(
                 content().json(
@@ -180,6 +184,7 @@ internal class RecruitmentRestControllerTest : RestControllerTest() {
             RestDocumentationRequestBuilders.get(
                 "/api/recruitments/all"
             )
+                .header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
         ).andExpect(status().isOk)
             .andExpect(
                 content().json(
