@@ -87,8 +87,8 @@ const SignUp = () => {
           required
         />
         <MessageTextInput
-          label="핸드폰번호"
-          placeholder="연락 가능한 핸드폰번호를 입력해 주세요."
+          label="휴대폰 번호"
+          placeholder="연락 가능한 휴대폰 번호를 입력해 주세요."
           type="tel"
           name={SIGN_UP_FORM_NAME.PHONE_NUMBER}
           value={form[SIGN_UP_FORM_NAME.PHONE_NUMBER]}
