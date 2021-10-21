@@ -15,8 +15,13 @@ export const formatDateTime = (value) => {
   ).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
 };
 
-export const formatBirthday = ({ year, month, day }) =>
-  `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}T00:00:00`;
+export const formatDate = (value) => {
+  const year = value.getFullYear();
+  const month = value.getMonth() + 1;
+  const date = value.getDate();
+
+  return `${year}-${String(month).padStart(2, "0")}-${String(date).padStart(2, "0")}`;
+};
 
 export const formatTimerText = (seconds) =>
   `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;

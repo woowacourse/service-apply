@@ -8,7 +8,6 @@ import styles from "./MessageTextInput.module.css";
 const MessageTextInput = ({
   label,
   description,
-  initialValue,
   value,
   onChange,
   name,
@@ -53,7 +52,7 @@ MessageTextInput.propTypes = {
 
 MessageTextInput.defaultProps = {
   label: "",
-  initialValue: "",
+  value: "",
   required: false,
   description: "",
 };

@@ -92,7 +92,7 @@ const Header = () => {
               <>
                 <Link to={PATH.LOGIN}>로그인</Link>
                 <div className={styles.bar} />
-                <Link to={PATH.NEW_APPLICATION}>회원가입</Link>
+                <Link to={PATH.SIGN_UP}>회원가입</Link>
               </>
             )}
           </div>

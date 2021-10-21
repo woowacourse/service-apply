@@ -1,257 +1,200 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { generatePath, useHistory, useLocation, useParams } from "react-router-dom";
+import React from "react";
+import { generatePath, useHistory } from "react-router";
+import { useLocation, useParams } from "react-router-dom";
 import * as Api from "../../api";
+import Button, { BUTTON_VARIANT } from "../../components/@common/Button/Button";
 import Container from "../../components/@common/Container/Container";
 import Description from "../../components/@common/Description/Description";
 import Label from "../../components/@common/Label/Label";
+import MessageTextarea from "../../components/@common/MessageTextarea/MessageTextarea";
+import MessageTextInput from "../../components/@common/MessageTextInput/MessageTextInput";
 import CheckBox from "../../components/form/CheckBox/CheckBox";
 import Form from "../../components/form/Form/Form";
-import FormInput from "../../components/form/FormInput/FormInput";
-import FormTextarea from "../../components/form/FormTextarea/FormTextarea";
-import ResetButton from "../../components/form/ResetButton/ResetButton";
-import SubmitButton from "../../components/form/SubmitButton/SubmitButton";
-import TempSaveButton from "../../components/form/TempSaveButton/TempSaveButton";
 import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
+import FORM from "../../constants/form";
 import { CONFIRM_MESSAGE, ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
 import PATH, { PARAM } from "../../constants/path";
-import useForm from "../../hooks/useForm";
+import useApplicationRegisterForm, {
+  APPLICATION_REGISTER_FORM_NAME,
+} from "../../hooks/useApplicationRegisterForm";
+import useRecruitmentItem from "../../hooks/useRecruitmentItem";
 import useTokenContext from "../../hooks/useTokenContext";
-import FormProvider from "../../provider/FormProvider";
 import { formatDateTime } from "../../utils/format/date";
 import { generateQuery, parseQuery } from "../../utils/route/query";
-import { validateURL } from "../../utils/validation/url";
 import styles from "./ApplicationRegister.module.css";
 
 const ApplicationRegister = () => {
-  const history = useHistory();
   const location = useLocation();
-  const { token } = useTokenContext();
+  const history = useHistory();
   const { status } = useParams();
+  const { token } = useTokenContext();
 
   const { recruitmentId } = parseQuery(location.search);
   const { currentRecruitment } = location.state;
+  const { recruitmentItems } = useRecruitmentItem(recruitmentId);
 
-  const [recruitmentItems, setRecruitmentItems] = useState([]);
-  const [initialFormData, setInitialFormData] = useState({});
-  const [modifiedDateTime, setModifiedDateTime] = useState("");
+  const {
+    form,
+    handleChanges,
+    errorMessage,
+    modifiedDateTime,
+    setModifiedDateTime,
+    isEmpty,
+    isValid,
+    reset,
+  } = useApplicationRegisterForm({
+    recruitmentId,
+    recruitmentItems,
+    currentRecruitment,
+    status,
+  });
 
-  const fetchRecruitmentItems = useCallback(async () => {
-    try {
-      const { data } = await Api.fetchItems(recruitmentId);
-
-      setRecruitmentItems(data);
-    } catch (e) {
-      alert(e.response.data.message);
-      history.replace(PATH.HOME);
-    }
-  }, [history, recruitmentId]);
-
-  const fillForm = (applicationForm) => {
-    setInitialFormData((prev) => {
-      const answers = applicationForm.answers.reduce((acc, cur, index) => {
-        acc[`recruitment-item-${index}`] = cur.contents;
-
-        return acc;
-      }, {});
-
-      return {
-        ...prev,
-        referenceUrl: applicationForm.referenceUrl,
-        ...answers,
-      };
-    });
-
-    setModifiedDateTime(formatDateTime(new Date(applicationForm.modifiedDateTime)));
-  };
-
-  const handleFetchFormError = (error) => {
-    if (!error) return;
-
-    alert(ERROR_MESSAGE.API.FETCHING_MY_APPLICATION);
-    history.replace(PATH.HOME);
-  };
-
-  const handleSubmitError = (error) => {
-    if (!error) return;
-
-    alert(ERROR_MESSAGE.API.SUBMIT_APPLICATION);
-    history.replace(PATH.HOME);
-  };
-
-  const handleSaveTempError = (error) => {
-    if (!error) return;
-
-    alert(ERROR_MESSAGE.API.SUBMIT_APPLICATION);
-    history.replace(PATH.HOME);
-  };
-
-  const handleInitError = (error) => {
-    if (!error) return;
-
-    history.replace({
-      pathname: generatePath(PATH.APPLICATION_FORM, {
-        status: PARAM.APPLICATION_FORM_STATUS.EDIT,
-      }),
-      search: generateQuery({ recruitmentId }),
-      state: { currentRecruitment },
-    });
-  };
-
-  const fetchApplicationForm = useCallback(async () => {
-    try {
-      const { data } = await Api.fetchForm({
-        token,
-        recruitmentId,
-      });
-
-      fillForm(data);
-    } catch (e) {
-      handleFetchFormError(e);
-    }
-  }, [history, token, recruitmentId]);
-
-  const save = async (answers, referenceUrl = "", submitted) => {
-    await Api.updateForm({
-      token,
-      data: { recruitmentId, referenceUrl, submitted, answers },
-    });
-
-    setModifiedDateTime(formatDateTime(new Date()));
-  };
-
-  const getAnswers = (value) =>
+  const combineAnswers = (answers) =>
     recruitmentItems.map((item, index) => ({
-      contents: value[`recruitment-item-${index}`] || "",
+      contents: answers[index] ?? "",
       recruitmentItemId: item.id,
     }));
 
-  const submit = async (value) => {
-    if (!window.confirm(CONFIRM_MESSAGE.SUBMIT_APPLICATION)) {
-      return;
-    }
+  const handleSaveError = (error) => {
+    if (!error) return;
 
+    alert(ERROR_MESSAGE.API.SUBMIT_APPLICATION);
+    history.replace(PATH.HOME);
+  };
+
+  const save = async ({ referenceUrl, answers }) => {
     try {
-      const answers = getAnswers(value);
+      await Api.updateForm({
+        token,
+        data: {
+          recruitmentId,
+          referenceUrl,
+          answers: combineAnswers(answers),
+          submitted: true,
+        },
+      });
 
-      await save(answers, value.url, true);
+      setModifiedDateTime(formatDateTime(new Date()));
       alert(SUCCESS_MESSAGE.API.SUBMIT_APPLICATION);
       history.replace(PATH.HOME);
-    } catch (e) {
-      handleSubmitError(e);
+    } catch (error) {
+      handleSaveError(error);
     }
   };
 
-  const { value, handleSubmit, ...methods } = useForm({
-    validators: { url: validateURL },
-    submit,
-  });
-
-  const handelSaveTemp = async () => {
+  const tempSave = async ({ referenceUrl, answers }) => {
     try {
-      const answers = getAnswers(value);
+      await Api.updateForm({
+        token,
+        data: {
+          recruitmentId,
+          referenceUrl,
+          answers: combineAnswers(answers),
+          submitted: false,
+        },
+      });
 
-      await save(answers, value.url, false);
-
+      setModifiedDateTime(formatDateTime(new Date()));
       alert(SUCCESS_MESSAGE.API.SAVE_APPLICATION);
 
-      if (status !== PARAM.APPLICATION_FORM_STATUS.EDIT) {
-        history.replace({
-          pathname: generatePath(PATH.APPLICATION_FORM, {
-            status: PARAM.APPLICATION_FORM_STATUS.EDIT,
-          }),
-          state: { currentRecruitment },
-          search: generateQuery({ recruitmentId }),
-        });
-      }
-    } catch (e) {
-      handleSaveTempError(e);
+      if (status === PARAM.APPLICATION_FORM_STATUS.EDIT) return;
+
+      const path = {
+        pathname: generatePath(PATH.APPLICATION_FORM, {
+          status: PARAM.APPLICATION_FORM_STATUS.EDIT,
+        }),
+        state: { currentRecruitment },
+        search: generateQuery({ recruitmentId }),
+      };
+
+      history.replace(path);
+    } catch (error) {
+      handleSaveError(error);
     }
   };
 
-  const init = async () => {
-    try {
-      await fetchRecruitmentItems();
+  const handleSubmit = (event) => {
+    event.preventDefault();
 
-      if (status === PARAM.APPLICATION_FORM_STATUS.EDIT) {
-        await fetchApplicationForm();
-      } else {
-        await Api.createForm({
-          token,
-          recruitmentId,
-        });
-      }
-    } catch (e) {
-      handleInitError(e);
-    }
+    if (!window.confirm(CONFIRM_MESSAGE.SUBMIT_APPLICATION)) return;
+
+    save(form);
   };
-
-  useEffect(() => {
-    init();
-  }, [status]);
 
   return (
     <div className={styles.box}>
       {currentRecruitment && <RecruitmentItem recruitment={currentRecruitment} />}
 
       <Container title="지원서 작성">
-        <FormProvider value={value} {...methods}>
-          <Form onSubmit={handleSubmit}>
-            {status === PARAM.APPLICATION_FORM_STATUS.EDIT && (
-              <p className={styles["autosave-indicator"]}>
-                {`임시 저장되었습니다. (${modifiedDateTime})`}
-              </p>
-            )}
-            {recruitmentItems.length !== 0 &&
-              recruitmentItems.map((item, index) => (
-                <FormTextarea
-                  key={`recruitment-item-${index}`}
-                  name={`recruitment-item-${index}`}
-                  initialValue={initialFormData[`recruitment-item-${index}`]}
-                  label={`${index + 1}. ${item.title}`}
-                  description={item.description}
-                  placeholder="내용을 입력해 주세요."
-                  maxLength={item.maximumLength}
-                  className={styles["label-bold"]}
-                  required
-                />
-              ))}
-
-            <FormInput
-              name="url"
-              type="url"
-              initialValue={initialFormData.referenceUrl}
-              description={
-                <div className={styles["description-url"]}>
-                  자신을 드러낼 수 있는 개인 블로그, GitHub, 포트폴리오 주소 등이 있다면 입력해
-                  주세요.
-                  <div className={styles["description-url-small"]}>
-                    여러 개가 있는 경우 Notion, Google 문서 등을 사용하여 하나로 묶어 주세요.
-                  </div>
-                </div>
-              }
-              label="URL"
+        <Form onSubmit={handleSubmit}>
+          {status === PARAM.APPLICATION_FORM_STATUS.EDIT && (
+            <p className={styles["autosave-indicator"]}>
+              {`임시 저장되었습니다. (${modifiedDateTime})`}
+            </p>
+          )}
+          {(recruitmentItems || []).map((item, index) => (
+            <MessageTextarea
+              key={index}
+              value={form[APPLICATION_REGISTER_FORM_NAME.ANSWERS][index]}
+              onChange={handleChanges[APPLICATION_REGISTER_FORM_NAME.ANSWERS](index)}
+              name={`recruitment-item-${index}`}
+              label={`${index + 1}. ${item.title}`}
+              description={item.description}
+              placeholder="내용을 입력해 주세요."
+              maxLength={item.maximumLength}
               className={styles["label-bold"]}
-              placeholder="ex) https://tecoble.techcourse.co.kr/"
+              required
             />
+          ))}
 
-            <div className={styles["box-agree"]}>
-              <Label className={styles["text-bold"]} required>
-                지원서 작성 내용 사실 확인
-              </Label>
-              <Description className={styles["description-agree"]}>
-                기재한 사실 중 허위사실이 발견되는 즉시, 교육 대상자에서 제외되며 향후 지원도
-                불가능합니다.
-              </Description>
-              <CheckBox name="agree" label="동의합니다." required />
-            </div>
+          <MessageTextInput
+            name="url"
+            type="url"
+            description={
+              <div className={styles["description-url"]}>
+                자신을 드러낼 수 있는 개인 블로그, GitHub, 포트폴리오 주소 등이 있다면 입력해
+                주세요.
+                <div className={styles["description-url-small"]}>
+                  여러 개가 있는 경우 Notion, Google 문서 등을 사용하여 하나로 묶어 주세요.
+                </div>
+              </div>
+            }
+            value={form[APPLICATION_REGISTER_FORM_NAME.REFERENCE_URL]}
+            onChange={handleChanges[APPLICATION_REGISTER_FORM_NAME.REFERENCE_URL]}
+            errorMessage={errorMessage[APPLICATION_REGISTER_FORM_NAME.REFERENCE_URL]}
+            label="URL"
+            className={styles["label-bold"]}
+            maxLength={FORM.REFERENCE_URL_MAX_LENGTH}
+            placeholder="ex) https://tecoble.techcourse.co.kr/"
+          />
 
-            <div className={styles.buttons}>
-              <ResetButton />
-              <TempSaveButton onSaveTemp={handelSaveTemp} />
-              <SubmitButton />
-            </div>
-          </Form>
-        </FormProvider>
+          <div className={styles["box-agree"]}>
+            <Label className={styles["text-bold"]} required>
+              지원서 작성 내용 사실 확인
+            </Label>
+            <Description className={styles["description-agree"]}>
+              기재한 사실 중 허위사실이 발견되는 즉시, 교육 대상자에서 제외되며 향후 지원도
+              불가능합니다.
+            </Description>
+            <CheckBox
+              name="agree"
+              label="동의합니다."
+              checked={form[APPLICATION_REGISTER_FORM_NAME.IS_TERM_AGREED]}
+              onChange={handleChanges[APPLICATION_REGISTER_FORM_NAME.IS_TERM_AGREED]}
+              required
+            />
+          </div>
+
+          <div className={styles.buttons}>
+            <Button type="reset" variant={BUTTON_VARIANT.OUTLINED} onClick={reset}>
+              초기화
+            </Button>
+            <Button type="button" onClick={() => tempSave(form)} disabled={!isValid}>
+              임시 저장
+            </Button>
+            <Button disabled={!isValid || isEmpty}>제출</Button>
+          </div>
+        </Form>
       </Container>
     </div>
   );
