@@ -25,7 +25,7 @@ const MyPage = () => {
   };
 
   return (
-    <Container title={`${userInfo?.email} 님`}>
+    <Container title={`${userInfo?.name} 님`}>
       <div className={styles.box}>
         <div className={styles["illust-box"]}>
           <img src={myPageImage} alt="자기소개서 일러스트" />
@@ -33,8 +33,8 @@ const MyPage = () => {
         <div className={styles["info-box"]}>
           <ul>
             <li className={styles.info}>
-              <div className={styles["info-title"]}>이름</div>
-              <div className={styles["info-data"]}>{userInfo?.name}</div>
+              <div className={styles["info-title"]}>이메일</div>
+              <div className={styles["info-data"]}>{userInfo?.email}</div>
             </li>
             <li className={styles.info}>
               <div className={styles["info-title"]}>전화번호</div>

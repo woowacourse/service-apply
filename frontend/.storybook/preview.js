@@ -4,11 +4,9 @@ import { initializeWorker, mswDecorator } from "msw-storybook-addon";
 import { MemoryRouter } from "react-router-dom";
 import "../src/api/api";
 import "../src/App.css";
-import useForm from "../src/hooks/useForm";
 import { RecruitmentContext } from "../src/hooks/useRecruitmentContext";
 import { UserInfoContext } from "../src/hooks/useUserInfoContext";
 import { recruitmentDummy, userInfoDummy } from "../src/mock/dummy";
-import FormProvider from "../src/provider/FormProvider";
 import { recruitmentFilter } from "../src/provider/RecruitmentProvider";
 import TokenProvider from "../src/provider/TokenProvider";
 
@@ -29,25 +27,19 @@ export const parameters = {
 };
 
 export const decorators = [
-  (Story) => {
-    const method = useForm({});
-
-    return (
-      <RecruitmentContext.Provider
-        value={{
-          recruitment: recruitmentFilter(recruitmentDummy),
-        }}
-      >
-        <FormProvider {...method}>
-          <TokenProvider>
-            <UserInfoContext.Provider value={{ userInfo: userInfoDummy }}>
-              <MemoryRouter>
-                <Story />
-              </MemoryRouter>
-            </UserInfoContext.Provider>
-          </TokenProvider>
-        </FormProvider>
-      </RecruitmentContext.Provider>
-    );
-  },
+  (Story) => (
+    <RecruitmentContext.Provider
+      value={{
+        recruitment: recruitmentFilter(recruitmentDummy),
+      }}
+    >
+      <TokenProvider>
+        <UserInfoContext.Provider value={{ userInfo: userInfoDummy }}>
+          <MemoryRouter>
+            <Story />
+          </MemoryRouter>
+        </UserInfoContext.Provider>
+      </TokenProvider>
+    </RecruitmentContext.Provider>
+  ),
 ];

@@ -2,8 +2,9 @@ import classNames from "classnames";
 import PropTypes from "prop-types";
 import { useEffect } from "react";
 import { fetchAuthenticationCode, fetchVerifyAuthenticationCode } from "../../../api";
+import FORM from "../../../constants/form";
 import { ERROR_MESSAGE } from "../../../constants/messages";
-import useFormContext from "../../../hooks/useFormContext";
+import { SIGN_UP_FORM_NAME } from "../../../hooks/useSignUpForm";
 import useTimer from "../../../hooks/useTimer";
 import { formatTimerText } from "../../../utils/format/date";
 import Button, { BUTTON_VARIANT } from "../../@common/Button/Button";
@@ -17,15 +18,20 @@ export const EMAIL_STATUS = {
   AUTHENTICATED: "authenticated",
 };
 
-const INPUT_NAME = {
-  EMAIL: "email",
-  AUTHENTICATED_CODE: "authenticationCode",
-};
-
 const AUTHENTICATED_CODE_VALIDITY_SECONDS = 600;
 
-const EmailField = ({ emailStatus, setEmailStatus }) => {
-  const { value, errorMessage, handleChange, reset, register, unRegister } = useFormContext();
+const EmailField = ({
+  emailValue,
+  emailErrorMessage,
+  onChangeEmail,
+  authenticationCodeValue,
+  authenticationCodeErrorMessage,
+  onChangeAuthenticationCode,
+  resetAuthenticationCode,
+  emailStatus,
+  setEmailStatus,
+  setErrorMessage,
+}) => {
   const { timerSeconds, setTimerSeconds, startTimer, resetTimer } = useTimer(
     AUTHENTICATED_CODE_VALIDITY_SECONDS
   );
@@ -42,7 +48,7 @@ const EmailField = ({ emailStatus, setEmailStatus }) => {
           variant={BUTTON_VARIANT.OUTLINED}
           onClick={handleIssueEmailCode}
           className={styles["input-button"]}
-          disabled={value.email === "" || errorMessage.email !== null}
+          disabled={emailValue === "" || emailErrorMessage !== ""}
         >
           이메일
           <br />
@@ -62,13 +68,13 @@ const EmailField = ({ emailStatus, setEmailStatus }) => {
 
   const handleChangeEmail = (event) => {
     setEmailStatus(EMAIL_STATUS.INPUT);
-    reset(INPUT_NAME.AUTHENTICATED_CODE);
-    handleChange(event);
+    resetAuthenticationCode();
+    onChangeEmail(event);
   };
 
   const handleIssueEmailCode = async () => {
     try {
-      await fetchAuthenticationCode(value.email);
+      await fetchAuthenticationCode(emailValue);
 
       setEmailStatus(EMAIL_STATUS.WAITING_AUTHENTICATION);
       setTimerSeconds(AUTHENTICATED_CODE_VALIDITY_SECONDS);
@@ -81,27 +87,21 @@ const EmailField = ({ emailStatus, setEmailStatus }) => {
   const handleAuthenticateEmail = async () => {
     try {
       await fetchVerifyAuthenticationCode({
-        email: value.email,
-        authenticationCode: value.authenticationCode,
+        email: emailValue,
+        authenticationCode: authenticationCodeValue,
       });
 
       setEmailStatus(EMAIL_STATUS.AUTHENTICATED);
+      setErrorMessage(SIGN_UP_FORM_NAME.AUTHENTICATION_CODE, "");
       resetTimer();
     } catch (error) {
-      alert(ERROR_MESSAGE.API.INVALID_AUTHENTICATION_CODE);
-      reset(INPUT_NAME.AUTHENTICATED_CODE);
+      resetAuthenticationCode();
+      setErrorMessage(
+        SIGN_UP_FORM_NAME.AUTHENTICATION_CODE,
+        ERROR_MESSAGE.API.INVALID_AUTHENTICATION_CODE
+      );
     }
   };
-
-  useEffect(() => {
-    register(INPUT_NAME.EMAIL, "", true);
-    register(INPUT_NAME.AUTHENTICATED_CODE, "", false);
-
-    return () => {
-      unRegister(INPUT_NAME.EMAIL);
-      unRegister(INPUT_NAME.AUTHENTICATED_CODE);
-    };
-  }, []);
 
   useEffect(() => {
     if (timerSeconds > 0) return;
@@ -111,7 +111,7 @@ const EmailField = ({ emailStatus, setEmailStatus }) => {
     resetTimer();
 
     setEmailStatus(EMAIL_STATUS.INPUT);
-    reset(INPUT_NAME.AUTHENTICATED_CODE);
+    resetAuthenticationCode();
   }, [timerSeconds]);
 
   return (
@@ -123,17 +123,18 @@ const EmailField = ({ emailStatus, setEmailStatus }) => {
           </Label>
           <div className={styles["input-box"]}>
             <TextInput
-              value={value.email}
-              name={INPUT_NAME.EMAIL}
               type="email"
               placeholder="이메일 주소를 입력해 주세요."
+              name={SIGN_UP_FORM_NAME.EMAIL}
+              value={emailValue}
               onChange={handleChangeEmail}
+              maxLength={FORM.EMAIL_MAX_LENGTH}
               required
             />
             {getEmailButton()}
           </div>
         </div>
-        {errorMessage.email && <p className={styles["rule-field"]}>{errorMessage.email}</p>}
+        {emailErrorMessage && <p className={styles["rule-field"]}>{emailErrorMessage}</p>}
       </div>
 
       {emailStatus === EMAIL_STATUS.WAITING_AUTHENTICATION && (
@@ -149,9 +150,9 @@ const EmailField = ({ emailStatus, setEmailStatus }) => {
               </Label>
               <div className={styles["input-box"]}>
                 <TextInput
-                  value={value.authenticationCode}
-                  name={INPUT_NAME.AUTHENTICATED_CODE}
-                  onChange={handleChange}
+                  name={SIGN_UP_FORM_NAME.AUTHENTICATION_CODE}
+                  value={authenticationCodeValue}
+                  onChange={onChangeAuthenticationCode}
                   required
                 />
                 <Button
@@ -166,6 +167,9 @@ const EmailField = ({ emailStatus, setEmailStatus }) => {
               </div>
             </div>
           </div>
+          {authenticationCodeErrorMessage && (
+            <p className={styles["rule-field"]}>{authenticationCodeErrorMessage}</p>
+          )}
         </div>
       )}
     </>
@@ -173,6 +177,13 @@ const EmailField = ({ emailStatus, setEmailStatus }) => {
 };
 
 EmailField.propTypes = {
+  emailValue: PropTypes.string.isRequired,
+  emailErrorMessage: PropTypes.string,
+  onChangeEmail: PropTypes.func.isRequired,
+  authenticationCodeValue: PropTypes.string.isRequired,
+  authenticationCodeErrorMessage: PropTypes.string,
+  onChangeAuthenticationCode: PropTypes.func.isRequired,
+  resetAuthenticationCode: PropTypes.func.isRequired,
   emailStatus: PropTypes.string.isRequired,
   setEmailStatus: PropTypes.func.isRequired,
 };

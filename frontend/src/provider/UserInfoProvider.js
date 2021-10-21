@@ -20,8 +20,8 @@ const UserInfoProvider = ({ children }) => {
       const { data } = await Api.fetchUserInfo({ token });
 
       setUserInfo(data);
-    } catch (e) {
-      handleFetchError(e);
+    } catch (error) {
+      handleFetchError(error);
     }
   };
 

@@ -1,24 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useHistory } from "react-router";
 import myPageImage from "../../assets/image/myPage.svg";
+import Button from "../../components/@common/Button/Button";
 import Container from "../../components/@common/Container/Container";
 import MessageTextInput from "../../components/@common/MessageTextInput/MessageTextInput";
 import BirthField from "../../components/form/BirthField/BirthField";
-import Form from "../../components/form/Form/Form";
-import FormInput from "../../components/form/FormInput/FormInput";
-import SubmitButton from "../../components/form/SubmitButton/SubmitButton";
 import CancelButton from "../../components/form/CancelButton/CancelButton";
-import PATH from "../../constants/path";
-import useForm from "../../hooks/useForm";
-import useUserInfoContext from "../../hooks/useUserInfoContext";
-import FormProvider from "../../provider/FormProvider";
-import * as styles from "./MyPageEdit.module.css";
+import Form from "../../components/form/Form/Form";
+import FORM from "../../constants/form";
 import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
-import { validatePhoneNumber } from "../../utils/validation/phoneNumber";
+import PATH from "../../constants/path";
+import useMyPageEditForm, { MY_PAGE_EDIT_FORM_NAME } from "../../hooks/useMyPageEditForm";
+import useUserInfoContext from "../../hooks/useUserInfoContext";
+import * as styles from "./MyPageEdit.module.css";
 
 const MyPageEdit = () => {
   const history = useHistory();
   const { userInfo, updateUserInfo } = useUserInfoContext();
+
+  const { form, errorMessage, init, handleChanges, isEmpty, isValid } = useMyPageEditForm();
 
   const handleSubmitError = (error) => {
     if (!error) return;
@@ -27,50 +27,62 @@ const MyPageEdit = () => {
     history.push(PATH.MY_PAGE);
   };
 
-  const submit = async (value) => {
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     try {
-      await updateUserInfo(value);
+      await updateUserInfo(form);
       alert(SUCCESS_MESSAGE.API.EDIT_MY_PAGE);
       history.push(PATH.MY_PAGE);
-    } catch (e) {
-      handleSubmitError(e);
+    } catch (error) {
+      handleSubmitError(error);
     }
   };
 
-  const { handleSubmit, ...methods } = useForm({
-    phoneNumber: validatePhoneNumber,
-    submit,
-  });
+  useEffect(() => {
+    if (userInfo === null) return;
+
+    init({
+      requiredForm: {
+        [MY_PAGE_EDIT_FORM_NAME.PHONE_NUMBER]: userInfo.phoneNumber,
+      },
+    });
+  }, [userInfo]);
 
   return (
-    <Container title={`${userInfo?.email} 님`}>
+    <Container title={`${userInfo?.name} 님`}>
       <div className={styles.box}>
         <div className={styles["illust-box"]}>
           <img src={myPageImage} alt="자기소개서 일러스트" />
         </div>
-        <FormProvider {...methods}>
-          <Form className={styles["input-box"]} onSubmit={handleSubmit}>
-            <MessageTextInput
-              name="name"
-              label="이름"
-              className={styles.input}
-              value={userInfo?.name}
-              readOnly
-            />
-            <FormInput
-              name="phoneNumber"
-              initialValue={userInfo?.phoneNumber}
-              type="tel"
-              label="전화번호"
-            />
-            <BirthField initialValue={userInfo?.birthday} readOnly />
+        <Form className={styles["input-box"]} onSubmit={handleSubmit}>
+          <MessageTextInput
+            label="이메일"
+            name={MY_PAGE_EDIT_FORM_NAME.EMAIL}
+            className={styles.input}
+            value={userInfo?.email}
+            readOnly
+          />
+          <MessageTextInput
+            label="휴대폰 번호"
+            type="tel"
+            name={MY_PAGE_EDIT_FORM_NAME.PHONE_NUMBER}
+            value={form[MY_PAGE_EDIT_FORM_NAME.PHONE_NUMBER]}
+            onChange={handleChanges[MY_PAGE_EDIT_FORM_NAME.PHONE_NUMBER]}
+            errorMessage={errorMessage[MY_PAGE_EDIT_FORM_NAME.PHONE_NUMBER]}
+            initialValue={userInfo?.phoneNumber}
+            maxLength={FORM.PHONE_NUMBER_MAX_LENGTH}
+          />
+          <BirthField
+            name={MY_PAGE_EDIT_FORM_NAME.BIRTHDAY}
+            value={new Date(userInfo?.birthday)}
+            readOnly
+          />
 
-            <div className={styles.buttons}>
-              <CancelButton onClick={history.goBack} />
-              <SubmitButton>확인</SubmitButton>
-            </div>
-          </Form>
-        </FormProvider>
+          <div className={styles.buttons}>
+            <CancelButton />
+            <Button disabled={!isValid || isEmpty}>확인</Button>
+          </div>
+        </Form>
       </div>
     </Container>
   );

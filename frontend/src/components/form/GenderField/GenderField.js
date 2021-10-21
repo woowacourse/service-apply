@@ -1,22 +1,11 @@
-import PropTypes from "prop-types";
-import React, { useEffect } from "react";
 import classNames from "classnames";
-import useFormContext from "../../../hooks/useFormContext";
+import PropTypes from "prop-types";
+import React from "react";
 import Label from "../../@common/Label/Label";
 import Radio from "../../@common/Radio/Radio";
 import styles from "./GenderField.module.css";
 
-const GenderField = ({ required, className }) => {
-  const { handleChange, register, unRegister } = useFormContext();
-
-  useEffect(() => {
-    register("gender");
-
-    return () => {
-      unRegister("gender");
-    };
-  }, []);
-
+const GenderField = ({ required, className, value, onChange }) => {
   return (
     <div className={classNames(styles["gender-field"], className)}>
       <Label className={styles.label} required={required}>
@@ -24,17 +13,19 @@ const GenderField = ({ required, className }) => {
       </Label>
       <div className={styles["gender-group"]}>
         <Radio
-          onChange={handleChange}
+          onChange={onChange}
           name="gender"
           label="남자"
           value="MALE"
+          checked={value === "MALE"}
           required={required}
         />
         <Radio
-          onChange={handleChange}
+          onChange={onChange}
           name="gender"
           label="여자"
           value="FEMALE"
+          checked={value === "FEMALE"}
           required={required}
         />
       </div>
@@ -43,6 +34,8 @@ const GenderField = ({ required, className }) => {
 };
 
 GenderField.propTypes = {
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
   required: PropTypes.bool,
   className: PropTypes.string,
 };

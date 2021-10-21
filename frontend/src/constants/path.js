@@ -1,7 +1,7 @@
 const PATH = {
   HOME: "/",
   RECRUITS: "/recruits",
-  NEW_APPLICATION: "/applicants/new",
+  SIGN_UP: "/sign-up",
   MY_APPLICATION: "/applications/me",
   ASSIGNMENT: "/assignment/:status(new|edit)",
   APPLICATION_FORM: "/application-forms/:status(new|edit)",

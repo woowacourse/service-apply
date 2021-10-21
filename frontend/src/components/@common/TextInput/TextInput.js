@@ -3,14 +3,29 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 import styles from "./TextInput.module.css";
 
-const TextInput = ({ className, type, readOnly, value, maxLength, ...props }) => {
+const TextInput = ({ className, type, readOnly, value, maxLength, onChange, ...props }) => {
+  const handleChange = (event) => {
+    if (maxLength !== undefined && event.target.value.length > maxLength) {
+      return;
+    }
+
+    onChange(event);
+  };
+
+  const handleWhiteSpace = (event) => {
+    if (event.key === " ") {
+      event.preventDefault();
+    }
+  };
+
   return (
     <input
       type={type}
       value={value}
-      maxLength={maxLength}
       className={classNames(styles["text-input"], className)}
       readOnly={readOnly}
+      onKeyDown={handleWhiteSpace}
+      onChange={handleChange}
       {...props}
     />
   );
@@ -29,7 +44,6 @@ TextInput.defaultProps = {
   type: "text",
   readOnly: false,
   value: "",
-  maxLength: undefined,
 };
 
 export default TextInput;

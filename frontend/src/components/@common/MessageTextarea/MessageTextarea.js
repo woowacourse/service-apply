@@ -10,7 +10,7 @@ const MessageTextarea = ({
   name,
   value,
   description,
-  handleChange,
+  onChange,
   maxLength,
   required,
   errorMessage,
@@ -31,7 +31,7 @@ const MessageTextarea = ({
           name={name}
           required={required}
           value={value}
-          onChange={handleChange}
+          onChange={onChange}
           maxLength={maxLength}
           {...props}
         />
@@ -51,6 +51,7 @@ MessageTextarea.propTypes = {
 };
 
 MessageTextarea.defaultProps = {
+  value: "",
   label: "",
   required: false,
   description: "",

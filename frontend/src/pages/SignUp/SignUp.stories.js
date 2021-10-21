@@ -1,10 +1,10 @@
 import React from "react";
 import { Route, MemoryRouter } from "react-router-dom";
-import Join from "./Join";
+import SignUp from "./SignUp";
 
 export default {
-  title: "pages/Join",
-  component: Join,
+  title: "pages/SignUp",
+  component: SignUp,
   decorators: [
     (Story) => (
       <MemoryRouter
@@ -25,6 +25,6 @@ export default {
   ],
 };
 
-const Template = (args) => <Join />;
+const Template = () => <SignUp />;
 
 export const Default = Template.bind({});
