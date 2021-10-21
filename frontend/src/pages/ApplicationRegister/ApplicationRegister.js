@@ -29,9 +29,8 @@ const ApplicationRegister = () => {
   const { status } = useParams();
   const { token } = useTokenContext();
 
-  const query = parseQuery(location.search);
-  const recruitmentId = query.recruitmentId ?? null;
-  const currentRecruitment = location?.state?.currentRecruitment ?? null;
+  const { recruitmentId = null } = parseQuery(location.search);
+  const currentRecruitment = location.state?.currentRecruitment ?? null;
   const { recruitmentItems } = useRecruitmentItem(recruitmentId);
 
   const {
