@@ -15,20 +15,13 @@ const TokenProvider = ({ children }) => {
     localStorage.setItem(LOCAL_STORAGE_KEY.ACCESS_TOKEN, token);
   };
 
-  const fetchLogin = async (payload) => {
-    const { data: token } = await Api.fetchLogin(payload);
-
-    setToken(token);
-    localStorage.setItem(LOCAL_STORAGE_KEY.ACCESS_TOKEN, token);
-  };
-
   const resetToken = () => {
     setToken("");
     localStorage.setItem(LOCAL_STORAGE_KEY.ACCESS_TOKEN, "");
   };
 
   return (
-    <TokenContext.Provider value={{ token, postRegister, fetchLogin, resetToken }}>
+    <TokenContext.Provider value={{ token, postRegister, setToken, resetToken }}>
       {children}
     </TokenContext.Provider>
   );

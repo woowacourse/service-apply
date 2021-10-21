@@ -120,8 +120,8 @@ const MyApplication = () => {
       };
 
       fetchMyRecruitments();
-    } catch (e) {
-      handleFetchError(e);
+    } catch (error) {
+      handleFetchError(error);
     }
   }, [token]);
 

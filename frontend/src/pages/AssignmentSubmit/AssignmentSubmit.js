@@ -1,17 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useHistory, useLocation, useParams } from "react-router";
 import { fetchAssignment, patchAssignment, postAssignment } from "../../api/recruitments";
+import Button from "../../components/@common/Button/Button";
 import Container from "../../components/@common/Container/Container";
+import MessageTextarea from "../../components/@common/MessageTextarea/MessageTextarea";
+import MessageTextInput from "../../components/@common/MessageTextInput/MessageTextInput";
 import CancelButton from "../../components/form/CancelButton/CancelButton";
 import Form from "../../components/form/Form/Form";
-import FormInput from "../../components/form/FormInput/FormInput";
-import FormTextarea from "../../components/form/FormTextarea/FormTextarea";
-import SubmitButton from "../../components/form/SubmitButton/SubmitButton";
+import FORM from "../../constants/form";
 import { CONFIRM_MESSAGE, ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
 import PATH, { PARAM } from "../../constants/path";
-import useForm from "../../hooks/useForm";
+import useAssignmentForm, { ASSIGNMENT_FORM_NAME } from "../../hooks/useAssignmentForm";
 import useTokenContext from "../../hooks/useTokenContext";
-import FormProvider from "../../provider/FormProvider";
 import styles from "./AssignmentSubmit.module.css";
 
 const AssignmentSubmit = () => {
@@ -22,7 +22,14 @@ const AssignmentSubmit = () => {
 
   const { recruitmentId, currentMission } = location.state;
 
-  const [initialFormData, setInitialFormData] = useState({});
+  const {
+    form,
+    errorMessage,
+    init: initForm,
+    handleChanges,
+    isValid,
+    isEmpty,
+  } = useAssignmentForm();
 
   const handleSubmitError = (error) => {
     if (!error) return;
@@ -30,12 +37,13 @@ const AssignmentSubmit = () => {
     alert(ERROR_MESSAGE.API.SUBMIT_ASSIGNMENT);
   };
 
-  const submit = async (assignmentData) => {
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     const payload = {
       recruitmentId,
       missionId: currentMission.id,
       token,
-      assignmentData,
+      assignmentData: form,
     };
 
     try {
@@ -50,21 +58,10 @@ const AssignmentSubmit = () => {
       alert(SUCCESS_MESSAGE.API.SUBMIT_ASSIGNMENT);
 
       history.push(PATH.MY_APPLICATION);
-    } catch (e) {
-      handleSubmitError(e);
+    } catch (error) {
+      handleSubmitError(error);
     }
   };
-
-  const handleCancel = () => {
-    if (window.confirm(CONFIRM_MESSAGE.CANCEL_ASSIGNMENT_SUBMIT)) {
-      history.goBack();
-    }
-  };
-
-  const { handleSubmit, ...methods } = useForm({
-    validators: {},
-    submit,
-  });
 
   const init = async () => {
     const response = await fetchAssignment({
@@ -73,7 +70,7 @@ const AssignmentSubmit = () => {
       token,
     });
 
-    setInitialFormData(response.data);
+    initForm({ requiredForm: response.data });
   };
 
   useEffect(() => {
@@ -84,36 +81,41 @@ const AssignmentSubmit = () => {
 
   return (
     <Container title={currentMission.title}>
-      <FormProvider {...methods}>
-        <Form onSubmit={handleSubmit} className={styles.form}>
-          <FormInput
-            label="GitHub ID"
-            name="githubUsername"
-            initialValue={initialFormData?.githubUsername}
-            required
-          />
-          <FormInput
-            type="url"
-            label="Pull Request 주소"
-            name="pullRequestUrl"
-            initialValue={initialFormData?.pullRequestUrl}
-            required
-          />
-          <FormTextarea
-            label="과제 진행 소감"
-            name="note"
-            initialValue={initialFormData?.note}
-            required
-          />
-          <p className={styles["info-message"]}>
-            작성하신 내용은 과제 제출 마감전까지 수정하실 수 있습니다.
-          </p>
-          <div className={styles.buttons}>
-            <CancelButton onClick={handleCancel} />
-            <SubmitButton />
-          </div>
-        </Form>
-      </FormProvider>
+      <Form onSubmit={handleSubmit} className={styles.form}>
+        <MessageTextInput
+          label="GitHub ID"
+          name={ASSIGNMENT_FORM_NAME.GITHUB_USERNAME}
+          value={form[ASSIGNMENT_FORM_NAME.GITHUB_USERNAME]}
+          onChange={handleChanges[ASSIGNMENT_FORM_NAME.GITHUB_USERNAME]}
+          maxLength={FORM.GITHUB_USERNAME_MAX_LENGTH}
+          errorMessage={errorMessage[ASSIGNMENT_FORM_NAME.GITHUB_USERNAME]}
+          required
+        />
+        <MessageTextInput
+          label="Pull Request 주소"
+          type="url"
+          name={ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL}
+          value={form[ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL]}
+          onChange={handleChanges[ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL]}
+          errorMessage={errorMessage[ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL]}
+          required
+        />
+        <MessageTextarea
+          label="과제 진행 소감"
+          name={ASSIGNMENT_FORM_NAME.NOTE}
+          value={form[ASSIGNMENT_FORM_NAME.NOTE]}
+          onChange={handleChanges[ASSIGNMENT_FORM_NAME.NOTE]}
+          maxLength={FORM.NOTE_MAX_LENGTH}
+          required
+        />
+        <p className={styles["info-message"]}>
+          작성하신 내용은 과제 제출 마감전까지 수정하실 수 있습니다.
+        </p>
+        <div className={styles.buttons}>
+          <CancelButton confirmMessage={CONFIRM_MESSAGE.CANCEL_ASSIGNMENT_SUBMIT} />
+          <Button disabled={!isValid || isEmpty}>제출</Button>
+        </div>
+      </Form>
     </Container>
   );
 };

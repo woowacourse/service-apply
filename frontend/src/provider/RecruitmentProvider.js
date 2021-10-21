@@ -25,8 +25,7 @@ const RecruitmentProvider = ({ children }) => {
       };
 
       fetchData();
-    } catch (e) {
-      console.error(e);
+    } catch (error) {
       setRecruitments([]);
     }
   }, []);
