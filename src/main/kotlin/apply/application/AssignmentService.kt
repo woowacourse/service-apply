@@ -30,7 +30,7 @@ class AssignmentService(
     fun update(missionId: Long, userId: Long, request: AssignmentRequest) {
         check(missionRepository.getById(missionId).isSubmitting) { "제출 불가능한 과제입니다." }
         val assignment = assignmentRepository.findByUserIdAndMissionId(userId, missionId)
-            ?: throw IllegalArgumentException("제출한 과제 제출물이 존재하지 않습니다")
+            ?: throw IllegalArgumentException("제출한 과제 제출물이 존재하지 않습니다.")
         assignment.update(request.githubUsername, request.pullRequestUrl, request.note)
     }
 
@@ -48,7 +48,7 @@ class AssignmentService(
 
     fun getByUserIdAndMissionId(userId: Long, missionId: Long): AssignmentResponse {
         val assignment = assignmentRepository.findByUserIdAndMissionId(userId, missionId)
-            ?: throw IllegalArgumentException("제출한 과제 제출물이 존재하지 않습니다")
+            ?: throw IllegalArgumentException("제출한 과제 제출물이 존재하지 않습니다.")
         return AssignmentResponse(assignment.githubUsername, assignment.pullRequestUrl, assignment.note)
     }
 }

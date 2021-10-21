@@ -3,9 +3,8 @@ package apply.domain.evaluationtarget
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.repository.findByIdOrNull
 
-fun EvaluationTargetRepository.getById(evaluationTargetId: Long): EvaluationTarget {
-    return findByIdOrNull(evaluationTargetId) ?: throw NoSuchElementException()
-}
+fun EvaluationTargetRepository.getById(id: Long): EvaluationTarget = findByIdOrNull(id)
+    ?: throw NoSuchElementException("평가 대상자가 존재하지 않습니다. id: $id")
 
 interface EvaluationTargetRepository : JpaRepository<EvaluationTarget, Long> {
     fun findByEvaluationIdAndUserId(evaluationId: Long, userId: Long): EvaluationTarget?

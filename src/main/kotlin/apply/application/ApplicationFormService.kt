@@ -7,8 +7,8 @@ import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.applicationform.ApplicationValidator
 import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentRepository
+import apply.domain.recruitment.getById
 import apply.domain.recruitmentitem.RecruitmentItemRepository
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 
@@ -60,10 +60,7 @@ class ApplicationFormService(
             ?: throw IllegalArgumentException("해당하는 지원서가 없습니다.")
 
     private fun findApplicableRecruitment(recruitmentId: Long): Recruitment {
-        val recruitment = recruitmentRepository.findByIdOrNull(recruitmentId)
-        requireNotNull(recruitment) {
-            "지원하는 모집이 존재하지 않습니다."
-        }
+        val recruitment = recruitmentRepository.getById(recruitmentId)
         check(recruitment.isRecruiting) {
             "지원 불가능한 모집입니다."
         }

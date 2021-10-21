@@ -58,7 +58,7 @@ class RecruitmentService(
 
     fun deleteById(id: Long) {
         val recruitment = getById(id)
-        check(!recruitment.recruitable)
+        check(!recruitment.recruitable) { "모집 중인 모집은 삭제할 수 없습니다." }
         recruitmentRepository.delete(recruitment)
     }
 

@@ -140,9 +140,7 @@ class ApplicationFormServiceTest {
     fun `지원서가 없으면 예외를 던진다`() {
         every { applicationFormRepository.findByRecruitmentIdAndUserId(any(), any()) } returns null
 
-        val message =
-            assertThrows<IllegalArgumentException> { applicationFormService.getApplicationForm(1L, 1L) }.message
-        assertThat(message).isEqualTo("해당하는 지원서가 없습니다.")
+        assertThrows<IllegalArgumentException> { applicationFormService.getApplicationForm(1L, 1L) }
     }
 
     @Test
@@ -186,26 +184,24 @@ class ApplicationFormServiceTest {
         every { applicationFormRepository.save(any<ApplicationForm>()) } returns mockk()
         every { applicationValidator.validate(any(), any()) } just Runs
 
-        val message = assertThrows<IllegalStateException> {
+        assertThrows<IllegalStateException> {
             applicationFormService.create(
                 userId,
                 createApplicationFormRequest
             )
-        }.message
-        assertThat(message).isEqualTo("이미 작성한 지원서가 있습니다.")
+        }
     }
 
     @Test
     fun `모집이 없는 경우 지원할 수 없다`() {
         every { recruitmentRepository.findByIdOrNull(any()) } returns null
 
-        val message = assertThrows<IllegalArgumentException> {
+        assertThrows<NoSuchElementException> {
             applicationFormService.create(
                 userId,
                 createApplicationFormRequest
             )
-        }.message
-        assertThat(message).isEqualTo("지원하는 모집이 존재하지 않습니다.")
+        }
     }
 
     @Test
@@ -225,26 +221,24 @@ class ApplicationFormServiceTest {
         every { applicationFormRepository.existsByUserIdAndSubmittedTrue(any()) } returns false
         every { applicationFormRepository.findByRecruitmentIdAndUserId(any(), any()) } returns null
 
-        val message = assertThrows<IllegalArgumentException> {
+        assertThrows<IllegalArgumentException> {
             applicationFormService.update(
                 userId,
                 updateApplicationFormRequest
             )
-        }.message
-        assertThat(message).isEqualTo("해당하는 지원서가 없습니다.")
+        }
     }
 
     @Test
     fun `모집중이 아닌 지원서를 수정할 수 없다`() {
         every { recruitmentRepository.findByIdOrNull(any()) } returns recruitmentNotRecruiting
 
-        val message = assertThrows<IllegalStateException> {
+        assertThrows<IllegalStateException> {
             applicationFormService.update(
                 userId,
                 updateApplicationFormRequest
             )
-        }.message
-        assertThat(message).isEqualTo("지원 불가능한 모집입니다.")
+        }
     }
 
     @Test
@@ -256,13 +250,12 @@ class ApplicationFormServiceTest {
             )
         } returns applicationFormSubmitted
 
-        val message = assertThrows<IllegalStateException> {
+        assertThrows<IllegalStateException> {
             applicationFormService.getApplicationForm(
                 userId = 3L,
                 recruitmentId = 1L
             )
-        }.message
-        assertThat(message).isEqualTo("이미 제출한 지원서는 열람할 수 없습니다.")
+        }
     }
 
     @Test
@@ -272,13 +265,12 @@ class ApplicationFormServiceTest {
         every { applicationFormRepository.existsByUserIdAndSubmittedTrue(any()) } returns false
         every { applicationFormRepository.findByRecruitmentIdAndUserId(any(), any()) } returns applicationForm1
 
-        val message = assertThrows<IllegalArgumentException> {
+        assertThrows<IllegalArgumentException> {
             applicationFormService.update(
                 userId,
                 UpdateApplicationFormRequest(recruitmentId = 1L, submitted = true)
             )
-        }.message
-        assertThat(message).isEqualTo("작성하지 않은 문항이 존재합니다.")
+        }
     }
 
     @Test
@@ -288,7 +280,7 @@ class ApplicationFormServiceTest {
         every { applicationFormRepository.existsByUserIdAndSubmittedTrue(any()) } returns false
         every { applicationFormRepository.findByRecruitmentIdAndUserId(any(), any()) } returns applicationForm1
 
-        val message = assertThrows<IllegalArgumentException> {
+        assertThrows<IllegalArgumentException> {
             applicationFormService.update(
                 userId,
                 UpdateApplicationFormRequest(
@@ -300,7 +292,6 @@ class ApplicationFormServiceTest {
                     )
                 )
             )
-        }.message
-        assertThat(message).isEqualTo("모집 문항의 최대 글자 수를 초과하였습니다.")
+        }
     }
 }

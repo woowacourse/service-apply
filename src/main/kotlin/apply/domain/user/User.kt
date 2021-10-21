@@ -45,7 +45,7 @@ class User(
     )
 
     fun authenticate(password: Password) {
-        identify(this.password == password) { "비밀번호가 일치하지 않습니다." }
+        identify(this.password == password) { "사용자 정보가 일치하지 않습니다." }
     }
 
     fun resetPassword(name: String, birthday: LocalDate, password: String) {
