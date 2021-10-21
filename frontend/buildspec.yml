@@ -1,0 +1,18 @@
+version: 0.2
+phases:
+  install:
+    commands:
+      - npm install --prefix ./frontend
+  pre_build:
+    commands:
+      - npm run lint --prefix ./frontend
+  build:
+    commands:
+      - REACT_APP_API_BASE_URL=$BACKEND_URL npm run build --prefix ./frontend
+artifacts:
+  files:
+    - '**/*'
+  base-directory: frontend/build
+cache:
+  paths:
+    - '**/node_modules/**/*'
