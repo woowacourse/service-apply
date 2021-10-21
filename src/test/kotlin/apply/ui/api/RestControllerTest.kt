@@ -1,7 +1,11 @@
 package apply.ui.api
 
 import apply.config.RestDocsConfiguration
+import apply.createUser
+import apply.security.LoginUserResolver
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.ninjasquad.springmockk.MockkBean
+import io.mockk.every
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,6 +25,9 @@ import support.test.TestEnvironment
 @ExtendWith(RestDocumentationExtension::class)
 @TestEnvironment
 abstract class RestControllerTest {
+    @MockkBean
+    private lateinit var loginUserResolver: LoginUserResolver
+
     @Autowired
     lateinit var objectMapper: ObjectMapper
 
@@ -40,5 +47,9 @@ abstract class RestControllerTest {
                 )
             )
             .build()
+        loginUserResolver.also {
+            every { it.supportsParameter(any()) } returns true
+            every { it.resolveArgument(any(), any(), any(), any()) } returns createUser()
+        }
     }
 }
