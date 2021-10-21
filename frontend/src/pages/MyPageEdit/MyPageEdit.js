@@ -61,7 +61,6 @@ const MyPageEdit = () => {
             className={styles.input}
             value={userInfo?.email}
             disabled
-            readOnly
           />
           <MessageTextInput
             label="휴대폰 번호"
@@ -77,9 +76,7 @@ const MyPageEdit = () => {
             name={MY_PAGE_EDIT_FORM_NAME.BIRTHDAY}
             value={new Date(userInfo?.birthday)}
             disabled
-            readOnly
           />
-
           <div className={styles.buttons}>
             <CancelButton />
             <Button disabled={!isValid || isEmpty}>확인</Button>
