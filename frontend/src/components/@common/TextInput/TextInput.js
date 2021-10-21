@@ -22,10 +22,10 @@ const TextInput = ({ className, type, readOnly, value, maxLength, onChange, ...p
     <input
       type={type}
       value={value}
-      maxLength={maxLength}
       className={classNames(styles["text-input"], className)}
       readOnly={readOnly}
       onKeyDown={handleWhiteSpace}
+      onCompositionStart={handleWhiteSpace}
       onChange={handleChange}
       {...props}
     />
