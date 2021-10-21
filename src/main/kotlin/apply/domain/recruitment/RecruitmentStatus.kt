@@ -13,7 +13,7 @@ enum class RecruitmentStatus {
                 now.isBetween(period) && recruitable -> RECRUITING
                 now.isBetween(period) && !recruitable -> UNRECRUITABLE
                 now.isAfter(period) -> ENDED
-                else -> throw IllegalArgumentException("해당하는 모집의 상태가 없습니다.")
+                else -> throw IllegalArgumentException()
             }
         }
     }
