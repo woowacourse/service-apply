@@ -53,6 +53,7 @@ const PasswordFind = () => {
           value={form[PASSWORD_FIND_FORM_NAME.EMAIL]}
           onChange={handleChanges[PASSWORD_FIND_FORM_NAME.EMAIL]}
           errorMessage={errorMessage[PASSWORD_FIND_FORM_NAME.EMAIL]}
+          maxLength={FORM.EMAIL_MAX_LENGTH}
           type="email"
           required
         />
