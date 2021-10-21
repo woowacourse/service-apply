@@ -92,7 +92,7 @@ const useApplicationRegisterForm = ({
   const handleInitError = (error) => {
     if (!error) return;
 
-    if (error.response.status === 409) {
+    if (error.response?.status === 409) {
       alert(error.response?.data.message);
       history.push(PATH.HOME);
       return;
