@@ -119,6 +119,7 @@ const SignUp = () => {
           value={form[SIGN_UP_FORM_NAME.CONFIRM_PASSWORD]}
           onChange={handleChanges[SIGN_UP_FORM_NAME.CONFIRM_PASSWORD]}
           errorMessage={errorMessage[SIGN_UP_FORM_NAME.CONFIRM_PASSWORD]}
+          onKeyUp={handleCapsLockState(SIGN_UP_FORM_NAME.CONFIRM_PASSWORD)}
           minLength={FORM.PASSWORD_MIN_LENGTH}
           maxLength={FORM.PASSWORD_MAX_LENGTH}
           required
