@@ -60,6 +60,7 @@ const MyPageEdit = () => {
             name={MY_PAGE_EDIT_FORM_NAME.EMAIL}
             className={styles.input}
             value={userInfo?.email}
+            disabled
             readOnly
           />
           <MessageTextInput
@@ -75,6 +76,7 @@ const MyPageEdit = () => {
           <BirthField
             name={MY_PAGE_EDIT_FORM_NAME.BIRTHDAY}
             value={new Date(userInfo?.birthday)}
+            disabled
             readOnly
           />
 

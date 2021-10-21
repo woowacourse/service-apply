@@ -10,7 +10,8 @@
   border: 1px solid var(--blue);
 }
 
-.text-input:read-only {
+.text-input:read-only,
+.text-input:disabled {
   cursor: default;
   background: var(--gray-003);
 }
