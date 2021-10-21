@@ -92,6 +92,12 @@ const useApplicationRegisterForm = ({
   const handleInitError = (error) => {
     if (!error) return;
 
+    if (error.response.status === 409) {
+      alert(error.response?.data.message);
+      history.push(PATH.HOME);
+      return;
+    }
+
     history.replace({
       pathname: generatePath(PATH.APPLICATION_FORM, {
         status: PARAM.APPLICATION_FORM_STATUS.EDIT,
