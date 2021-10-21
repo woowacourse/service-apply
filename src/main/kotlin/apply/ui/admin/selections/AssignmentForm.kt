@@ -1,6 +1,7 @@
 package apply.ui.admin.selections
 
 import apply.application.AssignmentData
+import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.formlayout.FormLayout
 import com.vaadin.flow.component.html.H3
 import com.vaadin.flow.component.textfield.TextArea
@@ -17,6 +18,9 @@ class AssignmentForm(assignmentData: AssignmentData) : FormLayout() {
             TextField("Pull Request URL").apply {
                 value = assignmentData.pullRequestUrl
                 isReadOnly = true
+                addClickListener {
+                    UI.getCurrent().page.open(value)
+                }
             },
             TextArea("소감").apply {
                 value = assignmentData.note
