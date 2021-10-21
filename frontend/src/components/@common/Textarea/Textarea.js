@@ -7,9 +7,7 @@ const Textarea = ({ className, readOnly, value, maxLength, onChange, ...props })
   const handleChange = (event) => {
     event.target.value = event.target.value.replaceAll("\r\n", "\n");
 
-    if (maxLength !== undefined && event.target.value.length > maxLength) {
-      event.target.value = event.target.value.slice(0, maxLength);
-    }
+    if (maxLength !== undefined && event.target.value.length > maxLength) return;
 
     onChange(event);
   };
