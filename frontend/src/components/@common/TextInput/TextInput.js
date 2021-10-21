@@ -5,6 +5,8 @@ import styles from "./TextInput.module.css";
 
 const TextInput = ({ className, type, readOnly, value, maxLength, onChange, ...props }) => {
   const handleChange = (event) => {
+    event.target.value = event.target.value.replaceAll(" ", "");
+
     if (maxLength !== undefined && event.target.value.length > maxLength) {
       return;
     }
@@ -25,7 +27,6 @@ const TextInput = ({ className, type, readOnly, value, maxLength, onChange, ...p
       className={classNames(styles["text-input"], className)}
       readOnly={readOnly}
       onKeyDown={handleWhiteSpace}
-      onCompositionStart={handleWhiteSpace}
       onChange={handleChange}
       {...props}
     />
