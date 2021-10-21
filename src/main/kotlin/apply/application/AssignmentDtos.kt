@@ -3,6 +3,7 @@ package apply.application
 import apply.domain.assignment.Assignment
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Pattern
+import javax.validation.constraints.Size
 
 data class AssignmentRequest(
     @field:Pattern(
@@ -18,6 +19,7 @@ data class AssignmentRequest(
     )
     val pullRequestUrl: String,
 
+    @field:Size(max = 1000)
     @field:NotBlank
     val note: String
 )
