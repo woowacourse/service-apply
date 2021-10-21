@@ -33,7 +33,7 @@ ol {
 }
 
 a {
-  color: var(--black);
+  color: inherit;
   text-decoration: none;
 }
 
