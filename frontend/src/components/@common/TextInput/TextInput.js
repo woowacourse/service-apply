@@ -5,7 +5,9 @@ import styles from "./TextInput.module.css";
 
 const TextInput = ({ className, type, readOnly, value, maxLength, onChange, ...props }) => {
   const handleChange = (event) => {
-    event.target.value = event.target.value.replaceAll(" ", "");
+    if (event.nativeEvent.isComposing) {
+      event.target.value = event.target.value.replaceAll(" ", "");
+    }
 
     if (maxLength !== undefined && event.target.value.length > maxLength) {
       return;
