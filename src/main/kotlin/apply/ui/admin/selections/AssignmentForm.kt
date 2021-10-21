@@ -3,6 +3,7 @@ package apply.ui.admin.selections
 import apply.application.AssignmentData
 import com.vaadin.flow.component.formlayout.FormLayout
 import com.vaadin.flow.component.html.H3
+import com.vaadin.flow.component.textfield.TextArea
 import com.vaadin.flow.component.textfield.TextField
 
 class AssignmentForm(assignmentData: AssignmentData) : FormLayout() {
@@ -17,7 +18,7 @@ class AssignmentForm(assignmentData: AssignmentData) : FormLayout() {
                 value = assignmentData.pullRequestUrl
                 isReadOnly = true
             },
-            TextField("소감").apply {
+            TextArea("소감").apply {
                 value = assignmentData.note
                 isReadOnly = true
             }
