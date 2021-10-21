@@ -1,6 +1,7 @@
 package apply.domain.applicationform
 
 import apply.createApplicationForm
+import apply.createApplicationFormAnswers
 import apply.fail
 import apply.pass
 import org.assertj.core.api.Assertions.assertThat
@@ -41,6 +42,21 @@ internal class ApplicationFormTest {
             { assertThat(applicationForm.referenceUrl).isEqualTo("https://example2.com") },
             { assertThat(applicationForm.answers.items[0].contents).isEqualTo("수정된 답변 1") }
         )
+    }
+
+    @Test
+    fun `포트폴리오 없이 지원서를 수정한다`() {
+        val applicationForm = createApplicationForm()
+        applicationForm.update(referenceUrl = "", createApplicationFormAnswers())
+        assertThat(applicationForm.referenceUrl).isEmpty()
+    }
+
+    @Test
+    fun `잘못된 포트폴리오 주소로 지원서를 수정할 수 없다`() {
+        val applicationForm = createApplicationForm()
+        assertThrows<IllegalArgumentException> {
+            applicationForm.update(referenceUrl = "wrong", createApplicationFormAnswers())
+        }
     }
 
     @Test

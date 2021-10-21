@@ -7,7 +7,8 @@ import apply.domain.user.User
 import java.time.LocalDate
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
-import javax.validation.constraints.NotNull
+import javax.validation.constraints.Past
+import javax.validation.constraints.Pattern
 
 data class UserResponse(
     val id: Long,
@@ -50,26 +51,19 @@ data class ApplicantAndFormResponse(
 }
 
 data class RegisterUserRequest(
-    @field:NotBlank
+    @field:Pattern(regexp = "[가-힣]{1,30}", message = "올바른 형식의 이름이어야 합니다")
     val name: String,
 
-    @field:NotNull
     @field:Email
     val email: String,
 
-    @field:NotBlank
+    @field:Pattern(regexp = "010-\\d{4}-\\d{4}", message = "올바른 형식의 전화번호여야 합니다")
     val phoneNumber: String,
-
-    @field:NotNull
     val gender: Gender,
 
-    @field:NotNull
+    @field:Past
     val birthday: LocalDate,
-
-    @field:NotNull
     val password: Password,
-
-    @field:NotNull
     val confirmPassword: Password,
 
     @field:NotBlank
@@ -81,38 +75,29 @@ data class RegisterUserRequest(
 }
 
 data class AuthenticateUserRequest(
-    @field:NotNull
     @field:Email
     val email: String,
-
-    @field:NotNull
     val password: Password
 )
 
 data class ResetPasswordRequest(
-    @field:NotBlank
+    @field:Pattern(regexp = "[가-힣]{1,30}", message = "올바른 형식의 이름이어야 합니다")
     val name: String,
 
-    @field:NotNull
     @field:Email
     val email: String,
 
-    @field:NotNull
+    @field:Past
     val birthday: LocalDate
 )
 
 data class EditPasswordRequest(
-    @field:NotNull
     val oldPassword: Password,
-
-    @field:NotNull
     val password: Password,
-
-    @field:NotNull
     val confirmPassword: Password
 )
 
 data class EditInformationRequest(
-    @field:NotBlank
+    @field:Pattern(regexp = "010-\\d{4}-\\d{4}", message = "올바른 형식의 전화번호여야 합니다")
     val phoneNumber: String
 )
