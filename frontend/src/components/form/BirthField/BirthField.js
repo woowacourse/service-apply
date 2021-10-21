@@ -1,12 +1,11 @@
 import classNames from "classnames";
+import ko from "date-fns/locale/ko";
 import PropTypes from "prop-types";
-import React, { useState } from "react";
+import React from "react";
 import DatePicker, { registerLocale } from "react-datepicker";
-import { formatDate } from "../../../utils/format/date";
+import "react-datepicker/dist/react-datepicker.css";
 import Label from "../../@common/Label/Label";
 import styles from "./BirthField.module.css";
-import "react-datepicker/dist/react-datepicker.css";
-import ko from "date-fns/locale/ko";
 
 registerLocale("ko", ko);
 
