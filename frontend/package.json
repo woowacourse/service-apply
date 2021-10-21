@@ -15,17 +15,20 @@
     "build": "react-scripts build",
     "eject": "react-scripts eject",
     "lint": "eslint ./src",
+    "lint:fix": "eslint --fix ./src",
     "storybook": "start-storybook -p 6006 -s ./public",
     "build-storybook": "build-storybook -s ./public"
   },
   "eslintConfig": {
     "extends": [
       "react-app",
-      "react-app/jest"
+      "react-app/jest",
+      "plugin:prettier/recommended"
     ],
     "rules": {
       "no-control-regex": "off",
-      "react-hooks/exhaustive-deps": "off"
+      "react-hooks/exhaustive-deps": "off",
+      "prettier/prettier": "error"
     },
     "overrides": [
       {
@@ -58,6 +61,8 @@
     "@storybook/preset-create-react-app": "^3.2.0",
     "@storybook/react": "^6.3.4",
     "babel-loader": "8.1.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
     "msw": "^0.34.0",
     "msw-storybook-addon": "^1.2.0",
     "prettier": "^2.3.2"
