@@ -26,7 +26,7 @@ import javax.validation.Valid
 class UserRestController(
     private val userService: UserService,
     private val userAuthenticationService: UserAuthenticationService,
-    private val mailService: MailService,
+    private val mailService: MailService
 ) {
     @PostMapping("/register")
     fun generateToken(@RequestBody @Valid request: RegisterUserRequest): ResponseEntity<ApiResponse<String>> {
