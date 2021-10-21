@@ -2,13 +2,13 @@ version: 0.2
 phases:
   install:
     commands:
-      - npm install --prefix ./frontend
+      - yarn --cwd ./frontend install
   pre_build:
     commands:
-      - npm run lint --prefix ./frontend
+      - yarn --cwd ./frontend lint
   build:
     commands:
-      - REACT_APP_API_BASE_URL=$BACKEND_URL npm run build --prefix ./frontend
+      - REACT_APP_API_BASE_URL=$BACKEND_URL yarn --cwd ./frontend build
 artifacts:
   files:
     - '**/*'
