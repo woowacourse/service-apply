@@ -86,4 +86,3 @@ alter table user
     modify gender varchar(6) not null,
     modify name varchar(30) not null,
     modify phone_number varchar(13) not null;
-
