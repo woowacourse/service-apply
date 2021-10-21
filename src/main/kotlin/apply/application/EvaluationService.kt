@@ -2,10 +2,10 @@ package apply.application
 
 import apply.domain.evaluation.Evaluation
 import apply.domain.evaluation.EvaluationRepository
+import apply.domain.evaluation.getById
 import apply.domain.evaluationItem.EvaluationItem
 import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.recruitment.RecruitmentRepository
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 
@@ -52,8 +52,7 @@ class EvaluationService(
 
     fun findById(id: Long): Evaluation? {
         if (id == 0L) return null
-
-        return evaluationRepository.findByIdOrNull(id) ?: throw IllegalArgumentException("해당 id의 평가를 찾을 수 없습니다.")
+        return evaluationRepository.getById(id)
     }
 
     fun findAllRecruitmentSelectData(): List<RecruitmentSelectData> {
@@ -63,7 +62,7 @@ class EvaluationService(
     }
 
     fun getDataById(id: Long): EvaluationData {
-        val evaluation = findById(id) ?: throw IllegalArgumentException("해당 id의 평가를 찾을 수 없습니다.")
+        val evaluation = evaluationRepository.getById(id)
         val evaluationItems = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluation.id)
         val recruitment = recruitmentRepository.getOne(evaluation.recruitmentId)
         val beforeEvaluation = findById(evaluation.beforeEvaluationId)
