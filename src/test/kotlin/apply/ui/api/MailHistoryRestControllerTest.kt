@@ -1,8 +1,6 @@
 package apply.ui.api
 
 import apply.application.MailHistoryService
-import apply.application.UserService
-import apply.application.mail.MailData
 import apply.createMailData
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
@@ -12,6 +10,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
+import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
@@ -24,9 +23,6 @@ import org.springframework.test.web.servlet.post
 )
 class MailHistoryRestControllerTest : RestControllerTest() {
     @MockkBean
-    private lateinit var userService: UserService
-
-    @MockkBean
     private lateinit var mailHistoryService: MailHistoryService
 
     @Test
@@ -34,8 +30,9 @@ class MailHistoryRestControllerTest : RestControllerTest() {
         every { mailHistoryService.save(any()) } just Runs
 
         mockMvc.post("/api/mail-history") {
-            content = objectMapper.writeValueAsString(createMailData())
+            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
             contentType = MediaType.APPLICATION_JSON
+            content = objectMapper.writeValueAsString(createMailData())
         }.andExpect {
             status { isOk }
         }
@@ -43,25 +40,27 @@ class MailHistoryRestControllerTest : RestControllerTest() {
 
     @Test
     fun `이메일 내역을 단일 조회한다`() {
-        val mailData: MailData = createMailData()
+        val mailData = createMailData()
         every { mailHistoryService.getById(any()) } returns mailData
 
-        mockMvc.get("/api/mail-history/{mailHistoryId}", mailData.id)
-            .andExpect {
-                status { isOk }
-                content { json(objectMapper.writeValueAsString(ApiResponse.success(mailData))) }
-            }
+        mockMvc.get("/api/mail-history/{mailHistoryId}", mailData.id) {
+            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+        }.andExpect {
+            status { isOk }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(mailData))) }
+        }
     }
 
     @Test
     fun `모든 이메일 내역을 조회한다`() {
-        val mailDataValues: List<MailData> = listOf(createMailData(), createMailData())
+        val mailDataValues = listOf(createMailData(), createMailData())
         every { mailHistoryService.findAll() } returns mailDataValues
 
-        mockMvc.get("/api/mail-history")
-            .andExpect {
-                status { isOk }
-                content { json(objectMapper.writeValueAsString(ApiResponse.success(mailDataValues))) }
-            }
+        mockMvc.get("/api/mail-history") {
+            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+        }.andExpect {
+            status { isOk }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(mailDataValues))) }
+        }
     }
 }

@@ -2,6 +2,8 @@ package apply.ui.api
 
 import apply.application.MailHistoryService
 import apply.application.mail.MailData
+import apply.domain.user.User
+import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -17,19 +19,27 @@ class MailHistoryRestController(
     private val mailHistoryService: MailHistoryService
 ) {
     @PostMapping
-    fun save(@RequestBody @Valid request: MailData): ResponseEntity<Unit> {
+    fun save(
+        @RequestBody @Valid request: MailData,
+        @LoginUser(administrator = true) user: User
+    ): ResponseEntity<Unit> {
         // todo: 파일 첨부하여 보내는 로직 필요
         mailHistoryService.save(request)
         return ResponseEntity.ok().build()
     }
 
     @GetMapping("/{mailHistoryId}")
-    fun getById(@PathVariable mailHistoryId: Long): ResponseEntity<ApiResponse<MailData>> {
+    fun getById(
+        @PathVariable mailHistoryId: Long,
+        @LoginUser(administrator = true) user: User
+    ): ResponseEntity<ApiResponse<MailData>> {
         return ResponseEntity.ok(ApiResponse.success(mailHistoryService.getById(mailHistoryId)))
     }
 
     @GetMapping
-    fun findAll(): ResponseEntity<ApiResponse<List<MailData>>> {
+    fun findAll(
+        @LoginUser(administrator = true) user: User
+    ): ResponseEntity<ApiResponse<List<MailData>>> {
         return ResponseEntity.ok(ApiResponse.success(mailHistoryService.findAll()))
     }
 }

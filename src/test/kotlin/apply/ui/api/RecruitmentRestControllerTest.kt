@@ -3,19 +3,18 @@ package apply.ui.api
 import apply.application.RecruitmentItemService
 import apply.application.RecruitmentResponse
 import apply.application.RecruitmentService
-import apply.application.UserService
 import apply.createRecruitment
 import apply.createRecruitmentData
 import apply.createRecruitmentItem
 import apply.createRecruitmentItemData
 import apply.domain.term.Term
-import apply.security.JwtTokenProvider
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.http.HttpHeaders
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders
 import org.springframework.restdocs.payload.JsonFieldType
@@ -32,25 +31,15 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 )
 internal class RecruitmentRestControllerTest : RestControllerTest() {
     @MockkBean
-    private lateinit var jwtTokenProvider: JwtTokenProvider
-
-    @MockkBean
-    private lateinit var userService: UserService
-
-    @MockkBean
     private lateinit var recruitmentService: RecruitmentService
 
     @MockkBean
     private lateinit var recruitmentItemService: RecruitmentItemService
 
     private val recruitmentId = 1L
-
     private val recruitment = createRecruitment()
-
     private val recruitmentResponse = RecruitmentResponse(recruitment, Term.SINGLE)
-
     private val recruitmentItems = listOf(createRecruitmentItem())
-
     private val recruitmentData = createRecruitmentData(recruitmentItems = listOf(createRecruitmentItemData()))
 
     @Test
@@ -111,10 +100,10 @@ internal class RecruitmentRestControllerTest : RestControllerTest() {
         mockMvc.perform(
             RestDocumentationRequestBuilders.post(
                 "/api/recruitments"
-            ).header("Content-Type", "application/json")
-                .content(
-                    objectMapper.writeValueAsString(recruitmentData)
-                )
+            )
+                .header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+                .header(HttpHeaders.CONTENT_TYPE, "application/json")
+                .content(objectMapper.writeValueAsString(recruitmentData))
         ).andExpect(status().isOk)
             .andDo(
                 document(
@@ -143,6 +132,7 @@ internal class RecruitmentRestControllerTest : RestControllerTest() {
                 "/api/recruitments/{id}",
                 recruitmentId
             )
+                .header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
         ).andExpect(status().isOk)
     }
 
@@ -155,6 +145,7 @@ internal class RecruitmentRestControllerTest : RestControllerTest() {
                 "/api/recruitments/{id}",
                 recruitmentId
             )
+                .header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
         ).andExpect(status().isOk)
             .andExpect(
                 content().json(
@@ -174,6 +165,7 @@ internal class RecruitmentRestControllerTest : RestControllerTest() {
                 "/api/recruitments/{recruitmentId}/detail",
                 recruitmentId
             )
+                .header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
         ).andExpect(status().isOk)
             .andExpect(
                 content().json(
@@ -192,6 +184,7 @@ internal class RecruitmentRestControllerTest : RestControllerTest() {
             RestDocumentationRequestBuilders.get(
                 "/api/recruitments/all"
             )
+                .header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
         ).andExpect(status().isOk)
             .andExpect(
                 content().json(

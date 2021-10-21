@@ -17,8 +17,9 @@ class LoginUserResolver(
     private val jwtTokenProvider: JwtTokenProvider,
     private val userService: UserService
 ) : HandlerMethodArgumentResolver {
-    override fun supportsParameter(parameter: MethodParameter) =
-        parameter.hasParameterAnnotation(LoginUser::class.java)
+    override fun supportsParameter(parameter: MethodParameter): Boolean {
+        return parameter.hasParameterAnnotation(LoginUser::class.java)
+    }
 
     override fun resolveArgument(
         parameter: MethodParameter,
@@ -26,13 +27,21 @@ class LoginUserResolver(
         webRequest: NativeWebRequest,
         binderFactory: WebDataBinderFactory?
     ): User {
+        validateIfAdministrator(parameter)
         val token = extractBearerToken(webRequest)
         if (!jwtTokenProvider.isValidToken(token)) {
             throw LoginFailedException()
         }
         val userEmail = jwtTokenProvider.getSubject(token)
-
         return userService.getByEmail(userEmail)
+    }
+
+    private fun validateIfAdministrator(parameter: MethodParameter) {
+        val annotation = parameter.getParameterAnnotation(LoginUser::class.java)
+        if (annotation?.administrator == true) {
+            // TODO: 관리자가 HTTP API를 사용할 때 작업
+            throw LoginFailedException()
+        }
     }
 
     private fun extractBearerToken(request: NativeWebRequest): String {

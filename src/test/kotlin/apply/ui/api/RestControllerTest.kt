@@ -1,11 +1,20 @@
 package apply.ui.api
 
 import apply.config.RestDocsConfiguration
+import apply.createUser
+import apply.security.LoginFailedException
+import apply.security.LoginUser
+import apply.security.LoginUserResolver
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.ninjasquad.springmockk.MockkBean
+import io.mockk.every
+import io.mockk.slot
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Import
+import org.springframework.core.MethodParameter
+import org.springframework.http.HttpHeaders
 import org.springframework.restdocs.RestDocumentationContextProvider
 import org.springframework.restdocs.RestDocumentationExtension
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation
@@ -14,6 +23,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
+import org.springframework.web.context.request.NativeWebRequest
 import org.springframework.web.filter.CharacterEncodingFilter
 import support.test.TestEnvironment
 
@@ -21,6 +31,9 @@ import support.test.TestEnvironment
 @ExtendWith(RestDocumentationExtension::class)
 @TestEnvironment
 abstract class RestControllerTest {
+    @MockkBean
+    private lateinit var loginUserResolver: LoginUserResolver
+
     @Autowired
     lateinit var objectMapper: ObjectMapper
 
@@ -40,5 +53,21 @@ abstract class RestControllerTest {
                 )
             )
             .build()
+        loginUserResolver.also {
+            slot<MethodParameter>().also { slot ->
+                every { it.supportsParameter(capture(slot)) } answers {
+                    slot.captured.hasParameterAnnotation(LoginUser::class.java)
+                }
+            }
+            slot<NativeWebRequest>().also { slot ->
+                every { it.resolveArgument(any(), any(), capture(slot), any()) } answers {
+                    val hasToken = slot.captured.getHeader(HttpHeaders.AUTHORIZATION)?.contains("Bearer")
+                    if (hasToken != true) {
+                        throw LoginFailedException()
+                    }
+                    createUser()
+                }
+            }
+        }
     }
 }
