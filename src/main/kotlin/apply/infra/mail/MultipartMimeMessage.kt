@@ -87,9 +87,10 @@ class MultipartMimeMessage(
     }
 
     private fun createRawMessage(message: MimeMessage): RawMessage {
-        val outputStream = ByteArrayOutputStream()
-        message.writeTo(outputStream)
-        return RawMessage(ByteBuffer.wrap(outputStream.toByteArray()))
+        ByteArrayOutputStream().use { outputStream ->
+            message.writeTo(outputStream)
+            return RawMessage(ByteBuffer.wrap(outputStream.toByteArray()))
+        }
     }
 }
 
