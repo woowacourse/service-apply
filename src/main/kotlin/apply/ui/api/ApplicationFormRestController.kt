@@ -64,7 +64,8 @@ class ApplicationFormRestController(
     @GetMapping("/recruitments/{recruitmentId}/application-forms")
     fun findAllByRecruitmentIdAndKeyword(
         @PathVariable recruitmentId: Long,
-        @RequestParam keyword: String?
+        @RequestParam keyword: String?,
+        @LoginUser(administrator = true) user: User
     ): ResponseEntity<ApiResponse<List<ApplicantAndFormResponse>>> {
         val applicants = applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId, keyword)
         return ResponseEntity.ok(ApiResponse.success(applicants))

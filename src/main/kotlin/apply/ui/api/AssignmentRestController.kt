@@ -56,7 +56,8 @@ class AssignmentRestController(
     @GetMapping("/targets/{targetId}/assignments")
     fun findByEvaluationTargetId(
         @PathVariable recruitmentId: Long,
-        @PathVariable targetId: Long
+        @PathVariable targetId: Long,
+        @LoginUser(administrator = true) user: User
     ): ResponseEntity<ApiResponse<AssignmentData>> {
         val assignments = assignmentService.findByEvaluationTargetId(targetId)
         return ResponseEntity.ok(ApiResponse.success(assignments))

@@ -8,6 +8,8 @@ import apply.application.GradeEvaluationResponse
 import apply.application.MailTargetResponse
 import apply.application.MailTargetService
 import apply.domain.evaluationtarget.EvaluationStatus
+import apply.domain.user.User
+import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
@@ -30,14 +32,19 @@ class EvaluationTargetRestController(
     fun findAllByEvaluationIdAndKeyword(
         @PathVariable recruitmentId: Long,
         @PathVariable evaluationId: Long,
-        @RequestParam keyword: String
+        @RequestParam keyword: String,
+        @LoginUser(administrator = true) user: User
     ): ResponseEntity<ApiResponse<List<EvaluationTargetResponse>>> {
         val evaluationTargets = evaluationTargetService.findAllByEvaluationIdAndKeyword(evaluationId, keyword)
         return ResponseEntity.ok(ApiResponse.success(evaluationTargets))
     }
 
     @PutMapping("/renew")
-    fun load(@PathVariable recruitmentId: Long, @PathVariable evaluationId: Long): ResponseEntity<Unit> {
+    fun load(
+        @PathVariable recruitmentId: Long,
+        @PathVariable evaluationId: Long,
+        @LoginUser(administrator = true) user: User
+    ): ResponseEntity<Unit> {
         evaluationTargetService.load(evaluationId)
         return ResponseEntity.ok().build()
     }
@@ -46,7 +53,8 @@ class EvaluationTargetRestController(
     fun getGradeEvaluation(
         @PathVariable recruitmentId: Long,
         @PathVariable evaluationId: Long,
-        @PathVariable targetId: Long
+        @PathVariable targetId: Long,
+        @LoginUser(administrator = true) user: User
     ): ResponseEntity<ApiResponse<GradeEvaluationResponse>> {
         val gradeEvaluation = evaluationTargetService.getGradeEvaluation(targetId)
         return ResponseEntity.ok(ApiResponse.success(gradeEvaluation))
@@ -57,7 +65,8 @@ class EvaluationTargetRestController(
         @PathVariable recruitmentId: Long,
         @PathVariable evaluationId: Long,
         @PathVariable targetId: Long,
-        @RequestBody request: EvaluationTargetData
+        @RequestBody request: EvaluationTargetData,
+        @LoginUser(administrator = true) user: User
     ): ResponseEntity<Unit> {
         evaluationTargetService.grade(targetId, request)
         return ResponseEntity.ok().build()
@@ -67,7 +76,8 @@ class EvaluationTargetRestController(
     fun findMailTargets(
         @PathVariable recruitmentId: Long,
         @PathVariable evaluationId: Long,
-        @RequestParam status: EvaluationStatus?
+        @RequestParam status: EvaluationStatus?,
+        @LoginUser(administrator = true) user: User
     ): ResponseEntity<ApiResponse<List<MailTargetResponse>>> {
         val mailSendingTargets = mailTargetService.findMailTargets(evaluationId, status)
         return ResponseEntity.ok(ApiResponse.success(mailSendingTargets))
@@ -77,7 +87,8 @@ class EvaluationTargetRestController(
     fun gradeByCsv(
         @PathVariable recruitmentId: Long,
         @PathVariable evaluationId: Long,
-        @RequestParam file: MultipartFile
+        @RequestParam file: MultipartFile,
+        @LoginUser(administrator = true) user: User
     ): ResponseEntity<Unit> {
         evaluationTargetCsvService.updateTarget(file.inputStream, evaluationId)
         return ResponseEntity.ok().build()

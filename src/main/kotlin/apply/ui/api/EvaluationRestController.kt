@@ -3,6 +3,8 @@ package apply.ui.api
 import apply.application.EvaluationData
 import apply.application.EvaluationResponse
 import apply.application.EvaluationService
+import apply.domain.user.User
+import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -20,7 +22,8 @@ class EvaluationRestController(
     @PostMapping
     fun createEvaluation(
         @PathVariable recruitmentId: Long,
-        @RequestBody evaluationData: EvaluationData
+        @RequestBody evaluationData: EvaluationData,
+        @LoginUser(administrator = true) user: User
     ): ResponseEntity<Unit> {
         evaluationService.save(evaluationData)
         return ResponseEntity.ok().build()
@@ -29,14 +32,18 @@ class EvaluationRestController(
     @GetMapping("/{evaluationId}")
     fun getDataById(
         @PathVariable recruitmentId: Long,
-        @PathVariable evaluationId: Long
+        @PathVariable evaluationId: Long,
+        @LoginUser(administrator = true) user: User
     ): ResponseEntity<ApiResponse<EvaluationData>> {
         val evaluationData = evaluationService.getDataById(evaluationId)
         return ResponseEntity.ok(ApiResponse.success(evaluationData))
     }
 
     @GetMapping
-    fun findAllWithRecruitment(@PathVariable recruitmentId: Long): ResponseEntity<ApiResponse<List<EvaluationResponse>>> {
+    fun findAllWithRecruitment(
+        @PathVariable recruitmentId: Long,
+        @LoginUser(administrator = true) user: User
+    ): ResponseEntity<ApiResponse<List<EvaluationResponse>>> {
         val evaluationResponses = evaluationService.findAllWithRecruitment()
         return ResponseEntity.ok(ApiResponse.success(evaluationResponses))
     }
@@ -44,7 +51,8 @@ class EvaluationRestController(
     @DeleteMapping("/{evaluationId}")
     fun deleteById(
         @PathVariable recruitmentId: Long,
-        @PathVariable evaluationId: Long
+        @PathVariable evaluationId: Long,
+        @LoginUser(administrator = true) user: User
     ): ResponseEntity<Unit> {
         evaluationService.deleteById(evaluationId)
         return ResponseEntity.ok().build()
