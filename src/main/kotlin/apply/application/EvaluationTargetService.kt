@@ -11,9 +11,9 @@ import apply.domain.evaluationtarget.EvaluationAnswers
 import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
+import apply.domain.evaluationtarget.getById
 import apply.domain.user.UserRepository
 import apply.domain.user.findAllByEmailIn
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 
@@ -27,9 +27,6 @@ class EvaluationTargetService(
     private val userRepository: UserRepository,
     private val cheaterRepository: CheaterRepository
 ) {
-    fun getById(id: Long): EvaluationTarget = evaluationTargetRepository.findByIdOrNull(id)
-        ?: throw IllegalArgumentException("EvaluationTarget (id=$id) 가 존재하지 않습니다")
-
     fun findAllByEvaluationId(evaluationId: Long): List<EvaluationTarget> =
         evaluationTargetRepository.findAllByEvaluationId(evaluationId)
 
@@ -127,9 +124,8 @@ class EvaluationTargetService(
     }
 
     fun getGradeEvaluation(targetId: Long): GradeEvaluationResponse {
-        val evaluationTarget = getById(targetId)
-        val evaluation = evaluationRepository.findByIdOrNull(evaluationTarget.evaluationId)
-            ?: throw IllegalArgumentException("EvaluationTarget (id=$targetId)의 Evaluation (id=${evaluationTarget.evaluationId}가 존재하지 않습니다")
+        val evaluationTarget = evaluationTargetRepository.getById(targetId)
+        val evaluation = evaluationRepository.getById(evaluationTarget.evaluationId)
         val evaluationItems = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluation.id)
 
         val evaluationItemScores = evaluationItems.map {
@@ -152,7 +148,7 @@ class EvaluationTargetService(
     }
 
     fun grade(evaluationTargetId: Long, request: EvaluationTargetData) {
-        val evaluationTarget = getById(evaluationTargetId)
+        val evaluationTarget = evaluationTargetRepository.getById(evaluationTargetId)
 
         val evaluationAnswers = request.evaluationItemScores
             .map { EvaluationAnswer(it.score, it.id) }

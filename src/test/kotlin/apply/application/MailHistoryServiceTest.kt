@@ -3,7 +3,6 @@ package apply.application
 import apply.createMailData
 import apply.createMailHistory
 import apply.domain.mail.MailHistoryRepository
-import apply.domain.user.UserRepository
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import org.assertj.core.api.Assertions.assertThat
@@ -18,14 +17,11 @@ class MailHistoryServiceTest {
     @MockK
     private lateinit var mailHistoryRepository: MailHistoryRepository
 
-    @MockK
-    private lateinit var userRepository: UserRepository
-
     private lateinit var mailHistoryService: MailHistoryService
 
     @BeforeEach
     internal fun setUp() {
-        mailHistoryService = MailHistoryService(mailHistoryRepository, userRepository)
+        mailHistoryService = MailHistoryService(mailHistoryRepository)
     }
 
     @Test
