@@ -3,7 +3,6 @@ package apply.ui.api
 import apply.application.EvaluationData
 import apply.application.EvaluationResponse
 import apply.application.EvaluationService
-import apply.application.UserService
 import apply.createEvaluation
 import apply.createRecruitment
 import com.ninjasquad.springmockk.MockkBean
@@ -14,6 +13,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
+import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.get
@@ -27,65 +27,60 @@ import org.springframework.test.web.servlet.post
 )
 internal class EvaluationRestControllerTest : RestControllerTest() {
     @MockkBean
-    private lateinit var userService: UserService
-
-    @MockkBean
     private lateinit var evaluationService: EvaluationService
 
     @Test
-    internal fun `평가를 추가한다`() {
-        val evaluationId = 1L
-        val evaluationData = EvaluationData(createEvaluation(), createRecruitment(), null, emptyList())
+    fun `평가를 추가한다`() {
+        every { evaluationService.save(any()) } just Runs
 
-        every { evaluationService.save(evaluationData) } just Runs
-
-        mockMvc.post("/api/recruitments/{recruitmentId}/evaluations", evaluationId) {
-            content = objectMapper.writeValueAsBytes(evaluationData)
+        mockMvc.post("/api/recruitments/{recruitmentId}/evaluations", 1L) {
+            content = objectMapper.writeValueAsBytes(
+                EvaluationData(createEvaluation(), createRecruitment(), null, emptyList())
+            )
             contentType = MediaType.APPLICATION_JSON
+            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+        }.andExpect {
+            status { isOk }
         }
-            .andExpect {
-                status { isOk }
-            }
     }
 
     @Test
-    internal fun `특정 평가를 조회한다`() {
+    fun `특정 평가를 조회한다`() {
         val evaluationData = EvaluationData(id = 1L)
-        val recruitmentId = 1L
-        every { evaluationService.getDataById(evaluationData.id) } returns evaluationData
+        every { evaluationService.getDataById(any()) } returns evaluationData
 
-        mockMvc.get("/api/recruitments/{recruitmentId}/evaluations/{evaluationId}", recruitmentId, evaluationData.id)
-            .andExpect {
-                status { isOk }
-                content { json(objectMapper.writeValueAsString(ApiResponse.success(evaluationData))) }
-            }
+        mockMvc.get("/api/recruitments/{recruitmentId}/evaluations/{evaluationId}", 1L, evaluationData.id) {
+            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+        }.andExpect {
+            status { isOk }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(evaluationData))) }
+        }
     }
 
     @Test
-    internal fun `모든 (상세한) 평가를 조회한다`() {
-        val recruitmentId = 1L
+    fun `모든 (상세한) 평가를 조회한다`() {
         val expected = listOf(
             EvaluationResponse(1L, "평가1", "평가1 설명", "우테코 3기 백엔드", 4L, "", 2L),
             EvaluationResponse(2L, "평가2", "평가2 설명", "우테코 3기 프론트", 5L, "", 2L),
         )
         every { evaluationService.findAllWithRecruitment() } returns expected
 
-        mockMvc.get("/api/recruitments/{recruitmentId}/evaluations", recruitmentId)
-            .andExpect {
-                status { isOk }
-                content { json(objectMapper.writeValueAsString(ApiResponse.success(expected))) }
-            }
+        mockMvc.get("/api/recruitments/{recruitmentId}/evaluations", 1L) {
+            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+        }.andExpect {
+            status { isOk }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(expected))) }
+        }
     }
 
     @Test
-    internal fun `평가를 삭제한다`() {
-        val recruitmentId = 1L
-        val evaluationId = 1L
-        every { evaluationService.deleteById(evaluationId) } just Runs
+    fun `평가를 삭제한다`() {
+        every { evaluationService.deleteById(any()) } just Runs
 
-        mockMvc.delete("/api/recruitments/{recruitmentId}/evaluations/{evaluationId}", recruitmentId, evaluationId)
-            .andExpect {
-                status { isOk }
-            }
+        mockMvc.delete("/api/recruitments/{recruitmentId}/evaluations/{evaluationId}", 1L, 1L) {
+            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+        }.andExpect {
+            status { isOk }
+        }
     }
 }
