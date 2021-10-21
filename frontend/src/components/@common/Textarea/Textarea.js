@@ -20,7 +20,6 @@ const Textarea = ({ className, readOnly, value, maxLength, onChange, ...props })
     <textarea
       value={value}
       onChange={handleChange}
-      maxLength={maxLength}
       className={classNames(styles["text-input"], className)}
       readOnly={readOnly}
       onBlur={trimEnd}
