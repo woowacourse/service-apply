@@ -1,8 +1,6 @@
 package apply.ui.api
 
 import apply.application.MailHistoryService
-import apply.application.UserService
-import apply.application.mail.MailData
 import apply.createMailData
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
@@ -24,9 +22,6 @@ import org.springframework.test.web.servlet.post
 )
 class MailHistoryRestControllerTest : RestControllerTest() {
     @MockkBean
-    private lateinit var userService: UserService
-
-    @MockkBean
     private lateinit var mailHistoryService: MailHistoryService
 
     @Test
@@ -43,7 +38,7 @@ class MailHistoryRestControllerTest : RestControllerTest() {
 
     @Test
     fun `이메일 내역을 단일 조회한다`() {
-        val mailData: MailData = createMailData()
+        val mailData = createMailData()
         every { mailHistoryService.getById(any()) } returns mailData
 
         mockMvc.get("/api/mail-history/{mailHistoryId}", mailData.id)
@@ -55,7 +50,7 @@ class MailHistoryRestControllerTest : RestControllerTest() {
 
     @Test
     fun `모든 이메일 내역을 조회한다`() {
-        val mailDataValues: List<MailData> = listOf(createMailData(), createMailData())
+        val mailDataValues = listOf(createMailData(), createMailData())
         every { mailHistoryService.findAll() } returns mailDataValues
 
         mockMvc.get("/api/mail-history")

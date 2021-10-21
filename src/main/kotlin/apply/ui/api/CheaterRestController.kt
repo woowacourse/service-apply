@@ -3,6 +3,8 @@ package apply.ui.api
 import apply.application.CheaterData
 import apply.application.CheaterResponse
 import apply.application.CheaterService
+import apply.domain.user.User
+import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -18,19 +20,27 @@ class CheaterRestController(
     private val cheaterService: CheaterService
 ) {
     @GetMapping
-    fun findAll(): ResponseEntity<ApiResponse<List<CheaterResponse>>> {
+    fun findAll(
+        @LoginUser(administrator = true) user: User
+    ): ResponseEntity<ApiResponse<List<CheaterResponse>>> {
         val cheaters = cheaterService.findAll()
         return ResponseEntity.ok(ApiResponse.success(cheaters))
     }
 
     @PostMapping
-    fun save(@RequestBody request: CheaterData): ResponseEntity<Unit> {
+    fun save(
+        @RequestBody request: CheaterData,
+        @LoginUser(administrator = true) user: User
+    ): ResponseEntity<Unit> {
         cheaterService.save(request)
         return ResponseEntity.ok().build()
     }
 
     @DeleteMapping("/{cheaterId}")
-    fun deleteById(@PathVariable cheaterId: Long): ResponseEntity<Unit> {
+    fun deleteById(
+        @PathVariable cheaterId: Long,
+        @LoginUser(administrator = true) user: User
+    ): ResponseEntity<Unit> {
         cheaterService.deleteById(cheaterId)
         return ResponseEntity.ok().build()
     }

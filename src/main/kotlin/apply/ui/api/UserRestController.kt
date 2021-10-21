@@ -76,7 +76,8 @@ class UserRestController(
 
     @GetMapping
     fun findAllByKeyword(
-        @RequestParam keyword: String
+        @RequestParam keyword: String,
+        @LoginUser(administrator = true) user: User
     ): ResponseEntity<ApiResponse<List<UserResponse>>> {
         val users = userService.findAllByKeyword(keyword)
         return ResponseEntity.ok(ApiResponse.success(users))

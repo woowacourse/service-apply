@@ -14,7 +14,6 @@ import apply.domain.authenticationcode.AuthenticationCode
 import apply.domain.user.Gender
 import apply.domain.user.Password
 import apply.domain.user.UnidentifiedUserException
-import apply.security.JwtTokenProvider
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
 import io.mockk.every
@@ -30,7 +29,6 @@ import support.createLocalDate
 import support.test.TestEnvironment
 
 private const val VALID_TOKEN = "SOME_VALID_TOKEN"
-private const val RANDOM_PASSWORD = "nEw_p@ssw0rd"
 private const val PASSWORD = "password"
 private const val INVALID_PASSWORD = "invalid_password"
 private const val WRONG_PASSWORD = "wrongPassword"
@@ -67,9 +65,6 @@ internal class UserRestControllerTest : RestControllerTest() {
     @MockkBean
     private lateinit var mailService: MailService
 
-    @MockkBean
-    private lateinit var jwtTokenProvider: JwtTokenProvider
-
     private val userRequest = RegisterUserRequest(
         name = "회원",
         email = "test@email.com",
@@ -91,8 +86,6 @@ internal class UserRestControllerTest : RestControllerTest() {
         email = userRequest.email,
         birthday = userRequest.birthday
     )
-
-    private val invalidUserRequest = userRequest.copy(password = Password(INVALID_PASSWORD))
 
     private val invalidUserLoginRequest = userLoginRequest.copy(password = Password(INVALID_PASSWORD))
 
@@ -181,9 +174,6 @@ internal class UserRestControllerTest : RestControllerTest() {
 
     @Test
     fun `올바른 비밀번호 변경 요청에 응답으로 NoContent를 반환한다`() {
-        every { jwtTokenProvider.isValidToken("valid_token") } returns true
-        every { jwtTokenProvider.getSubject("valid_token") } returns userRequest.email
-        every { userService.getByEmail(userRequest.email) } returns userRequest.toEntity()
         every { userService.editPassword(any(), eq(validEditPasswordRequest)) } just Runs
 
         val actualValidEditPasswordRequest = createValidEditPasswordRequest()
@@ -199,9 +189,6 @@ internal class UserRestControllerTest : RestControllerTest() {
 
     @Test
     fun `잘못된 비밀번호 변경 요청에 응답으로 403 Forbidden을 반환한다`() {
-        every { jwtTokenProvider.isValidToken("valid_token") } returns true
-        every { jwtTokenProvider.getSubject("valid_token") } returns userRequest.email
-        every { userService.getByEmail(userRequest.email) } returns userRequest.toEntity()
         every { userService.editPassword(any(), eq(inValidEditPasswordRequest)) } throws UnidentifiedUserException()
 
         val actualInValidEditPasswordRequest = createInValidEditPasswordRequest()
@@ -260,9 +247,6 @@ internal class UserRestControllerTest : RestControllerTest() {
     @Test
     fun `회원이 자신의 정보를 조회한다`() {
         val response = UserResponse(createUser())
-        every { jwtTokenProvider.isValidToken("valid_token") } returns true
-        every { jwtTokenProvider.getSubject("valid_token") } returns userRequest.email
-        every { userService.getByEmail(userRequest.email) } returns userRequest.toEntity()
         every { userService.getInformation(any()) } returns response
 
         mockMvc.get("/api/users/me") {
@@ -277,9 +261,6 @@ internal class UserRestControllerTest : RestControllerTest() {
     @Test
     fun `회원이 정보를 변경한다`() {
         val request = EditInformationRequest("010-9999-9999")
-        every { jwtTokenProvider.isValidToken("valid_token") } returns true
-        every { jwtTokenProvider.getSubject("valid_token") } returns userRequest.email
-        every { userService.getByEmail(userRequest.email) } returns userRequest.toEntity()
         every { userService.editInformation(any(), request) } just Runs
 
         mockMvc.patch("/api/users/information") {

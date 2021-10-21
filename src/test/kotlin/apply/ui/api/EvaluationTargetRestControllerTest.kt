@@ -10,11 +10,9 @@ import apply.application.EvaluationTargetService
 import apply.application.GradeEvaluationResponse
 import apply.application.MailTargetResponse
 import apply.application.MailTargetService
-import apply.application.UserService
 import apply.createEvaluationItem
 import apply.domain.evaluationtarget.EvaluationAnswers
 import apply.domain.evaluationtarget.EvaluationStatus
-import apply.security.JwtTokenProvider
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
 import io.mockk.every
@@ -44,12 +42,6 @@ import java.io.FileInputStream
     controllers = [EvaluationTargetRestController::class]
 )
 internal class EvaluationTargetRestControllerTest : RestControllerTest() {
-    @MockkBean
-    private lateinit var jwtTokenProvider: JwtTokenProvider
-
-    @MockkBean
-    private lateinit var userService: UserService
-
     @MockkBean
     private lateinit var evaluationTargetService: EvaluationTargetService
 

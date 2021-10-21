@@ -1,12 +1,9 @@
 package apply.ui.api
 
 import apply.application.AssignmentService
-import apply.application.UserService
 import apply.createAssignmentData
 import apply.createAssignmentRequest
 import apply.createAssignmentResponse
-import apply.createUser
-import apply.security.JwtTokenProvider
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
 import io.mockk.every
@@ -24,25 +21,14 @@ import support.test.TestEnvironment
 )
 @TestEnvironment
 internal class AssignmentRestControllerTest : RestControllerTest() {
-
     @MockkBean
     private lateinit var assignmentService: AssignmentService
 
-    @MockkBean
-    private lateinit var jwtTokenProvider: JwtTokenProvider
-
-    @MockkBean
-    private lateinit var userService: UserService
-
     private val recruitmentId = 1L
     private val missionId = 1L
-    private val loginUser = createUser()
 
     @Test
     fun `과제 제출물을 제출한다`() {
-        every { jwtTokenProvider.isValidToken(any()) } returns true
-        every { jwtTokenProvider.getSubject(any()) } returns loginUser.email
-        every { userService.getByEmail(any()) } returns loginUser
         every { assignmentService.create(any(), any(), createAssignmentRequest()) } just Runs
 
         mockMvc.post(
@@ -61,9 +47,6 @@ internal class AssignmentRestControllerTest : RestControllerTest() {
     @Test
     fun `나의 과제 제출물을 조회한다`() {
         val assignmentResponse = createAssignmentResponse()
-        every { jwtTokenProvider.isValidToken(any()) } returns true
-        every { jwtTokenProvider.getSubject(any()) } returns loginUser.email
-        every { userService.getByEmail(any()) } returns loginUser
         every { assignmentService.getByUserIdAndMissionId(any(), any()) } returns assignmentResponse
 
         mockMvc.get(
@@ -81,13 +64,12 @@ internal class AssignmentRestControllerTest : RestControllerTest() {
 
     @Test
     fun `특정 평가 대상자의 특정 과제에 해당하는 과제 제출물을 조회한다`() {
-        val targetId = 1L
         val assignmentData = createAssignmentData()
-        every { assignmentService.findByEvaluationTargetId(targetId) } returns assignmentData
+        every { assignmentService.findByEvaluationTargetId(any()) } returns assignmentData
         mockMvc.get(
             "/api/recruitments/{recruitmentId}/targets/{targetId}/assignments",
             recruitmentId,
-            targetId,
+            1L,
         ).andExpect {
             status { isOk }
             content { json(objectMapper.writeValueAsString(ApiResponse.success(assignmentData))) }

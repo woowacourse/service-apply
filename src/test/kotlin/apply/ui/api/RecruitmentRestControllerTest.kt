@@ -3,13 +3,11 @@ package apply.ui.api
 import apply.application.RecruitmentItemService
 import apply.application.RecruitmentResponse
 import apply.application.RecruitmentService
-import apply.application.UserService
 import apply.createRecruitment
 import apply.createRecruitmentData
 import apply.createRecruitmentItem
 import apply.createRecruitmentItemData
 import apply.domain.term.Term
-import apply.security.JwtTokenProvider
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
 import io.mockk.every
@@ -32,25 +30,15 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 )
 internal class RecruitmentRestControllerTest : RestControllerTest() {
     @MockkBean
-    private lateinit var jwtTokenProvider: JwtTokenProvider
-
-    @MockkBean
-    private lateinit var userService: UserService
-
-    @MockkBean
     private lateinit var recruitmentService: RecruitmentService
 
     @MockkBean
     private lateinit var recruitmentItemService: RecruitmentItemService
 
     private val recruitmentId = 1L
-
     private val recruitment = createRecruitment()
-
     private val recruitmentResponse = RecruitmentResponse(recruitment, Term.SINGLE)
-
     private val recruitmentItems = listOf(createRecruitmentItem())
-
     private val recruitmentData = createRecruitmentData(recruitmentItems = listOf(createRecruitmentItemData()))
 
     @Test

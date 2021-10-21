@@ -6,6 +6,8 @@ import apply.application.RecruitmentResponse
 import apply.application.RecruitmentService
 import apply.domain.recruitment.Recruitment
 import apply.domain.recruitmentitem.RecruitmentItem
+import apply.domain.user.User
+import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -27,35 +29,51 @@ class RecruitmentRestController(
     }
 
     @GetMapping("/all")
-    fun findAll(): ResponseEntity<ApiResponse<List<RecruitmentResponse>>> {
+    fun findAll(
+        @LoginUser(administrator = true) user: User
+    ): ResponseEntity<ApiResponse<List<RecruitmentResponse>>> {
         return ResponseEntity.ok(ApiResponse.success(recruitmentService.findAll()))
     }
 
     @GetMapping("/{recruitmentId}/items")
-    fun findItemsById(@PathVariable recruitmentId: Long): ResponseEntity<ApiResponse<List<RecruitmentItem>>> {
+    fun findItemsById(
+        @PathVariable recruitmentId: Long
+    ): ResponseEntity<ApiResponse<List<RecruitmentItem>>> {
         return ResponseEntity.ok()
             .body(ApiResponse.success(recruitmentItemService.findByRecruitmentIdOrderByPosition(recruitmentId)))
     }
 
     @PostMapping
-    fun save(@RequestBody request: RecruitmentData): ResponseEntity<Unit> {
+    fun save(
+        @RequestBody request: RecruitmentData,
+        @LoginUser(administrator = true) user: User
+    ): ResponseEntity<Unit> {
         recruitmentService.save(request)
         return ResponseEntity.ok().build()
     }
 
     @DeleteMapping("/{recruitmentId}")
-    fun deleteById(@PathVariable recruitmentId: Long): ResponseEntity<Unit> {
+    fun deleteById(
+        @PathVariable recruitmentId: Long,
+        @LoginUser(administrator = true) user: User
+    ): ResponseEntity<Unit> {
         recruitmentService.deleteById(recruitmentId)
         return ResponseEntity.ok().build()
     }
 
     @GetMapping("/{recruitmentId}")
-    fun getById(@PathVariable recruitmentId: Long): ResponseEntity<ApiResponse<Recruitment>> {
+    fun getById(
+        @PathVariable recruitmentId: Long,
+        @LoginUser(administrator = true) user: User
+    ): ResponseEntity<ApiResponse<Recruitment>> {
         return ResponseEntity.ok(ApiResponse.success(recruitmentService.getById(recruitmentId)))
     }
 
     @GetMapping("/{recruitmentId}/detail")
-    fun getNotEndedDataById(@PathVariable recruitmentId: Long): ResponseEntity<ApiResponse<RecruitmentData>> {
+    fun getNotEndedDataById(
+        @PathVariable recruitmentId: Long,
+        @LoginUser(administrator = true) user: User
+    ): ResponseEntity<ApiResponse<RecruitmentData>> {
         return ResponseEntity.ok(ApiResponse.success(recruitmentService.getNotEndedDataById(recruitmentId)))
     }
 }
