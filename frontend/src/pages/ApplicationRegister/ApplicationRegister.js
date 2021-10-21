@@ -12,7 +12,7 @@ import CheckBox from "../../components/form/CheckBox/CheckBox";
 import Form from "../../components/form/Form/Form";
 import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
 import FORM from "../../constants/form";
-import { CONFIRM_MESSAGE, ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
+import { CONFIRM_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
 import PATH, { PARAM } from "../../constants/path";
 import useApplicationRegisterForm, {
   APPLICATION_REGISTER_FORM_NAME,
@@ -29,8 +29,9 @@ const ApplicationRegister = () => {
   const { status } = useParams();
   const { token } = useTokenContext();
 
-  const { recruitmentId } = parseQuery(location.search);
-  const { currentRecruitment } = location.state;
+  const query = parseQuery(location.search);
+  const recruitmentId = query.recruitmentId ?? null;
+  const currentRecruitment = location?.state?.currentRecruitment ?? null;
   const { recruitmentItems } = useRecruitmentItem(recruitmentId);
 
   const {
