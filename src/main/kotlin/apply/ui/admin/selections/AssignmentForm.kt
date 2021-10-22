@@ -16,11 +16,7 @@ class AssignmentForm(assignmentData: AssignmentData) : FormLayout() {
                 value = assignmentData.githubUsername
                 isReadOnly = true
             },
-            HorizontalLayout(createUrlField(assignmentData.pullRequestUrl)).apply {
-                addClickListener {
-                    UI.getCurrent().page.open(assignmentData.pullRequestUrl)
-                }
-            },
+            createUrlField(assignmentData.pullRequestUrl),
             TextArea("소감").apply {
                 value = assignmentData.note
                 isReadOnly = true
@@ -29,7 +25,15 @@ class AssignmentForm(assignmentData: AssignmentData) : FormLayout() {
         setResponsiveSteps(ResponsiveStep("0", 1))
     }
 
-    private fun createUrlField(url: String): TextField {
+    private fun createUrlField(url: String): HorizontalLayout {
+        return HorizontalLayout(createPullRequestUrlField(url)).apply {
+            addClickListener {
+                UI.getCurrent().page.open(url)
+            }
+        }
+    }
+
+    private fun createPullRequestUrlField(url: String): TextField {
         return TextField("Pull Request URL").apply {
             value = url
             isReadOnly = true
