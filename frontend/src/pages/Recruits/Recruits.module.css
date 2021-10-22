@@ -1,12 +1,8 @@
-.box {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
 .tab {
   position: fixed;
   top: 5.75rem;
+  left: 0;
+  right: 0;
   width: 100%;
   height: 3.625rem;
   background-color: var(--white);
@@ -15,7 +11,8 @@
 }
 
 .tab-list {
-  width: var(--pc-main-width);
+  width: 100%;
+  max-width: var(--pc-main-width);
   height: inherit;
   display: flex;
   align-items: center;
@@ -58,10 +55,24 @@
   font-weight: bold;
 }
 
-.recruitment-list {
-  margin-top: 3.625rem;
+.recruitment-list-box {
   width: var(--pc-main-width);
+  margin: 3.625rem auto 0;
+}
+
+.recruitment-list {
   display: flex;
   flex-direction: column;
   gap: 1.125rem;
+}
+
+@media screen and (max-width: 800px) {
+  .tab-item {
+    font-size: 0.875rem;
+  }
+
+  .recruitment-list-box {
+    width: calc(100vw - 1rem);
+    margin-top: 3.625rem;
+  }
 }

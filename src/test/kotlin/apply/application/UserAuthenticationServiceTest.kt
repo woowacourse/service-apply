@@ -173,7 +173,7 @@ internal class UserAuthenticationServiceTest {
         }
 
         @Test
-        fun `인증코드 요청시 이미 가입된 이메일이라면 예외가 발생한다`() {
+        fun `인증 코드 요청시 이미 가입된 이메일이라면 예외가 발생한다`() {
             every { userRepository.existsByEmail(any()) } returns true
             assertThrows<IllegalStateException> {
                 userAuthenticationService.generateAuthenticationCode(authenticationCode.email)

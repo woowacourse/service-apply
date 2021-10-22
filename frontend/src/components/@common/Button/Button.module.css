@@ -18,23 +18,13 @@
   border: 1px solid var(--black);
 }
 
-.outlined:hover {
+.outlined:enabled:hover {
   background-color: var(--gray-001);
 }
 
 .contained {
   background-color: var(--black);
   color: var(--white);
-}
-
-.outlined {
-  color: var(--black);
-  background-color: var(--white);
-  border: 1px solid var(--black);
-}
-
-.outlined:hover {
-  background-color: var(--gray-001);
 }
 
 .cancel {

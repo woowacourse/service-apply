@@ -25,7 +25,7 @@ const MyPage = () => {
   };
 
   return (
-    <Container title={`${userInfo?.name} 님`}>
+    <Container title={`${userInfo?.name ?? ""} 님`}>
       <div className={styles.box}>
         <div className={styles["illust-box"]}>
           <img src={myPageImage} alt="자기소개서 일러스트" />

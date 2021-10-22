@@ -42,3 +42,25 @@
   color: #333;
   background-color: #fff;
 }
+
+@media screen and (max-width: 800px) {
+  .content-wrapper {
+    width: 100%;
+    margin: 0 0.5rem;
+  }
+}
+
+@media screen and (max-width: 513px) {
+  .logo {
+    width: 9rem;
+  }
+
+  .copyright {
+    font-size: 0.75rem;
+  }
+
+  .social a {
+    width: 2rem;
+    height: 2rem;
+  }
+}

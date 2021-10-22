@@ -30,3 +30,14 @@
 .button {
   min-width: 6rem;
 }
+
+@media screen and (max-width: 513px) {
+  .date {
+    gap: 0.25rem;
+    font-size: 0.875rem;
+  }
+
+  .icon {
+    width: 1rem;
+  }
+}

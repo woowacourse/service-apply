@@ -49,7 +49,7 @@ const MyPageEdit = () => {
   }, [userInfo]);
 
   return (
-    <Container title={`${userInfo?.name} 님`}>
+    <Container title={`${userInfo?.name ?? ""} 님`}>
       <div className={styles.box}>
         <div className={styles["illust-box"]}>
           <img src={myPageImage} alt="자기소개서 일러스트" />
@@ -60,7 +60,7 @@ const MyPageEdit = () => {
             name={MY_PAGE_EDIT_FORM_NAME.EMAIL}
             className={styles.input}
             value={userInfo?.email || ""}
-            readOnly
+            disabled
           />
           <MessageTextInput
             label="휴대폰 번호"
@@ -74,9 +74,8 @@ const MyPageEdit = () => {
           <BirthField
             name={MY_PAGE_EDIT_FORM_NAME.BIRTHDAY}
             value={new Date(userInfo?.birthday || null)}
-            readOnly
+            disabled
           />
-
           <div className={styles.buttons}>
             <CancelButton />
             <Button disabled={!isValid || isEmpty}>확인</Button>

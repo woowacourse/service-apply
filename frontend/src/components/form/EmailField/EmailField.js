@@ -137,13 +137,13 @@ const EmailField = ({
       {emailStatus === EMAIL_STATUS.WAITING_AUTHENTICATION && (
         <div className={styles.box}>
           <div className={styles.timer}>
-            인증코드 유효시간
+            인증 코드 유효시간
             <span className={styles["timer-time"]}>{formatTimerText(timerSeconds)}</span>
           </div>
           <div className={styles.box}>
             <div className={styles["text-field"]}>
               <Label className={styles.label} required>
-                이메일 인증코드
+                이메일 인증 코드
               </Label>
               <div className={styles["input-box"]}>
                 <TextInput

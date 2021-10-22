@@ -20,7 +20,9 @@ const MessageTextarea = ({
   return (
     <div className={classNames(styles.box, className)}>
       <div className={styles["text-field"]}>
-        <Label required={required}>{label}</Label>
+        <Label className={styles.label} required={required}>
+          {label}
+        </Label>
         {description && <Description>{description}</Description>}
         {maxLength && maxLength > 0 && (
           <div className={styles["length-limit"]}>

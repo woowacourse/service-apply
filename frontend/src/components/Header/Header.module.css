@@ -42,6 +42,11 @@
   margin-right: 1rem;
 }
 
+.link-container,
+.link-container button {
+  color: var(--gray-008);
+}
+
 .member-menu-container {
   position: relative;
 }
@@ -132,7 +137,23 @@
   background-color: var(--gray-008);
 }
 
-.link-container,
-.link-container button {
-  color: var(--gray-008);
+@media screen and (max-width: 800px) {
+  .header {
+    padding: 0 0.5rem;
+  }
+}
+
+@media screen and (max-width: 513px) {
+  .logo {
+    width: 10rem;
+    margin-right: 0;
+  }
+
+  .title {
+    font-size: 1.125rem;
+  }
+
+  .link-container {
+    margin: 0;
+  }
 }

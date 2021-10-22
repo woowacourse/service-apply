@@ -116,7 +116,7 @@ const AssignmentSubmit = () => {
           required
         />
         <p className={styles["info-message"]}>
-          작성하신 내용은 과제 제출 마감전까지 수정하실 수 있습니다.
+          작성하신 내용은 과제 제출 마감 전까지 수정할 수 있습니다.
         </p>
         <div className={styles.buttons}>
           <CancelButton confirmMessage={CONFIRM_MESSAGE.CANCEL_ASSIGNMENT_SUBMIT} />

@@ -27,3 +27,9 @@
 .buttons button {
   flex: 1;
 }
+
+@media screen and (max-width: 512px) {
+  .illust-box {
+    display: none;
+  }
+}

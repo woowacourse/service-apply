@@ -1,13 +1,10 @@
-import React, { useMemo } from "react";
-import PropTypes from "prop-types";
 import classNames from "classnames";
-
+import PropTypes from "prop-types";
+import React, { useMemo } from "react";
 import CalendarIcon from "../../assets/icon/calendar-icon.svg";
-
 import { formatDateTime } from "../../utils/format/date";
-
-import styles from "./RecruitmentItem.module.css";
 import Button from "../@common/Button/Button";
+import styles from "./RecruitmentItem.module.css";
 
 const RecruitmentItem = ({
   recruitment,
@@ -34,7 +31,7 @@ const RecruitmentItem = ({
           <strong>{recruitment.title}</strong>
         </p>
         <div className={styles.date}>
-          <img src={CalendarIcon} alt="달력 아이콘" />
+          <img src={CalendarIcon} alt="달력 아이콘" className={styles.icon} />
           <p>
             {formattedStartDateTime} ~ {formattedEndDateTime}
           </p>
