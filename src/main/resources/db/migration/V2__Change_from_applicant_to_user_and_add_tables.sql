@@ -4,7 +4,7 @@ alter table application_form
     change applicant_id user_id bigint not null after submitted_date_time;
 
 alter table cheater
-    change applicant_id user_id bigint not null after created_date_time;
+    change applicant_id user_id bigint after created_date_time;
 
 alter table evaluation_target
     change applicant_id user_id bigint not null after note;
