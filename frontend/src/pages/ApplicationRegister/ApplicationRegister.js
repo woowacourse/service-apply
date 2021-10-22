@@ -12,7 +12,7 @@ import CheckBox from "../../components/form/CheckBox/CheckBox";
 import Form from "../../components/form/Form/Form";
 import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
 import FORM from "../../constants/form";
-import { CONFIRM_MESSAGE, ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
+import { CONFIRM_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
 import PATH, { PARAM } from "../../constants/path";
 import useApplicationRegisterForm, {
   APPLICATION_REGISTER_FORM_NAME,
@@ -29,8 +29,8 @@ const ApplicationRegister = () => {
   const { status } = useParams();
   const { token } = useTokenContext();
 
-  const { recruitmentId } = parseQuery(location.search);
-  const { currentRecruitment } = location.state;
+  const { recruitmentId = null } = parseQuery(location.search);
+  const currentRecruitment = location.state?.currentRecruitment ?? null;
   const { recruitmentItems } = useRecruitmentItem(recruitmentId);
 
   const {
@@ -58,8 +58,8 @@ const ApplicationRegister = () => {
   const handleSaveError = (error) => {
     if (!error) return;
 
-    alert(ERROR_MESSAGE.API.SUBMIT_APPLICATION);
-    history.replace(PATH.HOME);
+    // TODO: 서버 에러응답을 클라이언트에서 분기처리하여 메시지 표시한다.
+    alert(error.response.data.message);
   };
 
   const save = async ({ referenceUrl, answers }) => {

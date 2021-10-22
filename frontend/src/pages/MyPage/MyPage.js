@@ -34,15 +34,15 @@ const MyPage = () => {
           <ul>
             <li className={styles.info}>
               <div className={styles["info-title"]}>이메일</div>
-              <div className={styles["info-data"]}>{userInfo?.email}</div>
+              <div className={styles["info-data"]}>{userInfo?.email || ""}</div>
             </li>
             <li className={styles.info}>
               <div className={styles["info-title"]}>전화번호</div>
-              <div className={styles["info-data"]}>{userInfo?.phoneNumber}</div>
+              <div className={styles["info-data"]}>{userInfo?.phoneNumber || ""}</div>
             </li>
             <li className={styles.info}>
               <div className={styles["info-title"]}>생년월일</div>
-              <div className={styles["info-data"]}>{userInfo?.birthday}</div>
+              <div className={styles["info-data"]}>{userInfo?.birthday || ""}</div>
             </li>
           </ul>
 

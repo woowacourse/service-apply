@@ -10,7 +10,7 @@ axios.interceptors.response.use(
     return Promise.resolve({ data: response.data["body"] || {} });
   },
   function (error) {
-    if (error.response.status === 401) {
+    if (error.response?.status === 401) {
       alert(ERROR_MESSAGE.API.TOKEN_EXPIRED);
       localStorage.removeItem(LOCAL_STORAGE_KEY.ACCESS_TOKEN);
       document.location.href = PATH.LOGIN;
