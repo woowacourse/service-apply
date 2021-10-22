@@ -92,6 +92,12 @@ const useApplicationRegisterForm = ({
   const handleInitError = (error) => {
     if (!error) return;
 
+    if (error.response?.status === 409) {
+      alert(error.response?.data.message);
+      history.push(PATH.HOME);
+      return;
+    }
+
     history.replace({
       pathname: generatePath(PATH.APPLICATION_FORM, {
         status: PARAM.APPLICATION_FORM_STATUS.EDIT,
@@ -104,8 +110,9 @@ const useApplicationRegisterForm = ({
   const handleLoadFormError = (error) => {
     if (!error) return;
 
-    alert(ERROR_MESSAGE.API.FETCHING_MY_APPLICATION);
-    history.replace(PATH.HOME);
+    // TODO: 서버 에러응답을 클라이언트에서 분기처리하여 메시지 표시한다.
+    alert(error.response.data.message);
+    history.push(PATH.RECRUITS);
   };
 
   const loadForm = async () => {
@@ -135,6 +142,12 @@ const useApplicationRegisterForm = ({
   };
 
   useEffect(() => {
+    if (!recruitmentId || !currentRecruitment) {
+      history.replace(PATH.RECRUITS);
+
+      return;
+    }
+
     init();
   }, [status]);
 

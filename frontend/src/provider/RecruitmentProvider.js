@@ -17,17 +17,17 @@ const RecruitmentProvider = ({ children }) => {
   const [recruitments, setRecruitments] = useState([]);
 
   useEffect(() => {
-    try {
-      const fetchData = async () => {
+    const fetchData = async () => {
+      try {
         const { data: recruitments } = await Api.fetchRecruitments();
 
         setRecruitments(recruitments.sort((a, b) => b.id - a.id));
-      };
+      } catch (error) {
+        setRecruitments([]);
+      }
+    };
 
-      fetchData();
-    } catch (error) {
-      setRecruitments([]);
-    }
+    fetchData();
   }, []);
 
   return (
