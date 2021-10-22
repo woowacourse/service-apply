@@ -59,7 +59,7 @@ const MyPageEdit = () => {
             label="이메일"
             name={MY_PAGE_EDIT_FORM_NAME.EMAIL}
             className={styles.input}
-            value={userInfo?.email}
+            value={userInfo?.email || ""}
             readOnly
           />
           <MessageTextInput
@@ -69,12 +69,11 @@ const MyPageEdit = () => {
             value={form[MY_PAGE_EDIT_FORM_NAME.PHONE_NUMBER]}
             onChange={handleChanges[MY_PAGE_EDIT_FORM_NAME.PHONE_NUMBER]}
             errorMessage={errorMessage[MY_PAGE_EDIT_FORM_NAME.PHONE_NUMBER]}
-            initialValue={userInfo?.phoneNumber}
             maxLength={FORM.PHONE_NUMBER_MAX_LENGTH}
           />
           <BirthField
             name={MY_PAGE_EDIT_FORM_NAME.BIRTHDAY}
-            value={new Date(userInfo?.birthday)}
+            value={new Date(userInfo?.birthday || null)}
             readOnly
           />
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { generatePath, Link, useHistory, useLocation } from "react-router-dom";
 import Button from "../../components/@common/Button/Button";
 import Container, { CONTAINER_SIZE } from "../../components/@common/Container/Container";
@@ -8,6 +8,7 @@ import { ERROR_MESSAGE } from "../../constants/messages";
 import PATH, { PARAM } from "../../constants/path";
 import useAuth from "../../hooks/useAuth";
 import useLoginForm, { LOGIN_FORM_NAME } from "../../hooks/useLoginForm";
+import useTokenContext from "../../hooks/useTokenContext";
 import { generateQuery } from "../../utils/route/query";
 import styles from "./Login.module.css";
 
@@ -16,6 +17,7 @@ const Login = () => {
   const location = useLocation();
   const currentRecruitment = location.state?.currentRecruitment;
 
+  const { token } = useTokenContext();
   const { login } = useAuth();
   const { form, errorMessage, handleChanges, handleCapsLockState, isEmpty } = useLoginForm();
 
@@ -42,6 +44,10 @@ const Login = () => {
       alert(ERROR_MESSAGE.API.LOGIN_FAILURE);
     }
   };
+
+  useEffect(() => {
+    if (token) history.push(PATH.HOME);
+  }, [token]);
 
   return (
     <Container size={CONTAINER_SIZE.NARROW} title="로그인">

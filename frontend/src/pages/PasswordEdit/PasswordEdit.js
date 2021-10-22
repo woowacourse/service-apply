@@ -26,11 +26,9 @@ const PasswordEdit = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
     try {
-      await fetchPasswordEdit({
-        token,
-        ...form,
-      });
+      await fetchPasswordEdit({ token, ...form });
 
       alert(SUCCESS_MESSAGE.API.CHANGE_PASSWORD);
 
