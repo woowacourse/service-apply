@@ -1,6 +1,7 @@
 package apply.ui.admin.selections
 
 import apply.application.AssignmentData
+import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.formlayout.FormLayout
 import com.vaadin.flow.component.html.H3
@@ -25,19 +26,15 @@ class AssignmentForm(assignmentData: AssignmentData) : FormLayout() {
         setResponsiveSteps(ResponsiveStep("0", 1))
     }
 
-    private fun createUrlField(url: String): HorizontalLayout {
-        return HorizontalLayout(createPullRequestUrlField(url)).apply {
-            addClickListener {
-                UI.getCurrent().page.open(url)
+    private fun createUrlField(url: String): Component {
+        return HorizontalLayout(
+            TextField("Pull Request URL").apply {
+                value = url
+                isReadOnly = true
+                setWidthFull()
             }
-        }
-    }
-
-    private fun createPullRequestUrlField(url: String): TextField {
-        return TextField("Pull Request URL").apply {
-            value = url
-            isReadOnly = true
-            setWidthFull()
+        ).apply {
+            addClickListener { UI.getCurrent().page.open(url) }
         }
     }
 }
