@@ -1,0 +1,18 @@
+version: 0.2
+phases:
+  install:
+    commands:
+      - yarn --cwd ./frontend install
+  pre_build:
+    commands:
+      - yarn --cwd ./frontend lint
+  build:
+    commands:
+      - REACT_APP_API_BASE_URL=$BACKEND_URL yarn --cwd ./frontend build
+artifacts:
+  files:
+    - '**/*'
+  base-directory: frontend/build
+cache:
+  paths:
+    - '**/node_modules/**/*'
