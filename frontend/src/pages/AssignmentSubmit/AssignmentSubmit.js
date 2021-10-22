@@ -20,7 +20,8 @@ const AssignmentSubmit = () => {
   const { status } = useParams();
   const { token } = useTokenContext();
 
-  const { recruitmentId, currentMission } = location.state;
+  const recruitmentId = location.state?.recruitmentId ?? null;
+  const currentMission = location.state?.currentMission ?? null;
 
   const {
     form,
@@ -74,13 +75,19 @@ const AssignmentSubmit = () => {
   };
 
   useEffect(() => {
+    if (!recruitmentId || !currentMission) {
+      history.replace(PATH.RECRUITS);
+
+      return;
+    }
+
     if (status !== PARAM.ASSIGNMENT_STATUS.EDIT) return;
 
     init();
   }, []);
 
   return (
-    <Container title={currentMission.title}>
+    <Container title={currentMission?.title ?? ""}>
       <Form onSubmit={handleSubmit} className={styles.form}>
         <MessageTextInput
           label="GitHub ID"
