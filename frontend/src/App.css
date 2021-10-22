@@ -33,10 +33,12 @@ ol {
 }
 
 a {
+  color: inherit;
   text-decoration: none;
 }
 
 button {
+  font-size: 0.875rem;
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -51,7 +53,7 @@ button {
 .main {
   flex: 1;
   margin: 0 auto;
-  padding: 2.5rem 0;
+  padding: 2.5rem 0.5rem;
 }
 
 input,

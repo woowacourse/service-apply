@@ -7,6 +7,7 @@ const Radio = ({ label, required, ...props }) => {
   return (
     <Label className={styles["radio-label"]}>
       <input type="radio" required={required} {...props} />
+      <div className={styles["custom-radio"]} />
       {label}
     </Label>
   );
