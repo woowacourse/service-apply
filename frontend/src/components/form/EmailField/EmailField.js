@@ -32,9 +32,7 @@ const EmailField = ({
   setEmailStatus,
   setErrorMessage,
 }) => {
-  const { timerSeconds, setTimerSeconds, startTimer, resetTimer } = useTimer(
-    AUTHENTICATED_CODE_VALIDITY_SECONDS
-  );
+  const { timerSeconds, startTimer, resetTimer } = useTimer(AUTHENTICATED_CODE_VALIDITY_SECONDS);
 
   const getEmailButton = () => {
     if (emailStatus === EMAIL_STATUS.WAITING_AUTHENTICATION) {
@@ -77,7 +75,6 @@ const EmailField = ({
       await fetchAuthenticationCode(emailValue);
 
       setEmailStatus(EMAIL_STATUS.WAITING_AUTHENTICATION);
-      setTimerSeconds(AUTHENTICATED_CODE_VALIDITY_SECONDS);
       startTimer();
     } catch (error) {
       alert(ERROR_MESSAGE.API.ALREADY_EXIST_EMAIL);
