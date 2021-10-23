@@ -26,7 +26,7 @@ const useAssignmentForm = () => {
   const isValid = Object.values(errorMessage).filter(Boolean).length === 0;
   const isEmpty =
     Object.values(requiredForm)
-      .map((value) => value.trimEnd())
+      .map((value) => (typeof value === "string" ? value.trimEnd() : value))
       .filter(Boolean).length < Object.keys(requiredForm).length;
 
   const init = ({ requiredForm }) => {

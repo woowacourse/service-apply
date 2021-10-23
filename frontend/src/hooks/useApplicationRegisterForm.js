@@ -15,10 +15,10 @@ export const APPLICATION_REGISTER_FORM_NAME = {
   IS_TERM_AGREED: "isTermAgreed",
 };
 
-const requiredFormInitialValue = {
-  [APPLICATION_REGISTER_FORM_NAME.ANSWERS]: [],
+const requiredFormInitialValue = (answerCount) => ({
+  [APPLICATION_REGISTER_FORM_NAME.ANSWERS]: Array(answerCount).fill(""),
   [APPLICATION_REGISTER_FORM_NAME.IS_TERM_AGREED]: false,
-};
+});
 
 const formInitialValue = {
   [APPLICATION_REGISTER_FORM_NAME.REFERENCE_URL]: "",
@@ -31,10 +31,12 @@ const errorMessageInitialValue = {
 const useApplicationRegisterForm = ({
   recruitmentId,
   currentRecruitment,
-  recruitmentItems,
+  recruitmentItems = [],
   status,
 }) => {
-  const [requiredForm, setRequiredForm] = useState(requiredFormInitialValue);
+  const [requiredForm, setRequiredForm] = useState(
+    requiredFormInitialValue(recruitmentItems.length)
+  );
   const [form, setForm] = useState(formInitialValue);
   const [errorMessage, setErrorMessage] = useState(errorMessageInitialValue);
 
@@ -44,7 +46,7 @@ const useApplicationRegisterForm = ({
 
   const isAnswersEmpty =
     requiredForm[APPLICATION_REGISTER_FORM_NAME.ANSWERS]
-      .map((value) => value.trimEnd())
+      .map((value = "") => value.trimEnd())
       .filter(Boolean).length < recruitmentItems.length;
 
   const isEmpty = isAnswersEmpty || !requiredForm[APPLICATION_REGISTER_FORM_NAME.IS_TERM_AGREED];
@@ -56,7 +58,7 @@ const useApplicationRegisterForm = ({
     ({ target }) => {
       if (recruitmentItems[index].maximumLength < target.value.length) return;
 
-      const newAnswers = [...requiredForm[APPLICATION_REGISTER_FORM_NAME.ANSWERS]];
+      const newAnswers = requiredForm[APPLICATION_REGISTER_FORM_NAME.ANSWERS].slice();
 
       newAnswers[index] = target.value;
 
