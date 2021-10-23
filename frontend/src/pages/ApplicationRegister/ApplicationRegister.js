@@ -31,7 +31,7 @@ const ApplicationRegister = () => {
 
   const { recruitmentId = null } = parseQuery(location.search);
   const currentRecruitment = location.state?.currentRecruitment ?? null;
-  const { recruitmentItems } = useRecruitmentItem(recruitmentId);
+  const { recruitmentItems = [] } = useRecruitmentItem(recruitmentId);
 
   const {
     form,
@@ -134,7 +134,7 @@ const ApplicationRegister = () => {
               {`임시 저장되었습니다. (${modifiedDateTime})`}
             </p>
           )}
-          {(recruitmentItems || []).map((item, index) => (
+          {recruitmentItems.map((item, index) => (
             <MessageTextarea
               key={index}
               value={form[APPLICATION_REGISTER_FORM_NAME.ANSWERS][index]}
