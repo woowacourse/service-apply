@@ -3,6 +3,8 @@ package apply.ui.admin.recruitment
 import apply.application.RecruitmentData
 import apply.application.RecruitmentItemData
 import apply.application.TermSelectData
+import apply.ui.admin.term.TermsView
+import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.datetimepicker.DateTimePicker
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup
@@ -36,14 +38,14 @@ class RecruitmentForm() : BindingIdentityFormLayout<RecruitmentData>(Recruitment
         children.forEach {
             setColspan(it, 7)
         }
-        setColspan(termButton,1)
+        setColspan(termButton, 1)
         setColspan(term, 6)
         drawRequired()
     }
 
     private fun createTermManageButton(): Button {
         return createPrimaryButton("기수 관리") {
-
+            UI.getCurrent().navigate(TermsView::class.java)
         }
     }
 
