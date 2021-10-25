@@ -3,6 +3,7 @@ package apply.ui.admin.recruitment
 import apply.application.RecruitmentData
 import apply.application.RecruitmentItemData
 import apply.application.TermData
+import apply.application.TermResponse
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.datetimepicker.DateTimePicker
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup
@@ -34,8 +35,8 @@ class RecruitmentForm() : BindingIdentityFormLayout<RecruitmentData>(Recruitment
         drawRequired()
     }
 
-    constructor(terms: List<TermData>) : this() {
-        term.setItems(terms)
+    constructor(terms: List<TermResponse>) : this() {
+        term.setItems(terms.map { TermData(it.name, it.id) })
     }
 
     constructor(
