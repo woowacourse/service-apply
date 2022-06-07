@@ -10,7 +10,6 @@ import io.mockk.just
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import support.test.UnitTest
@@ -54,21 +53,17 @@ internal class TermServiceTest {
         val terms = listOf(Term("3기"), Term("4기"))
         every { termRepository.findAll() } returns terms
         val responses = termService.findAll()
-        assertAll(
-            { assertThat(responses).hasSize(3) },
-            {
-                assertThat(responses).containsExactlyInAnyOrder(
-                    TermResponse(Term.SINGLE),
-                    TermResponse(terms[0]),
-                    TermResponse(terms[1])
-                )
-            }
+
+        assertThat(responses).containsExactlyInAnyOrder(
+            TermResponse(Term.SINGLE),
+            TermResponse(terms[0]),
+            TermResponse(terms[1])
         )
     }
 
     @Test
     fun `기수 조회시 단독 모집을 포함한다`() {
-        every { termRepository.findAll() } returns emptyList<Term>()
+        every { termRepository.findAll() } returns emptyList()
         val responses = termService.findAll()
         assertThat(responses).contains(TermResponse(Term.SINGLE))
     }
