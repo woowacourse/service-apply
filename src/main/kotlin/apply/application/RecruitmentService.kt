@@ -5,7 +5,6 @@ import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitment.getById
 import apply.domain.recruitmentitem.RecruitmentItem
 import apply.domain.recruitmentitem.RecruitmentItemRepository
-import apply.domain.term.Term
 import apply.domain.term.TermRepository
 import apply.domain.term.getById
 import org.springframework.stereotype.Service
@@ -69,10 +68,5 @@ class RecruitmentService(
         val term = termRepository.getById(recruitment.termId)
         val recruitmentItems = recruitmentItemRepository.findByRecruitmentIdOrderByPosition(recruitment.id)
         return RecruitmentData(recruitment, term, recruitmentItems)
-    }
-
-    fun findAllTermSelectData(): List<TermSelectData> {
-        val terms = listOf(Term.SINGLE) + termRepository.findAll().sortedBy { it.name }
-        return terms.map(::TermSelectData)
     }
 }

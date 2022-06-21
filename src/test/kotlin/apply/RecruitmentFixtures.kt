@@ -2,7 +2,7 @@ package apply
 
 import apply.application.RecruitmentData
 import apply.application.RecruitmentItemData
-import apply.application.TermSelectData
+import apply.application.TermData
 import apply.domain.recruitment.Recruitment
 import apply.domain.recruitmentitem.RecruitmentItem
 import apply.ui.admin.recruitment.RecruitmentForm
@@ -10,7 +10,7 @@ import apply.ui.admin.recruitment.RecruitmentItemForm
 import java.time.LocalDateTime
 
 private const val RECRUITMENT_TITLE: String = "웹 백엔드 3기"
-private val TERM: TermSelectData = TermSelectData("단독 모집")
+private val TERM: TermData = TermData("단독 모집")
 private val START_DATE_TIME: LocalDateTime = LocalDateTime.now().minusYears(1)
 private val END_DATE_TIME: LocalDateTime = LocalDateTime.now().plusYears(1)
 
@@ -45,7 +45,7 @@ fun createRecruitmentItem(
 
 fun createRecruitmentData(
     title: String = RECRUITMENT_TITLE,
-    term: TermSelectData = TERM,
+    term: TermData = TERM,
     startDateTime: LocalDateTime = START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
     recruitable: Boolean = false,
@@ -77,7 +77,7 @@ fun createRecruitmentItemData(
 
 fun createRecruitmentForm(
     title: String = RECRUITMENT_TITLE,
-    term: TermSelectData = TERM,
+    term: TermData = TERM,
     startDateTime: LocalDateTime = START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
     recruitable: Boolean = false,
