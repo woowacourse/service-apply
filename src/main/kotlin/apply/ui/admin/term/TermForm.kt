@@ -1,11 +1,11 @@
 package apply.ui.admin.term
 
-import apply.application.TermSelectData
+import apply.application.TermData
 import com.vaadin.flow.component.textfield.TextField
 import support.views.BindingIdentityFormLayout
 
-class TermForm() : BindingIdentityFormLayout<TermSelectData>(TermSelectData::class) {
-    val name: TextField = TextField("기수 이름")
+class TermForm : BindingIdentityFormLayout<TermData>(TermData::class) {
+    private val name: TextField = TextField("기수 이름")
 
     init {
         add(name)
@@ -13,11 +13,11 @@ class TermForm() : BindingIdentityFormLayout<TermSelectData>(TermSelectData::cla
         drawRequired()
     }
 
-    override fun bindOrNull(): TermSelectData? {
+    override fun bindOrNull(): TermData? {
         return bindDefaultOrNull()
     }
 
-    override fun fill(term: TermSelectData) {
+    override fun fill(term: TermData) {
         fillDefault(term)
     }
 }

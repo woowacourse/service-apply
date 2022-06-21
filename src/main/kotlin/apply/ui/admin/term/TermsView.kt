@@ -1,6 +1,6 @@
 package apply.ui.admin.term
 
-import apply.application.TermSelectData
+import apply.application.TermResponse
 import apply.application.TermService
 import apply.domain.term.Term
 import apply.ui.admin.BaseLayout
@@ -27,7 +27,6 @@ import support.views.toDisplayName
 
 @Route(value = "admin/terms", layout = BaseLayout::class)
 class TermsView(private val termService: TermService) : VerticalLayout() {
-
     init {
         add(createTitle(), createButtons(), createGrid())
     }
@@ -40,13 +39,13 @@ class TermsView(private val termService: TermService) : VerticalLayout() {
     }
 
     private fun createGrid(): Component {
-        return Grid<TermSelectData>(10).apply {
-            addSortableColumn("기수 명", TermSelectData::name)
+        return Grid<TermResponse>(10).apply {
+            addSortableColumn("기수 명", TermResponse::name)
             addColumn(createButtonRenderer()).apply {
                 isAutoWidth = true
                 justifyContentMode = FlexComponent.JustifyContentMode.END
             }
-            setItems(termService.findAllTermSelectData())
+            setItems(termService.findAll())
         }
     }
 
@@ -64,20 +63,18 @@ class TermsView(private val termService: TermService) : VerticalLayout() {
         }
     }
 
-    private fun createButtonRenderer(): Renderer<TermSelectData> {
-        return ComponentRenderer<Component, TermSelectData> { it ->
-            createButtons(it)
-        }
+    private fun createButtonRenderer(): Renderer<TermResponse> {
+        return ComponentRenderer { it -> createButtons(it) }
     }
 
-    private fun createButtons(term: TermSelectData): Component {
+    private fun createButtons(term: TermResponse): Component {
         return HorizontalLayout(
             createEditButton(term),
             createDeleteButton(term)
         )
     }
 
-    private fun createEditButton(term: TermSelectData): Component {
+    private fun createEditButton(term: TermResponse): Component {
         return createPrimarySmallButton("수정") {
             TermFormDialog(termService, EDIT_VALUE.toDisplayName(), term)
         }.apply {
@@ -87,7 +84,7 @@ class TermsView(private val termService: TermService) : VerticalLayout() {
         }
     }
 
-    private fun createDeleteButton(term: TermSelectData): Button {
+    private fun createDeleteButton(term: TermResponse): Button {
         return createDeleteButtonWithDialog("모집을 삭제하시겠습니까?") {
             // TODO : delete
         }.apply {

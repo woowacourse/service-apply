@@ -2,7 +2,8 @@ package apply.ui.admin.recruitment
 
 import apply.application.RecruitmentData
 import apply.application.RecruitmentItemData
-import apply.application.TermSelectData
+import apply.application.TermData
+import apply.application.TermResponse
 import apply.ui.admin.term.TermsView
 import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.button.Button
@@ -20,8 +21,8 @@ import java.time.LocalDateTime
 
 class RecruitmentForm() : BindingIdentityFormLayout<RecruitmentData>(RecruitmentData::class) {
     private val title: TextField = TextField("모집명")
-    private val term: Select<TermSelectData> = createItemSelect<TermSelectData>("기수").apply {
-        setItemLabelGenerator(TermSelectData::name)
+    private val term: Select<TermData> = createItemSelect<TermData>("기수").apply {
+        setItemLabelGenerator(TermData::name)
         isEmptySelectionAllowed = false
     }
     private val startDateTime: DateTimePicker = DateTimePicker("시작 일시")
@@ -43,19 +44,13 @@ class RecruitmentForm() : BindingIdentityFormLayout<RecruitmentData>(Recruitment
         drawRequired()
     }
 
-    private fun createTermManageButton(): Button {
-        return createPrimaryButton("기수 관리") {
-            UI.getCurrent().navigate(TermsView::class.java)
-        }
-    }
-
-    constructor(terms: List<TermSelectData>) : this() {
-        term.setItems(terms)
+    constructor(terms: List<TermResponse>) : this() {
+        term.setItems(terms.map { TermData(it.name, it.id) })
     }
 
     constructor(
         title: String,
-        term: TermSelectData,
+        term: TermData,
         startDateTime: LocalDateTime,
         endDateTime: LocalDateTime,
         recruitable: Boolean,
@@ -67,6 +62,12 @@ class RecruitmentForm() : BindingIdentityFormLayout<RecruitmentData>(Recruitment
         this.endDateTime.value = endDateTime
         this.recruitable.value = recruitable
         this.hidden.value = hidden
+    }
+
+    private fun createTermManageButton(): Button {
+        return createPrimaryButton("기수 관리") {
+            UI.getCurrent().navigate(TermsView::class.java)
+        }
     }
 
     private fun createAddButton(): Button {

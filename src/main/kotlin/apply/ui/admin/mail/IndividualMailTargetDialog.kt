@@ -48,7 +48,7 @@ class IndividualMailTargetDialog(
     }
 
     private fun createAddButton(): Renderer<UserResponse> {
-        return ComponentRenderer<Component, UserResponse> { applicantResponse ->
+        return ComponentRenderer { applicantResponse ->
             createPrimarySmallButton("추가") {
                 accept(MailTargetResponse(applicantResponse))
             }.apply {

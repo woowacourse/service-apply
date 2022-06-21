@@ -24,10 +24,10 @@ import support.views.toDisplayName
 @Route(value = "admin/recruitments", layout = BaseLayout::class)
 class RecruitmentsFormView(
     private val recruitmentService: RecruitmentService,
-    private val termService: TermService,
+    termService: TermService,
 ) : VerticalLayout(), HasUrlParameter<String> {
     private val title: Title = Title()
-    private val recruitmentForm: RecruitmentForm = RecruitmentForm(termService.findAllTermSelectData())
+    private val recruitmentForm: RecruitmentForm = RecruitmentForm(termService.findAll())
     private val submitButton: Button = createSubmitButton()
 
     init {

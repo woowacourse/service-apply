@@ -55,7 +55,7 @@ class EvaluationsView(private val evaluationService: EvaluationService) : Vertic
     }
 
     private fun createEditAndDeleteButton(): Renderer<EvaluationResponse> {
-        return ComponentRenderer<Component, EvaluationResponse> { evaluationResponse ->
+        return ComponentRenderer { evaluationResponse ->
             HorizontalLayout(
                 createPrimarySmallButton("수정") {
                     UI.getCurrent().navigate(EvaluationsFormView::class.java, "${evaluationResponse.id}/$EDIT_VALUE")

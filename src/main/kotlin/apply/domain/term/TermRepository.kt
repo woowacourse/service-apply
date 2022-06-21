@@ -10,4 +10,6 @@ fun TermRepository.getById(id: Long): Term {
     return findByIdOrNull(id) ?: throw NoSuchElementException("기수가 존재하지 않습니다. id: $id")
 }
 
-interface TermRepository : JpaRepository<Term, Long>
+interface TermRepository : JpaRepository<Term, Long> {
+    fun existsByName(name: String): Boolean
+}
