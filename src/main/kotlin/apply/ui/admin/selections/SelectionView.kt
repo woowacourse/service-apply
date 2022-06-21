@@ -142,7 +142,7 @@ class SelectionView(
     }
 
     private fun createButtonRenderer(): Renderer<ApplicantAndFormResponse> {
-        return ComponentRenderer<Component, ApplicantAndFormResponse> { user ->
+        return ComponentRenderer { user ->
             createPrimarySmallButton("지원서") {
                 val dialog = Dialog()
                 dialog.add(*createRecruitmentItems(user.applicationForm))
@@ -166,7 +166,7 @@ class SelectionView(
     }
 
     private fun createEvaluationButtonRenderer(): Renderer<EvaluationTargetResponse> {
-        return ComponentRenderer<Component, EvaluationTargetResponse> { response ->
+        return ComponentRenderer { response ->
             createPrimarySmallButton("평가하기") {
                 EvaluationTargetFormDialog(evaluationTargetService, assignmentService, response.id) {
                     selectedTabIndex = tabs.selectedIndex

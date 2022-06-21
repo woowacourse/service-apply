@@ -61,7 +61,7 @@ class CheatersView(
     }
 
     private fun createDeleteButtonRenderer(): Renderer<CheaterResponse> {
-        return ComponentRenderer<Component, CheaterResponse> { cheater ->
+        return ComponentRenderer { cheater ->
             createDeleteButtonWithDialog("부정 행위자를 삭제하시겠습니까?") {
                 cheaterService.deleteById(cheater.id)
             }
