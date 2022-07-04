@@ -4,9 +4,7 @@ import apply.application.TermResponse
 import apply.application.TermService
 import apply.domain.term.Term
 import apply.ui.admin.BaseLayout
-import apply.ui.admin.recruitment.RecruitmentsFormView
 import com.vaadin.flow.component.Component
-import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.html.H1
@@ -19,7 +17,6 @@ import com.vaadin.flow.router.Route
 import support.views.EDIT_VALUE
 import support.views.NEW_VALUE
 import support.views.addSortableColumn
-import support.views.createContrastButton
 import support.views.createDeleteButtonWithDialog
 import support.views.createPrimaryButton
 import support.views.createPrimarySmallButton
@@ -28,7 +25,7 @@ import support.views.toDisplayName
 @Route(value = "admin/terms", layout = BaseLayout::class)
 class TermsView(private val termService: TermService) : VerticalLayout() {
     init {
-        add(createTitle(), createButtons(), createGrid())
+        add(createTitle(), createButton(), createGrid())
     }
 
     private fun createTitle(): Component {
@@ -38,28 +35,22 @@ class TermsView(private val termService: TermService) : VerticalLayout() {
         }
     }
 
-    private fun createGrid(): Component {
-        return Grid<TermResponse>(10).apply {
-            addSortableColumn("기수 명", TermResponse::name)
-            addColumn(createButtonRenderer()).apply {
-                isAutoWidth = true
-                justifyContentMode = FlexComponent.JustifyContentMode.END
-            }
-            setItems(termService.findAll())
-        }
-    }
-
-    private fun createButtons(): Component {
+    private fun createButton(): Component {
         return HorizontalLayout(
-            createContrastButton("돌아가기") {
-                UI.getCurrent().navigate(RecruitmentsFormView::class.java, NEW_VALUE)
-            },
             createPrimaryButton("생성") {
                 TermFormDialog(termService, NEW_VALUE.toDisplayName())
             }
         ).apply {
             setSizeFull()
             justifyContentMode = FlexComponent.JustifyContentMode.END
+        }
+    }
+
+    private fun createGrid(): Component {
+        return Grid<TermResponse>(10).apply {
+            addSortableColumn("기수명", TermResponse::name)
+            addColumn(createButtonRenderer()).apply { isAutoWidth = true }
+            setItems(termService.findAll())
         }
     }
 
@@ -85,7 +76,7 @@ class TermsView(private val termService: TermService) : VerticalLayout() {
     }
 
     private fun createDeleteButton(term: TermResponse): Button {
-        return createDeleteButtonWithDialog("모집을 삭제하시겠습니까?") {
+        return createDeleteButtonWithDialog("기수를 삭제하시겠습니까?") {
             // TODO : delete
         }.apply {
             if (term.id == Term.SINGLE.id) {

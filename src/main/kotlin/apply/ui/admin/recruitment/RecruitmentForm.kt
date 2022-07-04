@@ -4,8 +4,6 @@ import apply.application.RecruitmentData
 import apply.application.RecruitmentItemData
 import apply.application.TermData
 import apply.application.TermResponse
-import apply.ui.admin.term.TermsView
-import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.datetimepicker.DateTimePicker
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup
@@ -15,7 +13,6 @@ import support.views.BindingIdentityFormLayout
 import support.views.createBooleanRadioButtonGroup
 import support.views.createErrorSmallButton
 import support.views.createItemSelect
-import support.views.createPrimaryButton
 import support.views.createPrimarySmallButton
 import java.time.LocalDateTime
 
@@ -32,15 +29,9 @@ class RecruitmentForm() : BindingIdentityFormLayout<RecruitmentData>(Recruitment
     private val recruitmentItems: MutableList<RecruitmentItemForm> = mutableListOf()
 
     init {
-        val termButton = createTermManageButton()
-        add(term, termButton, title, startDateTime, endDateTime, recruitable, hidden)
+        add(term, title, startDateTime, endDateTime, recruitable, hidden)
         addFormItem(createAddButton(), "모집 항목")
-        setResponsiveSteps(ResponsiveStep("0", 7))
-        children.forEach {
-            setColspan(it, 7)
-        }
-        setColspan(termButton, 1)
-        setColspan(term, 6)
+        setResponsiveSteps(ResponsiveStep("0", 1))
         drawRequired()
     }
 
@@ -62,12 +53,6 @@ class RecruitmentForm() : BindingIdentityFormLayout<RecruitmentData>(Recruitment
         this.endDateTime.value = endDateTime
         this.recruitable.value = recruitable
         this.hidden.value = hidden
-    }
-
-    private fun createTermManageButton(): Button {
-        return createPrimaryButton("기수 관리") {
-            UI.getCurrent().navigate(TermsView::class.java)
-        }
     }
 
     private fun createAddButton(): Button {
