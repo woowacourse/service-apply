@@ -66,7 +66,9 @@ class TermsView(private val termService: TermService) : VerticalLayout() {
         return HorizontalLayout(
             createEditButton(term).apply(block),
             createDeleteButton(term).apply(block)
-        )
+        ).apply {
+            justifyContentMode = FlexComponent.JustifyContentMode.END
+        }
     }
 
     private fun createEditButton(term: TermResponse): Button {

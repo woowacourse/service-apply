@@ -26,7 +26,6 @@ class TermFormDialog(
         title.text = "기수 $displayName"
         add(createHeader(), termForm, createButtons(displayName, reloadComponents))
         width = "800px"
-        height = "40%"
         open()
     }
 
@@ -48,7 +47,7 @@ class TermFormDialog(
 
     private fun createButtons(displayName: String, reloadComponent: () -> Unit): Component {
         return HorizontalLayout(getCreateSubmitButton(displayName, reloadComponent), createCancelButton()).apply {
-            setSizeFull()
+            setWidthFull()
             justifyContentMode = FlexComponent.JustifyContentMode.CENTER
             element.style.set("margin-top", "20px")
         }
