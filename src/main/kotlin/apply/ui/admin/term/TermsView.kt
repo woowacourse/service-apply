@@ -59,29 +59,26 @@ class TermsView(private val termService: TermService) : VerticalLayout() {
     }
 
     private fun createButtons(term: TermResponse): Component {
-        return HorizontalLayout(
-            createEditButton(term),
-            createDeleteButton(term)
-        )
-    }
-
-    private fun createEditButton(term: TermResponse): Component {
-        return createPrimarySmallButton("수정") {
-            TermFormDialog(termService, EDIT_VALUE.toDisplayName(), term)
-        }.apply {
+        val block: Button.() -> Unit = {
             if (term.id == Term.SINGLE.id) {
                 isEnabled = false
             }
+        }
+        return HorizontalLayout(
+            createEditButton(term).apply(block),
+            createDeleteButton(term).apply(block)
+        )
+    }
+
+    private fun createEditButton(term: TermResponse): Button {
+        return createPrimarySmallButton("수정") {
+            TermFormDialog(termService, EDIT_VALUE.toDisplayName(), term)
         }
     }
 
     private fun createDeleteButton(term: TermResponse): Button {
         return createDeleteButtonWithDialog("기수를 삭제하시겠습니까?") {
             // TODO : delete
-        }.apply {
-            if (term.id == Term.SINGLE.id) {
-                isEnabled = false
-            }
         }
     }
 }
