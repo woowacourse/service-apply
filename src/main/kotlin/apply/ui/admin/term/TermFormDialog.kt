@@ -11,25 +11,30 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import support.views.createContrastButton
+import support.views.createNotification
 import support.views.createPrimaryButton
 
 class TermFormDialog(
     private val termService: TermService,
     displayName: String,
+    reloadComponents: () -> Unit
 ) : Dialog() {
     private val title: H2 = H2()
     private val termForm: TermForm = TermForm()
-    private val submitButton: Button = createSubmitButton()
 
     init {
-        setDisplayName(displayName)
-        add(createHeader(), termForm, createButtons())
+        title.text = "기수 $displayName"
+        add(createHeader(), termForm, createButtons(displayName, reloadComponents))
         width = "800px"
         height = "40%"
         open()
     }
 
-    constructor(termService: TermService, displayName: String, term: TermResponse) : this(termService, displayName) {
+    constructor(termService: TermService, displayName: String, term: TermResponse, reloadComponents: () -> Unit) : this(
+        termService,
+        displayName,
+        reloadComponents
+    ) {
         termForm.fill(TermData(term.name, term.id))
     }
 
@@ -41,24 +46,24 @@ class TermFormDialog(
         }
     }
 
-    private fun setDisplayName(displayName: String) {
-        title.text = "기수 $displayName"
-        submitButton.text = displayName
-    }
-
-    private fun createButtons(): Component {
-        return HorizontalLayout(submitButton, createCancelButton()).apply {
+    private fun createButtons(displayName: String, reloadComponent: () -> Unit): Component {
+        return HorizontalLayout(getCreateSubmitButton(displayName, reloadComponent), createCancelButton()).apply {
             setSizeFull()
             justifyContentMode = FlexComponent.JustifyContentMode.CENTER
             element.style.set("margin-top", "20px")
         }
     }
 
-    private fun createSubmitButton(): Button {
-        return createPrimaryButton {
+    private fun getCreateSubmitButton(displayName: String, reloadComponent: () -> Unit): Component {
+        return createPrimaryButton(displayName) {
             termForm.bindOrNull()?.let {
-                // TODO : save
-                close()
+                try {
+                    termService.save(it)
+                    reloadComponent()
+                    close()
+                } catch (e: Exception) {
+                    createNotification(e.localizedMessage)
+                }
             }
         }
     }

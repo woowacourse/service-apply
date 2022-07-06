@@ -5,7 +5,7 @@ import com.vaadin.flow.component.textfield.TextField
 import support.views.BindingIdentityFormLayout
 
 class TermForm : BindingIdentityFormLayout<TermData>(TermData::class) {
-    private val name: TextField = TextField("기수 이름")
+    private val name: TextField = TextField("기수명")
 
     init {
         add(name)

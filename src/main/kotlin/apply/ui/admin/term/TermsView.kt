@@ -5,6 +5,7 @@ import apply.application.TermService
 import apply.domain.term.Term
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
+import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.html.H1
@@ -38,7 +39,9 @@ class TermsView(private val termService: TermService) : VerticalLayout() {
     private fun createButton(): Component {
         return HorizontalLayout(
             createPrimaryButton("생성") {
-                TermFormDialog(termService, NEW_VALUE.toDisplayName())
+                TermFormDialog(termService, NEW_VALUE.toDisplayName()) {
+                    UI.getCurrent().page.reload()
+                }
             }
         ).apply {
             setSizeFull()
@@ -59,11 +62,7 @@ class TermsView(private val termService: TermService) : VerticalLayout() {
     }
 
     private fun createButtons(term: TermResponse): Component {
-        val block: Button.() -> Unit = {
-            if (term.id == Term.SINGLE.id) {
-                isEnabled = false
-            }
-        }
+        val block: Button.() -> Unit = { isEnabled = term.id != Term.SINGLE.id }
         return HorizontalLayout(
             createEditButton(term).apply(block),
             createDeleteButton(term).apply(block)
@@ -72,13 +71,15 @@ class TermsView(private val termService: TermService) : VerticalLayout() {
 
     private fun createEditButton(term: TermResponse): Button {
         return createPrimarySmallButton("수정") {
-            TermFormDialog(termService, EDIT_VALUE.toDisplayName(), term)
+            TermFormDialog(termService, EDIT_VALUE.toDisplayName(), term) {
+                UI.getCurrent().page.reload()
+            }
         }
     }
 
     private fun createDeleteButton(term: TermResponse): Button {
         return createDeleteButtonWithDialog("기수를 삭제하시겠습니까?") {
-            // TODO : delete
+            termService.deleteById(term.id)
         }
     }
 }
