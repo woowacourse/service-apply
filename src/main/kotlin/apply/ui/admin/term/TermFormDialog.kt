@@ -19,21 +19,21 @@ class TermFormDialog(
     displayName: String,
     reloadComponents: () -> Unit
 ) : Dialog() {
-    private val title: H2 = H2()
+    private val title: H2 = H2("기수 $displayName")
     private val termForm: TermForm = TermForm()
 
     init {
-        title.text = "기수 $displayName"
         add(createHeader(), termForm, createButtons(displayName, reloadComponents))
         width = "800px"
         open()
     }
 
-    constructor(termService: TermService, displayName: String, term: TermResponse, reloadComponents: () -> Unit) : this(
-        termService,
-        displayName,
-        reloadComponents
-    ) {
+    constructor(
+        termService: TermService,
+        displayName: String,
+        term: TermResponse,
+        reloadComponents: () -> Unit
+    ) : this(termService, displayName, reloadComponents) {
         termForm.fill(TermData(term.name, term.id))
     }
 
