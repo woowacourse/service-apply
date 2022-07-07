@@ -32,7 +32,7 @@ class TermRestController(
     }
 
     @DeleteMapping("/{termId}")
-    fun delete(
+    fun deleteById(
         @PathVariable termId: Long
     ): ResponseEntity<Unit> {
         termService.deleteById(termId)

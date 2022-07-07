@@ -53,7 +53,6 @@ internal class TermServiceTest {
         val terms = listOf(Term("3기"), Term("4기"))
         every { termRepository.findAll() } returns terms
         val responses = termService.findAll()
-
         assertThat(responses).containsExactlyInAnyOrder(
             TermResponse(Term.SINGLE),
             TermResponse(terms[0]),

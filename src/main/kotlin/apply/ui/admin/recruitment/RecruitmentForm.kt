@@ -29,7 +29,7 @@ class RecruitmentForm() : BindingIdentityFormLayout<RecruitmentData>(Recruitment
     private val recruitmentItems: MutableList<RecruitmentItemForm> = mutableListOf()
 
     init {
-        add(title, term, startDateTime, endDateTime, recruitable, hidden)
+        add(term, title, startDateTime, endDateTime, recruitable, hidden)
         addFormItem(createAddButton(), "모집 항목")
         setResponsiveSteps(ResponsiveStep("0", 1))
         drawRequired()

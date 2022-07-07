@@ -134,7 +134,8 @@ private fun Dialog.createCancelButton(clickListener: ClickListener): Button {
 
 private fun Dialog.createConfirmButton(clickListener: ClickListener): Button {
     return createPrimaryButton("확인") {
-        clickListener(it)
-        UI.getCurrent().page.reload()
+        runCatching { clickListener(it) }
+            .onSuccess { UI.getCurrent().page.reload() }
+            .onFailure { e -> createNotification(e.localizedMessage) }
     }
 }

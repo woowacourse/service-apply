@@ -5,6 +5,7 @@ import apply.ui.admin.cheater.CheatersView
 import apply.ui.admin.evaluation.EvaluationsView
 import apply.ui.admin.mail.MailsView
 import apply.ui.admin.recruitment.RecruitmentsView
+import apply.ui.admin.term.TermsView
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.applayout.AppLayout
 import com.vaadin.flow.component.applayout.DrawerToggle
@@ -54,6 +55,7 @@ class BaseLayout(
     private fun createMenuItems(): List<MenuItem> {
         val recruitments = recruitmentService.findAll()
         return listOf(
+            "기수 관리" of TermsView::class.java,
             "모집 관리" of RecruitmentsView::class.java,
             "평가 관리" of EvaluationsView::class.java,
             "과제 관리".accordionOf("admin/missions", recruitments),

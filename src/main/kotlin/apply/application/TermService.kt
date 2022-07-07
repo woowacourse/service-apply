@@ -20,7 +20,7 @@ class TermService(
 
     fun findAll(): List<TermResponse> {
         val terms = listOf(Term.SINGLE) + termRepository.findAll().sortedBy { it.name }
-        return terms.map { TermResponse(it) }
+        return terms.map(::TermResponse)
     }
 
     fun deleteById(id: Long) {
