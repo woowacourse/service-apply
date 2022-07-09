@@ -7,9 +7,9 @@ import apply.security.LoginUser
 import apply.security.LoginUserResolver
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
+import io.kotest.core.spec.style.AnnotationSpec
 import io.mockk.every
 import io.mockk.slot
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Import
@@ -30,7 +30,7 @@ import support.test.TestEnvironment
 @Import(RestDocsConfiguration::class)
 @ExtendWith(RestDocumentationExtension::class)
 @TestEnvironment
-abstract class RestControllerTest {
+abstract class RestControllerTest : AnnotationSpec() {
     @MockkBean
     private lateinit var loginUserResolver: LoginUserResolver
 

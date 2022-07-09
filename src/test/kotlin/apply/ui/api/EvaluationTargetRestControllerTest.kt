@@ -14,12 +14,10 @@ import apply.createEvaluationItem
 import apply.domain.evaluationtarget.EvaluationAnswers
 import apply.domain.evaluationtarget.EvaluationStatus
 import com.ninjasquad.springmockk.MockkBean
+import io.kotest.inspectors.forAll
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.EnumSource
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.HttpHeaders
 import org.springframework.mock.web.MockMultipartFile
@@ -237,43 +235,44 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
             )
     }
 
-    @EnumSource(names = ["PASS", "FAIL", "WAITING"])
-    @ParameterizedTest
-    fun `메일 발송 대상(합격자)들의 이메일 정보를 조회한다`(enumStatus: EvaluationStatus?) {
-        every {
-            mailTargetService.findMailTargets(
-                evaluationId,
-                enumStatus
-            )
-        } returns listOf(MailTargetResponse("roki@woowacourse.com", "김로키"))
-
-        mockMvc.perform(
-            RestDocumentationRequestBuilders.get(
-                "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/emails?status={status}",
-                recruitmentId,
-                evaluationId,
-                enumStatus.toString()
-            )
-                .header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
-                .header(HttpHeaders.CONTENT_TYPE, "application/json")
-        ).andExpect(status().isOk)
-            .andDo(
-                document(
-                    "evaluationtarget-email-sending-target-emails",
-                    pathParameters(
-                        parameterWithName("recruitmentId").description("모집 ID"),
-                        parameterWithName("evaluationId").description("평가 ID")
-                    ),
-                    requestParameters(
-                        parameterWithName("status").description("조회할 평가 상태")
-                    ),
-                    responseFields(
-                        fieldWithPath("message").description("응답 메시지"),
-                        fieldWithPath("body.[].name").type(JsonFieldType.STRING).description("대상 이름"),
-                        fieldWithPath("body.[].email").type(JsonFieldType.STRING).description("대상 E-MAIL")
+    fun `메일 발송 대상(합격자)들의 이메일 정보를 조회한다`() {
+        listOf(EvaluationStatus.PASS, EvaluationStatus.FAIL, EvaluationStatus.WAITING)
+            .forAll { enumStatus: EvaluationStatus ->
+                every {
+                    mailTargetService.findMailTargets(
+                        evaluationId,
+                        enumStatus
                     )
-                )
-            )
+                } returns listOf(MailTargetResponse("roki@woowacourse.com", "김로키"))
+
+                mockMvc.perform(
+                    RestDocumentationRequestBuilders.get(
+                        "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/emails?status={status}",
+                        recruitmentId,
+                        evaluationId,
+                        enumStatus.toString()
+                    )
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+                        .header(HttpHeaders.CONTENT_TYPE, "application/json")
+                ).andExpect(status().isOk)
+                    .andDo(
+                        document(
+                            "evaluationtarget-email-sending-target-emails",
+                            pathParameters(
+                                parameterWithName("recruitmentId").description("모집 ID"),
+                                parameterWithName("evaluationId").description("평가 ID")
+                            ),
+                            requestParameters(
+                                parameterWithName("status").description("조회할 평가 상태")
+                            ),
+                            responseFields(
+                                fieldWithPath("message").description("응답 메시지"),
+                                fieldWithPath("body.[].name").type(JsonFieldType.STRING).description("대상 이름"),
+                                fieldWithPath("body.[].email").type(JsonFieldType.STRING).description("대상 E-MAIL")
+                            )
+                        )
+                    )
+            }
     }
 
     @Test
