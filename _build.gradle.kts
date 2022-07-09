@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    val kotlinVersion = "1.6.10"
+    val kotlinVersion = "1.5.10"
     id("org.springframework.boot") version "2.3.3.RELEASE"
     id("io.spring.dependency-management") version "1.0.10.RELEASE"
     kotlin("jvm") version kotlinVersion
@@ -53,8 +53,8 @@ dependencies {
     testImplementation("com.ninja-squad:springmockk:2.0.3")
     asciidoctor("org.springframework.restdocs:spring-restdocs-asciidoctor")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
-    testImplementation("io.kotest:kotest-runner-junit5:5.3.2")
-    testImplementation("io.kotest:kotest-assertions-core:5.3.2")
+    testImplementation("io.kotest:kotest-runner-junit5:4.3.2")
+    testImplementation("io.kotest:kotest-assertions-core:4.3.2")
 }
 
 dependencyManagement {
