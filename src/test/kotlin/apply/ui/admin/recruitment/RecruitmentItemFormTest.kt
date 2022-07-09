@@ -2,20 +2,21 @@ package apply.ui.admin.recruitment
 
 import apply.createRecruitmentItemData
 import apply.createRecruitmentItemForm
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.shouldBe
 
-internal class RecruitmentItemFormTest {
+internal class RecruitmentItemFormTest : AnnotationSpec() {
     @Test
     fun `유효한 값을 입력하는 경우`() {
         val actual = createRecruitmentItemForm().bindOrNull()
-        assertThat(actual).isEqualTo(createRecruitmentItemData())
+        actual shouldBe createRecruitmentItemData()
     }
 
     @Test
     fun `잘못된 값을 입력한 경우`() {
         val actual = createRecruitmentItemForm(title = "").bindOrNull()
-        assertThat(actual).isNull()
+        actual.shouldBeNull()
     }
 
     @Test
@@ -25,6 +26,6 @@ internal class RecruitmentItemFormTest {
             fill(data)
             bindOrNull()
         }
-        assertThat(actual).isEqualTo(createRecruitmentItemData(id = 1L))
+        actual shouldBe createRecruitmentItemData(id = 1L)
     }
 }
