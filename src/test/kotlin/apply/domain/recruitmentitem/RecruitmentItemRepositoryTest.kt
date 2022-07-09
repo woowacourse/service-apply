@@ -1,14 +1,15 @@
 package apply.domain.recruitmentitem
 
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertAll
+import io.kotest.assertions.assertSoftly
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.matchers.equality.shouldBeEqualToIgnoringFields
+import io.kotest.matchers.nulls.shouldNotBeNull
 import support.test.RepositoryTest
 
 @RepositoryTest
 internal class RecruitmentItemRepositoryTest(
     private val recruitmentItemRepository: RecruitmentItemRepository
-) {
+) : AnnotationSpec() {
     companion object {
         private const val RECRUITMENT_ID = 1L
         private const val DIFFERENT_RECRUITMENT_ID = 2L
@@ -49,11 +50,11 @@ internal class RecruitmentItemRepositoryTest(
 
         recruitmentItemRepository.saveAll(recruitmentItems)
         val results = recruitmentItemRepository.findByRecruitmentIdOrderByPosition(RECRUITMENT_ID)
-
         val expected = listOf(recruitmentItems[0], recruitmentItems[2], recruitmentItems[1])
-        assertAll(
-            { assertThat(results).usingElementComparatorIgnoringFields("id").isEqualTo(expected) },
-            { assertThat(results).usingElementComparatorOnFields("id").isNotNull() }
-        )
+        val zip = results.zip(expected)
+        assertSoftly {
+            zip.forEach { it.first.shouldBeEqualToIgnoringFields(it.second, RecruitmentItem::recruitmentId) }
+            zip.forEach { it.first.recruitmentId.shouldNotBeNull() }
+        }
     }
 }

@@ -1,6 +1,6 @@
 package apply.domain.user
 
-import org.assertj.core.api.Assertions.assertThat
+import io.kotest.matchers.shouldNotBe
 import org.junit.jupiter.api.Test
 
 internal class PasswordTest {
@@ -8,7 +8,6 @@ internal class PasswordTest {
     fun `변환된 비밀번호를 생성한다`() {
         val input = "password"
         val password = Password(input)
-
-        assertThat(password.value).isNotEqualTo(input)
+        password.value shouldNotBe input
     }
 }

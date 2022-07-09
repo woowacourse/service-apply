@@ -1,19 +1,23 @@
 package apply.domain.recruitment
 
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.inspectors.forAll
+import io.kotest.matchers.shouldBe
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.ValueSource
 import java.time.LocalDateTime
 
-internal class RecruitmentStatusTest {
-    @ValueSource(booleans = [true, false])
-    @ParameterizedTest
-    fun `시작 일시 전이면 모집 예정`(recruitable: Boolean) {
-        val tomorrow = LocalDateTime.now().plusDays(1L)
-        val period = RecruitmentPeriod(startDateTime = tomorrow, endDateTime = tomorrow)
-        val status = RecruitmentStatus.of(period, recruitable)
-        assertThat(status).isEqualTo(RecruitmentStatus.RECRUITABLE)
+internal class RecruitmentStatusTest : AnnotationSpec() {
+    @Test
+    fun `시작 일시 전이면 모집 예정`() {
+        listOf(
+            true,
+            false
+        ).forAll {
+            val tomorrow = LocalDateTime.now().plusDays(1L)
+            val period = RecruitmentPeriod(startDateTime = tomorrow, endDateTime = tomorrow)
+            val status = RecruitmentStatus.of(period, it)
+            assertThat(status).isEqualTo(RecruitmentStatus.RECRUITABLE)
+        }
     }
 
     @Test
@@ -22,7 +26,7 @@ internal class RecruitmentStatusTest {
         val tomorrow = LocalDateTime.now().plusDays(1L)
         val period = RecruitmentPeriod(startDateTime = yesterday, endDateTime = tomorrow)
         val status = RecruitmentStatus.of(period, true)
-        assertThat(status).isEqualTo(RecruitmentStatus.RECRUITING)
+        status shouldBe RecruitmentStatus.RECRUITING
     }
 
     @Test
@@ -31,15 +35,18 @@ internal class RecruitmentStatusTest {
         val tomorrow = LocalDateTime.now().plusDays(1L)
         val period = RecruitmentPeriod(startDateTime = yesterday, endDateTime = tomorrow)
         val status = RecruitmentStatus.of(period, false)
-        assertThat(status).isEqualTo(RecruitmentStatus.UNRECRUITABLE)
+        status shouldBe RecruitmentStatus.UNRECRUITABLE
     }
 
-    @ValueSource(booleans = [true, false])
-    @ParameterizedTest
-    fun `종료 일시가 지나면 모집 종료`(recruitable: Boolean) {
-        val yesterday = LocalDateTime.now().minusDays(1L)
-        val period = RecruitmentPeriod(startDateTime = yesterday, endDateTime = yesterday)
-        val status = RecruitmentStatus.of(period, recruitable)
-        assertThat(status).isEqualTo(RecruitmentStatus.ENDED)
+    @Test
+    fun `종료 일시가 지나면 모집 종료`() {
+        listOf(
+            true, false
+        ).forAll {
+            val yesterday = LocalDateTime.now().minusDays(1L)
+            val period = RecruitmentPeriod(startDateTime = yesterday, endDateTime = yesterday)
+            val status = RecruitmentStatus.of(period, it)
+            assertThat(status).isEqualTo(RecruitmentStatus.ENDED)
+        }
     }
 }
