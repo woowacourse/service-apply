@@ -8,21 +8,23 @@ import apply.domain.assignment.AssignmentRepository
 import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.mission.MissionRepository
+import io.kotest.assertions.assertSoftly
+import io.kotest.assertions.throwables.shouldNotThrow
+import io.kotest.assertions.throwables.shouldThrowExactly
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContainAnyOf
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.collections.shouldHaveSize
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.just
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertAll
-import org.junit.jupiter.api.assertDoesNotThrow
-import org.junit.jupiter.api.assertThrows
 import org.springframework.data.repository.findByIdOrNull
 import support.test.UnitTest
 
 @UnitTest
-class MissionServiceTest {
+class MissionServiceTest : AnnotationSpec() {
     @MockK
     lateinit var missionRepository: MissionRepository
 
@@ -53,14 +55,14 @@ class MissionServiceTest {
         every { evaluationRepository.existsById(any()) } returns true
         every { missionRepository.existsByEvaluationId(any()) } returns false
         every { missionRepository.save(any()) } returns createMission()
-        assertDoesNotThrow { missionService.save(missionData) }
+        shouldNotThrow<Exception> { missionService.save(missionData) }
     }
 
     @Test
     fun `존재하지 않는 평가 id인 경우 예외를 던진다`() {
         val missionData = createMissionData()
         every { evaluationRepository.existsById(any()) } returns false
-        assertThrows<IllegalArgumentException> { missionService.save(missionData) }
+        shouldThrowExactly<IllegalArgumentException> { missionService.save(missionData) }
     }
 
     @Test
@@ -68,7 +70,7 @@ class MissionServiceTest {
         val missionData = createMissionData()
         every { evaluationRepository.existsById(any()) } returns true
         every { missionRepository.existsByEvaluationId(any()) } returns true
-        assertThrows<IllegalStateException> { missionService.save(missionData) }
+        shouldThrowExactly<IllegalStateException> { missionService.save(missionData) }
     }
 
     @Test
@@ -83,15 +85,13 @@ class MissionServiceTest {
         every { missionRepository.findAllByEvaluationIdIn(any()) } returns listOf(firstMission, secondMission)
 
         val actual = missionService.findAllByRecruitmentId(recruitmentId)
-        assertAll(
-            { assertThat(actual).hasSize(2) },
-            {
-                assertThat(actual).containsAnyOf(
-                    MissionAndEvaluationResponse(firstMission, firstEvaluation),
-                    MissionAndEvaluationResponse(secondMission, secondEvaluation)
-                )
-            }
-        )
+        assertSoftly {
+            actual shouldHaveSize 2
+            actual shouldContainAnyOf listOf(
+                MissionAndEvaluationResponse(firstMission, firstEvaluation),
+                MissionAndEvaluationResponse(secondMission, secondEvaluation)
+            )
+        }
     }
 
     @Test
@@ -108,15 +108,13 @@ class MissionServiceTest {
 
         val responses = missionService.findAllByUserIdAndRecruitmentId(userId, recruitmentId)
 
-        assertAll(
-            { assertThat(responses).hasSize(2) },
-            {
-                assertThat(responses).containsExactlyInAnyOrder(
-                    MissionResponse(missions[0], true),
-                    MissionResponse(missions[1], true)
-                )
-            }
-        )
+        assertSoftly {
+            responses shouldHaveSize 2
+            responses shouldContainExactlyInAnyOrder listOf(
+                MissionResponse(missions[0], true),
+                MissionResponse(missions[1], true)
+            )
+        }
     }
 
     @Test
@@ -133,7 +131,7 @@ class MissionServiceTest {
 
         val responses = missionService.findAllByUserIdAndRecruitmentId(userId, recruitmentId)
 
-        assertThat(responses).isEmpty()
+        responses.shouldBeEmpty()
     }
 
     @Test
@@ -142,7 +140,7 @@ class MissionServiceTest {
         every { missionRepository.findByIdOrNull(mission.id) } returns mission
         every { missionRepository.deleteById(any()) } just Runs
 
-        assertDoesNotThrow { missionService.deleteById(mission.id) }
+        shouldNotThrow<Exception> { missionService.deleteById(mission.id) }
     }
 
     @Test
@@ -151,7 +149,7 @@ class MissionServiceTest {
         every { missionRepository.findByIdOrNull(mission.id) } returns mission
         every { missionRepository.deleteById(any()) } just Runs
 
-        assertThrows<IllegalStateException> { missionService.deleteById(mission.id) }
+        shouldThrowExactly<IllegalStateException> { missionService.deleteById(mission.id) }
     }
 
     @Test
@@ -160,6 +158,6 @@ class MissionServiceTest {
         every { missionRepository.findByIdOrNull(missionId) } returns null
         every { missionRepository.deleteById(any()) } just Runs
 
-        assertThrows<NoSuchElementException> { missionService.deleteById(missionId) }
+        shouldThrowExactly<NoSuchElementException> { missionService.deleteById(missionId) }
     }
 }

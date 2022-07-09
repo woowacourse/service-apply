@@ -9,21 +9,16 @@ import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitmentitem.RecruitmentItem
 import apply.domain.recruitmentitem.RecruitmentItemRepository
 import apply.domain.term.TermRepository
-import io.mockk.Runs
-import io.mockk.every
+import io.kotest.assertions.throwables.shouldThrowExactly
+import io.kotest.core.spec.style.AnnotationSpec
+import io.mockk.*
 import io.mockk.impl.annotations.MockK
-import io.mockk.just
-import io.mockk.slot
-import io.mockk.verify
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Nested
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.springframework.data.repository.findByIdOrNull
 import support.test.UnitTest
 
+
 @UnitTest
-internal class RecruitmentServiceTest {
+internal class RecruitmentServiceTest : AnnotationSpec() {
     @MockK
     lateinit var recruitmentRepository: RecruitmentRepository
 
@@ -41,7 +36,7 @@ internal class RecruitmentServiceTest {
     }
 
     @Nested
-    inner class Save {
+    inner class Save : AnnotationSpec() {
         @BeforeEach
         internal fun setUp() {
             slot<Recruitment>().also { slot ->
@@ -140,6 +135,6 @@ internal class RecruitmentServiceTest {
     fun `모집 중인 모집은 삭제할 수 없다`() {
         val recruitment = createRecruitment(recruitable = true)
         every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
-        assertThrows<IllegalStateException> { recruitmentService.deleteById(recruitment.id) }
+        shouldThrowExactly<IllegalStateException> { recruitmentService.deleteById(recruitment.id) }
     }
 }
