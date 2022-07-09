@@ -1,15 +1,16 @@
 package apply.domain.assignment
 
 import apply.createAssignment
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.matchers.booleans.shouldBeTrue
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.nulls.shouldNotBeNull
 import support.test.RepositoryTest
 
 @RepositoryTest
 class AssignmentRepositoryTest(
     private val assignmentRepository: AssignmentRepository
-) {
+) : AnnotationSpec() {
     private val assignment = createAssignment(userId = 1L, missionId = 1L)
 
     @BeforeEach
@@ -19,12 +20,12 @@ class AssignmentRepositoryTest(
 
     @Test
     fun `지원자와 과제에 해당하는 제출물의 존재 여부를 조회힌다`() {
-        assertThat(assignmentRepository.existsByUserIdAndMissionId(assignment.userId, assignment.missionId)).isTrue
+        assignmentRepository.existsByUserIdAndMissionId(assignment.userId, assignment.missionId).shouldBeTrue()
     }
 
     @Test
     fun `지원자와 과제에 해당하는 제출물을 반환한다`() {
-        assertThat(assignmentRepository.findByUserIdAndMissionId(assignment.userId, assignment.missionId)).isNotNull
+        assignmentRepository.findByUserIdAndMissionId(assignment.userId, assignment.missionId).shouldNotBeNull()
     }
 
     @Test
@@ -35,6 +36,6 @@ class AssignmentRepositoryTest(
                 createAssignment(userId = 1L, missionId = 3L)
             )
         )
-        assertThat(assignmentRepository.findAllByUserId(1L)).hasSize(3)
+        assignmentRepository.findAllByUserId(1L).shouldHaveSize(3)
     }
 }
