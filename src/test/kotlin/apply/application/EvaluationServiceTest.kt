@@ -1,6 +1,10 @@
 package apply.application
 
-import apply.*
+import apply.EVALUATION_TITLE1
+import apply.EVALUATION_TITLE2
+import apply.EVALUATION_TITLE3
+import apply.createEvaluation
+import apply.createRecruitment
 import apply.domain.evaluation.Evaluation
 import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluationItem.EvaluationItemRepository
@@ -14,7 +18,7 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.just
 import support.test.UnitTest
-import java.util.*
+import java.util.Optional
 
 @UnitTest
 internal class EvaluationServiceTest : AnnotationSpec() {

@@ -41,7 +41,12 @@ class AssignmentServiceTest : DescribeSpec({
         it("과제 제출물을 생성한다") {
             every { assignmentRepository.existsByUserIdAndMissionId(any(), any()) } returns false
             every { missionRepository.getById(any()) } returns createMission()
-            every { evaluationTargetRepository.findByEvaluationIdAndUserId(any(), any()) } returns createEvaluationTarget()
+            every {
+                evaluationTargetRepository.findByEvaluationIdAndUserId(
+                    any(),
+                    any()
+                )
+            } returns createEvaluationTarget()
             every { assignmentRepository.save(any()) } returns createAssignment()
             shouldNotThrow<Exception> { assignmentService.create(missionId, loginUser.id, createAssignmentRequest()) }
         }

@@ -1,6 +1,13 @@
 package apply.application
 
-import apply.*
+import apply.EVALUATION_ANSWER_SCORE
+import apply.EVALUATION_ID
+import apply.EVALUATION_ITEM_ID
+import apply.EVALUATION_TARGET_NOTE
+import apply.createEvaluation
+import apply.createEvaluationAnswer
+import apply.createEvaluationItem
+import apply.createEvaluationTarget
 import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormAnswer
 import apply.domain.applicationform.ApplicationFormAnswers
@@ -11,10 +18,16 @@ import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.evaluationtarget.EvaluationAnswer
 import apply.domain.evaluationtarget.EvaluationAnswers
-import apply.domain.evaluationtarget.EvaluationStatus.*
+import apply.domain.evaluationtarget.EvaluationStatus.FAIL
+import apply.domain.evaluationtarget.EvaluationStatus.PASS
+import apply.domain.evaluationtarget.EvaluationStatus.WAITING
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
-import apply.domain.user.*
+import apply.domain.user.Gender
+import apply.domain.user.Password
+import apply.domain.user.User
+import apply.domain.user.UserRepository
+import apply.domain.user.findAllByEmailIn
 import io.kotest.assertions.assertSoftly
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.booleans.shouldBeTrue

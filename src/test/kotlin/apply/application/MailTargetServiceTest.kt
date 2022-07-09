@@ -5,7 +5,10 @@ import apply.createEvaluationAnswer
 import apply.createEvaluationTarget
 import apply.createUser
 import apply.domain.evaluationtarget.EvaluationAnswers
-import apply.domain.evaluationtarget.EvaluationStatus.*
+import apply.domain.evaluationtarget.EvaluationStatus.FAIL
+import apply.domain.evaluationtarget.EvaluationStatus.PASS
+import apply.domain.evaluationtarget.EvaluationStatus.PENDING
+import apply.domain.evaluationtarget.EvaluationStatus.WAITING
 import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.user.UserRepository
 import apply.domain.user.findAllByEmailIn

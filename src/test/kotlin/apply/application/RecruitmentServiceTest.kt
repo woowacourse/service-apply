@@ -11,10 +11,14 @@ import apply.domain.recruitmentitem.RecruitmentItemRepository
 import apply.domain.term.TermRepository
 import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.core.spec.style.DescribeSpec
-import io.mockk.*
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.slot
+import io.mockk.verify
 import org.springframework.data.repository.findByIdOrNull
 import support.test.UnitTest
-
 
 @UnitTest
 internal class RecruitmentServiceTest : DescribeSpec({

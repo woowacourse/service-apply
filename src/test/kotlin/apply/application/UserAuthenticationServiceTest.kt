@@ -1,6 +1,18 @@
 package apply.application
 
-import apply.*
+import apply.BIRTHDAY
+import apply.CONFIRM_PASSWORD
+import apply.EMAIL
+import apply.GENDER
+import apply.INVALID_CODE
+import apply.NAME
+import apply.PASSWORD
+import apply.PHONE_NUMBER
+import apply.VALID_CODE
+import apply.VALID_TOKEN
+import apply.WRONG_PASSWORD
+import apply.createAuthenticationCode
+import apply.createUser
 import apply.domain.authenticationcode.AuthenticationCodeRepository
 import apply.domain.authenticationcode.getLastByEmail
 import apply.domain.user.UnidentifiedUserException
@@ -45,7 +57,7 @@ internal class UserAuthenticationServiceTest : DescribeSpec({
             it("인증된 인증 코드와 일치하지 않는다면 예외가 발생한다") {
                 every { userRepository.existsByEmail(any()) } returns false
                 every { authenticationCodeRepository.getLastByEmail(any()) } returns
-                        createAuthenticationCode(EMAIL, INVALID_CODE)
+                    createAuthenticationCode(EMAIL, INVALID_CODE)
                 request = RegisterUserRequest(
                     NAME, EMAIL, PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD, CONFIRM_PASSWORD, VALID_CODE
                 )
@@ -55,7 +67,7 @@ internal class UserAuthenticationServiceTest : DescribeSpec({
             it("인증된 이메일이 아니라면 예외가 발생한다") {
                 every { userRepository.existsByEmail(any()) } returns false
                 every { authenticationCodeRepository.getLastByEmail(any()) } returns
-                        createAuthenticationCode(EMAIL, INVALID_CODE)
+                    createAuthenticationCode(EMAIL, INVALID_CODE)
                 request = RegisterUserRequest(
                     NAME, "not@email.com", PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD, CONFIRM_PASSWORD, VALID_CODE
                 )
@@ -65,7 +77,7 @@ internal class UserAuthenticationServiceTest : DescribeSpec({
             it("가입되지 않고 인증된 이메일이라면 회원을 저장하고 토큰을 반환한다") {
                 every { userRepository.existsByEmail(any()) } returns false
                 every { authenticationCodeRepository.getLastByEmail(any()) } returns
-                        createAuthenticationCode(EMAIL, VALID_CODE, true)
+                    createAuthenticationCode(EMAIL, VALID_CODE, true)
 
                 every { userRepository.save(any()) } returns createUser()
                 request = RegisterUserRequest(

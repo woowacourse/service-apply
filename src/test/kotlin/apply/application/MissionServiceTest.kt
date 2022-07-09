@@ -83,7 +83,7 @@ class MissionServiceTest : DescribeSpec({
         it("특정 모집에 해당하는 나의 숨겨지지 않은 과제들을 조회한다") {
             val missions = listOf(createMission(id = 1L), createMission(id = 2L))
             every { evaluationRepository.findAllByRecruitmentId(any()) } returns
-                    listOf(createEvaluation(id = 1L), createEvaluation(id = 2L))
+                listOf(createEvaluation(id = 1L), createEvaluation(id = 2L))
             every { evaluationTargetRepository.existsByUserIdAndEvaluationId(any(), any()) } returns true
             every { missionRepository.findAllByEvaluationIdIn(any()) } returns missions
             every { assignmentRepository.findAllByUserId(any()) } returns listOf(
@@ -105,7 +105,7 @@ class MissionServiceTest : DescribeSpec({
         it("과제의 상태가 hidden인 경우 조회할 수 없다") {
             val missions = listOf(createMission(id = 1L, hidden = true), createMission(id = 2L, hidden = true))
             every { evaluationRepository.findAllByRecruitmentId(any()) } returns
-                    listOf(createEvaluation(id = 1L), createEvaluation(id = 2L))
+                listOf(createEvaluation(id = 1L), createEvaluation(id = 2L))
             every { evaluationTargetRepository.existsByUserIdAndEvaluationId(any(), any()) } returns true
             every { missionRepository.findAllByEvaluationIdIn(any()) } returns missions
             every { assignmentRepository.findAllByUserId(any()) } returns listOf(
