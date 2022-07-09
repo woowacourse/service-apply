@@ -1,10 +1,10 @@
 package apply.utils
 
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.matchers.shouldBe
 import java.io.BufferedReader
 
-class CsvGeneratorTest {
+class CsvGeneratorTest : AnnotationSpec() {
     @Test
     fun `Csv 파일의 내용을 생성한다`() {
         // given
@@ -25,6 +25,7 @@ class CsvGeneratorTest {
             "csvContent4,csvContent5,csvContent6",
             "csvContent7,csvContent8,csvContent9"
         )
-        assertThat(BufferedReader(actual.reader()).readLines()).isEqualTo(expected)
+
+        BufferedReader(actual.reader()).readLines() shouldBe expected
     }
 }
