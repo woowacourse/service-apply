@@ -3,7 +3,6 @@ package apply.security
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.shouldBe
-import org.assertj.core.api.Assertions.assertThat
 
 private const val PAYLOAD = "email@email.com"
 private const val NOT_VALID_TOKEN = ""
