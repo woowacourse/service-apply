@@ -45,7 +45,7 @@ class ApplicantServiceTest : DescribeSpec({
     }
 
     describe("ApplicantService") {
-        context("지원자 찾기 기능") {
+        context("지원자를 찾을 때") {
             it("지원자 정보와 부정 행위자 여부를 함께 제공한다") {
                 val actual = applicantService.findAllByRecruitmentIdAndKeyword(1L)
 
