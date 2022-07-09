@@ -4,25 +4,24 @@ import apply.createApplicationForm
 import apply.createApplicationFormAnswers
 import apply.fail
 import apply.pass
+import io.kotest.assertions.assertSoftly
+import io.kotest.assertions.throwables.shouldNotThrow
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.AnnotationSpec
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.assertAll
-import org.junit.jupiter.api.assertDoesNotThrow
-import org.junit.jupiter.api.assertThrows
+import io.kotest.matchers.booleans.shouldBeTrue
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldBeEmpty
 
 internal class ApplicationFormTest : AnnotationSpec() {
     @Test
     fun `지원서가 지원 정책을 충족하는 경우 생성한다`() {
-        assertDoesNotThrow {
-            ApplicationForm(1L, 1L, pass)
-        }
+        shouldNotThrow<Exception> { ApplicationForm(1L, 1L, pass) }
     }
 
     @Test
     fun `지원서가 지원 정책에 맞지 않으면 생성할 수 없다`() {
-        assertThrows<DuplicateApplicationException> {
-            ApplicationForm(1L, 1L, fail)
-        }
+        shouldThrow<DuplicateApplicationException> { ApplicationForm(1L, 1L, fail) }
     }
 
     @Test
@@ -37,41 +36,43 @@ internal class ApplicationFormTest : AnnotationSpec() {
                 )
             )
         }
-
-        assertAll(
-            { assertThat(applicationForm.referenceUrl).isEqualTo("https://example2.com") },
-            { assertThat(applicationForm.answers.items[0].contents).isEqualTo("수정된 답변 1") }
-        )
+        assertSoftly {
+            applicationForm.referenceUrl shouldBe "https://example2.com"
+            applicationForm.answers.items[0].contents shouldBe "수정된 답변 1"
+        }
     }
 
     @Test
     fun `포트폴리오 없이 지원서를 수정한다`() {
         val applicationForm = createApplicationForm()
         applicationForm.update(referenceUrl = "", createApplicationFormAnswers())
-        assertThat(applicationForm.referenceUrl).isEmpty()
+        applicationForm.referenceUrl.shouldBeEmpty()
     }
 
     @Test
     fun `잘못된 포트폴리오 주소로 지원서를 수정할 수 없다`() {
         val applicationForm = createApplicationForm()
-        assertThrows<IllegalArgumentException> {
-            applicationForm.update(referenceUrl = "wrong", createApplicationFormAnswers())
+        shouldThrow<IllegalArgumentException> {
+            applicationForm.update(
+                referenceUrl = "wrong",
+                createApplicationFormAnswers()
+            )
         }
     }
 
     @Test
     fun `지원서를 제출한다`() {
         val applicationForm = createApplicationForm().apply { submit(pass) }
-
-        assertThat(applicationForm.submitted).isTrue()
-        assertThat(applicationForm.submittedDateTime).isNotNull()
+        assertSoftly {
+            applicationForm.submitted.shouldBeTrue()
+            applicationForm.submittedDateTime.shouldNotBeNull()
+        }
     }
 
     @Test
     fun `제출한 지원서를 수정할 수 없다`() {
         val applicationForm = createApplicationForm().apply { submit(pass) }
-
-        assertThrows<IllegalStateException> {
+        shouldThrow<IllegalStateException> {
             applicationForm.update(
                 referenceUrl = "https://example2.com",
                 applicationFormAnswers = ApplicationFormAnswers(

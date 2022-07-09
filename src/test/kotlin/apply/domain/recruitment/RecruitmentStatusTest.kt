@@ -3,7 +3,6 @@ package apply.domain.recruitment
 import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.inspectors.forAll
 import io.kotest.matchers.shouldBe
-import org.assertj.core.api.Assertions.assertThat
 import java.time.LocalDateTime
 
 internal class RecruitmentStatusTest : AnnotationSpec() {
@@ -16,7 +15,7 @@ internal class RecruitmentStatusTest : AnnotationSpec() {
             val tomorrow = LocalDateTime.now().plusDays(1L)
             val period = RecruitmentPeriod(startDateTime = tomorrow, endDateTime = tomorrow)
             val status = RecruitmentStatus.of(period, it)
-            assertThat(status).isEqualTo(RecruitmentStatus.RECRUITABLE)
+            status shouldBe RecruitmentStatus.RECRUITABLE
         }
     }
 
@@ -46,7 +45,7 @@ internal class RecruitmentStatusTest : AnnotationSpec() {
             val yesterday = LocalDateTime.now().minusDays(1L)
             val period = RecruitmentPeriod(startDateTime = yesterday, endDateTime = yesterday)
             val status = RecruitmentStatus.of(period, it)
-            assertThat(status).isEqualTo(RecruitmentStatus.ENDED)
+            status shouldBe RecruitmentStatus.ENDED
         }
     }
 }

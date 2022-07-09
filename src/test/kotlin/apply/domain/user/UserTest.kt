@@ -5,11 +5,10 @@ import apply.WRONG_PASSWORD
 import apply.createUser
 import io.kotest.assertions.throwables.shouldNotThrow
 import io.kotest.assertions.throwables.shouldThrowExactly
+import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
 
-internal class UserTest {
+internal class UserTest : AnnotationSpec() {
     private lateinit var user: User
 
     @BeforeEach

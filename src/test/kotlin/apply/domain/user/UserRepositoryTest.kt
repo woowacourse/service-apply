@@ -8,7 +8,6 @@ import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
-import org.assertj.core.api.Assertions.assertThat
 import support.createLocalDate
 import support.test.RepositoryTest
 
@@ -54,7 +53,7 @@ internal class UserRepositoryTest(private val userRepository: UserRepository) : 
             "4" to 0
         ).forAll { (keyword, expectedSize) ->
             val result = userRepository.findAllByKeyword(keyword)
-            assertThat(result).hasSize(expectedSize)
+            result shouldHaveSize expectedSize
         }
     }
 

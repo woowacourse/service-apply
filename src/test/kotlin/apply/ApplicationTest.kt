@@ -1,10 +1,10 @@
 package apply
 
-import org.junit.jupiter.api.Test
+import io.kotest.core.spec.style.AnnotationSpec
 import support.test.IntegrationTest
 
 @IntegrationTest
-class ApplicationTest {
+class ApplicationTest : AnnotationSpec() {
     @Test
     fun name() {
     }
