@@ -14,23 +14,25 @@ import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitmentitem.RecruitmentItem
 import apply.domain.recruitmentitem.RecruitmentItemRepository
 import apply.pass
+import io.kotest.assertions.assertSoftly
+import io.kotest.assertions.throwables.shouldNotThrow
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.assertions.throwables.shouldThrowExactly
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.just
 import io.mockk.mockk
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertAll
-import org.junit.jupiter.api.assertDoesNotThrow
-import org.junit.jupiter.api.assertThrows
 import org.springframework.data.repository.findByIdOrNull
 import support.test.UnitTest
 import java.time.LocalDateTime
 
 @UnitTest
-class ApplicationFormServiceTest {
+class ApplicationFormServiceTest : AnnotationSpec() {
     @MockK
     private lateinit var applicationFormRepository: ApplicationFormRepository
 
@@ -133,14 +135,16 @@ class ApplicationFormServiceTest {
     fun `지원서가 있으면 지원서를 불러온다`() {
         every { applicationFormRepository.findByRecruitmentIdAndUserId(any(), any()) } returns applicationForm1
 
-        assertThat(applicationFormService.getApplicationForm(userId, 1L)).isEqualTo(applicationFormResponse)
+        applicationFormService.getApplicationForm(userId, 1L) shouldBe applicationFormResponse
     }
 
     @Test
     fun `지원서가 없으면 예외를 던진다`() {
         every { applicationFormRepository.findByRecruitmentIdAndUserId(any(), any()) } returns null
 
-        assertThrows<IllegalArgumentException> { applicationFormService.getApplicationForm(1L, 1L) }
+        shouldThrowExactly<IllegalArgumentException> {
+            applicationFormService.getApplicationForm(1L, 1L)
+        }
     }
 
     @Test
@@ -149,10 +153,10 @@ class ApplicationFormServiceTest {
 
         val expected = applicationFormService.getMyApplicationForms(userId)
 
-        assertAll(
-            { assertThat(expected).isNotNull },
-            { assertThat(expected).hasSize(2) }
-        )
+        assertSoftly {
+            expected.shouldNotBeNull()
+            expected shouldHaveSize 2
+        }
     }
 
     @Test
@@ -161,10 +165,10 @@ class ApplicationFormServiceTest {
 
         val expected = applicationFormService.getMyApplicationForms(userId)
 
-        assertAll(
-            { assertThat(expected).isNotNull },
-            { assertThat(expected).hasSize(0) }
-        )
+        assertSoftly {
+            expected.shouldNotBeNull()
+            expected shouldHaveSize 0
+        }
     }
 
     @Test
@@ -174,7 +178,7 @@ class ApplicationFormServiceTest {
         every { applicationFormRepository.save(any<ApplicationForm>()) } returns mockk()
         every { applicationValidator.validate(any(), any()) } just Runs
 
-        assertDoesNotThrow { applicationFormService.create(userId, createApplicationFormRequest) }
+        shouldNotThrow<Exception> { applicationFormService.create(userId, createApplicationFormRequest) }
     }
 
     @Test
@@ -184,7 +188,7 @@ class ApplicationFormServiceTest {
         every { applicationFormRepository.save(any<ApplicationForm>()) } returns mockk()
         every { applicationValidator.validate(any(), any()) } just Runs
 
-        assertThrows<IllegalStateException> {
+        shouldThrow<IllegalStateException> {
             applicationFormService.create(
                 userId,
                 createApplicationFormRequest
@@ -196,7 +200,7 @@ class ApplicationFormServiceTest {
     fun `모집이 없는 경우 지원할 수 없다`() {
         every { recruitmentRepository.findByIdOrNull(any()) } returns null
 
-        assertThrows<NoSuchElementException> {
+        shouldThrowExactly<NoSuchElementException> {
             applicationFormService.create(
                 userId,
                 createApplicationFormRequest
@@ -211,7 +215,7 @@ class ApplicationFormServiceTest {
         every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns recruitmentItems
         every { applicationFormRepository.save(any()) } returns applicationForm1
 
-        assertDoesNotThrow { applicationFormService.update(userId, updateApplicationFormRequest) }
+        shouldNotThrow<Exception> { applicationFormService.update(userId, updateApplicationFormRequest) }
     }
 
     @Test
@@ -221,7 +225,7 @@ class ApplicationFormServiceTest {
         every { applicationFormRepository.existsByUserIdAndSubmittedTrue(any()) } returns false
         every { applicationFormRepository.findByRecruitmentIdAndUserId(any(), any()) } returns null
 
-        assertThrows<IllegalArgumentException> {
+        shouldThrowExactly<IllegalArgumentException> {
             applicationFormService.update(
                 userId,
                 updateApplicationFormRequest
@@ -233,7 +237,7 @@ class ApplicationFormServiceTest {
     fun `모집중이 아닌 지원서를 수정할 수 없다`() {
         every { recruitmentRepository.findByIdOrNull(any()) } returns recruitmentNotRecruiting
 
-        assertThrows<IllegalStateException> {
+        shouldThrowExactly<IllegalStateException> {
             applicationFormService.update(
                 userId,
                 updateApplicationFormRequest
@@ -250,7 +254,7 @@ class ApplicationFormServiceTest {
             )
         } returns applicationFormSubmitted
 
-        assertThrows<IllegalStateException> {
+        shouldThrowExactly<IllegalStateException> {
             applicationFormService.getApplicationForm(
                 userId = 3L,
                 recruitmentId = 1L
@@ -265,7 +269,7 @@ class ApplicationFormServiceTest {
         every { applicationFormRepository.existsByUserIdAndSubmittedTrue(any()) } returns false
         every { applicationFormRepository.findByRecruitmentIdAndUserId(any(), any()) } returns applicationForm1
 
-        assertThrows<IllegalArgumentException> {
+        shouldThrowExactly<IllegalArgumentException> {
             applicationFormService.update(
                 userId,
                 UpdateApplicationFormRequest(recruitmentId = 1L, submitted = true)
@@ -280,7 +284,7 @@ class ApplicationFormServiceTest {
         every { applicationFormRepository.existsByUserIdAndSubmittedTrue(any()) } returns false
         every { applicationFormRepository.findByRecruitmentIdAndUserId(any(), any()) } returns applicationForm1
 
-        assertThrows<IllegalArgumentException> {
+        shouldThrowExactly<IllegalArgumentException> {
             applicationFormService.update(
                 userId,
                 UpdateApplicationFormRequest(

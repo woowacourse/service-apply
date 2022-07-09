@@ -7,10 +7,9 @@ import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.applicationform.DuplicateApplicationException
 import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.user.UserRepository
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertDoesNotThrow
-import org.junit.jupiter.api.assertThrows
+import io.kotest.assertions.throwables.shouldNotThrow
+import io.kotest.assertions.throwables.shouldThrowExactly
+import io.kotest.core.spec.style.AnnotationSpec
 import support.test.IntegrationTest
 import java.time.LocalDateTime
 
@@ -20,12 +19,17 @@ class ApplicationFormIntegrationTest(
     private val userRepository: UserRepository,
     private val applicationFormRepository: ApplicationFormRepository,
     private val recruitmentRepository: RecruitmentRepository
-) {
+) : AnnotationSpec() {
     @Test
     fun `아직 지원하지 않은 경우 단독 모집에 지원 가능하다`() {
         val recruitment = recruitmentRepository.save(createRecruitment(termId = 0L, recruitable = true))
         val user = userRepository.save(createUser())
-        assertDoesNotThrow { applicationFormService.create(user.id, CreateApplicationFormRequest(recruitment.id)) }
+        shouldNotThrow<Exception> {
+            applicationFormService.create(
+                user.id,
+                CreateApplicationFormRequest(recruitment.id)
+            )
+        }
     }
 
     @Test
@@ -40,7 +44,7 @@ class ApplicationFormIntegrationTest(
                 submittedDateTime = LocalDateTime.now()
             )
         )
-        assertThrows<IllegalStateException> {
+        shouldThrowExactly<IllegalStateException> {
             applicationFormService.create(user.id, CreateApplicationFormRequest(recruitment.id))
         }
     }
@@ -58,7 +62,7 @@ class ApplicationFormIntegrationTest(
             )
         )
         val recruitment = recruitmentRepository.save(createRecruitment(termId = 1L, recruitable = true))
-        assertThrows<DuplicateApplicationException> {
+        shouldThrowExactly<DuplicateApplicationException> {
             applicationFormService.create(user.id, CreateApplicationFormRequest(recruitment.id))
         }
     }
@@ -70,7 +74,7 @@ class ApplicationFormIntegrationTest(
         applicationFormRepository.save(createApplicationForm(user.id, appliedRecruitment.id, submitted = false))
         val recruitment = recruitmentRepository.save(createRecruitment(termId = 1L, recruitable = true))
         applicationFormRepository.save(createApplicationForm(user.id, recruitment.id, submitted = false))
-        assertDoesNotThrow {
+        shouldNotThrow<Exception> {
             applicationFormService.update(
                 user.id,
                 UpdateApplicationFormRequest(recruitmentId = recruitment.id, submitted = true)
@@ -92,7 +96,7 @@ class ApplicationFormIntegrationTest(
         )
         val recruitment = recruitmentRepository.save(createRecruitment(termId = 1L, recruitable = true))
         applicationFormRepository.save(createApplicationForm(user.id, recruitment.id, submitted = false))
-        assertThrows<DuplicateApplicationException> {
+        shouldThrowExactly<DuplicateApplicationException> {
             applicationFormService.update(
                 user.id,
                 UpdateApplicationFormRequest(recruitmentId = recruitment.id, submitted = true)

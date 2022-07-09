@@ -6,17 +6,17 @@ import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.Cheater
 import apply.domain.cheater.CheaterRepository
 import apply.domain.user.UserRepository
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.matchers.booleans.shouldBeTrue
+import io.kotest.matchers.collections.shouldHaveSize
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.slot
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Nested
-import org.junit.jupiter.api.Test
 import support.test.UnitTest
 
 @UnitTest
-class ApplicantServiceTest {
+class ApplicantServiceTest : AnnotationSpec() {
+
     @MockK
     private lateinit var userRepository: UserRepository
 
@@ -34,7 +34,7 @@ class ApplicantServiceTest {
     }
 
     @Nested
-    inner class Find {
+    inner class Find : AnnotationSpec() {
         @BeforeEach
         internal fun setUp() {
             val userId = 1L
@@ -64,16 +64,20 @@ class ApplicantServiceTest {
         fun `지원자 정보와 부정 행위자 여부를 함께 제공한다`() {
             val actual = applicantService.findAllByRecruitmentIdAndKeyword(1L)
 
-            assertThat(actual).hasSize(1)
-            assertThat(actual[0].isCheater).isTrue
+            actual shouldHaveSize 1
+            actual[0].isCheater.shouldBeTrue()
+            // assertThat(actual).hasSize(1)
+            // assertThat(actual[0].isCheater).isTrue
         }
 
         @Test
         fun `키워드로 찾은 지원자 정보와 부정 행위자 여부를 함께 제공한다`() {
             val actual = applicantService.findAllByRecruitmentIdAndKeyword(1L, "amazzi")
 
-            assertThat(actual).hasSize(1)
-            assertThat(actual[0].isCheater).isTrue
+            actual shouldHaveSize 1
+            actual[0].isCheater.shouldBeTrue()
+            // assertThat(actual).hasSize(1)
+            // assertThat(actual[0].isCheater).isTrue
         }
     }
 }

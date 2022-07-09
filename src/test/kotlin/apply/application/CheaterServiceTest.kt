@@ -4,16 +4,15 @@ import apply.createCheaterData
 import apply.domain.cheater.Cheater
 import apply.domain.cheater.CheaterRepository
 import apply.domain.user.UserRepository
+import io.kotest.assertions.throwables.shouldNotThrow
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.style.AnnotationSpec
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertDoesNotThrow
-import org.junit.jupiter.api.assertThrows
 import support.test.UnitTest
 
 @UnitTest
-internal class CheaterServiceTest {
+internal class CheaterServiceTest : AnnotationSpec() {
     @MockK
     private lateinit var userRepository: UserRepository
 
@@ -31,13 +30,13 @@ internal class CheaterServiceTest {
         val cheaterData = createCheaterData()
         every { cheaterRepository.existsByEmail(any()) } returns false
         every { cheaterRepository.save(any()) } returns Cheater(cheaterData.email, cheaterData.description)
-        assertDoesNotThrow { cheaterService.save(cheaterData) }
+        shouldNotThrow<Exception> { cheaterService.save(cheaterData) }
     }
 
     @Test
     fun `이미 등록된 부정 행위자를 추가하는 경우 예외를 던진다`() {
         val cheaterData = createCheaterData()
         every { cheaterRepository.existsByEmail(any()) } returns true
-        assertThrows<IllegalArgumentException> { cheaterService.save(cheaterData) }
+        shouldThrow<IllegalArgumentException> { cheaterService.save(cheaterData) }
     }
 }
