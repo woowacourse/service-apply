@@ -7,7 +7,6 @@ import io.kotest.core.spec.style.AnnotationSpec
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.shouldBe
 import support.test.RepositoryTest
-import javax.transaction.Transactional
 
 @RepositoryTest
 class ApplicationFormRepositoryTest(
