@@ -5,20 +5,16 @@ import apply.domain.assignment.AssignmentRepository
 import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.mission.MissionRepository
 import apply.utils.CsvGenerator
-import io.mockk.Runs
-import io.mockk.every
+import io.kotest.assertions.throwables.shouldNotThrow
+import io.kotest.assertions.throwables.shouldThrowExactly
+import io.kotest.core.spec.style.AnnotationSpec
+import io.mockk.*
 import io.mockk.impl.annotations.MockK
-import io.mockk.just
-import io.mockk.verify
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertDoesNotThrow
-import org.junit.jupiter.api.assertThrows
 import support.test.UnitTest
 import java.io.InputStream
 
 @UnitTest
-class EvaluationTargetCsvServiceTest {
+class EvaluationTargetCsvServiceTest : AnnotationSpec() {
     @MockK
     private lateinit var evaluationTargetService: EvaluationTargetService
 
@@ -38,6 +34,7 @@ class EvaluationTargetCsvServiceTest {
 
     @BeforeEach
     internal fun setUp() {
+        evaluationTargetService = mockkClass(EvaluationTargetService::class)
         evaluationTargetCsvService = EvaluationTargetCsvService(
             evaluationTargetService,
             evaluationItemRepository,
@@ -59,7 +56,7 @@ class EvaluationTargetCsvServiceTest {
         every { evaluationItemRepository.findByEvaluationIdOrderByPosition(any()) } returns evaluationItems
         every { evaluationTargetService.gradeAll(any(), any()) } just Runs
 
-        assertDoesNotThrow { evaluationTargetCsvService.updateTarget(inputStream, 1L) }
+        shouldNotThrow<Exception> { evaluationTargetCsvService.updateTarget(inputStream, 1L) }
         verify(exactly = 1) { evaluationTargetService.gradeAll(any(), any()) }
     }
 
@@ -75,7 +72,7 @@ class EvaluationTargetCsvServiceTest {
         every { evaluationItemRepository.findByEvaluationIdOrderByPosition(any()) } returns evaluationItems
         every { evaluationTargetService.gradeAll(any(), any()) } just Runs
 
-        assertDoesNotThrow { evaluationTargetCsvService.updateTarget(inputStream, 1L) }
+        shouldNotThrow<Exception> { evaluationTargetCsvService.updateTarget(inputStream, 1L) }
         verify(exactly = 1) { evaluationTargetService.gradeAll(any(), any()) }
     }
 
@@ -90,7 +87,7 @@ class EvaluationTargetCsvServiceTest {
 
         every { evaluationItemRepository.findByEvaluationIdOrderByPosition(any()) } returns evaluationItems
 
-        assertThrows<IllegalArgumentException> { evaluationTargetCsvService.updateTarget(inputStream, 1L) }
+        shouldThrowExactly<IllegalArgumentException> { evaluationTargetCsvService.updateTarget(inputStream, 1L) }
     }
 
     @Test
@@ -104,7 +101,7 @@ class EvaluationTargetCsvServiceTest {
 
         every { evaluationItemRepository.findByEvaluationIdOrderByPosition(any()) } returns evaluationItems
 
-        assertThrows<IllegalArgumentException> { evaluationTargetCsvService.updateTarget(inputStream, 1L) }
+        shouldThrowExactly<IllegalArgumentException> { evaluationTargetCsvService.updateTarget(inputStream, 1L) }
     }
 
     private fun getInputStream(fileName: String): InputStream {

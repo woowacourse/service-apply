@@ -1,13 +1,6 @@
 package apply.application
 
-import apply.EVALUATION_ANSWER_SCORE
-import apply.EVALUATION_ID
-import apply.EVALUATION_ITEM_ID
-import apply.EVALUATION_TARGET_NOTE
-import apply.createEvaluation
-import apply.createEvaluationAnswer
-import apply.createEvaluationItem
-import apply.createEvaluationTarget
+import apply.*
 import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormAnswer
 import apply.domain.applicationform.ApplicationFormAnswers
@@ -18,22 +11,19 @@ import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.evaluationtarget.EvaluationAnswer
 import apply.domain.evaluationtarget.EvaluationAnswers
-import apply.domain.evaluationtarget.EvaluationStatus.FAIL
-import apply.domain.evaluationtarget.EvaluationStatus.PASS
-import apply.domain.evaluationtarget.EvaluationStatus.WAITING
+import apply.domain.evaluationtarget.EvaluationStatus.*
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
-import apply.domain.user.Gender
-import apply.domain.user.Password
-import apply.domain.user.User
-import apply.domain.user.UserRepository
-import apply.domain.user.findAllByEmailIn
+import apply.domain.user.*
+import io.kotest.assertions.assertSoftly
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.matchers.booleans.shouldBeTrue
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.equality.shouldBeEqualToComparingFields
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldBeBlank
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertAll
 import org.springframework.data.repository.findByIdOrNull
 import support.createLocalDate
 import support.createLocalDateTime
@@ -42,7 +32,7 @@ import support.test.RepositoryTest
 @RepositoryTest
 class EvaluationTargetServiceTest(
     private val evaluationTargetRepository: EvaluationTargetRepository
-) {
+) : AnnotationSpec() {
     @MockK
     private lateinit var evaluationRepository: EvaluationRepository
 
@@ -105,15 +95,15 @@ class EvaluationTargetServiceTest(
         val actual = evaluationTargetRepository.findAllByEvaluationId(firstEvaluation.id)
 
         // then
-        assertAll(
-            { assertThat(actual).hasSize(3) },
-            { assertThat(actual[0].userId).isEqualTo(1L) },
-            { assertThat(actual[0].evaluationStatus).isEqualTo(WAITING) },
-            { assertThat(actual[1].userId).isEqualTo(2L) },
-            { assertThat(actual[1].evaluationStatus).isEqualTo(WAITING) },
-            { assertThat(actual[2].userId).isEqualTo(3L) },
-            { assertThat(actual[2].evaluationStatus).isEqualTo(FAIL) }
-        )
+        assertSoftly {
+            actual shouldHaveSize 3
+            actual[0].userId shouldBe 1L
+            actual[0].evaluationStatus shouldBe WAITING
+            actual[1].userId shouldBe 2L
+            actual[1].evaluationStatus shouldBe WAITING
+            actual[2].userId shouldBe 3L
+            actual[2].evaluationStatus shouldBe FAIL
+        }
     }
 
     @Test
@@ -141,13 +131,13 @@ class EvaluationTargetServiceTest(
         val actual = evaluationTargetRepository.findAllByEvaluationId(secondEvaluation.id)
 
         // then
-        assertAll(
-            { assertThat(actual).hasSize(2) },
-            { assertThat(actual[0].userId).isEqualTo(2L) },
-            { assertThat(actual[0].evaluationStatus).isEqualTo(WAITING) },
-            { assertThat(actual[1].userId).isEqualTo(3L) },
-            { assertThat(actual[1].evaluationStatus).isEqualTo(FAIL) }
-        )
+        assertSoftly {
+            actual shouldHaveSize 2
+            actual[0].userId shouldBe 2L
+            actual[0].evaluationStatus shouldBe WAITING
+            actual[1].userId shouldBe 3L
+            actual[1].evaluationStatus shouldBe FAIL
+        }
     }
 
     @Test
@@ -193,17 +183,17 @@ class EvaluationTargetServiceTest(
         val actual = evaluationTargetRepository.findAllByEvaluationId(firstEvaluation.id)
 
         // then
-        assertAll(
-            { assertThat(actual).hasSize(4) },
-            { assertThat(actual[0].userId).isEqualTo(1L) },
-            { assertThat(actual[0].evaluationStatus).isEqualTo(FAIL) },
-            { assertThat(actual[1].userId).isEqualTo(2L) },
-            { assertThat(actual[1].evaluationStatus).isEqualTo(PASS) },
-            { assertThat(actual[2].userId).isEqualTo(3L) },
-            { assertThat(actual[2].evaluationStatus).isEqualTo(FAIL) },
-            { assertThat(actual[3].userId).isEqualTo(4L) },
-            { assertThat(actual[3].evaluationStatus).isEqualTo(WAITING) }
-        )
+        assertSoftly {
+            actual shouldHaveSize 4
+            actual[0].userId shouldBe 1L
+            actual[0].evaluationStatus shouldBe FAIL
+            actual[1].userId shouldBe 2L
+            actual[1].evaluationStatus shouldBe PASS
+            actual[2].userId shouldBe 3L
+            actual[2].evaluationStatus shouldBe FAIL
+            actual[3].userId shouldBe 4L
+            actual[3].evaluationStatus shouldBe WAITING
+        }
     }
 
     @Test
@@ -242,15 +232,15 @@ class EvaluationTargetServiceTest(
         val actual = evaluationTargetRepository.findAllByEvaluationId(secondEvaluation.id)
 
         // then
-        assertAll(
-            { assertThat(actual).hasSize(3) },
-            { assertThat(actual[0].userId).isEqualTo(2L) },
-            { assertThat(actual[0].evaluationStatus).isEqualTo(PASS) },
-            { assertThat(actual[1].userId).isEqualTo(3L) },
-            { assertThat(actual[1].evaluationStatus).isEqualTo(FAIL) },
-            { assertThat(actual[2].userId).isEqualTo(4L) },
-            { assertThat(actual[2].evaluationStatus).isEqualTo(WAITING) }
-        )
+        assertSoftly {
+            actual shouldHaveSize 3
+            actual[0].userId shouldBe 2L
+            actual[0].evaluationStatus shouldBe PASS
+            actual[1].userId shouldBe 3L
+            actual[1].evaluationStatus shouldBe FAIL
+            actual[2].userId shouldBe 4L
+            actual[2].evaluationStatus shouldBe WAITING
+        }
     }
 
     @Test
@@ -298,10 +288,10 @@ class EvaluationTargetServiceTest(
         val cheaterEvaluationTargets = actual.filter { it.userId == cheater.id }
 
         // then
-        assertAll(
-            { assertThat(actual).hasSize(4) },
-            { assertThat(cheaterEvaluationTargets.all { it.evaluationStatus == FAIL }).isTrue() }
-        )
+        assertSoftly {
+            actual shouldHaveSize 4
+            cheaterEvaluationTargets.all { it.evaluationStatus == FAIL }.shouldBeTrue()
+        }
     }
 
     @Test
@@ -330,11 +320,11 @@ class EvaluationTargetServiceTest(
         evaluationTargetService.load(2L)
 
         // then
-        assertAll(
-            { assertThat(evaluationTargetRepository.findAllByEvaluationId(1L)[0].evaluationStatus).isEqualTo(PASS) },
-            { assertThat(evaluationTargetRepository.findAllByEvaluationId(2L)[0].evaluationStatus).isEqualTo(FAIL) },
-            { assertThat(evaluationTargetRepository.findAllByEvaluationId(3L)[0].evaluationStatus).isEqualTo(PASS) }
-        )
+        assertSoftly {
+            evaluationTargetRepository.findAllByEvaluationId(1L)[0].evaluationStatus shouldBe PASS
+            evaluationTargetRepository.findAllByEvaluationId(2L)[0].evaluationStatus shouldBe FAIL
+            evaluationTargetRepository.findAllByEvaluationId(3L)[0].evaluationStatus shouldBe PASS
+        }
     }
 
     @Test
@@ -350,14 +340,14 @@ class EvaluationTargetServiceTest(
         } returns listOf(evaluationItem)
 
         val result = evaluationTargetService.getGradeEvaluation(evaluationTarget.id)
-        assertAll(
-            { assertThat(result.title).isEqualTo(evaluation.title) },
-            { assertThat(result.description).isEqualTo(evaluation.description) },
-            { assertThat(result.evaluationItems).hasSize(1) },
-            { assertThat(result.evaluationTarget.evaluationItemScores[0].score).isEqualTo(0) },
-            { assertThat(result.evaluationTarget.evaluationStatus).isEqualTo(WAITING) },
-            { assertThat(result.evaluationTarget.note).isBlank() }
-        )
+        assertSoftly {
+            result.title shouldBe evaluation.title
+            result.description shouldBe evaluation.description
+            result.evaluationItems shouldHaveSize 1
+            result.evaluationTarget.evaluationItemScores[0].score shouldBe 0
+            result.evaluationTarget.evaluationStatus shouldBe WAITING
+            result.evaluationTarget.note.shouldBeBlank()
+        }
     }
 
     @Test
@@ -375,14 +365,14 @@ class EvaluationTargetServiceTest(
         } returns listOf(evaluationItem)
 
         val result = evaluationTargetService.getGradeEvaluation(evaluationTarget.id)
-        assertAll(
-            { assertThat(result.title).isEqualTo(evaluation.title) },
-            { assertThat(result.description).isEqualTo(evaluation.description) },
-            { assertThat(result.evaluationItems).hasSize(1) },
-            { assertThat(result.evaluationTarget.evaluationItemScores[0].score).isEqualTo(EVALUATION_ANSWER_SCORE) },
-            { assertThat(result.evaluationTarget.evaluationStatus).isEqualTo(PASS) },
-            { assertThat(result.evaluationTarget.note).isEqualTo(EVALUATION_TARGET_NOTE) }
-        )
+        assertSoftly {
+            result.title shouldBe evaluation.title
+            result.description shouldBe evaluation.description
+            result.evaluationItems shouldHaveSize 1
+            result.evaluationTarget.evaluationItemScores[0].score shouldBe EVALUATION_ANSWER_SCORE
+            result.evaluationTarget.evaluationStatus shouldBe PASS
+            result.evaluationTarget.note shouldBe EVALUATION_TARGET_NOTE
+        }
     }
 
     @Test
@@ -399,14 +389,11 @@ class EvaluationTargetServiceTest(
 
         val updatedEvaluationTarget = evaluationTargetRepository.findByIdOrNull(evaluationTarget.id)!!
         val expectedAnswers = EvaluationAnswers(mutableListOf(EvaluationAnswer(updatedScore, 3L)))
-        assertAll(
-            { assertThat(updatedEvaluationTarget.evaluationStatus).isEqualTo(updatedStatus) },
-            { assertThat(updatedEvaluationTarget.note).isEqualTo(updatedNote) },
-            {
-                assertThat(updatedEvaluationTarget.evaluationAnswers).usingRecursiveComparison()
-                    .isEqualTo(expectedAnswers)
-            }
-        )
+        assertSoftly {
+            updatedEvaluationTarget.evaluationStatus shouldBe updatedStatus
+            updatedEvaluationTarget.note shouldBe updatedNote
+            updatedEvaluationTarget.evaluationAnswers shouldBeEqualToComparingFields expectedAnswers
+        }
     }
 
     private fun createApplicationForm(id: Long, recruitmentId: Long = 1L, userId: Long): ApplicationForm {

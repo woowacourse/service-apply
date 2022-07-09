@@ -1,28 +1,23 @@
 package apply.application
 
-import apply.EVALUATION_TITLE1
-import apply.EVALUATION_TITLE2
-import apply.EVALUATION_TITLE3
-import apply.createEvaluation
-import apply.createRecruitment
+import apply.*
 import apply.domain.evaluation.Evaluation
 import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentRepository
+import io.kotest.assertions.assertSoftly
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.matchers.shouldBe
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.just
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertAll
 import support.test.UnitTest
-import java.util.Optional
+import java.util.*
 
 @UnitTest
-internal class EvaluationServiceTest {
+internal class EvaluationServiceTest : AnnotationSpec() {
     @MockK
     private lateinit var recruitmentRepository: RecruitmentRepository
 
@@ -66,15 +61,15 @@ internal class EvaluationServiceTest {
 
         val findAllWithRecruitment = evaluationService.findAllWithRecruitment()
 
-        assertAll(
-            { assertThat(2L).isEqualTo(findAllWithRecruitment[1].id) },
-            { assertThat(firstEvaluation.title).isEqualTo(findAllWithRecruitment[1].title) },
-            { assertThat(firstEvaluation.description).isEqualTo(findAllWithRecruitment[1].description) },
-            { assertThat(recruitments[0].title).isEqualTo(findAllWithRecruitment[1].recruitmentTitle) },
-            { assertThat(firstEvaluation.recruitmentId).isEqualTo(findAllWithRecruitment[1].recruitmentId) },
-            { assertThat(preCourseEvaluation.title).isEqualTo(findAllWithRecruitment[1].beforeEvaluationTitle) },
-            { assertThat(preCourseEvaluation.id).isEqualTo(findAllWithRecruitment[1].beforeEvaluationId) }
-        )
+        assertSoftly {
+            findAllWithRecruitment[1].id shouldBe 2L
+            firstEvaluation.title shouldBe findAllWithRecruitment[1].title
+            firstEvaluation.description shouldBe findAllWithRecruitment[1].description
+            recruitments[0].title shouldBe findAllWithRecruitment[1].recruitmentTitle
+            firstEvaluation.recruitmentId shouldBe findAllWithRecruitment[1].recruitmentId
+            preCourseEvaluation.title shouldBe findAllWithRecruitment[1].beforeEvaluationTitle
+            preCourseEvaluation.id shouldBe findAllWithRecruitment[1].beforeEvaluationId
+        }
     }
 
     @Test
@@ -84,7 +79,7 @@ internal class EvaluationServiceTest {
 
         evaluationService.deleteById(2L)
 
-        assertThat(0L).isEqualTo(evaluations[2].beforeEvaluationId)
+        evaluations[2].beforeEvaluationId shouldBe 0L
     }
 
     @Test
@@ -99,7 +94,9 @@ internal class EvaluationServiceTest {
 
         evaluationService.deleteById(2L)
 
-        assertThat(0L).isEqualTo(evaluationsWithDuplicatedBeforeEvaluationId[2].beforeEvaluationId)
-        assertThat(0L).isEqualTo(evaluationsWithDuplicatedBeforeEvaluationId[3].beforeEvaluationId)
+        assertSoftly {
+            evaluationsWithDuplicatedBeforeEvaluationId[2].beforeEvaluationId shouldBe 0L
+            evaluationsWithDuplicatedBeforeEvaluationId[3].beforeEvaluationId shouldBe 0L
+        }
     }
 }

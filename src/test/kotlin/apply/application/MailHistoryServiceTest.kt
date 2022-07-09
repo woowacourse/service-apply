@@ -3,17 +3,16 @@ package apply.application
 import apply.createMailData
 import apply.createMailHistory
 import apply.domain.mail.MailHistoryRepository
+import io.kotest.assertions.throwables.shouldNotThrow
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.matchers.collections.shouldContainExactly
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertDoesNotThrow
 import support.test.UnitTest
 import java.time.LocalDateTime
 
 @UnitTest
-class MailHistoryServiceTest {
+class MailHistoryServiceTest : AnnotationSpec() {
     @MockK
     private lateinit var mailHistoryRepository: MailHistoryRepository
 
@@ -28,7 +27,7 @@ class MailHistoryServiceTest {
     fun `메일 이력을 저장한다`() {
         val mailData = createMailData()
         every { mailHistoryRepository.save(any()) } returns createMailHistory()
-        assertDoesNotThrow { mailHistoryService.save(mailData) }
+        shouldNotThrow<Exception> { mailHistoryService.save(mailData) }
     }
 
     @Test
@@ -39,6 +38,6 @@ class MailHistoryServiceTest {
         val emailHistory1 = createMailHistory(subject = "제목1", sentTime = now)
         val emailHistory2 = createMailHistory(subject = "제목2", sentTime = now.plusSeconds(1))
         every { mailHistoryRepository.findAll() } returns listOf(emailHistory1, emailHistory2)
-        assertThat(mailHistoryService.findAll()).containsExactly(mailData1, mailData2)
+        mailHistoryService.findAll().shouldContainExactly(mailData1, mailData2)
     }
 }

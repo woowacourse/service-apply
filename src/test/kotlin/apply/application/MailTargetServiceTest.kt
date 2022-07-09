@@ -5,23 +5,21 @@ import apply.createEvaluationAnswer
 import apply.createEvaluationTarget
 import apply.createUser
 import apply.domain.evaluationtarget.EvaluationAnswers
-import apply.domain.evaluationtarget.EvaluationStatus.FAIL
-import apply.domain.evaluationtarget.EvaluationStatus.PASS
-import apply.domain.evaluationtarget.EvaluationStatus.PENDING
-import apply.domain.evaluationtarget.EvaluationStatus.WAITING
+import apply.domain.evaluationtarget.EvaluationStatus.*
 import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.user.UserRepository
 import apply.domain.user.findAllByEmailIn
+import io.kotest.assertions.assertSoftly
+import io.kotest.core.spec.style.AnnotationSpec
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.verify
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
 import support.test.UnitTest
 
 @UnitTest
-class MailTargetServiceTest {
+class MailTargetServiceTest : AnnotationSpec() {
     @MockK
     private lateinit var evaluationTargetRepository: EvaluationTargetRepository
 
@@ -50,7 +48,7 @@ class MailTargetServiceTest {
             createUser(id = 4L, email = "fail@email.com")
         )
         val actual = mailTargetService.findMailTargets(EVALUATION_ID)
-        assertThat(actual).hasSize(4)
+        actual shouldHaveSize 4
     }
 
     @Test
@@ -62,8 +60,10 @@ class MailTargetServiceTest {
             createUser(id = 3L, email = "pass@email.com")
         )
         val actual = mailTargetService.findMailTargets(EVALUATION_ID, PASS)
-        assertThat(actual).hasSize(1)
-        assertThat(actual[0].email).isEqualTo("pass@email.com")
+        assertSoftly {
+            actual shouldHaveSize 1
+            actual[0].email shouldBe "pass@email.com"
+        }
     }
 
     @Test
@@ -75,8 +75,10 @@ class MailTargetServiceTest {
             createUser(id = 2L, email = "fail@email.com")
         )
         val actual = mailTargetService.findMailTargets(EVALUATION_ID, FAIL)
-        assertThat(actual).hasSize(1)
-        assertThat(actual[0].email).isEqualTo("fail@email.com")
+        assertSoftly {
+            actual shouldHaveSize 1
+            actual[0].email shouldBe "fail@email.com"
+        }
     }
 
     @Test
@@ -107,8 +109,10 @@ class MailTargetServiceTest {
             createUser(id = 1L, email = "waiting@email.com")
         )
         val actual = mailTargetService.findMailTargets(EVALUATION_ID, WAITING)
-        assertThat(actual).hasSize(1)
-        assertThat(actual[0].email).isEqualTo("waiting@email.com")
+        assertSoftly {
+            actual shouldHaveSize 1
+            actual[0].email shouldBe "waiting@email.com"
+        }
     }
 
     @Test
@@ -125,6 +129,6 @@ class MailTargetServiceTest {
         )
         every { userRepository.findAllByEmailIn(emails) } returns users
         val actual = mailTargetService.findAllByEmails(emails)
-        assertThat(actual).isEqualTo(mailTargetResponses)
+        actual shouldBe mailTargetResponses
     }
 }
