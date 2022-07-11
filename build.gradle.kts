@@ -9,7 +9,7 @@ plugins {
     kotlin("plugin.jpa") version kotlinVersion
     id("org.jlleitschuh.gradle.ktlint") version "10.1.0"
     id("com.vaadin") version "0.8.0"
-    id("org.asciidoctor.convert") version "2.4.0"
+    id("org.asciidoctor.jvm.convert") version "3.3.2"
     id("org.flywaydb.flyway") version "7.12.0"
 }
 
@@ -23,6 +23,8 @@ repositories {
         url = uri("http://maven.vaadin.com/vaadin-addons")
     }
 }
+
+val asciidoctorExt by configurations.creating
 
 extra["vaadinVersion"] = "14.3.3"
 
@@ -51,7 +53,7 @@ dependencies {
         exclude(group = "org.mockito")
     }
     testImplementation("com.ninja-squad:springmockk:2.0.3")
-    asciidoctor("org.springframework.restdocs:spring-restdocs-asciidoctor")
+    asciidoctorExt("org.springframework.restdocs:spring-restdocs-asciidoctor")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
 }
 
@@ -89,13 +91,16 @@ tasks {
         outputs.dir(snippetsDir)
     }
     asciidoctor {
-        inputs.dir(snippetsDir)
         dependsOn(test)
+        configurations("asciidoctorExt")
+        inputs.dir(snippetsDir)
+    }
+    register<Copy>("copyDocument") {
+        dependsOn(asciidoctor)
+        from(file("build/docs/asciidoc/index.html"))
+        into(file("src/main/resources/static/docs"))
     }
     bootJar {
-        dependsOn(asciidoctor)
-        from("$snippetsDir/html5") {
-            into("static/docs")
-        }
+        dependsOn("copyDocument")
     }
 }
