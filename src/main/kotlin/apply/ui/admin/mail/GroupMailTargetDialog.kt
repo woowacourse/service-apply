@@ -14,6 +14,7 @@ import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.html.H2
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
+import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.select.Select
 import com.vaadin.flow.data.provider.ListDataProvider
 import dev.mett.vaadin.tooltip.Tooltips
@@ -34,10 +35,16 @@ class GroupMailTargetDialog(
     private val mailTargetsGrid: Grid<MailTargetResponse> = createMailTargetsGrid()
 
     init {
-        add(H2("그룹 불러오기"), createSearchFilter(), mailTargetsGrid, createButtons())
+        add(createHeader(), createSearchFilter(), mailTargetsGrid, createButtons())
         width = "900px"
-        height = "70%"
         open()
+    }
+
+    private fun createHeader(): VerticalLayout {
+        return VerticalLayout(H2("그룹 불러오기")).apply {
+            isPadding = false
+            element.style.set("margin-bottom", "10px")
+        }
     }
 
     private fun createMailTargetsGrid(): Grid<MailTargetResponse> {
@@ -85,9 +92,9 @@ class GroupMailTargetDialog(
 
     private fun createButtons(): Component {
         return HorizontalLayout(createAddButton(), createCancelButton()).apply {
-            setSizeFull()
+            setWidthFull()
             justifyContentMode = FlexComponent.JustifyContentMode.CENTER
-            element.style.set("margin-top", "10px")
+            element.style.set("margin-top", "20px")
         }
     }
 
@@ -100,7 +107,7 @@ class GroupMailTargetDialog(
     }
 
     private fun createCancelButton(): Button {
-        return createContrastButton("취소") {
+        return createContrastButton("닫기") {
             close()
         }
     }
