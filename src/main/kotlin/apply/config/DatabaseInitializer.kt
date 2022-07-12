@@ -6,6 +6,8 @@ import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormAnswer
 import apply.domain.applicationform.ApplicationFormAnswers
 import apply.domain.applicationform.ApplicationFormRepository
+import apply.domain.assignment.Assignment
+import apply.domain.assignment.AssignmentRepository
 import apply.domain.evaluation.Evaluation
 import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluationItem.EvaluationItem
@@ -14,6 +16,10 @@ import apply.domain.evaluationtarget.EvaluationAnswer
 import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
+import apply.domain.mail.MailHistory
+import apply.domain.mail.MailHistoryRepository
+import apply.domain.mission.Mission
+import apply.domain.mission.MissionRepository
 import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitmentitem.RecruitmentItem
@@ -44,6 +50,9 @@ class DatabaseInitializer(
     private val userRepository: UserRepository,
     private val applicationFormRepository: ApplicationFormRepository,
     private val evaluationTargetRepository: EvaluationTargetRepository,
+    private val missionRepository: MissionRepository,
+    private val assignmentRepository: AssignmentRepository,
+    private val mailHistoryRepository: MailHistoryRepository,
     private val database: Database
 ) : CommandLineRunner {
     override fun run(vararg args: String) {
@@ -68,6 +77,9 @@ class DatabaseInitializer(
         populateUsers()
         populateApplicationForms()
         populateEvaluationTargets()
+        populateMissions()
+        populateAssignments()
+        populateMailHistories()
     }
 
     private fun populateAdministrator() {
@@ -304,12 +316,8 @@ class DatabaseInitializer(
     }
 
     private fun populateEvaluationTargets() {
-        if (evaluationTargetRepository.count() != 0L) {
-            return
-        }
         val evaluationTargets = listOf(
             EvaluationTarget(
-                id = 1L,
                 evaluationId = 1L,
                 administratorId = 1L,
                 userId = 1L
@@ -325,10 +333,58 @@ class DatabaseInitializer(
             },
             EvaluationTarget(
                 evaluationId = 2L,
-                administratorId = 1L,
                 userId = 2L
             )
         )
         evaluationTargetRepository.saveAll(evaluationTargets)
+    }
+
+    private fun populateMissions() {
+        val missions = listOf(
+            Mission(
+                title = "1주 차 프리코스 - 숫자 야구 게임",
+                description = "https://github.com/woowacourse/java-baseball-precourse",
+                evaluationId = 2L,
+                startDateTime = createLocalDateTime(2020, 11, 24, 15),
+                endDateTime = createLocalDateTime(2020, 12, 1, 0),
+                submittable = true,
+                hidden = false
+            ),
+            Mission(
+                title = "2주 차 프리코스 - 자동차 경주 게임",
+                description = "https://github.com/woowacourse/java-racingcar-precourse",
+                evaluationId = 3L,
+                startDateTime = createLocalDateTime(2020, 12, 1, 15),
+                endDateTime = createLocalDateTime(2020, 12, 8, 0),
+                submittable = true,
+                hidden = false
+            )
+        )
+        missionRepository.saveAll(missions)
+    }
+
+    private fun populateAssignments() {
+        val assignments = listOf(
+            Assignment(
+                userId = 2L,
+                missionId = 1L,
+                githubUsername = "javajigi",
+                pullRequestUrl = "https://github.com/woowacourse/java-baseball-precourse/pull/1",
+                note = "안녕하세요. 이번 미션 생각보다 쉽지 않네요."
+            )
+        )
+        assignmentRepository.saveAll(assignments)
+    }
+
+    private fun populateMailHistories() {
+        val mailHistories = listOf(
+            MailHistory(
+                subject = "[우아한테크코스] 프리코스를 진행하는 목적과 사전 준비",
+                body = "안녕하세요.",
+                sender = "woowa_course@woowahan.com",
+                recipients = listOf("a@email.com", "b@email.com", "c@email.com", "d@email.com")
+            )
+        )
+        mailHistoryRepository.saveAll(mailHistories)
     }
 }

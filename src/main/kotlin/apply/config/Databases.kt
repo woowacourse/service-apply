@@ -51,10 +51,10 @@ class MySql(
     entityManager: EntityManager,
     properties: DatabaseInitializationProperties
 ) : AbstractDatabase(entityManager, properties) {
-    override val metaTablesSql: String = "SHOW TABLES"
-    override val constraintsOffSql: String = "SET FOREIGN_KEY_CHECKS = 0"
-    override val constraintsOnSql: String = "SET FOREIGN_KEY_CHECKS = 1"
-    override fun createTruncateTableSql(tableName: String): String = "TRUNCATE TABLE $tableName"
+    override val metaTablesSql: String = "show tables"
+    override val constraintsOffSql: String = "set foreign_key_checks = 0"
+    override val constraintsOnSql: String = "set foreign_key_checks = 1"
+    override fun createTruncateTableSql(tableName: String): String = "truncate table $tableName"
 }
 
 @Profile("test")
@@ -63,8 +63,8 @@ class H2(
     entityManager: EntityManager,
     properties: DatabaseInitializationProperties
 ) : AbstractDatabase(entityManager, properties) {
-    override val metaTablesSql: String = "SHOW TABLES"
-    override val constraintsOffSql: String = "SET REFERENTIAL_INTEGRITY FALSE"
-    override val constraintsOnSql: String = "SET REFERENTIAL_INTEGRITY TRUE"
-    override fun createTruncateTableSql(tableName: String): String = "TRUNCATE TABLE $tableName RESTART IDENTITY"
+    override val metaTablesSql: String = "show tables"
+    override val constraintsOffSql: String = "set referential_integrity false"
+    override val constraintsOnSql: String = "set referential_integrity true"
+    override fun createTruncateTableSql(tableName: String): String = "truncate table $tableName restart identity"
 }
