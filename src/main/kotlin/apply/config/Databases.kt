@@ -3,6 +3,7 @@ package apply.config
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 import javax.persistence.EntityManager
 
 @ConfigurationProperties("database.initialization")
@@ -11,7 +12,7 @@ data class DatabaseInitializationProperties(val excludedTableNames: List<String>
 
 interface Database {
     fun retrieveTables(): List<String>
-    fun clear(vararg tableNames: String)
+    fun clear(tableNames: List<String>)
 }
 
 abstract class AbstractDatabase(
@@ -24,9 +25,10 @@ abstract class AbstractDatabase(
             .excluded()
     }
 
-    override fun clear(vararg tableNames: String) {
+    @Transactional
+    override fun clear(tableNames: List<String>) {
         entityManager.createNativeQuery(constraintsOffSql).executeUpdate()
-        tableNames.toList()
+        tableNames
             .excluded()
             .forEach { entityManager.createNativeQuery(createTruncateTableSql(it)).executeUpdate() }
         entityManager.createNativeQuery(constraintsOnSql).executeUpdate()
