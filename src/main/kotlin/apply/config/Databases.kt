@@ -2,6 +2,7 @@ package apply.config
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import javax.persistence.EntityManager
@@ -44,6 +45,7 @@ abstract class AbstractDatabase(
     abstract fun createTruncateTableSql(tableName: String): String
 }
 
+@Profile("local")
 @Component
 class MySql(
     entityManager: EntityManager,
@@ -55,6 +57,7 @@ class MySql(
     override fun createTruncateTableSql(tableName: String): String = "TRUNCATE TABLE $tableName"
 }
 
+@Profile("test")
 @Component
 class H2(
     entityManager: EntityManager,
