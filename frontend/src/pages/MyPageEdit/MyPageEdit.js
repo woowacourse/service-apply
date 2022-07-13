@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router-dom";
 import myPageImage from "../../assets/image/myPage.svg";
 import Button from "../../components/@common/Button/Button";
 import Container from "../../components/@common/Container/Container";
@@ -15,7 +15,7 @@ import useUserInfoContext from "../../hooks/useUserInfoContext";
 import * as styles from "./MyPageEdit.module.css";
 
 const MyPageEdit = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { userInfo, updateUserInfo } = useUserInfoContext();
 
   const { form, errorMessage, init, handleChanges, isEmpty, isValid } = useMyPageEditForm();
@@ -24,7 +24,7 @@ const MyPageEdit = () => {
     if (!error) return;
 
     alert(ERROR_MESSAGE.API.EDIT_FAILURE);
-    history.push(PATH.MY_PAGE);
+    navigate(PATH.MY_PAGE);
   };
 
   const handleSubmit = async (event) => {
@@ -32,7 +32,7 @@ const MyPageEdit = () => {
     try {
       await updateUserInfo(form);
       alert(SUCCESS_MESSAGE.API.EDIT_MY_PAGE);
-      history.push(PATH.MY_PAGE);
+      navigate(PATH.MY_PAGE);
     } catch (error) {
       handleSubmitError(error);
     }

@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router-dom";
 import * as Api from "../api";
 import PATH from "../constants/path";
 
 const useRecruitmentItem = (recruitmentId) => {
   const [recruitmentItems, setRecruitmentItems] = useState([]);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const init = async () => {
     try {
@@ -14,7 +14,7 @@ const useRecruitmentItem = (recruitmentId) => {
       setRecruitmentItems(data);
     } catch (error) {
       alert("지원서를 불러오는데 실패했습니다.");
-      history.replace(PATH.HOME);
+      navigate(PATH.HOME);
     }
   };
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { fetchPasswordFind } from "../../api/user";
 import Button from "../../components/@common/Button/Button";
 import Container, { CONTAINER_SIZE } from "../../components/@common/Container/Container";
@@ -14,7 +14,7 @@ import usePasswordFindForm, { PASSWORD_FIND_FORM_NAME } from "../../hooks/usePas
 import styles from "./PasswordFind.module.css";
 
 const PasswordFind = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { form, errorMessage, handleChanges, isValid, isEmpty } = usePasswordFindForm();
 
@@ -24,7 +24,7 @@ const PasswordFind = () => {
     try {
       await fetchPasswordFind(form);
 
-      history.push({
+      navigate({
         pathname: PATH.FIND_PASSWORD_RESULT,
         state: { email: form[PASSWORD_FIND_FORM_NAME.EMAIL] },
       });

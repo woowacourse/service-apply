@@ -1,5 +1,5 @@
 import React from "react";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router";
 import myPageImage from "../../assets/image/myPage.svg";
 import Button, { BUTTON_VARIANT } from "../../components/@common/Button/Button";
 import Container from "../../components/@common/Container/Container";
@@ -8,20 +8,16 @@ import useUserInfoContext from "../../hooks/useUserInfoContext";
 import * as styles from "./MyPage.module.css";
 
 const MyPage = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { userInfo } = useUserInfoContext();
 
   const routeToPasswordEdit = () => {
-    history.push({
-      pathname: PATH.EDIT_PASSWORD,
-    });
+    navigate(PATH.EDIT_PASSWORD);
   };
 
   const routeToMyPageEdit = () => {
-    history.push({
-      pathname: PATH.EDIT_MY_PAGE,
-    });
+    navigate(PATH.EDIT_MY_PAGE);
   };
 
   return (
