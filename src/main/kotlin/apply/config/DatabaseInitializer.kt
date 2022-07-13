@@ -105,8 +105,8 @@ class DatabaseInitializer(
         val recruitments = listOf(
             Recruitment(
                 title = "지원할 제목",
-                startDateTime = createLocalDateTime(2020, 10, 5, 10),
-                endDateTime = createLocalDateTime(2020, 11, 5, 10),
+                startDateTime = createLocalDateTime(2019, 10, 5, 10),
+                endDateTime = createLocalDateTime(2120, 11, 5, 10),
                 recruitable = true,
                 hidden = false
             ),
@@ -346,7 +346,7 @@ class DatabaseInitializer(
                 description = "https://github.com/woowacourse/java-baseball-precourse",
                 evaluationId = 2L,
                 startDateTime = createLocalDateTime(2020, 11, 24, 15),
-                endDateTime = createLocalDateTime(2020, 12, 1, 0),
+                endDateTime = createLocalDateTime(2120, 12, 1, 0),
                 submittable = true,
                 hidden = false
             ),
@@ -355,7 +355,7 @@ class DatabaseInitializer(
                 description = "https://github.com/woowacourse/java-racingcar-precourse",
                 evaluationId = 3L,
                 startDateTime = createLocalDateTime(2020, 12, 1, 15),
-                endDateTime = createLocalDateTime(2020, 12, 8, 0),
+                endDateTime = createLocalDateTime(2120, 12, 8, 0),
                 submittable = true,
                 hidden = false
             )
@@ -382,7 +382,8 @@ class DatabaseInitializer(
                 subject = "[우아한테크코스] 프리코스를 진행하는 목적과 사전 준비",
                 body = "안녕하세요.",
                 sender = "woowa_course@woowahan.com",
-                recipients = listOf("a@email.com", "b@email.com", "c@email.com", "d@email.com")
+                recipients = listOf("a@email.com", "b@email.com", "c@email.com", "d@email.com"),
+                sentTime = createLocalDateTime(2020, 11, 5, 10)
             )
         )
         mailHistoryRepository.saveAll(mailHistories)
