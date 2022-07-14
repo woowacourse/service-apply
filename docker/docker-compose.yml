@@ -1,6 +1,7 @@
 version: "3.8"
 services:
   db:
+
     image: library/mysql:5.7
     container_name: apply-db
     restart: always

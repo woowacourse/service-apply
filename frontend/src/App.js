@@ -27,33 +27,45 @@ const App = () => {
     <TokenProvider>
       <RecruitmentProvider>
         <BrowserRouter>
-          <UserInfoProvider>
-            <Header />
-            <main className="main">
-              <ScrollToTop>
-                <Routes>
-                  <Route path={PATH.HOME} element={<Recruits />} />
-                  <Route path={PATH.RECRUITS} element={<Recruits />} />
-                  <Route path={PATH.SIGN_UP} element={<SignUp />} />
-                  <Route path={PATH.LOGIN} element={<Login />} />
-                  <Route path={PATH.FIND_PASSWORD} element={<PasswordFind />} />
-                  <Route path={PATH.FIND_PASSWORD_RESULT} element={<PasswordFindResult />} />
-                  <Route element={<PrivateRoute />}>
-                    <Route path={PATH.APPLICATION_FORM} element={<ApplicationRegister />} />
-                    <Route path={PATH.EDIT_PASSWORD} element={<PasswordEdit />} />
-                    <Route path={PATH.MY_APPLICATION} element={<MyApplication />} />
-                    <Route path={PATH.ASSIGNMENT} element={<AssignmentSubmit />} />
-                  </Route>
+          <Header />
+          <main className="main">
+            <ScrollToTop>
+              <Routes>
+                <Route path={PATH.HOME} element={<Recruits />} />
+                <Route path={PATH.RECRUITS} element={<Recruits />} />
+                <Route path={PATH.SIGN_UP} element={<SignUp />} />
+                <Route path={PATH.LOGIN} element={<Login />} />
+                <Route path={PATH.FIND_PASSWORD} element={<PasswordFind />} />
+                <Route path={PATH.FIND_PASSWORD_RESULT} element={<PasswordFindResult />} />
+                <Route element={<PrivateRoute />}>
+                  <Route path={PATH.APPLICATION_FORM} element={<ApplicationRegister />} />
+                  <Route path={PATH.EDIT_PASSWORD} element={<PasswordEdit />} />
+                  <Route path={PATH.MY_APPLICATION} element={<MyApplication />} />
+                  <Route path={PATH.ASSIGNMENT} element={<AssignmentSubmit />} />
+                </Route>
 
-                  <Route element={<PrivateRoute />}>
-                    <Route path={PATH.MY_PAGE} element={<MyPage />} />
-                    <Route path={PATH.EDIT_MY_PAGE} element={<MyPageEdit />} />
-                  </Route>
-                </Routes>
-              </ScrollToTop>
-            </main>
-            <Footer />
-          </UserInfoProvider>
+                <Route element={<PrivateRoute />}>
+                  <Route
+                    path={PATH.MY_PAGE}
+                    element={
+                      <UserInfoProvider>
+                        <MyPage />
+                      </UserInfoProvider>
+                    }
+                  />
+                  <Route
+                    path={PATH.EDIT_MY_PAGE}
+                    element={
+                      <UserInfoProvider>
+                        <MyPageEdit />
+                      </UserInfoProvider>
+                    }
+                  />
+                </Route>
+              </Routes>
+            </ScrollToTop>
+          </main>
+          <Footer />
         </BrowserRouter>
       </RecruitmentProvider>
     </TokenProvider>
