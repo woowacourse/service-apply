@@ -56,11 +56,13 @@ class DatabaseInitializer(
     private val database: Database
 ) : CommandLineRunner {
     override fun run(vararg args: String) {
-        if (recruitmentRepository.count() != 0L) {
-            return
-        }
+        if (shouldSkip()) return
         cleanUp()
         populate()
+    }
+
+    private fun shouldSkip(): Boolean {
+        return recruitmentRepository.count() != 0L
     }
 
     private fun cleanUp() {
