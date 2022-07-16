@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
+import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.get
@@ -33,7 +34,8 @@ internal class TermRestControllerTest : RestControllerTest() {
 
     @Test
     fun `기수를 생성한다`() {
-        every { termService.save(TermData("3기")) } just Runs
+        val termId = 1L
+        every { termService.save(TermData("3기")) } returns termId
 
         mockMvc.post(
             "/api/terms"
@@ -41,7 +43,8 @@ internal class TermRestControllerTest : RestControllerTest() {
             content = objectMapper.writeValueAsString(TermData("3기"))
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
-            status { isOk }
+            status { isCreated }
+            header { string(HttpHeaders.LOCATION, "/api/terms/$termId") }
         }
     }
 
