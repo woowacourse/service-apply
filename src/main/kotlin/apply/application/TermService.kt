@@ -12,10 +12,11 @@ class TermService(
     private val termRepository: TermRepository,
     private val recruitmentRepository: RecruitmentRepository
 ) {
-    fun save(request: TermData) {
+    fun save(request: TermData): Long {
         check(request.name != Term.SINGLE.name) { "기수명은 ${Term.SINGLE.name}일 수 없습니다." }
         check(!termRepository.existsByName(request.name)) { "이미 등록된 기수명입니다." }
-        termRepository.save(request.toEntity())
+        val term = termRepository.save(request.toEntity())
+        return term.id
     }
 
     fun findAll(): List<TermResponse> {
