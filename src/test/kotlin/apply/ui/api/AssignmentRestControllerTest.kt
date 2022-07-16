@@ -5,9 +5,7 @@ import apply.createAssignmentData
 import apply.createAssignmentRequest
 import apply.createAssignmentResponse
 import com.ninjasquad.springmockk.MockkBean
-import io.mockk.Runs
 import io.mockk.every
-import io.mockk.just
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.HttpHeaders
@@ -29,7 +27,8 @@ internal class AssignmentRestControllerTest : RestControllerTest() {
 
     @Test
     fun `과제 제출물을 제출한다`() {
-        every { assignmentService.create(any(), any(), createAssignmentRequest()) } just Runs
+        val assignmentId = 1L
+        every { assignmentService.create(any(), any(), createAssignmentRequest()) } returns assignmentId
 
         mockMvc.post(
             "/api/recruitments/{recruitmentId}/missions/{missionId}/assignments",
@@ -40,7 +39,13 @@ internal class AssignmentRestControllerTest : RestControllerTest() {
             content = objectMapper.writeValueAsString(createAssignmentRequest())
             header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
-            status { isOk }
+            status { isCreated }
+            header {
+                string(
+                    HttpHeaders.LOCATION,
+                    "/api/recruitments/$recruitmentId/missions/$missionId/assignments/$assignmentId"
+                )
+            }
         }
     }
 
