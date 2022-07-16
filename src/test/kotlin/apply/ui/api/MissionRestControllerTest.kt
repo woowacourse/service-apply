@@ -16,9 +16,11 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders
 import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 
 @WebMvcTest(
     controllers = [MissionRestController::class],
@@ -48,6 +50,27 @@ internal class MissionRestControllerTest : RestControllerTest() {
             status { isCreated }
             header { string(HttpHeaders.LOCATION, "/api/recruitments/$recruitmentId/missions/$missionId") }
         }
+    }
+
+    @Test
+    fun `과제 id로 과제를 조회한다`() {
+        val mission = createMission(id = 1L)
+        every { missionService.getById(mission.id) } answers { mission }
+
+        mockMvc.perform(
+            RestDocumentationRequestBuilders.get(
+                "/api/recruitments/{recruitmentId}/missions/{missionId}",
+                recruitmentId, mission.id
+            )
+                .header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+        ).andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(
+                MockMvcResultMatchers.content().json(
+                    objectMapper.writeValueAsString(
+                        ApiResponse.success(mission)
+                    )
+                )
+            )
     }
 
     @Test

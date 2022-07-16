@@ -56,6 +56,10 @@ class MissionService(
         return request.id == 0L || !missionRepository.existsById(request.id)
     }
 
+    fun getById(id: Long): Mission {
+        return missionRepository.getById(id)
+    }
+
     fun getDataById(id: Long): MissionData {
         val mission = missionRepository.getById(id)
         val evaluation = evaluationRepository.getById(mission.evaluationId)
