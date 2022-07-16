@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.net.URI
 import javax.validation.Valid
 
 @RestController
@@ -24,8 +25,8 @@ class MailHistoryRestController(
         @LoginUser(administrator = true) user: User
     ): ResponseEntity<Unit> {
         // todo: 파일 첨부하여 보내는 로직 필요
-        mailHistoryService.save(request)
-        return ResponseEntity.ok().build()
+        val savedId = mailHistoryService.save(request)
+        return ResponseEntity.created(URI.create("/api/mail-history/$savedId")).build()
     }
 
     @GetMapping("/{mailHistoryId}")

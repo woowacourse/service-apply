@@ -3,9 +3,7 @@ package apply.ui.api
 import apply.application.MailHistoryService
 import apply.createMailData
 import com.ninjasquad.springmockk.MockkBean
-import io.mockk.Runs
 import io.mockk.every
-import io.mockk.just
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.ComponentScan
@@ -27,14 +25,16 @@ class MailHistoryRestControllerTest : RestControllerTest() {
 
     @Test
     fun `이메일 이력을 저장한다`() {
-        every { mailHistoryService.save(any()) } just Runs
+        val mailHistoryId = 1L
+        every { mailHistoryService.save(any()) } returns mailHistoryId
 
         mockMvc.post("/api/mail-history") {
             header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
             contentType = MediaType.APPLICATION_JSON
             content = objectMapper.writeValueAsString(createMailData())
         }.andExpect {
-            status { isOk }
+            status { isCreated }
+            header { string(HttpHeaders.LOCATION, "/api/mail-history/$mailHistoryId") }
         }
     }
 

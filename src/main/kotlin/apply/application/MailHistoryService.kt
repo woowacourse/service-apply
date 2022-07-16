@@ -12,8 +12,8 @@ import javax.transaction.Transactional
 class MailHistoryService(
     private val mailHistoryRepository: MailHistoryRepository
 ) {
-    fun save(request: MailData) {
-        mailHistoryRepository.save(
+    fun save(request: MailData): Long {
+        val mailHistory = mailHistoryRepository.save(
             MailHistory(
                 request.subject,
                 request.body,
@@ -22,6 +22,7 @@ class MailHistoryService(
                 request.sentTime
             )
         )
+        return mailHistory.id
     }
 
     fun findAll(): List<MailData> {
