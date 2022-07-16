@@ -84,16 +84,20 @@ const Recruits = () => {
       <div className={styles["recruitment-list-box"]}>
         {recruitment && (
           <div className={styles["recruitment-list"]} role="list">
-            {sortedRecruitment.map((recruitment) => (
-              <RecruitmentItem
-                key={recruitment.id}
-                recruitment={recruitment}
-                isButtonDisabled={recruitment.status !== RECRUITMENT_STATUS.RECRUITING}
-                buttonLabel={BUTTON_LABEL[recruitment.status]}
-                onClickButton={() => goToNewApplicationFormPage(recruitment)}
-                role="listitem"
-              />
-            ))}
+            {sortedRecruitment.length === 0 ? (
+              <div className={styles["empty-state-box"]}>텅 비었어요...</div>
+            ) : (
+              sortedRecruitment.map((recruitment) => (
+                <RecruitmentItem
+                  key={recruitment.id}
+                  recruitment={recruitment}
+                  isButtonDisabled={recruitment.status !== RECRUITMENT_STATUS.RECRUITING}
+                  buttonLabel={BUTTON_LABEL[recruitment.status]}
+                  onClickButton={() => goToNewApplicationFormPage(recruitment)}
+                  role="listitem"
+                />
+              ))
+            )}
           </div>
         )}
       </div>
