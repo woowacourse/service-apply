@@ -4,6 +4,7 @@ import apply.application.MissionAndEvaluationResponse
 import apply.application.MissionData
 import apply.application.MissionResponse
 import apply.application.MissionService
+import apply.domain.mission.Mission
 import apply.domain.user.User
 import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
@@ -29,6 +30,16 @@ class MissionRestController(
     ): ResponseEntity<Unit> {
         val saveId = missionService.save(missionData)
         return ResponseEntity.created(URI.create("/api/recruitments/$recruitmentId/missions/$saveId")).build()
+    }
+
+    @GetMapping("/missions/{missionId}")
+    fun getById(
+        @PathVariable recruitmentId: Long,
+        @PathVariable missionId: Long,
+        @LoginUser(administrator = true) user: User
+    ): ResponseEntity<ApiResponse<Mission>> {
+        val mission = missionService.getById(missionId)
+        return ResponseEntity.ok(ApiResponse.success(mission))
     }
 
     @GetMapping("/missions")
