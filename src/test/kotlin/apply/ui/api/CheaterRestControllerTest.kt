@@ -15,9 +15,11 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders
 import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import support.createLocalDateTime
 
 @WebMvcTest(
@@ -52,6 +54,26 @@ internal class CheaterRestControllerTest : RestControllerTest() {
             status { isOk }
             content { json(objectMapper.writeValueAsString(ApiResponse.success(cheaterResponses))) }
         }
+    }
+
+    @Test
+    fun `부정행위자 id로 부정행위자를 조회한다`() {
+        val cheater = Cheater(email = cheatedUser.email, id = cheatedUser.id)
+        every { cheaterService.getById(cheater.id) } answers { cheater }
+
+        mockMvc.perform(
+            RestDocumentationRequestBuilders.get(
+                "/api/cheaters/{cheaterId}", cheater.id
+            )
+                .header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+        ).andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(
+                MockMvcResultMatchers.content().json(
+                    objectMapper.writeValueAsString(
+                        ApiResponse.success(cheater)
+                    )
+                )
+            )
     }
 
     @Test

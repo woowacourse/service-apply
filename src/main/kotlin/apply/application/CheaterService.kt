@@ -2,6 +2,7 @@ package apply.application
 
 import apply.domain.cheater.Cheater
 import apply.domain.cheater.CheaterRepository
+import apply.domain.cheater.getById
 import apply.domain.user.UserRepository
 import apply.domain.user.findByEmail
 import org.springframework.stereotype.Service
@@ -25,6 +26,10 @@ class CheaterService(
         }
         val cheater = cheaterRepository.save(Cheater(email, request.description))
         return cheater.id
+    }
+
+    fun getById(id: Long): Cheater {
+        return cheaterRepository.getById(id)
     }
 
     fun deleteById(id: Long) {

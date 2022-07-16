@@ -3,6 +3,7 @@ package apply.ui.api
 import apply.application.CheaterData
 import apply.application.CheaterResponse
 import apply.application.CheaterService
+import apply.domain.cheater.Cheater
 import apply.domain.user.User
 import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
@@ -35,6 +36,15 @@ class CheaterRestController(
     ): ResponseEntity<Unit> {
         val savedId = cheaterService.save(request)
         return ResponseEntity.created(URI.create("/api/cheaters/$savedId")).build()
+    }
+
+    @GetMapping("/{cheaterId}")
+    fun findById(
+        @PathVariable cheaterId: Long,
+        @LoginUser(administrator = true) user: User
+    ): ResponseEntity<ApiResponse<Cheater>> {
+        val cheater = cheaterService.getById(cheaterId)
+        return ResponseEntity.ok(ApiResponse.success(cheater))
     }
 
     @DeleteMapping("/{cheaterId}")
