@@ -24,6 +24,7 @@ import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
 import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
 import org.springframework.restdocs.request.RequestDocumentation.pathParameters
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @WebMvcTest(
@@ -95,7 +96,8 @@ internal class RecruitmentRestControllerTest : RestControllerTest() {
 
     @Test
     fun `지원과 지원 항목을 저장한다`() {
-        every { recruitmentService.save(recruitmentData) } just Runs
+        val recruitmentId = 1L
+        every { recruitmentService.save(recruitmentData) } returns recruitmentId
 
         mockMvc.perform(
             RestDocumentationRequestBuilders.post(
@@ -104,7 +106,9 @@ internal class RecruitmentRestControllerTest : RestControllerTest() {
                 .header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
                 .header(HttpHeaders.CONTENT_TYPE, "application/json")
                 .content(objectMapper.writeValueAsString(recruitmentData))
-        ).andExpect(status().isOk)
+        )
+            .andExpect(status().isCreated)
+            .andExpect(header().string(HttpHeaders.LOCATION, "/api/recruitments/$recruitmentId"))
             .andDo(
                 document(
                     "recruitments-save",
