@@ -44,6 +44,7 @@ internal class TermRestControllerTest : RestControllerTest() {
         ) {
             content = objectMapper.writeValueAsString(TermData("3기"))
             contentType = MediaType.APPLICATION_JSON
+            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isCreated }
             header { string(HttpHeaders.LOCATION, "/api/terms/$termId") }
@@ -78,7 +79,9 @@ internal class TermRestControllerTest : RestControllerTest() {
 
         mockMvc.get(
             "/api/terms"
-        ).andExpect {
+        ) {
+            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+        }.andExpect {
             status { isOk }
             content { json(objectMapper.writeValueAsString(ApiResponse.success(terms))) }
         }
@@ -91,7 +94,9 @@ internal class TermRestControllerTest : RestControllerTest() {
 
         mockMvc.delete(
             "/api/terms/{termId}", termId
-        ).andExpect {
+        ) {
+            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+        }.andExpect {
             status { isOk }
         }
     }
