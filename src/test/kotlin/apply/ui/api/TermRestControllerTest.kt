@@ -15,9 +15,11 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders
 import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 
 @WebMvcTest(
     controllers = [TermRestController::class],
@@ -46,6 +48,27 @@ internal class TermRestControllerTest : RestControllerTest() {
             status { isCreated }
             header { string(HttpHeaders.LOCATION, "/api/terms/$termId") }
         }
+    }
+
+    @Test
+    fun `기수 id로 기수를 조회한다`() {
+        val term = Term("1기", 1L)
+        every { termService.getById(term.id) } answers { term }
+
+        mockMvc.perform(
+            RestDocumentationRequestBuilders.get(
+                "/api/terms/{id}",
+                term.id
+            )
+                .header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+        ).andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(
+                MockMvcResultMatchers.content().json(
+                    objectMapper.writeValueAsString(
+                        ApiResponse.success(term)
+                    )
+                )
+            )
     }
 
     @Test

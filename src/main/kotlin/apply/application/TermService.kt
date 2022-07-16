@@ -1,8 +1,10 @@
 package apply.application
 
 import apply.domain.recruitment.RecruitmentRepository
+import apply.domain.recruitment.getById
 import apply.domain.term.Term
 import apply.domain.term.TermRepository
+import apply.domain.term.getById
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -17,6 +19,10 @@ class TermService(
         check(!termRepository.existsByName(request.name)) { "이미 등록된 기수명입니다." }
         val term = termRepository.save(request.toEntity())
         return term.id
+    }
+
+    fun getById(id: Long): Term {
+        return termRepository.getById(id)
     }
 
     fun findAll(): List<TermResponse> {

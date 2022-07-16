@@ -3,6 +3,7 @@ package apply.ui.api
 import apply.application.TermResponse
 import apply.application.TermData
 import apply.application.TermService
+import apply.domain.term.Term
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -24,6 +25,14 @@ class TermRestController(
     ): ResponseEntity<Unit> {
         val savedId = termService.save(termData)
         return ResponseEntity.created(URI.create("/api/terms/$savedId")).build()
+    }
+
+    @GetMapping("/{termId}")
+    fun getById(
+        @PathVariable termId: Long
+    ): ResponseEntity<ApiResponse<Term>> {
+        val term = termService.getById(termId)
+        return ResponseEntity.ok(ApiResponse.success(term))
     }
 
     @GetMapping
