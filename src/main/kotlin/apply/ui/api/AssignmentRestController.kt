@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.net.URI
 import javax.validation.Valid
 
 @RestController
@@ -28,8 +29,10 @@ class AssignmentRestController(
         @RequestBody @Valid request: AssignmentRequest,
         @LoginUser user: User
     ): ResponseEntity<Unit> {
-        assignmentService.create(missionId, user.id, request)
-        return ResponseEntity.ok().build()
+        val assignmentId = assignmentService.create(missionId, user.id, request)
+        return ResponseEntity
+            .created(URI.create("/api/recruitments/$recruitmentId/missions/$missionId/assignments/$assignmentId"))
+            .build()
     }
 
     @GetMapping("/missions/{missionId}/assignments/me")
