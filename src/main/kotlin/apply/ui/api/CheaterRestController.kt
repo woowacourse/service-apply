@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.net.URI
 
 @RestController
 @RequestMapping("/api/cheaters")
@@ -32,8 +33,8 @@ class CheaterRestController(
         @RequestBody request: CheaterData,
         @LoginUser(administrator = true) user: User
     ): ResponseEntity<Unit> {
-        cheaterService.save(request)
-        return ResponseEntity.ok().build()
+        val saveId = cheaterService.save(request)
+        return ResponseEntity.created(URI.create("/api/cheaters/$saveId")).build()
     }
 
     @DeleteMapping("/{cheaterId}")
