@@ -33,8 +33,8 @@ class CheaterRestController(
         @RequestBody request: CheaterData,
         @LoginUser(administrator = true) user: User
     ): ResponseEntity<Unit> {
-        val saveId = cheaterService.save(request)
-        return ResponseEntity.created(URI.create("/api/cheaters/$saveId")).build()
+        val savedId = cheaterService.save(request)
+        return ResponseEntity.created(URI.create("/api/cheaters/$savedId")).build()
     }
 
     @DeleteMapping("/{cheaterId}")
