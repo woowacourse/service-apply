@@ -19,12 +19,12 @@ const BirthField = ({ value, onChange, required, className, ...props }) => {
         <DatePicker
           id="birthday"
           locale="ko"
-          dateFormat="yyyyMMdd"
+          dateFormat="yyyy-MM-dd"
           selected={value}
           onChange={onChange}
           maxDate={new Date()}
           className={styles.input}
-          placeholderText="YYYYMMDD"
+          placeholderText="YYYY-MM-DD"
           showYearDropdown
           showMonthDropdown
           popperPlacement="bottom-start"
