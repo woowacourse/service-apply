@@ -31,16 +31,20 @@ internal class EvaluationRestControllerTest : RestControllerTest() {
 
     @Test
     fun `평가를 추가한다`() {
-        every { evaluationService.save(any()) } just Runs
+        // every { evaluationService.save(any()) } just Runs
+        val evaluationId = 1L
+        val recruitmentId = 1L
+        every { evaluationService.save(any()) } returns evaluationId
 
-        mockMvc.post("/api/recruitments/{recruitmentId}/evaluations", 1L) {
+        mockMvc.post("/api/recruitments/{recruitmentId}/evaluations", recruitmentId) {
             content = objectMapper.writeValueAsBytes(
                 EvaluationData(createEvaluation(), createRecruitment(), null, emptyList())
             )
             contentType = MediaType.APPLICATION_JSON
             header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
-            status { isOk }
+            status { isCreated }
+            header { string(HttpHeaders.LOCATION, "/api/recruitments/$recruitmentId/evaluations/$evaluationId") }
         }
     }
 
