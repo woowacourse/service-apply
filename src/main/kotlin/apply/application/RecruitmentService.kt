@@ -17,7 +17,7 @@ class RecruitmentService(
     private val recruitmentItemRepository: RecruitmentItemRepository,
     private val termRepository: TermRepository
 ) {
-    fun save(request: RecruitmentData): Long {
+    fun save(request: RecruitmentData): RecruitmentData {
         val recruitment = recruitmentRepository.save(
             Recruitment(
                 request.title,
@@ -37,7 +37,8 @@ class RecruitmentService(
                 RecruitmentItem(recruitment.id, it.title, it.position, it.maximumLength, it.description, it.id)
             }
         )
-        return recruitment.id
+        request.id = recruitment.id
+        return request
     }
 
     private fun findRecruitmentItemsToDelete(recruitmentId: Long, excludedItemIds: List<Long>): List<RecruitmentItem> {

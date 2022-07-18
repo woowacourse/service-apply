@@ -48,9 +48,10 @@ class RecruitmentRestController(
     fun save(
         @RequestBody request: RecruitmentData,
         @LoginUser(administrator = true) user: User
-    ): ResponseEntity<Unit> {
-        val savedId = recruitmentService.save(request)
-        return ResponseEntity.created(URI.create("/api/recruitments/$savedId")).build()
+    ): ResponseEntity<ApiResponse<RecruitmentData>> {
+        val recruitmentData = recruitmentService.save(request)
+        return ResponseEntity.created(URI.create("/api/recruitments/${recruitmentData.id}"))
+            .body(ApiResponse.success(recruitmentData))
     }
 
     @DeleteMapping("/{recruitmentId}")

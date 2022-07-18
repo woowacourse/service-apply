@@ -96,8 +96,7 @@ internal class RecruitmentRestControllerTest : RestControllerTest() {
 
     @Test
     fun `지원과 지원 항목을 저장한다`() {
-        val recruitmentId = 1L
-        every { recruitmentService.save(recruitmentData) } returns recruitmentId
+        every { recruitmentService.save(recruitmentData) } returns recruitmentData
 
         mockMvc.perform(
             RestDocumentationRequestBuilders.post(
@@ -108,7 +107,8 @@ internal class RecruitmentRestControllerTest : RestControllerTest() {
                 .content(objectMapper.writeValueAsString(recruitmentData))
         )
             .andExpect(status().isCreated)
-            .andExpect(header().string(HttpHeaders.LOCATION, "/api/recruitments/$recruitmentId"))
+            .andExpect(header().string(HttpHeaders.LOCATION, "/api/recruitments/${recruitmentData.id}"))
+            .andExpect(content().json(objectMapper.writeValueAsString(ApiResponse.success(recruitmentData))))
             .andDo(
                 document(
                     "recruitments-save",
