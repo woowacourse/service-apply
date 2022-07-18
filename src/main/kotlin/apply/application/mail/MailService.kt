@@ -86,8 +86,8 @@ class MailService(
 
     @Async
     fun sendMailsByBcc(request: MailData, files: Map<String, ByteArrayResource>) {
-        request.recipients.plus(mailProperties.username)
-        for (targetMailsPart in request.recipients.chunked(MAIL_SENDING_UNIT)) {
+        val recipients = request.recipients + mailProperties.username
+        for (targetMailsPart in recipients.chunked(MAIL_SENDING_UNIT)) {
             mailSender.sendBcc(targetMailsPart, request.subject, request.body, files)
         }
     }
