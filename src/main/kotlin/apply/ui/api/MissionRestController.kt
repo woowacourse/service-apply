@@ -27,9 +27,10 @@ class MissionRestController(
         @PathVariable recruitmentId: Long,
         @RequestBody missionData: MissionData,
         @LoginUser(administrator = true) user: User
-    ): ResponseEntity<Unit> {
-        val saveId = missionService.save(missionData)
-        return ResponseEntity.created(URI.create("/api/recruitments/$recruitmentId/missions/$saveId")).build()
+    ): ResponseEntity<ApiResponse<MissionData>> {
+        val mission = missionService.save(missionData)
+        return ResponseEntity.created(URI.create("/api/recruitments/$recruitmentId/missions/${mission.id}"))
+            .body(ApiResponse.success(mission))
     }
 
     @GetMapping("/missions/{missionId}")

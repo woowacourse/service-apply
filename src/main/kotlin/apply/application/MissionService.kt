@@ -18,7 +18,7 @@ class MissionService(
     private val evaluationTargetRepository: EvaluationTargetRepository,
     private val assignmentRepository: AssignmentRepository
 ) {
-    fun save(request: MissionData): Long {
+    fun save(request: MissionData): MissionData {
         validate(request)
         val mission = missionRepository.save(
             request.let {
@@ -34,7 +34,8 @@ class MissionService(
                 )
             }
         )
-        return mission.id
+        request.id = mission.id
+        return request
     }
 
     private fun validate(request: MissionData) {
