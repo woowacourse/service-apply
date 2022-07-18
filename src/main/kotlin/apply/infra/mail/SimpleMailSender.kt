@@ -22,7 +22,7 @@ class SimpleMailSender(
     }
 
     override fun sendBcc(
-        toAddresses: Array<String>,
+        toAddresses: List<String>,
         subject: String,
         body: String,
         attachments: Map<String, ByteArrayResource>
@@ -30,7 +30,7 @@ class SimpleMailSender(
         val message = mailSender.createMimeMessage()
         val mimeMessageHelper = MimeMessageHelper(message, true).apply {
             setFrom(mailProperties.username)
-            setBcc(toAddresses)
+            setBcc(toAddresses.toTypedArray())
             setSubject(subject)
             setText(body, true)
         }

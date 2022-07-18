@@ -88,7 +88,7 @@ class MailService(
     fun sendMailsByBcc(request: MailData, files: Map<String, ByteArrayResource>) {
         request.recipients.plus(mailProperties.username)
         for (targetMailsPart in request.recipients.chunked(MAIL_SENDING_UNIT)) {
-            mailSender.sendBcc(targetMailsPart.toTypedArray(), request.subject, request.body, files)
+            mailSender.sendBcc(targetMailsPart, request.subject, request.body, files)
         }
     }
 }

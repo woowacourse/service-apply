@@ -67,7 +67,7 @@ class AwsMailSender(
     }
 
     override fun sendBcc(
-        toAddresses: Array<String>,
+        toAddresses: List<String>,
         subject: String,
         body: String,
         attachments: Map<String, ByteArrayResource>
@@ -99,7 +99,7 @@ private class MultipartMimeMessage(
         templateEngine: ITemplateEngine,
         subject: String,
         userName: String,
-        recipient: Array<String>,
+        recipient: List<String>,
         body: String,
         files: Map<String, ByteArrayResource>
     ) : this() {
@@ -119,7 +119,7 @@ private class MultipartMimeMessage(
         message.setFrom(InternetAddress(userName))
     }
 
-    fun setRecipient(recipient: Array<String>) {
+    fun setRecipient(recipient: List<String>) {
         message.setRecipients(RecipientType.BCC, recipient.map { InternetAddress(it) }.toTypedArray())
     }
 
