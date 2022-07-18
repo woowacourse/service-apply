@@ -36,8 +36,8 @@ internal class TermRestControllerTest : RestControllerTest() {
 
     @Test
     fun `기수를 생성한다`() {
-        val termResponse = TermResponse(1L, "3기")
-        every { termService.save(TermData("3기")) } returns termResponse
+        val termData = TermData("3기", 1L)
+        every { termService.save(TermData("3기")) } returns termData
 
         mockMvc.post(
             "/api/terms"
@@ -47,8 +47,8 @@ internal class TermRestControllerTest : RestControllerTest() {
             header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isCreated }
-            header { string(HttpHeaders.LOCATION, "/api/terms/${termResponse.id}") }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(termResponse))) }
+            header { string(HttpHeaders.LOCATION, "/api/terms/${termData.id}") }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(termData))) }
         }
     }
 
