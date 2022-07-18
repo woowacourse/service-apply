@@ -3,17 +3,18 @@ package apply.ui.admin.recruitment
 import apply.createRecruitmentItemData
 import apply.createRecruitmentItemForm
 import io.kotest.core.spec.style.StringSpec
-import org.assertj.core.api.Assertions.assertThat
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.shouldBe
 
 class RecruitmentItemFormTest : StringSpec({
     "유효한 값을 입력하는 경우" {
         val actual = createRecruitmentItemForm().bindOrNull()
-        assertThat(actual).isEqualTo(createRecruitmentItemData())
+        actual shouldBe createRecruitmentItemData()
     }
 
     "잘못된 값을 입력한 경우" {
         val actual = createRecruitmentItemForm(title = "").bindOrNull()
-        assertThat(actual).isNull()
+        actual.shouldBeNull()
     }
 
     "양식에 값을 채울 수 있다" {
@@ -22,6 +23,6 @@ class RecruitmentItemFormTest : StringSpec({
             fill(data)
             bindOrNull()
         }
-        assertThat(actual).isEqualTo(createRecruitmentItemData(id = 1L))
+        actual shouldBe createRecruitmentItemData(id = 1L)
     }
 })

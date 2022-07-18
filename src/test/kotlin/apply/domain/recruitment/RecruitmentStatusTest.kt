@@ -2,16 +2,20 @@ package apply.domain.recruitment
 
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.inspectors.forAll
-import org.assertj.core.api.Assertions.assertThat
+import io.kotest.matchers.shouldBe
 import java.time.LocalDateTime
 
-class RecruitmentStatusTest : StringSpec({
+internal class RecruitmentStatusTest : StringSpec({
+
     "시작 일시 전이면 모집 예정" {
-        listOf(true, false).forAll { recruitable ->
+        listOf(
+            true,
+            false
+        ).forAll {
             val tomorrow = LocalDateTime.now().plusDays(1L)
             val period = RecruitmentPeriod(startDateTime = tomorrow, endDateTime = tomorrow)
-            val status = RecruitmentStatus.of(period, recruitable)
-            assertThat(status).isEqualTo(RecruitmentStatus.RECRUITABLE)
+            val status = RecruitmentStatus.of(period, it)
+            status shouldBe RecruitmentStatus.RECRUITABLE
         }
     }
 
@@ -20,7 +24,7 @@ class RecruitmentStatusTest : StringSpec({
         val tomorrow = LocalDateTime.now().plusDays(1L)
         val period = RecruitmentPeriod(startDateTime = yesterday, endDateTime = tomorrow)
         val status = RecruitmentStatus.of(period, true)
-        assertThat(status).isEqualTo(RecruitmentStatus.RECRUITING)
+        status shouldBe RecruitmentStatus.RECRUITING
     }
 
     "모집 기간 사이이면서 모집이 불가능한 경우 모집 중지" {
@@ -28,15 +32,17 @@ class RecruitmentStatusTest : StringSpec({
         val tomorrow = LocalDateTime.now().plusDays(1L)
         val period = RecruitmentPeriod(startDateTime = yesterday, endDateTime = tomorrow)
         val status = RecruitmentStatus.of(period, false)
-        assertThat(status).isEqualTo(RecruitmentStatus.UNRECRUITABLE)
+        status shouldBe RecruitmentStatus.UNRECRUITABLE
     }
 
     "종료 일시가 지나면 모집 종료" {
-        listOf(true, false).forAll { recruitable ->
+        listOf(
+            true, false
+        ).forAll {
             val yesterday = LocalDateTime.now().minusDays(1L)
             val period = RecruitmentPeriod(startDateTime = yesterday, endDateTime = yesterday)
-            val status = RecruitmentStatus.of(period, recruitable)
-            assertThat(status).isEqualTo(RecruitmentStatus.ENDED)
+            val status = RecruitmentStatus.of(period, it)
+            status shouldBe RecruitmentStatus.ENDED
         }
     }
 })
