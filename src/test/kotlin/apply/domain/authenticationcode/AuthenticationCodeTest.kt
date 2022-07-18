@@ -11,8 +11,7 @@ import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.nulls.shouldNotBeNull
 import java.time.LocalDateTime
 
-internal class AuthenticationCodeTest : StringSpec({
-
+class AuthenticationCodeTest : StringSpec({
     "인증 코드를 생성한다" {
         val authenticationCode = AuthenticationCode(EMAIL)
         assertSoftly {

@@ -1,18 +1,17 @@
 package apply.domain.recruitment
 
-import io.kotest.assertions.throwables.shouldNotThrow
+import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.shouldBe
 import java.time.LocalDateTime
 
-internal class RecruitmentPeriodTest : StringSpec({
-
+class RecruitmentPeriodTest : StringSpec({
     val now: LocalDateTime = LocalDateTime.now()
 
     "시작 일시와 종료 일시는 동일할 수 있다" {
-        shouldNotThrow<Exception> { RecruitmentPeriod(now, now) }
+        shouldNotThrowAny { RecruitmentPeriod(now, now) }
     }
 
     "시작 일시는 종료 일시보다 이후일 수 없다" {

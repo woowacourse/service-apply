@@ -3,13 +3,12 @@ package apply.security
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.shouldBe
-import org.assertj.core.api.Assertions.assertThat
 
 private const val PAYLOAD = "email@email.com"
 private const val NOT_VALID_TOKEN = ""
 private const val NEGATIVE_VALIDITY_TIME = -10L
 
-internal class JwtTokenProviderTest : StringSpec({
+class JwtTokenProviderTest : StringSpec({
     "payload를 넣어 토큰을 생성하고 토큰에서 다시 payload를 불러올 수 있는지 확인한다" {
         val jwtTokenProvider = JwtTokenProvider()
         val token = jwtTokenProvider.createToken(PAYLOAD)

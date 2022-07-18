@@ -5,16 +5,12 @@ import io.kotest.inspectors.forAll
 import io.kotest.matchers.shouldBe
 import java.time.LocalDateTime
 
-internal class RecruitmentStatusTest : StringSpec({
-
+class RecruitmentStatusTest : StringSpec({
     "시작 일시 전이면 모집 예정" {
-        listOf(
-            true,
-            false
-        ).forAll {
+        listOf(true, false).forAll { recruitable ->
             val tomorrow = LocalDateTime.now().plusDays(1L)
             val period = RecruitmentPeriod(startDateTime = tomorrow, endDateTime = tomorrow)
-            val status = RecruitmentStatus.of(period, it)
+            val status = RecruitmentStatus.of(period, recruitable)
             status shouldBe RecruitmentStatus.RECRUITABLE
         }
     }
@@ -36,12 +32,10 @@ internal class RecruitmentStatusTest : StringSpec({
     }
 
     "종료 일시가 지나면 모집 종료" {
-        listOf(
-            true, false
-        ).forAll {
+        listOf(true, false).forAll { recruitable ->
             val yesterday = LocalDateTime.now().minusDays(1L)
             val period = RecruitmentPeriod(startDateTime = yesterday, endDateTime = yesterday)
-            val status = RecruitmentStatus.of(period, it)
+            val status = RecruitmentStatus.of(period, recruitable)
             status shouldBe RecruitmentStatus.ENDED
         }
     }

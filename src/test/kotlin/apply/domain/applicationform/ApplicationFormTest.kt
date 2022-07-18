@@ -5,7 +5,7 @@ import apply.createApplicationFormAnswers
 import apply.fail
 import apply.pass
 import io.kotest.assertions.assertSoftly
-import io.kotest.assertions.throwables.shouldNotThrow
+import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.booleans.shouldBeTrue
@@ -15,7 +15,7 @@ import io.kotest.matchers.string.shouldBeEmpty
 
 class ApplicationFormTest : StringSpec({
     "지원서가 지원 정책을 충족하는 경우 생성한다" {
-        shouldNotThrow<Exception> { ApplicationForm(1L, 1L, pass) }
+        shouldNotThrowAny { ApplicationForm(1L, 1L, pass) }
     }
 
     "지원서가 지원 정책에 맞지 않으면 생성할 수 없다" {
