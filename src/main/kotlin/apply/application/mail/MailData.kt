@@ -25,7 +25,7 @@ data class MailData(
     @field:NotNull
     var sentTime: LocalDateTime = LocalDateTime.now(),
 
-    var attachFiles: Map<String, ByteArrayResource> = emptyMap(),
+    var attachments: Map<String, ByteArrayResource> = emptyMap(),
 
     @field:NotNull
     var id: Long = 0L

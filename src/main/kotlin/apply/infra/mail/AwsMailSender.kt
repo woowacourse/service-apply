@@ -70,7 +70,7 @@ class AwsMailSender(
         toAddresses: Array<String>,
         subject: String,
         body: String,
-        files: Map<String, ByteArrayResource>
+        attachments: Map<String, ByteArrayResource>
     ) {
         val multipartMimeMessage = MultipartMimeMessage(
             applicationProperties = applicationProperties,
@@ -79,7 +79,7 @@ class AwsMailSender(
             userName = mailProperties.username,
             recipient = toAddresses,
             body = body,
-            files = files
+            files = attachments
         )
 
         val rawEmailRequest = multipartMimeMessage.getRawEmailRequest()

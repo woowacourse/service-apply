@@ -67,7 +67,7 @@ class MailsFormView(
         return createPrimaryButton("보내기") {
             mailForm.bindOrNull()?.let {
                 mailHistoryService.save(it)
-                mailService.sendMailsByBcc(it, it.attachFiles)
+                mailService.sendMailsByBcc(it, it.attachments)
                 UI.getCurrent().navigate(MailsView::class.java)
             }
         }

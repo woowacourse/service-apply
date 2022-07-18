@@ -128,7 +128,7 @@ class MailForm(
     override fun bindOrNull(): MailData? {
         return bindDefaultOrNull()?.apply {
             recipients = mailTargets.map { it.email }.toList()
-            attachFiles = uploadFile
+            attachments = uploadFile
         }
     }
 

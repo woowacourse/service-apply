@@ -25,7 +25,7 @@ class SimpleMailSender(
         toAddresses: Array<String>,
         subject: String,
         body: String,
-        files: Map<String, ByteArrayResource>
+        attachments: Map<String, ByteArrayResource>
     ) {
         val message = mailSender.createMimeMessage()
         val mimeMessageHelper = MimeMessageHelper(message, true).apply {
@@ -34,7 +34,7 @@ class SimpleMailSender(
             setSubject(subject)
             setText(body, true)
         }
-        files.forEach { (fileName, data) ->
+        attachments.forEach { (fileName, data) ->
             mimeMessageHelper.addAttachment(fileName, data)
         }
         mailSender.send(message)
