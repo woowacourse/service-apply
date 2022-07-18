@@ -15,6 +15,8 @@ import org.springframework.transaction.event.TransactionalEventListener
 import org.thymeleaf.context.Context
 import org.thymeleaf.spring5.ISpringTemplateEngine
 
+private const val MAIL_SENDING_UNIT = 50
+
 @Service
 class MailService(
     private val userRepository: UserRepository,
@@ -24,8 +26,6 @@ class MailService(
     private val mailSender: MailSender,
     private val mailProperties: MailProperties
 ) {
-    val MAIL_SENDING_UNIT = 50
-
     @Async
     @TransactionalEventListener
     fun sendPasswordResetMail(event: PasswordResetEvent) {
