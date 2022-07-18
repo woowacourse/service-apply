@@ -2,24 +2,21 @@ package apply.ui.admin.recruitment
 
 import apply.createRecruitmentItemData
 import apply.createRecruitmentItemForm
+import io.kotest.core.spec.style.StringSpec
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
 
-internal class RecruitmentItemFormTest {
-    @Test
-    fun `유효한 값을 입력하는 경우`() {
+class RecruitmentItemFormTest : StringSpec({
+    "유효한 값을 입력하는 경우" {
         val actual = createRecruitmentItemForm().bindOrNull()
         assertThat(actual).isEqualTo(createRecruitmentItemData())
     }
 
-    @Test
-    fun `잘못된 값을 입력한 경우`() {
+    "잘못된 값을 입력한 경우" {
         val actual = createRecruitmentItemForm(title = "").bindOrNull()
         assertThat(actual).isNull()
     }
 
-    @Test
-    fun `양식에 값을 채울 수 있다`() {
+    "양식에 값을 채울 수 있다" {
         val data = createRecruitmentItemData(id = 1L)
         val actual = createRecruitmentItemForm().run {
             fill(data)
@@ -27,4 +24,4 @@ internal class RecruitmentItemFormTest {
         }
         assertThat(actual).isEqualTo(createRecruitmentItemData(id = 1L))
     }
-}
+})
