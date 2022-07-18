@@ -16,7 +16,7 @@ class EvaluationService(
     private val evaluationItemRepository: EvaluationItemRepository,
     private val recruitmentRepository: RecruitmentRepository
 ) {
-    fun save(request: EvaluationData): Long {
+    fun save(request: EvaluationData): EvaluationData {
         val evaluation = evaluationRepository.save(
             Evaluation(
                 request.title,
@@ -34,7 +34,8 @@ class EvaluationService(
                 EvaluationItem(it.title, it.description, it.maximumScore, it.position, evaluation.id, it.id)
             }
         )
-        return evaluation.id
+        request.id = evaluation.id
+        return request
     }
 
     private fun findEvaluationItemsToDelete(evaluationId: Long, excludedItemIds: List<Long>): List<EvaluationItem> {

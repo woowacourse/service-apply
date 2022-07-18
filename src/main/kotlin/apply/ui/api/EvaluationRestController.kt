@@ -25,9 +25,10 @@ class EvaluationRestController(
         @PathVariable recruitmentId: Long,
         @RequestBody evaluationData: EvaluationData,
         @LoginUser(administrator = true) user: User
-    ): ResponseEntity<Unit> {
-        val savedId = evaluationService.save(evaluationData)
-        return ResponseEntity.created(URI.create("/api/recruitments/$recruitmentId/evaluations/$savedId")).build()
+    ): ResponseEntity<ApiResponse<EvaluationData>> {
+        val evaluation = evaluationService.save(evaluationData)
+        return ResponseEntity.created(URI.create("/api/recruitments/$recruitmentId/evaluations/${evaluation.id}"))
+            .body(ApiResponse.success(evaluation))
     }
 
     @GetMapping("/{evaluationId}")

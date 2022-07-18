@@ -25,26 +25,28 @@ import org.springframework.test.web.servlet.post
         ComponentScan.Filter(type = FilterType.REGEX, pattern = ["apply.security.*"])
     ]
 )
+
 internal class EvaluationRestControllerTest : RestControllerTest() {
     @MockkBean
     private lateinit var evaluationService: EvaluationService
 
     @Test
     fun `평가를 추가한다`() {
-        // every { evaluationService.save(any()) } just Runs
-        val evaluationId = 1L
-        val recruitmentId = 1L
-        every { evaluationService.save(any()) } returns evaluationId
+        val evaluationData = EvaluationData(createEvaluation(), createRecruitment(), null, emptyList())
+        every { evaluationService.save(any()) } returns evaluationData
 
-        mockMvc.post("/api/recruitments/{recruitmentId}/evaluations", recruitmentId) {
-            content = objectMapper.writeValueAsBytes(
-                EvaluationData(createEvaluation(), createRecruitment(), null, emptyList())
-            )
+        mockMvc.post("/api/recruitments/{recruitmentId}/evaluations", evaluationData.recruitment.id) {
+            content = objectMapper.writeValueAsBytes(evaluationData)
             contentType = MediaType.APPLICATION_JSON
             header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isCreated }
-            header { string(HttpHeaders.LOCATION, "/api/recruitments/$recruitmentId/evaluations/$evaluationId") }
+            header {
+                string(
+                    HttpHeaders.LOCATION,
+                    "/api/recruitments/${evaluationData.recruitment.id}/evaluations/${evaluationData.id}"
+                )
+            }
         }
     }
 
