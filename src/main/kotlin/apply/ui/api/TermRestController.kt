@@ -25,9 +25,9 @@ class TermRestController(
     fun create(
         @RequestBody termData: TermData,
         @LoginUser(administrator = true) user: User
-    ): ResponseEntity<Unit> {
-        val savedId = termService.save(termData)
-        return ResponseEntity.created(URI.create("/api/terms/$savedId")).build()
+    ): ResponseEntity<ApiResponse<TermResponse>> {
+        val term = termService.save(termData)
+        return ResponseEntity.created(URI.create("/api/terms/${term.id}")).body(ApiResponse.success(term))
     }
 
     @GetMapping("/{termId}")
