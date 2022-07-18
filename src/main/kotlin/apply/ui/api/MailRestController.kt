@@ -2,6 +2,8 @@ package apply.ui.api
 
 import apply.application.mail.MailData
 import apply.application.mail.MailService
+import apply.security.LoginUser
+import org.apache.catalina.User
 import org.springframework.core.io.ByteArrayResource
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -19,6 +21,7 @@ class MailRestController(
     fun sendMail(
         @RequestPart request: MailData,
         @RequestPart files: Array<MultipartFile>,
+        @LoginUser(administrator = true) user: User,
     ): ResponseEntity<Unit> {
         val inputStreamFiles = files.associate { (it.originalFilename!! to ByteArrayResource(it.bytes)) }
         mailService.sendMailsByBcc(request, inputStreamFiles)
