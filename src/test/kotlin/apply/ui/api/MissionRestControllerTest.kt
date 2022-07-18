@@ -36,8 +36,8 @@ internal class MissionRestControllerTest : RestControllerTest() {
 
     @Test
     fun `과제를 추가한다`() {
-        val missionId = 1L
-        every { missionService.save(any()) } returns missionId
+        val missionData = createMissionData()
+        every { missionService.save(any()) } returns missionData
 
         mockMvc.post(
             "/api/recruitments/{recruitmentId}/missions",
@@ -48,7 +48,8 @@ internal class MissionRestControllerTest : RestControllerTest() {
             content = objectMapper.writeValueAsString(createMissionData())
         }.andExpect {
             status { isCreated }
-            header { string(HttpHeaders.LOCATION, "/api/recruitments/$recruitmentId/missions/$missionId") }
+            header { string(HttpHeaders.LOCATION, "/api/recruitments/$recruitmentId/missions/${missionData.id}") }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(missionData))) }
         }
     }
 
