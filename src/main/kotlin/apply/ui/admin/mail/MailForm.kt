@@ -42,12 +42,14 @@ class MailForm(
     private val mailTargetsGrid: Grid<MailTargetResponse> = createMailTargetsGrid(mailTargets)
     private val recipientFilter: Component = createRecipientFilter()
     private val fileUpload: Upload = createFileUpload()
+
     init {
         add(subject, createSender(), recipientFilter, mailTargetsGrid, body, fileUpload)
         setResponsiveSteps(ResponsiveStep("0", 1))
         drawRequired()
         refreshGridFooter()
     }
+
     private fun createSender(): Component {
         return TextField("보낸사람").apply {
             value = mailProperties.username
