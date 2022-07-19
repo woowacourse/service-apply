@@ -85,7 +85,7 @@ const Recruits = () => {
         {recruitment && (
           <div className={styles["recruitment-list"]} role="list">
             {sortedRecruitment.length === 0 ? (
-              <div className={styles["empty-state-box"]}>텅 비었어요...</div>
+              <div className={styles["empty-state-box"]}>해당하는 공고가 존재하지 않습니다.</div>
             ) : (
               sortedRecruitment.map((recruitment) => (
                 <RecruitmentItem
