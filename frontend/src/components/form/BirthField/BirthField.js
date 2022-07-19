@@ -38,7 +38,7 @@ const BirthField = ({ value, onChange, required, className, ...props }) => {
 };
 
 BirthField.propTypes = {
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]).isRequired,
+  value: PropTypes.instanceOf(Date),
   onChange: PropTypes.func.isRequired,
   errorMessage: PropTypes.string,
   required: PropTypes.bool,
@@ -47,6 +47,7 @@ BirthField.propTypes = {
 };
 
 BirthField.defaultProps = {
+  value: null,
   required: false,
 };
 
