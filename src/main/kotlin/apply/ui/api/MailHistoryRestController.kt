@@ -23,10 +23,11 @@ class MailHistoryRestController(
     fun save(
         @RequestBody @Valid request: MailData,
         @LoginUser(administrator = true) user: User
-    ): ResponseEntity<Unit> {
+    ): ResponseEntity<ApiResponse<MailData>> {
         // todo: 파일 첨부하여 보내는 로직 필요
-        val savedId = mailHistoryService.save(request)
-        return ResponseEntity.created(URI.create("/api/mail-history/$savedId")).build()
+        val mailData = mailHistoryService.save(request)
+        return ResponseEntity.created(URI.create("/api/mail-history/${mailData.id}"))
+            .body(ApiResponse.success(mailData))
     }
 
     @GetMapping("/{mailHistoryId}")
