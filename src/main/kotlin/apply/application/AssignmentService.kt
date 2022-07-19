@@ -17,7 +17,7 @@ class AssignmentService(
     private val missionRepository: MissionRepository,
     private val evaluationTargetRepository: EvaluationTargetRepository
 ) {
-    fun create(missionId: Long, userId: Long, request: AssignmentRequest): Long {
+    fun create(missionId: Long, userId: Long, request: AssignmentRequest): AssignmentData {
         check(!assignmentRepository.existsByUserIdAndMissionId(userId, missionId)) { "이미 제출한 과제 제출물이 존재합니다." }
         val mission = missionRepository.getById(missionId)
         check(mission.isSubmitting) { "제출 불가능한 과제입니다." }
@@ -25,7 +25,7 @@ class AssignmentService(
         val assignment = assignmentRepository.save(
             Assignment(userId, missionId, request.githubUsername, request.pullRequestUrl, request.note)
         )
-        return assignment.id
+        return AssignmentData(assignment)
     }
 
     fun update(missionId: Long, userId: Long, request: AssignmentRequest) {

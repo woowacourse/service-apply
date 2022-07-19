@@ -1,9 +1,11 @@
 package apply.ui.api
 
+import apply.application.AssignmentData
 import apply.application.AssignmentService
 import apply.createAssignmentData
 import apply.createAssignmentRequest
 import apply.createAssignmentResponse
+import apply.domain.assignment.Assignment
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import org.junit.jupiter.api.Test
@@ -27,8 +29,11 @@ internal class AssignmentRestControllerTest : RestControllerTest() {
 
     @Test
     fun `과제 제출물을 제출한다`() {
-        val assignmentId = 1L
-        every { assignmentService.create(any(), any(), createAssignmentRequest()) } returns assignmentId
+        val assignment =
+            Assignment(1L, missionId, "parang", "https://github.com/woowacourse-study/2022-kotudy/issues/47", "note")
+        val assignmentData = AssignmentData(assignment)
+
+        every { assignmentService.create(any(), any(), createAssignmentRequest()) } returns assignmentData
 
         mockMvc.post(
             "/api/recruitments/{recruitmentId}/missions/{missionId}/assignments",
@@ -43,9 +48,10 @@ internal class AssignmentRestControllerTest : RestControllerTest() {
             header {
                 string(
                     HttpHeaders.LOCATION,
-                    "/api/recruitments/$recruitmentId/missions/$missionId/assignments/$assignmentId"
+                    "/api/recruitments/$recruitmentId/missions/$missionId/assignments/${assignmentData.id}"
                 )
             }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(assignmentData))) }
         }
     }
 
