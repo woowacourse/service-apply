@@ -79,16 +79,18 @@ internal class CheaterRestControllerTest : RestControllerTest() {
     @Test
     fun `부정행위자를 추가한다`() {
         val cheaterData = createCheaterData()
-        val cheaterId = 1L
-        every { cheaterService.save(cheaterData) } returns cheaterId
+        val cheaterResponse = CheaterResponse(Cheater(cheaterData.email, cheaterData.description), createUser())
+
+        every { cheaterService.save(cheaterData) } returns cheaterResponse
 
         mockMvc.post("/api/cheaters") {
             header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
             contentType = MediaType.APPLICATION_JSON
-            content = objectMapper.writeValueAsString(cheaterData)
+            content = objectMapper.writeValueAsString(cheaterResponse)
         }.andExpect {
             status { isCreated }
-            header { string(HttpHeaders.LOCATION, "/api/cheaters/$cheaterId") }
+            header { string(HttpHeaders.LOCATION, "/api/cheaters/${cheaterResponse.id}") }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(cheaterResponse))) }
         }
     }
 

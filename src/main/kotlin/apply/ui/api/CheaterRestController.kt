@@ -33,9 +33,10 @@ class CheaterRestController(
     fun save(
         @RequestBody request: CheaterData,
         @LoginUser(administrator = true) user: User
-    ): ResponseEntity<Unit> {
-        val savedId = cheaterService.save(request)
-        return ResponseEntity.created(URI.create("/api/cheaters/$savedId")).build()
+    ): ResponseEntity<ApiResponse<CheaterResponse>> {
+        val cheaterResponse = cheaterService.save(request)
+        return ResponseEntity.created(URI.create("/api/cheaters/${cheaterResponse.id}"))
+            .body(ApiResponse.success(cheaterResponse))
     }
 
     @GetMapping("/{cheaterId}")
