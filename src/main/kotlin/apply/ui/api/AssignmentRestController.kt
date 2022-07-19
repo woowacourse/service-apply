@@ -28,11 +28,11 @@ class AssignmentRestController(
         @PathVariable missionId: Long,
         @RequestBody @Valid request: AssignmentRequest,
         @LoginUser user: User
-    ): ResponseEntity<Unit> {
-        val assignmentId = assignmentService.create(missionId, user.id, request)
+    ): ResponseEntity<ApiResponse<AssignmentData>> {
+        val assignment = assignmentService.create(missionId, user.id, request)
         return ResponseEntity
-            .created(URI.create("/api/recruitments/$recruitmentId/missions/$missionId/assignments/$assignmentId"))
-            .build()
+            .created(URI.create("/api/recruitments/$recruitmentId/missions/$missionId/assignments/${assignment.id}"))
+            .body(ApiResponse.success(assignment))
     }
 
     @GetMapping("/missions/{missionId}/assignments/me")

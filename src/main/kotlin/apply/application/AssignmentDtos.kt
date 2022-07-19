@@ -27,12 +27,14 @@ data class AssignmentRequest(
 data class AssignmentData(
     val githubUsername: String,
     val pullRequestUrl: String,
-    val note: String
+    val note: String,
+    val id: Long? = 0
 ) {
     constructor(assignment: Assignment?) : this(
         assignment?.githubUsername.orEmpty(),
         assignment?.pullRequestUrl.orEmpty(),
-        assignment?.note.orEmpty()
+        assignment?.note.orEmpty(),
+        assignment?.id
     )
 }
 
