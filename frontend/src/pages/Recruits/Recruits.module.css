@@ -69,7 +69,6 @@
 .empty-state-box {
   display: flex;
   justify-content: center;
-  align-items: center;
   padding: 2rem 0;
 
   font-size: 2rem;
