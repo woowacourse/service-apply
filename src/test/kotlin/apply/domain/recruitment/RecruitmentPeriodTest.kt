@@ -1,7 +1,7 @@
 package apply.domain.recruitment
 
 import io.kotest.assertions.throwables.shouldNotThrowAny
-import io.kotest.assertions.throwables.shouldThrowExactly
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.shouldBe
@@ -16,7 +16,7 @@ class RecruitmentPeriodTest : StringSpec({
     }
 
     "시작 일시는 종료 일시보다 이후일 수 없다" {
-        shouldThrowExactly<IllegalArgumentException> {
+        shouldThrow<IllegalArgumentException> {
             RecruitmentPeriod(startDateTime = now, endDateTime = now.minusDays(1L))
         }
     }
