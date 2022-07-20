@@ -4,7 +4,7 @@ import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.term.Term
 import apply.domain.term.TermRepository
 import io.kotest.assertions.throwables.shouldNotThrowAny
-import io.kotest.assertions.throwables.shouldThrowExactly
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.collections.shouldContainExactly
@@ -34,14 +34,14 @@ internal class TermServiceTest : DescribeSpec({
         context("기본 기수명으로") {
             it("기수를 생성할 수 없다") {
                 val request = TermData(Term.SINGLE.name)
-                shouldThrowExactly<IllegalStateException> { termService.save(request) }
+                shouldThrow<IllegalStateException> { termService.save(request) }
             }
         }
 
         context("중복된 기수명으로") {
             it("기수를 생성할 수 없다") {
                 every { termRepository.existsByName(any()) } returns true
-                shouldThrowExactly<IllegalStateException> { termService.save(TermData("3기")) }
+                shouldThrow<IllegalStateException> { termService.save(TermData("3기")) }
             }
         }
 
@@ -74,7 +74,7 @@ internal class TermServiceTest : DescribeSpec({
         context("모집이 존재하는 기수는") {
             it("삭제할 수 없다") {
                 every { recruitmentRepository.existsByTermId(any()) } returns true
-                shouldThrowExactly<IllegalStateException> { termService.deleteById(1L) }
+                shouldThrow<IllegalStateException> { termService.deleteById(1L) }
             }
         }
 
@@ -82,7 +82,7 @@ internal class TermServiceTest : DescribeSpec({
             it("예외가 발생한다") {
                 every { recruitmentRepository.existsByTermId(any()) } returns false
                 every { termRepository.existsById(any()) } returns false
-                shouldThrowExactly<IllegalArgumentException> { termService.deleteById(1L) }
+                shouldThrow<IllegalArgumentException> { termService.deleteById(1L) }
             }
         }
     }

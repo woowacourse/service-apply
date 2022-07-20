@@ -6,7 +6,7 @@ import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.mission.MissionRepository
 import apply.utils.CsvGenerator
 import io.kotest.assertions.throwables.shouldNotThrowAny
-import io.kotest.assertions.throwables.shouldThrowExactly
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
 import io.mockk.Runs
 import io.mockk.every
@@ -75,7 +75,7 @@ class EvaluationTargetCsvServiceTest : DescribeSpec({
                 every { evaluationItemRepository.findByEvaluationIdOrderByPosition(any()) } returns evaluationItems
                 every { evaluationTargetService.gradeAll(any(), any()) } just Runs
 
-                shouldNotThrowAny{ evaluationTargetCsvService.updateTarget(inputStream, 1L) }
+                shouldNotThrowAny { evaluationTargetCsvService.updateTarget(inputStream, 1L) }
                 verify(exactly = 1) { evaluationTargetService.gradeAll(any(), any()) }
             }
         }
@@ -108,7 +108,7 @@ class EvaluationTargetCsvServiceTest : DescribeSpec({
 
                 every { evaluationItemRepository.findByEvaluationIdOrderByPosition(any()) } returns evaluationItems
 
-                shouldThrowExactly<IllegalArgumentException> {
+                shouldThrow<IllegalArgumentException> {
                     evaluationTargetCsvService.updateTarget(
                         inputStream,
                         1L
@@ -128,7 +128,7 @@ class EvaluationTargetCsvServiceTest : DescribeSpec({
 
                 every { evaluationItemRepository.findByEvaluationIdOrderByPosition(any()) } returns evaluationItems
 
-                shouldThrowExactly<IllegalArgumentException> {
+                shouldThrow<IllegalArgumentException> {
                     evaluationTargetCsvService.updateTarget(
                         inputStream,
                         1L

@@ -16,7 +16,7 @@ import apply.domain.user.getById
 import io.kotest.assertions.assertSoftly
 import io.kotest.assertions.throwables.shouldNotThrow
 import io.kotest.assertions.throwables.shouldNotThrowAny
-import io.kotest.assertions.throwables.shouldThrowExactly
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
@@ -52,7 +52,7 @@ internal class UserServiceTest : DescribeSpec({
 
             it("일치하지 않는다면 예외가 발생한다") {
                 request = ResetPasswordRequest("가짜 이름", EMAIL, BIRTHDAY)
-                shouldThrowExactly<UnidentifiedUserException> { subject() }
+                shouldThrow<UnidentifiedUserException> { subject() }
             }
         }
 
@@ -72,12 +72,12 @@ internal class UserServiceTest : DescribeSpec({
 
             it("일치하지 않다면 예외가 발생한다") {
                 request = EditPasswordRequest(WRONG_PASSWORD, Password("new_password"), Password("new_password"))
-                shouldThrowExactly<UnidentifiedUserException> { subject() }
+                shouldThrow<UnidentifiedUserException> { subject() }
             }
 
             it("확인용 비밀번호가 일치하지 않으면 예외가 발생한다") {
                 request = EditPasswordRequest(WRONG_PASSWORD, Password("new_password"), Password("wrong_password"))
-                shouldThrowExactly<IllegalArgumentException> { subject() }
+                shouldThrow<IllegalArgumentException> { subject() }
             }
         }
 

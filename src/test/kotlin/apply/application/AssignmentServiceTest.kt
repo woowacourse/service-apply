@@ -12,7 +12,7 @@ import apply.domain.mission.MissionRepository
 import apply.domain.mission.getById
 import io.kotest.assertions.assertSoftly
 import io.kotest.assertions.throwables.shouldNotThrowAny
-import io.kotest.assertions.throwables.shouldThrowExactly
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -55,7 +55,7 @@ class AssignmentServiceTest : DescribeSpec({
                 every { missionRepository.getById(any()) } returns createMission(
                     startDateTime = LocalDateTime.now().minusDays(2), endDateTime = LocalDateTime.now().minusDays(1)
                 )
-                shouldThrowExactly<IllegalStateException> {
+                shouldThrow<IllegalStateException> {
                     assignmentService.create(
                         missionId,
                         loginUser.id,
@@ -68,7 +68,7 @@ class AssignmentServiceTest : DescribeSpec({
                 every { missionRepository.getById(any()) } returns createMission(
                     startDateTime = LocalDateTime.now().minusDays(2), endDateTime = LocalDateTime.now().minusDays(1)
                 )
-                shouldThrowExactly<IllegalStateException> {
+                shouldThrow<IllegalStateException> {
                     assignmentService.update(1L, 1L, createAssignmentRequest())
                 }
             }
@@ -77,7 +77,7 @@ class AssignmentServiceTest : DescribeSpec({
         context("이미 제출한 이력이 있는 경우") {
             it("새로 제출할 수 없다") {
                 every { assignmentRepository.existsByUserIdAndMissionId(any(), any()) } returns true
-                shouldThrowExactly<IllegalStateException> {
+                shouldThrow<IllegalStateException> {
                     assignmentService.create(1L, 1L, createAssignmentRequest())
                 }
             }
@@ -88,7 +88,7 @@ class AssignmentServiceTest : DescribeSpec({
                 every { assignmentRepository.existsByUserIdAndMissionId(any(), any()) } returns false
                 every { missionRepository.getById(any()) } returns createMission()
                 every { evaluationTargetRepository.findByEvaluationIdAndUserId(any(), any()) } returns null
-                shouldThrowExactly<IllegalArgumentException> {
+                shouldThrow<IllegalArgumentException> {
                     assignmentService.create(
                         missionId,
                         loginUser.id,
@@ -128,7 +128,7 @@ class AssignmentServiceTest : DescribeSpec({
         context("과제를 제출한 적이 없는 경우") {
             it("제출물 조회시 예외를 반환한다") {
                 every { assignmentRepository.findByUserIdAndMissionId(any(), any()) } returns null
-                shouldThrowExactly<IllegalArgumentException> {
+                shouldThrow<IllegalArgumentException> {
                     assignmentService.getByUserIdAndMissionId(
                         loginUser.id,
                         missionId
@@ -140,7 +140,7 @@ class AssignmentServiceTest : DescribeSpec({
         context("제출 불가능한 과제의") {
             it("과제 제출물을 수정할 수 없다") {
                 every { missionRepository.getById(any()) } returns createMission(submittable = false)
-                shouldThrowExactly<IllegalStateException> {
+                shouldThrow<IllegalStateException> {
                     assignmentService.update(1L, 1L, createAssignmentRequest())
                 }
             }
@@ -150,7 +150,7 @@ class AssignmentServiceTest : DescribeSpec({
             it("수정할 수 없다") {
                 every { missionRepository.getById(any()) } returns createMission()
                 every { assignmentRepository.findByUserIdAndMissionId(any(), any()) } returns null
-                shouldThrowExactly<IllegalArgumentException> {
+                shouldThrow<IllegalArgumentException> {
                     assignmentService.update(1L, 1L, createAssignmentRequest())
                 }
             }
@@ -164,7 +164,7 @@ class AssignmentServiceTest : DescribeSpec({
             it("평가 대상자가 존재하지 않으면 예외가 발생한다") {
                 every { evaluationTargetRepository.findByIdOrNull(any()) } returns null
 
-                shouldThrowExactly<NoSuchElementException> { subject() }
+                shouldThrow<NoSuchElementException> { subject() }
             }
 
             it("평가 대상자가 제출한 과제 제출물이 없으면 빈 과제 제출물 데이터를 반환한다") {

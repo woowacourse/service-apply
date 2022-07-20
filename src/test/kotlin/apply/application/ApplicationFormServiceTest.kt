@@ -18,7 +18,6 @@ import io.kotest.assertions.assertSoftly
 import io.kotest.assertions.throwables.shouldNotThrow
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
-import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.nulls.shouldNotBeNull
@@ -116,7 +115,7 @@ class ApplicationFormServiceTest : DescribeSpec({
             it("예외를 던진다") {
                 every { applicationFormRepository.findByRecruitmentIdAndUserId(any(), any()) } returns null
 
-                shouldThrowExactly<IllegalArgumentException> {
+                shouldThrow<IllegalArgumentException> {
                     applicationFormService.getApplicationForm(1L, 1L)
                 }
             }
@@ -175,7 +174,7 @@ class ApplicationFormServiceTest : DescribeSpec({
             it("지원할 수 없다") {
                 every { recruitmentRepository.findByIdOrNull(any()) } returns null
 
-                shouldThrowExactly<NoSuchElementException> {
+                shouldThrow<NoSuchElementException> {
                     applicationFormService.create(
                         userId,
                         createApplicationFormRequest
@@ -200,7 +199,7 @@ class ApplicationFormServiceTest : DescribeSpec({
                 every { applicationFormRepository.existsByUserIdAndSubmittedTrue(any()) } returns false
                 every { applicationFormRepository.findByRecruitmentIdAndUserId(any(), any()) } returns null
 
-                shouldThrowExactly<IllegalArgumentException> {
+                shouldThrow<IllegalArgumentException> {
                     applicationFormService.update(
                         userId,
                         updateApplicationFormRequest
@@ -213,7 +212,7 @@ class ApplicationFormServiceTest : DescribeSpec({
             it("수정할 수 없다") {
                 every { recruitmentRepository.findByIdOrNull(any()) } returns recruitmentNotRecruiting
 
-                shouldThrowExactly<IllegalStateException> {
+                shouldThrow<IllegalStateException> {
                     applicationFormService.update(
                         userId,
                         updateApplicationFormRequest
@@ -231,7 +230,7 @@ class ApplicationFormServiceTest : DescribeSpec({
                     )
                 } returns applicationFormSubmitted
 
-                shouldThrowExactly<IllegalStateException> {
+                shouldThrow<IllegalStateException> {
                     applicationFormService.getApplicationForm(
                         userId = 3L,
                         recruitmentId = 1L
@@ -247,7 +246,7 @@ class ApplicationFormServiceTest : DescribeSpec({
                 every { applicationFormRepository.existsByUserIdAndSubmittedTrue(any()) } returns false
                 every { applicationFormRepository.findByRecruitmentIdAndUserId(any(), any()) } returns applicationForm1
 
-                shouldThrowExactly<IllegalArgumentException> {
+                shouldThrow<IllegalArgumentException> {
                     applicationFormService.update(
                         userId,
                         UpdateApplicationFormRequest(recruitmentId = 1L, submitted = true)
@@ -263,7 +262,7 @@ class ApplicationFormServiceTest : DescribeSpec({
                 every { applicationFormRepository.existsByUserIdAndSubmittedTrue(any()) } returns false
                 every { applicationFormRepository.findByRecruitmentIdAndUserId(any(), any()) } returns applicationForm1
 
-                shouldThrowExactly<IllegalArgumentException> {
+                shouldThrow<IllegalArgumentException> {
                     applicationFormService.update(
                         userId,
                         UpdateApplicationFormRequest(

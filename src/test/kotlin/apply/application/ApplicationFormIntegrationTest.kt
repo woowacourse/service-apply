@@ -9,7 +9,7 @@ import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.user.UserRepository
 import io.kotest.assertions.throwables.shouldNotThrow
 import io.kotest.assertions.throwables.shouldNotThrowAny
-import io.kotest.assertions.throwables.shouldThrowExactly
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
 import support.test.IntegrationTest
 import java.time.LocalDateTime
@@ -47,7 +47,7 @@ class ApplicationFormIntegrationTest(
                         submittedDateTime = LocalDateTime.now()
                     )
                 )
-                shouldThrowExactly<IllegalStateException> {
+                shouldThrow<IllegalStateException> {
                     applicationFormService.create(user.id, CreateApplicationFormRequest(recruitment.id))
                 }
             }
@@ -66,7 +66,7 @@ class ApplicationFormIntegrationTest(
                     )
                 )
                 val recruitment = recruitmentRepository.save(createRecruitment(termId = 1L, recruitable = true))
-                shouldThrowExactly<DuplicateApplicationException> {
+                shouldThrow<DuplicateApplicationException> {
                     applicationFormService.create(user.id, CreateApplicationFormRequest(recruitment.id))
                 }
             }
@@ -102,7 +102,7 @@ class ApplicationFormIntegrationTest(
                 )
                 val recruitment = recruitmentRepository.save(createRecruitment(termId = 1L, recruitable = true))
                 applicationFormRepository.save(createApplicationForm(user.id, recruitment.id, submitted = false))
-                shouldThrowExactly<DuplicateApplicationException> {
+                shouldThrow<DuplicateApplicationException> {
                     applicationFormService.update(
                         user.id,
                         UpdateApplicationFormRequest(recruitmentId = recruitment.id, submitted = true)

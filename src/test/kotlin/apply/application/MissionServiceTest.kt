@@ -11,7 +11,7 @@ import apply.domain.mission.MissionRepository
 import io.kotest.assertions.assertSoftly
 import io.kotest.assertions.throwables.shouldNotThrow
 import io.kotest.assertions.throwables.shouldNotThrowAny
-import io.kotest.assertions.throwables.shouldThrowExactly
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.collections.shouldContainAnyOf
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
@@ -49,7 +49,7 @@ class MissionServiceTest : DescribeSpec({
             it("예외를 던진다") {
                 val missionData = createMissionData()
                 every { evaluationRepository.existsById(any()) } returns false
-                shouldThrowExactly<IllegalArgumentException> { missionService.save(missionData) }
+                shouldThrow<IllegalArgumentException> { missionService.save(missionData) }
             }
         }
 
@@ -58,7 +58,7 @@ class MissionServiceTest : DescribeSpec({
                 val missionData = createMissionData()
                 every { evaluationRepository.existsById(any()) } returns true
                 every { missionRepository.existsByEvaluationId(any()) } returns true
-                shouldThrowExactly<IllegalStateException> { missionService.save(missionData) }
+                shouldThrow<IllegalStateException> { missionService.save(missionData) }
             }
         }
 
@@ -143,7 +143,7 @@ class MissionServiceTest : DescribeSpec({
                 every { missionRepository.findByIdOrNull(mission.id) } returns mission
                 every { missionRepository.deleteById(any()) } just Runs
 
-                shouldThrowExactly<IllegalStateException> { missionService.deleteById(mission.id) }
+                shouldThrow<IllegalStateException> { missionService.deleteById(mission.id) }
             }
         }
 
@@ -153,7 +153,7 @@ class MissionServiceTest : DescribeSpec({
                 every { missionRepository.findByIdOrNull(missionId) } returns null
                 every { missionRepository.deleteById(any()) } just Runs
 
-                shouldThrowExactly<NoSuchElementException> { missionService.deleteById(missionId) }
+                shouldThrow<NoSuchElementException> { missionService.deleteById(missionId) }
             }
         }
     }

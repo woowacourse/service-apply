@@ -9,7 +9,7 @@ import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitmentitem.RecruitmentItem
 import apply.domain.recruitmentitem.RecruitmentItemRepository
 import apply.domain.term.TermRepository
-import io.kotest.assertions.throwables.shouldThrowExactly
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
 import io.mockk.Runs
 import io.mockk.every
@@ -127,7 +127,7 @@ internal class RecruitmentServiceTest : DescribeSpec({
             it("삭제할 수 없다") {
                 val recruitment = createRecruitment(recruitable = true)
                 every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
-                shouldThrowExactly<IllegalStateException> { recruitmentService.deleteById(recruitment.id) }
+                shouldThrow<IllegalStateException> { recruitmentService.deleteById(recruitment.id) }
             }
         }
     }

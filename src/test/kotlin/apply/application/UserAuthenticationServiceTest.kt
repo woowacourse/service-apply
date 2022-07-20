@@ -20,7 +20,7 @@ import apply.domain.user.UserRepository
 import apply.domain.user.existsByEmail
 import apply.domain.user.findByEmail
 import apply.security.JwtTokenProvider
-import io.kotest.assertions.throwables.shouldThrowExactly
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -50,7 +50,7 @@ internal class UserAuthenticationServiceTest : DescribeSpec({
                 request = RegisterUserRequest(
                     NAME, EMAIL, PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD, CONFIRM_PASSWORD, VALID_CODE
                 )
-                shouldThrowExactly<IllegalStateException> { subject() }
+                shouldThrow<IllegalStateException> { subject() }
             }
 
             it("인증된 인증 코드와 일치하지 않는다면 예외가 발생한다") {
@@ -60,7 +60,7 @@ internal class UserAuthenticationServiceTest : DescribeSpec({
                 request = RegisterUserRequest(
                     NAME, EMAIL, PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD, CONFIRM_PASSWORD, VALID_CODE
                 )
-                shouldThrowExactly<IllegalStateException> { subject() }
+                shouldThrow<IllegalStateException> { subject() }
             }
 
             it("인증된 이메일이 아니라면 예외가 발생한다") {
@@ -70,7 +70,7 @@ internal class UserAuthenticationServiceTest : DescribeSpec({
                 request = RegisterUserRequest(
                     NAME, "not@email.com", PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD, CONFIRM_PASSWORD, VALID_CODE
                 )
-                shouldThrowExactly<IllegalStateException> { subject() }
+                shouldThrow<IllegalStateException> { subject() }
             }
 
             it("가입되지 않고 인증된 이메일이라면 회원을 저장하고 토큰을 반환한다") {
@@ -89,7 +89,7 @@ internal class UserAuthenticationServiceTest : DescribeSpec({
                 request = RegisterUserRequest(
                     NAME, EMAIL, PHONE_NUMBER, GENDER, BIRTHDAY, PASSWORD, WRONG_PASSWORD, VALID_CODE
                 )
-                shouldThrowExactly<IllegalArgumentException> { subject() }
+                shouldThrow<IllegalArgumentException> { subject() }
             }
         }
 
@@ -108,13 +108,13 @@ internal class UserAuthenticationServiceTest : DescribeSpec({
             it("회원이 존재하지만 인증에 실패하면 예외가 발생한다") {
                 every { userRepository.findByEmail(any()) } returns createUser()
                 request = AuthenticateUserRequest(EMAIL, WRONG_PASSWORD)
-                shouldThrowExactly<UnidentifiedUserException> { subject() }
+                shouldThrow<UnidentifiedUserException> { subject() }
             }
 
             it("회원이 존재하지 않다면 예외가 발생한다") {
                 every { userRepository.findByEmail(any()) } returns null
                 request = AuthenticateUserRequest(EMAIL, PASSWORD)
-                shouldThrowExactly<UnidentifiedUserException> { subject() }
+                shouldThrow<UnidentifiedUserException> { subject() }
             }
         }
 
@@ -129,7 +129,7 @@ internal class UserAuthenticationServiceTest : DescribeSpec({
 
             it("인증 코드가 일치하지 않는다면 예외가 발생한다") {
                 every { authenticationCodeRepository.getLastByEmail(any()) } returns authenticationCode
-                shouldThrowExactly<IllegalArgumentException> {
+                shouldThrow<IllegalArgumentException> {
                     userAuthenticationService.authenticateEmail(authenticationCode.email, INVALID_CODE)
                 }
             }
@@ -143,7 +143,7 @@ internal class UserAuthenticationServiceTest : DescribeSpec({
 
             it("인증 코드 요청시 이미 가입된 이메일이라면 예외가 발생한다") {
                 every { userRepository.existsByEmail(any()) } returns true
-                shouldThrowExactly<IllegalStateException> {
+                shouldThrow<IllegalStateException> {
                     userAuthenticationService.generateAuthenticationCode(authenticationCode.email)
                 }
             }
