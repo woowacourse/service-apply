@@ -4,7 +4,7 @@ import apply.createCheaterData
 import apply.domain.cheater.Cheater
 import apply.domain.cheater.CheaterRepository
 import apply.domain.user.UserRepository
-import io.kotest.assertions.throwables.shouldNotThrow
+import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
 import io.mockk.every
@@ -22,7 +22,7 @@ internal class CheaterServiceTest : DescribeSpec({
             val cheaterData = createCheaterData()
             every { cheaterRepository.existsByEmail(any()) } returns false
             every { cheaterRepository.save(any()) } returns Cheater(cheaterData.email, cheaterData.description)
-            shouldNotThrow<Exception> { cheaterService.save(cheaterData) }
+            shouldNotThrowAny { cheaterService.save(cheaterData) }
         }
 
         context("이미 등록된 부정 행위자를 추가하는 경우") {

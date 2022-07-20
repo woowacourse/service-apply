@@ -83,7 +83,7 @@ internal class EvaluationServiceTest : DescribeSpec({
 
             evaluationService.deleteById(2L)
 
-            assertSoftly {
+            assertSoftly(evaluationsWithDuplicatedBeforeEvaluationId) {
                 evaluationsWithDuplicatedBeforeEvaluationId[2].beforeEvaluationId shouldBe 0L
                 evaluationsWithDuplicatedBeforeEvaluationId[3].beforeEvaluationId shouldBe 0L
             }

@@ -15,6 +15,7 @@ import apply.domain.user.findByEmail
 import apply.domain.user.getById
 import io.kotest.assertions.assertSoftly
 import io.kotest.assertions.throwables.shouldNotThrow
+import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.nulls.shouldNotBeNull
@@ -66,7 +67,7 @@ internal class UserServiceTest : DescribeSpec({
 
             it("일치한다면 변경한다") {
                 request = EditPasswordRequest(PASSWORD, Password("new_password"), Password("new_password"))
-                shouldNotThrow<Exception> { subject() }
+                shouldNotThrowAny { subject() }
             }
 
             it("일치하지 않다면 예외가 발생한다") {
@@ -87,7 +88,7 @@ internal class UserServiceTest : DescribeSpec({
 
                 val expected = userService.getInformation(user.id)
 
-                assertSoftly {
+                assertSoftly(expected) {
                     expected.id.shouldNotBeNull()
                     expected.name.shouldNotBeNull()
                     expected.email.shouldNotBeNull()

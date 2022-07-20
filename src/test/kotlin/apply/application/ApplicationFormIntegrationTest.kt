@@ -8,6 +8,7 @@ import apply.domain.applicationform.DuplicateApplicationException
 import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.user.UserRepository
 import io.kotest.assertions.throwables.shouldNotThrow
+import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.core.spec.style.DescribeSpec
 import support.test.IntegrationTest
@@ -25,7 +26,7 @@ class ApplicationFormIntegrationTest(
             it("단독 모집에 지원 가능한다.") {
                 val recruitment = recruitmentRepository.save(createRecruitment(termId = 0L, recruitable = true))
                 val user = userRepository.save(createUser())
-                shouldNotThrow<Exception> {
+                shouldNotThrowAny {
                     applicationFormService.create(
                         user.id,
                         CreateApplicationFormRequest(recruitment.id)
@@ -110,47 +111,6 @@ class ApplicationFormIntegrationTest(
             }
         }
     }
-
-    // describe("지원서를 제출할 때") {
-    //     context("동일한 기수의 다른 모집에 임시 저장되어 있어도") {
-    //         it("지원서를 제출할 수 있다.") {
-    //             val user = userRepository.save(createUser())
-    //             val appliedRecruitment = recruitmentRepository.save(createRecruitment(termId = 1L))
-    //             applicationFormRepository.save(createApplicationForm(user.id, appliedRecruitment.id, submitted = false))
-    //             val recruitment = recruitmentRepository.save(createRecruitment(termId = 1L, recruitable = true))
-    //             applicationFormRepository.save(createApplicationForm(user.id, recruitment.id, submitted = false))
-    //             shouldNotThrow<Exception> {
-    //                 applicationFormService.update(
-    //                     user.id,
-    //                     UpdateApplicationFormRequest(recruitmentId = recruitment.id, submitted = true)
-    //                 )
-    //             }
-    //         }
-    //     }
-    //
-    //     context("동일한 기수의 다른 모집에 이미 지원서를 제출한 경우에는") {
-    //         it("지원서를 제출할 수 없다.") {
-    //             val user = userRepository.save(createUser())
-    //             val appliedRecruitment = recruitmentRepository.save(createRecruitment(termId = 1L))
-    //             applicationFormRepository.save(
-    //                 createApplicationForm(
-    //                     user.id,
-    //                     appliedRecruitment.id,
-    //                     submitted = true,
-    //                     submittedDateTime = LocalDateTime.now()
-    //                 )
-    //             )
-    //             val recruitment = recruitmentRepository.save(createRecruitment(termId = 1L, recruitable = true))
-    //             applicationFormRepository.save(createApplicationForm(user.id, recruitment.id, submitted = false))
-    //             shouldThrowExactly<DuplicateApplicationException> {
-    //                 applicationFormService.update(
-    //                     user.id,
-    //                     UpdateApplicationFormRequest(recruitmentId = recruitment.id, submitted = true)
-    //                 )
-    //             }
-    //         }
-    //     }
-    // }
 
     afterEach {
         userRepository.deleteAll()

@@ -66,7 +66,7 @@ class MailTargetServiceTest : DescribeSpec({
                     createUser(id = 3L, email = "pass@email.com")
                 )
                 val actual = mailTargetService.findMailTargets(EVALUATION_ID, PASS)
-                assertSoftly {
+                assertSoftly(actual) {
                     actual shouldHaveSize 1
                     actual[0].email shouldBe "pass@email.com"
                 }
@@ -87,7 +87,7 @@ class MailTargetServiceTest : DescribeSpec({
                     createUser(id = 2L, email = "fail@email.com")
                 )
                 val actual = mailTargetService.findMailTargets(EVALUATION_ID, FAIL)
-                assertSoftly {
+                assertSoftly(actual) {
                     actual shouldHaveSize 1
                     actual[0].email shouldBe "fail@email.com"
                 }
@@ -131,7 +131,7 @@ class MailTargetServiceTest : DescribeSpec({
                     createUser(id = 1L, email = "waiting@email.com")
                 )
                 val actual = mailTargetService.findMailTargets(EVALUATION_ID, WAITING)
-                assertSoftly {
+                assertSoftly(actual) {
                     actual shouldHaveSize 1
                     actual[0].email shouldBe "waiting@email.com"
                 }

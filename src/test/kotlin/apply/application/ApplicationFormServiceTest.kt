@@ -16,6 +16,7 @@ import apply.domain.recruitmentitem.RecruitmentItemRepository
 import apply.pass
 import io.kotest.assertions.assertSoftly
 import io.kotest.assertions.throwables.shouldNotThrow
+import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.core.spec.style.DescribeSpec
@@ -126,7 +127,7 @@ class ApplicationFormServiceTest : DescribeSpec({
 
             val expected = applicationFormService.getMyApplicationForms(userId)
 
-            assertSoftly {
+            assertSoftly(expected) {
                 expected.shouldNotBeNull()
                 expected shouldHaveSize 2
             }
@@ -138,7 +139,7 @@ class ApplicationFormServiceTest : DescribeSpec({
 
                 val expected = applicationFormService.getMyApplicationForms(userId)
 
-                assertSoftly {
+                assertSoftly(expected) {
                     expected.shouldNotBeNull()
                     expected shouldHaveSize 0
                 }
@@ -151,7 +152,7 @@ class ApplicationFormServiceTest : DescribeSpec({
             every { applicationFormRepository.save(any<ApplicationForm>()) } returns mockk()
             every { applicationValidator.validate(any(), any()) } just Runs
 
-            shouldNotThrow<Exception> { applicationFormService.create(userId, createApplicationFormRequest) }
+            shouldNotThrowAny { applicationFormService.create(userId, createApplicationFormRequest) }
         }
 
         context("이미 작성한 지원서가 있는 경우") {

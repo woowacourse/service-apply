@@ -22,7 +22,6 @@ import apply.domain.user.findByEmail
 import apply.security.JwtTokenProvider
 import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.core.spec.style.DescribeSpec
-import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
@@ -125,7 +124,7 @@ internal class UserAuthenticationServiceTest : DescribeSpec({
             it("인증 코드가 일치한다면 인증된 회원으로 변경한다") {
                 every { authenticationCodeRepository.getLastByEmail(any()) } returns authenticationCode
                 userAuthenticationService.authenticateEmail(authenticationCode.email, authenticationCode.code)
-                authenticationCode.authenticated.shouldBeTrue()
+                authenticationCode.authenticated shouldBe true
             }
 
             it("인증 코드가 일치하지 않는다면 예외가 발생한다") {

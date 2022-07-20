@@ -30,7 +30,6 @@ import apply.domain.user.UserRepository
 import apply.domain.user.findAllByEmailIn
 import io.kotest.assertions.assertSoftly
 import io.kotest.core.spec.style.DescribeSpec
-import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.equality.shouldBeEqualToComparingFields
 import io.kotest.matchers.shouldBe
@@ -138,7 +137,7 @@ class EvaluationTargetServiceTest(
                 val actual = evaluationTargetRepository.findAllByEvaluationId(firstEvaluation.id)
 
                 // then
-                assertSoftly {
+                assertSoftly(actual) {
                     actual shouldHaveSize 3
                     actual[0].userId shouldBe 1L
                     actual[0].evaluationStatus shouldBe WAITING
@@ -175,7 +174,7 @@ class EvaluationTargetServiceTest(
                 val actual = evaluationTargetRepository.findAllByEvaluationId(secondEvaluation.id)
 
                 // then
-                assertSoftly {
+                assertSoftly(actual) {
                     actual shouldHaveSize 2
                     actual[0].userId shouldBe 2L
                     actual[0].evaluationStatus shouldBe WAITING
@@ -228,7 +227,7 @@ class EvaluationTargetServiceTest(
                 val actual = evaluationTargetRepository.findAllByEvaluationId(firstEvaluation.id)
 
                 // then
-                assertSoftly {
+                assertSoftly(actual) {
                     actual shouldHaveSize 4
                     actual[0].userId shouldBe 1L
                     actual[0].evaluationStatus shouldBe FAIL
@@ -278,7 +277,7 @@ class EvaluationTargetServiceTest(
                 val actual = evaluationTargetRepository.findAllByEvaluationId(secondEvaluation.id)
 
                 // then
-                assertSoftly {
+                assertSoftly(actual) {
                     actual shouldHaveSize 3
                     actual[0].userId shouldBe 2L
                     actual[0].evaluationStatus shouldBe PASS
@@ -337,7 +336,7 @@ class EvaluationTargetServiceTest(
                 // then
                 assertSoftly {
                     actual shouldHaveSize 4
-                    cheaterEvaluationTargets.all { it.evaluationStatus == FAIL }.shouldBeTrue()
+                    cheaterEvaluationTargets.all { it.evaluationStatus == FAIL } shouldBe true
                 }
             }
         }
@@ -368,7 +367,7 @@ class EvaluationTargetServiceTest(
                 evaluationTargetService.load(2L)
 
                 // then
-                assertSoftly {
+                assertSoftly(evaluationTargetRepository) {
                     evaluationTargetRepository.findAllByEvaluationId(1L)[0].evaluationStatus shouldBe PASS
                     evaluationTargetRepository.findAllByEvaluationId(2L)[0].evaluationStatus shouldBe FAIL
                     evaluationTargetRepository.findAllByEvaluationId(3L)[0].evaluationStatus shouldBe PASS
@@ -389,7 +388,7 @@ class EvaluationTargetServiceTest(
                 } returns listOf(evaluationItem)
 
                 val result = evaluationTargetService.getGradeEvaluation(evaluationTarget.id)
-                assertSoftly {
+                assertSoftly(result) {
                     result.title shouldBe evaluation.title
                     result.description shouldBe evaluation.description
                     result.evaluationItems shouldHaveSize 1
@@ -415,7 +414,7 @@ class EvaluationTargetServiceTest(
                 } returns listOf(evaluationItem)
 
                 val result = evaluationTargetService.getGradeEvaluation(evaluationTarget.id)
-                assertSoftly {
+                assertSoftly(result) {
                     result.title shouldBe evaluation.title
                     result.description shouldBe evaluation.description
                     result.evaluationItems shouldHaveSize 1
@@ -440,7 +439,7 @@ class EvaluationTargetServiceTest(
 
                 val updatedEvaluationTarget = evaluationTargetRepository.findByIdOrNull(evaluationTarget.id)!!
                 val expectedAnswers = EvaluationAnswers(mutableListOf(EvaluationAnswer(updatedScore, 3L)))
-                assertSoftly {
+                assertSoftly(updatedEvaluationTarget) {
                     updatedEvaluationTarget.evaluationStatus shouldBe updatedStatus
                     updatedEvaluationTarget.note shouldBe updatedNote
                     updatedEvaluationTarget.evaluationAnswers shouldBeEqualToComparingFields expectedAnswers

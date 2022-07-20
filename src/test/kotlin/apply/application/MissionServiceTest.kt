@@ -10,12 +10,13 @@ import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.mission.MissionRepository
 import io.kotest.assertions.assertSoftly
 import io.kotest.assertions.throwables.shouldNotThrow
+import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.core.spec.style.DescribeSpec
-import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainAnyOf
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.shouldBe
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
@@ -76,7 +77,7 @@ class MissionServiceTest : DescribeSpec({
                 every { missionRepository.findAllByEvaluationIdIn(any()) } returns listOf(firstMission, secondMission)
 
                 val actual = missionService.findAllByRecruitmentId(recruitmentId)
-                assertSoftly {
+                assertSoftly(actual) {
                     actual shouldHaveSize 2
                     actual shouldContainAnyOf listOf(
                         MissionAndEvaluationResponse(firstMission, firstEvaluation),
@@ -100,7 +101,7 @@ class MissionServiceTest : DescribeSpec({
 
                 val responses = missionService.findAllByUserIdAndRecruitmentId(userId, recruitmentId)
 
-                assertSoftly {
+                assertSoftly(responses) {
                     responses shouldHaveSize 2
                     responses shouldContainExactlyInAnyOrder listOf(
                         MissionResponse(missions[0], true),
@@ -124,7 +125,7 @@ class MissionServiceTest : DescribeSpec({
 
                 val responses = missionService.findAllByUserIdAndRecruitmentId(userId, recruitmentId)
 
-                responses.shouldBeEmpty()
+                responses shouldBe emptyList()
             }
         }
 
@@ -133,7 +134,7 @@ class MissionServiceTest : DescribeSpec({
             every { missionRepository.findByIdOrNull(mission.id) } returns mission
             every { missionRepository.deleteById(any()) } just Runs
 
-            shouldNotThrow<Exception> { missionService.deleteById(mission.id) }
+            shouldNotThrowAny { missionService.deleteById(mission.id) }
         }
 
         context("제출 가능한 상태의 과제를 삭제하면") {

@@ -7,8 +7,8 @@ import apply.domain.cheater.Cheater
 import apply.domain.cheater.CheaterRepository
 import apply.domain.user.UserRepository
 import io.kotest.core.spec.style.DescribeSpec
-import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
@@ -50,14 +50,14 @@ class ApplicantServiceTest : DescribeSpec({
                 val actual = applicantService.findAllByRecruitmentIdAndKeyword(1L)
 
                 actual shouldHaveSize 1
-                actual[0].isCheater.shouldBeTrue()
+                actual[0].isCheater shouldBe true
             }
 
             it("키워드로 찾은 지원자 정보와 부정 행위자 여부를 함께 제공한다") {
                 val actual = applicantService.findAllByRecruitmentIdAndKeyword(1L, "amazzi")
 
                 actual shouldHaveSize 1
-                actual[0].isCheater.shouldBeTrue()
+                actual[0].isCheater shouldBe true
             }
         }
     }

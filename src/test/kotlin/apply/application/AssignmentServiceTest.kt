@@ -11,12 +11,10 @@ import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.mission.MissionRepository
 import apply.domain.mission.getById
 import io.kotest.assertions.assertSoftly
-import io.kotest.assertions.throwables.shouldNotThrow
+import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrowExactly
 import io.kotest.core.spec.style.DescribeSpec
-import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldBeBlank
 import io.mockk.every
 import io.mockk.mockk
 import org.springframework.data.repository.findByIdOrNull
@@ -48,7 +46,7 @@ class AssignmentServiceTest : DescribeSpec({
                 )
             } returns createEvaluationTarget()
             every { assignmentRepository.save(any()) } returns createAssignment()
-            shouldNotThrow<Exception> { assignmentService.create(missionId, loginUser.id, createAssignmentRequest()) }
+            shouldNotThrowAny { assignmentService.create(missionId, loginUser.id, createAssignmentRequest()) }
         }
 
         context("과제 제출 기간이 아니면") {
@@ -110,20 +108,20 @@ class AssignmentServiceTest : DescribeSpec({
                 every { assignmentRepository.save(any()) } returns createAssignment()
 
                 assignmentService.create(missionId, loginUser.id, createAssignmentRequest())
-                evaluationTarget.isPassed.shouldBeTrue()
+                evaluationTarget.isPassed shouldBe true
             }
         }
 
         it("제출한 과제 제출물을 수정할 수 있다") {
             every { missionRepository.getById(any()) } returns createMission()
             every { assignmentRepository.findByUserIdAndMissionId(any(), any()) } returns createAssignment()
-            shouldNotThrow<Exception> { assignmentService.update(1L, 1L, createAssignmentRequest()) }
+            shouldNotThrowAny { assignmentService.update(1L, 1L, createAssignmentRequest()) }
         }
 
         context("과제를 제출한 적이 있는 경우") {
             it("제출물 조회시 제출물을 반환한다") {
                 every { assignmentRepository.findByUserIdAndMissionId(any(), any()) } returns createAssignment()
-                shouldNotThrow<Exception> { assignmentService.getByUserIdAndMissionId(loginUser.id, missionId) }
+                shouldNotThrowAny { assignmentService.getByUserIdAndMissionId(loginUser.id, missionId) }
             }
         }
 
@@ -176,10 +174,10 @@ class AssignmentServiceTest : DescribeSpec({
 
                 val actual = subject()
 
-                assertSoftly {
-                    actual.githubUsername.shouldBeBlank()
-                    actual.pullRequestUrl.shouldBeBlank()
-                    actual.note.shouldBeBlank()
+                assertSoftly(actual) {
+                    actual.githubUsername shouldBe ""
+                    actual.pullRequestUrl shouldBe ""
+                    actual.note shouldBe ""
                 }
             }
 
@@ -191,7 +189,7 @@ class AssignmentServiceTest : DescribeSpec({
 
                 val actual = subject()
 
-                assertSoftly {
+                assertSoftly(actual) {
                     actual.githubUsername shouldBe assignment.githubUsername
                     actual.pullRequestUrl shouldBe assignment.pullRequestUrl
                     actual.note shouldBe assignment.note
