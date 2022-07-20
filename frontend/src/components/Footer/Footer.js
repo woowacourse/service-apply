@@ -15,7 +15,7 @@ const Footer = () => {
         <p className={styles.copyright}>Copyright 2021. 우아한테크코스. All rights reserved.</p>
         <div className={styles.social}>
           <a
-            href="https://techblog.woowahan.com/5977/"
+            href="https://github.com/woowacourse/"
             target="_blank"
             rel="noreferrer noopener"
             aria-label="GitHub"
