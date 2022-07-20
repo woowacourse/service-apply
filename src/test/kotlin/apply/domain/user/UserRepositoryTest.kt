@@ -1,18 +1,21 @@
 package apply.domain.user
 
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertAll
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.CsvSource
+import io.kotest.assertions.assertSoftly
+import io.kotest.core.spec.style.DescribeSpec
+import io.kotest.extensions.spring.SpringExtension
+import io.kotest.inspectors.forAll
+import io.kotest.matchers.booleans.shouldBeFalse
+import io.kotest.matchers.booleans.shouldBeTrue
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.shouldBe
 import support.createLocalDate
 import support.test.RepositoryTest
 
 @RepositoryTest
-internal class UserRepositoryTest(private val userRepository: UserRepository) {
-    @BeforeEach
-    internal fun setUp() {
+internal class UserRepositoryTest(private val userRepository: UserRepository) : DescribeSpec({
+    extension(SpringExtension)
+    beforeEach {
         val users = listOf(
             User(
                 "홍길동1",
@@ -42,34 +45,37 @@ internal class UserRepositoryTest(private val userRepository: UserRepository) {
         userRepository.saveAll(users)
     }
 
-    @ParameterizedTest
-    @CsvSource("홍,2", "a@,1", "'',3", "4,0")
-    fun `이름 또는 이메일에 검색 키워드가 포함되는 회원들을 모두 조회한다`(keyword: String, expectedSize: Int) {
-        val result = userRepository.findAllByKeyword(keyword)
-        assertThat(result).hasSize(expectedSize)
-    }
+    describe("UserRepository") {
+        it("이름 또는 이메일에 검색 키워드가 포함되는 회원들을 모두 조회한다") {
+            listOf(
+                "홍" to 2,
+                "a@" to 1,
+                "" to 3,
+                "4" to 0
+            ).forAll { (keyword, expectedSize) ->
+                val result = userRepository.findAllByKeyword(keyword)
+                result.shouldHaveSize(expectedSize)
+            }
+        }
 
-    @Test
-    fun `이메일이 일치하는 회원을 조회한다`() {
-        assertThat(userRepository.findByEmail("b@email.com")!!.name).isEqualTo("홍길동2")
-    }
+        it("이메일이 일치하는 회원을 조회한다") {
+            userRepository.findByEmail("b@email.com")!!.name.shouldBe("홍길동2")
+        }
 
-    @Test
-    fun `이메일이 일치하는 회원이 존재하지 않을 때, null을 반환한다`() {
-        assertThat(userRepository.findByEmail("notexist@email.com")).isNull()
-    }
+        it("이메일이 일치하는 회원이 존재하지 않을 때, null을 반환한다") {
+            userRepository.findByEmail("notexist@email.com").shouldBeNull()
+        }
 
-    @Test
-    fun `이메일이 일치하는 회원들을 전부 조회한다`() {
-        val emails = listOf("b@email.com", "c@email.com")
-        assertThat(userRepository.findAllByEmailIn(emails)).hasSize(2)
-    }
+        it("이메일이 일치하는 회원들을 전부 조회한다") {
+            val emails = listOf("b@email.com", "c@email.com")
+            userRepository.findAllByEmailIn(emails).shouldHaveSize(2)
+        }
 
-    @Test
-    fun `이메일이 일치하는 회원이 있는지 확인한다`() {
-        assertAll(
-            { assertThat(userRepository.existsByEmail("a@email.com")).isTrue() },
-            { assertThat(userRepository.existsByEmail("non-exists@email.com")).isFalse() }
-        )
+        it("이메일이 일치하는 회원이 있는지 확인한다") {
+            assertSoftly(userRepository) {
+                existsByEmail("a@email.com").shouldBeTrue()
+                existsByEmail("non-exists@email.com").shouldBeFalse()
+            }
+        }
     }
-}
+})
