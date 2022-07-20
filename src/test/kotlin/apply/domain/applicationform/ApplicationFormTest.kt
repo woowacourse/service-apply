@@ -33,9 +33,9 @@ class ApplicationFormTest : StringSpec({
                 )
             )
         }
-        assertSoftly {
-            applicationForm.referenceUrl shouldBe "https://example2.com"
-            applicationForm.answers.items[0].contents shouldBe "수정된 답변 1"
+        assertSoftly(applicationForm) {
+            referenceUrl shouldBe "https://example2.com"
+            answers.items[0].contents shouldBe "수정된 답변 1"
         }
     }
 
@@ -48,18 +48,15 @@ class ApplicationFormTest : StringSpec({
     "잘못된 포트폴리오 주소로 지원서를 수정할 수 없다" {
         val applicationForm = createApplicationForm()
         shouldThrow<IllegalArgumentException> {
-            applicationForm.update(
-                referenceUrl = "wrong",
-                createApplicationFormAnswers()
-            )
+            applicationForm.update(referenceUrl = "wrong", createApplicationFormAnswers())
         }
     }
 
     "지원서를 제출한다" {
         val applicationForm = createApplicationForm().apply { submit(pass) }
-        assertSoftly {
-            applicationForm.submitted.shouldBeTrue()
-            applicationForm.submittedDateTime.shouldNotBeNull()
+        assertSoftly(applicationForm) {
+            submitted.shouldBeTrue()
+            submittedDateTime.shouldNotBeNull()
         }
     }
 

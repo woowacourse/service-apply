@@ -14,10 +14,10 @@ import java.time.LocalDateTime
 class AuthenticationCodeTest : StringSpec({
     "인증 코드를 생성한다" {
         val authenticationCode = AuthenticationCode(EMAIL)
-        assertSoftly {
-            authenticationCode.code.shouldNotBeNull()
-            authenticationCode.authenticated.shouldBeFalse()
-            authenticationCode.createdDateTime.shouldNotBeNull()
+        assertSoftly(authenticationCode) {
+            code.shouldNotBeNull()
+            authenticated.shouldBeFalse()
+            createdDateTime.shouldNotBeNull()
         }
     }
 

@@ -14,9 +14,9 @@ class EvaluationItemFormTest : StringSpec({
     "유효한 값을 입력하는 경우" {
         val actual = createEvaluationItemForm().bindOrNull()
         actual.shouldNotBeNull()
-        assertSoftly {
-            actual!!.title shouldBe EVALUATION_ITEM_TITLE
-            actual!!.position shouldBe EVALUATION_ITEM_POSITION
+        assertSoftly(actual) {
+            title shouldBe EVALUATION_ITEM_TITLE
+            position shouldBe EVALUATION_ITEM_POSITION
         }
     }
 
