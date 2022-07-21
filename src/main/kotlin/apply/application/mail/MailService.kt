@@ -86,9 +86,18 @@ class MailService(
 
     @Async
     fun sendMailsByBcc(request: MailData, files: Map<String, ByteArrayResource>) {
+        val context = Context().apply {
+            setVariables(
+                mapOf(
+                    "content" to request.body,
+                    "url" to applicationProperties.url
+                )
+            )
+        }
+        val body = templateEngine.process("mail/common", context)
         val recipients = request.recipients + mailProperties.username
         for (targetMailsPart in recipients.chunked(MAIL_SENDING_UNIT)) {
-            mailSender.sendBcc(targetMailsPart, request.subject, request.body, files)
+            mailSender.sendBcc(targetMailsPart, request.subject, body, files)
         }
     }
 }

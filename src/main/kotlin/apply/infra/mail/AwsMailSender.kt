@@ -1,6 +1,5 @@
 package apply.infra.mail
 
-import apply.application.ApplicationProperties
 import apply.application.mail.MailSender
 import apply.infra.throttle.ExceedRateLimitException
 import apply.infra.throttle.RequestPerSecondLimiter
@@ -19,16 +18,12 @@ import com.amazonaws.services.simpleemail.model.SendRawEmailRequest
 import org.springframework.boot.autoconfigure.mail.MailProperties
 import org.springframework.core.io.ByteArrayResource
 import org.springframework.stereotype.Component
-import org.thymeleaf.ITemplateEngine
-import org.thymeleaf.context.Context
-import org.thymeleaf.spring5.ISpringTemplateEngine
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 import java.util.Properties
 import javax.activation.DataHandler
 import javax.activation.DataSource
 import javax.activation.MimetypesFileTypeMap
-import javax.mail.Message.RecipientType
 import javax.mail.Session
 import javax.mail.internet.InternetAddress
 import javax.mail.internet.MimeBodyPart
@@ -39,8 +34,6 @@ import javax.mail.util.ByteArrayDataSource
 @Component
 class AwsMailSender(
     private val mailProperties: MailProperties,
-    private val applicationProperties: ApplicationProperties,
-    private val templateEngine: ISpringTemplateEngine,
     awsProperties: AwsProperties
 ) : MailSender {
     private val client: AmazonSimpleEmailService = AmazonSimpleEmailServiceClientBuilder
@@ -85,8 +78,6 @@ class AwsMailSender(
         }
 
         val multipartMimeMessage = MultipartMimeMessage(
-            applicationProperties = applicationProperties,
-            templateEngine = templateEngine,
             subject = subject,
             userName = mailProperties.username,
             recipient = toAddresses,
@@ -107,8 +98,6 @@ private class MultipartMimeMessage(
     val message: MimeMessage = MimeMessage(Session.getDefaultInstance(Properties()))
 ) {
     constructor(
-        applicationProperties: ApplicationProperties,
-        templateEngine: ITemplateEngine,
         subject: String,
         userName: String,
         recipient: List<String>,
@@ -119,7 +108,7 @@ private class MultipartMimeMessage(
         setSubject(subject)
         setFrom(userName)
         setRecipient(recipient)
-        addBody(body, applicationProperties.url, templateEngine, mimeMultipart)
+        addBody(body, mimeMultipart)
         addAttachment(files, mimeMultipart)
     }
 
@@ -132,22 +121,17 @@ private class MultipartMimeMessage(
     }
 
     fun setRecipient(recipient: List<String>) {
-        message.setRecipients(RecipientType.BCC, recipient.map { InternetAddress(it) }.toTypedArray())
+        message.setRecipients(
+            javax.mail.Message.RecipientType.BCC,
+            recipient.map { InternetAddress(it) }.toTypedArray()
+        )
     }
 
-    fun addBody(body: String, url: String, templateEngine: ITemplateEngine, mimeMixedPart: MimeMultipart) {
+    fun addBody(body: String, mimeMixedPart: MimeMultipart) {
         val messageBody = MimeMultipart("alternative")
         val wrap = MimeBodyPart()
-        val context = Context().apply {
-            setVariables(
-                mapOf(
-                    "content" to body,
-                    "url" to url
-                )
-            )
-        }
         val htmlPart = MimeBodyPart()
-        htmlPart.setContent(templateEngine.process("mail/common", context), "text/html; charset=UTF-8")
+        htmlPart.setContent(body, "text/html; charset=UTF-8")
         messageBody.addBodyPart(htmlPart)
         wrap.setContent(messageBody)
         message.setContent(mimeMixedPart)
