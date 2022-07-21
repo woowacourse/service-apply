@@ -2,6 +2,8 @@ package apply.infra.mail
 
 import apply.application.ApplicationProperties
 import apply.application.mail.MailSender
+import apply.infra.throttle.ExceedRateLimitException
+import apply.infra.throttle.RequestPerSecondLimiter
 import com.amazonaws.auth.AWSStaticCredentialsProvider
 import com.amazonaws.auth.BasicAWSCredentials
 import com.amazonaws.regions.Regions
@@ -54,7 +56,13 @@ class AwsMailSender(
         .withRegion(Regions.AP_NORTHEAST_2)
         .build()
 
+    private val requestPerSecondLimiter = RequestPerSecondLimiter(14)
+
     override fun send(toAddress: String, subject: String, body: String) {
+        if (requestPerSecondLimiter.isExceed()) {
+            throw ExceedRateLimitException("예상보다 많은 요청이 왔어요. 잠시 후 다시 요청해주세요.")
+        }
+
         val request = SendEmailRequest()
             .withSource(mailProperties.username)
             .withDestination(Destination().withToAddresses(toAddress))
@@ -72,6 +80,10 @@ class AwsMailSender(
         body: String,
         attachments: Map<String, ByteArrayResource>
     ) {
+        if (requestPerSecondLimiter.isExceed()) {
+            throw ExceedRateLimitException("예상보다 많은 요청이 왔어요. 잠시 후 다시 요청해주세요.")
+        }
+
         val multipartMimeMessage = MultipartMimeMessage(
             applicationProperties = applicationProperties,
             templateEngine = templateEngine,
