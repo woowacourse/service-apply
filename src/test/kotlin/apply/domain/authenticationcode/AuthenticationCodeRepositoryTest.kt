@@ -3,7 +3,6 @@ package apply.domain.authenticationcode
 import apply.EMAIL
 import apply.createAuthenticationCode
 import io.kotest.core.spec.style.DescribeSpec
-import io.kotest.extensions.spring.SpringExtension
 import io.kotest.matchers.types.shouldBeSameInstanceAs
 import support.test.RepositoryTest
 import java.time.LocalDateTime
@@ -12,7 +11,6 @@ import java.time.LocalDateTime
 internal class AuthenticationCodeRepositoryTest(
     private val authenticationCodeRepository: AuthenticationCodeRepository
 ) : DescribeSpec({
-    extension(SpringExtension)
     describe("AuthenticationCodeRepository") {
         it("가장 최근에 생성된 인증 코드를 조회한다") {
             val now = LocalDateTime.now()

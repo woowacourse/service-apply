@@ -3,7 +3,6 @@ package apply.domain.mission
 import apply.createMission
 import io.kotest.assertions.assertSoftly
 import io.kotest.core.spec.style.DescribeSpec
-import io.kotest.extensions.spring.SpringExtension
 import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.collections.shouldHaveSize
@@ -17,7 +16,6 @@ internal class MissionRepositoryTest(
     private val missionRepository: MissionRepository,
     private val entityManager: TestEntityManager
 ) : DescribeSpec({
-    extension(SpringExtension)
     fun flushAndClear() {
         entityManager.flush()
         entityManager.clear()

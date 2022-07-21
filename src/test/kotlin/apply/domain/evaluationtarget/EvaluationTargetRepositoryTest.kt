@@ -1,7 +1,6 @@
 package apply.domain.evaluationtarget
 
 import io.kotest.core.spec.style.DescribeSpec
-import io.kotest.extensions.spring.SpringExtension
 import io.kotest.inspectors.forAll
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.collections.shouldHaveSize
@@ -13,7 +12,6 @@ import support.test.RepositoryTest
 internal class EvaluationTargetRepositoryTest(
     private val evaluationTargetRepository: EvaluationTargetRepository
 ) : DescribeSpec({
-    extension(SpringExtension)
 
     val evaluationTargets: List<EvaluationTarget> = listOf(
         EvaluationTarget(
