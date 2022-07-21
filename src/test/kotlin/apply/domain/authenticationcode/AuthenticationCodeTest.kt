@@ -3,58 +3,53 @@ package apply.domain.authenticationcode
 import apply.EMAIL
 import apply.INVALID_CODE
 import apply.VALID_CODE
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertAll
-import org.junit.jupiter.api.assertThrows
+import io.kotest.assertions.assertSoftly
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.booleans.shouldBeFalse
+import io.kotest.matchers.booleans.shouldBeTrue
+import io.kotest.matchers.nulls.shouldNotBeNull
 import java.time.LocalDateTime
 
-internal class AuthenticationCodeTest {
-    @Test
-    fun `인증 코드를 생성한다`() {
+class AuthenticationCodeTest : StringSpec({
+    "인증 코드를 생성한다" {
         val authenticationCode = AuthenticationCode(EMAIL)
-        assertAll(
-            { assertThat(authenticationCode.code).isNotNull() },
-            { assertThat(authenticationCode.authenticated).isFalse() },
-            { assertThat(authenticationCode.createdDateTime).isNotNull() }
-        )
+        assertSoftly(authenticationCode) {
+            code.shouldNotBeNull()
+            authenticated.shouldBeFalse()
+            createdDateTime.shouldNotBeNull()
+        }
     }
 
-    @Test
-    fun `코드를 인증한다`() {
+    "코드를 인증한다" {
         val authenticationCode = AuthenticationCode(EMAIL, VALID_CODE)
         authenticationCode.authenticate(VALID_CODE)
-        assertThat(authenticationCode.authenticated).isTrue()
+        authenticationCode.authenticated.shouldBeTrue()
     }
 
-    @Test
-    fun `이미 인증한 경우 다시 인증할 수 없다`() {
+    "이미 인증한 경우 다시 인증할 수 없다" {
         val authenticationCode = AuthenticationCode(EMAIL, VALID_CODE, true)
-        assertThrows<IllegalStateException> { authenticationCode.authenticate(VALID_CODE) }
+        shouldThrow<IllegalStateException> { authenticationCode.authenticate(VALID_CODE) }
     }
 
-    @Test
-    fun `코드가 일치하지 않으면 인증할 수 없다`() {
+    "코드가 일치하지 않으면 인증할 수 없다" {
         val authenticationCode = AuthenticationCode(EMAIL, VALID_CODE)
-        assertThrows<IllegalArgumentException> { authenticationCode.authenticate(INVALID_CODE) }
+        shouldThrow<IllegalArgumentException> { authenticationCode.authenticate(INVALID_CODE) }
     }
 
-    @Test
-    fun `인증시간이 10분이 지나면 인증할 수 없다`() {
+    "인증시간이 10분이 지나면 인증할 수 없다" {
         val now = LocalDateTime.now()
         val authenticationCode = AuthenticationCode(EMAIL, VALID_CODE, createdDateTime = now.minusMinutes(11L))
-        assertThrows<IllegalStateException> { authenticationCode.authenticate(VALID_CODE) }
+        shouldThrow<IllegalStateException> { authenticationCode.authenticate(VALID_CODE) }
     }
 
-    @Test
-    fun `일치하지 않은 코드로 검증한다`() {
+    "일치하지 않은 코드로 검증한다" {
         val authenticationCode = AuthenticationCode(EMAIL, VALID_CODE, true)
-        assertThrows<IllegalStateException> { authenticationCode.validate(INVALID_CODE) }
+        shouldThrow<IllegalStateException> { authenticationCode.validate(INVALID_CODE) }
     }
 
-    @Test
-    fun `인증 여부를 검증한다`() {
+    "인증 여부를 검증한다" {
         val authenticationCode = AuthenticationCode(EMAIL, VALID_CODE, false)
-        assertThrows<IllegalStateException> { authenticationCode.validate(VALID_CODE) }
+        shouldThrow<IllegalStateException> { authenticationCode.validate(VALID_CODE) }
     }
-}
+})

@@ -1,14 +1,12 @@
 package apply.domain.user
 
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
+import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.shouldNotBe
 
-internal class PasswordTest {
-    @Test
-    fun `변환된 비밀번호를 생성한다`() {
+class PasswordTest : StringSpec({
+    "변환된 비밀번호를 생성한다" {
         val input = "password"
         val password = Password(input)
-
-        assertThat(password.value).isNotEqualTo(input)
+        password.value shouldNotBe input
     }
-}
+})

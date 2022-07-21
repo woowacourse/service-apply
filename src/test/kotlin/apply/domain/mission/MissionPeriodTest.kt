@@ -1,22 +1,13 @@
 package apply.domain.mission
 
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
-import java.time.LocalDateTime
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.style.StringSpec
+import java.time.LocalDateTime.now
 
-class MissionPeriodTest {
-    private lateinit var now: LocalDateTime
+class MissionPeriodTest : StringSpec({
+    val now = now()
 
-    @BeforeEach
-    internal fun setUp() {
-        now = LocalDateTime.now()
+    "시작 일시는 종료 일시보다 이후일 수 없다" {
+        shouldThrow<IllegalArgumentException> { MissionPeriod(startDateTime = now, endDateTime = now.minusDays(1L)) }
     }
-
-    @Test
-    fun `시작 일시는 종료 일시보다 이후일 수 없다`() {
-        assertThrows<IllegalArgumentException> {
-            MissionPeriod(now, now.minusDays(1L))
-        }
-    }
-}
+})
