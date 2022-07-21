@@ -10,7 +10,7 @@ import java.time.LocalDateTime
 private const val MISSION_TITLE: String = "숫자야구게임"
 private const val MISSION_DESCRIPTION: String = "과제 설명입니다."
 private val START_DATE_TIME: LocalDateTime = LocalDateTime.now()
-private val END_DATE_TIME: LocalDateTime = LocalDateTime.now().plusDays(7)
+private val END_DATE_TIME: LocalDateTime = LocalDateTime.now().plusDays(7L)
 
 fun createMission(
     title: String = MISSION_TITLE,
