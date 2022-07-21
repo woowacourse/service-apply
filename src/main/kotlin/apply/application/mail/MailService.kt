@@ -2,6 +2,8 @@ package apply.application.mail
 
 import apply.application.ApplicationProperties
 import apply.domain.applicationform.ApplicationFormSubmittedEvent
+import apply.domain.mail.MailHistory
+import apply.domain.mail.MailHistoryRepository
 import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitment.getById
 import apply.domain.user.PasswordResetEvent
@@ -21,6 +23,7 @@ private const val MAIL_SENDING_UNIT = 50
 class MailService(
     private val userRepository: UserRepository,
     private val recruitmentRepository: RecruitmentRepository,
+    private val mailHistoryRepository: MailHistoryRepository,
     private val applicationProperties: ApplicationProperties,
     private val templateEngine: ISpringTemplateEngine,
     private val mailSender: MailSender,
@@ -99,5 +102,15 @@ class MailService(
         for (targetMailsPart in recipients.chunked(MAIL_SENDING_UNIT)) {
             mailSender.sendBcc(targetMailsPart, request.subject, body, files)
         }
+
+        mailHistoryRepository.save(
+            MailHistory(
+                request.subject,
+                request.body,
+                request.sender,
+                request.recipients,
+                request.sentTime
+            )
+        )
     }
 }
