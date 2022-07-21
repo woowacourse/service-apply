@@ -1,15 +1,7 @@
 package apply.ui.api
 
 import apply.EVALUATION_TARGET_NOTE
-import apply.application.EvaluationItemResponse
-import apply.application.EvaluationItemScoreData
-import apply.application.EvaluationTargetCsvService
-import apply.application.EvaluationTargetData
-import apply.application.EvaluationTargetResponse
-import apply.application.EvaluationTargetService
-import apply.application.GradeEvaluationResponse
-import apply.application.MailTargetResponse
-import apply.application.MailTargetService
+import apply.application.*
 import apply.createEvaluationItem
 import apply.domain.evaluationtarget.EvaluationAnswers
 import apply.domain.evaluationtarget.EvaluationStatus
@@ -26,14 +18,8 @@ import org.springframework.mock.web.MockMultipartFile
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders
 import org.springframework.restdocs.payload.JsonFieldType
-import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
-import org.springframework.restdocs.payload.PayloadDocumentation.requestFields
-import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
-import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
-import org.springframework.restdocs.request.RequestDocumentation.partWithName
-import org.springframework.restdocs.request.RequestDocumentation.pathParameters
-import org.springframework.restdocs.request.RequestDocumentation.requestParameters
-import org.springframework.restdocs.request.RequestDocumentation.requestParts
+import org.springframework.restdocs.payload.PayloadDocumentation.*
+import org.springframework.restdocs.request.RequestDocumentation.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.io.File

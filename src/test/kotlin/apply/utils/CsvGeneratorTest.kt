@@ -10,9 +10,9 @@ class CsvGeneratorTest : DescribeSpec({
             // given
             val headers = arrayOf("header1", "header2", "header3")
             val csvRows = listOf(
-                    CsvRow("csvContent1", "csvContent2", "csvContent3"),
-                    CsvRow("csvContent4", "csvContent5", "csvContent6"),
-                    CsvRow("csvContent7", "csvContent8", "csvContent9")
+                CsvRow("csvContent1", "csvContent2", "csvContent3"),
+                CsvRow("csvContent4", "csvContent5", "csvContent6"),
+                CsvRow("csvContent7", "csvContent8", "csvContent9")
             )
 
             // when
@@ -20,10 +20,10 @@ class CsvGeneratorTest : DescribeSpec({
 
             // then
             val expected = listOf(
-                    "header1,header2,header3",
-                    "csvContent1,csvContent2,csvContent3",
-                    "csvContent4,csvContent5,csvContent6",
-                    "csvContent7,csvContent8,csvContent9"
+                "header1,header2,header3",
+                "csvContent1,csvContent2,csvContent3",
+                "csvContent4,csvContent5,csvContent6",
+                "csvContent7,csvContent8,csvContent9"
             )
             BufferedReader(actual.reader()).readLines() shouldBe expected
         }

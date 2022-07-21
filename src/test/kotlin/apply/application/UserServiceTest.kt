@@ -1,18 +1,7 @@
 package apply.application
 
-import apply.BIRTHDAY
-import apply.EMAIL
-import apply.NAME
-import apply.PASSWORD
-import apply.RANDOM_PASSWORD_TEXT
-import apply.WRONG_PASSWORD
-import apply.createUser
-import apply.domain.user.Password
-import apply.domain.user.UnidentifiedUserException
-import apply.domain.user.User
-import apply.domain.user.UserRepository
-import apply.domain.user.findByEmail
-import apply.domain.user.getById
+import apply.*
+import apply.domain.user.*
 import io.kotest.assertions.assertSoftly
 import io.kotest.assertions.throwables.shouldNotThrow
 import io.kotest.assertions.throwables.shouldNotThrowAny

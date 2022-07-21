@@ -8,13 +8,8 @@ import apply.utils.CsvGenerator
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
-import io.mockk.Runs
-import io.mockk.every
+import io.mockk.*
 import io.mockk.impl.annotations.MockK
-import io.mockk.just
-import io.mockk.mockk
-import io.mockk.mockkClass
-import io.mockk.verify
 import support.test.UnitTest
 import java.io.InputStream
 
@@ -39,7 +34,7 @@ class EvaluationTargetCsvServiceTest : DescribeSpec({
     @MockK
     var csvGenerator: CsvGenerator = mockk()
 
-    var evaluationTargetCsvService: EvaluationTargetCsvService = EvaluationTargetCsvService(
+    var evaluationTargetCsvService = EvaluationTargetCsvService(
         evaluationTargetService,
         evaluationItemRepository,
         missionRepository,

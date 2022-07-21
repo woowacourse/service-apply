@@ -1,10 +1,6 @@
 package apply.ui.api
 
-import apply.application.ApplicantAndFormResponse
-import apply.application.ApplicantService
-import apply.application.ApplicationFormResponse
-import apply.application.ApplicationFormService
-import apply.application.MyApplicationFormResponse
+import apply.application.*
 import apply.createApplicationForm
 import apply.createApplicationForms
 import apply.createUser

@@ -17,7 +17,7 @@ class MailHistoryServiceTest : DescribeSpec({
     @MockK
     val mailHistoryRepository: MailHistoryRepository = mockk()
 
-    val mailHistoryService: MailHistoryService = MailHistoryService(mailHistoryRepository)
+    val mailHistoryService = MailHistoryService(mailHistoryRepository)
 
     describe("MailHistoryService") {
         it("메일 이력을 저장한다") {

@@ -15,12 +15,11 @@ import io.mockk.slot
 import support.test.UnitTest
 
 @UnitTest
-class ApplicantServiceTest : DescribeSpec({
+internal class ApplicantServiceTest : DescribeSpec({
     val userRepository: UserRepository = mockk()
     val cheaterRepository: CheaterRepository = mockk()
     val applicationFormRepository: ApplicationFormRepository = mockk()
-    val applicantService: ApplicantService =
-        ApplicantService(applicationFormRepository, userRepository, cheaterRepository)
+    val applicantService = ApplicantService(applicationFormRepository, userRepository, cheaterRepository)
 
     val userId = 1L
     val email = "email@email.com"

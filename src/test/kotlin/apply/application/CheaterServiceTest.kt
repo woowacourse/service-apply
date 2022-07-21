@@ -15,7 +15,7 @@ import support.test.UnitTest
 internal class CheaterServiceTest : DescribeSpec({
     val userRepository: UserRepository = mockk()
     val cheaterRepository: CheaterRepository = mockk()
-    val cheaterService: CheaterService = CheaterService(userRepository, cheaterRepository)
+    val cheaterService = CheaterService(userRepository, cheaterRepository)
 
     describe("CheaterService") {
         it("부정 행위자를 추가한다") {

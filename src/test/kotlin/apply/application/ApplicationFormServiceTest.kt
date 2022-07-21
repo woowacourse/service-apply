@@ -1,11 +1,6 @@
 package apply.application
 
-import apply.createAnswerRequest
-import apply.createApplicationForm
-import apply.createApplicationForms
-import apply.createExceededAnswerRequest
-import apply.createRecruitment
-import apply.createRecruitmentItem
+import apply.*
 import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.applicationform.ApplicationValidator
@@ -13,7 +8,6 @@ import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitmentitem.RecruitmentItem
 import apply.domain.recruitmentitem.RecruitmentItemRepository
-import apply.pass
 import io.kotest.assertions.assertSoftly
 import io.kotest.assertions.throwables.shouldNotThrow
 import io.kotest.assertions.throwables.shouldNotThrowAny
@@ -45,9 +39,9 @@ class ApplicationFormServiceTest : DescribeSpec({
     @MockK
     val applicationValidator: ApplicationValidator = mockk()
 
-    val userId: Long = 1L
+    val userId = 1L
 
-    val applicationFormService: ApplicationFormService = ApplicationFormService(
+    val applicationFormService = ApplicationFormService(
         applicationFormRepository,
         recruitmentRepository,
         recruitmentItemRepository,
@@ -58,7 +52,7 @@ class ApplicationFormServiceTest : DescribeSpec({
     val applicationForm2: ApplicationForm = createApplicationForm(userId = 2L)
     val applicationFormSubmitted: ApplicationForm = createApplicationForm(userId = 3L).apply { submit(pass) }
     val applicationForms: List<ApplicationForm> = createApplicationForms()
-    val applicationFormResponse: ApplicationFormResponse = ApplicationFormResponse(
+    val applicationFormResponse = ApplicationFormResponse(
         id = applicationForm1.id,
         recruitmentId = applicationForm1.recruitmentId,
         referenceUrl = applicationForm1.referenceUrl,
@@ -68,14 +62,14 @@ class ApplicationFormServiceTest : DescribeSpec({
         modifiedDateTime = applicationForm1.modifiedDateTime,
         submittedDateTime = applicationForm1.submittedDateTime
     )
-    val createApplicationFormRequest: CreateApplicationFormRequest = CreateApplicationFormRequest(userId)
-    val updateApplicationFormRequest: UpdateApplicationFormRequest = UpdateApplicationFormRequest(
+    val createApplicationFormRequest = CreateApplicationFormRequest(userId)
+    val updateApplicationFormRequest = UpdateApplicationFormRequest(
         recruitmentId = applicationForm1.recruitmentId,
         referenceUrl = applicationForm1.referenceUrl,
         submitted = false,
         answers = applicationForm1.answers.items.map { AnswerRequest(it.contents, it.recruitmentItemId) }
     )
-    val updateApplicationFormRequestWithPassword: UpdateApplicationFormRequest = UpdateApplicationFormRequest(
+    val updateApplicationFormRequestWithPassword = UpdateApplicationFormRequest(
         recruitmentId = applicationForm1.recruitmentId,
         referenceUrl = applicationForm1.referenceUrl,
         submitted = false,

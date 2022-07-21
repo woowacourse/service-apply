@@ -11,12 +11,7 @@ import apply.domain.recruitmentitem.RecruitmentItemRepository
 import apply.domain.term.TermRepository
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
-import io.mockk.Runs
-import io.mockk.every
-import io.mockk.just
-import io.mockk.mockk
-import io.mockk.slot
-import io.mockk.verify
+import io.mockk.*
 import org.springframework.data.repository.findByIdOrNull
 import support.test.UnitTest
 

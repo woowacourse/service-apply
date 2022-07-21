@@ -36,8 +36,8 @@ internal class RecruitmentFormTest : DescribeSpec({
 
         it("공개 여부 값이 설정되어 있는지 확인") {
             listOf(
-                    true,
-                    false
+                true,
+                false
             ).forAll { hidden ->
                 val actual = createRecruitmentForm(hidden = hidden).bindOrNull()
                 actual.shouldNotBeNull()
@@ -50,8 +50,8 @@ internal class RecruitmentFormTest : DescribeSpec({
             val form = createRecruitmentForm()
             form.fill(data)
             form.bindOrNull() shouldBe createRecruitmentData(
-                    id = 1L,
-                    recruitmentItems = listOf(createRecruitmentItemData(id = 1L))
+                id = 1L,
+                recruitmentItems = listOf(createRecruitmentItemData(id = 1L))
             )
         }
     }

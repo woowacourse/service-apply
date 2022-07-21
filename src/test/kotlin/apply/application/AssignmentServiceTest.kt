@@ -1,10 +1,6 @@
 package apply.application
 
-import apply.createAssignment
-import apply.createAssignmentRequest
-import apply.createEvaluationTarget
-import apply.createMission
-import apply.createUser
+import apply.*
 import apply.domain.assignment.AssignmentRepository
 import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.evaluationtarget.EvaluationTargetRepository
@@ -29,7 +25,7 @@ class AssignmentServiceTest : DescribeSpec({
 
     val evaluationTargetRepository: EvaluationTargetRepository = mockk()
 
-    val assignmentService: AssignmentService =
+    val assignmentService =
         AssignmentService(assignmentRepository, missionRepository, evaluationTargetRepository)
 
     val loginUser = createUser()

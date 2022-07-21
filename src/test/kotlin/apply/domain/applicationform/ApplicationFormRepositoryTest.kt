@@ -3,12 +3,9 @@ package apply.domain.applicationform
 import apply.createApplicationForm
 import apply.pass
 import io.kotest.assertions.assertSoftly
-import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.shouldBe
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.assertAll
 import support.test.RepositoryTest
 
 @RepositoryTest
