@@ -17,7 +17,7 @@ import org.springframework.transaction.event.TransactionalEventListener
 import org.thymeleaf.context.Context
 import org.thymeleaf.spring5.ISpringTemplateEngine
 
-private const val MAIL_SENDING_UNIT = 50
+private const val MAIL_SENDING_UNIT: Int = 50
 
 @Service
 class MailService(

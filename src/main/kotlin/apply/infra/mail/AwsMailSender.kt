@@ -24,6 +24,7 @@ import java.util.Properties
 import javax.activation.DataHandler
 import javax.activation.DataSource
 import javax.activation.MimetypesFileTypeMap
+import javax.mail.Message.RecipientType
 import javax.mail.Session
 import javax.mail.internet.InternetAddress
 import javax.mail.internet.MimeBodyPart
@@ -122,7 +123,7 @@ private class MultipartMimeMessage(
 
     fun setRecipient(recipient: List<String>) {
         message.setRecipients(
-            javax.mail.Message.RecipientType.BCC,
+            RecipientType.BCC,
             recipient.map { InternetAddress(it) }.toTypedArray()
         )
     }
