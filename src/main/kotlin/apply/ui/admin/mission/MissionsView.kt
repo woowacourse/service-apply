@@ -68,7 +68,7 @@ class MissionsView(
     }
 
     private fun createButtonRenderer(): Renderer<MissionAndEvaluationResponse> {
-        return ComponentRenderer<Component, MissionAndEvaluationResponse> { it -> createButtons(it) }
+        return ComponentRenderer { it -> createButtons(it) }
     }
 
     private fun createButtons(mission: MissionAndEvaluationResponse): Component {

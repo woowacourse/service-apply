@@ -10,6 +10,7 @@ import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.html.H2
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
+import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.data.renderer.ComponentRenderer
 import com.vaadin.flow.data.renderer.Renderer
 import support.views.addSortableColumn
@@ -24,10 +25,16 @@ class IndividualMailTargetDialog(
     private val mailTargetsGrid: Grid<UserResponse> = createMailTargetsGrid()
 
     init {
-        add(H2("개별 불러오기"), createSearchFilter(), mailTargetsGrid, createButtons())
+        add(createHeader(), createSearchFilter(), mailTargetsGrid, createButtons())
         width = "900px"
-        height = "70%"
         open()
+    }
+
+    private fun createHeader(): VerticalLayout {
+        return VerticalLayout(H2("개별 불러오기")).apply {
+            isPadding = false
+            element.style.set("margin-bottom", "10px")
+        }
     }
 
     private fun createSearchFilter(): Component {
@@ -48,7 +55,7 @@ class IndividualMailTargetDialog(
     }
 
     private fun createAddButton(): Renderer<UserResponse> {
-        return ComponentRenderer<Component, UserResponse> { applicantResponse ->
+        return ComponentRenderer { applicantResponse ->
             createPrimarySmallButton("추가") {
                 accept(MailTargetResponse(applicantResponse))
             }.apply {
@@ -59,14 +66,14 @@ class IndividualMailTargetDialog(
 
     private fun createButtons(): Component {
         return HorizontalLayout(createCancelButton()).apply {
-            setSizeFull()
+            setWidthFull()
             justifyContentMode = FlexComponent.JustifyContentMode.CENTER
-            element.style.set("margin-top", "10px")
+            element.style.set("margin-top", "20px")
         }
     }
 
     private fun createCancelButton(): Button {
-        return createContrastButton("취소") {
+        return createContrastButton("닫기") {
             close()
         }
     }

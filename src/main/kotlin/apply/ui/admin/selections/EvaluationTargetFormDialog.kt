@@ -38,7 +38,6 @@ class EvaluationTargetFormDialog(
 
         add(createHeader(), createAssignmentForm(), evaluationTargetForm, createButtons(reloadComponents))
         width = "800px"
-        height = "90%"
         open()
     }
 
@@ -58,7 +57,7 @@ class EvaluationTargetFormDialog(
 
     private fun createButtons(reloadComponent: () -> Unit): Component {
         return HorizontalLayout(getCreateAddButton(reloadComponent), createCancelButton()).apply {
-            setSizeFull()
+            setWidthFull()
             justifyContentMode = FlexComponent.JustifyContentMode.CENTER
             element.style.set("margin-top", "20px")
         }

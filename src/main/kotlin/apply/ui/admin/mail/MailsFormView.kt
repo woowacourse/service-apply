@@ -44,7 +44,7 @@ class MailsFormView(
     private val submitButton: Component = createSubmitButton()
 
     init {
-        add(Title("메일"), mailForm, createButtons())
+        add(Title("메일 쓰기"), mailForm, createButtons())
     }
 
     override fun setParameter(event: BeforeEvent, @WildcardParameter parameter: String) {

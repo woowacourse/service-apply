@@ -120,7 +120,7 @@ class MailForm(
     }
 
     private fun createRemoveButton(): Renderer<MailTargetResponse> {
-        return ComponentRenderer<Component, MailTargetResponse> { response ->
+        return ComponentRenderer { response ->
             createErrorSmallButton("제거") {
                 refreshGrid { mailTargets.remove(response) }
             }

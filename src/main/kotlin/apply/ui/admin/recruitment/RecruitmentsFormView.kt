@@ -1,6 +1,7 @@
 package apply.ui.admin.recruitment
 
 import apply.application.RecruitmentService
+import apply.application.TermService
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
@@ -22,10 +23,11 @@ import support.views.toDisplayName
 
 @Route(value = "admin/recruitments", layout = BaseLayout::class)
 class RecruitmentsFormView(
-    private val recruitmentService: RecruitmentService
+    private val recruitmentService: RecruitmentService,
+    termService: TermService,
 ) : VerticalLayout(), HasUrlParameter<String> {
     private val title: Title = Title()
-    private val recruitmentForm: RecruitmentForm = RecruitmentForm(recruitmentService.findAllTermSelectData())
+    private val recruitmentForm: RecruitmentForm = RecruitmentForm(termService.findAll())
     private val submitButton: Button = createSubmitButton()
 
     init {

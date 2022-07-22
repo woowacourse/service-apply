@@ -24,7 +24,6 @@ class CheaterFormDialog(
     init {
         add(createHeader(), cheaterRegistrationForm, createButtons(reloadComponents))
         width = "800px"
-        height = "60%"
         open()
     }
 
@@ -38,7 +37,7 @@ class CheaterFormDialog(
 
     private fun createButtons(reloadComponent: () -> Unit): Component {
         return HorizontalLayout(getCreateAddButton(reloadComponent), createCancelButton()).apply {
-            setSizeFull()
+            setWidthFull()
             justifyContentMode = FlexComponent.JustifyContentMode.CENTER
             element.style.set("margin-top", "20px")
         }

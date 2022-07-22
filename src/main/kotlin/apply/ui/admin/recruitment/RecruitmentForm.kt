@@ -2,7 +2,8 @@ package apply.ui.admin.recruitment
 
 import apply.application.RecruitmentData
 import apply.application.RecruitmentItemData
-import apply.application.TermSelectData
+import apply.application.TermData
+import apply.application.TermResponse
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.datetimepicker.DateTimePicker
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup
@@ -17,8 +18,8 @@ import java.time.LocalDateTime
 
 class RecruitmentForm() : BindingIdentityFormLayout<RecruitmentData>(RecruitmentData::class) {
     private val title: TextField = TextField("모집명")
-    private val term: Select<TermSelectData> = createItemSelect<TermSelectData>("기수").apply {
-        setItemLabelGenerator(TermSelectData::name)
+    private val term: Select<TermData> = createItemSelect<TermData>("기수").apply {
+        setItemLabelGenerator(TermData::name)
         isEmptySelectionAllowed = false
     }
     private val startDateTime: DateTimePicker = DateTimePicker("시작 일시")
@@ -28,19 +29,19 @@ class RecruitmentForm() : BindingIdentityFormLayout<RecruitmentData>(Recruitment
     private val recruitmentItems: MutableList<RecruitmentItemForm> = mutableListOf()
 
     init {
-        add(title, term, startDateTime, endDateTime, recruitable, hidden)
+        add(term, title, startDateTime, endDateTime, recruitable, hidden)
         addFormItem(createAddButton(), "모집 항목")
         setResponsiveSteps(ResponsiveStep("0", 1))
         drawRequired()
     }
 
-    constructor(terms: List<TermSelectData>) : this() {
-        term.setItems(terms)
+    constructor(terms: List<TermResponse>) : this() {
+        term.setItems(terms.map { TermData(it.name, it.id) })
     }
 
     constructor(
         title: String,
-        term: TermSelectData,
+        term: TermData,
         startDateTime: LocalDateTime,
         endDateTime: LocalDateTime,
         recruitable: Boolean,
