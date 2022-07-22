@@ -1,7 +1,6 @@
 package apply.application
 
 import apply.application.mail.MailData
-import apply.domain.mail.MailHistory
 import apply.domain.mail.MailHistoryRepository
 import apply.domain.mail.getById
 import org.springframework.stereotype.Service
@@ -12,18 +11,6 @@ import javax.transaction.Transactional
 class MailHistoryService(
     private val mailHistoryRepository: MailHistoryRepository
 ) {
-    fun save(request: MailData) {
-        mailHistoryRepository.save(
-            MailHistory(
-                request.subject,
-                request.body,
-                request.sender,
-                request.recipients,
-                request.sentTime
-            )
-        )
-    }
-
     fun findAll(): List<MailData> {
         return mailHistoryRepository.findAll().map { MailData(it) }
     }
