@@ -2,8 +2,8 @@ package apply.ui.api
 
 import apply.application.mail.MailData
 import apply.application.mail.MailService
+import apply.domain.user.User
 import apply.security.LoginUser
-import org.apache.catalina.User
 import org.springframework.core.io.ByteArrayResource
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
