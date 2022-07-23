@@ -1,8 +1,6 @@
 package apply.infra.mail
 
 import apply.application.mail.MailSender
-import apply.infra.throttle.ExceedRateLimitException
-import apply.infra.throttle.RequestPerSecondLimiter
 import com.amazonaws.auth.AWSStaticCredentialsProvider
 import com.amazonaws.auth.BasicAWSCredentials
 import com.amazonaws.regions.Regions
@@ -18,6 +16,7 @@ import com.amazonaws.services.simpleemail.model.SendRawEmailRequest
 import org.springframework.boot.autoconfigure.mail.MailProperties
 import org.springframework.core.io.ByteArrayResource
 import org.springframework.stereotype.Component
+import support.infra.RateLimiter
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 import java.util.Properties
@@ -50,13 +49,10 @@ class AwsMailSender(
         .withRegion(Regions.AP_NORTHEAST_2)
         .build()
 
-    private val requestPerSecondLimiter = RequestPerSecondLimiter(14)
+    private val rateLimiter = RateLimiter(14)
 
     override fun send(toAddress: String, subject: String, body: String) {
-        if (requestPerSecondLimiter.isExceed()) {
-            throw ExceedRateLimitException("예상보다 많은 요청이 왔어요. 잠시 후 다시 요청해주세요.")
-        }
-
+        rateLimiter.acquire()
         val request = SendEmailRequest()
             .withSource(mailProperties.username)
             .withDestination(Destination().withToAddresses(toAddress))
@@ -74,10 +70,7 @@ class AwsMailSender(
         body: String,
         attachments: Map<String, ByteArrayResource>
     ) {
-        if (requestPerSecondLimiter.isExceed()) {
-            throw ExceedRateLimitException("예상보다 많은 요청이 왔어요. 잠시 후 다시 요청해주세요.")
-        }
-
+        rateLimiter.acquire()
         val multipartMimeMessage = MultipartMimeMessage(
             subject = subject,
             userName = mailProperties.username,
@@ -85,7 +78,6 @@ class AwsMailSender(
             body = body,
             files = attachments
         )
-
         val rawEmailRequest = multipartMimeMessage.getRawEmailRequest()
         client.sendRawEmail(rawEmailRequest)
     }

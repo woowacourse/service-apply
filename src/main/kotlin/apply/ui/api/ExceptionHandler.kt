@@ -2,7 +2,6 @@ package apply.ui.api
 
 import apply.domain.applicationform.DuplicateApplicationException
 import apply.domain.user.UnidentifiedUserException
-import apply.infra.throttle.ExceedRateLimitException
 import apply.security.LoginFailedException
 import com.fasterxml.jackson.databind.exc.InvalidFormatException
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.context.request.WebRequest
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
+import support.infra.ExceededRequestException
 import javax.persistence.EntityNotFoundException
 
 @RestControllerAdvice
@@ -85,8 +85,8 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
             .body(ApiResponse.error(exception.message))
     }
 
-    @ExceptionHandler(ExceedRateLimitException::class)
-    fun handleExceedRateLimitException(exception: ExceedRateLimitException): ResponseEntity<ApiResponse<Unit>> {
+    @ExceptionHandler(ExceededRequestException::class)
+    fun handleExceedRateLimitException(exception: ExceededRequestException): ResponseEntity<ApiResponse<Unit>> {
         logger.error("message", exception)
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
             .header(HttpHeaders.RETRY_AFTER, "1")
