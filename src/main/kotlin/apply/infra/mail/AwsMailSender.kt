@@ -79,7 +79,7 @@ class AwsMailSender(
             files = attachments
         )
         val rawEmailRequest = multipartMimeMessage.getRawEmailRequest()
-        client.sendRawEmail(rawEmailRequest)
+        client.sendRawEmail(rawEmailRequest) // TODO MessageRejectedException 처리
     }
 
     private fun createContent(data: String): Content {

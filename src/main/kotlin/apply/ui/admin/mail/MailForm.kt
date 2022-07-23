@@ -36,6 +36,7 @@ class MailForm(
     private val mailProperties: MailProperties
 ) : BindingFormLayout<MailData>(MailData::class) {
     private val subject: TextField = TextField("제목").apply { setWidthFull() }
+    private val sender: TextField = createSender()
     private val body: TextArea = createBody()
     private val mailTargets: MutableSet<MailTargetResponse> = mutableSetOf()
     private val uploadFile: MutableMap<String, ByteArrayResource> = mutableMapOf()
@@ -44,13 +45,13 @@ class MailForm(
     private val fileUpload: Upload = createFileUpload()
 
     init {
-        add(subject, createSender(), recipientFilter, mailTargetsGrid, body, fileUpload)
+        add(subject, sender, recipientFilter, mailTargetsGrid, body, fileUpload)
         setResponsiveSteps(ResponsiveStep("0", 1))
         drawRequired()
         refreshGridFooter()
     }
 
-    private fun createSender(): Component {
+    private fun createSender(): TextField {
         return TextField("보낸사람").apply {
             value = mailProperties.username
             isReadOnly = true
