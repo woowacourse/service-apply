@@ -1,16 +1,25 @@
 package apply.acceptance.fixture
 
+import apply.application.RecruitmentItemData
+
 class RecruitmentItem(
     val title: String,
     val position: Int,
     val maximumLength: Int,
     val description: String
-)
+) {
+    constructor(recruitmentItemData: RecruitmentItemData) : this(
+        recruitmentItemData.title,
+        recruitmentItemData.position,
+        recruitmentItemData.maximumLength,
+        recruitmentItemData.description
+    )
+}
 
 class RecruitmentItemBuilder {
     var title: String = "프로그래밍 학습 과정과 현재 자신이 생각하는 역량은?"
     var position: Int = 1
-    var maximumLength = 1000
+    var maximumLength: Int = 1000
     var description: String = "우아한테크코스는..."
 
     fun build(): RecruitmentItem {
