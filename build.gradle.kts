@@ -25,7 +25,6 @@ repositories {
 }
 
 extra["vaadinVersion"] = "14.3.3"
-extra["kotlin-coroutines.version"] = "1.6.0"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -55,6 +54,7 @@ dependencies {
     asciidoctor("org.springframework.restdocs:spring-restdocs-asciidoctor")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
     testImplementation("io.kotest:kotest-runner-junit5:5.3.2")
+    testImplementation("io.rest-assured:rest-assured:3.3.0")
 }
 
 dependencyManagement {
