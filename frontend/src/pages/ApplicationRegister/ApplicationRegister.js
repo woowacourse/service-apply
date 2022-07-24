@@ -75,7 +75,7 @@ const ApplicationRegister = () => {
 
       setModifiedDateTime(formatDateTime(new Date()));
       alert(SUCCESS_MESSAGE.API.SUBMIT_APPLICATION);
-      navigate(PATH.HOME);
+      navigate(PATH.HOME, { replace: true });
     } catch (error) {
       handleSaveError(error);
     }
@@ -106,7 +106,7 @@ const ApplicationRegister = () => {
         search: generateQuery({ recruitmentId }),
       };
 
-      navigate(path);
+      navigate(path, { replace: true });
     } catch (error) {
       handleSaveError(error);
     }
