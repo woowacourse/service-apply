@@ -1,20 +1,34 @@
 package apply.acceptance.fixture
 
+import apply.application.RecruitmentData
 import apply.ui.api.ApiResponse
 import io.restassured.RestAssured
 import io.restassured.http.ContentType
 import io.restassured.mapper.TypeRef
 import java.time.LocalDateTime
 
-class Recruitment(
-    val title: String,
-    val term: Term,
-    val startDateTime: LocalDateTime,
-    val endDateTime: LocalDateTime,
-    val recruitable: Boolean,
-    val hidden: Boolean,
-    val recruitmentItems: List<RecruitmentItem>
-)
+data class Recruitment(
+    var title: String,
+    var term: Term,
+    var startDateTime: LocalDateTime,
+    var endDateTime: LocalDateTime,
+    var recruitable: Boolean,
+    var hidden: Boolean,
+    var recruitmentItems: List<RecruitmentItem>,
+    var id: Long
+) {
+    constructor(recruitmentData: RecruitmentData) : this(
+        recruitmentData.title,
+        Term(recruitmentData.term),
+        recruitmentData.startDateTime,
+        recruitmentData.endDateTime,
+        recruitmentData.recruitable,
+        recruitmentData.hidden,
+        recruitmentData.recruitmentItems
+            .map(::RecruitmentItem),
+        recruitmentData.id
+    )
+}
 
 class RecruitmentBuilder {
     var title: String = "웹 백엔드 3기"
@@ -22,8 +36,8 @@ class RecruitmentBuilder {
     lateinit var term: Term
     var startDateTime: LocalDateTime = LocalDateTime.now().minusYears(1)
     var endDateTime: LocalDateTime = LocalDateTime.now().plusYears(1)
-    var recruitable = false
-    var hidden = true
+    var recruitable: Boolean = false
+    var hidden: Boolean = true
     var recruitmentItems: List<RecruitmentItem> = recruitmentItems {
         recruitmentItem()
         recruitmentItem {
@@ -39,6 +53,7 @@ class RecruitmentBuilder {
             description = "우아한테크코스는..."
         }
     }
+    var id: Long = 0L
 
     fun build(): Recruitment {
         if (!::term.isInitialized) {
@@ -52,28 +67,32 @@ class RecruitmentBuilder {
             endDateTime,
             recruitable,
             hidden,
-            recruitmentItems
+            recruitmentItems,
+            id
         )
 
-        postRecruitment(recruitment)
-        return recruitment
+        return postRecruitment(recruitment)
     }
 
-    private fun postRecruitment(recruitment: Recruitment) {
-        RestAssured.given()
+    private fun postRecruitment(recruitment: Recruitment): Recruitment {
+        val savedRecruitmentData = RestAssured.given()
             .contentType(ContentType.JSON)
             .body(recruitment)
             .`when`()
             .post("/api/recruitments")
+            .`as`(object : TypeRef<ApiResponse<RecruitmentData>>() {})
+            .body as RecruitmentData
+        return Recruitment(savedRecruitmentData)
     }
 
     private fun getTermById(): Term {
-        return RestAssured.given()
+        val term = RestAssured.given()
             .get("/api/terms/$termId")
             .then()
             .extract()
-            .`as`(object : TypeRef<ApiResponse<Term>>() {})
-            .body as Term
+            .`as`(object : TypeRef<ApiResponse<apply.domain.term.Term>>() {})
+            .body as apply.domain.term.Term
+        return Term(term.name, term.id)
     }
 }
 
