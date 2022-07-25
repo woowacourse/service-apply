@@ -99,8 +99,14 @@ class MailService(
         }
         val body = templateEngine.process("mail/common", context)
         val recipients = request.recipients + mailProperties.username
-        for (targetMailsPart in recipients.chunked(MAIL_SENDING_UNIT)) {
-            mailSender.sendBcc(targetMailsPart, request.subject, body, files)
+
+        // TODO: 성공과 실패를 분리하여 히스토리 관리
+        val succeeded = mutableListOf<String>()
+        val failed = mutableListOf<String>()
+        for (addresses in recipients.chunked(MAIL_SENDING_UNIT)) {
+            runCatching { mailSender.sendBcc(addresses, request.subject, body, files) }
+                .onSuccess { succeeded.addAll(addresses) }
+                .onFailure { failed.addAll(addresses) }
         }
 
         mailHistoryRepository.save(
