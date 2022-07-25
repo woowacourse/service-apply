@@ -29,11 +29,12 @@ fun createAssignmentRequest(
 }
 
 fun createAssignmentResponse(
+    id: Long = 1L,
     githubUsername: String = GITHUB_USERNAME,
     pullRequestUrl: String = PULL_REQUEST_URL,
     note: String = NOTE
 ): AssignmentResponse {
-    return AssignmentResponse(githubUsername, pullRequestUrl, note)
+    return AssignmentResponse(id, githubUsername, pullRequestUrl, note)
 }
 
 fun createAssignmentData(

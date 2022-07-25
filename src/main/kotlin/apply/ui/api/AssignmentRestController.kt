@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import support.toUri
 import javax.validation.Valid
 
 @RestController
@@ -27,9 +28,11 @@ class AssignmentRestController(
         @PathVariable missionId: Long,
         @RequestBody @Valid request: AssignmentRequest,
         @LoginUser user: User
-    ): ResponseEntity<Unit> {
-        assignmentService.create(missionId, user.id, request)
-        return ResponseEntity.ok().build()
+    ): ResponseEntity<ApiResponse<AssignmentResponse>> {
+        val response = assignmentService.create(missionId, user.id, request)
+        return ResponseEntity
+            .created("/missions/${response.id}/assignments/me".toUri())
+            .body(ApiResponse.success(response))
     }
 
     @GetMapping("/missions/{missionId}/assignments/me")

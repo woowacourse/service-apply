@@ -37,7 +37,15 @@ data class AssignmentData(
 }
 
 data class AssignmentResponse(
+    val id: Long,
     val githubUsername: String,
     val pullRequestUrl: String,
     val note: String
-)
+) {
+    constructor(assignment: Assignment) : this(
+        assignment.id,
+        assignment.githubUsername,
+        assignment.pullRequestUrl,
+        assignment.note
+    )
+}
