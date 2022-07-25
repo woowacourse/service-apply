@@ -22,6 +22,7 @@ import support.views.EDIT_VALUE
 import support.views.FORM_URL_PATTERN
 import support.views.Title
 import support.views.createContrastButton
+import support.views.createNotification
 import support.views.createPrimaryButton
 
 @Route(value = "admin/mails", layout = BaseLayout::class)
@@ -65,8 +66,11 @@ class MailsFormView(
 
     private fun createSubmitButton(): Button {
         return createPrimaryButton("보내기") {
-            mailForm.bindOrNull()?.let {
-                mailService.sendMailsByBcc(it, it.attachments)
+            val result = mailForm.bindOrNull()
+            if (result == null) {
+                createNotification("받는사람을 한 명 이상 지정해야 합니다.")
+            } else {
+                mailService.sendMailsByBcc(result, result.attachments)
                 UI.getCurrent().navigate(MailsView::class.java)
             }
         }
