@@ -32,6 +32,7 @@ class RateLimiter(
     private fun sync(requestTime: Long) {
         while (available.isNotEmpty()) {
             val elapsedTime = requestTime - available.peek()
+            require(elapsedTime >= 0) { "잘못된 요청 시간입니다." }
             if (elapsedTime.milliseconds < 1.seconds) {
                 break
             }
