@@ -4,6 +4,7 @@ import apply.application.ApplicantAndFormResponse
 import apply.application.ApplicantService
 import apply.application.ApplicationFormResponse
 import apply.application.ApplicationFormService
+import apply.application.CreateApplicationFormRequest
 import apply.application.MyApplicationFormResponse
 import apply.createApplicationForm
 import apply.createApplicationForms
@@ -15,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.get
+import org.springframework.test.web.servlet.post
 
 @WebMvcTest(
     controllers = [ApplicationFormRestController::class]
@@ -57,6 +59,20 @@ internal class ApplicationFormRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isOk }
             content { json(objectMapper.writeValueAsString(ApiResponse.success(myApplicationFormResponses))) }
+        }
+    }
+
+    @Test
+    fun `지원서를 생성한다`() {
+        every { applicationFormService.create(any(), any()) } returns applicationFormResponse
+
+        mockMvc.post("/api/application-forms") {
+            header(AUTHORIZATION, "Bearer valid_token")
+            content = objectMapper.writeValueAsString(CreateApplicationFormRequest(1L))
+            contentType = MediaType.APPLICATION_JSON
+        }.andExpect {
+            status { isCreated }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(applicationFormResponse))) }
         }
     }
 

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import support.toUri
 import javax.validation.Valid
 
 @RestController
@@ -47,9 +48,10 @@ class ApplicationFormRestController(
     fun create(
         @RequestBody @Valid request: CreateApplicationFormRequest,
         @LoginUser user: User
-    ): ResponseEntity<Unit> {
-        applicationFormService.create(user.id, request)
-        return ResponseEntity.ok().build()
+    ): ResponseEntity<ApiResponse<ApplicationFormResponse>> {
+        val response = applicationFormService.create(user.id, request)
+        return ResponseEntity.created("/api/application-forms/${response.id}".toUri())
+            .body(ApiResponse.success(response))
     }
 
     @PatchMapping("/application-forms")

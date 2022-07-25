@@ -20,12 +20,14 @@ class ApplicationFormService(
     private val recruitmentItemRepository: RecruitmentItemRepository,
     private val applicationValidator: ApplicationValidator
 ) {
-    fun create(userId: Long, request: CreateApplicationFormRequest) {
+    fun create(userId: Long, request: CreateApplicationFormRequest): ApplicationFormResponse {
         val recruitment = findApplicableRecruitment(request.recruitmentId)
         check(!applicationFormRepository.existsByRecruitmentIdAndUserId(recruitment.id, userId)) {
             "이미 작성한 지원서가 있습니다."
         }
-        applicationFormRepository.save(ApplicationForm(userId, recruitment.id, applicationValidator))
+        return applicationFormRepository
+            .save(ApplicationForm(userId, recruitment.id, applicationValidator))
+            .let(::ApplicationFormResponse)
     }
 
     fun update(userId: Long, request: UpdateApplicationFormRequest) {
