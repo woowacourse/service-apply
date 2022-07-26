@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.MediaType
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.patch
 import org.springframework.test.web.servlet.post
@@ -118,6 +119,8 @@ internal class UserRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isOk }
             content { json(objectMapper.writeValueAsString(ApiResponse.success(VALID_TOKEN))) }
+        }.andDo {
+            handle(document("user-register"))
         }
     }
 
@@ -133,6 +136,8 @@ internal class UserRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isOk }
             content { json(objectMapper.writeValueAsString(ApiResponse.success(VALID_TOKEN))) }
+        }.andDo {
+            handle(document("user-login"))
         }
     }
 
@@ -145,6 +150,8 @@ internal class UserRestControllerTest : RestControllerTest() {
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isForbidden }
+        }.andDo {
+            handle(document("user-login-forbidden"))
         }
     }
 
@@ -157,6 +164,8 @@ internal class UserRestControllerTest : RestControllerTest() {
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isNoContent }
+        }.andDo {
+            handle(document("user-reset-password"))
         }
     }
 
@@ -169,6 +178,8 @@ internal class UserRestControllerTest : RestControllerTest() {
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
             status { isForbidden }
+        }.andDo {
+            handle(document("user-reset-password-forbidden"))
         }
     }
 
@@ -184,6 +195,8 @@ internal class UserRestControllerTest : RestControllerTest() {
             header(AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isNoContent }
+        }.andDo {
+            handle(document("user-edit-password"))
         }
     }
 
@@ -199,6 +212,8 @@ internal class UserRestControllerTest : RestControllerTest() {
             header(AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isForbidden }
+        }.andDo {
+            handle(document("user-edit-password-forbidden"))
         }
     }
 
@@ -212,6 +227,8 @@ internal class UserRestControllerTest : RestControllerTest() {
             param("email", authenticationCode.email)
         }.andExpect {
             status { isNoContent }
+        }.andDo {
+            handle(document("user-authentication-code"))
         }
     }
 
@@ -241,6 +258,8 @@ internal class UserRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isOk }
             content { json(objectMapper.writeValueAsString(ApiResponse.success(userResponses))) }
+        }.andDo {
+            handle(document("user-authenticate-email"))
         }
     }
 
@@ -255,6 +274,8 @@ internal class UserRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isOk }
             content { json(objectMapper.writeValueAsString(ApiResponse.success(response))) }
+        }.andDo {
+            handle(document("user-me"))
         }
     }
 
@@ -269,6 +290,8 @@ internal class UserRestControllerTest : RestControllerTest() {
             header(AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isNoContent }
+        }.andDo {
+            handle(document("user-information"))
         }
     }
 
