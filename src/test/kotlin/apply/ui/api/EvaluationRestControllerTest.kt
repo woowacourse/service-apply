@@ -29,9 +29,12 @@ internal class EvaluationRestControllerTest : RestControllerTest() {
     @MockkBean
     private lateinit var evaluationService: EvaluationService
 
+    private val evaluationResponse: EvaluationResponse =
+        EvaluationResponse(1L, "평가1", "평가1 설명", "우테코 3기 백엔드", 4L, "", 2L)
+
     @Test
     fun `평가를 추가한다`() {
-        every { evaluationService.save(any()) } just Runs
+        every { evaluationService.save(any()) } returns evaluationResponse
 
         mockMvc.post("/api/recruitments/{recruitmentId}/evaluations", 1L) {
             content = objectMapper.writeValueAsBytes(
@@ -40,7 +43,8 @@ internal class EvaluationRestControllerTest : RestControllerTest() {
             contentType = MediaType.APPLICATION_JSON
             header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
-            status { isOk }
+            status { isCreated }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(evaluationResponse))) }
         }
     }
 

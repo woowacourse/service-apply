@@ -16,7 +16,7 @@ class EvaluationService(
     private val evaluationItemRepository: EvaluationItemRepository,
     private val recruitmentRepository: RecruitmentRepository
 ) {
-    fun save(request: EvaluationData) {
+    fun save(request: EvaluationData): EvaluationResponse {
         val evaluation = evaluationRepository.save(
             Evaluation(
                 request.title,
@@ -33,6 +33,13 @@ class EvaluationService(
             request.evaluationItems.map {
                 EvaluationItem(it.title, it.description, it.maximumScore, it.position, evaluation.id, it.id)
             }
+        )
+        return EvaluationResponse(
+            evaluation,
+            request.recruitment.title,
+            request.recruitment.id,
+            request.beforeEvaluation.title,
+            request.beforeEvaluation.id
         )
     }
 
