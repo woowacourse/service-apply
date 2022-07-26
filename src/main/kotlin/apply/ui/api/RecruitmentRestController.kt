@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import support.toUri
 
 @RestController
 @RequestMapping("/api/recruitments")
@@ -47,9 +48,10 @@ class RecruitmentRestController(
     fun save(
         @RequestBody request: RecruitmentData,
         @LoginUser(administrator = true) user: User
-    ): ResponseEntity<Unit> {
-        recruitmentService.save(request)
-        return ResponseEntity.ok().build()
+    ): ResponseEntity<ApiResponse<RecruitmentResponse>> {
+        val response = recruitmentService.save(request)
+        return ResponseEntity.created("/api/recruitments/${response.id}".toUri())
+            .body(ApiResponse.success(response))
     }
 
     @DeleteMapping("/{recruitmentId}")

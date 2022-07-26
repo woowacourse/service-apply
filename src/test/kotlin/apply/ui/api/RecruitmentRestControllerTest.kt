@@ -95,7 +95,7 @@ internal class RecruitmentRestControllerTest : RestControllerTest() {
 
     @Test
     fun `지원과 지원 항목을 저장한다`() {
-        every { recruitmentService.save(recruitmentData) } just Runs
+        every { recruitmentService.save(recruitmentData) } returns recruitmentResponse
 
         mockMvc.perform(
             RestDocumentationRequestBuilders.post(
@@ -104,7 +104,10 @@ internal class RecruitmentRestControllerTest : RestControllerTest() {
                 .header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
                 .header(HttpHeaders.CONTENT_TYPE, "application/json")
                 .content(objectMapper.writeValueAsString(recruitmentData))
-        ).andExpect(status().isOk)
+        ).andExpect {
+            status().isCreated
+            content().json(objectMapper.writeValueAsString(ApiResponse.success(recruitment)))
+        }
             .andDo(
                 document(
                     "recruitments-save",

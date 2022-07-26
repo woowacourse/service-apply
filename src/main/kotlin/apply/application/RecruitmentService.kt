@@ -5,6 +5,7 @@ import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitment.getById
 import apply.domain.recruitmentitem.RecruitmentItem
 import apply.domain.recruitmentitem.RecruitmentItemRepository
+import apply.domain.term.Term
 import apply.domain.term.TermRepository
 import apply.domain.term.getById
 import org.springframework.stereotype.Service
@@ -17,7 +18,7 @@ class RecruitmentService(
     private val recruitmentItemRepository: RecruitmentItemRepository,
     private val termRepository: TermRepository
 ) {
-    fun save(request: RecruitmentData) {
+    fun save(request: RecruitmentData): RecruitmentResponse {
         val recruitment = recruitmentRepository.save(
             Recruitment(
                 request.title,
@@ -37,6 +38,7 @@ class RecruitmentService(
                 RecruitmentItem(recruitment.id, it.title, it.position, it.maximumLength, it.description, it.id)
             }
         )
+        return RecruitmentResponse(recruitment, Term(request.term.name))
     }
 
     private fun findRecruitmentItemsToDelete(recruitmentId: Long, excludedItemIds: List<Long>): List<RecruitmentItem> {
