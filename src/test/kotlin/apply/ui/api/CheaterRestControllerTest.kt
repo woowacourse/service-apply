@@ -30,6 +30,10 @@ internal class CheaterRestControllerTest : RestControllerTest() {
     @MockkBean
     private lateinit var cheaterService: CheaterService
 
+    private val cheaterResponse = CheaterResponse(
+        Cheater(email = "loki@email.com", createdDateTime = createLocalDateTime(2021, 10, 9, 10, 0, 0, 0)),
+        createUser(name = "로키")
+    )
     private val cheaterResponses = listOf(
         CheaterResponse(
             Cheater(email = "loki@email.com", createdDateTime = createLocalDateTime(2021, 10, 9, 10, 0, 0, 0)),
@@ -57,14 +61,15 @@ internal class CheaterRestControllerTest : RestControllerTest() {
     @Test
     fun `부정행위자를 추가한다`() {
         val cheaterData = createCheaterData()
-        every { cheaterService.save(cheaterData) } just Runs
+        every { cheaterService.save(cheaterData) } returns cheaterResponse
 
         mockMvc.post("/api/cheaters") {
             header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
             contentType = MediaType.APPLICATION_JSON
             content = objectMapper.writeValueAsString(cheaterData)
         }.andExpect {
-            status { isOk }
+            status { isCreated }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(cheaterResponse))) }
         }
     }
 

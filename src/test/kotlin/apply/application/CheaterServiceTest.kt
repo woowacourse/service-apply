@@ -1,9 +1,11 @@
 package apply.application
 
 import apply.createCheaterData
+import apply.createUser
 import apply.domain.cheater.Cheater
 import apply.domain.cheater.CheaterRepository
 import apply.domain.user.UserRepository
+import apply.domain.user.findByEmail
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import org.junit.jupiter.api.BeforeEach
@@ -31,6 +33,7 @@ internal class CheaterServiceTest {
         val cheaterData = createCheaterData()
         every { cheaterRepository.existsByEmail(any()) } returns false
         every { cheaterRepository.save(any()) } returns Cheater(cheaterData.email, cheaterData.description)
+        every { userRepository.findByEmail(any()) } returns createUser()
         assertDoesNotThrow { cheaterService.save(cheaterData) }
     }
 
