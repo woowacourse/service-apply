@@ -34,7 +34,8 @@ internal class MissionRestControllerTest : RestControllerTest() {
 
     @Test
     fun `과제를 추가한다`() {
-        every { missionService.save(any()) } just Runs
+        val missionResponse = createMissionResponse(id = 1L)
+        every { missionService.save(any()) } returns missionResponse
 
         mockMvc.post(
             "/api/recruitments/{recruitmentId}/missions",
@@ -44,7 +45,8 @@ internal class MissionRestControllerTest : RestControllerTest() {
             contentType = MediaType.APPLICATION_JSON
             content = objectMapper.writeValueAsString(createMissionData())
         }.andExpect {
-            status { isOk }
+            status { isCreated }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(missionResponse))) }
         }
     }
 

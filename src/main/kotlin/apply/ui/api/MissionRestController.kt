@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import support.toUri
 
 @RestController
 @RequestMapping("/api/recruitments/{recruitmentId}")
@@ -25,9 +26,10 @@ class MissionRestController(
         @PathVariable recruitmentId: Long,
         @RequestBody missionData: MissionData,
         @LoginUser(administrator = true) user: User
-    ): ResponseEntity<Unit> {
-        missionService.save(missionData)
-        return ResponseEntity.ok().build()
+    ): ResponseEntity<ApiResponse<MissionResponse>> {
+        val response = missionService.save(missionData)
+        return ResponseEntity.created("/api/recruitments/$recruitmentId/missions/${response.id}".toUri())
+            .body(ApiResponse.success(response))
     }
 
     @GetMapping("/missions")
