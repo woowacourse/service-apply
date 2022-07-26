@@ -24,9 +24,10 @@ repositories {
     }
 }
 
-val asciidoctorExt by configurations.creating
-
 extra["vaadinVersion"] = "14.3.3"
+
+val asciidoctorExt: Configuration by configurations.creating
+val snippetsDir by extra { "build/generated-snippets" }
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -63,10 +64,6 @@ dependencyManagement {
     }
 }
 
-val snippetsDir by extra {
-    file("build/generated-snippets")
-}
-
 tasks {
     withType<Test> {
         useJUnitPlatform()
@@ -91,16 +88,17 @@ tasks {
         outputs.dir(snippetsDir)
     }
     asciidoctor {
-        dependsOn(test)
-        configurations("asciidoctorExt")
         inputs.dir(snippetsDir)
+        configurations("asciidoctorExt")
+        dependsOn(test)
+        baseDirFollowsSourceFile()
     }
-    register<Copy>("copyDocument") {
+    val copyDocs = register<Copy>("copyDocs") {
         dependsOn(asciidoctor)
-        from(file("build/docs/asciidoc/index.html"))
-        into(file("src/main/resources/static/docs"))
+        from("${asciidoctor.get().outputDir}/index.html")
+        into("src/main/resources/static/docs")
     }
     bootJar {
-        dependsOn("copyDocument")
+        dependsOn(copyDocs)
     }
 }
