@@ -38,7 +38,7 @@ fun createUpload(
     succeededListener: UploadSucceededListener
 ): Upload {
     return Upload(receiver).apply {
-        maxFileSize = 10_485_760
+        maxFileSize = 3_145_728 // spring.servlet.multipart.max-file-size
         uploadButton = createPrimaryButton(text) { }
         addSucceededListener {
             succeededListener(receiver)

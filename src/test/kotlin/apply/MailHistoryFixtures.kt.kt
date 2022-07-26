@@ -29,5 +29,5 @@ fun createMailData(
     sentTime: LocalDateTime = SENT_TIME,
     id: Long = 0L
 ): MailData {
-    return MailData(subject, body, sender, recipients, sentTime, id)
+    return MailData(subject, body, sender, recipients, sentTime, id = id)
 }
