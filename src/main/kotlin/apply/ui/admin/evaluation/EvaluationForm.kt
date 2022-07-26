@@ -89,7 +89,6 @@ class EvaluationForm() : BindingIdentityFormLayout<EvaluationData>(EvaluationDat
             result?.beforeEvaluation = beforeEvaluation.value
         }
         return result?.apply {
-            recruitment
             evaluationItems = items
         }
     }
