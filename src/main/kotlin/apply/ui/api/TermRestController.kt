@@ -1,7 +1,7 @@
 package apply.ui.api
 
-import apply.application.TermResponse
 import apply.application.TermData
+import apply.application.TermResponse
 import apply.application.TermService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import support.toUri
 
 @RestController
 @RequestMapping("/api/terms")
@@ -20,9 +21,10 @@ class TermRestController(
     @PostMapping
     fun create(
         @RequestBody termData: TermData
-    ): ResponseEntity<Unit> {
-        termService.save(termData)
-        return ResponseEntity.ok().build()
+    ): ResponseEntity<ApiResponse<TermResponse>> {
+        val response = termService.save(termData)
+        return ResponseEntity.created("/api/terms/${response.id}".toUri())
+            .body(ApiResponse.success(response))
     }
 
     @GetMapping

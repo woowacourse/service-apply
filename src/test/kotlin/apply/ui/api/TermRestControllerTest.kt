@@ -33,15 +33,17 @@ internal class TermRestControllerTest : RestControllerTest() {
 
     @Test
     fun `기수를 생성한다`() {
-        every { termService.save(TermData("3기")) } just Runs
+        val termResponse = TermResponse(Term("4기"))
+        every { termService.save(TermData("4기")) } returns termResponse
 
         mockMvc.post(
             "/api/terms"
         ) {
-            content = objectMapper.writeValueAsString(TermData("3기"))
+            content = objectMapper.writeValueAsString(TermData("4기"))
             contentType = MediaType.APPLICATION_JSON
         }.andExpect {
-            status { isOk }
+            status { isCreated }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(termResponse))) }
         }
     }
 
