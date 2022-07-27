@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
+import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.get
@@ -37,6 +38,7 @@ internal class TermRestControllerTest : RestControllerTest() {
         ) {
             content = objectMapper.writeValueAsString(TermData("4기"))
             contentType = MediaType.APPLICATION_JSON
+            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isCreated }
             content { json(objectMapper.writeValueAsString(ApiResponse.success(termResponse))) }
@@ -50,7 +52,9 @@ internal class TermRestControllerTest : RestControllerTest() {
 
         mockMvc.get(
             "/api/terms"
-        ).andExpect {
+        ) {
+            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+        }.andExpect {
             status { isOk }
             content { json(objectMapper.writeValueAsString(ApiResponse.success(terms))) }
         }
@@ -63,7 +67,9 @@ internal class TermRestControllerTest : RestControllerTest() {
 
         mockMvc.delete(
             "/api/terms/{termId}", termId
-        ).andExpect {
+        ) {
+            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+        }.andExpect {
             status { isOk }
         }
     }

@@ -3,6 +3,8 @@ package apply.ui.api
 import apply.application.TermData
 import apply.application.TermResponse
 import apply.application.TermService
+import apply.domain.user.User
+import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -20,7 +22,8 @@ class TermRestController(
 ) {
     @PostMapping
     fun create(
-        @RequestBody termData: TermData
+        @RequestBody termData: TermData,
+        @LoginUser(administrator = true) user: User
     ): ResponseEntity<ApiResponse<TermResponse>> {
         val response = termService.save(termData)
         return ResponseEntity.created("/api/terms/${response.id}".toUri())
@@ -28,14 +31,17 @@ class TermRestController(
     }
 
     @GetMapping
-    fun findAll(): ResponseEntity<ApiResponse<List<TermResponse>>> {
+    fun findAll(
+        @LoginUser(administrator = true) user: User
+    ): ResponseEntity<ApiResponse<List<TermResponse>>> {
         val terms = termService.findAll()
         return ResponseEntity.ok(ApiResponse.success(terms))
     }
 
     @DeleteMapping("/{termId}")
     fun deleteById(
-        @PathVariable termId: Long
+        @PathVariable termId: Long,
+        @LoginUser(administrator = true) user: User
     ): ResponseEntity<Unit> {
         termService.deleteById(termId)
         return ResponseEntity.ok().build()
