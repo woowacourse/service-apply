@@ -34,8 +34,8 @@ internal class AssignmentRestControllerTest : RestControllerTest() {
             recruitmentId,
             missionId
         ) {
-            contentType = MediaType.APPLICATION_JSON
             content = objectMapper.writeValueAsString(createAssignmentRequest())
+            contentType = MediaType.APPLICATION_JSON
             header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isCreated }

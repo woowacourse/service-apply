@@ -209,9 +209,9 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
                 evaluationId,
                 targetId
             )
+                .content(objectMapper.writeValueAsString(gradeEvaluationRequest))
                 .header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
                 .header(HttpHeaders.CONTENT_TYPE, "application/json")
-                .content(objectMapper.writeValueAsString(gradeEvaluationRequest))
         ).andExpect(status().isOk)
             .andDo(
                 document(

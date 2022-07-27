@@ -4,6 +4,7 @@ import apply.application.MissionAndEvaluationResponse
 import apply.application.MissionData
 import apply.application.MissionResponse
 import apply.application.MissionService
+import apply.application.MyMissionResponse
 import apply.domain.user.User
 import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
@@ -45,7 +46,7 @@ class MissionRestController(
     fun findMyMissionsByRecruitmentId(
         @PathVariable recruitmentId: Long,
         @LoginUser user: User
-    ): ResponseEntity<ApiResponse<List<MissionResponse>>> {
+    ): ResponseEntity<ApiResponse<List<MyMissionResponse>>> {
         val missions = missionService.findAllByUserIdAndRecruitmentId(user.id, recruitmentId)
         return ResponseEntity.ok(ApiResponse.success(missions))
     }

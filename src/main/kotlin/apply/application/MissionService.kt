@@ -20,21 +20,18 @@ class MissionService(
 ) {
     fun save(request: MissionData): MissionResponse {
         validate(request)
-        val mission = missionRepository.save(
-            request.let {
-                Mission(
-                    it.title,
-                    it.description,
-                    it.evaluation.id,
-                    it.startDateTime,
-                    it.endDateTime,
-                    it.submittable,
-                    it.hidden,
-                    it.id
-                )
-            }
-        )
-        return MissionResponse(mission, request.submittable)
+        return missionRepository.save(
+            Mission(
+                request.title,
+                request.description,
+                request.evaluation.id,
+                request.startDateTime,
+                request.endDateTime,
+                request.submittable,
+                request.hidden,
+                request.id
+            )
+        ).let(::MissionResponse)
     }
 
     private fun validate(request: MissionData) {
@@ -74,7 +71,7 @@ class MissionService(
         missionRepository.deleteById(id)
     }
 
-    fun findAllByUserIdAndRecruitmentId(userId: Long, recruitmentId: Long): List<MissionResponse> {
+    fun findAllByUserIdAndRecruitmentId(userId: Long, recruitmentId: Long): List<MyMissionResponse> {
         val evaluationIds = evaluationRepository.findAllByRecruitmentId(recruitmentId).map { it.id }
         val includedEvaluationIds = evaluationIds.filter {
             evaluationTargetRepository.existsByUserIdAndEvaluationId(userId, it)
@@ -82,6 +79,6 @@ class MissionService(
         val assignments = assignmentRepository.findAllByUserId(userId)
         return missionRepository.findAllByEvaluationIdIn(includedEvaluationIds)
             .filterNot { it.hidden }
-            .map { mission -> MissionResponse(mission, assignments.any { it.missionId == mission.id }) }
+            .map { mission -> MyMissionResponse(mission, assignments.any { it.missionId == mission.id }) }
     }
 }

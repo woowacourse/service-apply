@@ -24,8 +24,7 @@ class CheaterService(
             "이미 등록된 부정 행위자입니다."
         }
         val cheater = cheaterRepository.save(Cheater(email, request.description))
-        val user = userRepository.findByEmail(email)
-        return CheaterResponse(cheater, user)
+        return CheaterResponse(cheater, userRepository.findByEmail(email))
     }
 
     fun deleteById(id: Long) {

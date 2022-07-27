@@ -112,8 +112,8 @@ class MissionServiceTest {
             { assertThat(responses).hasSize(2) },
             {
                 assertThat(responses).containsExactlyInAnyOrder(
-                    MissionResponse(missions[0], true),
-                    MissionResponse(missions[1], true)
+                    MyMissionResponse(missions[0], true),
+                    MyMissionResponse(missions[1], true)
                 )
             }
         )

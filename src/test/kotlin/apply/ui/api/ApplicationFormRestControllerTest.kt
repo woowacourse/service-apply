@@ -67,9 +67,9 @@ internal class ApplicationFormRestControllerTest : RestControllerTest() {
         every { applicationFormService.create(any(), any()) } returns applicationFormResponse
 
         mockMvc.post("/api/application-forms") {
-            header(AUTHORIZATION, "Bearer valid_token")
             content = objectMapper.writeValueAsString(CreateApplicationFormRequest(1L))
             contentType = MediaType.APPLICATION_JSON
+            header(AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isCreated }
             content { json(objectMapper.writeValueAsString(ApiResponse.success(applicationFormResponse))) }

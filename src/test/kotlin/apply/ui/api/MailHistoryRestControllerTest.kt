@@ -30,9 +30,9 @@ class MailHistoryRestControllerTest : RestControllerTest() {
         every { mailHistoryService.save(any()) } just Runs
 
         mockMvc.post("/api/mail-history") {
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
-            contentType = MediaType.APPLICATION_JSON
             content = objectMapper.writeValueAsString(createMailData())
+            contentType = MediaType.APPLICATION_JSON
+            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isOk }
         }

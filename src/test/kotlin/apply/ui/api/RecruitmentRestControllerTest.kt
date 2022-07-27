@@ -1,5 +1,6 @@
 package apply.ui.api
 
+import apply.application.RecruitmentData
 import apply.application.RecruitmentItemService
 import apply.application.RecruitmentResponse
 import apply.application.RecruitmentService
@@ -7,6 +8,8 @@ import apply.createRecruitment
 import apply.createRecruitmentData
 import apply.createRecruitmentItem
 import apply.createRecruitmentItemData
+import apply.domain.recruitment.Recruitment
+import apply.domain.recruitmentitem.RecruitmentItem
 import apply.domain.term.Term
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
@@ -36,11 +39,13 @@ internal class RecruitmentRestControllerTest : RestControllerTest() {
     @MockkBean
     private lateinit var recruitmentItemService: RecruitmentItemService
 
-    private val recruitmentId = 1L
-    private val recruitment = createRecruitment()
-    private val recruitmentResponse = RecruitmentResponse(recruitment, Term.SINGLE)
-    private val recruitmentItems = listOf(createRecruitmentItem())
-    private val recruitmentData = createRecruitmentData(recruitmentItems = listOf(createRecruitmentItemData()))
+    private val recruitmentId: Long = 1L
+    private val recruitment: Recruitment = createRecruitment()
+    private val recruitmentResponse: RecruitmentResponse = RecruitmentResponse(recruitment, Term.SINGLE)
+    private val recruitmentItems: List<RecruitmentItem> = listOf(createRecruitmentItem())
+    private val recruitmentData: RecruitmentData = createRecruitmentData(
+        recruitmentItems = listOf(createRecruitmentItemData())
+    )
 
     @Test
     fun `공개된 지원서 목록을 가져온다`() {

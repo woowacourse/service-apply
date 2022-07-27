@@ -5,7 +5,6 @@ import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitment.getById
 import apply.domain.recruitmentitem.RecruitmentItem
 import apply.domain.recruitmentitem.RecruitmentItemRepository
-import apply.domain.term.Term
 import apply.domain.term.TermRepository
 import apply.domain.term.getById
 import org.springframework.stereotype.Service
@@ -38,7 +37,7 @@ class RecruitmentService(
                 RecruitmentItem(recruitment.id, it.title, it.position, it.maximumLength, it.description, it.id)
             }
         )
-        return RecruitmentResponse(recruitment, Term(request.term.name))
+        return RecruitmentResponse(recruitment, request.term.id, request.term.name)
     }
 
     private fun findRecruitmentItemsToDelete(recruitmentId: Long, excludedItemIds: List<Long>): List<RecruitmentItem> {

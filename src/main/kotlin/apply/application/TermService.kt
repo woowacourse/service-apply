@@ -15,8 +15,7 @@ class TermService(
     fun save(request: TermData): TermResponse {
         check(request.name != Term.SINGLE.name) { "기수명은 ${Term.SINGLE.name}일 수 없습니다." }
         check(!termRepository.existsByName(request.name)) { "이미 등록된 기수명입니다." }
-        val term = termRepository.save(request.toEntity())
-        return TermResponse(term)
+        return termRepository.save(Term(request.name, request.id)).let(::TermResponse)
     }
 
     fun findAll(): List<TermResponse> {

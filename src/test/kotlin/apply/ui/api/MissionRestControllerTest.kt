@@ -6,6 +6,7 @@ import apply.createEvaluation
 import apply.createMission
 import apply.createMissionData
 import apply.createMissionResponse
+import apply.createMyMissionResponse
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
 import io.mockk.every
@@ -41,9 +42,9 @@ internal class MissionRestControllerTest : RestControllerTest() {
             "/api/recruitments/{recruitmentId}/missions",
             recruitmentId
         ) {
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
-            contentType = MediaType.APPLICATION_JSON
             content = objectMapper.writeValueAsString(createMissionData())
+            contentType = MediaType.APPLICATION_JSON
+            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isCreated }
             content { json(objectMapper.writeValueAsString(ApiResponse.success(missionResponse))) }
@@ -68,18 +69,18 @@ internal class MissionRestControllerTest : RestControllerTest() {
 
     @Test
     fun `나의 과제들을 조회한다`() {
-        val missionResponses = listOf(createMissionResponse(id = 1L), createMissionResponse(id = 2L))
-        every { missionService.findAllByUserIdAndRecruitmentId(any(), any()) } returns missionResponses
+        val myMissionResponses = listOf(createMyMissionResponse(id = 1L), createMyMissionResponse(id = 2L))
+        every { missionService.findAllByUserIdAndRecruitmentId(any(), any()) } returns myMissionResponses
 
         mockMvc.get(
             "/api/recruitments/{recruitmentId}/missions/me",
             recruitmentId
         ) {
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
             contentType = MediaType.APPLICATION_JSON
+            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(missionResponses))) }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(myMissionResponses))) }
         }
     }
 

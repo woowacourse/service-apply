@@ -29,12 +29,14 @@ internal class EvaluationRestControllerTest : RestControllerTest() {
     @MockkBean
     private lateinit var evaluationService: EvaluationService
 
-    private val evaluationResponse: EvaluationResponse =
-        EvaluationResponse(1L, "평가1", "평가1 설명", "우테코 3기 백엔드", 4L, "", 2L)
+    private val evaluationResponses: List<EvaluationResponse> = listOf(
+        EvaluationResponse(1L, "평가1", "평가1 설명", "우테코 3기 백엔드", 4L, "", 2L),
+        EvaluationResponse(2L, "평가2", "평가2 설명", "우테코 3기 프론트", 5L, "", 2L),
+    )
 
     @Test
     fun `평가를 추가한다`() {
-        every { evaluationService.save(any()) } returns evaluationResponse
+        every { evaluationService.save(any()) } returns evaluationResponses[0]
 
         mockMvc.post("/api/recruitments/{recruitmentId}/evaluations", 1L) {
             content = objectMapper.writeValueAsBytes(
@@ -44,7 +46,7 @@ internal class EvaluationRestControllerTest : RestControllerTest() {
             header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isCreated }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(evaluationResponse))) }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(evaluationResponses[0]))) }
         }
     }
 
@@ -63,17 +65,13 @@ internal class EvaluationRestControllerTest : RestControllerTest() {
 
     @Test
     fun `모든 (상세한) 평가를 조회한다`() {
-        val expected = listOf(
-            EvaluationResponse(1L, "평가1", "평가1 설명", "우테코 3기 백엔드", 4L, "", 2L),
-            EvaluationResponse(2L, "평가2", "평가2 설명", "우테코 3기 프론트", 5L, "", 2L),
-        )
-        every { evaluationService.findAllWithRecruitment() } returns expected
+        every { evaluationService.findAllWithRecruitment() } returns evaluationResponses
 
         mockMvc.get("/api/recruitments/{recruitmentId}/evaluations", 1L) {
             header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(expected))) }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(evaluationResponses))) }
         }
     }
 

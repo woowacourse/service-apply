@@ -3,7 +3,6 @@ package apply.ui.api
 import apply.application.TermData
 import apply.application.TermResponse
 import apply.application.TermService
-import apply.application.UserService
 import apply.domain.term.Term
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
@@ -25,9 +24,6 @@ import org.springframework.test.web.servlet.post
     ]
 )
 internal class TermRestControllerTest : RestControllerTest() {
-    @MockkBean
-    private lateinit var userService: UserService
-
     @MockkBean
     private lateinit var termService: TermService
 
