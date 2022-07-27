@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import support.toUri
 
-@RestController
 @RequestMapping("/api/terms")
+@RestController
 class TermRestController(
     private val termService: TermService
 ) {
@@ -30,12 +30,21 @@ class TermRestController(
             .body(ApiResponse.success(response))
     }
 
+    @GetMapping("/{termId}")
+    fun getById(
+        @PathVariable termId: Long,
+        @LoginUser(administrator = true) user: User
+    ): ResponseEntity<ApiResponse<TermResponse>> {
+        val response = termService.getById(termId)
+        return ResponseEntity.ok(ApiResponse.success(response))
+    }
+
     @GetMapping
     fun findAll(
         @LoginUser(administrator = true) user: User
     ): ResponseEntity<ApiResponse<List<TermResponse>>> {
-        val terms = termService.findAll()
-        return ResponseEntity.ok(ApiResponse.success(terms))
+        val responses = termService.findAll()
+        return ResponseEntity.ok(ApiResponse.success(responses))
     }
 
     @DeleteMapping("/{termId}")

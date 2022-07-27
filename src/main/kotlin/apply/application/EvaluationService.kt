@@ -6,6 +6,7 @@ import apply.domain.evaluation.getById
 import apply.domain.evaluationItem.EvaluationItem
 import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.recruitment.RecruitmentRepository
+import apply.domain.recruitment.getById
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 
@@ -49,40 +50,21 @@ class EvaluationService(
             .filterNot { excludedItemIds.contains(it.id) }
     }
 
-    fun findAll(): List<Evaluation> {
-        return evaluationRepository.findAll()
-    }
-
-    fun findAllByRecruitmentId(recruitmentId: Long): List<Evaluation> {
-        return evaluationRepository.findAllByRecruitmentId(recruitmentId)
-    }
-
-    fun findById(id: Long): Evaluation? {
-        if (id == 0L) return null
-        return evaluationRepository.getById(id)
-    }
-
-    fun findAllRecruitmentSelectData(): List<RecruitmentSelectData> {
-        return recruitmentRepository.findAll()
-            .map { recruitment -> RecruitmentSelectData(recruitment) }
-            .sortedByDescending { it.id }
-    }
-
-    fun getDataById(id: Long): EvaluationData {
+    fun getById(id: Long): EvaluationResponse {
         val evaluation = evaluationRepository.getById(id)
-        val evaluationItems = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluation.id)
-        val recruitment = recruitmentRepository.getOne(evaluation.recruitmentId)
+        val recruitment = recruitmentRepository.getById(evaluation.recruitmentId)
         val beforeEvaluation = findById(evaluation.beforeEvaluationId)
-
-        return EvaluationData(evaluation, recruitment, beforeEvaluation, evaluationItems)
-    }
-
-    fun getAllSelectDataByRecruitmentId(id: Long): List<EvaluationSelectData> {
-        return findAllByRecruitmentId(id).map { EvaluationSelectData(it) }
+        return EvaluationResponse(
+            evaluation,
+            recruitment.title,
+            recruitment.id,
+            beforeEvaluation?.title ?: "이전 평가 없음",
+            beforeEvaluation?.id ?: 0
+        )
     }
 
     fun findAllWithRecruitment(): List<EvaluationResponse> {
-        return findAll().map {
+        return evaluationRepository.findAll().map {
             EvaluationResponse(
                 it.id,
                 it.title,
@@ -95,9 +77,13 @@ class EvaluationService(
         }
     }
 
+    fun findById(id: Long): Evaluation? {
+        if (id == 0L) return null
+        return evaluationRepository.getById(id)
+    }
+
     fun deleteById(id: Long) {
         evaluationRepository.deleteById(id)
-
         resetBeforeEvaluationContain(id)
     }
 
@@ -105,5 +91,27 @@ class EvaluationService(
         evaluationRepository.findAll()
             .filter { it.hasSameBeforeEvaluationWith(id) }
             .forEach { it.resetBeforeEvaluation() }
+    }
+
+    fun findAllByRecruitmentId(recruitmentId: Long): List<Evaluation> {
+        return evaluationRepository.findAllByRecruitmentId(recruitmentId)
+    }
+
+    fun getDataById(id: Long): EvaluationData {
+        val evaluation = evaluationRepository.getById(id)
+        val evaluationItems = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluation.id)
+        val recruitment = recruitmentRepository.getOne(evaluation.recruitmentId)
+        val beforeEvaluation = findById(evaluation.beforeEvaluationId)
+        return EvaluationData(evaluation, recruitment, beforeEvaluation, evaluationItems)
+    }
+
+    fun findAllRecruitmentSelectData(): List<RecruitmentSelectData> {
+        return recruitmentRepository.findAll()
+            .map { recruitment -> RecruitmentSelectData(recruitment) }
+            .sortedByDescending { it.id }
+    }
+
+    fun getAllSelectDataByRecruitmentId(id: Long): List<EvaluationSelectData> {
+        return findAllByRecruitmentId(id).map { EvaluationSelectData(it) }
     }
 }

@@ -4,6 +4,7 @@ import apply.domain.cheater.Cheater
 import apply.domain.cheater.CheaterRepository
 import apply.domain.user.UserRepository
 import apply.domain.user.findByEmail
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -13,11 +14,6 @@ class CheaterService(
     private val userRepository: UserRepository,
     private val cheaterRepository: CheaterRepository
 ) {
-    fun findAll(): List<CheaterResponse> = cheaterRepository.findAll().map {
-        val user = userRepository.findByEmail(it.email)
-        CheaterResponse(it, user)
-    }
-
     fun save(request: CheaterData): CheaterResponse {
         val email = request.email
         require(!cheaterRepository.existsByEmail(email)) {
@@ -25,6 +21,18 @@ class CheaterService(
         }
         val cheater = cheaterRepository.save(Cheater(email, request.description))
         return CheaterResponse(cheater, userRepository.findByEmail(email))
+    }
+
+    fun getById(id: Long): CheaterResponse {
+        val cheater = cheaterRepository.findByIdOrNull(id) ?: throw NoSuchElementException()
+        return CheaterResponse(cheater, userRepository.findByEmail(cheater.email))
+    }
+
+    fun findAll(): List<CheaterResponse> {
+        return cheaterRepository.findAll().map {
+            val user = userRepository.findByEmail(it.email)
+            CheaterResponse(it, user)
+        }
     }
 
     fun deleteById(id: Long) {

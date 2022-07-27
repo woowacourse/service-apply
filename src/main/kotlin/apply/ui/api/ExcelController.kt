@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-@RestController
 @RequestMapping("/api/recruitments/{recruitmentId}")
+@RestController
 class ExcelController(
     private val excelService: ExcelService,
     private val recruitmentService: RecruitmentService,

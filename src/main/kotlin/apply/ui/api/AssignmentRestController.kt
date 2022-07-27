@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RestController
 import support.toUri
 import javax.validation.Valid
 
-@RestController
 @RequestMapping("/api/recruitments/{recruitmentId}")
+@RestController
 class AssignmentRestController(
     private val assignmentService: AssignmentService
 ) {

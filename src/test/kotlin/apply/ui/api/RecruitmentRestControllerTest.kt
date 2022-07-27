@@ -146,7 +146,7 @@ internal class RecruitmentRestControllerTest : RestControllerTest() {
 
     @Test
     fun `모집 id로 모집을 가져온다`() {
-        every { recruitmentService.getById(recruitmentId) } answers { recruitment }
+        every { recruitmentService.getById(recruitmentId) } answers { recruitmentResponse }
 
         mockMvc.perform(
             RestDocumentationRequestBuilders.get(
@@ -158,7 +158,7 @@ internal class RecruitmentRestControllerTest : RestControllerTest() {
             .andExpect(
                 content().json(
                     objectMapper.writeValueAsString(
-                        ApiResponse.success(recruitment)
+                        ApiResponse.success(recruitmentResponse)
                     )
                 )
             )

@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.RestController
 import support.toUri
 import javax.validation.Valid
 
-@RestController
 @RequestMapping("/api")
+@RestController
 class ApplicationFormRestController(
     private val applicationFormService: ApplicationFormService,
     private val applicantService: ApplicantService

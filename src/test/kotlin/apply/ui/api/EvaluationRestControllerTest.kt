@@ -52,14 +52,13 @@ internal class EvaluationRestControllerTest : RestControllerTest() {
 
     @Test
     fun `특정 평가를 조회한다`() {
-        val evaluationData = EvaluationData(id = 1L)
-        every { evaluationService.getDataById(any()) } returns evaluationData
+        every { evaluationService.getById(any()) } returns evaluationResponses[0]
 
-        mockMvc.get("/api/recruitments/{recruitmentId}/evaluations/{evaluationId}", 1L, evaluationData.id) {
+        mockMvc.get("/api/recruitments/{recruitmentId}/evaluations/{evaluationId}", 1L, 1L) {
             header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(evaluationData))) }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(evaluationResponses[0]))) }
         }
     }
 

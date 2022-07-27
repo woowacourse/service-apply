@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import javax.validation.Valid
 
-@RestController
 @RequestMapping("/api/users")
+@RestController
 class UserRestController(
     private val userService: UserService,
     private val userAuthenticationService: UserAuthenticationService,

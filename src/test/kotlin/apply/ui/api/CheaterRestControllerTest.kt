@@ -35,6 +35,18 @@ internal class CheaterRestControllerTest : RestControllerTest() {
     )
 
     @Test
+    fun `부정행위자를 조회한다`() {
+        every { cheaterService.getById(any()) } returns cheaterResponses[0]
+
+        mockMvc.get("/api/cheaters/{cheaterId}", 1L) {
+            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+        }.andExpect {
+            status { isOk }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(cheaterResponses[0]))) }
+        }
+    }
+
+    @Test
     fun `모든 부정행위자를 찾는다`() {
         every { cheaterService.findAll() } returns cheaterResponses
 

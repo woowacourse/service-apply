@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import support.toUri
 
-@RestController
 @RequestMapping("/api/recruitments/{recruitmentId}/evaluations")
+@RestController
 class EvaluationRestController(
     private val evaluationService: EvaluationService
 ) {
@@ -32,13 +32,13 @@ class EvaluationRestController(
     }
 
     @GetMapping("/{evaluationId}")
-    fun getDataById(
+    fun getById(
         @PathVariable recruitmentId: Long,
         @PathVariable evaluationId: Long,
         @LoginUser(administrator = true) user: User
-    ): ResponseEntity<ApiResponse<EvaluationData>> {
-        val evaluationData = evaluationService.getDataById(evaluationId)
-        return ResponseEntity.ok(ApiResponse.success(evaluationData))
+    ): ResponseEntity<ApiResponse<EvaluationResponse>> {
+        val response = evaluationService.getById(evaluationId)
+        return ResponseEntity.ok(ApiResponse.success(response))
     }
 
     @GetMapping
@@ -46,8 +46,8 @@ class EvaluationRestController(
         @PathVariable recruitmentId: Long,
         @LoginUser(administrator = true) user: User
     ): ResponseEntity<ApiResponse<List<EvaluationResponse>>> {
-        val evaluationResponses = evaluationService.findAllWithRecruitment()
-        return ResponseEntity.ok(ApiResponse.success(evaluationResponses))
+        val responses = evaluationService.findAllWithRecruitment()
+        return ResponseEntity.ok(ApiResponse.success(responses))
     }
 
     @DeleteMapping("/{evaluationId}")

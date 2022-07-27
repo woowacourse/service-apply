@@ -15,19 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import support.toUri
 
-@RestController
 @RequestMapping("/api/cheaters")
+@RestController
 class CheaterRestController(
     private val cheaterService: CheaterService
 ) {
-    @GetMapping
-    fun findAll(
-        @LoginUser(administrator = true) user: User
-    ): ResponseEntity<ApiResponse<List<CheaterResponse>>> {
-        val cheaters = cheaterService.findAll()
-        return ResponseEntity.ok(ApiResponse.success(cheaters))
-    }
-
     @PostMapping
     fun save(
         @RequestBody request: CheaterData,
@@ -36,6 +28,23 @@ class CheaterRestController(
         val response = cheaterService.save(request)
         return ResponseEntity.created("/api/cheaters/${response.id}".toUri())
             .body(ApiResponse.success(response))
+    }
+
+    @GetMapping("/{cheaterId}")
+    fun getById(
+        @PathVariable cheaterId: Long,
+        @LoginUser(administrator = true) user: User
+    ): ResponseEntity<ApiResponse<CheaterResponse>> {
+        val response = cheaterService.getById(cheaterId)
+        return ResponseEntity.ok(ApiResponse.success(response))
+    }
+
+    @GetMapping
+    fun findAll(
+        @LoginUser(administrator = true) user: User
+    ): ResponseEntity<ApiResponse<List<CheaterResponse>>> {
+        val responses = cheaterService.findAll()
+        return ResponseEntity.ok(ApiResponse.success(responses))
     }
 
     @DeleteMapping("/{cheaterId}")

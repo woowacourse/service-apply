@@ -38,16 +38,26 @@ internal class MissionRestControllerTest : RestControllerTest() {
         val missionResponse = createMissionResponse(id = 1L)
         every { missionService.save(any()) } returns missionResponse
 
-        mockMvc.post(
-            "/api/recruitments/{recruitmentId}/missions",
-            recruitmentId
-        ) {
+        mockMvc.post("/api/recruitments/{recruitmentId}/missions", recruitmentId) {
             content = objectMapper.writeValueAsString(createMissionData())
             contentType = MediaType.APPLICATION_JSON
             header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isCreated }
             content { json(objectMapper.writeValueAsString(ApiResponse.success(missionResponse))) }
+        }
+    }
+
+    @Test
+    fun `과제를 조회한다`() {
+        val response = createMissionResponse()
+        every { missionService.getById(any()) } returns response
+
+        mockMvc.get("/api/recruitments/{recruitmentId}/missions/{missionId}", recruitmentId, 1L) {
+            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+        }.andExpect {
+            status { isOk }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(response))) }
         }
     }
 
@@ -72,10 +82,7 @@ internal class MissionRestControllerTest : RestControllerTest() {
         val myMissionResponses = listOf(createMyMissionResponse(id = 1L), createMyMissionResponse(id = 2L))
         every { missionService.findAllByUserIdAndRecruitmentId(any(), any()) } returns myMissionResponses
 
-        mockMvc.get(
-            "/api/recruitments/{recruitmentId}/missions/me",
-            recruitmentId
-        ) {
+        mockMvc.get("/api/recruitments/{recruitmentId}/missions/me", recruitmentId) {
             contentType = MediaType.APPLICATION_JSON
             header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
@@ -88,11 +95,7 @@ internal class MissionRestControllerTest : RestControllerTest() {
     fun `과제를 삭제한다`() {
         every { missionService.deleteById(any()) } just Runs
 
-        mockMvc.delete(
-            "/api/recruitments/{recruitmentId}/missions/{missionId}",
-            recruitmentId,
-            1L
-        ) {
+        mockMvc.delete("/api/recruitments/{recruitmentId}/missions/{missionId}", recruitmentId, 1L) {
             header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isOk }

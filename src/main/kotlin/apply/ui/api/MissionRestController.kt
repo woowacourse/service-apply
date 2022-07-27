@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import support.toUri
 
+@RequestMapping("/api/recruitments/{recruitmentId}/missions")
 @RestController
-@RequestMapping("/api/recruitments/{recruitmentId}")
 class MissionRestController(
     private val missionService: MissionService
 ) {
-    @PostMapping("/missions")
+    @PostMapping
     fun save(
         @PathVariable recruitmentId: Long,
         @RequestBody missionData: MissionData,
@@ -33,25 +33,35 @@ class MissionRestController(
             .body(ApiResponse.success(response))
     }
 
-    @GetMapping("/missions")
+    @GetMapping("/{missionId}")
+    fun getById(
+        @PathVariable recruitmentId: Long,
+        @PathVariable missionId: Long,
+        @LoginUser(administrator = true) user: User
+    ): ResponseEntity<ApiResponse<MissionResponse>> {
+        val response = missionService.getById(missionId)
+        return ResponseEntity.ok(ApiResponse.success(response))
+    }
+
+    @GetMapping
     fun findAllByRecruitmentId(
         @PathVariable recruitmentId: Long,
         @LoginUser(administrator = true) user: User
     ): ResponseEntity<ApiResponse<List<MissionAndEvaluationResponse>>> {
-        val missions = missionService.findAllByRecruitmentId(recruitmentId)
-        return ResponseEntity.ok(ApiResponse.success(missions))
+        val responses = missionService.findAllByRecruitmentId(recruitmentId)
+        return ResponseEntity.ok(ApiResponse.success(responses))
     }
 
-    @GetMapping("/missions/me")
+    @GetMapping("/me")
     fun findMyMissionsByRecruitmentId(
         @PathVariable recruitmentId: Long,
         @LoginUser user: User
     ): ResponseEntity<ApiResponse<List<MyMissionResponse>>> {
-        val missions = missionService.findAllByUserIdAndRecruitmentId(user.id, recruitmentId)
-        return ResponseEntity.ok(ApiResponse.success(missions))
+        val responses = missionService.findAllByUserIdAndRecruitmentId(user.id, recruitmentId)
+        return ResponseEntity.ok(ApiResponse.success(responses))
     }
 
-    @DeleteMapping("/missions/{missionId}")
+    @DeleteMapping("/{missionId}")
     fun deleteById(
         @PathVariable recruitmentId: Long,
         @PathVariable missionId: Long,
