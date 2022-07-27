@@ -21,7 +21,7 @@ class EvaluationRestController(
     private val evaluationService: EvaluationService
 ) {
     @PostMapping
-    fun createEvaluation(
+    fun save(
         @PathVariable recruitmentId: Long,
         @RequestBody evaluationData: EvaluationData,
         @LoginUser(administrator = true) user: User

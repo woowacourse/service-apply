@@ -21,7 +21,7 @@ class TermRestController(
     private val termService: TermService
 ) {
     @PostMapping
-    fun create(
+    fun save(
         @RequestBody termData: TermData,
         @LoginUser(administrator = true) user: User
     ): ResponseEntity<ApiResponse<TermResponse>> {
