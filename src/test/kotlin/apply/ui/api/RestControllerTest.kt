@@ -1,6 +1,5 @@
 package apply.ui.api
 
-import apply.config.RestDocsConfiguration
 import apply.createUser
 import apply.security.LoginFailedException
 import apply.security.LoginUser
@@ -12,12 +11,13 @@ import io.mockk.slot
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.annotation.Import
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
 import org.springframework.core.MethodParameter
 import org.springframework.http.HttpHeaders
 import org.springframework.restdocs.RestDocumentationContextProvider
 import org.springframework.restdocs.RestDocumentationExtension
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation
+import org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder
@@ -27,7 +27,7 @@ import org.springframework.web.context.request.NativeWebRequest
 import org.springframework.web.filter.CharacterEncodingFilter
 import support.test.TestEnvironment
 
-@Import(RestDocsConfiguration::class)
+@AutoConfigureRestDocs
 @ExtendWith(RestDocumentationExtension::class)
 @TestEnvironment
 abstract class RestControllerTest {
@@ -50,7 +50,9 @@ abstract class RestControllerTest {
             .apply<DefaultMockMvcBuilder>(
                 MockMvcRestDocumentation.documentationConfiguration(
                     restDocumentationContextProvider
-                )
+                ).operationPreprocessors()
+                    .withRequestDefaults(prettyPrint())
+                    .withResponseDefaults(prettyPrint())
             )
             .build()
         loginUserResolver.also {

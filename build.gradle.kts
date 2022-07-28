@@ -9,7 +9,7 @@ plugins {
     kotlin("plugin.jpa") version kotlinVersion
     id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
     id("com.vaadin") version "0.8.0"
-    id("org.asciidoctor.convert") version "2.4.0"
+    id("org.asciidoctor.jvm.convert") version "3.3.2"
     id("org.flywaydb.flyway") version "7.12.0"
 }
 
@@ -26,6 +26,9 @@ repositories {
 
 extra["vaadinVersion"] = "14.3.3"
 extra["kotlin-coroutines.version"] = "1.6.0"
+
+val asciidoctorExt: Configuration by configurations.creating
+val snippetsDir by extra { "build/generated-snippets" }
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -52,7 +55,7 @@ dependencies {
         exclude(group = "org.mockito")
     }
     testImplementation("com.ninja-squad:springmockk:2.0.3")
-    asciidoctor("org.springframework.restdocs:spring-restdocs-asciidoctor")
+    asciidoctorExt("org.springframework.restdocs:spring-restdocs-asciidoctor")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
     testImplementation("io.kotest:kotest-runner-junit5:5.3.2")
 }
@@ -61,10 +64,6 @@ dependencyManagement {
     imports {
         mavenBom("com.vaadin:vaadin-bom:${property("vaadinVersion")}")
     }
-}
-
-val snippetsDir by extra {
-    file("build/generated-snippets")
 }
 
 tasks {
@@ -92,12 +91,16 @@ tasks {
     }
     asciidoctor {
         inputs.dir(snippetsDir)
+        configurations("asciidoctorExt")
         dependsOn(test)
+        baseDirFollowsSourceFile()
+    }
+    val copyDocs = register<Copy>("copyDocs") {
+        dependsOn(asciidoctor)
+        from("${asciidoctor.get().outputDir}/index.html")
+        into("src/main/resources/static/docs")
     }
     bootJar {
-        dependsOn(asciidoctor)
-        from("$snippetsDir/html5") {
-            into("static/docs")
-        }
+        dependsOn(copyDocs)
     }
 }

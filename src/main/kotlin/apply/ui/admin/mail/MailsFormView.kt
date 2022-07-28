@@ -5,6 +5,7 @@ import apply.application.MailHistoryService
 import apply.application.MailTargetService
 import apply.application.RecruitmentService
 import apply.application.UserService
+import apply.application.mail.MailService
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
@@ -21,6 +22,7 @@ import support.views.EDIT_VALUE
 import support.views.FORM_URL_PATTERN
 import support.views.Title
 import support.views.createContrastButton
+import support.views.createNotification
 import support.views.createPrimaryButton
 
 @Route(value = "admin/mails", layout = BaseLayout::class)
@@ -30,6 +32,7 @@ class MailsFormView(
     evaluationService: EvaluationService,
     mailTargetService: MailTargetService,
     private val mailHistoryService: MailHistoryService,
+    private val mailService: MailService,
     mailProperties: MailProperties
 ) : VerticalLayout(), HasUrlParameter<String> {
     private val mailForm: MailForm = MailForm(
@@ -63,9 +66,11 @@ class MailsFormView(
 
     private fun createSubmitButton(): Button {
         return createPrimaryButton("보내기") {
-            mailForm.bindOrNull()?.let {
-                mailHistoryService.save(it)
-                // TODO: emailService.메일전송(it, uploadFile)
+            val result = mailForm.bindOrNull()
+            if (result == null) {
+                createNotification("받는사람을 한 명 이상 지정해야 합니다.")
+            } else {
+                mailService.sendMailsByBcc(result, result.attachments)
                 UI.getCurrent().navigate(MailsView::class.java)
             }
         }

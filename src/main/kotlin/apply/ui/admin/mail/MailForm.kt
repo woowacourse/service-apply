@@ -17,7 +17,9 @@ import com.vaadin.flow.component.upload.Upload
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer
 import com.vaadin.flow.data.renderer.ComponentRenderer
 import com.vaadin.flow.data.renderer.Renderer
+import elemental.json.JsonObject
 import org.springframework.boot.autoconfigure.mail.MailProperties
+import org.springframework.core.io.ByteArrayResource
 import support.views.BindingFormLayout
 import support.views.NO_NAME
 import support.views.addSortableColumn
@@ -34,20 +36,22 @@ class MailForm(
     private val mailProperties: MailProperties
 ) : BindingFormLayout<MailData>(MailData::class) {
     private val subject: TextField = TextField("제목").apply { setWidthFull() }
+    private val sender: TextField = createSender()
     private val body: TextArea = createBody()
     private val mailTargets: MutableSet<MailTargetResponse> = mutableSetOf()
+    private val uploadFile: MutableMap<String, ByteArrayResource> = mutableMapOf()
     private val mailTargetsGrid: Grid<MailTargetResponse> = createMailTargetsGrid(mailTargets)
     private val recipientFilter: Component = createRecipientFilter()
-    private val fileUpload: Component = createFileUpload()
+    private val fileUpload: Upload = createFileUpload()
 
     init {
-        add(subject, createSender(), recipientFilter, mailTargetsGrid, body, fileUpload)
+        add(subject, sender, recipientFilter, mailTargetsGrid, body, fileUpload)
         setResponsiveSteps(ResponsiveStep("0", 1))
         drawRequired()
         refreshGridFooter()
     }
 
-    private fun createSender(): Component {
+    private fun createSender(): TextField {
         return TextField("보낸사람").apply {
             value = mailProperties.username
             isReadOnly = true
@@ -103,15 +107,17 @@ class MailForm(
     }
 
     private fun createFileUpload(): Upload {
-        return createUpload("파일첨부", MultiFileMemoryBuffer()) {
-            // TODO: 추후 업로드 된 파일을 메일로 첨부하는 로직이 추가되어야 함
-            // (uploadFiles 같은 필드를 두고 mail을 보내는 기능에 포함시키면 될 것 같음)
-            // it.files.forEach { fileName ->
-            //     val fileData = it.getFileData(fileName)
-            //     val inputStream = it.getInputStream(fileName)
-            //     val readBytes = inputStream.readBytes()
-            // }
+        val upload = createUpload("파일첨부", MultiFileMemoryBuffer()) {
+            it.files.forEach { fileName ->
+                val byteArray = it.getInputStream(fileName).readBytes()
+                uploadFile[fileName] = ByteArrayResource(byteArray)
+            }
         }
+        upload.element.addEventListener("file-remove") { event ->
+            val eventData: JsonObject = event.eventData
+            uploadFile.remove(eventData.getString("event.detail.file.name"))
+        }.addEventData("event.detail.file.name")
+        return upload
     }
 
     private fun createRemoveButton(): Renderer<MailTargetResponse> {
@@ -123,8 +129,12 @@ class MailForm(
     }
 
     override fun bindOrNull(): MailData? {
+        if (mailTargets.isEmpty()) {
+            return null
+        }
         return bindDefaultOrNull()?.apply {
             recipients = mailTargets.map { it.email }.toList()
+            attachments = uploadFile
         }
     }
 
