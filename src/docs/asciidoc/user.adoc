@@ -1,0 +1,49 @@
+= 회원 관련 API
+
+== 회원 가입
+
+operation::user-register[snippets='http-request,http-response']
+
+== 로그인
+
+operation::user-login[snippets='http-request,http-response']
+
+=== 로그인 실패
+
+operation::user-login-forbidden[snippets='http-request,http-response']
+
+== 임시 비밀번호 발급
+
+operation::user-reset-password[snippets='http-request,http-response']
+
+=== 임시 비밀번호 발급 실패
+
+사용자 정보를 올바르게 입력하지 않은 경우
+
+operation::user-reset-password-forbidden[snippets='http-request,http-response']
+
+== 비밀번호 변경
+
+operation::user-edit-password[snippets='http-request,http-response']
+
+=== 비밀번호 변경 실패
+
+기존 비밀번호를 올바르게 입력하지 않은 경우
+
+operation::user-edit-password-forbidden[snippets='http-request,http-response']
+
+== 인증 코드 발송
+
+operation::user-authentication-code[snippets='http-request,http-response']
+
+== 인증 코드 확인
+
+operation::user-authenticate-email[snippets='http-request,http-response']
+
+== 내 정보 조회
+
+operation::user-me[snippets='http-request,http-response']
+
+== 내 정보 변경
+
+operation::user-information[snippets='http-request,http-response']
