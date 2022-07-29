@@ -71,13 +71,16 @@
   justify-content: center;
   padding: 2rem 0;
 
-  font-size: 2rem;
   font-weight: 700;
   color: var(--gray-005);
 }
 
 @media screen and (max-width: 800px) {
   .tab-item {
+    font-size: 0.875rem;
+  }
+
+  .empty-state-box {
     font-size: 0.875rem;
   }
 
