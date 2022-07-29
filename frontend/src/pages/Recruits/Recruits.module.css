@@ -76,10 +76,7 @@
 }
 
 @media screen and (max-width: 800px) {
-  .tab-item {
-    font-size: 0.875rem;
-  }
-
+  .tab-item,
   .empty-state-box {
     font-size: 0.875rem;
   }
