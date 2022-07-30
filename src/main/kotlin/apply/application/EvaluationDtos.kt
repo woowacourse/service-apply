@@ -46,7 +46,6 @@ data class EvaluationData(
 
     @field:NotNull
     var recruitment: RecruitmentSelectData = RecruitmentSelectData(),
-
     var beforeEvaluation: EvaluationSelectData = EvaluationSelectData(),
 
     @field:NotNull

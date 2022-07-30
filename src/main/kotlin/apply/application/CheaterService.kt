@@ -3,6 +3,7 @@ package apply.application
 import apply.domain.cheater.Cheater
 import apply.domain.cheater.CheaterRepository
 import apply.domain.user.UserRepository
+import apply.domain.user.findAllByEmailIn
 import apply.domain.user.findByEmail
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -20,7 +21,8 @@ class CheaterService(
             "이미 등록된 부정 행위자입니다."
         }
         val cheater = cheaterRepository.save(Cheater(email, request.description))
-        return CheaterResponse(cheater, userRepository.findByEmail(email))
+        val user = userRepository.findByEmail(email)
+        return CheaterResponse(cheater, user)
     }
 
     fun getById(id: Long): CheaterResponse {
@@ -29,10 +31,9 @@ class CheaterService(
     }
 
     fun findAll(): List<CheaterResponse> {
-        return cheaterRepository.findAll().map {
-            val user = userRepository.findByEmail(it.email)
-            CheaterResponse(it, user)
-        }
+        val cheaters = cheaterRepository.findAll()
+        val usersByEmail = userRepository.findAllByEmailIn(cheaters.map { it.email }).associateBy { it.email }
+        return cheaters.map { CheaterResponse(it, usersByEmail[it.email]) }
     }
 
     fun deleteById(id: Long) {

@@ -87,17 +87,6 @@ data class RecruitmentResponse(
     val endDateTime: LocalDateTime,
     val status: RecruitmentStatus
 ) {
-    constructor(recruitment: Recruitment, termId: Long, termName: String) : this(
-        recruitment.id,
-        recruitment.title,
-        TermResponse(termId, termName),
-        recruitment.recruitable,
-        recruitment.hidden,
-        recruitment.startDateTime,
-        recruitment.endDateTime,
-        recruitment.status
-    )
-
     constructor(recruitment: Recruitment, term: Term) : this(
         recruitment.id,
         recruitment.title,
