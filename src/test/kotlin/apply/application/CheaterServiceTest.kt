@@ -29,7 +29,7 @@ internal class CheaterServiceTest {
     }
 
     @Test
-    fun `부정 행위자를 추가한다`() {
+    fun `부정행위자를 추가한다`() {
         val cheaterData = createCheaterData()
         every { cheaterRepository.existsByEmail(any()) } returns false
         every { cheaterRepository.save(any()) } returns Cheater(cheaterData.email, cheaterData.description)
@@ -38,7 +38,7 @@ internal class CheaterServiceTest {
     }
 
     @Test
-    fun `이미 등록된 부정 행위자를 추가하는 경우 예외를 던진다`() {
+    fun `이미 등록된 부정행위자를 추가하는 경우 예외를 던진다`() {
         val cheaterData = createCheaterData()
         every { cheaterRepository.existsByEmail(any()) } returns true
         assertThrows<IllegalArgumentException> { cheaterService.save(cheaterData) }

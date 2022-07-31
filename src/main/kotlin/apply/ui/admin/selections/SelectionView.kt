@@ -135,7 +135,7 @@ class SelectionView(
             addSortableColumn("성별") { it.gender.title }
             addSortableDateColumn("생년월일", ApplicantAndFormResponse::birthday)
             addSortableDateTimeColumn("지원 일시") { it.applicationForm.submittedDateTime }
-            addSortableColumn("부정 행위자") { if (it.isCheater) "O" else "X" }
+            addSortableColumn("부정행위자") { if (it.isCheater) "O" else "X" }
             addColumn(createButtonRenderer()).apply { isAutoWidth = true }
             setItems(users)
         }
