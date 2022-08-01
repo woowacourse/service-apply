@@ -66,8 +66,18 @@
   gap: 1.125rem;
 }
 
+.empty-state-box {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 0;
+
+  font-weight: 700;
+  color: var(--gray-005);
+}
+
 @media screen and (max-width: 800px) {
-  .tab-item {
+  .tab-item,
+  .empty-state-box {
     font-size: 0.875rem;
   }
 
