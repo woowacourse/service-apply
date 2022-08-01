@@ -15,8 +15,8 @@ class Evaluation(
     @Column(nullable = false)
     val recruitmentId: Long,
 
+    @Column(nullable = false)
     var beforeEvaluationId: Long = 0L,
-
     id: Long = 0L
 ) : BaseEntity(id) {
     fun hasBeforeEvaluation(): Boolean = beforeEvaluationId != 0L

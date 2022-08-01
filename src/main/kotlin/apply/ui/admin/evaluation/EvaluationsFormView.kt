@@ -24,12 +24,9 @@ class EvaluationsFormView(
     private val evaluationService: EvaluationService
 ) : VerticalLayout(), HasUrlParameter<String> {
     private val title: Title = Title()
-    private val evaluationForm: EvaluationForm = EvaluationForm(
-        evaluationService.findAllRecruitmentSelectData()
-    ) {
+    private val evaluationForm: EvaluationForm = EvaluationForm(evaluationService.findAllRecruitmentSelectData()) {
         evaluationService.getAllSelectDataByRecruitmentId(it)
     }
-
     private val submitButton: Button = createSubmitButton()
 
     init {

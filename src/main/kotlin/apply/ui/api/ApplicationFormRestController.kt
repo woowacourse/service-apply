@@ -18,38 +18,23 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import support.toUri
 import javax.validation.Valid
 
-@RestController
 @RequestMapping("/api")
+@RestController
 class ApplicationFormRestController(
     private val applicationFormService: ApplicationFormService,
     private val applicantService: ApplicantService
 ) {
-    @GetMapping("/application-forms/me")
-    fun getMyApplicationForms(
-        @LoginUser user: User
-    ): ResponseEntity<ApiResponse<List<MyApplicationFormResponse>>> {
-        val form = applicationFormService.getMyApplicationForms(user.id)
-        return ResponseEntity.ok().body(ApiResponse.success(form))
-    }
-
-    @GetMapping("/application-forms")
-    fun getForm(
-        @RequestParam recruitmentId: Long,
-        @LoginUser user: User
-    ): ResponseEntity<ApiResponse<ApplicationFormResponse>> {
-        val form = applicationFormService.getApplicationForm(user.id, recruitmentId)
-        return ResponseEntity.ok().body(ApiResponse.success(form))
-    }
-
     @PostMapping("/application-forms")
     fun create(
         @RequestBody @Valid request: CreateApplicationFormRequest,
         @LoginUser user: User
-    ): ResponseEntity<Unit> {
-        applicationFormService.create(user.id, request)
-        return ResponseEntity.ok().build()
+    ): ResponseEntity<ApiResponse<ApplicationFormResponse>> {
+        val response = applicationFormService.create(user.id, request)
+        return ResponseEntity.created("/api/application-forms?recruitmentId=${response.recruitmentId}".toUri())
+            .body(ApiResponse.success(response))
     }
 
     @PatchMapping("/application-forms")
@@ -59,6 +44,23 @@ class ApplicationFormRestController(
     ): ResponseEntity<Unit> {
         applicationFormService.update(user.id, request)
         return ResponseEntity.ok().build()
+    }
+
+    @GetMapping("/application-forms/me")
+    fun getMyApplicationForms(
+        @LoginUser user: User
+    ): ResponseEntity<ApiResponse<List<MyApplicationFormResponse>>> {
+        val form = applicationFormService.getMyApplicationForms(user.id)
+        return ResponseEntity.ok(ApiResponse.success(form))
+    }
+
+    @GetMapping("/application-forms")
+    fun getApplicationForm(
+        @RequestParam recruitmentId: Long,
+        @LoginUser user: User
+    ): ResponseEntity<ApiResponse<ApplicationFormResponse>> {
+        val form = applicationFormService.getApplicationForm(user.id, recruitmentId)
+        return ResponseEntity.ok(ApiResponse.success(form))
     }
 
     @GetMapping("/recruitments/{recruitmentId}/application-forms")

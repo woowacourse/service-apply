@@ -11,8 +11,6 @@ data class TermData(
     var id: Long = 0L
 ) {
     constructor(term: Term) : this(term.name, term.id)
-
-    fun toEntity() = Term(name, id)
 }
 
 data class TermResponse(

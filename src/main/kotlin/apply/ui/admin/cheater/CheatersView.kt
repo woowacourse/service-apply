@@ -30,7 +30,7 @@ class CheatersView(
     }
 
     private fun createTitle(): Component {
-        return HorizontalLayout(H1("부정 행위자")).apply {
+        return HorizontalLayout(H1("부정행위자")).apply {
             setSizeFull()
             justifyContentMode = FlexComponent.JustifyContentMode.CENTER
         }
@@ -62,7 +62,7 @@ class CheatersView(
 
     private fun createDeleteButtonRenderer(): Renderer<CheaterResponse> {
         return ComponentRenderer { cheater ->
-            createDeleteButtonWithDialog("부정 행위자를 삭제하시겠습니까?") {
+            createDeleteButtonWithDialog("부정행위자를 삭제하시겠습니까?") {
                 cheaterService.deleteById(cheater.id)
             }
         }

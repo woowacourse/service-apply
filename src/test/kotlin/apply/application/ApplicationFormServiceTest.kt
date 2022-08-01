@@ -171,7 +171,7 @@ class ApplicationFormServiceTest {
     fun `지원서를 생성한다`() {
         every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
         every { applicationFormRepository.existsByRecruitmentIdAndUserId(any(), any()) } returns false
-        every { applicationFormRepository.save(any<ApplicationForm>()) } returns mockk()
+        every { applicationFormRepository.save(any()) } returns applicationForm1
         every { applicationValidator.validate(any(), any()) } just Runs
 
         assertDoesNotThrow { applicationFormService.create(userId, createApplicationFormRequest) }

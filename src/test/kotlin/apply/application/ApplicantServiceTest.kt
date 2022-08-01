@@ -61,7 +61,7 @@ class ApplicantServiceTest {
         }
 
         @Test
-        fun `지원자 정보와 부정 행위자 여부를 함께 제공한다`() {
+        fun `지원자 정보와 부정행위자 여부를 함께 제공한다`() {
             val actual = applicantService.findAllByRecruitmentIdAndKeyword(1L)
 
             assertThat(actual).hasSize(1)
@@ -69,7 +69,7 @@ class ApplicantServiceTest {
         }
 
         @Test
-        fun `키워드로 찾은 지원자 정보와 부정 행위자 여부를 함께 제공한다`() {
+        fun `키워드로 찾은 지원자 정보와 부정행위자 여부를 함께 제공한다`() {
             val actual = applicantService.findAllByRecruitmentIdAndKeyword(1L, "amazzi")
 
             assertThat(actual).hasSize(1)

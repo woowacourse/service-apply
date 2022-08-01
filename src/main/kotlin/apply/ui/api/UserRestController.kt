@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import javax.validation.Valid
 
-@RestController
 @RequestMapping("/api/users")
+@RestController
 class UserRestController(
     private val userService: UserService,
     private val userAuthenticationService: UserAuthenticationService,
@@ -31,13 +31,13 @@ class UserRestController(
     @PostMapping("/register")
     fun generateToken(@RequestBody @Valid request: RegisterUserRequest): ResponseEntity<ApiResponse<String>> {
         val token = userAuthenticationService.generateTokenByRegister(request)
-        return ResponseEntity.ok().body(ApiResponse.success(token))
+        return ResponseEntity.ok(ApiResponse.success(token))
     }
 
     @PostMapping("/login")
     fun generateToken(@RequestBody @Valid request: AuthenticateUserRequest): ResponseEntity<ApiResponse<String>> {
         val token = userAuthenticationService.generateTokenByLogin(request)
-        return ResponseEntity.ok().body(ApiResponse.success(token))
+        return ResponseEntity.ok(ApiResponse.success(token))
     }
 
     @PostMapping("/reset-password")

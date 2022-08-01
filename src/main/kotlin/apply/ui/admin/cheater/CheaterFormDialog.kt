@@ -18,7 +18,7 @@ class CheaterFormDialog(
     private val cheaterService: CheaterService,
     reloadComponents: () -> Unit
 ) : Dialog() {
-    private val title: H2 = H2("부정 행위자 등록")
+    private val title: H2 = H2("부정행위자 등록")
     private val cheaterRegistrationForm: CheaterForm = CheaterForm { userService.findAllByKeyword(it) }
 
     init {
@@ -52,7 +52,7 @@ class CheaterFormDialog(
                     close()
                 }
             } catch (e: IllegalArgumentException) {
-                createNotification("이미 등록된 부정 행위자입니다.")
+                createNotification("이미 등록된 부정행위자입니다.")
             } catch (e: NullPointerException) {
                 createNotification("대상을 선택해야 합니다.")
             }
