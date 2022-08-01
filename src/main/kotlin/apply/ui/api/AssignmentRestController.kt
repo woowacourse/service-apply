@@ -30,8 +30,7 @@ class AssignmentRestController(
         @LoginUser user: User
     ): ResponseEntity<ApiResponse<AssignmentResponse>> {
         val response = assignmentService.create(missionId, user.id, request)
-        return ResponseEntity
-            .created("/missions/${response.id}/assignments/me".toUri())
+        return ResponseEntity.created("/missions/${response.id}/assignments/me".toUri())
             .body(ApiResponse.success(response))
     }
 

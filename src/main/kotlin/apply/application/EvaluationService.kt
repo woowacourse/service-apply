@@ -107,7 +107,7 @@ class EvaluationService(
 
     fun findAllRecruitmentSelectData(): List<RecruitmentSelectData> {
         return recruitmentRepository.findAll()
-            .map { recruitment -> RecruitmentSelectData(recruitment) }
+            .map(::RecruitmentSelectData)
             .sortedByDescending { it.id }
     }
 

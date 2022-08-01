@@ -29,10 +29,10 @@ fun createAssignmentRequest(
 }
 
 fun createAssignmentResponse(
-    id: Long = 1L,
     githubUsername: String = GITHUB_USERNAME,
     pullRequestUrl: String = PULL_REQUEST_URL,
-    note: String = NOTE
+    note: String = NOTE,
+    id: Long = 0L
 ): AssignmentResponse {
     return AssignmentResponse(id, githubUsername, pullRequestUrl, note)
 }
