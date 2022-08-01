@@ -18,22 +18,20 @@ class MissionService(
     private val evaluationTargetRepository: EvaluationTargetRepository,
     private val assignmentRepository: AssignmentRepository
 ) {
-    fun save(request: MissionData) {
+    fun save(request: MissionData): MissionResponse {
         validate(request)
-        missionRepository.save(
-            request.let {
-                Mission(
-                    it.title,
-                    it.description,
-                    it.evaluation.id,
-                    it.startDateTime,
-                    it.endDateTime,
-                    it.submittable,
-                    it.hidden,
-                    it.id
-                )
-            }
-        )
+        return missionRepository.save(
+            Mission(
+                request.title,
+                request.description,
+                request.evaluation.id,
+                request.startDateTime,
+                request.endDateTime,
+                request.submittable,
+                request.hidden,
+                request.id
+            )
+        ).let(::MissionResponse)
     }
 
     private fun validate(request: MissionData) {
@@ -55,10 +53,8 @@ class MissionService(
         return request.id == 0L || !missionRepository.existsById(request.id)
     }
 
-    fun getDataById(id: Long): MissionData {
-        val mission = missionRepository.getById(id)
-        val evaluation = evaluationRepository.getById(mission.evaluationId)
-        return MissionData(mission, evaluation)
+    fun getById(id: Long): MissionResponse {
+        return missionRepository.getById(id).let(::MissionResponse)
     }
 
     fun findAllByRecruitmentId(recruitmentId: Long): List<MissionAndEvaluationResponse> {
@@ -67,20 +63,25 @@ class MissionService(
         return missions.map { MissionAndEvaluationResponse(it, evaluationsById.getValue(it.evaluationId)) }
     }
 
+    fun findAllByUserIdAndRecruitmentId(userId: Long, recruitmentId: Long): List<MyMissionResponse> {
+        val evaluationIds = evaluationRepository.findAllByRecruitmentId(recruitmentId).map { it.id }
+        val includedEvaluationIds = evaluationIds
+            .filter { evaluationTargetRepository.existsByUserIdAndEvaluationId(userId, it) }
+        val assignments = assignmentRepository.findAllByUserId(userId)
+        return missionRepository.findAllByEvaluationIdIn(includedEvaluationIds)
+            .filterNot { it.hidden }
+            .map { mission -> MyMissionResponse(mission, assignments.any { it.missionId == mission.id }) }
+    }
+
     fun deleteById(id: Long) {
         val mission = missionRepository.getById(id)
         check(!mission.submittable) { "제출 가능한 과제는 삭제할 수 없습니다." }
         missionRepository.deleteById(id)
     }
 
-    fun findAllByUserIdAndRecruitmentId(userId: Long, recruitmentId: Long): List<MissionResponse> {
-        val evaluationIds = evaluationRepository.findAllByRecruitmentId(recruitmentId).map { it.id }
-        val includedEvaluationIds = evaluationIds.filter {
-            evaluationTargetRepository.existsByUserIdAndEvaluationId(userId, it)
-        }
-        val assignments = assignmentRepository.findAllByUserId(userId)
-        return missionRepository.findAllByEvaluationIdIn(includedEvaluationIds)
-            .filterNot { it.hidden }
-            .map { mission -> MissionResponse(mission, assignments.any { it.missionId == mission.id }) }
+    fun getDataById(id: Long): MissionData {
+        val mission = missionRepository.getById(id)
+        val evaluation = evaluationRepository.getById(mission.evaluationId)
+        return MissionData(mission, evaluation)
     }
 }

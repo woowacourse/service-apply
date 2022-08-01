@@ -140,18 +140,18 @@ class DatabaseInitializer(
     private fun populateRecruitmentItems() {
         val recruitmentItems = listOf(
             RecruitmentItem(
-                title = "프로그래머가 되려는 이유는 무엇인가요?",
-                description = "어떤 계기로 프로그래머라는 직업을 꿈꾸게 되었나요? 프로그래밍을 배워 최종적으로 하고 싶은 일이 무엇인지, 프로그래밍을 통해 만들고 싶은 소프트웨어가 있다면 무엇인지에 대해 작성해 주세요.",
+                title = "프로그래밍 학습 과정과 현재 자신이 생각하는 역량은",
+                description = "우아한테크코스는 프로그래밍에 대한 기본 지식과 경험을 가진 교육생을 선발하기 때문에 프로그래밍 경험이 있는 상태에서 지원하게 됩니다. 프로그래밍 학습을 어떤 계기로 시작했으며, 어떻게 학습해왔는지, 이를 통해 현재 어느 정도의 역량을 보유한 상태인지를 구체적으로 작성해 주세요.",
                 recruitmentId = 1L,
                 maximumLength = 1000,
                 position = 1
             ),
             RecruitmentItem(
-                title = "프로그래밍 학습 과정과 현재 자신이 생각하는 역량은",
-                description = "우아한테크코스는 프로그래밍에 대한 기본 지식과 경험을 가진 교육생을 선발하기 때문에 프로그래밍 경험이 있는 상태에서 지원하게 됩니다. 프로그래밍 학습을 어떤 계기로 시작했으며, 어떻게 학습해왔는지, 이를 통해 현재 어느 정도의 역량을 보유한 상태인지를 구체적으로 작성해 주세요.",
+                title = "프로그래머가 되려는 이유는 무엇인가요?",
+                description = "어떤 계기로 프로그래머라는 직업을 꿈꾸게 되었나요? 프로그래밍을 배워 최종적으로 하고 싶은 일이 무엇인지, 프로그래밍을 통해 만들고 싶은 소프트웨어가 있다면 무엇인지에 대해 작성해 주세요.",
                 recruitmentId = 1L,
                 maximumLength = 1000,
-                position = 0
+                position = 2
             )
         )
         recruitmentItemRepository.saveAll(recruitmentItems)
@@ -191,15 +191,7 @@ class DatabaseInitializer(
                     "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
                 evaluationId = 1L,
                 maximumScore = 2,
-                position = 0
-            ),
-            EvaluationItem(
-                title = "인덴트가 2 이하인가?",
-                description = "[리뷰 절차]\n" +
-                    "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
-                evaluationId = 1L,
-                maximumScore = 3,
-                position = 2
+                position = 1
             ),
             EvaluationItem(
                 title = "하드코딩을 상수화 했는가?",
@@ -207,7 +199,15 @@ class DatabaseInitializer(
                     "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
                 evaluationId = 1L,
                 maximumScore = 2,
-                position = 1
+                position = 2
+            ),
+            EvaluationItem(
+                title = "인덴트가 2 이하인가?",
+                description = "[리뷰 절차]\n" +
+                    "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
+                evaluationId = 1L,
+                maximumScore = 3,
+                position = 3
             )
         )
         evaluationItemRepository.saveAll(evaluationItems)
@@ -263,8 +263,8 @@ class DatabaseInitializer(
                 userId = 1L,
                 answers = ApplicationFormAnswers(
                     mutableListOf(
-                        ApplicationFormAnswer("고객에게 가치를 전달하고 싶습니다.", 1L),
-                        ApplicationFormAnswer("도전, 끈기", 2L)
+                        ApplicationFormAnswer("도전, 끈기", 1L),
+                        ApplicationFormAnswer("고객에게 가치를 전달하고 싶습니다.", 2L)
                     )
                 )
             ),
@@ -278,8 +278,8 @@ class DatabaseInitializer(
                 userId = 2L,
                 answers = ApplicationFormAnswers(
                     mutableListOf(
-                        ApplicationFormAnswer("스타트업을 하고 싶습니다.", 1L),
-                        ApplicationFormAnswer("책임감", 2L)
+                        ApplicationFormAnswer("책임감", 1L),
+                        ApplicationFormAnswer("스타트업을 하고 싶습니다.", 2L),
                     )
                 )
             ),
@@ -293,8 +293,8 @@ class DatabaseInitializer(
                 userId = 3L,
                 answers = ApplicationFormAnswers(
                     mutableListOf(
-                        ApplicationFormAnswer("바딘을 배우고 싶습니다.", 1L),
-                        ApplicationFormAnswer("건강", 2L)
+                        ApplicationFormAnswer("건강", 1L),
+                        ApplicationFormAnswer("바딘을 배우고 싶습니다.", 2L)
                     )
                 )
             ),
@@ -308,8 +308,8 @@ class DatabaseInitializer(
                 userId = 4L,
                 answers = ApplicationFormAnswers(
                     mutableListOf(
-                        ApplicationFormAnswer("코딩 교육을 하고 싶습니다.", 1L),
-                        ApplicationFormAnswer("사랑", 2L)
+                        ApplicationFormAnswer("사랑", 1L),
+                        ApplicationFormAnswer("코딩 교육을 하고 싶습니다.", 2L)
                     )
                 )
             )

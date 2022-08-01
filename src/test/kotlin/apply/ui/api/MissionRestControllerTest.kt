@@ -6,6 +6,7 @@ import apply.createEvaluation
 import apply.createMission
 import apply.createMissionData
 import apply.createMissionResponse
+import apply.createMyMissionResponse
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
 import io.mockk.every
@@ -34,17 +35,29 @@ internal class MissionRestControllerTest : RestControllerTest() {
 
     @Test
     fun `과제를 추가한다`() {
-        every { missionService.save(any()) } just Runs
+        val missionResponse = createMissionResponse(id = 1L)
+        every { missionService.save(any()) } returns missionResponse
 
-        mockMvc.post(
-            "/api/recruitments/{recruitmentId}/missions",
-            recruitmentId
-        ) {
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
-            contentType = MediaType.APPLICATION_JSON
+        mockMvc.post("/api/recruitments/{recruitmentId}/missions", recruitmentId) {
             content = objectMapper.writeValueAsString(createMissionData())
+            contentType = MediaType.APPLICATION_JSON
+            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+        }.andExpect {
+            status { isCreated }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(missionResponse))) }
+        }
+    }
+
+    @Test
+    fun `과제를 조회한다`() {
+        val response = createMissionResponse()
+        every { missionService.getById(any()) } returns response
+
+        mockMvc.get("/api/recruitments/{recruitmentId}/missions/{missionId}", recruitmentId, 1L) {
+            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isOk }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(response))) }
         }
     }
 
@@ -66,18 +79,15 @@ internal class MissionRestControllerTest : RestControllerTest() {
 
     @Test
     fun `나의 과제들을 조회한다`() {
-        val missionResponses = listOf(createMissionResponse(id = 1L), createMissionResponse(id = 2L))
-        every { missionService.findAllByUserIdAndRecruitmentId(any(), any()) } returns missionResponses
+        val myMissionResponses = listOf(createMyMissionResponse(id = 1L), createMyMissionResponse(id = 2L))
+        every { missionService.findAllByUserIdAndRecruitmentId(any(), any()) } returns myMissionResponses
 
-        mockMvc.get(
-            "/api/recruitments/{recruitmentId}/missions/me",
-            recruitmentId
-        ) {
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+        mockMvc.get("/api/recruitments/{recruitmentId}/missions/me", recruitmentId) {
             contentType = MediaType.APPLICATION_JSON
+            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(missionResponses))) }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(myMissionResponses))) }
         }
     }
 
@@ -85,11 +95,7 @@ internal class MissionRestControllerTest : RestControllerTest() {
     fun `과제를 삭제한다`() {
         every { missionService.deleteById(any()) } just Runs
 
-        mockMvc.delete(
-            "/api/recruitments/{recruitmentId}/missions/{missionId}",
-            recruitmentId,
-            1L
-        ) {
+        mockMvc.delete("/api/recruitments/{recruitmentId}/missions/{missionId}", recruitmentId, 1L) {
             header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isOk }

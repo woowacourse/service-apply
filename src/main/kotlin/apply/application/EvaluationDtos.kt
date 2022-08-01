@@ -46,7 +46,6 @@ data class EvaluationData(
 
     @field:NotNull
     var recruitment: RecruitmentSelectData = RecruitmentSelectData(),
-
     var beforeEvaluation: EvaluationSelectData = EvaluationSelectData(),
 
     @field:NotNull
@@ -111,7 +110,23 @@ data class EvaluationResponse(
     val recruitmentId: Long,
     val beforeEvaluationTitle: String = "",
     val beforeEvaluationId: Long = 0L
-)
+) {
+    constructor(
+        evaluation: Evaluation,
+        recruitmentTitle: String,
+        recruitmentId: Long,
+        beforeEvaluationTitle: String,
+        beforeEvaluationId: Long
+    ) : this(
+        evaluation.id,
+        evaluation.title,
+        evaluation.description,
+        recruitmentTitle,
+        recruitmentId,
+        beforeEvaluationTitle,
+        beforeEvaluationId
+    )
+}
 
 data class EvaluationItemResponse(
     val title: String,

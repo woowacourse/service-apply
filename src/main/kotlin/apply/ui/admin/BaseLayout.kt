@@ -60,7 +60,7 @@ class BaseLayout(
             "평가 관리" of EvaluationsView::class.java,
             "과제 관리".accordionOf("admin/missions", recruitments),
             "선발 과정".accordionOf("admin/selections", recruitments),
-            "부정 행위자" of CheatersView::class.java,
+            "부정행위자" of CheatersView::class.java,
             "메일 관리" of MailsView::class.java
         )
     }

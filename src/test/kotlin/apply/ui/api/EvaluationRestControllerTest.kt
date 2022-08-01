@@ -29,9 +29,14 @@ internal class EvaluationRestControllerTest : RestControllerTest() {
     @MockkBean
     private lateinit var evaluationService: EvaluationService
 
+    private val evaluationResponses: List<EvaluationResponse> = listOf(
+        EvaluationResponse(1L, "평가1", "평가1 설명", "우테코 3기 백엔드", 4L, "", 2L),
+        EvaluationResponse(2L, "평가2", "평가2 설명", "우테코 3기 프론트", 5L, "", 2L),
+    )
+
     @Test
     fun `평가를 추가한다`() {
-        every { evaluationService.save(any()) } just Runs
+        every { evaluationService.save(any()) } returns evaluationResponses[0]
 
         mockMvc.post("/api/recruitments/{recruitmentId}/evaluations", 1L) {
             content = objectMapper.writeValueAsBytes(
@@ -40,36 +45,32 @@ internal class EvaluationRestControllerTest : RestControllerTest() {
             contentType = MediaType.APPLICATION_JSON
             header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
-            status { isOk }
+            status { isCreated }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(evaluationResponses[0]))) }
         }
     }
 
     @Test
     fun `특정 평가를 조회한다`() {
-        val evaluationData = EvaluationData(id = 1L)
-        every { evaluationService.getDataById(any()) } returns evaluationData
+        every { evaluationService.getById(any()) } returns evaluationResponses[0]
 
-        mockMvc.get("/api/recruitments/{recruitmentId}/evaluations/{evaluationId}", 1L, evaluationData.id) {
+        mockMvc.get("/api/recruitments/{recruitmentId}/evaluations/{evaluationId}", 1L, 1L) {
             header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(evaluationData))) }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(evaluationResponses[0]))) }
         }
     }
 
     @Test
     fun `모든 (상세한) 평가를 조회한다`() {
-        val expected = listOf(
-            EvaluationResponse(1L, "평가1", "평가1 설명", "우테코 3기 백엔드", 4L, "", 2L),
-            EvaluationResponse(2L, "평가2", "평가2 설명", "우테코 3기 프론트", 5L, "", 2L),
-        )
-        every { evaluationService.findAllWithRecruitment() } returns expected
+        every { evaluationService.findAllWithRecruitment() } returns evaluationResponses
 
         mockMvc.get("/api/recruitments/{recruitmentId}/evaluations", 1L) {
             header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(expected))) }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(evaluationResponses))) }
         }
     }
 

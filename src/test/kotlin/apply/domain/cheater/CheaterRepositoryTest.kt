@@ -40,7 +40,7 @@ internal class CheaterRepositoryTest(
     }
 
     @Test
-    fun `지원자의 부정 행위 여부를 확인한다`() {
+    fun `지원자의 부정행위 여부를 확인한다`() {
         assertAll(
             { assertThat(cheaterRepository.existsByEmail(cheater.email)).isTrue() },
             { assertThat(cheaterRepository.existsByEmail(user.email)).isFalse() }
