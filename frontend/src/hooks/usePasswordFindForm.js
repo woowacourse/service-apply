@@ -12,7 +12,7 @@ export const PASSWORD_FIND_FORM_NAME = {
 const initialRequiredForm = {
   [PASSWORD_FIND_FORM_NAME.NAME]: "",
   [PASSWORD_FIND_FORM_NAME.EMAIL]: "",
-  [PASSWORD_FIND_FORM_NAME.BIRTHDAY]: "",
+  [PASSWORD_FIND_FORM_NAME.BIRTHDAY]: null,
 };
 
 const initialErrorMessage = {
