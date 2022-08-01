@@ -93,8 +93,8 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
                 recruitmentId,
                 evaluationId,
             )
-                .param("keyword", keyword)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+                .param("keyword", keyword)
         ).andExpect(status().isOk)
             .andExpect(
                 content().json(

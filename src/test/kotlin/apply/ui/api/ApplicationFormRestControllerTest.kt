@@ -42,8 +42,8 @@ internal class ApplicationFormRestControllerTest : RestControllerTest() {
         every { applicationFormService.getApplicationForm(any(), any()) } returns applicationFormResponse
 
         mockMvc.get("/api/application-forms") {
-            param("recruitmentId", "1")
             header(AUTHORIZATION, "Bearer valid_token")
+            param("recruitmentId", "1")
         }.andExpect {
             status { isOk }
             content { json(objectMapper.writeValueAsString(ApiResponse.success(applicationFormResponse))) }
