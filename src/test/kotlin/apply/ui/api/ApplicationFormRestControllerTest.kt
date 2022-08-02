@@ -6,22 +6,27 @@ import apply.application.ApplicationFormResponse
 import apply.application.ApplicationFormService
 import apply.application.CreateApplicationFormRequest
 import apply.application.MyApplicationFormResponse
+import apply.application.UpdateApplicationFormRequest
 import apply.createApplicationForm
 import apply.createApplicationForms
 import apply.createUser
 import com.ninjasquad.springmockk.MockkBean
+import io.mockk.Runs
 import io.mockk.every
+import io.mockk.just
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.MediaType
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.test.web.servlet.get
+import org.springframework.test.web.servlet.patch
 import org.springframework.test.web.servlet.post
 
 @WebMvcTest(
     controllers = [ApplicationFormRestController::class]
 )
-internal class ApplicationFormRestControllerTest : RestControllerTest() {
+class ApplicationFormRestControllerTest : RestControllerTest() {
     @MockkBean
     private lateinit var applicationFormService: ApplicationFormService
 
@@ -38,31 +43,6 @@ internal class ApplicationFormRestControllerTest : RestControllerTest() {
     private val applicantAndFormFindByUserKeywordResponses = listOf(applicantAndFormResponses[1])
 
     @Test
-    fun `올바른 지원서 요청에 정상적으로 응답한다`() {
-        every { applicationFormService.getApplicationForm(any(), any()) } returns applicationFormResponse
-
-        mockMvc.get("/api/application-forms") {
-            header(AUTHORIZATION, "Bearer valid_token")
-            param("recruitmentId", "1")
-        }.andExpect {
-            status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(applicationFormResponse))) }
-        }
-    }
-
-    @Test
-    fun `내 지원서 요청에 정상적으로 응답한다`() {
-        every { applicationFormService.getMyApplicationForms(any()) } returns myApplicationFormResponses
-
-        mockMvc.get("/api/application-forms/me") {
-            header(AUTHORIZATION, "Bearer valid_token")
-        }.andExpect {
-            status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(myApplicationFormResponses))) }
-        }
-    }
-
-    @Test
     fun `지원서를 생성한다`() {
         every { applicationFormService.create(any(), any()) } returns applicationFormResponse
 
@@ -73,6 +53,54 @@ internal class ApplicationFormRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isCreated }
             content { json(objectMapper.writeValueAsString(ApiResponse.success(applicationFormResponse))) }
+        }.andDo {
+            handle(document("application-forms-create"))
+        }
+    }
+
+    @Test
+    fun `지원서를 수정한다`() {
+        every { applicationFormService.update(any(), any()) } just Runs
+
+        mockMvc.patch("/api/application-forms") {
+            content = objectMapper.writeValueAsString(UpdateApplicationFormRequest(1L))
+            contentType = MediaType.APPLICATION_JSON
+            header(AUTHORIZATION, "Bearer valid_token")
+        }.andExpect {
+            status { isOk }
+        }.andDo {
+            handle(document("application-forms-update"))
+        }
+    }
+
+    @Test
+    fun `내 지원서 요청에 정상적으로 응답한다`() {
+        every { applicationFormService.getMyApplicationForms(any()) } returns myApplicationFormResponses
+
+        mockMvc.get("/api/application-forms/me") {
+            contentType = MediaType.APPLICATION_JSON
+            header(AUTHORIZATION, "Bearer valid_token")
+        }.andExpect {
+            status { isOk }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(myApplicationFormResponses))) }
+        }.andDo {
+            handle(document("application-forms-me"))
+        }
+    }
+
+    @Test
+    fun `올바른 지원서 요청에 정상적으로 응답한다`() {
+        every { applicationFormService.getApplicationForm(any(), any()) } returns applicationFormResponse
+
+        mockMvc.get("/api/application-forms") {
+            contentType = MediaType.APPLICATION_JSON
+            header(AUTHORIZATION, "Bearer valid_token")
+            param("recruitmentId", "1")
+        }.andExpect {
+            status { isOk }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(applicationFormResponse))) }
+        }.andDo {
+            handle(document("application-forms-read"))
         }
     }
 
@@ -88,19 +116,12 @@ internal class ApplicationFormRestControllerTest : RestControllerTest() {
             contentType = MediaType.APPLICATION_JSON
             header(AUTHORIZATION, "Bearer valid_token")
             param("keyword", userKeyword)
-        }
-            .andExpect {
-                status { isOk }
-                content {
-                    json(
-                        objectMapper.writeValueAsString(
-                            ApiResponse.success(
-                                applicantAndFormFindByUserKeywordResponses
-                            )
-                        )
-                    )
-                }
+        }.andExpect {
+            status { isOk }
+            content {
+                json(objectMapper.writeValueAsString(ApiResponse.success(applicantAndFormFindByUserKeywordResponses)))
             }
+        }
     }
 
     @Test
@@ -111,9 +132,7 @@ internal class ApplicationFormRestControllerTest : RestControllerTest() {
             applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId)
         } returns applicantAndFormResponses
 
-        mockMvc.get(
-            "/api/recruitments/{recruitmentId}/application-forms", recruitmentId
-        ) {
+        mockMvc.get("/api/recruitments/{recruitmentId}/application-forms", recruitmentId) {
             contentType = MediaType.APPLICATION_JSON
             header(AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
