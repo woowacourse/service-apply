@@ -248,10 +248,7 @@ internal class UserRestControllerTest : RestControllerTest() {
     fun `키워드(이름 or 이메일)로 회원들을 조회한다`() {
         every { userService.findAllByKeyword(userKeyword) } returns userResponses
 
-        mockMvc.get(
-            "/api/users",
-            userKeyword
-        ) {
+        mockMvc.get("/api/users", userKeyword) {
             contentType = MediaType.APPLICATION_JSON
             header(AUTHORIZATION, "Bearer valid_token")
             param("keyword", userKeyword)
