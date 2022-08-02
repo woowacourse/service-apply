@@ -1,4 +1,4 @@
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { fetchPasswordEdit } from "../../api";
 import Button from "../../components/@common/Button/Button";
 import Container, { CONTAINER_SIZE } from "../../components/@common/Container/Container";
@@ -13,7 +13,7 @@ import styles from "./PasswordEdit.module.css";
 
 const PasswordEdit = () => {
   const { token, resetToken } = useTokenContext();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { form, errorMessage, handleChanges, handleCapsLockState, isValid, isEmpty } =
     usePasswordEditForm();
@@ -33,7 +33,7 @@ const PasswordEdit = () => {
       alert(SUCCESS_MESSAGE.API.CHANGE_PASSWORD);
 
       resetToken();
-      history.push(PATH.LOGIN);
+      navigate(PATH.LOGIN);
     } catch (error) {
       handleSubmitError(error);
     }

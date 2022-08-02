@@ -1,5 +1,6 @@
 import { useEffect } from "react";
-import { useHistory, useLocation, useParams } from "react-router";
+import { useLocation, useParams } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { fetchAssignment, patchAssignment, postAssignment } from "../../api/recruitments";
 import Button from "../../components/@common/Button/Button";
 import Container from "../../components/@common/Container/Container";
@@ -15,7 +16,7 @@ import useTokenContext from "../../hooks/useTokenContext";
 import styles from "./AssignmentSubmit.module.css";
 
 const AssignmentSubmit = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
   const { status } = useParams();
   const { token } = useTokenContext();
@@ -58,7 +59,7 @@ const AssignmentSubmit = () => {
 
       alert(SUCCESS_MESSAGE.API.SUBMIT_ASSIGNMENT);
 
-      history.push(PATH.MY_APPLICATION);
+      navigate(PATH.MY_APPLICATION);
     } catch (error) {
       handleSubmitError(error);
     }
@@ -76,8 +77,7 @@ const AssignmentSubmit = () => {
 
   useEffect(() => {
     if (!recruitmentId || !currentMission) {
-      history.replace(PATH.RECRUITS);
-
+      navigate(PATH.RECRUITS, { replace: true });
       return;
     }
 

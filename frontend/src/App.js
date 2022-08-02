@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./api/api";
 import "./App.css";
 import Footer from "./components/Footer/Footer";
@@ -28,51 +28,43 @@ const App = () => {
       <RecruitmentProvider>
         <BrowserRouter>
           <Header />
-
           <main className="main">
             <ScrollToTop>
-              <Switch>
-                <Route path={[PATH.HOME, PATH.RECRUITS]} exact>
-                  <Recruits />
-                </Route>
-                <Route path={PATH.SIGN_UP} exact>
-                  <SignUp />
-                </Route>
-                <Route path={PATH.LOGIN} exact>
-                  <Login />
-                </Route>
-                <Route path={PATH.FIND_PASSWORD} exact>
-                  <PasswordFind />
-                </Route>
-                <Route path={PATH.FIND_PASSWORD_RESULT} exact>
-                  <PasswordFindResult />
+              <Routes>
+                <Route path={PATH.HOME} element={<Recruits />} />
+                <Route path={PATH.RECRUITS} element={<Recruits />} />
+                <Route path={PATH.SIGN_UP} element={<SignUp />} />
+                <Route path={PATH.LOGIN} element={<Login />} />
+                <Route path={PATH.FIND_PASSWORD} element={<PasswordFind />} />
+                <Route path={PATH.FIND_PASSWORD_RESULT} element={<PasswordFindResult />} />
+                <Route element={<PrivateRoute />}>
+                  <Route path={PATH.APPLICATION_FORM} element={<ApplicationRegister />} />
+                  <Route path={PATH.EDIT_PASSWORD} element={<PasswordEdit />} />
+                  <Route path={PATH.MY_APPLICATION} element={<MyApplication />} />
+                  <Route path={PATH.ASSIGNMENT} element={<AssignmentSubmit />} />
                 </Route>
 
-                <PrivateRoute path={PATH.APPLICATION_FORM} exact>
-                  <ApplicationRegister />
-                </PrivateRoute>
-                <PrivateRoute path={PATH.EDIT_PASSWORD} exact>
-                  <PasswordEdit />
-                </PrivateRoute>
-                <PrivateRoute path={PATH.MY_APPLICATION} exact>
-                  <MyApplication />
-                </PrivateRoute>
-                <PrivateRoute path={PATH.ASSIGNMENT} exact>
-                  <AssignmentSubmit />
-                </PrivateRoute>
-
-                <UserInfoProvider>
-                  <PrivateRoute path={PATH.MY_PAGE} exact>
-                    <MyPage />
-                  </PrivateRoute>
-                  <PrivateRoute path={PATH.EDIT_MY_PAGE} exact>
-                    <MyPageEdit />
-                  </PrivateRoute>
-                </UserInfoProvider>
-              </Switch>
+                <Route element={<PrivateRoute />}>
+                  <Route
+                    path={PATH.MY_PAGE}
+                    element={
+                      <UserInfoProvider>
+                        <MyPage />
+                      </UserInfoProvider>
+                    }
+                  />
+                  <Route
+                    path={PATH.EDIT_MY_PAGE}
+                    element={
+                      <UserInfoProvider>
+                        <MyPageEdit />
+                      </UserInfoProvider>
+                    }
+                  />
+                </Route>
+              </Routes>
             </ScrollToTop>
           </main>
-
           <Footer />
         </BrowserRouter>
       </RecruitmentProvider>

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { generatePath, Link, useHistory, useLocation } from "react-router-dom";
+import { generatePath, Link, useNavigate, useLocation } from "react-router-dom";
 import Button from "../../components/@common/Button/Button";
 import Container, { CONTAINER_SIZE } from "../../components/@common/Container/Container";
 import MessageTextInput from "../../components/@common/MessageTextInput/MessageTextInput";
@@ -13,7 +13,7 @@ import { generateQuery } from "../../utils/route/query";
 import styles from "./Login.module.css";
 
 const Login = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
   const currentRecruitment = location.state?.currentRecruitment;
 
@@ -39,14 +39,14 @@ const Login = () => {
           }
         : PATH.RECRUITS;
 
-      history.push(path);
+      navigate(path);
     } catch (error) {
       alert(ERROR_MESSAGE.API.LOGIN_FAILURE);
     }
   };
 
   useEffect(() => {
-    if (token) history.push(PATH.HOME);
+    if (token) navigate(PATH.HOME);
   }, [token]);
 
   return (

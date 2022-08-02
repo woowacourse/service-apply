@@ -1,13 +1,13 @@
 import PropTypes from "prop-types";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Button, { BUTTON_VARIANT } from "../../@common/Button/Button";
 
 const CancelButton = ({ confirmMessage }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleClick = () => {
     if (!confirmMessage || (confirmMessage && window.confirm(confirmMessage))) {
-      history.goBack();
+      navigate(-1);
     }
   };
 

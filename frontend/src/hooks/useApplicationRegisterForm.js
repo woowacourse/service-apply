@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { generatePath, useHistory } from "react-router";
+import { generatePath, useNavigate } from "react-router";
 import * as Api from "../api";
 import { ERROR_MESSAGE } from "../constants/messages";
 import PATH, { PARAM } from "../constants/path";
@@ -41,7 +41,7 @@ const useApplicationRegisterForm = ({
   const [errorMessage, setErrorMessage] = useState(errorMessageInitialValue);
 
   const [modifiedDateTime, setModifiedDateTime] = useState("");
-  const history = useHistory();
+  const navigate = useNavigate();
   const { token } = useTokenContext();
 
   const isAnswersEmpty =
@@ -96,25 +96,24 @@ const useApplicationRegisterForm = ({
 
     if (error.response?.status === 409) {
       alert(error.response?.data.message);
-      history.push(PATH.HOME);
+      navigate(PATH.HOME);
       return;
     }
-
-    history.replace({
+    navigate({
       pathname: generatePath(PATH.APPLICATION_FORM, {
         status: PARAM.APPLICATION_FORM_STATUS.EDIT,
       }),
       search: generateQuery({ recruitmentId }),
       state: { currentRecruitment },
+      replace: true,
     });
   };
 
   const handleLoadFormError = (error) => {
     if (!error) return;
-
     // TODO: 서버 에러응답을 클라이언트에서 분기처리하여 메시지 표시한다.
     alert(error.response.data.message);
-    history.push(PATH.RECRUITS);
+    navigate(PATH.RECRUITS);
   };
 
   const loadForm = async () => {
@@ -145,8 +144,7 @@ const useApplicationRegisterForm = ({
 
   useEffect(() => {
     if (!recruitmentId || !currentRecruitment) {
-      history.replace(PATH.RECRUITS);
-
+      navigate(PATH.RECRUITS, { replace: true });
       return;
     }
 
