@@ -1,0 +1,13 @@
+= 과제 관련 API
+
+== 과제 제출물 생성
+
+operation::assignment-create[snippets='http-request,http-response']
+
+== 과제 제출물 수정
+
+operation::assignment-update[snippets='http-request,http-response']
+
+== 내 과제 제출물 조회
+
+operation::assignment-me[snippets='http-request,http-response']
