@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { generatePath, useHistory } from "react-router";
+import { generatePath } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { fetchMyApplicationForms } from "../../api/application-forms";
 import Container from "../../components/@common/Container/Container";
 import Panel from "../../components/@common/Panel/Panel";
@@ -45,7 +46,7 @@ const isApplicationDisabled = (submitted, recruitable) => {
 };
 
 const MyApplication = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { token } = useTokenContext();
   const { recruitment } = useRecruitmentContext();
 
@@ -69,7 +70,7 @@ const MyApplication = () => {
   const { missions } = useMissions(recruitmentIds);
 
   const routeToApplicationForm = (recruitment) => () => {
-    history.push({
+    navigate({
       pathname: generatePath(PATH.APPLICATION_FORM, {
         status: PARAM.APPLICATION_FORM_STATUS.EDIT,
       }),
@@ -84,7 +85,7 @@ const MyApplication = () => {
     ({ recruitmentId, mission, submitted }) =>
     () => {
       if (submitted) {
-        history.push({
+        navigate({
           pathname: generatePath(PATH.ASSIGNMENT, {
             status: PARAM.ASSIGNMENT_STATUS.EDIT,
           }),
@@ -94,7 +95,7 @@ const MyApplication = () => {
           },
         });
       } else {
-        history.push({
+        navigate({
           pathname: generatePath(PATH.ASSIGNMENT, {
             status: PARAM.ASSIGNMENT_STATUS.NEW,
           }),

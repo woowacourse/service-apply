@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Button from "../../components/@common/Button/Button";
 import Container, { CONTAINER_SIZE } from "../../components/@common/Container/Container";
 import MessageTextInput from "../../components/@common/MessageTextInput/MessageTextInput";
@@ -18,7 +18,7 @@ import useTokenContext from "../../hooks/useTokenContext";
 import styles from "./SignUp.module.css";
 
 const SignUp = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { postRegister } = useTokenContext();
 
   const [emailStatus, setEmailStatus] = useState(EMAIL_STATUS.INPUT);
@@ -44,7 +44,7 @@ const SignUp = () => {
 
     try {
       await postRegister(form);
-      history.push(PATH.RECRUITS);
+      navigate(PATH.RECRUITS);
     } catch (error) {
       alert(ERROR_MESSAGE.API.JOIN_FAILURE);
     }

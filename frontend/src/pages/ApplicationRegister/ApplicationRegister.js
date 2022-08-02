@@ -1,6 +1,6 @@
 import React from "react";
-import { generatePath, useHistory } from "react-router";
-import { useLocation, useParams } from "react-router-dom";
+import { generatePath } from "react-router";
+import { useLocation, useParams, useNavigate } from "react-router-dom";
 import * as Api from "../../api";
 import Button, { BUTTON_VARIANT } from "../../components/@common/Button/Button";
 import Container from "../../components/@common/Container/Container";
@@ -25,10 +25,9 @@ import styles from "./ApplicationRegister.module.css";
 
 const ApplicationRegister = () => {
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { status } = useParams();
   const { token } = useTokenContext();
-
   const { recruitmentId = null } = parseQuery(location.search);
   const currentRecruitment = location.state?.currentRecruitment ?? null;
   const { recruitmentItems = [] } = useRecruitmentItem(recruitmentId);
@@ -76,7 +75,7 @@ const ApplicationRegister = () => {
 
       setModifiedDateTime(formatDateTime(new Date()));
       alert(SUCCESS_MESSAGE.API.SUBMIT_APPLICATION);
-      history.replace(PATH.HOME);
+      navigate(PATH.HOME, { replace: true });
     } catch (error) {
       handleSaveError(error);
     }
@@ -107,7 +106,7 @@ const ApplicationRegister = () => {
         search: generateQuery({ recruitmentId }),
       };
 
-      history.replace(path);
+      navigate(path, { replace: true });
     } catch (error) {
       handleSaveError(error);
     }
