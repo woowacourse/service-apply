@@ -7,3 +7,5 @@
 == Service-Apply
 
 include::user.adoc[]
+include::application-form.adoc[]
+include::assignment.adoc[]
