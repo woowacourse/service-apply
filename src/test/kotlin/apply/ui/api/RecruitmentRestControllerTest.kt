@@ -18,21 +18,20 @@ import io.mockk.just
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.HttpHeaders
+import org.springframework.http.MediaType
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders
 import org.springframework.restdocs.payload.JsonFieldType
 import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
 import org.springframework.restdocs.payload.PayloadDocumentation.requestFields
-import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
-import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
-import org.springframework.restdocs.request.RequestDocumentation.pathParameters
+import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @WebMvcTest(
     controllers = [RecruitmentRestController::class]
 )
-internal class RecruitmentRestControllerTest : RestControllerTest() {
+class RecruitmentRestControllerTest : RestControllerTest() {
     @MockkBean
     private lateinit var recruitmentService: RecruitmentService
 
@@ -48,54 +47,31 @@ internal class RecruitmentRestControllerTest : RestControllerTest() {
     )
 
     @Test
-    fun `공개된 지원서 목록을 가져온다`() {
-        every { recruitmentService.findAllNotHidden() } answers { listOf(recruitmentResponse) }
+    fun `공개된 모집 목록을 가져온다`() {
+        every { recruitmentService.findAllNotHidden() } returns listOf(recruitmentResponse)
 
-        mockMvc.perform(
-            RestDocumentationRequestBuilders.get(
-                "/api/recruitments"
-            )
-        ).andExpect(status().isOk)
-            .andDo(
-                document(
-                    "recruitment-findAllNotHidden",
-                    responseFields(
-                        fieldWithPath("message").description("응답 메시지"),
-                        fieldWithPath("body.[]").description("모집 목록"),
-                    ).andWithPrefix("body.[].", RECRUITMENT_FIELD_DESCRIPTORS)
-                )
-            )
+        mockMvc.get("/api/recruitments") {
+            contentType = MediaType.APPLICATION_JSON
+        }.andExpect {
+            status { isOk }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(listOf(recruitmentResponse)))) }
+        }.andDo {
+            handle(document("recruitment-findAllNotHidden"))
+        }
     }
 
     @Test
-    fun `지원 id로 지원 항목들을 position 순서대로 가져온다`() {
-        every { recruitmentItemService.findByRecruitmentIdOrderByPosition(recruitmentId) } answers { recruitmentItems }
+    fun `모집 id로 모집 항목들을 position 순서대로 가져온다`() {
+        every { recruitmentItemService.findByRecruitmentIdOrderByPosition(recruitmentId) } returns recruitmentItems
 
-        mockMvc.perform(
-            RestDocumentationRequestBuilders.get(
-                "/api/recruitments/{id}/items",
-                recruitmentId,
-            )
-        ).andExpect(status().isOk)
-            .andExpect(
-                content().json(
-                    objectMapper.writeValueAsString(
-                        ApiResponse.success(recruitmentItems)
-                    )
-                )
-            )
-            .andDo(
-                document(
-                    "recruitments-findItemsById",
-                    pathParameters(
-                        parameterWithName("id").description("모집 ID"),
-                    ),
-                    responseFields(
-                        fieldWithPath("message").description("응답 메시지"),
-                        fieldWithPath("body.[]").description("모집 항목 목록"),
-                    ).andWithPrefix("body.[].", RECRUITMENT_ITEM_FIELD_DESCRIPTORS)
-                )
-            )
+        mockMvc.get("/api/recruitments/{id}/items", recruitmentId) {
+            contentType = MediaType.APPLICATION_JSON
+        }.andExpect {
+            status { isOk }
+            content { json(objectMapper.writeValueAsString(ApiResponse.success(recruitmentItems))) }
+        }.andDo {
+            handle(document("recruitment-findItemsById"))
+        }
     }
 
     @Test
