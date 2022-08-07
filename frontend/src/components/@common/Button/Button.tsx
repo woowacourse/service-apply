@@ -6,7 +6,7 @@ import styles from "./Button.module.css";
 export const BUTTON_VARIANT = {
   CONTAINED: "contained",
   OUTLINED: "outlined",
-};
+} as const;
 
 const Button = ({ children, type, variant, cancel, className, ...props }) => {
   return (
