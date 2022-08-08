@@ -53,7 +53,7 @@ class RecruitmentRestControllerTest : RestControllerTest() {
             status { isOk }
             content { json(objectMapper.writeValueAsString(success(listOf(recruitmentResponse)))) }
         }.andDo {
-            handle(document("get/recruitments"))
+            handle(document("recruitment-get"))
         }
     }
 
@@ -67,7 +67,7 @@ class RecruitmentRestControllerTest : RestControllerTest() {
             status { isOk }
             content { json(objectMapper.writeValueAsString(success(recruitmentItems))) }
         }.andDo {
-            handle(document("get/recruitments/items"))
+            handle(document("recruitment-item-list-get"))
         }
     }
 

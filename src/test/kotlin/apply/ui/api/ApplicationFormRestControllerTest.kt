@@ -17,7 +17,6 @@ import io.mockk.every
 import io.mockk.just
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.test.web.servlet.get
@@ -56,7 +55,7 @@ class ApplicationFormRestControllerTest : RestControllerTest() {
             status { isCreated }
             content { json(objectMapper.writeValueAsString(success(applicationFormResponse))) }
         }.andDo {
-            handle(document("post/application-forms"))
+            handle(document("application-form-post"))
         }
     }
 
@@ -71,7 +70,7 @@ class ApplicationFormRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isOk }
         }.andDo {
-            handle(document("patch/application-forms"))
+            handle(document("application-form-patch"))
         }
     }
 
@@ -86,7 +85,7 @@ class ApplicationFormRestControllerTest : RestControllerTest() {
             status { isOk }
             content { json(objectMapper.writeValueAsString(success(myApplicationFormResponses))) }
         }.andDo {
-            handle(document("get/application-forms/me"))
+            handle(document("application-form-me-get"))
         }
     }
 
@@ -102,7 +101,7 @@ class ApplicationFormRestControllerTest : RestControllerTest() {
             status { isOk }
             content { json(objectMapper.writeValueAsString(success(applicationFormResponse))) }
         }.andDo {
-            handle(document("get/application-forms"))
+            handle(document("application-form-get"))
         }
     }
 
@@ -128,13 +127,11 @@ class ApplicationFormRestControllerTest : RestControllerTest() {
     fun `특정 모집 id에 지원완료한 지원서 정보들을 조회한다`() {
         val recruitmentId = applicantAndFormResponses[0].applicationForm.recruitmentId
 
-        every {
-            applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId)
-        } returns applicantAndFormResponses
+        every { applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId) } returns applicantAndFormResponses
 
         mockMvc.get("/api/recruitments/{recruitmentId}/application-forms", recruitmentId) {
             contentType = APPLICATION_JSON
-            header(AUTHORIZATION, "Bearer valid_token")
+            bearer("valid_token")
         }.andExpect {
             status { isOk }
             content { json(objectMapper.writeValueAsString(success(applicantAndFormResponses))) }

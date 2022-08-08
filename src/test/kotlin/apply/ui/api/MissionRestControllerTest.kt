@@ -91,7 +91,7 @@ class MissionRestControllerTest : RestControllerTest() {
             status { isOk }
             content { json(objectMapper.writeValueAsString(success(myMissionResponses))) }
         }.andDo {
-            handle(document("get/recruitments/missions/me"))
+            handle(document("mission-me-get"))
         }
     }
 

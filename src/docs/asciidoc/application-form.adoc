@@ -2,16 +2,16 @@
 
 == 지원서 생성
 
-operation::post/application-forms[snippets='http-request,http-response']
+operation::application-form-post[snippets='http-request,http-response']
 
 == 지원서 수정
 
-operation::patch/application-forms[snippets='http-request,http-response']
+operation::application-form-patch[snippets='http-request,http-response']
 
 == 내 지원서 조회
 
-operation::get/application-forms/me[snippets='http-request,http-response']
+operation::application-form-me-get[snippets='http-request,http-response']
 
 == 지원서 조회
 
-operation::get/application-forms[snippets='http-request,http-response']
+operation::application-form-get[snippets='http-request,http-response']

@@ -2,12 +2,12 @@
 
 == 과제 제출물 생성
 
-operation::post/recruitments/missions/assignments[snippets='http-request,http-response']
+operation::assignment-post[snippets='http-request,http-response']
 
 == 과제 제출물 수정
 
-operation::patch/recruitments/missions/assignments[snippets='http-request,http-response']
+operation::assignment-patch[snippets='http-request,http-response']
 
 == 내 과제 제출물 조회
 
-operation::get/recruitments/missions/assignments/me[snippets='http-request,http-response']
+operation::assignment-me-get[snippets='http-request,http-response']

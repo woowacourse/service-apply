@@ -2,8 +2,8 @@
 
 == 모집 조회
 
-operation::get/recruitments[snippets='http-request,http-response']
+operation::recruitment-get[snippets='http-request,http-response']
 
 == 모집 항목 조회
 
-operation::get/recruitments/items[snippets='http-request,http-response']
+operation::recruitment-item-list-get[snippets='http-request,http-response']

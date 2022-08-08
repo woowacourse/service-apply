@@ -46,7 +46,7 @@ class AssignmentRestControllerTest : RestControllerTest() {
             status { isCreated }
             content { json(objectMapper.writeValueAsString(success(createAssignmentResponse()))) }
         }.andDo {
-            handle(document("post/recruitments/missions/assignments"))
+            handle(document("assignment-post"))
         }
     }
 
@@ -65,7 +65,7 @@ class AssignmentRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isOk }
         }.andDo {
-            handle(document("patch/recruitments/missions/assignments"))
+            handle(document("assignment-patch"))
         }
     }
 
@@ -85,7 +85,7 @@ class AssignmentRestControllerTest : RestControllerTest() {
             status { isOk }
             content { json(objectMapper.writeValueAsString(success(assignmentResponse))) }
         }.andDo {
-            handle(document("get/recruitments/missions/assignments/me"))
+            handle(document("assignment-me-get"))
         }
     }
 

@@ -121,15 +121,13 @@ class UserRestControllerTest : RestControllerTest() {
             status { isOk }
             content { json(objectMapper.writeValueAsString(success(VALID_TOKEN))) }
         }.andDo {
-            handle(document("post/users/register"))
+            handle(document("user-register-post"))
         }
     }
 
     @Test
     fun `올바른 회원 로그인 요청에 응답으로 Token을 반환한다`() {
-        every {
-            userAuthenticationService.generateTokenByLogin(userLoginRequest)
-        } returns VALID_TOKEN
+        every { userAuthenticationService.generateTokenByLogin(userLoginRequest) } returns VALID_TOKEN
 
         mockMvc.post("/api/users/login") {
             content = objectMapper.writeValueAsBytes(userLoginRequest.withPlainPassword(PASSWORD))
@@ -138,15 +136,15 @@ class UserRestControllerTest : RestControllerTest() {
             status { isOk }
             content { json(objectMapper.writeValueAsString(success(VALID_TOKEN))) }
         }.andDo {
-            handle(document("post/users/login"))
+            handle(document("user-login-post"))
         }
     }
 
     @Test
     fun `잘못된 회원 로그인 요청에 응답으로 403 Forbidden을 반환한다`() {
-        every {
-            userAuthenticationService.generateTokenByLogin(invalidUserLoginRequest)
-        } throws UnidentifiedUserException("사용자 정보가 일치하지 않습니다.")
+        every { userAuthenticationService.generateTokenByLogin(invalidUserLoginRequest) } throws UnidentifiedUserException(
+            "사용자 정보가 일치하지 않습니다."
+        )
 
         mockMvc.post("/api/users/login") {
             content = objectMapper.writeValueAsBytes(invalidUserLoginRequest.withPlainPassword(INVALID_PASSWORD))
@@ -154,7 +152,7 @@ class UserRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isForbidden }
         }.andDo {
-            handle(document("post/users/login/forbidden"))
+            handle(document("user-login-post-forbidden"))
         }
     }
 
@@ -168,15 +166,15 @@ class UserRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isNoContent }
         }.andDo {
-            handle(document("post/users/reset-password"))
+            handle(document("user-reset-password-post"))
         }
     }
 
     @Test
     fun `잘못된 비밀번호 찾기 요청에 응답으로 403 Forbidden을 반환한다`() {
-        every {
-            userService.resetPassword(inValidUserPasswordFindRequest)
-        } throws UnidentifiedUserException("사용자 정보가 일치하지 않습니다.")
+        every { userService.resetPassword(inValidUserPasswordFindRequest) } throws UnidentifiedUserException(
+            "사용자 정보가 일치하지 않습니다."
+        )
 
         mockMvc.post("/api/users/reset-password") {
             content = objectMapper.writeValueAsBytes(inValidUserPasswordFindRequest)
@@ -184,7 +182,7 @@ class UserRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isForbidden }
         }.andDo {
-            handle(document("post/users/reset-password/forbidden"))
+            handle(document("user-reset-password-post-forbidden"))
         }
     }
 
@@ -201,15 +199,15 @@ class UserRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isNoContent }
         }.andDo {
-            handle(document("post/users/edit-password"))
+            handle(document("user-edit-password-post"))
         }
     }
 
     @Test
     fun `잘못된 비밀번호 변경 요청에 응답으로 403 Forbidden을 반환한다`() {
-        every {
-            userService.editPassword(any(), eq(inValidEditPasswordRequest))
-        } throws UnidentifiedUserException("기존 비밀번호가 일치하지 않습니다.")
+        every { userService.editPassword(any(), eq(inValidEditPasswordRequest)) } throws UnidentifiedUserException(
+            "기존 비밀번호가 일치하지 않습니다."
+        )
 
         val actualInValidEditPasswordRequest = createInValidEditPasswordRequest()
 
@@ -220,7 +218,7 @@ class UserRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isForbidden }
         }.andDo {
-            handle(document("post/users/edit-password/forbidden"))
+            handle(document("user-edit-password-post-forbidden"))
         }
     }
 
@@ -235,7 +233,7 @@ class UserRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isNoContent }
         }.andDo {
-            handle(document("post/users/authentication-code"))
+            handle(document("user-authentication-code-post"))
         }
     }
 
@@ -249,7 +247,7 @@ class UserRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isNoContent }
         }.andDo {
-            handle(document("post/users/authenticate-email"))
+            handle(document("user-authenticate-email-post"))
         }
     }
 
@@ -279,7 +277,7 @@ class UserRestControllerTest : RestControllerTest() {
             status { isOk }
             content { json(objectMapper.writeValueAsString(success(response))) }
         }.andDo {
-            handle(document("get/users/me"))
+            handle(document("user-me-get"))
         }
     }
 
@@ -295,7 +293,7 @@ class UserRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isNoContent }
         }.andDo {
-            handle(document("patch/users/information"))
+            handle(document("user-information-patch"))
         }
     }
 
