@@ -2,14 +2,15 @@ package apply.ui.api
 
 import apply.application.MailHistoryService
 import apply.createMailData
+import apply.ui.api.ApiResponse.Companion.success
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
-import org.springframework.http.HttpHeaders
 import org.springframework.test.web.servlet.get
+import support.test.web.servlet.bearer
 
 @WebMvcTest(
     controllers = [MailHistoryRestController::class],
@@ -27,10 +28,10 @@ class MailHistoryRestControllerTest : RestControllerTest() {
         every { mailHistoryService.getById(any()) } returns mailData
 
         mockMvc.get("/api/mail-history/{mailHistoryId}", mailData.id) {
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            bearer("valid_token")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(mailData))) }
+            content { json(objectMapper.writeValueAsString(success(mailData))) }
         }
     }
 
@@ -40,10 +41,10 @@ class MailHistoryRestControllerTest : RestControllerTest() {
         every { mailHistoryService.findAll() } returns mailDataValues
 
         mockMvc.get("/api/mail-history") {
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            bearer("valid_token")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(mailDataValues))) }
+            content { json(objectMapper.writeValueAsString(success(mailDataValues))) }
         }
     }
 }

@@ -5,6 +5,7 @@ import apply.application.CheaterService
 import apply.createCheaterData
 import apply.createUser
 import apply.domain.cheater.Cheater
+import apply.ui.api.ApiResponse.Companion.success
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
 import io.mockk.every
@@ -13,11 +14,11 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
-import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType
+import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
+import support.test.web.servlet.bearer
 
 @WebMvcTest(
     controllers = [CheaterRestController::class],
@@ -25,7 +26,7 @@ import org.springframework.test.web.servlet.post
         ComponentScan.Filter(type = FilterType.REGEX, pattern = ["apply.security.*"])
     ]
 )
-internal class CheaterRestControllerTest : RestControllerTest() {
+class CheaterRestControllerTest : RestControllerTest() {
     @MockkBean
     private lateinit var cheaterService: CheaterService
 
@@ -39,10 +40,10 @@ internal class CheaterRestControllerTest : RestControllerTest() {
         every { cheaterService.getById(any()) } returns cheaterResponses[0]
 
         mockMvc.get("/api/cheaters/{cheaterId}", 1L) {
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            bearer("valid_token")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(cheaterResponses[0]))) }
+            content { json(objectMapper.writeValueAsString(success(cheaterResponses[0]))) }
         }
     }
 
@@ -51,10 +52,10 @@ internal class CheaterRestControllerTest : RestControllerTest() {
         every { cheaterService.findAll() } returns cheaterResponses
 
         mockMvc.get("/api/cheaters") {
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            bearer("valid_token")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(cheaterResponses))) }
+            content { json(objectMapper.writeValueAsString(success(cheaterResponses))) }
         }
     }
 
@@ -64,11 +65,11 @@ internal class CheaterRestControllerTest : RestControllerTest() {
 
         mockMvc.post("/api/cheaters") {
             content = objectMapper.writeValueAsString(createCheaterData())
-            contentType = MediaType.APPLICATION_JSON
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            contentType = APPLICATION_JSON
+            bearer("valid_token")
         }.andExpect {
             status { isCreated }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(cheaterResponses[0]))) }
+            content { json(objectMapper.writeValueAsString(success(cheaterResponses[0]))) }
         }
     }
 
@@ -77,7 +78,7 @@ internal class CheaterRestControllerTest : RestControllerTest() {
         every { cheaterService.deleteById(any()) } just Runs
 
         mockMvc.delete("/api/cheaters/{cheaterId}", 1L) {
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            bearer("valid_token")
         }.andExpect {
             status { isOk }
         }

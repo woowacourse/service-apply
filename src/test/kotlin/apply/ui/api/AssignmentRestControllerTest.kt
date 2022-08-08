@@ -4,19 +4,20 @@ import apply.application.AssignmentService
 import apply.createAssignmentData
 import apply.createAssignmentRequest
 import apply.createAssignmentResponse
+import apply.ui.api.ApiResponse.Companion.success
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType
+import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.patch
 import org.springframework.test.web.servlet.post
 import support.test.TestEnvironment
+import support.test.web.servlet.bearer
 
 @WebMvcTest(
     controllers = [AssignmentRestController::class]
@@ -39,13 +40,13 @@ class AssignmentRestControllerTest : RestControllerTest() {
             missionId
         ) {
             content = objectMapper.writeValueAsString(createAssignmentRequest())
-            contentType = MediaType.APPLICATION_JSON
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            contentType = APPLICATION_JSON
+            bearer("valid_token")
         }.andExpect {
             status { isCreated }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(createAssignmentResponse()))) }
+            content { json(objectMapper.writeValueAsString(success(createAssignmentResponse()))) }
         }.andDo {
-            handle(document("assignment-create"))
+            handle(document("post/recruitments/missions/assignments"))
         }
     }
 
@@ -59,12 +60,12 @@ class AssignmentRestControllerTest : RestControllerTest() {
             missionId
         ) {
             content = objectMapper.writeValueAsString(createAssignmentRequest())
-            contentType = MediaType.APPLICATION_JSON
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            contentType = APPLICATION_JSON
+            bearer("valid_token")
         }.andExpect {
             status { isOk }
         }.andDo {
-            handle(document("assignment-update"))
+            handle(document("patch/recruitments/missions/assignments"))
         }
     }
 
@@ -78,13 +79,13 @@ class AssignmentRestControllerTest : RestControllerTest() {
             recruitmentId,
             missionId
         ) {
-            contentType = MediaType.APPLICATION_JSON
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            contentType = APPLICATION_JSON
+            bearer("valid_token")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(assignmentResponse))) }
+            content { json(objectMapper.writeValueAsString(success(assignmentResponse))) }
         }.andDo {
-            handle(document("assignment-me"))
+            handle(document("get/recruitments/missions/assignments/me"))
         }
     }
 
@@ -92,15 +93,16 @@ class AssignmentRestControllerTest : RestControllerTest() {
     fun `특정 평가 대상자의 특정 과제에 해당하는 과제 제출물을 조회한다`() {
         val assignmentData = createAssignmentData()
         every { assignmentService.findByEvaluationTargetId(any()) } returns assignmentData
+
         mockMvc.get(
             "/api/recruitments/{recruitmentId}/targets/{targetId}/assignments",
             recruitmentId,
             1L,
         ) {
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            bearer("valid_token")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(assignmentData))) }
+            content { json(objectMapper.writeValueAsString(success(assignmentData))) }
         }
     }
 }

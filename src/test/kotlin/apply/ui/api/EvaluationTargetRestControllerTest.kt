@@ -13,6 +13,7 @@ import apply.application.MailTargetService
 import apply.createEvaluationItem
 import apply.domain.evaluationtarget.EvaluationAnswers
 import apply.domain.evaluationtarget.EvaluationStatus
+import apply.ui.api.ApiResponse.Companion.success
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
 import io.mockk.every
@@ -21,19 +22,16 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
-import org.springframework.http.MediaType
+import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.mock.web.MockMultipartFile
-import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.ResultActions
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.patch
 import org.springframework.test.web.servlet.put
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder
-import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import support.test.web.servlet.bearer
+import support.test.web.servlet.multipart
 import kotlin.io.path.Path
 import kotlin.io.path.inputStream
 
@@ -89,11 +87,11 @@ class EvaluationTargetRestControllerTest : RestControllerTest() {
             recruitmentId,
             evaluationId
         ) {
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            bearer("valid_token")
             param("keyword", keyword)
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(responses))) }
+            content { json(objectMapper.writeValueAsString(success(responses))) }
         }
     }
 
@@ -106,7 +104,7 @@ class EvaluationTargetRestControllerTest : RestControllerTest() {
             recruitmentId,
             evaluationId
         ) {
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            bearer("valid_token")
         }.andExpect {
             status { isOk }
         }
@@ -122,10 +120,12 @@ class EvaluationTargetRestControllerTest : RestControllerTest() {
             evaluationId,
             targetId
         ) {
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            bearer("valid_token")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(gradeEvaluationResponse))) }
+            content { json(objectMapper.writeValueAsString(success(gradeEvaluationResponse))) }
+        }.andDo {
+            handle(document("patch/recruitments/evaluations/targets/grade"))
         }
     }
 
@@ -139,9 +139,9 @@ class EvaluationTargetRestControllerTest : RestControllerTest() {
             evaluationId,
             targetId
         ) {
-            contentType = MediaType.APPLICATION_JSON
             content = objectMapper.writeValueAsString(gradeEvaluationRequest)
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            contentType = APPLICATION_JSON
+            bearer("valid_token")
         }.andExpect {
             status { isOk }
         }
@@ -159,11 +159,11 @@ class EvaluationTargetRestControllerTest : RestControllerTest() {
             evaluationId,
             enumStatus.toString()
         ) {
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            bearer("valid_token")
             param("keyword", keyword)
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(responses))) }
+            content { json(objectMapper.writeValueAsString(success(responses))) }
         }
     }
 
@@ -180,23 +180,8 @@ class EvaluationTargetRestControllerTest : RestControllerTest() {
             recruitmentId,
             evaluationId
         ) {
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            bearer("valid_token")
             file("file", file.bytes)
         }.andExpect(status().isOk)
-    }
-
-    private fun MockMvc.multipart(
-        method: HttpMethod,
-        urlTemplate: String,
-        vararg vars: Any,
-        block: MockMultipartHttpServletRequestBuilder.() -> Unit = {}
-    ): ResultActions {
-        val builder = multipart(urlTemplate, *vars)
-        MockHttpServletRequestBuilder::class.java.getDeclaredField("method").apply {
-            isAccessible = true
-            set(builder, method.name)
-        }
-        builder.apply(block)
-        return perform(builder)
     }
 }

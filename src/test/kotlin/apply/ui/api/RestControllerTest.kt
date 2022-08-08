@@ -13,7 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
 import org.springframework.core.MethodParameter
-import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.restdocs.RestDocumentationContextProvider
 import org.springframework.restdocs.RestDocumentationExtension
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation
@@ -63,7 +63,7 @@ abstract class RestControllerTest {
             }
             slot<NativeWebRequest>().also { slot ->
                 every { it.resolveArgument(any(), any(), capture(slot), any()) } answers {
-                    val hasToken = slot.captured.getHeader(HttpHeaders.AUTHORIZATION)?.contains("Bearer")
+                    val hasToken = slot.captured.getHeader(AUTHORIZATION)?.contains("Bearer")
                     if (hasToken != true) {
                         throw LoginFailedException()
                     }

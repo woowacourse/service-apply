@@ -11,18 +11,19 @@ import apply.createRecruitmentItemData
 import apply.domain.recruitment.Recruitment
 import apply.domain.recruitmentitem.RecruitmentItem
 import apply.domain.term.Term
+import apply.ui.api.ApiResponse.Companion.success
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType
+import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
+import support.test.web.servlet.bearer
 
 @WebMvcTest(
     controllers = [RecruitmentRestController::class]
@@ -47,12 +48,12 @@ class RecruitmentRestControllerTest : RestControllerTest() {
         every { recruitmentService.findAllNotHidden() } returns listOf(recruitmentResponse)
 
         mockMvc.get("/api/recruitments") {
-            contentType = MediaType.APPLICATION_JSON
+            contentType = APPLICATION_JSON
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(listOf(recruitmentResponse)))) }
+            content { json(objectMapper.writeValueAsString(success(listOf(recruitmentResponse)))) }
         }.andDo {
-            handle(document("recruitment-findAllNotHidden"))
+            handle(document("get/recruitments"))
         }
     }
 
@@ -61,12 +62,12 @@ class RecruitmentRestControllerTest : RestControllerTest() {
         every { recruitmentItemService.findByRecruitmentIdOrderByPosition(recruitmentId) } returns recruitmentItems
 
         mockMvc.get("/api/recruitments/{id}/items", recruitmentId) {
-            contentType = MediaType.APPLICATION_JSON
+            contentType = APPLICATION_JSON
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(recruitmentItems))) }
+            content { json(objectMapper.writeValueAsString(success(recruitmentItems))) }
         }.andDo {
-            handle(document("recruitment-findItemsById"))
+            handle(document("get/recruitments/items"))
         }
     }
 
@@ -76,11 +77,11 @@ class RecruitmentRestControllerTest : RestControllerTest() {
 
         mockMvc.post("/api/recruitments") {
             content = objectMapper.writeValueAsString(recruitmentData)
-            contentType = MediaType.APPLICATION_JSON
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            contentType = APPLICATION_JSON
+            bearer("valid_token")
         }.andExpect {
             status { isCreated }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(recruitmentResponse))) }
+            content { json(objectMapper.writeValueAsString(success(recruitmentResponse))) }
         }
     }
 
@@ -89,7 +90,7 @@ class RecruitmentRestControllerTest : RestControllerTest() {
         every { recruitmentService.deleteById(recruitmentId) } just Runs
 
         mockMvc.delete("/api/recruitments/{id}", recruitmentId) {
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            bearer("valid_token")
         }.andExpect {
             status { isOk }
         }
@@ -100,10 +101,10 @@ class RecruitmentRestControllerTest : RestControllerTest() {
         every { recruitmentService.getById(recruitmentId) } returns recruitmentResponse
 
         mockMvc.get("/api/recruitments/{id}", recruitmentId) {
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            bearer("valid_token")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(recruitmentResponse))) }
+            content { json(objectMapper.writeValueAsString(success(recruitmentResponse))) }
         }
     }
 
@@ -112,10 +113,10 @@ class RecruitmentRestControllerTest : RestControllerTest() {
         every { recruitmentService.getNotEndedDataById(recruitmentId) } returns recruitmentData
 
         mockMvc.get("/api/recruitments/{recruitmentId}/detail", recruitmentId) {
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            bearer("valid_token")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(recruitmentData))) }
+            content { json(objectMapper.writeValueAsString(success(recruitmentData))) }
         }
     }
 
@@ -124,10 +125,10 @@ class RecruitmentRestControllerTest : RestControllerTest() {
         every { recruitmentService.findAll() } returns listOf(recruitmentResponse)
 
         mockMvc.get("/api/recruitments/all") {
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            bearer("valid_token")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(listOf(recruitmentResponse)))) }
+            content { json(objectMapper.writeValueAsString(success(listOf(recruitmentResponse)))) }
         }
     }
 }

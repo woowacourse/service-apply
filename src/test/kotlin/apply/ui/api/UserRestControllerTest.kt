@@ -14,20 +14,21 @@ import apply.domain.authenticationcode.AuthenticationCode
 import apply.domain.user.Gender
 import apply.domain.user.Password
 import apply.domain.user.UnidentifiedUserException
+import apply.ui.api.ApiResponse.Companion.success
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.http.HttpHeaders.AUTHORIZATION
-import org.springframework.http.MediaType
+import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.patch
 import org.springframework.test.web.servlet.post
 import support.createLocalDate
 import support.test.TestEnvironment
+import support.test.web.servlet.bearer
 
 private const val VALID_TOKEN = "SOME_VALID_TOKEN"
 private const val PASSWORD = "password"
@@ -56,7 +57,7 @@ private fun AuthenticateUserRequest.withPlainPassword(password: String): Map<Str
     controllers = [UserRestController::class]
 )
 @TestEnvironment
-internal class UserRestControllerTest : RestControllerTest() {
+class UserRestControllerTest : RestControllerTest() {
     @MockkBean
     private lateinit var userService: UserService
 
@@ -115,12 +116,12 @@ internal class UserRestControllerTest : RestControllerTest() {
 
         mockMvc.post("/api/users/register") {
             content = objectMapper.writeValueAsBytes(userRequest.withPlainPassword(PASSWORD))
-            contentType = MediaType.APPLICATION_JSON
+            contentType = APPLICATION_JSON
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(VALID_TOKEN))) }
+            content { json(objectMapper.writeValueAsString(success(VALID_TOKEN))) }
         }.andDo {
-            handle(document("user-register"))
+            handle(document("post/users/register"))
         }
     }
 
@@ -132,26 +133,28 @@ internal class UserRestControllerTest : RestControllerTest() {
 
         mockMvc.post("/api/users/login") {
             content = objectMapper.writeValueAsBytes(userLoginRequest.withPlainPassword(PASSWORD))
-            contentType = MediaType.APPLICATION_JSON
+            contentType = APPLICATION_JSON
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(VALID_TOKEN))) }
+            content { json(objectMapper.writeValueAsString(success(VALID_TOKEN))) }
         }.andDo {
-            handle(document("user-login"))
+            handle(document("post/users/login"))
         }
     }
 
     @Test
     fun `잘못된 회원 로그인 요청에 응답으로 403 Forbidden을 반환한다`() {
-        every { userAuthenticationService.generateTokenByLogin(invalidUserLoginRequest) } throws UnidentifiedUserException()
+        every {
+            userAuthenticationService.generateTokenByLogin(invalidUserLoginRequest)
+        } throws UnidentifiedUserException("사용자 정보가 일치하지 않습니다.")
 
         mockMvc.post("/api/users/login") {
             content = objectMapper.writeValueAsBytes(invalidUserLoginRequest.withPlainPassword(INVALID_PASSWORD))
-            contentType = MediaType.APPLICATION_JSON
+            contentType = APPLICATION_JSON
         }.andExpect {
             status { isForbidden }
         }.andDo {
-            handle(document("user-login-forbidden"))
+            handle(document("post/users/login/forbidden"))
         }
     }
 
@@ -161,25 +164,27 @@ internal class UserRestControllerTest : RestControllerTest() {
 
         mockMvc.post("/api/users/reset-password") {
             content = objectMapper.writeValueAsBytes(userPasswordFindRequest)
-            contentType = MediaType.APPLICATION_JSON
+            contentType = APPLICATION_JSON
         }.andExpect {
             status { isNoContent }
         }.andDo {
-            handle(document("user-reset-password"))
+            handle(document("post/users/reset-password"))
         }
     }
 
     @Test
     fun `잘못된 비밀번호 찾기 요청에 응답으로 403 Forbidden을 반환한다`() {
-        every { userService.resetPassword(inValidUserPasswordFindRequest) } throws UnidentifiedUserException()
+        every {
+            userService.resetPassword(inValidUserPasswordFindRequest)
+        } throws UnidentifiedUserException("사용자 정보가 일치하지 않습니다.")
 
         mockMvc.post("/api/users/reset-password") {
             content = objectMapper.writeValueAsBytes(inValidUserPasswordFindRequest)
-            contentType = MediaType.APPLICATION_JSON
+            contentType = APPLICATION_JSON
         }.andExpect {
             status { isForbidden }
         }.andDo {
-            handle(document("user-reset-password-forbidden"))
+            handle(document("post/users/reset-password/forbidden"))
         }
     }
 
@@ -191,29 +196,31 @@ internal class UserRestControllerTest : RestControllerTest() {
 
         mockMvc.post("/api/users/edit-password") {
             content = objectMapper.writeValueAsBytes(actualValidEditPasswordRequest)
-            contentType = MediaType.APPLICATION_JSON
-            header(AUTHORIZATION, "Bearer valid_token")
+            contentType = APPLICATION_JSON
+            bearer("valid_token")
         }.andExpect {
             status { isNoContent }
         }.andDo {
-            handle(document("user-edit-password"))
+            handle(document("post/users/edit-password"))
         }
     }
 
     @Test
     fun `잘못된 비밀번호 변경 요청에 응답으로 403 Forbidden을 반환한다`() {
-        every { userService.editPassword(any(), eq(inValidEditPasswordRequest)) } throws UnidentifiedUserException()
+        every {
+            userService.editPassword(any(), eq(inValidEditPasswordRequest))
+        } throws UnidentifiedUserException("기존 비밀번호가 일치하지 않습니다.")
 
         val actualInValidEditPasswordRequest = createInValidEditPasswordRequest()
 
         mockMvc.post("/api/users/edit-password") {
             content = objectMapper.writeValueAsBytes(actualInValidEditPasswordRequest)
-            contentType = MediaType.APPLICATION_JSON
-            header(AUTHORIZATION, "Bearer valid_token")
+            contentType = APPLICATION_JSON
+            bearer("valid_token")
         }.andExpect {
             status { isForbidden }
         }.andDo {
-            handle(document("user-edit-password-forbidden"))
+            handle(document("post/users/edit-password/forbidden"))
         }
     }
 
@@ -228,7 +235,7 @@ internal class UserRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isNoContent }
         }.andDo {
-            handle(document("user-authentication-code"))
+            handle(document("post/users/authentication-code"))
         }
     }
 
@@ -241,6 +248,8 @@ internal class UserRestControllerTest : RestControllerTest() {
             param("authenticationCode", "code")
         }.andExpect {
             status { isNoContent }
+        }.andDo {
+            handle(document("post/users/authenticate-email"))
         }
     }
 
@@ -249,14 +258,12 @@ internal class UserRestControllerTest : RestControllerTest() {
         every { userService.findAllByKeyword(userKeyword) } returns userResponses
 
         mockMvc.get("/api/users", userKeyword) {
-            contentType = MediaType.APPLICATION_JSON
-            header(AUTHORIZATION, "Bearer valid_token")
+            contentType = APPLICATION_JSON
+            bearer("valid_token")
             param("keyword", userKeyword)
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(userResponses))) }
-        }.andDo {
-            handle(document("user-authenticate-email"))
+            content { json(objectMapper.writeValueAsString(success(userResponses))) }
         }
     }
 
@@ -266,13 +273,13 @@ internal class UserRestControllerTest : RestControllerTest() {
         every { userService.getInformation(any()) } returns response
 
         mockMvc.get("/api/users/me") {
-            contentType = MediaType.APPLICATION_JSON
-            header(AUTHORIZATION, "Bearer valid_token")
+            contentType = APPLICATION_JSON
+            bearer("valid_token")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(response))) }
+            content { json(objectMapper.writeValueAsString(success(response))) }
         }.andDo {
-            handle(document("user-me"))
+            handle(document("get/users/me"))
         }
     }
 
@@ -283,12 +290,12 @@ internal class UserRestControllerTest : RestControllerTest() {
 
         mockMvc.patch("/api/users/information") {
             content = objectMapper.writeValueAsBytes(request)
-            contentType = MediaType.APPLICATION_JSON
-            header(AUTHORIZATION, "Bearer valid_token")
+            contentType = APPLICATION_JSON
+            bearer("valid_token")
         }.andExpect {
             status { isNoContent }
         }.andDo {
-            handle(document("user-information"))
+            handle(document("patch/users/information"))
         }
     }
 

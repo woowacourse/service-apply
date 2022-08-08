@@ -5,6 +5,7 @@ import apply.application.EvaluationResponse
 import apply.application.EvaluationService
 import apply.createEvaluation
 import apply.createRecruitment
+import apply.ui.api.ApiResponse.Companion.success
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
 import io.mockk.every
@@ -13,11 +14,11 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
-import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType
+import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
+import support.test.web.servlet.bearer
 
 @WebMvcTest(
     controllers = [EvaluationRestController::class],
@@ -25,7 +26,7 @@ import org.springframework.test.web.servlet.post
         ComponentScan.Filter(type = FilterType.REGEX, pattern = ["apply.security.*"])
     ]
 )
-internal class EvaluationRestControllerTest : RestControllerTest() {
+class EvaluationRestControllerTest : RestControllerTest() {
     @MockkBean
     private lateinit var evaluationService: EvaluationService
 
@@ -42,11 +43,11 @@ internal class EvaluationRestControllerTest : RestControllerTest() {
             content = objectMapper.writeValueAsBytes(
                 EvaluationData(createEvaluation(), createRecruitment(), null, emptyList())
             )
-            contentType = MediaType.APPLICATION_JSON
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            contentType = APPLICATION_JSON
+            bearer("valid_token")
         }.andExpect {
             status { isCreated }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(evaluationResponses[0]))) }
+            content { json(objectMapper.writeValueAsString(success(evaluationResponses[0]))) }
         }
     }
 
@@ -55,10 +56,10 @@ internal class EvaluationRestControllerTest : RestControllerTest() {
         every { evaluationService.getById(any()) } returns evaluationResponses[0]
 
         mockMvc.get("/api/recruitments/{recruitmentId}/evaluations/{evaluationId}", 1L, 1L) {
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            bearer("valid_token")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(evaluationResponses[0]))) }
+            content { json(objectMapper.writeValueAsString(success(evaluationResponses[0]))) }
         }
     }
 
@@ -67,10 +68,10 @@ internal class EvaluationRestControllerTest : RestControllerTest() {
         every { evaluationService.findAllWithRecruitment() } returns evaluationResponses
 
         mockMvc.get("/api/recruitments/{recruitmentId}/evaluations", 1L) {
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            bearer("valid_token")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(evaluationResponses))) }
+            content { json(objectMapper.writeValueAsString(success(evaluationResponses))) }
         }
     }
 
@@ -79,7 +80,7 @@ internal class EvaluationRestControllerTest : RestControllerTest() {
         every { evaluationService.deleteById(any()) } just Runs
 
         mockMvc.delete("/api/recruitments/{recruitmentId}/evaluations/{evaluationId}", 1L, 1L) {
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            bearer("valid_token")
         }.andExpect {
             status { isOk }
         }

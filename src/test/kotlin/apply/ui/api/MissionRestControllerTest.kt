@@ -7,6 +7,7 @@ import apply.createMission
 import apply.createMissionData
 import apply.createMissionResponse
 import apply.createMyMissionResponse
+import apply.ui.api.ApiResponse.Companion.success
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
 import io.mockk.every
@@ -15,12 +16,12 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
-import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType
+import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
+import support.test.web.servlet.bearer
 
 @WebMvcTest(
     controllers = [MissionRestController::class],
@@ -28,7 +29,7 @@ import org.springframework.test.web.servlet.post
         ComponentScan.Filter(type = FilterType.REGEX, pattern = ["apply.security.*"])
     ]
 )
-internal class MissionRestControllerTest : RestControllerTest() {
+class MissionRestControllerTest : RestControllerTest() {
     @MockkBean
     private lateinit var missionService: MissionService
 
@@ -41,11 +42,11 @@ internal class MissionRestControllerTest : RestControllerTest() {
 
         mockMvc.post("/api/recruitments/{recruitmentId}/missions", recruitmentId) {
             content = objectMapper.writeValueAsString(createMissionData())
-            contentType = MediaType.APPLICATION_JSON
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            contentType = APPLICATION_JSON
+            bearer("valid_token")
         }.andExpect {
             status { isCreated }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(missionResponse))) }
+            content { json(objectMapper.writeValueAsString(success(missionResponse))) }
         }
     }
 
@@ -55,10 +56,10 @@ internal class MissionRestControllerTest : RestControllerTest() {
         every { missionService.getById(any()) } returns response
 
         mockMvc.get("/api/recruitments/{recruitmentId}/missions/{missionId}", recruitmentId, 1L) {
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            bearer("valid_token")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(response))) }
+            content { json(objectMapper.writeValueAsString(success(response))) }
         }
     }
 
@@ -71,10 +72,10 @@ internal class MissionRestControllerTest : RestControllerTest() {
         every { missionService.findAllByRecruitmentId(any()) } returns missionAndEvaluationResponses
 
         mockMvc.get("/api/recruitments/{recruitmentId}/missions", recruitmentId) {
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            bearer("valid_token")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(missionAndEvaluationResponses))) }
+            content { json(objectMapper.writeValueAsString(success(missionAndEvaluationResponses))) }
         }
     }
 
@@ -84,13 +85,13 @@ internal class MissionRestControllerTest : RestControllerTest() {
         every { missionService.findAllByUserIdAndRecruitmentId(any(), any()) } returns myMissionResponses
 
         mockMvc.get("/api/recruitments/{recruitmentId}/missions/me", recruitmentId) {
-            contentType = MediaType.APPLICATION_JSON
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            contentType = APPLICATION_JSON
+            bearer("valid_token")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(myMissionResponses))) }
+            content { json(objectMapper.writeValueAsString(success(myMissionResponses))) }
         }.andDo {
-            handle(document("mission-me"))
+            handle(document("get/recruitments/missions/me"))
         }
     }
 
@@ -99,7 +100,7 @@ internal class MissionRestControllerTest : RestControllerTest() {
         every { missionService.deleteById(any()) } just Runs
 
         mockMvc.delete("/api/recruitments/{recruitmentId}/missions/{missionId}", recruitmentId, 1L) {
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            bearer("valid_token")
         }.andExpect {
             status { isOk }
         }

@@ -2,4 +2,4 @@
 
 == 내 과제 조회
 
-operation::mission-me[snippets='http-request,http-response']
+operation::get/recruitments/missions/me[snippets='http-request,http-response']

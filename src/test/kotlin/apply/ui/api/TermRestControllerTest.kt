@@ -4,6 +4,7 @@ import apply.application.TermData
 import apply.application.TermResponse
 import apply.application.TermService
 import apply.domain.term.Term
+import apply.ui.api.ApiResponse.Companion.success
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
 import io.mockk.every
@@ -12,11 +13,11 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
-import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType
+import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
+import support.test.web.servlet.bearer
 
 @WebMvcTest(
     controllers = [TermRestController::class],
@@ -24,7 +25,7 @@ import org.springframework.test.web.servlet.post
         ComponentScan.Filter(type = FilterType.REGEX, pattern = ["apply.security.*"])
     ]
 )
-internal class TermRestControllerTest : RestControllerTest() {
+class TermRestControllerTest : RestControllerTest() {
     @MockkBean
     private lateinit var termService: TermService
 
@@ -35,11 +36,11 @@ internal class TermRestControllerTest : RestControllerTest() {
 
         mockMvc.post("/api/terms") {
             content = objectMapper.writeValueAsString(TermData("4기"))
-            contentType = MediaType.APPLICATION_JSON
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            contentType = APPLICATION_JSON
+            bearer("valid_token")
         }.andExpect {
             status { isCreated }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(response))) }
+            content { json(objectMapper.writeValueAsString(success(response))) }
         }
     }
 
@@ -49,10 +50,10 @@ internal class TermRestControllerTest : RestControllerTest() {
         every { termService.getById(any()) } returns response
 
         mockMvc.get("/api/terms/{termId}", 1L) {
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            bearer("valid_token")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(response))) }
+            content { json(objectMapper.writeValueAsString(success(response))) }
         }
     }
 
@@ -62,10 +63,10 @@ internal class TermRestControllerTest : RestControllerTest() {
         every { termService.findAll() } returns responses
 
         mockMvc.get("/api/terms") {
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            bearer("valid_token")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(responses))) }
+            content { json(objectMapper.writeValueAsString(success(responses))) }
         }
     }
 
@@ -74,7 +75,7 @@ internal class TermRestControllerTest : RestControllerTest() {
         every { termService.deleteById(any()) } just Runs
 
         mockMvc.delete("/api/terms/{termId}", 1L) {
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            bearer("valid_token")
         }.andExpect {
             status { isOk }
         }

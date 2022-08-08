@@ -10,6 +10,7 @@ import apply.application.UpdateApplicationFormRequest
 import apply.createApplicationForm
 import apply.createApplicationForms
 import apply.createUser
+import apply.ui.api.ApiResponse.Companion.success
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
 import io.mockk.every
@@ -17,11 +18,12 @@ import io.mockk.just
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.HttpHeaders.AUTHORIZATION
-import org.springframework.http.MediaType
+import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.patch
 import org.springframework.test.web.servlet.post
+import support.test.web.servlet.bearer
 
 @WebMvcTest(
     controllers = [ApplicationFormRestController::class]
@@ -48,13 +50,13 @@ class ApplicationFormRestControllerTest : RestControllerTest() {
 
         mockMvc.post("/api/application-forms") {
             content = objectMapper.writeValueAsString(CreateApplicationFormRequest(1L))
-            contentType = MediaType.APPLICATION_JSON
-            header(AUTHORIZATION, "Bearer valid_token")
+            contentType = APPLICATION_JSON
+            bearer("valid_token")
         }.andExpect {
             status { isCreated }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(applicationFormResponse))) }
+            content { json(objectMapper.writeValueAsString(success(applicationFormResponse))) }
         }.andDo {
-            handle(document("application-forms-create"))
+            handle(document("post/application-forms"))
         }
     }
 
@@ -64,12 +66,12 @@ class ApplicationFormRestControllerTest : RestControllerTest() {
 
         mockMvc.patch("/api/application-forms") {
             content = objectMapper.writeValueAsString(UpdateApplicationFormRequest(1L))
-            contentType = MediaType.APPLICATION_JSON
-            header(AUTHORIZATION, "Bearer valid_token")
+            contentType = APPLICATION_JSON
+            bearer("valid_token")
         }.andExpect {
             status { isOk }
         }.andDo {
-            handle(document("application-forms-update"))
+            handle(document("patch/application-forms"))
         }
     }
 
@@ -78,13 +80,13 @@ class ApplicationFormRestControllerTest : RestControllerTest() {
         every { applicationFormService.getMyApplicationForms(any()) } returns myApplicationFormResponses
 
         mockMvc.get("/api/application-forms/me") {
-            contentType = MediaType.APPLICATION_JSON
-            header(AUTHORIZATION, "Bearer valid_token")
+            contentType = APPLICATION_JSON
+            bearer("valid_token")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(myApplicationFormResponses))) }
+            content { json(objectMapper.writeValueAsString(success(myApplicationFormResponses))) }
         }.andDo {
-            handle(document("application-forms-me"))
+            handle(document("get/application-forms/me"))
         }
     }
 
@@ -93,14 +95,14 @@ class ApplicationFormRestControllerTest : RestControllerTest() {
         every { applicationFormService.getApplicationForm(any(), any()) } returns applicationFormResponse
 
         mockMvc.get("/api/application-forms") {
-            contentType = MediaType.APPLICATION_JSON
-            header(AUTHORIZATION, "Bearer valid_token")
+            contentType = APPLICATION_JSON
+            bearer("valid_token")
             param("recruitmentId", "1")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(applicationFormResponse))) }
+            content { json(objectMapper.writeValueAsString(success(applicationFormResponse))) }
         }.andDo {
-            handle(document("application-forms-read"))
+            handle(document("get/application-forms"))
         }
     }
 
@@ -113,14 +115,12 @@ class ApplicationFormRestControllerTest : RestControllerTest() {
         } returns applicantAndFormFindByUserKeywordResponses
 
         mockMvc.get("/api/recruitments/{recruitmentId}/application-forms", recruitmentId) {
-            contentType = MediaType.APPLICATION_JSON
-            header(AUTHORIZATION, "Bearer valid_token")
+            contentType = APPLICATION_JSON
+            bearer("valid_token")
             param("keyword", userKeyword)
         }.andExpect {
             status { isOk }
-            content {
-                json(objectMapper.writeValueAsString(ApiResponse.success(applicantAndFormFindByUserKeywordResponses)))
-            }
+            content { json(objectMapper.writeValueAsString(success(applicantAndFormFindByUserKeywordResponses))) }
         }
     }
 
@@ -133,11 +133,11 @@ class ApplicationFormRestControllerTest : RestControllerTest() {
         } returns applicantAndFormResponses
 
         mockMvc.get("/api/recruitments/{recruitmentId}/application-forms", recruitmentId) {
-            contentType = MediaType.APPLICATION_JSON
+            contentType = APPLICATION_JSON
             header(AUTHORIZATION, "Bearer valid_token")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(applicantAndFormResponses))) }
+            content { json(objectMapper.writeValueAsString(success(applicantAndFormResponses))) }
         }
     }
 }
