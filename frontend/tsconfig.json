@@ -1,24 +1,25 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
-    "target": "es2016", //
-    "jsx": "react-jsx", //
-    "module": "esnext",
-    "sourceMap": true,
-    "removeComments": true, //
-    "esModuleInterop": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true,
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true, //
-    "allowSyntheticDefaultImports": true, //
-    "noFallthroughCasesInSwitch": true, //
-    "moduleResolution": "node", //
-    "resolveJsonModule": true, //
-    "isolatedModules": true, //
-    "noEmit": true,
-    "incremental": true
+    "target": "es2016", // 코드에서 사용할 ECMAScript 버전 설정
+    "jsx": "react-jsx", // jsx 지원
+    "module": "esnext", // 모듈 설정
+    "sourceMap": false, // 소스맵(*.map) 파일 생성 여부
+    "removeComments": true, // 컴파일시 주석 제거
+    "esModuleInterop": true, // 밑의 resolveJsonModule과 함께 사용할시 JSON을 쉽게 import 할수 있다.
+    "strict": true, // 엄격하게 typescript를 컴파일 시킨다.
+    "forceConsistentCasingInFileNames": true, // 파일명에 대소문자 구분하지 않아도 되는 기능 사용 여부
+    "skipLibCheck": true, // 모든 선언파일(*.d.ts)의 유형검사를 건너뛸지 여부
+    "lib": ["dom", "dom.iterable", "esnext"], //컴파일에 포함될 라이브러리 파일 목록
+    "allowJs": true, // javascript의 컴파일을 허용합니다.
+    "allowSyntheticDefaultImports": true, // default export가 없는 모듈에서 default imports를 허용합니다.
+    "noFallthroughCasesInSwitch": true, // switch에서 default를 뺄시 에러가 나온다.
+    "moduleResolution": "node", // nodejs, classic 어떤걸로 모듈 해석 할지 결정 -> 오늘날은 대부분 nodejs를 이용
+    "resolveJsonModule": true, // 위의 esModuleInterop과 함께 이용됨.
+    "isolatedModules": true, // 추가 검사를 수행하여 별도의 컴파일이 안전한지 확인합니다.
+    "noEmit": true, // 출력을 내보내지 않습니다.
+    "incremental": true // 이전 컴파일에서 디스크의 파일로 정보를 읽거나/기록하여 증분 컴파일을 활성화합니다. 사용시 tsc 컴파일 시간이 매우 빨라진다고 함.
   },
-  "exclude": ["node_modules/*"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
 }
