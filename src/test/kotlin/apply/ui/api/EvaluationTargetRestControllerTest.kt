@@ -13,7 +13,7 @@ import apply.application.MailTargetService
 import apply.createEvaluationItem
 import apply.domain.evaluationtarget.EvaluationAnswers
 import apply.domain.evaluationtarget.EvaluationStatus
-import apply.ui.api.ApiResponse.Companion.success
+import apply.domain.evaluationtarget.EvaluationStatus.PASS
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
 import io.mockk.every
@@ -23,7 +23,6 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.HttpMethod
-import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.mock.web.MockMultipartFile
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.test.web.servlet.get
@@ -35,9 +34,7 @@ import support.test.web.servlet.multipart
 import kotlin.io.path.Path
 import kotlin.io.path.inputStream
 
-@WebMvcTest(
-    controllers = [EvaluationTargetRestController::class]
-)
+@WebMvcTest(EvaluationTargetRestController::class)
 class EvaluationTargetRestControllerTest : RestControllerTest() {
     @MockkBean
     private lateinit var evaluationTargetService: EvaluationTargetService
@@ -48,62 +45,37 @@ class EvaluationTargetRestControllerTest : RestControllerTest() {
     @MockkBean
     private lateinit var evaluationTargetCsvService: EvaluationTargetCsvService
 
-    private val recruitmentId = 1L
-    private val evaluationId = 1L
-    private val targetId = 1L
-    private val keyword = "아마찌"
-    private val updatedScore = 5
-    private val updatedStatus = EvaluationStatus.PASS
-    private val updatedNote = "특이 사항(수정)"
-    private val answers = listOf(EvaluationItemScoreData(score = updatedScore, id = 3L))
-    private val gradeEvaluationRequest = EvaluationTargetData(answers, updatedNote, updatedStatus)
-
-    private val evaluationTargetResponse: EvaluationTargetResponse = EvaluationTargetResponse(
-        id = 1L,
-        name = "아마찌",
-        email = "wlgp2500@gmail.com",
-        userId = 1L,
-        totalScore = 100,
-        evaluationStatus = EvaluationStatus.PASS,
-        administratorId = 1L,
-        note = EVALUATION_TARGET_NOTE,
-        answers = EvaluationAnswers(mutableListOf())
-    )
-
-    private val gradeEvaluationResponse: GradeEvaluationResponse = GradeEvaluationResponse(
-        title = "평가 항목 제목",
-        description = "평가 항목 설명",
-        evaluationTarget = EvaluationTargetData(),
-        evaluationItems = listOf(EvaluationItemResponse(createEvaluationItem()))
-    )
-
     @Test
     fun `평가 id와 키워드(이름, 이메일)로 평가 대상자를 조회한다`() {
-        val responses = listOf(evaluationTargetResponse)
-        every { evaluationTargetService.findAllByEvaluationIdAndKeyword(evaluationId, keyword) } returns responses
+        val responses = listOf(
+            EvaluationTargetResponse(
+                id = 1L,
+                name = "아마찌",
+                email = "wlgp2500@gmail.com",
+                userId = 1L,
+                totalScore = 100,
+                evaluationStatus = PASS,
+                administratorId = 1L,
+                note = EVALUATION_TARGET_NOTE,
+                answers = EvaluationAnswers(mutableListOf())
+            )
+        )
+        every { evaluationTargetService.findAllByEvaluationIdAndKeyword(any(), any()) } returns responses
 
-        mockMvc.get(
-            "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets",
-            recruitmentId,
-            evaluationId
-        ) {
+        mockMvc.get("/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets", 1L, 1L) {
             bearer("valid_token")
-            param("keyword", keyword)
+            param("keyword", "아마찌")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(success(responses))) }
+            content { success(responses) }
         }
     }
 
     @Test
     fun `이전 평가와 평가 대상자 존재 여부를 통해 저장하거나 갱신한다 `() {
-        every { evaluationTargetService.load(evaluationId) } just Runs
+        every { evaluationTargetService.load(any()) } just Runs
 
-        mockMvc.put(
-            "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/renew",
-            recruitmentId,
-            evaluationId
-        ) {
+        mockMvc.put("/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/renew", 1L, 1L) {
             bearer("valid_token")
         }.andExpect {
             status { isOk }
@@ -112,18 +84,21 @@ class EvaluationTargetRestControllerTest : RestControllerTest() {
 
     @Test
     fun `평가 대상 id로 채점 정보를 불러온다`() {
-        every { evaluationTargetService.getGradeEvaluation(targetId) } returns gradeEvaluationResponse
+        val response = GradeEvaluationResponse(
+            title = "평가 항목 제목",
+            description = "평가 항목 설명",
+            evaluationTarget = EvaluationTargetData(),
+            evaluationItems = listOf(EvaluationItemResponse(createEvaluationItem()))
+        )
+        every { evaluationTargetService.getGradeEvaluation(any()) } returns response
 
         mockMvc.get(
-            "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/{targetId}/grade",
-            recruitmentId,
-            evaluationId,
-            targetId
+            "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/{targetId}/grade", 1L, 1L, 1L
         ) {
             bearer("valid_token")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(success(gradeEvaluationResponse))) }
+            content { success(response) }
         }.andDo {
             handle(document("patch/recruitments/evaluations/targets/grade"))
         }
@@ -131,16 +106,12 @@ class EvaluationTargetRestControllerTest : RestControllerTest() {
 
     @Test
     fun `평가 완료 후 점수를 매긴다`() {
-        every { evaluationTargetService.grade(targetId, gradeEvaluationRequest) } just Runs
+        every { evaluationTargetService.grade(any(), any()) } just Runs
 
         mockMvc.patch(
-            "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/{targetId}/grade",
-            recruitmentId,
-            evaluationId,
-            targetId
+            "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/{targetId}/grade", 1L, 1L, 1L
         ) {
-            content = objectMapper.writeValueAsString(gradeEvaluationRequest)
-            contentType = APPLICATION_JSON
+            jsonContent(EvaluationTargetData(listOf(EvaluationItemScoreData(score = 5, id = 3L)), "특이 사항(수정)", PASS))
             bearer("valid_token")
         }.andExpect {
             status { isOk }
@@ -151,19 +122,14 @@ class EvaluationTargetRestControllerTest : RestControllerTest() {
     @ParameterizedTest
     fun `메일 발송 대상(합격자)들의 이메일 정보를 조회한다`(enumStatus: EvaluationStatus) {
         val responses = listOf(MailTargetResponse("roki@woowacourse.com", "김로키"))
-        every { mailTargetService.findMailTargets(evaluationId, enumStatus) } returns responses
+        every { mailTargetService.findMailTargets(any(), any()) } returns responses
 
-        mockMvc.get(
-            "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/emails?status={status}",
-            recruitmentId,
-            evaluationId,
-            enumStatus.toString()
-        ) {
+        mockMvc.get("/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/emails", 1L, 1L) {
             bearer("valid_token")
-            param("keyword", keyword)
+            param("status", enumStatus.name)
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(success(responses))) }
+            content { success(responses) }
         }
     }
 
@@ -172,13 +138,13 @@ class EvaluationTargetRestControllerTest : RestControllerTest() {
         val contentStream = Path("src/test/resources/another_evaluation.csv").inputStream()
         val file = MockMultipartFile("evaluation", "evaluation.csv", "text/csv", contentStream)
 
-        every { evaluationTargetCsvService.updateTarget(any(), evaluationId) } just Runs
+        every { evaluationTargetCsvService.updateTarget(any(), any()) } just Runs
 
         mockMvc.multipart(
             HttpMethod.PATCH,
             "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/grade",
-            recruitmentId,
-            evaluationId
+            1L,
+            1L
         ) {
             bearer("valid_token")
             file("file", file.bytes)

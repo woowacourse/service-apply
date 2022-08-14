@@ -5,73 +5,62 @@ import apply.application.EvaluationResponse
 import apply.application.EvaluationService
 import apply.createEvaluation
 import apply.createRecruitment
-import apply.ui.api.ApiResponse.Companion.success
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.context.annotation.ComponentScan
-import org.springframework.context.annotation.FilterType
-import org.springframework.http.MediaType.APPLICATION_JSON
 import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 import support.test.web.servlet.bearer
 
-@WebMvcTest(
-    controllers = [EvaluationRestController::class],
-    includeFilters = [
-        ComponentScan.Filter(type = FilterType.REGEX, pattern = ["apply.security.*"])
-    ]
-)
+@WebMvcTest(EvaluationRestController::class)
 class EvaluationRestControllerTest : RestControllerTest() {
     @MockkBean
     private lateinit var evaluationService: EvaluationService
 
-    private val evaluationResponses: List<EvaluationResponse> = listOf(
-        EvaluationResponse(1L, "평가1", "평가1 설명", "우테코 3기 백엔드", 4L, "", 2L),
-        EvaluationResponse(2L, "평가2", "평가2 설명", "우테코 3기 프론트", 5L, "", 2L),
-    )
-
     @Test
     fun `평가를 추가한다`() {
-        every { evaluationService.save(any()) } returns evaluationResponses[0]
+        val response = EvaluationResponse(1L, "평가1", "평가1 설명", "우테코 3기 백엔드", 4L)
+        every { evaluationService.save(any()) } returns response
 
         mockMvc.post("/api/recruitments/{recruitmentId}/evaluations", 1L) {
-            content = objectMapper.writeValueAsBytes(
-                EvaluationData(createEvaluation(), createRecruitment(), null, emptyList())
-            )
-            contentType = APPLICATION_JSON
+            jsonContent(EvaluationData(createEvaluation(), createRecruitment(), null, emptyList()))
             bearer("valid_token")
         }.andExpect {
             status { isCreated }
-            content { json(objectMapper.writeValueAsString(success(evaluationResponses[0]))) }
+            content { success(response) }
         }
     }
 
     @Test
     fun `특정 평가를 조회한다`() {
-        every { evaluationService.getById(any()) } returns evaluationResponses[0]
+        val response = EvaluationResponse(1L, "평가1", "평가1 설명", "우테코 3기 백엔드", 4L)
+        every { evaluationService.getById(any()) } returns response
 
         mockMvc.get("/api/recruitments/{recruitmentId}/evaluations/{evaluationId}", 1L, 1L) {
             bearer("valid_token")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(success(evaluationResponses[0]))) }
+            content { success(response) }
         }
     }
 
     @Test
     fun `모든 (상세한) 평가를 조회한다`() {
-        every { evaluationService.findAllWithRecruitment() } returns evaluationResponses
+        val responses = listOf(
+            EvaluationResponse(1L, "평가1", "평가1 설명", "우테코 3기 백엔드", 4L),
+            EvaluationResponse(2L, "평가2", "평가2 설명", "우테코 3기 프론트", 5L)
+        )
+        every { evaluationService.findAllWithRecruitment() } returns responses
 
         mockMvc.get("/api/recruitments/{recruitmentId}/evaluations", 1L) {
             bearer("valid_token")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(success(evaluationResponses))) }
+            content { success(responses) }
         }
     }
 
