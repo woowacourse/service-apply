@@ -10,7 +10,9 @@ operation::user-login-post[snippets='http-request,http-response']
 
 === 로그인 실패
 
-operation::user-login-post-forbidden[snippets='http-request,http-response']
+사용자 정보를 올바르게 입력하지 않은 경우
+
+operation::user-login-post-forbidden[snippets='http-response']
 
 == 비밀번호 초기화
 
@@ -20,7 +22,7 @@ operation::user-reset-password-post[snippets='http-request,http-response']
 
 사용자 정보를 올바르게 입력하지 않은 경우
 
-operation::user-reset-password-post-forbidden[snippets='http-request,http-response']
+operation::user-reset-password-post-forbidden[snippets='http-response']
 
 == 비밀번호 변경
 
@@ -30,7 +32,7 @@ operation::user-edit-password-post[snippets='http-request,http-response']
 
 기존 비밀번호를 올바르게 입력하지 않은 경우
 
-operation::user-edit-password-post-forbidden[snippets='http-request,http-response']
+operation::user-edit-password-post-forbidden[snippets='http-response']
 
 == 인증 코드 생성
 
