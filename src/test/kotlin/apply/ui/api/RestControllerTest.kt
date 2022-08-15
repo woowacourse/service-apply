@@ -83,10 +83,10 @@ abstract class RestControllerTest {
     }
 
     fun ContentResultMatchers.success(value: Any): ResultMatcher {
-        return json(objectMapper.writeValueAsString(ApiResponse.success(value)))
+        return json(objectMapper.writeValueAsString(ApiResponse.success(value)), true)
     }
 
     fun ContentResultMatchers.error(message: String): ResultMatcher {
-        return json(objectMapper.writeValueAsString(ApiResponse.error(message)))
+        return json(objectMapper.writeValueAsString(ApiResponse.error(message)), true)
     }
 }
