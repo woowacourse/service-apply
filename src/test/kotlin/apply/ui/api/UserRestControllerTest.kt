@@ -1,9 +1,6 @@
 package apply.ui.api
 
-import apply.application.AuthenticateUserRequest
 import apply.application.EditInformationRequest
-import apply.application.EditPasswordRequest
-import apply.application.RegisterUserRequest
 import apply.application.ResetPasswordRequest
 import apply.application.UserAuthenticationService
 import apply.application.UserResponse
@@ -12,7 +9,6 @@ import apply.application.mail.MailService
 import apply.createUser
 import apply.domain.authenticationcode.AuthenticationCode
 import apply.domain.user.Gender
-import apply.domain.user.Password
 import apply.domain.user.UnidentifiedUserException
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
@@ -20,22 +16,29 @@ import io.mockk.every
 import io.mockk.just
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.http.HttpHeaders.AUTHORIZATION
-import org.springframework.http.MediaType
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.patch
 import org.springframework.test.web.servlet.post
 import support.createLocalDate
-import support.test.TestEnvironment
+import support.test.web.servlet.bearer
+import java.time.LocalDate
 
-private const val VALID_TOKEN = "SOME_VALID_TOKEN"
 private const val PASSWORD = "password"
 private const val INVALID_PASSWORD = "invalid_password"
-private const val WRONG_PASSWORD = "wrongPassword"
-private const val NEW_PASSWORD = "NEW_PASSWORD"
+private const val WRONG_PASSWORD = "wrong_password"
+private const val NEW_PASSWORD = "new_password"
 
-private fun RegisterUserRequest.withPlainPassword(password: String): Map<String, Any?> {
+private fun createRegisterUserRequest(
+    name: String = "회원",
+    email: String = "test@email.com",
+    phoneNumber: String = "010-0000-0000",
+    gender: Gender = Gender.MALE,
+    birthday: LocalDate = createLocalDate(1995, 2, 2),
+    password: String = PASSWORD,
+    confirmPassword: String = PASSWORD,
+    authenticationCode: String = "3ea9fa6c"
+): Map<String, Any> {
     return mapOf(
         "name" to name,
         "email" to email,
@@ -43,20 +46,35 @@ private fun RegisterUserRequest.withPlainPassword(password: String): Map<String,
         "gender" to gender,
         "birthday" to birthday,
         "password" to password,
-        "confirmPassword" to password,
+        "confirmPassword" to confirmPassword,
         "authenticationCode" to authenticationCode
     )
 }
 
-private fun AuthenticateUserRequest.withPlainPassword(password: String): Map<String, Any?> {
-    return mapOf("email" to email, "password" to password)
+private fun createAuthenticateUserRequest(
+    email: String = "test@email.com",
+    password: String = PASSWORD
+): Map<String, Any> {
+    return mapOf(
+        "email" to email,
+        "password" to password
+    )
 }
 
-@WebMvcTest(
-    controllers = [UserRestController::class]
-)
-@TestEnvironment
-internal class UserRestControllerTest : RestControllerTest() {
+private fun createEditPasswordRequest(
+    oldPassword: String = PASSWORD,
+    password: String = NEW_PASSWORD,
+    confirmPassword: String = NEW_PASSWORD
+): Map<String, String> {
+    return mapOf(
+        "oldPassword" to oldPassword,
+        "password" to password,
+        "confirmPassword" to confirmPassword
+    )
+}
+
+@WebMvcTest(UserRestController::class)
+class UserRestControllerTest : RestControllerTest() {
     @MockkBean
     private lateinit var userService: UserService
 
@@ -66,154 +84,101 @@ internal class UserRestControllerTest : RestControllerTest() {
     @MockkBean
     private lateinit var mailService: MailService
 
-    private val userRequest = RegisterUserRequest(
-        name = "회원",
-        email = "test@email.com",
-        phoneNumber = "010-0000-0000",
-        gender = Gender.MALE,
-        birthday = createLocalDate(1995, 2, 2),
-        password = Password(PASSWORD),
-        confirmPassword = Password(PASSWORD),
-        authenticationCode = "3ea9fa6c"
-    )
-
-    private val userLoginRequest = AuthenticateUserRequest(
-        email = userRequest.email,
-        password = userRequest.password
-    )
-
-    private val userPasswordFindRequest = ResetPasswordRequest(
-        name = userRequest.name,
-        email = userRequest.email,
-        birthday = userRequest.birthday
-    )
-
-    private val invalidUserLoginRequest = userLoginRequest.copy(password = Password(INVALID_PASSWORD))
-
-    private val inValidUserPasswordFindRequest =
-        userPasswordFindRequest.copy(birthday = createLocalDate(1995, 4, 4))
-
-    private val validEditPasswordRequest = EditPasswordRequest(
-        oldPassword = Password(PASSWORD),
-        password = Password(NEW_PASSWORD),
-        confirmPassword = Password(NEW_PASSWORD)
-    )
-
-    private val inValidEditPasswordRequest = validEditPasswordRequest.copy(oldPassword = Password(WRONG_PASSWORD))
-
-    private val userKeyword = "아마찌"
-
-    private val userResponses = listOf(
-        UserResponse(createUser("아마찌")),
-        UserResponse(createUser("로키"))
-    )
-
     @Test
     fun `유효한 회원 생성 및 검증 요청에 대하여 응답으로 토큰이 반환된다`() {
-        every { userAuthenticationService.generateTokenByRegister(userRequest) } returns VALID_TOKEN
+        val response = "valid_token"
+        every { userAuthenticationService.generateTokenByRegister(any()) } returns response
         every { mailService.sendAuthenticationCodeMail(any(), any()) } just Runs
 
         mockMvc.post("/api/users/register") {
-            content = objectMapper.writeValueAsBytes(userRequest.withPlainPassword(PASSWORD))
-            contentType = MediaType.APPLICATION_JSON
+            jsonContent(createRegisterUserRequest())
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(VALID_TOKEN))) }
+            content { success(response) }
         }.andDo {
-            handle(document("user-register"))
+            handle(document("user-register-post"))
         }
     }
 
     @Test
     fun `올바른 회원 로그인 요청에 응답으로 Token을 반환한다`() {
-        every {
-            userAuthenticationService.generateTokenByLogin(userLoginRequest)
-        } returns VALID_TOKEN
+        val response = "valid_token"
+        every { userAuthenticationService.generateTokenByLogin(any()) } returns response
 
         mockMvc.post("/api/users/login") {
-            content = objectMapper.writeValueAsBytes(userLoginRequest.withPlainPassword(PASSWORD))
-            contentType = MediaType.APPLICATION_JSON
+            jsonContent(createAuthenticateUserRequest())
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(VALID_TOKEN))) }
+            content { success(response) }
         }.andDo {
-            handle(document("user-login"))
+            handle(document("user-login-post"))
         }
     }
 
     @Test
     fun `잘못된 회원 로그인 요청에 응답으로 403 Forbidden을 반환한다`() {
-        every { userAuthenticationService.generateTokenByLogin(invalidUserLoginRequest) } throws UnidentifiedUserException()
+        every { userAuthenticationService.generateTokenByLogin(any()) } throws UnidentifiedUserException("사용자 정보가 일치하지 않습니다.")
 
         mockMvc.post("/api/users/login") {
-            content = objectMapper.writeValueAsBytes(invalidUserLoginRequest.withPlainPassword(INVALID_PASSWORD))
-            contentType = MediaType.APPLICATION_JSON
+            jsonContent(createAuthenticateUserRequest(password = INVALID_PASSWORD))
         }.andExpect {
             status { isForbidden }
         }.andDo {
-            handle(document("user-login-forbidden"))
+            handle(document("user-login-post-forbidden"))
         }
     }
 
     @Test
     fun `올바른 비밀번호 찾기 요청에 응답으로 NoContent를 반환한다`() {
-        every { userService.resetPassword(userPasswordFindRequest) } just Runs
+        every { userService.resetPassword(any()) } just Runs
 
         mockMvc.post("/api/users/reset-password") {
-            content = objectMapper.writeValueAsBytes(userPasswordFindRequest)
-            contentType = MediaType.APPLICATION_JSON
+            jsonContent(ResetPasswordRequest("회원", "test@email.com", createLocalDate(1995, 2, 2)))
         }.andExpect {
             status { isNoContent }
         }.andDo {
-            handle(document("user-reset-password"))
+            handle(document("user-reset-password-post"))
         }
     }
 
     @Test
     fun `잘못된 비밀번호 찾기 요청에 응답으로 403 Forbidden을 반환한다`() {
-        every { userService.resetPassword(inValidUserPasswordFindRequest) } throws UnidentifiedUserException()
+        every { userService.resetPassword(any()) } throws UnidentifiedUserException("사용자 정보가 일치하지 않습니다.")
 
         mockMvc.post("/api/users/reset-password") {
-            content = objectMapper.writeValueAsBytes(inValidUserPasswordFindRequest)
-            contentType = MediaType.APPLICATION_JSON
+            jsonContent(ResetPasswordRequest("회원", "test@email.com", createLocalDate(1995, 4, 4)))
         }.andExpect {
             status { isForbidden }
         }.andDo {
-            handle(document("user-reset-password-forbidden"))
+            handle(document("user-reset-password-post-forbidden"))
         }
     }
 
     @Test
     fun `올바른 비밀번호 변경 요청에 응답으로 NoContent를 반환한다`() {
-        every { userService.editPassword(any(), eq(validEditPasswordRequest)) } just Runs
-
-        val actualValidEditPasswordRequest = createValidEditPasswordRequest()
+        every { userService.editPassword(any(), any()) } just Runs
 
         mockMvc.post("/api/users/edit-password") {
-            content = objectMapper.writeValueAsBytes(actualValidEditPasswordRequest)
-            contentType = MediaType.APPLICATION_JSON
-            header(AUTHORIZATION, "Bearer valid_token")
+            jsonContent(createEditPasswordRequest())
+            bearer("valid_token")
         }.andExpect {
             status { isNoContent }
         }.andDo {
-            handle(document("user-edit-password"))
+            handle(document("user-edit-password-post"))
         }
     }
 
     @Test
     fun `잘못된 비밀번호 변경 요청에 응답으로 403 Forbidden을 반환한다`() {
-        every { userService.editPassword(any(), eq(inValidEditPasswordRequest)) } throws UnidentifiedUserException()
-
-        val actualInValidEditPasswordRequest = createInValidEditPasswordRequest()
+        every { userService.editPassword(any(), any()) } throws UnidentifiedUserException("기존 비밀번호가 일치하지 않습니다.")
 
         mockMvc.post("/api/users/edit-password") {
-            content = objectMapper.writeValueAsBytes(actualInValidEditPasswordRequest)
-            contentType = MediaType.APPLICATION_JSON
-            header(AUTHORIZATION, "Bearer valid_token")
+            jsonContent(createEditPasswordRequest(oldPassword = WRONG_PASSWORD))
+            bearer("valid_token")
         }.andExpect {
             status { isForbidden }
         }.andDo {
-            handle(document("user-edit-password-forbidden"))
+            handle(document("user-edit-password-post-forbidden"))
         }
     }
 
@@ -221,45 +186,42 @@ internal class UserRestControllerTest : RestControllerTest() {
     fun `이메일 인증 코드 요청에 응답으로 NoContent를 반환한다`() {
         val authenticationCode = AuthenticationCode("authentication-code@email.com")
         every { userAuthenticationService.generateAuthenticationCode(any()) } returns authenticationCode.code
-        every { mailService.sendAuthenticationCodeMail(authenticationCode.email, authenticationCode.code) } just Runs
+        every { mailService.sendAuthenticationCodeMail(any(), any()) } just Runs
 
         mockMvc.post("/api/users/authentication-code") {
             param("email", authenticationCode.email)
         }.andExpect {
             status { isNoContent }
         }.andDo {
-            handle(document("user-authentication-code"))
+            handle(document("user-authentication-code-post"))
         }
     }
 
     @Test
     fun `이메일 인증 요청에 응답으로 NoContent를 반환한다`() {
-        every { userAuthenticationService.authenticateEmail(userRequest.email, any()) } just Runs
+        every { userAuthenticationService.authenticateEmail(any(), any()) } just Runs
 
         mockMvc.post("/api/users/authenticate-email") {
-            param("email", userRequest.email)
+            param("email", "test@email.com")
             param("authenticationCode", "code")
         }.andExpect {
             status { isNoContent }
+        }.andDo {
+            handle(document("user-authenticate-email-post"))
         }
     }
 
     @Test
     fun `키워드(이름 or 이메일)로 회원들을 조회한다`() {
-        every { userService.findAllByKeyword(userKeyword) } returns userResponses
+        val responses = listOf(UserResponse(createUser("아마찌")))
+        every { userService.findAllByKeyword(any()) } returns responses
 
-        mockMvc.get(
-            "/api/users",
-            userKeyword
-        ) {
-            contentType = MediaType.APPLICATION_JSON
-            header(AUTHORIZATION, "Bearer valid_token")
-            param("keyword", userKeyword)
+        mockMvc.get("/api/users") {
+            bearer("valid_token")
+            param("keyword", "아마찌")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(userResponses))) }
-        }.andDo {
-            handle(document("user-authenticate-email"))
+            content { success(responses) }
         }
     }
 
@@ -269,45 +231,26 @@ internal class UserRestControllerTest : RestControllerTest() {
         every { userService.getInformation(any()) } returns response
 
         mockMvc.get("/api/users/me") {
-            contentType = MediaType.APPLICATION_JSON
-            header(AUTHORIZATION, "Bearer valid_token")
+            bearer("valid_token")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(response))) }
+            content { success(response) }
         }.andDo {
-            handle(document("user-me"))
+            handle(document("user-me-get"))
         }
     }
 
     @Test
     fun `회원이 정보를 변경한다`() {
-        val request = EditInformationRequest("010-9999-9999")
-        every { userService.editInformation(any(), request) } just Runs
+        every { userService.editInformation(any(), any()) } just Runs
 
         mockMvc.patch("/api/users/information") {
-            content = objectMapper.writeValueAsBytes(request)
-            contentType = MediaType.APPLICATION_JSON
-            header(AUTHORIZATION, "Bearer valid_token")
+            jsonContent(EditInformationRequest("010-9999-9999"))
+            bearer("valid_token")
         }.andExpect {
             status { isNoContent }
         }.andDo {
-            handle(document("user-information"))
+            handle(document("user-information-patch"))
         }
-    }
-
-    private fun createValidEditPasswordRequest(): Map<String, String> {
-        return mapOf(
-            "oldPassword" to PASSWORD,
-            "password" to NEW_PASSWORD,
-            "confirmPassword" to NEW_PASSWORD,
-        )
-    }
-
-    private fun createInValidEditPasswordRequest(): Map<String, String> {
-        return mapOf(
-            "oldPassword" to WRONG_PASSWORD,
-            "password" to NEW_PASSWORD,
-            "confirmPassword" to NEW_PASSWORD
-        )
     }
 }

@@ -11,66 +11,56 @@ import io.mockk.every
 import io.mockk.just
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.context.annotation.ComponentScan
-import org.springframework.context.annotation.FilterType
-import org.springframework.http.HttpHeaders
-import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
+import support.test.web.servlet.bearer
 
-@WebMvcTest(
-    controllers = [EvaluationRestController::class],
-    includeFilters = [
-        ComponentScan.Filter(type = FilterType.REGEX, pattern = ["apply.security.*"])
-    ]
-)
-internal class EvaluationRestControllerTest : RestControllerTest() {
+@WebMvcTest(EvaluationRestController::class)
+class EvaluationRestControllerTest : RestControllerTest() {
     @MockkBean
     private lateinit var evaluationService: EvaluationService
 
-    private val evaluationResponses: List<EvaluationResponse> = listOf(
-        EvaluationResponse(1L, "평가1", "평가1 설명", "우테코 3기 백엔드", 4L, "", 2L),
-        EvaluationResponse(2L, "평가2", "평가2 설명", "우테코 3기 프론트", 5L, "", 2L),
-    )
-
     @Test
     fun `평가를 추가한다`() {
-        every { evaluationService.save(any()) } returns evaluationResponses[0]
+        val response = EvaluationResponse(1L, "평가1", "평가1 설명", "우테코 3기 백엔드", 4L)
+        every { evaluationService.save(any()) } returns response
 
         mockMvc.post("/api/recruitments/{recruitmentId}/evaluations", 1L) {
-            content = objectMapper.writeValueAsBytes(
-                EvaluationData(createEvaluation(), createRecruitment(), null, emptyList())
-            )
-            contentType = MediaType.APPLICATION_JSON
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            jsonContent(EvaluationData(createEvaluation(), createRecruitment(), null, emptyList()))
+            bearer("valid_token")
         }.andExpect {
             status { isCreated }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(evaluationResponses[0]))) }
+            content { success(response) }
         }
     }
 
     @Test
     fun `특정 평가를 조회한다`() {
-        every { evaluationService.getById(any()) } returns evaluationResponses[0]
+        val response = EvaluationResponse(1L, "평가1", "평가1 설명", "우테코 3기 백엔드", 4L)
+        every { evaluationService.getById(any()) } returns response
 
         mockMvc.get("/api/recruitments/{recruitmentId}/evaluations/{evaluationId}", 1L, 1L) {
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            bearer("valid_token")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(evaluationResponses[0]))) }
+            content { success(response) }
         }
     }
 
     @Test
     fun `모든 (상세한) 평가를 조회한다`() {
-        every { evaluationService.findAllWithRecruitment() } returns evaluationResponses
+        val responses = listOf(
+            EvaluationResponse(1L, "평가1", "평가1 설명", "우테코 3기 백엔드", 4L),
+            EvaluationResponse(2L, "평가2", "평가2 설명", "우테코 3기 프론트", 5L)
+        )
+        every { evaluationService.findAllWithRecruitment() } returns responses
 
         mockMvc.get("/api/recruitments/{recruitmentId}/evaluations", 1L) {
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            bearer("valid_token")
         }.andExpect {
             status { isOk }
-            content { json(objectMapper.writeValueAsString(ApiResponse.success(evaluationResponses))) }
+            content { success(responses) }
         }
     }
 
@@ -79,7 +69,7 @@ internal class EvaluationRestControllerTest : RestControllerTest() {
         every { evaluationService.deleteById(any()) } just Runs
 
         mockMvc.delete("/api/recruitments/{recruitmentId}/evaluations/{evaluationId}", 1L, 1L) {
-            header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
+            bearer("valid_token")
         }.andExpect {
             status { isOk }
         }

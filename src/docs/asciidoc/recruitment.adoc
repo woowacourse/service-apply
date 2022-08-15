@@ -1,0 +1,9 @@
+= 모집 관련 API
+
+== 모집 조회
+
+operation::recruitment-get[snippets='http-request,http-response']
+
+== 모집 항목 조회
+
+operation::recruitment-item-list-get[snippets='http-request,http-response']
