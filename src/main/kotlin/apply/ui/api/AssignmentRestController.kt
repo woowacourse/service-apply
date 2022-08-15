@@ -34,16 +34,6 @@ class AssignmentRestController(
             .body(ApiResponse.success(response))
     }
 
-    @GetMapping("/missions/{missionId}/assignments/me")
-    fun getAssignment(
-        @PathVariable recruitmentId: Long,
-        @PathVariable missionId: Long,
-        @LoginUser user: User
-    ): ResponseEntity<ApiResponse<AssignmentResponse>> {
-        val assignment = assignmentService.getByUserIdAndMissionId(user.id, missionId)
-        return ResponseEntity.ok(ApiResponse.success(assignment))
-    }
-
     @PatchMapping("/missions/{missionId}/assignments")
     fun update(
         @PathVariable recruitmentId: Long,
@@ -53,6 +43,16 @@ class AssignmentRestController(
     ): ResponseEntity<Unit> {
         assignmentService.update(missionId, user.id, request)
         return ResponseEntity.ok().build()
+    }
+
+    @GetMapping("/missions/{missionId}/assignments/me")
+    fun getAssignment(
+        @PathVariable recruitmentId: Long,
+        @PathVariable missionId: Long,
+        @LoginUser user: User
+    ): ResponseEntity<ApiResponse<AssignmentResponse>> {
+        val assignment = assignmentService.getByUserIdAndMissionId(user.id, missionId)
+        return ResponseEntity.ok(ApiResponse.success(assignment))
     }
 
     @GetMapping("/targets/{targetId}/assignments")

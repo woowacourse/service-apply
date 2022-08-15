@@ -1,0 +1,17 @@
+= 지원서 관련 API
+
+== 지원서 생성
+
+operation::application-form-post[snippets='http-request,http-response']
+
+== 지원서 수정
+
+operation::application-form-patch[snippets='http-request,http-response']
+
+== 내 지원서 조회
+
+operation::application-form-me-get[snippets='http-request,http-response']
+
+== 지원서 조회
+
+operation::application-form-get[snippets='http-request,http-response']

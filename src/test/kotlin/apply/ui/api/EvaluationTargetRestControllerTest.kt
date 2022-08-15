@@ -13,6 +13,7 @@ import apply.application.MailTargetService
 import apply.createEvaluationItem
 import apply.domain.evaluationtarget.EvaluationAnswers
 import apply.domain.evaluationtarget.EvaluationStatus
+import apply.domain.evaluationtarget.EvaluationStatus.PASS
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
 import io.mockk.every
@@ -21,28 +22,20 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
 import org.springframework.mock.web.MockMultipartFile
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders
-import org.springframework.restdocs.payload.JsonFieldType
-import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
-import org.springframework.restdocs.payload.PayloadDocumentation.requestFields
-import org.springframework.restdocs.payload.PayloadDocumentation.responseFields
-import org.springframework.restdocs.request.RequestDocumentation.parameterWithName
-import org.springframework.restdocs.request.RequestDocumentation.partWithName
-import org.springframework.restdocs.request.RequestDocumentation.pathParameters
-import org.springframework.restdocs.request.RequestDocumentation.requestParameters
-import org.springframework.restdocs.request.RequestDocumentation.requestParts
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
+import org.springframework.test.web.servlet.get
+import org.springframework.test.web.servlet.patch
+import org.springframework.test.web.servlet.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import java.io.File
-import java.io.FileInputStream
+import support.test.web.servlet.bearer
+import support.test.web.servlet.multipart
+import kotlin.io.path.Path
+import kotlin.io.path.inputStream
 
-@WebMvcTest(
-    controllers = [EvaluationTargetRestController::class]
-)
-internal class EvaluationTargetRestControllerTest : RestControllerTest() {
+@WebMvcTest(EvaluationTargetRestController::class)
+class EvaluationTargetRestControllerTest : RestControllerTest() {
     @MockkBean
     private lateinit var evaluationTargetService: EvaluationTargetService
 
@@ -52,277 +45,109 @@ internal class EvaluationTargetRestControllerTest : RestControllerTest() {
     @MockkBean
     private lateinit var evaluationTargetCsvService: EvaluationTargetCsvService
 
-    private val recruitmentId = 1L
-    private val evaluationId = 1L
-    private val targetId = 1L
-    private val keyword = "아마찌"
-    private val updatedScore = 5
-    private val updatedStatus = EvaluationStatus.PASS
-    private val updatedNote = "특이 사항(수정)"
-    private val answers = listOf(EvaluationItemScoreData(score = updatedScore, id = 3L))
-    private val gradeEvaluationRequest = EvaluationTargetData(answers, updatedNote, updatedStatus)
-
-    private val evaluationTargetResponse: EvaluationTargetResponse = EvaluationTargetResponse(
-        id = 1L,
-        name = "아마찌",
-        email = "wlgp2500@gmail.com",
-        userId = 1L,
-        totalScore = 100,
-        evaluationStatus = EvaluationStatus.PASS,
-        administratorId = 1L,
-        note = EVALUATION_TARGET_NOTE,
-        answers = EvaluationAnswers(mutableListOf())
-    )
-
-    private val gradeEvaluationResponse: GradeEvaluationResponse = GradeEvaluationResponse(
-        title = "평가 항목 제목",
-        description = "평가 항목 설명",
-        evaluationTarget = EvaluationTargetData(),
-        evaluationItems = listOf(EvaluationItemResponse(createEvaluationItem()))
-    )
-
     @Test
     fun `평가 id와 키워드(이름, 이메일)로 평가 대상자를 조회한다`() {
-        every { evaluationTargetService.findAllByEvaluationIdAndKeyword(evaluationId, keyword) }.answers {
-            listOf(evaluationTargetResponse)
-        }
+        val responses = listOf(
+            EvaluationTargetResponse(
+                id = 1L,
+                name = "아마찌",
+                email = "wlgp2500@gmail.com",
+                userId = 1L,
+                totalScore = 100,
+                evaluationStatus = PASS,
+                administratorId = 1L,
+                note = EVALUATION_TARGET_NOTE,
+                answers = EvaluationAnswers(mutableListOf())
+            )
+        )
+        every { evaluationTargetService.findAllByEvaluationIdAndKeyword(any(), any()) } returns responses
 
-        mockMvc.perform(
-            RestDocumentationRequestBuilders.get(
-                "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets",
-                recruitmentId,
-                evaluationId,
-            )
-                .header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
-                .param("keyword", keyword)
-        ).andExpect(status().isOk)
-            .andExpect(
-                content().json(
-                    objectMapper.writeValueAsString(
-                        ApiResponse.success(listOf(evaluationTargetResponse))
-                    )
-                )
-            )
-            .andDo(
-                document(
-                    "evaluation-target-findAllByEvaluationIdAndKeyword",
-                    pathParameters(
-                        parameterWithName("recruitmentId").description("모집 ID"),
-                        parameterWithName("evaluationId").description("평가 ID")
-                    ),
-                    requestParameters(
-                        parameterWithName("keyword").description("키워드(이름, 이메일)")
-                    ),
-                    responseFields(
-                        fieldWithPath("message").description("응답 메시지"),
-                        fieldWithPath("body.[]").description("평가 대상자 목록")
-                    ).andWithPrefix("body.[].", EVALUATION_TARGET_FIELD_DESCRIPTORS)
-                )
-            )
+        mockMvc.get("/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets", 1L, 1L) {
+            bearer("valid_token")
+            param("keyword", "아마찌")
+        }.andExpect {
+            status { isOk }
+            content { success(responses) }
+        }
     }
 
     @Test
     fun `이전 평가와 평가 대상자 존재 여부를 통해 저장하거나 갱신한다 `() {
-        every { evaluationTargetService.load(evaluationId) } just Runs
+        every { evaluationTargetService.load(any()) } just Runs
 
-        mockMvc.perform(
-            RestDocumentationRequestBuilders.put(
-                "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/renew",
-                recruitmentId, evaluationId,
-            )
-                .header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
-        ).andExpect(status().isOk)
-            .andDo(
-                document(
-                    "evaluation-target-load",
-                    pathParameters(
-                        parameterWithName("recruitmentId").description("모집 ID"),
-                        parameterWithName("evaluationId").description("평가 ID")
-                    )
-                )
-            )
+        mockMvc.put("/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/renew", 1L, 1L) {
+            bearer("valid_token")
+        }.andExpect {
+            status { isOk }
+        }
     }
 
     @Test
     fun `평가 대상 id로 채점 정보를 불러온다`() {
-        every { evaluationTargetService.getGradeEvaluation(targetId) }.answers { gradeEvaluationResponse }
+        val response = GradeEvaluationResponse(
+            title = "평가 항목 제목",
+            description = "평가 항목 설명",
+            evaluationTarget = EvaluationTargetData(),
+            evaluationItems = listOf(EvaluationItemResponse(createEvaluationItem()))
+        )
+        every { evaluationTargetService.getGradeEvaluation(any()) } returns response
 
-        mockMvc.perform(
-            RestDocumentationRequestBuilders.get(
-                "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/{targetId}/grade",
-                recruitmentId,
-                evaluationId,
-                targetId
-            )
-                .header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
-        ).andExpect(status().isOk)
-            .andExpect(
-                content().json(
-                    objectMapper.writeValueAsString(
-                        ApiResponse.success(gradeEvaluationResponse)
-                    )
-                )
-            )
-            .andDo(
-                document(
-                    "evaluation-target-getGradeEvaluation",
-                    pathParameters(
-                        parameterWithName("recruitmentId").description("모집 ID"),
-                        parameterWithName("evaluationId").description("평가 ID"),
-                        parameterWithName("targetId").description("평가 대상자 ID")
-                    ),
-                    responseFields(
-                        fieldWithPath("message").description("응답 메시지"),
-                        fieldWithPath("body.title").type(JsonFieldType.STRING).description("평가 항목 제목"),
-                        fieldWithPath("body.description").type(JsonFieldType.STRING).description("평가 항목 설명"),
-                        fieldWithPath("body.evaluationTarget").type(JsonFieldType.OBJECT).description("평가 대상자 정보"),
-                        fieldWithPath("body.evaluationTarget.evaluationItemScores").type(JsonFieldType.ARRAY)
-                            .description("평가 항목 점수 목록"),
-                        fieldWithPath("body.evaluationTarget.note").type(JsonFieldType.STRING).description("평가 특이 사항"),
-                        fieldWithPath("body.evaluationTarget.evaluationStatus").type(JsonFieldType.STRING)
-                            .description("평가 상태"),
-                        fieldWithPath("body.evaluationItems").type(JsonFieldType.ARRAY).description("평가 항목 목록"),
-                        fieldWithPath("body.evaluationItems.[].title").type(JsonFieldType.STRING)
-                            .description("평가 항목 제목"),
-                        fieldWithPath("body.evaluationItems.[].description").type(JsonFieldType.STRING)
-                            .description("평가 항목 설명"),
-                        fieldWithPath("body.evaluationItems.[].maximumScore").type(JsonFieldType.NUMBER)
-                            .description("평가 항목 최대 점수"),
-                        fieldWithPath("body.evaluationItems.[].position").type(JsonFieldType.NUMBER)
-                            .description("평가 항목 POSITION"),
-                        fieldWithPath("body.evaluationItems.[].evaluationId").type(JsonFieldType.NUMBER)
-                            .description("평가 ID"),
-                        fieldWithPath("body.evaluationItems.[].id").type(JsonFieldType.NUMBER).description("평가 항목 ID")
-                    )
-                )
-            )
+        mockMvc.get(
+            "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/{targetId}/grade", 1L, 1L, 1L
+        ) {
+            bearer("valid_token")
+        }.andExpect {
+            status { isOk }
+            content { success(response) }
+        }.andDo {
+            handle(document("patch/recruitments/evaluations/targets/grade"))
+        }
     }
 
     @Test
     fun `평가 완료 후 점수를 매긴다`() {
-        every { evaluationTargetService.grade(targetId, gradeEvaluationRequest) } just Runs
+        every { evaluationTargetService.grade(any(), any()) } just Runs
 
-        mockMvc.perform(
-            RestDocumentationRequestBuilders.patch(
-                "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/{targetId}/grade",
-                recruitmentId,
-                evaluationId,
-                targetId
-            )
-                .content(objectMapper.writeValueAsString(gradeEvaluationRequest))
-                .header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
-                .header(HttpHeaders.CONTENT_TYPE, "application/json")
-        ).andExpect(status().isOk)
-            .andDo(
-                document(
-                    "evaluationtarget-grade",
-                    pathParameters(
-                        parameterWithName("recruitmentId").description("모집 ID"),
-                        parameterWithName("evaluationId").description("평가 ID"),
-                        parameterWithName("targetId").description("평가 대상자 ID")
-                    ),
-                    requestFields(
-                        fieldWithPath("evaluationItemScores").type(JsonFieldType.ARRAY)
-                            .description("평가 항목 점수 목록"),
-                        fieldWithPath("evaluationItemScores.[].score").type(JsonFieldType.NUMBER)
-                            .description("평가 항목 점수"),
-                        fieldWithPath("evaluationItemScores.[].id").type(JsonFieldType.NUMBER)
-                            .description("평가 항목 점수 ID"),
-                        fieldWithPath("note").type(JsonFieldType.STRING)
-                            .description("평가 특이 사항"),
-                        fieldWithPath("evaluationStatus").type(JsonFieldType.STRING)
-                            .description("평가 상태")
-                    )
-                )
-            )
+        mockMvc.patch(
+            "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/{targetId}/grade", 1L, 1L, 1L
+        ) {
+            jsonContent(EvaluationTargetData(listOf(EvaluationItemScoreData(score = 5, id = 3L)), "특이 사항(수정)", PASS))
+            bearer("valid_token")
+        }.andExpect {
+            status { isOk }
+        }
     }
 
     @EnumSource(names = ["PASS", "FAIL", "WAITING"])
     @ParameterizedTest
-    fun `메일 발송 대상(합격자)들의 이메일 정보를 조회한다`(enumStatus: EvaluationStatus?) {
-        every {
-            mailTargetService.findMailTargets(
-                evaluationId,
-                enumStatus
-            )
-        } returns listOf(MailTargetResponse("roki@woowacourse.com", "김로키"))
+    fun `메일 발송 대상(합격자)들의 이메일 정보를 조회한다`(enumStatus: EvaluationStatus) {
+        val responses = listOf(MailTargetResponse("roki@woowacourse.com", "김로키"))
+        every { mailTargetService.findMailTargets(any(), any()) } returns responses
 
-        mockMvc.perform(
-            RestDocumentationRequestBuilders.get(
-                "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/emails?status={status}",
-                recruitmentId,
-                evaluationId,
-                enumStatus.toString()
-            )
-                .header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
-                .header(HttpHeaders.CONTENT_TYPE, "application/json")
-        ).andExpect(status().isOk)
-            .andDo(
-                document(
-                    "evaluationtarget-email-sending-target-emails",
-                    pathParameters(
-                        parameterWithName("recruitmentId").description("모집 ID"),
-                        parameterWithName("evaluationId").description("평가 ID")
-                    ),
-                    requestParameters(
-                        parameterWithName("status").description("조회할 평가 상태")
-                    ),
-                    responseFields(
-                        fieldWithPath("message").description("응답 메시지"),
-                        fieldWithPath("body.[].name").type(JsonFieldType.STRING).description("대상 이름"),
-                        fieldWithPath("body.[].email").type(JsonFieldType.STRING).description("대상 E-MAIL")
-                    )
-                )
-            )
+        mockMvc.get("/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/emails", 1L, 1L) {
+            bearer("valid_token")
+            param("status", enumStatus.name)
+        }.andExpect {
+            status { isOk }
+            content { success(responses) }
+        }
     }
 
     @Test
     fun `평가지를 기준으로 평가대상자들의 상태를 업데이트한다`() {
-        val pathname = javaClass.classLoader.getResource("another_evaluation.csv")!!.file
-        val inputStream = FileInputStream(File(pathname))
-        val file = MockMultipartFile("evaluation", "evaluation.csv", "text/csv", inputStream)
+        val contentStream = Path("src/test/resources/another_evaluation.csv").inputStream()
+        val file = MockMultipartFile("evaluation", "evaluation.csv", "text/csv", contentStream)
 
-        every { evaluationTargetCsvService.updateTarget(any(), evaluationId) } just Runs
+        every { evaluationTargetCsvService.updateTarget(any(), any()) } just Runs
 
-        val request = RestDocumentationRequestBuilders.fileUpload(
+        mockMvc.multipart(
+            HttpMethod.PATCH,
             "/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/grade",
-            recruitmentId,
-            evaluationId
-        )
-            .file("file", file.bytes)
-            .with { request ->
-                request.method = "PATCH"
-                request
-            }
-            .header(HttpHeaders.AUTHORIZATION, "Bearer valid_token")
-
-        mockMvc.perform(request)
-            .andExpect(status().isOk)
-            .andDo(
-                document(
-                    "evaluationtarget-csv-grade",
-                    pathParameters(
-                        parameterWithName("recruitmentId").description("모집 ID"),
-                        parameterWithName("evaluationId").description("평가 ID"),
-                    ),
-                    requestParts(
-                        partWithName("file").description("업데이트 기준이 될 평가지")
-                    ),
-                )
-            )
-    }
-
-    companion object {
-        val EVALUATION_TARGET_FIELD_DESCRIPTORS = listOf(
-            fieldWithPath("id").type(JsonFieldType.NUMBER).description("ID"),
-            fieldWithPath("name").type(JsonFieldType.STRING).description("이름"),
-            fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
-            fieldWithPath("userId").type(JsonFieldType.NUMBER).description("지원자 ID"),
-            fieldWithPath("totalScore").type(JsonFieldType.NUMBER).description("점수"),
-            fieldWithPath("evaluationStatus").type(JsonFieldType.STRING).description("평가 상태"),
-            fieldWithPath("administratorId").type(JsonFieldType.NUMBER).description("평가자 ID"),
-            fieldWithPath("note").type(JsonFieldType.STRING).description("평가 특이 사항"),
-            fieldWithPath("answers").type(JsonFieldType.ARRAY).description("평가 대답")
-        )
+            1L,
+            1L
+        ) {
+            bearer("valid_token")
+            file("file", file.bytes)
+        }.andExpect(status().isOk)
     }
 }
