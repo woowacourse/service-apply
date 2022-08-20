@@ -17,30 +17,29 @@
   transform: translateX(-6px);
 }
 
-.copyright {
-  margin-top: 1.25rem;
-}
-
 .social {
   display: flex;
+  align-items: center;
 }
 
 .social a {
-  width: 2.75rem;
-  height: 2.75rem;
-  color: var(--white);
-  margin-right: 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 100%;
-  border: 1px solid #fff;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  color: var(--white);
+  border: none;
   transition: all 0.2s ease;
 }
 
 .social a:hover {
   color: #333;
   background-color: #fff;
+}
+
+.copyright {
+  margin-top: 1.25rem;
 }
 
 @media screen and (max-width: 800px) {
