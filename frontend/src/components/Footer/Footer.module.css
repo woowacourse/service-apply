@@ -38,6 +38,13 @@
   background-color: #fff;
 }
 
+.divider {
+  width: 1px;
+  height: 1rem;
+  border: none;
+  background-color: var(--white);
+}
+
 .copyright {
   margin-top: 1.25rem;
 }

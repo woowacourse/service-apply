@@ -21,6 +21,7 @@ const Footer = () => {
           >
             <i className="ti-github" aria-hidden="true"></i>
           </a>
+          <hr className={styles.divider}></hr>
           <a
             href="https://www.youtube.com/channel/UC-mOekGSesms0agFntnQang/featured?view_as=subscribe"
             target="_blank"
