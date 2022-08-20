@@ -34,8 +34,8 @@
 }
 
 .social a:hover {
-  color: #333;
-  background-color: #fff;
+  color: var(--black);
+  background-color: var(--white);
 }
 
 .divider {
