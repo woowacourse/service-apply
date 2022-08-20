@@ -30,6 +30,15 @@ const Footer = () => {
           >
             <i className="fa fa-youtube-play" aria-hidden="true"></i>
           </a>
+          <hr className={styles.divider}></hr>
+          <a
+            href="https://instagram.com/wooteco?igshid=YmMyMTA2M2Y="
+            target="_blank"
+            rel="noreferrer noopener"
+            aria-label="Instagram"
+          >
+            <i class="fa fa-instagram" aria-hidden="true"></i>
+          </a>
         </div>
         <p className={styles.copyright}>Copyright 2021. 우아한테크코스. All rights reserved.</p>
       </div>
