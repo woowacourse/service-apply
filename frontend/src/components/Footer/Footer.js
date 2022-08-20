@@ -12,7 +12,6 @@ const Footer = () => {
             alt="우아한테크코스 로고"
           />
         </a>
-        <p className={styles.copyright}>Copyright 2021. 우아한테크코스. All rights reserved.</p>
         <div className={styles.social}>
           <a
             href="https://github.com/woowacourse/"
@@ -31,6 +30,7 @@ const Footer = () => {
             <i className="fa fa-youtube-play" aria-hidden="true"></i>
           </a>
         </div>
+        <p className={styles.copyright}>Copyright 2021. 우아한테크코스. All rights reserved.</p>
       </div>
     </footer>
   );
