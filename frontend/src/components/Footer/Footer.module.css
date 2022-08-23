@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2.625rem 0;
+  padding: 3rem 0;
   background: var(--black);
   color: var(--white);
   user-select: none;
@@ -10,11 +10,13 @@
 
 .content-wrapper {
   width: var(--pc-main-width);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .logo {
-  width: 200px;
-  transform: translateX(-6px);
+  height: 2rem;
 }
 
 .social {
@@ -45,7 +47,6 @@
 }
 
 .copyright {
-  margin-top: 1.25rem;
 }
 
 @media screen and (max-width: 800px) {
