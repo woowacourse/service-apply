@@ -19,25 +19,25 @@ const Footer = () => {
             rel="noreferrer noopener"
             aria-label="GitHub"
           >
-            <i className="ti-github" aria-hidden="true"></i>
+            <i className="ti-github" aria-hidden="true" />
           </a>
-          <hr className={styles.divider}></hr>
+          <hr className={styles.divider} />
           <a
             href="https://www.youtube.com/channel/UC-mOekGSesms0agFntnQang/featured?view_as=subscribe"
             target="_blank"
             rel="noreferrer noopener"
             aria-label="Youtube"
           >
-            <i className="fa fa-youtube-play" aria-hidden="true"></i>
+            <i className="fa fa-youtube-play" aria-hidden="true" />
           </a>
-          <hr className={styles.divider}></hr>
+          <hr className={styles.divider} />
           <a
             href="https://instagram.com/wooteco?igshid=YmMyMTA2M2Y="
             target="_blank"
             rel="noreferrer noopener"
             aria-label="Instagram"
           >
-            <i class="fa fa-instagram" aria-hidden="true"></i>
+            <i class="fa fa-instagram" aria-hidden="true" />
           </a>
         </div>
         <p className={styles.copyright}>Copyright 2021. 우아한테크코스. All rights reserved.</p>
