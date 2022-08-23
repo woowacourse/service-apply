@@ -2,6 +2,7 @@ package apply.application
 
 import apply.domain.administrator.Administrator
 import apply.domain.administrator.AdministratorRepository
+import apply.domain.administrator.getById
 import apply.domain.administrator.getByUsername
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
@@ -29,5 +30,9 @@ class AdministratorService(private val administratorRepository: AdministratorRep
 
     fun findAll(): List<AdministratorResponse> {
         return administratorRepository.findAll().map(::AdministratorResponse)
+    }
+
+    fun findById(id: Long): AdministratorResponse {
+        return AdministratorResponse(administratorRepository.getById(id))
     }
 }

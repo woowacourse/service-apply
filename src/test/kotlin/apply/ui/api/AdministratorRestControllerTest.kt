@@ -47,4 +47,17 @@ internal class AdministratorRestControllerTest : RestControllerTest() {
             content { success(responses) }
         }
     }
+
+    @Test
+    fun `식별자로 관리자를 조회한다`() {
+        val response = createAdministratorResponse()
+        every { administratorService.findById(any()) } returns response
+
+        mockMvc.get("/api/admin/administrators/1") {
+            bearer("valid_token")
+        }.andExpect {
+            status { isOk }
+            content { success(response) }
+        }
+    }
 }

@@ -4,6 +4,7 @@ import apply.ADMINISTRATOR_USERNAME
 import apply.createAdministrator
 import apply.createAdministratorData
 import apply.domain.administrator.AdministratorRepository
+import apply.domain.administrator.getById
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import org.assertj.core.api.Assertions.assertThat
@@ -81,5 +82,13 @@ class AdministratorServiceTest {
         every { administratorRepository.findAll() } returns administrators
 
         assertThat(administratorService.findAll()).hasSize(3)
+    }
+
+    @Test
+    fun `관리자 단건을 조회한다`() {
+        val administrator = createAdministrator()
+        every { administratorRepository.getById(any()) } returns administrator
+
+        assertThat(administratorService.findById(administrator.id))
     }
 }
