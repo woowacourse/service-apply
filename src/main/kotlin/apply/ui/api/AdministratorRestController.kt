@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import support.toUri
+import javax.validation.Valid
 
 @RequestMapping("/api/admin/administrators")
 @RestController
@@ -22,7 +23,7 @@ class AdministratorRestController(
 
     @PostMapping
     fun save(
-        @RequestBody request: AdministratorData,
+        @RequestBody @Valid request: AdministratorData,
         @LoginUser(administrator = true) user: User
     ): ResponseEntity<ApiResponse<AdministratorResponse>> {
         val response = administratorService.save(request)

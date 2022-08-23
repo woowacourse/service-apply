@@ -3,7 +3,6 @@ package apply.ui.admin.administrators
 import apply.application.AdministratorData
 import apply.application.AdministratorResponse
 import apply.application.AdministratorService
-import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.dialog.Dialog
@@ -11,7 +10,6 @@ import com.vaadin.flow.component.html.H2
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
-import com.vaadin.flow.router.Route
 import support.views.createContrastButton
 import support.views.createNotification
 import support.views.createPrimaryButton
