@@ -34,6 +34,10 @@
   transition: all 0.2s ease;
 }
 
+.social a:first-child {
+  padding: 0 1rem 0 0;
+}
+
 .social a:hover {
   opacity: 0.6;
 }
