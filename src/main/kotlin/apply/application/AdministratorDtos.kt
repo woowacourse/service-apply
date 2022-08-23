@@ -12,16 +12,16 @@ data class AdministratorData(
         regexp = "[0-9a-zA-Z가-힣]+",
         message = "이름은 영어, 한글, 숫자만 가능합니다."
     )
-    val name: String,
+    var name: String = "",
 
     @field:NotBlank
-    val username: String,
+    var username: String = "",
 
     @field:NotBlank
-    val password: String,
+    var password: String = "",
 
     @field:NotBlank
-    val passwordConfirmation: String
+    var passwordConfirmation: String = ""
 )
 
 data class AdministratorResponse(
