@@ -63,10 +63,23 @@ class AdministratorServiceTest {
 
     @Test
     fun `관리자 아이디로 관리자를 불러온다`() {
-        every {administratorRepository.findByUsername(any())} returns createAdministrator()
+        every { administratorRepository.findByUsername(any()) } returns createAdministrator()
 
         val administrator = administratorService.loadUserByUsername(ADMINISTRATOR_USERNAME)
 
         assertThat(administrator).isNotNull
+    }
+
+    @Test
+    fun `관리자 목록을 조회한다`() {
+        val administrators = listOf(
+            createAdministrator(name = "adminA", username = "masterA", id = 1L),
+            createAdministrator(name = "adminB", username = "masterB", id = 2L),
+            createAdministrator(name = "adminC", username = "masterC", id = 3L)
+        )
+
+        every { administratorRepository.findAll() } returns administrators
+
+        assertThat(administratorService.findAll()).hasSize(3)
     }
 }

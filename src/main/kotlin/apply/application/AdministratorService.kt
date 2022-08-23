@@ -27,7 +27,7 @@ class AdministratorService(private val administratorRepository: AdministratorRep
         ).let(::AdministratorResponse)
     }
 
-    fun findAll() {
-        
+    fun findAll(): List<AdministratorResponse> {
+        return administratorRepository.findAll().map(::AdministratorResponse)
     }
 }

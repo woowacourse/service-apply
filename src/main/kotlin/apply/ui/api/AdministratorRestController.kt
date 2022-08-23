@@ -6,6 +6,7 @@ import apply.application.AdministratorService
 import apply.domain.user.User
 import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -22,9 +23,17 @@ class AdministratorRestController(
     fun save(
         @RequestBody request: AdministratorData,
         @LoginUser(administrator = true) user: User
-    ) : ResponseEntity<ApiResponse<AdministratorResponse>> {
+    ): ResponseEntity<ApiResponse<AdministratorResponse>> {
         val response = administratorService.save(request)
         return ResponseEntity.created("/api/admin/administrators/${response.id}".toUri())
             .body(ApiResponse.success(response))
+    }
+
+    @GetMapping
+    fun findAll(
+        @LoginUser(administrator = true) user: User
+    ): ResponseEntity<ApiResponse<List<AdministratorResponse>>> {
+        val response = administratorService.findAll()
+        return ResponseEntity.ok(ApiResponse.success(response))
     }
 }
