@@ -10,15 +10,16 @@ import javax.persistence.Entity
 @Entity
 class Administrator(
     @Column(unique = true)
-    private val name: String,
+    val name: String,
+    private val username: String,
     private val password: String,
-    id: Long
+    id: Long = 0L
 ) : BaseEntity(id), UserDetails {
     override fun getAuthorities(): List<GrantedAuthority> = listOf(SimpleGrantedAuthority("ADMIN"))
 
     override fun getPassword(): String = password
 
-    override fun getUsername(): String = name
+    override fun getUsername(): String = username
 
     override fun isAccountNonExpired(): Boolean = true
 
