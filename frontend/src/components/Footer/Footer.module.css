@@ -26,8 +26,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding: 0 1rem;
   color: var(--white);
   border: none;
   transition: all 0.2s ease;
