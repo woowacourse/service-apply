@@ -49,9 +49,6 @@
   background-color: var(--white);
 }
 
-.copyright {
-}
-
 @media screen and (max-width: 800px) {
   .content-wrapper {
     width: 100%;
