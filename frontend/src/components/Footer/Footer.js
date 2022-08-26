@@ -15,6 +15,7 @@ const Footer = () => {
           />
         </a>
         <div className={styles.social}>
+          <hr className={styles.divider} />
           <a
             href={FOOTER_LINK_URL.GITHUB}
             target="_blank"
@@ -41,6 +42,7 @@ const Footer = () => {
           >
             <i className="fa fa-instagram" aria-hidden="true" />
           </a>
+          <hr className={styles.divider} />
         </div>
         <p className={styles.copyright}>Copyright 2021. 우아한테크코스. All rights reserved.</p>
       </div>
