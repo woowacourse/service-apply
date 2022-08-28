@@ -1,7 +1,7 @@
 import axios from "axios";
 import { headers } from "./api";
 import { formatDate } from "../utils/format/date";
-import * as T from "../../types/user";
+import * as T from "../../types/api";
 
 const COMMON_PATH = "/api/users" as const;
 

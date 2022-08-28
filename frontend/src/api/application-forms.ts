@@ -1,6 +1,6 @@
 import axios from "axios";
 import { headers } from "./api";
-import * as T from "../../types/applicationForms";
+import * as T from "../../types/api";
 
 const COMMON_PATH = "/api/application-forms" as const;
 
