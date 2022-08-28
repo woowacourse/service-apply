@@ -2,7 +2,7 @@ import axios from "axios";
 import { headers } from "./api";
 import * as T from "../../types/api";
 
-const COMMON_PATH = "/api/application-forms" as const;
+const COMMON_PATH = "/api/application-forms";
 
 export const fetchMyApplicationForms = (token: T.FetchMyApplicationFormsRequest) =>
   axios.get<T.FetchMyApplicationFormsResponseData>(`${COMMON_PATH}/me`, {

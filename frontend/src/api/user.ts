@@ -3,7 +3,7 @@ import { headers } from "./api";
 import { formatDate } from "../utils/format/date";
 import * as T from "../../types/api";
 
-const COMMON_PATH = "/api/users" as const;
+const COMMON_PATH = "/api/users";
 
 export const fetchRegister = ({
   name,

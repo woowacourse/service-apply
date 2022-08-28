@@ -2,7 +2,7 @@ import axios from "axios";
 import { headers } from "./api";
 import * as T from "../../types/api";
 
-const COMMON_PATH = "/api/recruitments" as const;
+const COMMON_PATH = "/api/recruitments";
 
 export const fetchItems = (recruitmentId: T.FetchItemsRequest) =>
   axios.get<T.FetchItemsResponseData>(`${COMMON_PATH}/${recruitmentId}/items`);
