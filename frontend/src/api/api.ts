@@ -22,7 +22,7 @@ axios.interceptors.response.use(
   }
 );
 
-export const headers = ({ token }) => ({
+export const headers = ({ token }: { token: string }) => ({
   headers: {
     ...(token && { Authorization: `Bearer ${token}` }),
   },
