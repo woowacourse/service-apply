@@ -1,7 +1,7 @@
 import axios from "axios";
 import { LOCAL_STORAGE_KEY } from "../constants/key";
 import { ERROR_MESSAGE } from "../constants/messages";
-import PATH from "../constants/path";
+import { PATH } from "../constants/path";
 
 axios.defaults.baseURL = process.env.REACT_APP_API_BASE_URL;
 

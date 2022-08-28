@@ -6,7 +6,7 @@ import Container from "../../components/@common/Container/Container";
 import Panel from "../../components/@common/Panel/Panel";
 import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
 import { ERROR_MESSAGE } from "../../constants/messages";
-import PATH, { PARAM } from "../../constants/path";
+import { PATH, PARAM } from "../../constants/path";
 import useMissions from "../../hooks/useMissions";
 import useRecruitmentContext from "../../hooks/useRecruitmentContext";
 import useTokenContext from "../../hooks/useTokenContext";

@@ -6,7 +6,7 @@ import Footer from "./components/Footer/Footer";
 import Header from "./components/Header/Header";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
-import PATH from "./constants/path";
+import { PATH } from "./constants/path";
 import ApplicationRegister from "./pages/ApplicationRegister/ApplicationRegister";
 import AssignmentSubmit from "./pages/AssignmentSubmit/AssignmentSubmit";
 import Login from "./pages/Login/Login";

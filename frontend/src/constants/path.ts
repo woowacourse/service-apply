@@ -1,4 +1,4 @@
-const PATH = {
+export const PATH = {
   HOME: "/",
   RECRUITS: "/recruits",
   SIGN_UP: "/sign-up",
@@ -23,5 +23,3 @@ export const PARAM = {
     NEW: "new",
   },
 } as const;
-
-export default PATH;
