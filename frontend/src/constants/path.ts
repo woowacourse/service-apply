@@ -11,7 +11,7 @@ const PATH = {
   EDIT_PASSWORD: "/edit",
   MY_PAGE: "/mypage",
   EDIT_MY_PAGE: "/mypage/edit",
-};
+} as const;
 
 export const PARAM = {
   APPLICATION_FORM_STATUS: {
@@ -22,6 +22,6 @@ export const PARAM = {
     EDIT: "edit",
     NEW: "new",
   },
-};
+} as const;
 
 export default PATH;

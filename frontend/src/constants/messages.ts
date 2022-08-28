@@ -41,7 +41,7 @@ export const ERROR_MESSAGE = {
     CANNOT_FIND_TOKEN_CONTEXT: "TokenContext가 존재하지 않습니다",
     CANNOT_FIND_USER_INFO_CONTEXT: "UserInfoContext가 존재하지 않습니다",
   },
-};
+} as const;
 
 export const SUCCESS_MESSAGE = {
   API: {
@@ -51,10 +51,10 @@ export const SUCCESS_MESSAGE = {
     SAVE_APPLICATION: "정상적으로 저장되었습니다.",
     EDIT_MY_PAGE: "정상적으로 변경되었습니다.",
   },
-};
+} as const;
 
 export const CONFIRM_MESSAGE = {
   SUBMIT_APPLICATION: "제출하신 뒤에는 수정하실 수 없습니다. 정말로 제출하시겠습니까?",
   RESET_APPLICATION: "정말 초기화하시겠습니까?",
   CANCEL_ASSIGNMENT_SUBMIT: "정말 취소하시겠습니까? 작성하신 내용이 저장되지 않습니다.",
-};
+} as const;

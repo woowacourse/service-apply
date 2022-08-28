@@ -7,6 +7,6 @@ const FORM = {
   REFERENCE_URL_MAX_LENGTH: 255,
   GITHUB_USERNAME_MAX_LENGTH: 39,
   NOTE_MAX_LENGTH: 1000,
-};
+} as const;
 
 export default FORM;

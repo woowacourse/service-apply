@@ -15,11 +15,11 @@ export const RECRUITS_TAB = {
     name: "ended",
     label: "모집 종료",
   },
-};
+} as const;
 
 export const RECRUITS_TAB_LIST = [
   RECRUITS_TAB.ALL,
   RECRUITS_TAB.RECRUITABLE,
   RECRUITS_TAB.RECRUITING,
   RECRUITS_TAB.ENDED,
-];
+] as const;
