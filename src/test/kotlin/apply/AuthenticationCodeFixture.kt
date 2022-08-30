@@ -5,7 +5,7 @@ import java.time.LocalDateTime
 
 const val VALID_CODE: String = "VALID"
 const val INVALID_CODE: String = "INVALID"
-private const val AUTHENTICATION_EMAIL: String = "test@email.com"
+const val AUTHENTICATION_EMAIL: String = "test@email.com"
 private val CREATE_DATE_TIME: LocalDateTime = LocalDateTime.now()
 
 fun createAuthenticationCode(
