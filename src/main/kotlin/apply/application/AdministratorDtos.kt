@@ -6,7 +6,6 @@ import javax.validation.constraints.Pattern
 import javax.validation.constraints.Size
 
 data class AdministratorData(
-    @field:NotBlank
     @field:Size(min = 1, max = 20)
     @field:Pattern(
         regexp = "[0-9a-zA-Z가-힣]+",
