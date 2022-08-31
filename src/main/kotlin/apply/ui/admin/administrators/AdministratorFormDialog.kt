@@ -29,15 +29,6 @@ class AdministratorFormDialog(
         open()
     }
 
-    constructor(
-        administratorService: AdministratorService,
-        displayName: String,
-        administrator: AdministratorResponse,
-        reloadComponents: () -> Unit
-    ) : this(administratorService, displayName, reloadComponents) {
-        administratorForm.fill(AdministratorData(administrator.name, administrator.username, "testtest", ""))
-    }
-
     private fun createHeader(): VerticalLayout {
         return VerticalLayout(title).apply {
             alignItems = FlexComponent.Alignment.CENTER
