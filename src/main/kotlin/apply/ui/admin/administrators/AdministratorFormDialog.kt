@@ -1,7 +1,5 @@
 package apply.ui.admin.administrators
 
-import apply.application.AdministratorData
-import apply.application.AdministratorResponse
 import apply.application.AdministratorService
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.button.Button
