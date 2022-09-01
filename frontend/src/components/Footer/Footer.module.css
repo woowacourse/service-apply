@@ -38,10 +38,21 @@
   opacity: 0.6;
 }
 
-.divider {
+.social a::before {
+  content: "";
+  position: relative;
+  left: -1rem;
   width: 1px;
   height: 1rem;
-  border: none;
+  background-color: var(--white);
+}
+
+.social a:last-child::after {
+  content: "";
+  position: relative;
+  left: 1rem;
+  width: 1px;
+  height: 1rem;
   background-color: var(--white);
 }
 
