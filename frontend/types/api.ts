@@ -59,9 +59,9 @@ export type FetchVerifyAuthenticationCodeRequest = {
 export type FetchVerifyAuthenticationCodeResponseData = never;
 
 // Recruitments 관련 API
-export type FetchItemsRequest = number;
+export type FetchRecruitmentItemsRequest = number;
 
-export type FetchItemsResponseData = ResponseDataWithMessage<RecruitmentItem[]>;
+export type FetchRecruitmentItemsResponseData = ResponseDataWithMessage<RecruitmentItem[]>;
 
 export type FetchRecruitmentsResponseData = ResponseDataWithMessage<Recruitment[]>;
 

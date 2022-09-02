@@ -9,7 +9,7 @@ const useRecruitmentItem = (recruitmentId) => {
 
   const init = async () => {
     try {
-      const { data } = await Api.fetchItems(recruitmentId);
+      const { data } = await Api.fetchRecruitmentItems(recruitmentId);
 
       setRecruitmentItems(data);
     } catch (error) {
