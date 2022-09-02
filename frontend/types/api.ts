@@ -29,7 +29,7 @@ export type FetchLoginResponseData = ResponseDataWithMessage<string>;
 
 export type FetchPasswordFindRequest = Pick<User, "name" | "email" | "password" | "birthday">;
 
-export type FetchPasswordFindResponseData = never;
+export type FetchPasswordFindResponseData = null;
 
 export type FetchPasswordEditRequest = RequestWithToken<{
   oldPassword: string;
@@ -37,7 +37,7 @@ export type FetchPasswordEditRequest = RequestWithToken<{
   confirmPassword: string;
 }>;
 
-export type FetchPasswordEditResponseData = never;
+export type FetchPasswordEditResponseData = null;
 
 export type FetchUserInfoRequest = RequestWithToken;
 
@@ -45,18 +45,18 @@ export type FetchUserInfoResponseData = ResponseDataWithMessage<Omit<User, "pass
 
 export type FetchUserInfoEditRequest = RequestWithToken<{ phoneNumber: string }>;
 
-export type FetchUserInfoEditResponseData = never;
+export type FetchUserInfoEditResponseData = null;
 
 export type FetchAuthenticationCodeRequest = string;
 
-export type FetchAuthenticationCodeResponseData = never;
+export type FetchAuthenticationCodeResponseData = null;
 
 export type FetchVerifyAuthenticationCodeRequest = {
   email: string;
   authenticationCode: string;
 };
 
-export type FetchVerifyAuthenticationCodeResponseData = never;
+export type FetchVerifyAuthenticationCodeResponseData = null;
 
 // Recruitments 관련 API
 export type FetchRecruitmentItemsRequest = number;
@@ -92,7 +92,7 @@ export type PatchAssignmentRequest = RequestWithToken<{
   assignmentData: AssignmentData;
 }>;
 
-export type PatchAssignmentResponseData = never;
+export type PatchAssignmentResponseData = null;
 
 // ApplicationForms 관련 API
 export type FetchMyApplicationFormsRequest = string;
@@ -118,4 +118,4 @@ export type UpdateFormRequest = RequestWithToken<{
   };
 }>;
 
-export type UpdateFormResponseData = never;
+export type UpdateFormResponseData = null;
