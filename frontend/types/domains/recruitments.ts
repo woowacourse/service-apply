@@ -18,7 +18,7 @@ export type RecruitmentItem = {
   id: number;
   recruitmentId: number;
   title: string;
-  poition: number;
+  position: number;
   maximumLength: number;
   description: string;
 };
