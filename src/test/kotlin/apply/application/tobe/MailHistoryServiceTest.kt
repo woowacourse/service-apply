@@ -6,8 +6,10 @@ import apply.createMailHistory
 import apply.domain.mail.MailHistoryRepository
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
+import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
+import support.test.spec.afterRootTest
 import java.time.LocalDateTime.now
 
 class MailHistoryServiceTest : BehaviorSpec({
@@ -31,5 +33,9 @@ class MailHistoryServiceTest : BehaviorSpec({
                 actual[1] shouldBe createMailData(subject = "제목2", sentTime = now.plusSeconds(1))
             }
         }
+    }
+
+    afterRootTest {
+        clearAllMocks()
     }
 })

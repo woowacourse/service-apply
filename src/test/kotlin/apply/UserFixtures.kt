@@ -13,6 +13,7 @@ val GENDER: Gender = Gender.MALE
 val BIRTHDAY: LocalDate = createLocalDate(1995, 2, 2)
 val PASSWORD: Password = Password("password")
 val CONFIRM_PASSWORD: Password = Password("password")
+val NEW_PASSWORD: Password = Password("new_password")
 val WRONG_PASSWORD: Password = Password("wrong_password")
 
 const val RANDOM_PASSWORD_TEXT: String = "nEw_p@ssw0rd"
