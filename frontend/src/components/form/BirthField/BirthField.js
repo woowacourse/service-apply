@@ -1,7 +1,6 @@
 import classNames from "classnames";
 import ko from "date-fns/locale/ko";
 import PropTypes from "prop-types";
-import React from "react";
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Label from "../../@common/Label/Label";
@@ -39,7 +38,7 @@ const BirthField = ({ value, onChange, required, className, ...props }) => {
 
 BirthField.propTypes = {
   value: PropTypes.instanceOf(Date),
-  onChange: PropTypes.func.isRequired,
+  onChange: PropTypes.func,
   errorMessage: PropTypes.string,
   required: PropTypes.bool,
 
