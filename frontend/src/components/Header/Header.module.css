@@ -29,9 +29,8 @@
 }
 
 .logo {
-  width: 200px;
-  margin-right: 0.25rem;
-  transform: translateX(-6px);
+  width: 1.5rem;
+  margin-right: 0.5rem;
 }
 
 .link-container {
