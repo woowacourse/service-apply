@@ -5,7 +5,9 @@ import apply.createAdministratorData
 import apply.createAdministratorResponse
 import apply.createAdministratorUpdateFormData
 import com.ninjasquad.springmockk.MockkBean
+import io.mockk.Runs
 import io.mockk.every
+import io.mockk.just
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.test.web.servlet.get
@@ -64,7 +66,7 @@ class AdministratorRestControllerTest : RestControllerTest() {
 
     @Test
     fun `관리자를 수정한다`() {
-        every { administratorService.update(any()) } returns Unit
+        every { administratorService.update(any()) } just Runs
 
         mockMvc.put("/api/administrators") {
             jsonContent(createAdministratorUpdateFormData())
