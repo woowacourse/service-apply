@@ -36,7 +36,7 @@ const Header = () => {
             <Link className={styles.title} to={PATH.RECRUITS}>
               <img
                 className={styles.logo}
-                src="/assets/logo/logo_icon_dark.png"
+                src="/assets/logo/logo_no_text_dark.png"
                 alt="우아한테크코스 로고"
               />
               <span>지원하기</span>
