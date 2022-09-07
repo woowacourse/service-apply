@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { generatePath, useNavigate } from "react-router";
 import * as Api from "../api";
+import FORM from "../constants/form";
 import { ERROR_MESSAGE } from "../constants/messages";
 import PATH, { PARAM } from "../constants/path";
-import FORM from "../constants/form";
 import { formatDateTime } from "../utils/format/date";
 import { generateQuery } from "../utils/route/query";
 import { isValidURL } from "../utils/validation/url";
@@ -99,14 +99,18 @@ const useApplicationRegisterForm = ({
       navigate(PATH.HOME);
       return;
     }
-    navigate({
-      pathname: generatePath(PATH.APPLICATION_FORM, {
-        status: PARAM.APPLICATION_FORM_STATUS.EDIT,
-      }),
-      search: generateQuery({ recruitmentId }),
-      state: { currentRecruitment },
-      replace: true,
-    });
+    navigate(
+      {
+        pathname: generatePath(PATH.APPLICATION_FORM, {
+          status: PARAM.APPLICATION_FORM_STATUS.EDIT,
+        }),
+        search: generateQuery({ recruitmentId }),
+      },
+      {
+        state: { currentRecruitment },
+        replace: true,
+      }
+    );
   };
 
   const handleLoadFormError = (error) => {
