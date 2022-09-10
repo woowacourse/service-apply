@@ -3,295 +3,220 @@ package apply.application
 import apply.createAnswerRequest
 import apply.createApplicationForm
 import apply.createApplicationForms
-import apply.createExceededAnswerRequest
 import apply.createRecruitment
 import apply.createRecruitmentItem
-import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.applicationform.ApplicationValidator
-import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentRepository
-import apply.domain.recruitmentitem.RecruitmentItem
+import apply.domain.recruitment.getById
 import apply.domain.recruitmentitem.RecruitmentItemRepository
-import apply.pass
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.style.BehaviorSpec
+import io.kotest.matchers.booleans.shouldBeFalse
+import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.shouldBe
 import io.mockk.Runs
+import io.mockk.clearAllMocks
 import io.mockk.every
-import io.mockk.impl.annotations.MockK
 import io.mockk.just
 import io.mockk.mockk
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertAll
-import org.junit.jupiter.api.assertDoesNotThrow
-import org.junit.jupiter.api.assertThrows
 import org.springframework.data.repository.findByIdOrNull
-import support.test.UnitTest
-import java.time.LocalDateTime
+import support.test.spec.afterRootTest
+import java.time.LocalDateTime.now
 
-@UnitTest
-class ApplicationFormServiceTest {
-    @MockK
-    private lateinit var applicationFormRepository: ApplicationFormRepository
+class ApplicationFormServiceTest : BehaviorSpec({
+    val applicationFormRepository = mockk<ApplicationFormRepository>()
+    val recruitmentRepository = mockk<RecruitmentRepository>()
+    val recruitmentItemRepository = mockk<RecruitmentItemRepository>()
+    val applicationValidator = mockk<ApplicationValidator>()
 
-    @MockK
-    private lateinit var recruitmentRepository: RecruitmentRepository
+    val applicationFormService = ApplicationFormService(
+        applicationFormRepository,
+        recruitmentRepository,
+        recruitmentItemRepository,
+        applicationValidator
+    )
 
-    @MockK
-    private lateinit var recruitmentItemRepository: RecruitmentItemRepository
+    Given("지원할 수 있는 모집이 있고 특정 회원이 있는 경우") {
+        val recruitment = createRecruitment(recruitable = true, id = 1L)
+        val userId = 1L
 
-    @MockK
-    private lateinit var applicationValidator: ApplicationValidator
-
-    private lateinit var applicationFormService: ApplicationFormService
-
-    private lateinit var applicationForm1: ApplicationForm
-    private lateinit var applicationForm2: ApplicationForm
-    private lateinit var applicationFormSubmitted: ApplicationForm
-    private lateinit var applicationForms: List<ApplicationForm>
-    private lateinit var applicationFormResponse: ApplicationFormResponse
-    private lateinit var createApplicationFormRequest: CreateApplicationFormRequest
-    private lateinit var updateApplicationFormRequest: UpdateApplicationFormRequest
-    private lateinit var updateApplicationFormRequestWithPassword: UpdateApplicationFormRequest
-
-    private lateinit var recruitment: Recruitment
-    private lateinit var recruitmentItems: List<RecruitmentItem>
-    private lateinit var recruitmentNotRecruiting: Recruitment
-    private lateinit var recruitmentHidden: Recruitment
-
-    private val userId: Long = 1L
-
-    @BeforeEach
-    internal fun setUp() {
-        this.applicationFormService = ApplicationFormService(
-            applicationFormRepository,
-            recruitmentRepository,
-            recruitmentItemRepository,
-            applicationValidator
-        )
-
-        applicationForm1 = createApplicationForm()
-
-        applicationForm2 = createApplicationForm(userId = 2L)
-
-        applicationFormSubmitted = createApplicationForm(userId = 3L).apply { submit(pass) }
-
-        applicationForms = createApplicationForms()
-
-        applicationFormResponse = ApplicationFormResponse(
-            id = applicationForm1.id,
-            recruitmentId = applicationForm1.recruitmentId,
-            referenceUrl = applicationForm1.referenceUrl,
-            submitted = applicationForm1.submitted,
-            answers = applicationForm1.answers.items.map { AnswerResponse(it.contents, it.recruitmentItemId) },
-            createdDateTime = applicationForm1.createdDateTime,
-            modifiedDateTime = applicationForm1.modifiedDateTime,
-            submittedDateTime = applicationForm1.submittedDateTime
-        )
-
-        createApplicationFormRequest = CreateApplicationFormRequest(userId)
-
-        updateApplicationFormRequest = UpdateApplicationFormRequest(
-            recruitmentId = applicationForm1.recruitmentId,
-            referenceUrl = applicationForm1.referenceUrl,
-            submitted = false,
-            answers = applicationForm1.answers.items.map { AnswerRequest(it.contents, it.recruitmentItemId) }
-        )
-
-        recruitmentItems = listOf(
-            createRecruitmentItem(
-                recruitmentId = applicationForm1.recruitmentId,
-                position = 1,
-                id = 1L
-            ),
-            createRecruitmentItem(
-                recruitmentId = applicationForm1.recruitmentId,
-                position = 2,
-                id = 2L
-            )
-        )
-
-        updateApplicationFormRequestWithPassword = UpdateApplicationFormRequest(
-            recruitmentId = applicationForm1.recruitmentId,
-            referenceUrl = applicationForm1.referenceUrl,
-            submitted = false,
-            answers = applicationForm1.answers.items.map { AnswerRequest(it.contents, it.recruitmentItemId) }
-        )
-
-        recruitment = createRecruitment(hidden = false)
-
-        recruitmentNotRecruiting = createRecruitment(
-            startDateTime = LocalDateTime.now().minusHours(2),
-            endDateTime = LocalDateTime.now().minusHours(1),
-            hidden = false
-        )
-
-        recruitmentHidden = createRecruitment()
-    }
-
-    @Test
-    fun `지원서가 있으면 지원서를 불러온다`() {
-        every { applicationFormRepository.findByRecruitmentIdAndUserId(any(), any()) } returns applicationForm1
-
-        assertThat(applicationFormService.getApplicationForm(userId, 1L)).isEqualTo(applicationFormResponse)
-    }
-
-    @Test
-    fun `지원서가 없으면 예외를 던진다`() {
-        every { applicationFormRepository.findByRecruitmentIdAndUserId(any(), any()) } returns null
-
-        assertThrows<IllegalArgumentException> { applicationFormService.getApplicationForm(1L, 1L) }
-    }
-
-    @Test
-    fun `지원자가 자신의 지원서를 모두 불러온다`() {
-        every { applicationFormRepository.findAllByUserId(userId) } returns applicationForms
-
-        val expected = applicationFormService.getMyApplicationForms(userId)
-
-        assertAll(
-            { assertThat(expected).isNotNull },
-            { assertThat(expected).hasSize(2) }
-        )
-    }
-
-    @Test
-    fun `지원자가 지원한 지원서가 없으면 빈 리스트를 불러온다`() {
-        every { applicationFormRepository.findAllByUserId(userId) } returns emptyList()
-
-        val expected = applicationFormService.getMyApplicationForms(userId)
-
-        assertAll(
-            { assertThat(expected).isNotNull },
-            { assertThat(expected).hasSize(0) }
-        )
-    }
-
-    @Test
-    fun `지원서를 생성한다`() {
         every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
         every { applicationFormRepository.existsByRecruitmentIdAndUserId(any(), any()) } returns false
-        every { applicationFormRepository.save(any()) } returns applicationForm1
         every { applicationValidator.validate(any(), any()) } just Runs
+        every { applicationFormRepository.save(any()) } returns createApplicationForm(userId, recruitment.id)
 
-        assertDoesNotThrow { applicationFormService.create(userId, createApplicationFormRequest) }
-    }
+        When("특정 회원이 해당 모집에 대한 지원서를 생성하면") {
+            val actual = applicationFormService.create(userId, CreateApplicationFormRequest(recruitment.id))
 
-    @Test
-    fun `이미 작성한 지원서가 있는 경우 지원할 수 없다`() {
-        every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
-        every { applicationFormRepository.existsByRecruitmentIdAndUserId(any(), any()) } returns true
-        every { applicationFormRepository.save(any<ApplicationForm>()) } returns mockk()
-        every { applicationValidator.validate(any(), any()) } just Runs
-
-        assertThrows<IllegalStateException> {
-            applicationFormService.create(
-                userId,
-                createApplicationFormRequest
-            )
+            Then("임시 저장된 지원서가 생성된다") {
+                actual.submitted.shouldBeFalse()
+            }
         }
     }
 
-    @Test
-    fun `모집이 없는 경우 지원할 수 없다`() {
-        every { recruitmentRepository.findByIdOrNull(any()) } returns null
+    Given("지원할 수 있는 모집이 있고 해당 모집에 대해 특정 회원이 작성한 지원서가 없는 경우") {
+        val recruitment = createRecruitment(recruitable = true, id = 1L)
+        val userId = 1L
 
-        assertThrows<NoSuchElementException> {
-            applicationFormService.create(
-                userId,
-                createApplicationFormRequest
-            )
-        }
-    }
-
-    @Test
-    fun `지원서를 수정한다`() {
         every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
-        every { applicationFormRepository.findByRecruitmentIdAndUserId(any(), any()) } returns applicationForm1
-        every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns recruitmentItems
-        every { applicationFormRepository.save(any()) } returns applicationForm1
-
-        assertDoesNotThrow { applicationFormService.update(userId, updateApplicationFormRequest) }
-    }
-
-    @Test
-    fun `지원서가 없는 경우 수정할 수 없다`() {
-        every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
-        every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns recruitmentItems
-        every { applicationFormRepository.existsByUserIdAndSubmittedTrue(any()) } returns false
+        every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns emptyList()
         every { applicationFormRepository.findByRecruitmentIdAndUserId(any(), any()) } returns null
 
-        assertThrows<IllegalArgumentException> {
-            applicationFormService.update(
-                userId,
-                updateApplicationFormRequest
-            )
+        When("특정 회원이 해당 모집에 대한 지원서를 수정하면") {
+            Then("예외가 발생한다") {
+                shouldThrow<IllegalArgumentException> {
+                    applicationFormService.update(userId, UpdateApplicationFormRequest(recruitment.id))
+                }
+            }
         }
     }
 
-    @Test
-    fun `모집중이 아닌 지원서를 수정할 수 없다`() {
-        every { recruitmentRepository.findByIdOrNull(any()) } returns recruitmentNotRecruiting
+    Given("지원할 수 없는 모집이 있고 해당 모집에 지원서를 제출한 특정 회원이 있는 경우") {
+        val recruitment = createRecruitment(recruitable = false, id = 1L)
+        val userId = 1L
 
-        assertThrows<IllegalStateException> {
-            applicationFormService.update(
-                userId,
-                updateApplicationFormRequest
-            )
-        }
-    }
-
-    @Test
-    fun `제출한 지원서를 열람할 수 없다`() {
-        every {
-            applicationFormRepository.findByRecruitmentIdAndUserId(
-                any(),
-                any()
-            )
-        } returns applicationFormSubmitted
-
-        assertThrows<IllegalStateException> {
-            applicationFormService.getApplicationForm(
-                userId = 3L,
-                recruitmentId = 1L
-            )
-        }
-    }
-
-    @Test
-    fun `작성하지 않은 문항이 존재하는 경우 제출할 수 없다`() {
         every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
-        every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns recruitmentItems
-        every { applicationFormRepository.existsByUserIdAndSubmittedTrue(any()) } returns false
-        every { applicationFormRepository.findByRecruitmentIdAndUserId(any(), any()) } returns applicationForm1
 
-        assertThrows<IllegalArgumentException> {
-            applicationFormService.update(
-                userId,
-                UpdateApplicationFormRequest(recruitmentId = 1L, submitted = true)
-            )
+        When("특정 회원이 해당 모집에 대한 지원서를 수정하면") {
+            Then("예외가 발생한다") {
+                shouldThrow<IllegalStateException> {
+                    applicationFormService.update(userId, UpdateApplicationFormRequest(recruitment.id))
+                }
+            }
         }
     }
 
-    @Test
-    fun `유효하지 않은 문항이 존재하는 경우 제출할 수 없다`() {
-        every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
-        every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns recruitmentItems
-        every { applicationFormRepository.existsByUserIdAndSubmittedTrue(any()) } returns false
-        every { applicationFormRepository.findByRecruitmentIdAndUserId(any(), any()) } returns applicationForm1
+    Given("특정 모집에 대한 임시 지원서를 작성한 지원자가 있고 모집 항목이 있는 경우") {
+        val recruitmentId = 1L
+        val recruitmentItemId = 1L
+        val userId = 1L
 
-        assertThrows<IllegalArgumentException> {
-            applicationFormService.update(
-                userId,
-                UpdateApplicationFormRequest(
-                    recruitmentId = 1L,
-                    submitted = true,
-                    answers = listOf(
-                        createExceededAnswerRequest(recruitmentItemId = 1L),
-                        createAnswerRequest(recruitmentItemId = 2L)
-                    )
+        every { recruitmentRepository.getById(any()) } returns createRecruitment(id = recruitmentId)
+        every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns listOf(
+            createRecruitmentItem(recruitmentId = recruitmentId, id = recruitmentItemId)
+        )
+        every { applicationFormRepository.existsByUserIdAndSubmittedTrue(any()) } returns false
+        every { applicationFormRepository.findByRecruitmentIdAndUserId(any(), any()) } returns createApplicationForm(
+            userId = userId, recruitmentId = recruitmentId, submitted = false
+        )
+
+        When("미제출 항목이 있는 상태에서 지원서를 최종 제출하면") {
+            val request = UpdateApplicationFormRequest(recruitmentId = 1L, submitted = true, answers = emptyList())
+
+            Then("예외가 발생한다") {
+                shouldThrow<IllegalArgumentException> { applicationFormService.update(userId, request) }
+            }
+        }
+
+        When("항목이 비어 있는 상태에서 지원서를 최종 제출하면") {
+            val request = UpdateApplicationFormRequest(
+                recruitmentId = 1L,
+                submitted = true,
+                answers = listOf(createAnswerRequest(contents = "", recruitmentItemId))
+            )
+
+            Then("예외가 발생한다") {
+                shouldThrow<IllegalArgumentException> { applicationFormService.update(userId, request) }
+            }
+        }
+    }
+
+    Given("특정 모집에 대한 임시 지원서를 작성한 지원자가 있고 글자 수 제한이 있는 특정 모집 항목이 있는 경우") {
+        val recruitmentId = 1L
+        val recruitmentItemId = 1L
+        val maximumLength = 1
+        val userId = 1L
+
+        every { recruitmentRepository.getById(any()) } returns createRecruitment(id = recruitmentId)
+        every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns listOf(
+            createRecruitmentItem(recruitmentId = recruitmentId, maximumLength = maximumLength, id = recruitmentItemId)
+        )
+        every { applicationFormRepository.existsByUserIdAndSubmittedTrue(any()) } returns false
+        every { applicationFormRepository.findByRecruitmentIdAndUserId(any(), any()) } returns createApplicationForm(
+            userId = userId, recruitmentId = recruitmentId, submitted = false
+        )
+
+        When("최대 글자 수를 초과하여 항목을 작성하면") {
+            val request = UpdateApplicationFormRequest(
+                recruitmentId = recruitmentId,
+                answers = listOf(
+                    createAnswerRequest(contents = "*".repeat(maximumLength + 1), recruitmentItemId = recruitmentItemId)
                 )
             )
+
+            Then("예외가 발생한다") {
+                shouldThrow<IllegalArgumentException> { applicationFormService.update(userId, request) }
+            }
         }
     }
-}
+
+    Given("특정 회원이 특정 모집에 대해 작성한 임시 지원서가 있는 경우") {
+        val applicationForm = createApplicationForm(submitted = false)
+
+        every { applicationFormRepository.findByRecruitmentIdAndUserId(any(), any()) } returns applicationForm
+
+        When("해당 지원서를 조회하면") {
+            val actual = applicationFormService.getApplicationForm(1L, 1L)
+
+            Then("지원서를 확인할 수 있다") {
+                actual shouldBe ApplicationFormResponse(applicationForm)
+            }
+        }
+    }
+
+    Given("특정 회원이 특정 모집에 대해 생성한 지원서가 없는 경우") {
+        every { applicationFormRepository.findByRecruitmentIdAndUserId(any(), any()) } returns null
+
+        When("지원서를 조회하면") {
+            Then("예외가 발생한다") {
+                shouldThrow<IllegalArgumentException> {
+                    applicationFormService.getApplicationForm(1L, 1L)
+                }
+            }
+        }
+    }
+
+    Given("특정 회원이 특정 모집에 대해 최종 지원서를 제출한 경우") {
+        val applicationForm = createApplicationForm(submitted = true, submittedDateTime = now())
+
+        every { applicationFormRepository.findByRecruitmentIdAndUserId(any(), any()) } returns applicationForm
+
+        When("해당 지원서를 조회하면") {
+            Then("예외가 발생한다") {
+                shouldThrow<IllegalStateException> {
+                    applicationFormService.getApplicationForm(1L, 1L)
+                }
+            }
+        }
+    }
+
+    Given("지원자가 생성한 지원서가 여러 개 있는 경우") {
+        every { applicationFormRepository.findAllByUserId(any()) } returns createApplicationForms()
+
+        When("해당 지원자에 대한 모든 지원서를 조회하면") {
+            val actual = applicationFormService.getMyApplicationForms(1L)
+
+            Then("모든 지원서가 조회된다") {
+                actual shouldHaveSize 2
+            }
+        }
+    }
+
+    Given("지원자가 생성한 지원서가 없는 경우") {
+        every { applicationFormRepository.findAllByUserId(any()) } returns emptyList()
+
+        When("해당 지원자에 대한 모든 지원서를 조회하면") {
+            val actual = applicationFormService.getMyApplicationForms(1L)
+
+            Then("빈 목록이 조회된다") {
+                actual.shouldBeEmpty()
+            }
+        }
+    }
+
+    afterRootTest {
+        clearAllMocks()
+    }
+})

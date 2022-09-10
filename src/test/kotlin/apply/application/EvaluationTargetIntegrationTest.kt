@@ -1,13 +1,8 @@
-package apply.application.tobe
+package apply.application
 
 import apply.EVALUATION_DESCRIPTION
 import apply.EVALUATION_TARGET_NOTE
 import apply.EVALUATION_TITLE1
-import apply.application.EvaluationItemResponse
-import apply.application.EvaluationItemScoreData
-import apply.application.EvaluationTargetData
-import apply.application.EvaluationTargetService
-import apply.application.GradeEvaluationResponse
 import apply.createApplicationForm
 import apply.createCheater
 import apply.createEvaluation

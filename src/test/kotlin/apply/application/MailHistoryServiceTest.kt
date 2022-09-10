@@ -3,34 +3,38 @@ package apply.application
 import apply.createMailData
 import apply.createMailHistory
 import apply.domain.mail.MailHistoryRepository
+import io.kotest.core.spec.style.BehaviorSpec
+import io.kotest.matchers.shouldBe
+import io.mockk.clearAllMocks
 import io.mockk.every
-import io.mockk.impl.annotations.MockK
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import support.test.UnitTest
-import java.time.LocalDateTime
+import io.mockk.mockk
+import support.test.spec.afterRootTest
+import java.time.LocalDateTime.now
 
-@UnitTest
-class MailHistoryServiceTest {
-    @MockK
-    private lateinit var mailHistoryRepository: MailHistoryRepository
+class MailHistoryServiceTest : BehaviorSpec({
+    val mailHistoryRepository = mockk<MailHistoryRepository>()
 
-    private lateinit var mailHistoryService: MailHistoryService
+    val mailHistoryService = MailHistoryService(mailHistoryRepository)
 
-    @BeforeEach
-    internal fun setUp() {
-        mailHistoryService = MailHistoryService(mailHistoryRepository)
+    Given("메일 이력이 있는 경우") {
+        val now = now()
+
+        every { mailHistoryRepository.findAll() } returns listOf(
+            createMailHistory(subject = "제목1", sentTime = now),
+            createMailHistory(subject = "제목2", sentTime = now.plusSeconds(1))
+        )
+
+        When("모든 메일 이력을 조회하면") {
+            val actual = mailHistoryService.findAll()
+
+            Then("모든 메일 이력을 확인할 수 있다") {
+                actual[0] shouldBe createMailData(subject = "제목1", sentTime = now)
+                actual[1] shouldBe createMailData(subject = "제목2", sentTime = now.plusSeconds(1))
+            }
+        }
     }
 
-    @Test
-    fun `저장된 메일 이력을 모두 조회한다`() {
-        val now = LocalDateTime.now()
-        val mailData1 = createMailData(subject = "제목1", sentTime = now)
-        val mailData2 = createMailData(subject = "제목2", sentTime = now.plusSeconds(1))
-        val emailHistory1 = createMailHistory(subject = "제목1", sentTime = now)
-        val emailHistory2 = createMailHistory(subject = "제목2", sentTime = now.plusSeconds(1))
-        every { mailHistoryRepository.findAll() } returns listOf(emailHistory1, emailHistory2)
-        assertThat(mailHistoryService.findAll()).containsExactly(mailData1, mailData2)
+    afterRootTest {
+        clearAllMocks()
     }
-}
+})
