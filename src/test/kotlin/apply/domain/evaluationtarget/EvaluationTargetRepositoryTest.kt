@@ -1,95 +1,87 @@
 package apply.domain.evaluationtarget
 
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.CsvSource
-import org.junit.jupiter.params.provider.ValueSource
+import apply.createEvaluationTarget
+import apply.domain.evaluationtarget.EvaluationStatus.FAIL
+import apply.domain.evaluationtarget.EvaluationStatus.PASS
+import io.kotest.core.spec.style.ExpectSpec
+import io.kotest.extensions.spring.SpringExtension
+import io.kotest.inspectors.forAll
+import io.kotest.matchers.booleans.shouldBeTrue
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.longs.shouldBeZero
+import io.kotest.matchers.shouldBe
 import support.test.RepositoryTest
+import support.test.spec.afterRootTest
 
 @RepositoryTest
 class EvaluationTargetRepositoryTest(
     private val evaluationTargetRepository: EvaluationTargetRepository
-) {
-    companion object {
-        private const val EVALUATION_ID = 1L
-    }
+) : ExpectSpec({
+    extensions(SpringExtension)
 
-    private val evaluationTargets: List<EvaluationTarget> = listOf(
-        EvaluationTarget(
-            EVALUATION_ID,
-            userId = 1L
-        ),
-        EvaluationTarget(
-            EVALUATION_ID,
-            userId = 2L
-        )
-    )
-
-    @BeforeEach
-    fun setUp() {
-        evaluationTargetRepository.saveAll(evaluationTargets)
-    }
-
-    @Test
-    fun `평가의 id로 평가 대상자를 찾는다`() {
-        val results = evaluationTargetRepository.findAllByEvaluationId(EVALUATION_ID)
-
-        assertThat(results).usingElementComparatorOnFields("userId").isEqualTo(evaluationTargets)
-    }
-
-    @CsvSource(value = ["1,true", "2,false"])
-    @ParameterizedTest
-    fun `평가의 id를 가지고 있는 평가 대상자의 존재 여부를 확인한다`(evaluationId: Long, expected: Boolean) {
-        val actual = evaluationTargetRepository.existsByEvaluationId(evaluationId)
-
-        assertThat(actual).isEqualTo(expected)
-    }
-
-    @Test
-    fun `지원자의 id들에 해당되는 평가 대상자를 제거한다`() {
-        evaluationTargetRepository.deleteByUserIdIn(setOf(1L, 2L))
-
-        assertThat(evaluationTargetRepository.count()).isEqualTo(0)
-    }
-
-    @Test
-    fun `지정한 평가에 해당되고 지원자의 id들에 해당되는 평가 대상자를 제거한다`() {
-        evaluationTargetRepository.save(
-            EvaluationTarget(
-                evaluationId = 2L,
-                userId = 1L
-            )
-        )
-
-        evaluationTargetRepository.deleteByEvaluationIdAndUserIdIn(1L, setOf(1L, 2L))
-
-        assertThat(evaluationTargetRepository.count()).isEqualTo(1)
-    }
-
-    @ParameterizedTest
-    @CsvSource(value = ["PASS,2", "FAIL,1"])
-    fun `지정한 평가에 해당되고 평가대상자들의 평가 상태가 특정 평가 상태와 일치하는 평가 대상자를 찾는다`(
-        evaluationStatus: EvaluationStatus,
-        expectedSize: Int
-    ) {
+    context("평가 대상자 조회") {
+        val evaluationId = 1L
         evaluationTargetRepository.saveAll(
             listOf(
-                EvaluationTarget(EVALUATION_ID, userId = 1L, evaluationStatus = EvaluationStatus.PASS),
-                EvaluationTarget(EVALUATION_ID, userId = 2L, evaluationStatus = EvaluationStatus.PASS),
-                EvaluationTarget(EVALUATION_ID, userId = 3L, evaluationStatus = EvaluationStatus.FAIL)
+                createEvaluationTarget(evaluationId = evaluationId, userId = 1L),
+                createEvaluationTarget(evaluationId = evaluationId, userId = 2L)
             )
         )
-        val actual =
-            evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(EVALUATION_ID, evaluationStatus)
-        assertThat(actual).hasSize(expectedSize)
+
+        expect("특정 평가의 평가 대상자를 조회한다") {
+            val actual = evaluationTargetRepository.findAllByEvaluationId(evaluationId)
+            actual shouldHaveSize 2
+        }
+
+        expect("특정 회원이 특정 평가의 평가 대상자인지 확인한다") {
+            listOf(1L, 2L).forAll { userId ->
+                val actual = evaluationTargetRepository.existsByUserIdAndEvaluationId(userId, evaluationId)
+                actual.shouldBeTrue()
+            }
+        }
     }
 
-    @ParameterizedTest
-    @ValueSource(ints = [1, 2])
-    fun `지정한 평가와 회원에 해당하는 대상자의 존재 여부를 확인한다`(userId: Long) {
-        val isExists = evaluationTargetRepository.existsByUserIdAndEvaluationId(userId, EVALUATION_ID)
-        assertThat(isExists).isTrue
+    context("평가 상태가 다른 평가 대상자 조회") {
+        val evaluationId = 1L
+        evaluationTargetRepository.saveAll(
+            listOf(
+                createEvaluationTarget(evaluationId = evaluationId, userId = 1L, evaluationStatus = PASS),
+                createEvaluationTarget(evaluationId = evaluationId, userId = 2L, evaluationStatus = PASS),
+                createEvaluationTarget(evaluationId = evaluationId, userId = 3L, evaluationStatus = FAIL)
+            )
+        )
+
+        expect("특정 평가의 평가 상태가 일치하는 평가 대상자를 조회한다") {
+            listOf(PASS to 2, FAIL to 1).forAll { (evaluationStatus, size) ->
+                val actual = evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(
+                    evaluationId, evaluationStatus
+                )
+                actual shouldHaveSize size
+            }
+        }
     }
-}
+
+    context("평가 대상자 삭제") {
+        evaluationTargetRepository.saveAll(
+            listOf(
+                createEvaluationTarget(evaluationId = 1L, userId = 1L),
+                createEvaluationTarget(evaluationId = 1L, userId = 2L),
+                createEvaluationTarget(evaluationId = 2L, userId = 1L)
+            )
+        )
+
+        expect("평가 대상자에서 특정 사용자를 삭제한다") {
+            evaluationTargetRepository.deleteByUserIdIn(setOf(1L, 2L))
+            evaluationTargetRepository.count().shouldBeZero()
+        }
+
+        expect("특정 평가의 평가 대상자에서 특정 사용자를 삭제한다") {
+            evaluationTargetRepository.deleteByEvaluationIdAndUserIdIn(1L, setOf(1L, 2L))
+            evaluationTargetRepository.count() shouldBe 1
+        }
+    }
+
+    afterRootTest {
+        evaluationTargetRepository.deleteAll()
+    }
+})

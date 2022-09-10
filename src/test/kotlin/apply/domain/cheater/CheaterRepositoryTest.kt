@@ -1,49 +1,22 @@
 package apply.domain.cheater
 
-import apply.domain.user.Gender
-import apply.domain.user.Password
-import apply.domain.user.User
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertAll
-import support.createLocalDate
+import io.kotest.core.spec.style.ExpectSpec
+import io.kotest.extensions.spring.SpringTestExtension
+import io.kotest.extensions.spring.SpringTestLifecycleMode
+import io.kotest.matchers.booleans.shouldBeTrue
 import support.test.RepositoryTest
 
 @RepositoryTest
-internal class CheaterRepositoryTest(
+class CheaterRepositoryTest(
     private val cheaterRepository: CheaterRepository
-) {
-    private val cheater = User(
-        id = 1L,
-        name = "홍길동1",
-        email = "a@email.com",
-        phoneNumber = "010-0000-0000",
-        gender = Gender.MALE,
-        birthday = createLocalDate(2020, 4, 17),
-        password = Password("password")
-    )
+) : ExpectSpec({
+    extensions(SpringTestExtension(SpringTestLifecycleMode.Root))
 
-    private val user = User(
-        id = 2L,
-        name = "홍길동2",
-        email = "b@email.com",
-        phoneNumber = "010-0000-0000",
-        gender = Gender.MALE,
-        birthday = createLocalDate(2020, 4, 17),
-        password = Password("password")
-    )
+    context("부정행위자 조회") {
+        cheaterRepository.save(Cheater("a@email.com"))
 
-    @BeforeEach
-    internal fun setUp() {
-        cheaterRepository.save(Cheater(cheater.email))
+        expect("지원자의 부정행위 여부를 확인한다") {
+            cheaterRepository.existsByEmail("a@email.com").shouldBeTrue()
+        }
     }
-
-    @Test
-    fun `지원자의 부정행위 여부를 확인한다`() {
-        assertAll(
-            { assertThat(cheaterRepository.existsByEmail(cheater.email)).isTrue() },
-            { assertThat(cheaterRepository.existsByEmail(user.email)).isFalse() }
-        )
-    }
-}
+})

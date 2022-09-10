@@ -1,29 +1,33 @@
 package apply.domain.evaluationitem
 
-import apply.EVALUATION_ID
 import apply.createEvaluationItem
 import apply.domain.evaluationItem.EvaluationItemRepository
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
+import io.kotest.core.spec.style.ExpectSpec
+import io.kotest.extensions.spring.SpringTestExtension
+import io.kotest.extensions.spring.SpringTestLifecycleMode
+import io.kotest.matchers.collections.shouldBeSortedBy
 import support.test.RepositoryTest
 
 @RepositoryTest
-internal class EvaluationItemRepositoryTest(
+class EvaluationItemRepositoryTest(
     private val evaluationItemRepository: EvaluationItemRepository
-) {
-    @Test
-    fun `평가의 id로 평가 항목들을 Position의 오름차순으로 조회한다`() {
-        val evaluationItems = listOf(
-            createEvaluationItem(position = 2),
-            createEvaluationItem(position = 1),
-            createEvaluationItem(position = 3),
-            createEvaluationItem(position = 0)
+) : ExpectSpec({
+    extensions(SpringTestExtension(SpringTestLifecycleMode.Root))
+
+    context("평가 조회") {
+        val evaluationId = 1L
+        evaluationItemRepository.saveAll(
+            listOf(
+                createEvaluationItem(evaluationId = evaluationId, position = 2),
+                createEvaluationItem(evaluationId = evaluationId, position = 1),
+                createEvaluationItem(evaluationId = evaluationId, position = 3),
+                createEvaluationItem(evaluationId = evaluationId, position = 0)
+            )
         )
 
-        evaluationItemRepository.saveAll(evaluationItems)
-        val results = evaluationItemRepository.findByEvaluationIdOrderByPosition(EVALUATION_ID)
-
-        val expected = listOf(evaluationItems[3], evaluationItems[1], evaluationItems[0], evaluationItems[2])
-        assertThat(results).isEqualTo(expected)
+        expect("특정 평가의 평가 항목을 순서대로 조회한다") {
+            val actual = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluationId)
+            actual.shouldBeSortedBy { it.position }
+        }
     }
-}
+})

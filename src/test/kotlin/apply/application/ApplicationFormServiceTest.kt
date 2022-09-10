@@ -97,7 +97,6 @@ class ApplicationFormServiceTest : BehaviorSpec({
         every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns listOf(
             createRecruitmentItem(recruitmentId = recruitmentId, id = recruitmentItemId)
         )
-        every { applicationFormRepository.existsByUserIdAndSubmittedTrue(any()) } returns false
         every { applicationFormRepository.findByRecruitmentIdAndUserId(any(), any()) } returns createApplicationForm(
             userId = userId, recruitmentId = recruitmentId, submitted = false
         )
@@ -133,7 +132,6 @@ class ApplicationFormServiceTest : BehaviorSpec({
         every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns listOf(
             createRecruitmentItem(recruitmentId = recruitmentId, maximumLength = maximumLength, id = recruitmentItemId)
         )
-        every { applicationFormRepository.existsByUserIdAndSubmittedTrue(any()) } returns false
         every { applicationFormRepository.findByRecruitmentIdAndUserId(any(), any()) } returns createApplicationForm(
             userId = userId, recruitmentId = recruitmentId, submitted = false
         )
