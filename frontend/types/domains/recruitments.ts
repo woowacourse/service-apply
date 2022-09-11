@@ -1,3 +1,5 @@
+import { ISO8601DateString } from "./common";
+
 export type RecruitmentStatus = "RECRUITABLE" | "RECRUITING" | "UNRECRUITABLE" | "ENDED";
 
 export type Recruitment = {
@@ -9,8 +11,8 @@ export type Recruitment = {
   };
   recruitable: boolean;
   hidden: boolean;
-  startDateTime: string;
-  endDateTime: string;
+  startDateTime: ISO8601DateString;
+  endDateTime: ISO8601DateString;
   status: RecruitmentStatus;
 };
 
@@ -29,8 +31,8 @@ export type Mission = {
   description: string;
   submittable: boolean;
   submitted: boolean;
-  startDateTime: string;
-  endDateTime: string;
+  startDateTime: ISO8601DateString;
+  endDateTime: ISO8601DateString;
   status: RecruitmentStatus;
 };
 

@@ -1,3 +1,5 @@
+import { ISO8601DateString } from "./common";
+
 export type Answer = {
   contents: string;
   recruitmentItemId: number;
@@ -9,7 +11,7 @@ export type ApplicationForm = {
   referenceUrl: string;
   submitted: boolean;
   answers: Answer[];
-  createdDateTime: string;
-  modifiedDateTime: string;
-  submittedDateTime: string | null;
+  createdDateTime: ISO8601DateString;
+  modifiedDateTime: ISO8601DateString;
+  submittedDateTime: ISO8601DateString | null;
 };
