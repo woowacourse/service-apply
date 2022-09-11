@@ -9,8 +9,6 @@ import {
   RecruitmentItem,
 } from "../../types/domains/recruitments";
 
-const COMMON_PATH = "/api/recruitments";
-
 export type FetchRecruitmentItemsRequest = number;
 
 export type FetchRecruitmentItemsResponseData = ResponseDataWithMessage<RecruitmentItem[]>;
@@ -47,19 +45,20 @@ export type PatchAssignmentRequest = RequestWithToken<{
 export type PatchAssignmentResponseData = null;
 
 export const fetchRecruitmentItems = (recruitmentId: FetchRecruitmentItemsRequest) =>
-  axios.get<FetchRecruitmentItemsResponseData>(`${COMMON_PATH}/${recruitmentId}/items`);
+  axios.get<FetchRecruitmentItemsResponseData>(`/api/recruitments/${recruitmentId}/items`);
 
-export const fetchRecruitments = () => axios.get<FetchRecruitmentsResponseData>(COMMON_PATH);
+export const fetchRecruitments = () =>
+  axios.get<FetchRecruitmentsResponseData>("/api/recruitments");
 
 export const fetchMyMissions = ({ token, recruitmentId }: FetchMyMissionsRequest) =>
   axios.get<FetchMyMissionsResponseData>(
-    `${COMMON_PATH}/${recruitmentId}/missions/me`,
+    `/api/recruitments/${recruitmentId}/missions/me`,
     headers({ token })
   );
 
 export const fetchAssignment = ({ token, recruitmentId, missionId }: FetchAssignmentRequest) =>
   axios.get<FetchAssignmentResponseData>(
-    `${COMMON_PATH}/${recruitmentId}/missions/${missionId}/assignments/me`,
+    `/api/recruitments/${recruitmentId}/missions/${missionId}/assignments/me`,
     headers({ token })
   );
 
@@ -70,7 +69,7 @@ export const postAssignment = ({
   assignmentData,
 }: PostAssignmentRequest) =>
   axios.post<PostAssignmentResponseData>(
-    `${COMMON_PATH}/${recruitmentId}/missions/${missionId}/assignmets`,
+    `/api/recruitments/${recruitmentId}/missions/${missionId}/assignments`,
     assignmentData,
     headers({ token })
   );
@@ -82,7 +81,7 @@ export const patchAssignment = ({
   assignmentData,
 }: PatchAssignmentRequest) =>
   axios.patch<PatchAssignmentResponseData>(
-    `${COMMON_PATH}/${recruitmentId}/missions/${missionId}/assignments`,
+    `/api/recruitments/${recruitmentId}/missions/${missionId}/assignments`,
     assignmentData,
     headers({ token })
   );

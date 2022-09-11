@@ -4,8 +4,6 @@ import { formatDate } from "../utils/format/date";
 import { RequestWithToken, ResponseDataWithMessage } from "../../types/utility";
 import { User } from "../../types/domains/user";
 
-const COMMON_PATH = "/api/users";
-
 type FetchRegisterRequest = Omit<User, "id"> & {
   confirmPassword: string;
   authenticationCode: string;
@@ -58,7 +56,7 @@ export const fetchRegister = ({
   confirmPassword,
   authenticationCode,
 }: FetchRegisterRequest) =>
-  axios.post<FetchRegisterResponseData>(`${COMMON_PATH}/register`, {
+  axios.post<FetchRegisterResponseData>("/api/users/register", {
     name,
     email,
     phoneNumber,
@@ -70,10 +68,10 @@ export const fetchRegister = ({
   });
 
 export const fetchLogin = ({ email, password }: FetchLoginRequest) =>
-  axios.post<FetchLoginResponseData>(`${COMMON_PATH}/login`, { email, password });
+  axios.post<FetchLoginResponseData>("/api/users/login", { email, password });
 
 export const fetchPasswordFind = ({ name, email, birthday }: FetchPasswordFindRequest) =>
-  axios.post<FetchPasswordFindResponseData>(`${COMMON_PATH}/reset-password`, {
+  axios.post<FetchPasswordFindResponseData>("/api/users/reset-password", {
     name,
     email,
     birthday: formatDate(birthday),
@@ -86,30 +84,28 @@ export const fetchPasswordEdit = ({
   confirmPassword,
 }: FetchPasswordEditRequest) =>
   axios.post<FetchPasswordEditResponseData>(
-    `${COMMON_PATH}/edit-password`,
+    "/api/users/edit-password",
     { oldPassword, password, confirmPassword },
     headers({ token })
   );
 
 export const fetchUserInfo = ({ token }: FetchUserInfoRequest) =>
-  axios.get<FetchUserInfoResponseData>(`${COMMON_PATH}/me`, headers({ token }));
+  axios.get<FetchUserInfoResponseData>("/api/users/me", headers({ token }));
 
 export const fetchUserInfoEdit = ({ token, phoneNumber }: FetchUserInfoEditRequest) =>
   axios.patch<FetchUserInfoEditResponseData>(
-    `${COMMON_PATH}/information`,
+    "/api/users/information",
     { phoneNumber },
     headers({ token })
   );
 
 export const fetchAuthenticationCode = (email: FetchAuthenticationCodeRequest) =>
-  axios.post<FetchAuthenticationCodeResponseData>(
-    `${COMMON_PATH}/authentication-code?email=${email}`
-  );
+  axios.post<FetchAuthenticationCodeResponseData>(`/api/users/authentication-code?email=${email}`);
 
 export const fetchVerifyAuthenticationCode = ({
   email,
   authenticationCode,
 }: FetchVerifyAuthenticationCodeRequest) =>
   axios.post<FetchVerifyAuthenticationCodeResponseData>(
-    `${COMMON_PATH}/authenticate-email?email=${email}&authenticationCode=${authenticationCode}`
+    `/api/users/authenticate-email?email=${email}&authenticationCode=${authenticationCode}`
   );

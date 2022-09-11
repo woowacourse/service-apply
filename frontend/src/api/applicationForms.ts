@@ -3,8 +3,6 @@ import { Answer, ApplicationForm } from "../../types/domains/applicationForms";
 import { ResponseDataWithMessage, RequestWithToken } from "../../types/utility";
 import { headers } from "./api";
 
-const COMMON_PATH = "/api/application-forms";
-
 export type FetchMyApplicationFormsRequest = string;
 
 export type FetchMyApplicationFormsResponseData = ResponseDataWithMessage<
@@ -31,14 +29,14 @@ export type UpdateFormRequest = RequestWithToken<{
 export type UpdateFormResponseData = null;
 
 export const fetchMyApplicationForms = (token: FetchMyApplicationFormsRequest) =>
-  axios.get<FetchMyApplicationFormsResponseData>(`${COMMON_PATH}/me`, {
+  axios.get<FetchMyApplicationFormsResponseData>("/api/application-forms/me", {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
 
 export const fetchForm = ({ token, recruitmentId }: FetchFormRequest) =>
-  axios.get<FetchFormResponseData>(COMMON_PATH, {
+  axios.get<FetchFormResponseData>("/api/application-forms", {
     ...headers({ token }),
     params: {
       recruitmentId,
@@ -46,7 +44,11 @@ export const fetchForm = ({ token, recruitmentId }: FetchFormRequest) =>
   });
 
 export const createForm = ({ token, recruitmentId }: CreateFormRequest) =>
-  axios.post<CreateFormResponseData>(COMMON_PATH, { recruitmentId }, headers({ token }));
+  axios.post<CreateFormResponseData>(
+    "/api/application-forms",
+    { recruitmentId },
+    headers({ token })
+  );
 
 export const updateForm = ({ token, data }: UpdateFormRequest) =>
-  axios.patch<UpdateFormResponseData>(COMMON_PATH, data, headers({ token }));
+  axios.patch<UpdateFormResponseData>("/api/application-forms", data, headers({ token }));
