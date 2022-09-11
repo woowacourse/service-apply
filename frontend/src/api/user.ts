@@ -17,7 +17,7 @@ type FetchLoginResponseData = ResponseDataWithMessage<string>;
 
 type FetchPasswordFindRequest = Pick<User, "name" | "email" | "password" | "birthday">;
 
-type FetchPasswordFindResponseData = null;
+type FetchPasswordFindResponseData = void;
 
 type FetchPasswordEditRequest = RequestWithToken<{
   oldPassword: string;
@@ -25,7 +25,7 @@ type FetchPasswordEditRequest = RequestWithToken<{
   confirmPassword: string;
 }>;
 
-type FetchPasswordEditResponseData = null;
+type FetchPasswordEditResponseData = void;
 
 type FetchUserInfoRequest = RequestWithToken;
 
@@ -33,18 +33,18 @@ type FetchUserInfoResponseData = ResponseDataWithMessage<Omit<User, "password">>
 
 type FetchUserInfoEditRequest = RequestWithToken<{ phoneNumber: string }>;
 
-type FetchUserInfoEditResponseData = null;
+type FetchUserInfoEditResponseData = void;
 
 type FetchAuthenticationCodeRequest = string;
 
-type FetchAuthenticationCodeResponseData = null;
+type FetchAuthenticationCodeResponseData = void;
 
 type FetchVerifyAuthenticationCodeRequest = {
   email: string;
   authenticationCode: string;
 };
 
-type FetchVerifyAuthenticationCodeResponseData = null;
+type FetchVerifyAuthenticationCodeResponseData = void;
 
 export const fetchRegister = ({
   name,

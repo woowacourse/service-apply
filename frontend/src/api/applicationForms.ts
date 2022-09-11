@@ -26,7 +26,7 @@ export type UpdateFormRequest = RequestWithToken<{
   };
 }>;
 
-export type UpdateFormResponseData = null;
+export type UpdateFormResponseData = void;
 
 export const fetchMyApplicationForms = (token: FetchMyApplicationFormsRequest) =>
   axios.get<FetchMyApplicationFormsResponseData>("/api/application-forms/me", {

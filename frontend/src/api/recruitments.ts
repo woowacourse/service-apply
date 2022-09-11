@@ -42,7 +42,7 @@ export type PatchAssignmentRequest = RequestWithToken<{
   assignmentData: AssignmentData;
 }>;
 
-export type PatchAssignmentResponseData = null;
+export type PatchAssignmentResponseData = void;
 
 export const fetchRecruitmentItems = (recruitmentId: FetchRecruitmentItemsRequest) =>
   axios.get<FetchRecruitmentItemsResponseData>(`/api/recruitments/${recruitmentId}/items`);
