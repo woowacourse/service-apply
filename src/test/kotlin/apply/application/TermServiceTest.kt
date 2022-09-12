@@ -3,88 +3,120 @@ package apply.application
 import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.term.Term
 import apply.domain.term.TermRepository
+import io.kotest.assertions.throwables.shouldNotThrowAny
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.style.BehaviorSpec
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.shouldBe
 import io.mockk.Runs
+import io.mockk.clearAllMocks
 import io.mockk.every
-import io.mockk.impl.annotations.MockK
 import io.mockk.just
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertDoesNotThrow
-import org.junit.jupiter.api.assertThrows
-import support.test.UnitTest
+import io.mockk.mockk
+import support.test.spec.afterRootTest
 
-@UnitTest
-internal class TermServiceTest {
-    @MockK
-    lateinit var termRepository: TermRepository
+class TermServiceTest : BehaviorSpec({
+    val termRepository = mockk<TermRepository>()
+    val recruitmentRepository = mockk<RecruitmentRepository>()
 
-    @MockK
-    lateinit var recruitmentRepository: RecruitmentRepository
+    val termService = TermService(termRepository, recruitmentRepository)
 
-    private lateinit var termService: TermService
+    Given("같은 이름의 기수가 없는 경우") {
+        val name = "3기"
 
-    @BeforeEach
-    internal fun setUp() {
-        termService = TermService(termRepository, recruitmentRepository)
-    }
-
-    @Test
-    fun `기수를 생성한다`() {
-        every { termRepository.save(any()) } returns Term("3기")
         every { termRepository.existsByName(any()) } returns false
-        assertDoesNotThrow { termService.save(TermData("3기")) }
+        every { termRepository.save(any()) } returns Term(name)
+
+        When("해당 이름으로 기수를 생성하면") {
+            val actual = termService.save(TermData(name))
+
+            Then("기수가 생성된다") {
+                actual.name shouldBe name
+            }
+        }
     }
 
-    @Test
-    fun `기본 기수명으로 기수를 생성할 수 없다`() {
-        val request = TermData(Term.SINGLE.name)
-        assertThrows<IllegalStateException> { termService.save(request) }
-    }
-
-    @Test
-    fun `중복된 기수명으로 기수를 생성할 수 없다`() {
+    Given("같은 이름의 기수가 존재하는 경우") {
         every { termRepository.existsByName(any()) } returns true
-        assertThrows<IllegalStateException> { termService.save(TermData("3기")) }
+
+        When("해당 이름으로 기수를 생성하면") {
+            Then("예외가 발생한다") {
+                shouldThrow<IllegalStateException> {
+                    termService.save(TermData("3기"))
+                }
+            }
+        }
     }
 
-    @Test
-    fun `기수를 조회한다`() {
-        val terms = listOf(Term("3기"), Term("4기"))
-        every { termRepository.findAll() } returns terms
-        val responses = termService.findAll()
-        assertThat(responses).containsExactlyInAnyOrder(
-            TermResponse(Term.SINGLE),
-            TermResponse(terms[0]),
-            TermResponse(terms[1])
-        )
+    Given("기수 이름이 단독 모집인 경우") {
+        val name = "단독 모집"
+
+        When("해당 이름으로 기수를 생성하면") {
+            Then("예외가 발생한다") {
+                shouldThrow<IllegalStateException> {
+                    termService.save(TermData(name))
+                }
+            }
+        }
     }
 
-    @Test
-    fun `기수 조회시 단독 모집을 포함한다`() {
-        every { termRepository.findAll() } returns emptyList()
-        val responses = termService.findAll()
-        assertThat(responses).contains(TermResponse(Term.SINGLE))
+    Given("기수가 여러 개인 경우") {
+        val term1 = Term("3기", 1L)
+        val term2 = Term("4기", 2L)
+
+        every { termRepository.findAll() } returns listOf(term1, term2)
+
+        When("모든 기수를 조회하면") {
+            val actual = termService.findAll()
+
+            Then("단독 모집을 포함하여 모든 기수를 확인할 수 있다") {
+                actual shouldContainExactlyInAnyOrder listOf(
+                    TermResponse(Term.SINGLE), TermResponse(term1), TermResponse(term2)
+                )
+            }
+        }
     }
 
-    @Test
-    fun `기수를 삭제한다`() {
+    Given("모집이 등록되지 않은 특정 기수가 있는 경우") {
         every { recruitmentRepository.existsByTermId(any()) } returns false
         every { termRepository.existsById(any()) } returns true
         every { termRepository.deleteById(any()) } just Runs
-        assertDoesNotThrow { termService.deleteById(1L) }
+
+        When("해당 기수를 삭제하면") {
+            Then("기수를 삭제할 수 있다") {
+                shouldNotThrowAny {
+                    termService.deleteById(1L)
+                }
+            }
+        }
     }
 
-    @Test
-    fun `모집이 존재하는 기수는 삭제할 수 없다`() {
+    Given("모집이 등록된 특정 기수가 있는 경우") {
         every { recruitmentRepository.existsByTermId(any()) } returns true
-        assertThrows<IllegalStateException> { termService.deleteById(1L) }
+
+        When("해당 기수를 삭제하면") {
+            Then("예외가 발생한다") {
+                shouldThrow<IllegalStateException> {
+                    termService.deleteById(1L)
+                }
+            }
+        }
     }
 
-    @Test
-    fun `존재하지 않는 기수를 삭제하면 예외가 발생한다`() {
+    Given("기수가 존재하지 않는 경우") {
         every { recruitmentRepository.existsByTermId(any()) } returns false
         every { termRepository.existsById(any()) } returns false
-        assertThrows<IllegalArgumentException> { termService.deleteById(1L) }
+
+        When("헤딩 기수를 삭제하면") {
+            Then("예외가 발생한다") {
+                shouldThrow<IllegalArgumentException> {
+                    termService.deleteById(1L)
+                }
+            }
+        }
     }
-}
+
+    afterRootTest {
+        clearAllMocks()
+    }
+})

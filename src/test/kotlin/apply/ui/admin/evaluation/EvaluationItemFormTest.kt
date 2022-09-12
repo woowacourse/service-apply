@@ -11,7 +11,7 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 
 class EvaluationItemFormTest : StringSpec({
-    "유효한 값을 입력하는 경우" {
+    "유효한 값을 입력한 경우" {
         val actual = createEvaluationItemForm().bindOrNull()
         actual.shouldNotBeNull()
         assertSoftly(actual) {
