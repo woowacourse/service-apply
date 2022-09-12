@@ -17,7 +17,7 @@ class EvaluationItemScoreFormTest : StringSpec({
         every { Tooltips.getCurrent() } returns Tooltips(UI())
     }
 
-    "유효한 값을 입력하는 경우" {
+    "유효한 값을 입력한 경우" {
         val actual = createEvaluationAnswerForm(score = 3, evaluationItemId = 1L).bindOrNull()
         actual shouldBe EvaluationItemScoreData(score = 3, id = 1L)
     }

@@ -48,7 +48,7 @@ class EvaluationServiceTest : BehaviorSpec({
     }
 
     Given("특정 평가가 이전 평가인 다른 평가가 있는 경우") {
-        val evaluation1 = createEvaluation(beforeEvaluationId = 10L, id = 1L)
+        val evaluation1 = createEvaluation(id = 1L)
         val evaluation2 = createEvaluation(beforeEvaluationId = 1L, id = 2L)
         val evaluation3 = createEvaluation(beforeEvaluationId = 1L, id = 3L)
 

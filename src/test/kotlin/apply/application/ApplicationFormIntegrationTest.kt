@@ -23,7 +23,7 @@ class ApplicationFormIntegrationTest(
     private val applicationFormRepository: ApplicationFormRepository,
     private val recruitmentRepository: RecruitmentRepository
 ) : BehaviorSpec({
-    Given("지원하지 않은 모집 중 모집이 있는 경우") {
+    Given("지원하지 않은 모집 중인 모집이 있는 경우") {
         val recruitment = recruitmentRepository.save(createRecruitment(recruitable = true))
         val user = userRepository.save(createUser())
 
@@ -37,7 +37,7 @@ class ApplicationFormIntegrationTest(
         }
     }
 
-    Given("이미 최종 지원서를 제출한 회원과 모집 중 모집이 있는 경우") {
+    Given("이미 최종 지원서를 제출한 회원과 모집 중인 모집이 있는 경우") {
         val recruitment = recruitmentRepository.save(createRecruitment(recruitable = true))
         val user = userRepository.save(createUser())
         applicationFormRepository.save(
@@ -91,7 +91,7 @@ class ApplicationFormIntegrationTest(
         }
     }
 
-    Given("동일 기수의 특정 모집에 지원서를 최종 제출한 회원이 있는 경우") {
+    Given("이미 다른 모집에 최종 지원서를 제출한 회원이 동일 기수의 특정 모집에 지원서를 임시 저장한 경우") {
         val termId = 1L
         val recruitment1 = recruitmentRepository.save(createRecruitment(termId = termId))
         val recruitment2 = recruitmentRepository.save(createRecruitment(termId = termId, recruitable = true))
@@ -101,7 +101,7 @@ class ApplicationFormIntegrationTest(
         )
         applicationFormRepository.save(createApplicationForm(user.id, recruitment2.id, submitted = false))
 
-        When("동일 기수의 다른 모집에 지원서를 최종 제출하면") {
+        When("해당 모집에 지원서를 최종 제출하면") {
             Then("예외가 발생한다") {
                 shouldThrow<DuplicateApplicationException> {
                     applicationFormService.update(

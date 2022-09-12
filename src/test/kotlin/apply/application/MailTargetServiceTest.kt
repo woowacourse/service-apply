@@ -13,6 +13,7 @@ import apply.domain.user.UserRepository
 import apply.domain.user.findAllByEmailIn
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
@@ -29,6 +30,12 @@ class MailTargetServiceTest : BehaviorSpec({
 
     Given("특정 평가에 대한 평가 대상자가 있는 경우") {
         val evaluationId = 1L
+        val users = listOf(
+            createUser(id = 1L, email = "waiting@email.com"),
+            createUser(id = 2L, email = "pending@email.com"),
+            createUser(id = 3L, email = "pass@email.com"),
+            createUser(id = 4L, email = "fail@email.com")
+        )
 
         every { evaluationTargetRepository.findAllByEvaluationId(any()) } returns listOf(
             createEvaluationTarget(evaluationId = evaluationId, userId = 1L, evaluationStatus = WAITING),
@@ -36,18 +43,14 @@ class MailTargetServiceTest : BehaviorSpec({
             createEvaluationTarget(evaluationId = evaluationId, userId = 3L, evaluationStatus = PASS),
             createEvaluationTarget(evaluationId = evaluationId, userId = 4L, evaluationStatus = FAIL)
         )
-        every { userRepository.findAllById(any()) } returns listOf(
-            createUser(id = 1L, email = "waiting@email.com"),
-            createUser(id = 2L, email = "pending@email.com"),
-            createUser(id = 3L, email = "pass@email.com"),
-            createUser(id = 4L, email = "fail@email.com")
-        )
+        every { userRepository.findAllById(any()) } returns users
 
         When("해당 평가의 모든 평가 대상자에 대한 이메일 정보를 조회하면") {
             val actual = mailTargetService.findMailTargets(evaluationId)
 
-            Then("모든 평가 대상자의 이메일 정보를 확인할 수 있다") {
+            Then("모든 평가 대상자의 이름 및 이메일을 확인할 수 있다") {
                 actual shouldHaveSize 4
+                actual.map { it.name to it.email } shouldContainExactlyInAnyOrder users.map { it.name to it.email }
             }
         }
     }

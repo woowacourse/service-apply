@@ -22,7 +22,7 @@ class RecruitmentFormTest : StringSpec({
         every { UI.getCurrent() }.returns(UI())
     }
 
-    "유효한 값을 입력하는 경우" {
+    "유효한 값을 입력한 경우" {
         val actual = createRecruitmentForm().bindOrNull()
         actual shouldBe createRecruitmentData()
     }

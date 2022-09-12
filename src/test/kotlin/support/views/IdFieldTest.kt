@@ -9,7 +9,7 @@ class IdFieldTest : StringSpec({
         IdField().value.shouldBeZero()
     }
 
-    "유효한 값을 입력하는 경우" {
+    "유효한 값을 입력한 경우" {
         val actual = IdField().apply { value = 1L }
         actual.value shouldBe 1
     }

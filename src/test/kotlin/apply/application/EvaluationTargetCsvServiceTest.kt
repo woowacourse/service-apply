@@ -30,7 +30,7 @@ class EvaluationTargetCsvServiceTest : BehaviorSpec({
         csvGenerator
     )
 
-    Given("특정 평가와 해당 평가에 대한 평가 항목이 여러 개 있는 경우") {
+    Given("특정 평가에 대한 평가 항목이 여러 개 있는 경우") {
         val evaluationId = 1L
         val evaluationItems = listOf(
             createEvaluationItem("평가 항목1", evaluationId = evaluationId, maximumScore = 1, position = 1, id = 1L),
