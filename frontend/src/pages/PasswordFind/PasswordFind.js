@@ -1,4 +1,3 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchPasswordFind } from "../../api/user";
 import Button from "../../components/@common/Button/Button";
@@ -24,10 +23,14 @@ const PasswordFind = () => {
     try {
       await fetchPasswordFind(form);
 
-      navigate({
-        pathname: PATH.FIND_PASSWORD_RESULT,
-        state: { email: form[PASSWORD_FIND_FORM_NAME.EMAIL] },
-      });
+      navigate(
+        {
+          pathname: PATH.FIND_PASSWORD_RESULT,
+        },
+        {
+          state: { email: form[PASSWORD_FIND_FORM_NAME.EMAIL] },
+        }
+      );
     } catch (error) {
       alert(ERROR_MESSAGE.API.FIND_PASSWORD);
     }

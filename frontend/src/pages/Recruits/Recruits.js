@@ -36,25 +36,31 @@ const Recruits = () => {
 
   const goToNewApplicationFormPage = (recruitment) => {
     if (!token) {
-      navigate({
-        pathname: PATH.LOGIN,
-        state: {
-          currentRecruitment: recruitment,
-        },
-      });
+      navigate(
+        { pathname: PATH.LOGIN },
+        {
+          state: {
+            currentRecruitment: recruitment,
+          },
+        }
+      );
 
       return;
     }
 
-    navigate({
-      pathname: generatePath(PATH.APPLICATION_FORM, {
-        status: PARAM.APPLICATION_FORM_STATUS.NEW,
-      }),
-      search: generateQuery({ recruitmentId: recruitment.id }),
-      state: {
-        currentRecruitment: recruitment,
+    navigate(
+      {
+        pathname: generatePath(PATH.APPLICATION_FORM, {
+          status: PARAM.APPLICATION_FORM_STATUS.NEW,
+        }),
+        search: generateQuery({ recruitmentId: recruitment.id }),
       },
-    });
+      {
+        state: {
+          currentRecruitment: recruitment,
+        },
+      }
+    );
   };
 
   return (

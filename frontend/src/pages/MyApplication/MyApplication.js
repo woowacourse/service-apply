@@ -70,40 +70,52 @@ const MyApplication = () => {
   const { missions } = useMissions(recruitmentIds);
 
   const routeToApplicationForm = (recruitment) => () => {
-    navigate({
-      pathname: generatePath(PATH.APPLICATION_FORM, {
-        status: PARAM.APPLICATION_FORM_STATUS.EDIT,
-      }),
-      search: generateQuery({ recruitmentId: recruitment.id }),
-      state: {
-        currentRecruitment: recruitment,
+    navigate(
+      {
+        pathname: generatePath(PATH.APPLICATION_FORM, {
+          status: PARAM.APPLICATION_FORM_STATUS.EDIT,
+        }),
+        search: generateQuery({ recruitmentId: recruitment.id }),
       },
-    });
+      {
+        state: {
+          currentRecruitment: recruitment,
+        },
+      }
+    );
   };
 
   const routeToAssignmentSubmit =
     ({ recruitmentId, mission, submitted }) =>
     () => {
       if (submitted) {
-        navigate({
-          pathname: generatePath(PATH.ASSIGNMENT, {
-            status: PARAM.ASSIGNMENT_STATUS.EDIT,
-          }),
-          state: {
-            recruitmentId,
-            currentMission: mission,
+        navigate(
+          {
+            pathname: generatePath(PATH.ASSIGNMENT, {
+              status: PARAM.ASSIGNMENT_STATUS.EDIT,
+            }),
           },
-        });
+          {
+            state: {
+              recruitmentId,
+              currentMission: mission,
+            },
+          }
+        );
       } else {
-        navigate({
-          pathname: generatePath(PATH.ASSIGNMENT, {
-            status: PARAM.ASSIGNMENT_STATUS.NEW,
-          }),
-          state: {
-            recruitmentId,
-            currentMission: mission,
+        navigate(
+          {
+            pathname: generatePath(PATH.ASSIGNMENT, {
+              status: PARAM.ASSIGNMENT_STATUS.NEW,
+            }),
           },
-        });
+          {
+            state: {
+              recruitmentId,
+              currentMission: mission,
+            },
+          }
+        );
       }
     };
 
