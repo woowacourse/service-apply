@@ -1,136 +1,114 @@
 package apply.application
 
-import apply.BIRTHDAY
-import apply.EMAIL
-import apply.NAME
+import apply.NEW_PASSWORD
 import apply.PASSWORD
 import apply.RANDOM_PASSWORD_TEXT
 import apply.WRONG_PASSWORD
 import apply.createUser
 import apply.domain.user.Password
 import apply.domain.user.UnidentifiedUserException
-import apply.domain.user.User
 import apply.domain.user.UserRepository
 import apply.domain.user.findByEmail
 import apply.domain.user.getById
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.style.BehaviorSpec
+import io.kotest.matchers.shouldBe
+import io.mockk.clearAllMocks
 import io.mockk.every
-import io.mockk.impl.annotations.MockK
-import io.mockk.slot
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Nested
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertAll
-import org.junit.jupiter.api.assertDoesNotThrow
-import org.junit.jupiter.api.assertThrows
-import support.test.UnitTest
+import io.mockk.mockk
+import support.test.spec.afterRootTest
 
-@UnitTest
-internal class UserServiceTest {
-    @MockK
-    private lateinit var userRepository: UserRepository
+class UserServiceTest : BehaviorSpec({
+    val userRepository = mockk<UserRepository>()
+    val passwordGenerator = mockk<PasswordGenerator>()
 
-    @MockK
-    private lateinit var passwordGenerator: PasswordGenerator
+    val userService = UserService(userRepository, passwordGenerator)
 
-    private lateinit var userService: UserService
+    Given("특정 회원의 개인정보가 있는 경우") {
+        val user = createUser()
 
-    @BeforeEach
-    internal fun setUp() {
-        userService = UserService(userRepository, passwordGenerator)
-    }
+        every { userRepository.findByEmail(any()) } returns user
+        every { passwordGenerator.generate() } returns RANDOM_PASSWORD_TEXT
+        every { userRepository.save(any()) } returns user
 
-    @DisplayName("비밀번호 초기화는")
-    @Nested
-    inner class ResetPassword {
-        private lateinit var user: User
-        private lateinit var request: ResetPasswordRequest
+        When("동일한 개인정보로 비밀번호를 초기화하면") {
+            userService.resetPassword(ResetPasswordRequest(user.name, user.email, user.birthday))
 
-        @BeforeEach
-        internal fun setUp() {
-            user = createUser()
-            every { userRepository.findByEmail(EMAIL) } returns user
-            every { passwordGenerator.generate() } returns RANDOM_PASSWORD_TEXT
-        }
-
-        fun subject() {
-            userService.resetPassword(request)
-        }
-
-        @Test
-        fun `만약 개인정보가 일치한다면 초기화한다`() {
-            every { userRepository.save(any()) } returns user
-            request = ResetPasswordRequest(NAME, EMAIL, BIRTHDAY)
-            subject()
-            assertThat(user.password).isEqualTo(Password(RANDOM_PASSWORD_TEXT))
-        }
-
-        @Test
-        fun `만약 개인정보가 일치하지 않는다면 예외가 발생한다`() {
-            request = ResetPasswordRequest("가짜 이름", EMAIL, BIRTHDAY)
-            assertThrows<UnidentifiedUserException> { subject() }
-        }
-    }
-
-    @DisplayName("비밀번호 변경은")
-    @Nested
-    inner class EditPassword {
-        private lateinit var request: EditPasswordRequest
-
-        @BeforeEach
-        internal fun setUp() {
-            slot<Long>().also { slot ->
-                every { userRepository.getById(capture(slot)) } answers { createUser(id = slot.captured) }
+            Then("비밀번호가 초기화된다") {
+                user.password shouldBe Password(RANDOM_PASSWORD_TEXT)
             }
         }
 
-        fun subject() {
-            userService.editPassword(1L, request)
-        }
-
-        @Test
-        fun `만약 기존 비밀번호가 일치한다면 변경한다`() {
-            request = EditPasswordRequest(PASSWORD, Password("new_password"), Password("new_password"))
-            assertDoesNotThrow { subject() }
-        }
-
-        @Test
-        fun `만약 기존 비밀번호가 일치하지 않다면 예외가 발생한다`() {
-            request = EditPasswordRequest(WRONG_PASSWORD, Password("new_password"), Password("new_password"))
-            assertThrows<UnidentifiedUserException> { subject() }
-        }
-
-        @Test
-        fun `확인용 비밀번호가 일치하지 않으면 예외가 발생한다`() {
-            request = EditPasswordRequest(WRONG_PASSWORD, Password("new_password"), Password("wrong_password"))
-            assertThrows<IllegalArgumentException> { subject() }
+        When("일치하지 않는 개인정보로 비밀번호를 초기화하면") {
+            Then("예외가 발생한다") {
+                shouldThrow<UnidentifiedUserException> {
+                    userService.resetPassword(ResetPasswordRequest("가짜 이름", user.email, user.birthday))
+                }
+            }
         }
     }
 
-    @Test
-    fun `회원이 정보를 조회한다`() {
-        val user = createUser()
+    Given("특정 회원이 있고 변경할 비밀번호가 있는 경우") {
+        val user = createUser(id = 1L, password = PASSWORD)
+        val password = NEW_PASSWORD
+
         every { userRepository.getById(any()) } returns user
 
-        val expected = userService.getInformation(user.id)
+        When("기존 비밀번호와 함께 새 비밀번호를 변경하면") {
+            userService.editPassword(user.id, EditPasswordRequest(user.password, password, password))
 
-        assertAll(
-            { assertThat(expected.id).isNotNull },
-            { assertThat(expected.name).isNotNull },
-            { assertThat(expected.email).isNotNull },
-            { assertThat(expected.phoneNumber).isNotNull },
-            { assertThat(expected.gender).isNotNull },
-            { assertThat(expected.birthday).isNotNull }
-        )
+            Then("새 비밀번호로 변경된다") {
+                user.password shouldBe password
+            }
+        }
+
+        When("일치하지 않는 기존 비밀번호와 함께 새 비밀번호를 변경하면") {
+            Then("예외가 발생한다") {
+                shouldThrow<UnidentifiedUserException> {
+                    userService.editPassword(user.id, EditPasswordRequest(WRONG_PASSWORD, password, password))
+                }
+            }
+        }
+
+        When("이전 비밀번호는 일치하지만 새 비밀번호와 확인 비밀번호가 일치하지 않으면") {
+            Then("예외가 발생한다") {
+                shouldThrow<IllegalArgumentException> {
+                    userService.editPassword(user.id, EditPasswordRequest(user.password, password, WRONG_PASSWORD))
+                }
+            }
+        }
     }
 
-    @Test
-    fun `회원이 정보(전화번호)를 변경한다`() {
-        val request = EditInformationRequest("010-9999-9999")
+    Given("특정 회원이 있는 경우") {
+        val user = createUser(id = 1L)
+
+        every { userRepository.getById(any()) } returns user
+
+        When("해당 회원의 정보를 조회하면") {
+            val actual = userService.getInformation(user.id)
+
+            Then("회원 정보를 확인할 수 있다") {
+                actual shouldBe UserResponse(user)
+            }
+        }
+    }
+
+    Given("특정 회원이 존재하고 변경할 정보(전화번호)가 있는 경우") {
         val user = createUser(phoneNumber = "010-0000-0000")
+        val phoneNumber = "010-9999-9999"
+
         every { userRepository.getById(any()) } returns user
-        assertDoesNotThrow { userService.editInformation(user.id, request) }
-        assertThat(user.phoneNumber).isEqualTo(request.phoneNumber)
+
+        When("특정 회원의 정보(전화번호)를 변경하면") {
+            userService.editInformation(user.id, EditInformationRequest(phoneNumber))
+
+            Then("정보(전화번호)가 변경된다") {
+                user.phoneNumber shouldBe phoneNumber
+            }
+        }
     }
-}
+
+    afterRootTest {
+        clearAllMocks()
+    }
+})

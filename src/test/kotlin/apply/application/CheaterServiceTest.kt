@@ -1,46 +1,55 @@
 package apply.application
 
+import apply.createCheater
 import apply.createCheaterData
-import apply.createUser
-import apply.domain.cheater.Cheater
 import apply.domain.cheater.CheaterRepository
 import apply.domain.user.UserRepository
 import apply.domain.user.findByEmail
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.style.BehaviorSpec
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.shouldBe
+import io.mockk.clearAllMocks
 import io.mockk.every
-import io.mockk.impl.annotations.MockK
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertDoesNotThrow
-import org.junit.jupiter.api.assertThrows
-import support.test.UnitTest
+import io.mockk.mockk
+import support.test.spec.afterRootTest
 
-@UnitTest
-internal class CheaterServiceTest {
-    @MockK
-    private lateinit var userRepository: UserRepository
+class CheaterServiceTest : BehaviorSpec({
+    val userRepository = mockk<UserRepository>()
+    val cheaterRepository = mockk<CheaterRepository>()
 
-    @MockK
-    private lateinit var cheaterRepository: CheaterRepository
-    private lateinit var cheaterService: CheaterService
+    val cheaterService = CheaterService(userRepository, cheaterRepository)
 
-    @BeforeEach
-    internal fun setUp() {
-        cheaterService = CheaterService(userRepository, cheaterRepository)
-    }
+    Given("특정 이메일의 회원이 존재하지 않는 경우") {
+        val email = "cheater@email.com"
 
-    @Test
-    fun `부정행위자를 추가한다`() {
-        val cheaterData = createCheaterData()
         every { cheaterRepository.existsByEmail(any()) } returns false
-        every { cheaterRepository.save(any()) } returns Cheater(cheaterData.email, cheaterData.description)
-        every { userRepository.findByEmail(any()) } returns createUser()
-        assertDoesNotThrow { cheaterService.save(cheaterData) }
+        every { cheaterRepository.save(any()) } returns createCheater(email = email)
+        every { userRepository.findByEmail(any()) } returns null
+
+        When("특정 이메일로 부정행위자를 등록하면") {
+            val actual = cheaterService.save(createCheaterData(email = email))
+
+            Then("이름 없이 등록된다") {
+                actual.email shouldBe email
+                actual.name.shouldBeNull()
+            }
+        }
     }
 
-    @Test
-    fun `이미 등록된 부정행위자를 추가하는 경우 예외를 던진다`() {
-        val cheaterData = createCheaterData()
+    Given("특정 이메일로 등록된 부정행위자가 있는 경우") {
         every { cheaterRepository.existsByEmail(any()) } returns true
-        assertThrows<IllegalArgumentException> { cheaterService.save(cheaterData) }
+
+        When("해당 이메일로 부정행위자를 등록하면") {
+            Then("예외가 발생한다") {
+                shouldThrow<IllegalArgumentException> {
+                    cheaterService.save(createCheaterData(email = "cheater@email.com"))
+                }
+            }
+        }
     }
-}
+
+    afterRootTest {
+        clearAllMocks()
+    }
+})

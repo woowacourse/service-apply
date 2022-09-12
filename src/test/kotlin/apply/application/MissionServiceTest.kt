@@ -4,162 +4,167 @@ import apply.createAssignment
 import apply.createEvaluation
 import apply.createMission
 import apply.createMissionData
+import apply.createMissionResponse
 import apply.domain.assignment.AssignmentRepository
 import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.mission.MissionRepository
+import io.kotest.assertions.throwables.shouldNotThrowAny
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.style.BehaviorSpec
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.shouldBe
 import io.mockk.Runs
+import io.mockk.clearAllMocks
 import io.mockk.every
-import io.mockk.impl.annotations.MockK
 import io.mockk.just
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertAll
-import org.junit.jupiter.api.assertDoesNotThrow
-import org.junit.jupiter.api.assertThrows
+import io.mockk.mockk
 import org.springframework.data.repository.findByIdOrNull
-import support.test.UnitTest
+import support.test.spec.afterRootTest
 
-@UnitTest
-class MissionServiceTest {
-    @MockK
-    lateinit var missionRepository: MissionRepository
+class MissionServiceTest : BehaviorSpec({
+    val missionRepository = mockk<MissionRepository>()
+    val evaluationRepository = mockk<EvaluationRepository>()
+    val evaluationTargetRepository = mockk<EvaluationTargetRepository>()
+    val assignmentRepository = mockk<AssignmentRepository>()
 
-    @MockK
-    lateinit var evaluationRepository: EvaluationRepository
+    val missionService = MissionService(
+        missionRepository, evaluationRepository, evaluationTargetRepository, assignmentRepository
+    )
 
-    @MockK
-    lateinit var evaluationTargetRepository: EvaluationTargetRepository
-
-    @MockK
-    lateinit var assignmentRepository: AssignmentRepository
-
-    private lateinit var missionService: MissionService
-
-    private val recruitmentId = 1L
-    private val userId = 1L
-
-    @BeforeEach
-    internal fun setUp() {
-        missionService = MissionService(
-            missionRepository, evaluationRepository, evaluationTargetRepository, assignmentRepository
-        )
-    }
-
-    @Test
-    fun `과제를 추가한다`() {
-        val missionData = createMissionData()
+    Given("과제가 없는 평가가 있는 경우") {
         every { evaluationRepository.existsById(any()) } returns true
         every { missionRepository.existsByEvaluationId(any()) } returns false
         every { missionRepository.save(any()) } returns createMission()
-        assertDoesNotThrow { missionService.save(missionData) }
+
+        When("해당 평가에 대한 과제를 생성하면") {
+            val actual = missionService.save(createMissionData())
+
+            Then("과제가 생성된다") {
+                actual shouldBe createMissionResponse()
+            }
+        }
     }
 
-    @Test
-    fun `존재하지 않는 평가 id인 경우 예외를 던진다`() {
-        val missionData = createMissionData()
+    Given("평가가 존재하지 않는 경우") {
         every { evaluationRepository.existsById(any()) } returns false
-        assertThrows<IllegalArgumentException> { missionService.save(missionData) }
+
+        When("해당 평가에 대한 과제를 생성하면") {
+            Then("예외가 발생한다") {
+                shouldThrow<IllegalArgumentException> {
+                    missionService.save(createMissionData())
+                }
+            }
+        }
     }
 
-    @Test
-    fun `해당 평가에 이미 등록된 과제가 있는 경우 예외를 던진다`() {
-        val missionData = createMissionData()
+    Given("평가에 대한 과제가 이미 있는 경우") {
         every { evaluationRepository.existsById(any()) } returns true
         every { missionRepository.existsByEvaluationId(any()) } returns true
-        assertThrows<IllegalStateException> { missionService.save(missionData) }
+
+        When("해당 평가에 대한 과제를 생성하면") {
+            Then("예외가 발생한다") {
+                shouldThrow<IllegalStateException> {
+                    missionService.save(createMissionData())
+                }
+            }
+        }
     }
 
-    @Test
-    fun `특정 모집의 모든 과제를 찾는다`() {
+    Given("특정 모집에 대한 평가 및 과제가 있는 경우") {
         val recruitmentId = 1L
-        val firstEvaluation = createEvaluation(id = 1L, title = "평가1", recruitmentId = recruitmentId)
-        val secondEvaluation = createEvaluation(id = 2L, title = "평가2", recruitmentId = recruitmentId)
-        every { evaluationRepository.findAllByRecruitmentId(any()) } returns listOf(firstEvaluation, secondEvaluation)
+        val evaluation1 = createEvaluation(id = 1L, title = "평가1", recruitmentId = recruitmentId)
+        val evaluation2 = createEvaluation(id = 2L, title = "평가2", recruitmentId = recruitmentId)
+        val mission1 = createMission(title = "과제1", evaluationId = 1L)
+        val mission2 = createMission(title = "과제1", evaluationId = 2L)
 
-        val firstMission = createMission(title = "과제1", evaluationId = 1L)
-        val secondMission = createMission(title = "과제1", evaluationId = 2L)
-        every { missionRepository.findAllByEvaluationIdIn(any()) } returns listOf(firstMission, secondMission)
+        every { evaluationRepository.findAllByRecruitmentId(any()) } returns listOf(evaluation1, evaluation2)
+        every { missionRepository.findAllByEvaluationIdIn(any()) } returns listOf(mission1, mission2)
 
-        val actual = missionService.findAllByRecruitmentId(recruitmentId)
-        assertAll(
-            { assertThat(actual).hasSize(2) },
-            {
-                assertThat(actual).containsAnyOf(
-                    MissionAndEvaluationResponse(firstMission, firstEvaluation),
-                    MissionAndEvaluationResponse(secondMission, secondEvaluation)
+        When("평가와 함께 해당 모집에 대한 모든 과제를 조회하면") {
+            val actual = missionService.findAllByRecruitmentId(recruitmentId)
+
+            Then("해당 모집에 대한 모든 과제와 관련된 평가를 확인할 수 있다") {
+                actual shouldContainExactlyInAnyOrder listOf(
+                    MissionAndEvaluationResponse(mission1, evaluation1),
+                    MissionAndEvaluationResponse(mission2, evaluation2)
                 )
             }
-        )
+        }
     }
 
-    @Test
-    fun `특정 모집에 해당하는 나의 숨겨지지 않은 과제들을 조회한다`() {
-        val missions = listOf(createMission(id = 1L), createMission(id = 2L))
-        every { evaluationRepository.findAllByRecruitmentId(any()) } returns
-            listOf(createEvaluation(id = 1L), createEvaluation(id = 2L))
+    Given("과제 및 평가 대상자가 있는 평가가 있고 해당 평가 대상자가 제출한 과제 제출물이 있는 경우") {
+        val mission1 = createMission(id = 1L, hidden = false)
+        val mission2 = createMission(id = 2L, hidden = false)
+        val recruitmentId = 1L
+        val userId = 1L
+
+        every { evaluationRepository.findAllByRecruitmentId(any()) } returns listOf(
+            createEvaluation(recruitmentId = recruitmentId, id = 1L),
+            createEvaluation(recruitmentId = recruitmentId, id = 2L)
+        )
         every { evaluationTargetRepository.existsByUserIdAndEvaluationId(any(), any()) } returns true
-        every { missionRepository.findAllByEvaluationIdIn(any()) } returns missions
+        every { missionRepository.findAllByEvaluationIdIn(any()) } returns listOf(mission1, mission2)
         every { assignmentRepository.findAllByUserId(any()) } returns listOf(
-            createAssignment(userId = userId, missionId = 1L),
-            createAssignment(userId = userId, missionId = 2L)
+            createAssignment(id = userId, missionId = mission1.id)
         )
 
-        val responses = missionService.findAllByUserIdAndRecruitmentId(userId, recruitmentId)
+        When("해당 사용자의 특정 모집에 대한 모든 과제를 조회하면") {
+            val actual = missionService.findAllByUserIdAndRecruitmentId(userId, recruitmentId)
 
-        assertAll(
-            { assertThat(responses).hasSize(2) },
-            {
-                assertThat(responses).containsExactlyInAnyOrder(
-                    MyMissionResponse(missions[0], true),
-                    MyMissionResponse(missions[1], true)
+            Then("과제 및 과제 제출물이 제출되었는지 확인할 수 있다") {
+                actual shouldContainExactlyInAnyOrder listOf(
+                    MyMissionResponse(mission1, true),
+                    MyMissionResponse(mission2, false)
                 )
             }
-        )
+        }
     }
 
-    @Test
-    fun `과제의 상태가 hidden인 경우 조회할 수 없다`() {
-        val missions = listOf(createMission(id = 1L, hidden = true), createMission(id = 2L, hidden = true))
-        every { evaluationRepository.findAllByRecruitmentId(any()) } returns
-            listOf(createEvaluation(id = 1L), createEvaluation(id = 2L))
-        every { evaluationTargetRepository.existsByUserIdAndEvaluationId(any(), any()) } returns true
-        every { missionRepository.findAllByEvaluationIdIn(any()) } returns missions
-        every { assignmentRepository.findAllByUserId(any()) } returns listOf(
-            createAssignment(userId = userId, missionId = 1L),
-            createAssignment(userId = userId, missionId = 2L)
-        )
-
-        val responses = missionService.findAllByUserIdAndRecruitmentId(userId, recruitmentId)
-
-        assertThat(responses).isEmpty()
-    }
-
-    @Test
-    fun `과제를 삭제한다`() {
+    Given("과제 제출물을 제출할 수 없는 과제가 있는 경우") {
         val mission = createMission(submittable = false)
+
         every { missionRepository.findByIdOrNull(mission.id) } returns mission
         every { missionRepository.deleteById(any()) } just Runs
 
-        assertDoesNotThrow { missionService.deleteById(mission.id) }
+        When("해당 과제를 삭제하면") {
+            Then("과제를 삭제할 수 있다") {
+                shouldNotThrowAny {
+                    missionService.deleteById(mission.id)
+                }
+            }
+        }
     }
 
-    @Test
-    fun `제출 가능한 상태의 과제를 삭제하면 예외가 발생한다`() {
+    Given("과제 제출물을 제출할 수 있는 과제가 있는 경우") {
         val mission = createMission(submittable = true)
+
         every { missionRepository.findByIdOrNull(mission.id) } returns mission
         every { missionRepository.deleteById(any()) } just Runs
 
-        assertThrows<IllegalStateException> { missionService.deleteById(mission.id) }
+        When("해당 과제를 삭제하면") {
+            Then("예외가 발생한다") {
+                shouldThrow<IllegalStateException> {
+                    missionService.deleteById(mission.id)
+                }
+            }
+        }
     }
 
-    @Test
-    fun `존재하지 않는 과제를 삭제하면 예외가 발생한다`() {
-        val missionId = 1L
-        every { missionRepository.findByIdOrNull(missionId) } returns null
+    Given("과제가 존재하지 않는 경우") {
+        every { missionRepository.findByIdOrNull(any()) } returns null
         every { missionRepository.deleteById(any()) } just Runs
 
-        assertThrows<NoSuchElementException> { missionService.deleteById(missionId) }
+        When("해당 과제를 삭제하면") {
+            Then("예외가 발생한다") {
+                shouldThrow<NoSuchElementException> {
+                    missionService.deleteById(1L)
+                }
+            }
+        }
     }
-}
+
+    afterRootTest {
+        clearAllMocks()
+    }
+})

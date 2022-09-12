@@ -1,79 +1,79 @@
 package apply.application
 
 import apply.createApplicationForm
+import apply.createCheater
 import apply.createUser
 import apply.domain.applicationform.ApplicationFormRepository
-import apply.domain.cheater.Cheater
 import apply.domain.cheater.CheaterRepository
 import apply.domain.user.UserRepository
+import io.kotest.core.spec.style.BehaviorSpec
+import io.kotest.matchers.booleans.shouldBeFalse
+import io.kotest.matchers.booleans.shouldBeTrue
+import io.kotest.matchers.collections.shouldHaveSize
+import io.mockk.clearAllMocks
 import io.mockk.every
-import io.mockk.impl.annotations.MockK
-import io.mockk.slot
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Nested
-import org.junit.jupiter.api.Test
-import support.test.UnitTest
+import io.mockk.mockk
+import support.test.spec.afterRootTest
 
-@UnitTest
-class ApplicantServiceTest {
-    @MockK
-    private lateinit var userRepository: UserRepository
+class ApplicantServiceTest : BehaviorSpec({
+    val applicationFormRepository = mockk<ApplicationFormRepository>()
+    val userRepository = mockk<UserRepository>()
+    val cheaterRepository = mockk<CheaterRepository>()
 
-    @MockK
-    private lateinit var cheaterRepository: CheaterRepository
+    val applicantService = ApplicantService(applicationFormRepository, userRepository, cheaterRepository)
 
-    @MockK
-    private lateinit var applicationFormRepository: ApplicationFormRepository
+    Given("특정 모집에 지원한 부정행위자가 있는 경우") {
+        val recruitmentId = 1L
+        val user = createUser(id = 1L)
+        val cheater = createCheater(email = user.email)
 
-    private lateinit var applicantService: ApplicantService
+        every { applicationFormRepository.findByRecruitmentIdAndSubmittedTrue(any()) } returns listOf(
+            createApplicationForm(userId = user.id, recruitmentId = recruitmentId)
+        )
+        every { cheaterRepository.findAll() } returns listOf(cheater)
+        every { userRepository.findAllById(any()) } returns listOf(createUser(email = cheater.email, id = user.id))
 
-    @BeforeEach
-    internal fun setUp() {
-        applicantService = ApplicantService(applicationFormRepository, userRepository, cheaterRepository)
+        When("특정 모집에 지원한 지원 정보를 조회하면") {
+            val actual = applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId)
+
+            Then("지원 정보 및 부정행위 여부를 확인할 수 있다") {
+                actual shouldHaveSize 1
+                actual[0].isCheater.shouldBeTrue()
+            }
+        }
     }
 
-    @Nested
-    inner class Find {
-        @BeforeEach
-        internal fun setUp() {
-            val userId = 1L
-            val email = "email@email.com"
+    Given("이름이나 이메일에 특정 키워드를 포함하는 지원자와 부정행위자가 있는 경우") {
+        val recruitmentId = 1L
+        val keyword = "amazzi"
+        val user1 = createUser(name = keyword, id = 1L)
+        val user2 = createUser(email = "$keyword@email.com", id = 2L)
+        val cheater = createCheater(email = user1.email)
 
-            slot<Long>().also { slot ->
-                every { applicationFormRepository.findByRecruitmentIdAndSubmittedTrue(capture(slot)) } answers {
-                    listOf(createApplicationForm(recruitmentId = slot.captured))
-                }
+        every { applicationFormRepository.findByRecruitmentIdAndSubmittedTrue(any()) } returns listOf(
+            createApplicationForm(userId = user1.id, recruitmentId = recruitmentId),
+            createApplicationForm(userId = user2.id, recruitmentId = recruitmentId)
+        )
+        every { cheaterRepository.findAll() } returns listOf(cheater)
+        every { userRepository.findAllByKeyword(keyword) } returns listOf(user1, user2)
+
+        When("특정 키워드로 특정 모집에 지원한 지원 정보를 조회하면") {
+            val actual = applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId, keyword)
+
+            Then("지원 정보 및 부정행위 여부를 확인할 수 있다") {
+                actual shouldHaveSize 2
+                actual.filter { it.hasKeywordInNameOrEmail(keyword) } shouldHaveSize 2
+                actual[0].isCheater.shouldBeTrue()
+                actual[1].isCheater.shouldBeFalse()
             }
-
-            every { cheaterRepository.findAll() } returns listOf(Cheater(email))
-            slot<Iterable<Long>>().also { slot ->
-                every { userRepository.findAllById(capture(slot)) } answers {
-                    slot.captured.map { createUser(id = it, email = email) }
-                }
-            }
-
-            slot<String>().also { slot ->
-                every { userRepository.findAllByKeyword(capture(slot)) } answers {
-                    listOf(createUser(name = slot.captured, id = userId, email = email))
-                }
-            }
-        }
-
-        @Test
-        fun `지원자 정보와 부정행위자 여부를 함께 제공한다`() {
-            val actual = applicantService.findAllByRecruitmentIdAndKeyword(1L)
-
-            assertThat(actual).hasSize(1)
-            assertThat(actual[0].isCheater).isTrue
-        }
-
-        @Test
-        fun `키워드로 찾은 지원자 정보와 부정행위자 여부를 함께 제공한다`() {
-            val actual = applicantService.findAllByRecruitmentIdAndKeyword(1L, "amazzi")
-
-            assertThat(actual).hasSize(1)
-            assertThat(actual[0].isCheater).isTrue
         }
     }
+
+    afterRootTest {
+        clearAllMocks()
+    }
+})
+
+private fun ApplicantAndFormResponse.hasKeywordInNameOrEmail(keyword: String): Boolean {
+    return name.contains(keyword) || email.contains(keyword)
 }

@@ -1,35 +1,27 @@
 package apply.domain.recruitment
 
 import apply.createRecruitment
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertAll
-import org.springframework.boot.autoconfigure.domain.EntityScan
+import io.kotest.core.spec.style.ExpectSpec
+import io.kotest.extensions.spring.SpringTestExtension
+import io.kotest.extensions.spring.SpringTestLifecycleMode
+import io.kotest.matchers.collections.shouldBeEmpty
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories
-import org.springframework.data.repository.findByIdOrNull
 import support.test.RepositoryTest
 
-@EnableJpaRepositories("apply.domain.recruitment")
-@EntityScan("apply.domain.recruitment")
 @RepositoryTest
 class RecruitmentRepositoryTest(
     private val recruitmentRepository: RecruitmentRepository,
     private val entityManager: TestEntityManager
-) {
-    @Test
-    fun `삭제 시 논리적 삭제가 적용된다`() {
-        val recruitment = recruitmentRepository.save(createRecruitment())
-        flushAndClear()
-        recruitmentRepository.deleteById(recruitment.id)
-        assertAll(
-            { assertThat(recruitmentRepository.findAll()).hasSize(0) },
-            { assertThat(recruitmentRepository.findByIdOrNull(recruitment.id)).isNull() }
-        )
-    }
+) : ExpectSpec({
+    extensions(SpringTestExtension(SpringTestLifecycleMode.Root))
 
-    private fun flushAndClear() {
-        entityManager.flush()
-        entityManager.clear()
+    context("모집 삭제") {
+        val recruitment = recruitmentRepository.save(createRecruitment())
+
+        expect("삭제 시 논리적 삭제가 적용된다") {
+            recruitmentRepository.deleteById(recruitment.id)
+            val actual = recruitmentRepository.findAll()
+            actual.shouldBeEmpty()
+        }
     }
-}
+})

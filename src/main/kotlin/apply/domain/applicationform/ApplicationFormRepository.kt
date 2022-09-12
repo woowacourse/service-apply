@@ -8,5 +8,4 @@ interface ApplicationFormRepository : JpaRepository<ApplicationForm, Long> {
     fun findAllByUserId(userId: Long): List<ApplicationForm>
     fun findAllByUserIdAndSubmittedTrue(userId: Long): List<ApplicationForm>
     fun existsByRecruitmentIdAndUserId(recruitmentId: Long, userId: Long): Boolean
-    fun existsByUserIdAndSubmittedTrue(userId: Long): Boolean
 }

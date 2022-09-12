@@ -1,39 +1,30 @@
 package apply.domain.applicationform
 
 import apply.createApplicationForm
-import apply.pass
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertAll
+import io.kotest.core.spec.style.ExpectSpec
+import io.kotest.extensions.spring.SpringTestExtension
+import io.kotest.extensions.spring.SpringTestLifecycleMode
+import io.kotest.matchers.nulls.shouldNotBeNull
 import support.test.RepositoryTest
+import java.time.LocalDateTime.now
 
 @RepositoryTest
 class ApplicationFormRepositoryTest(
     private val applicationFormRepository: ApplicationFormRepository
-) {
-    @BeforeEach
-    internal fun setUp() {
-        val applicationForm = createApplicationForm()
-        val submittedApplicationForm = createApplicationForm(recruitmentId = 2L).apply { submit(pass) }
+) : ExpectSpec({
+    extensions(SpringTestExtension(SpringTestLifecycleMode.Root))
 
-        applicationFormRepository.saveAll(listOf(applicationForm, submittedApplicationForm))
-    }
-
-    @Test
-    fun `지원자가 지원한 모집의 지원서를 가져온다`() {
-        val form = applicationFormRepository.findByRecruitmentIdAndUserId(1L, 1L)!!
-
-        assertAll(
-            { assertThat(form.referenceUrl).isEqualTo("https://example.com") },
-            { assertThat(form.id).isEqualTo(1L) },
-            { assertThat(form.answers.items[0].contents).isEqualTo("스타트업을 하고 싶습니다.") },
-            { assertThat(form.answers.items[1].contents).isEqualTo("책임감") }
+    context("지원서 조회") {
+        applicationFormRepository.saveAll(
+            listOf(
+                createApplicationForm(userId = 1L, recruitmentId = 1L),
+                createApplicationForm(userId = 1L, recruitmentId = 2L, submitted = true, submittedDateTime = now())
+            )
         )
-    }
 
-    @Test
-    fun `지원자가 지원서를 제출한 이력이 있는지 확인한다`() {
-        assertThat(applicationFormRepository.existsByUserIdAndSubmittedTrue(1L)).isTrue()
+        expect("지원자가 지원한 모집에 대한 지원서를 조회한다") {
+            val actual = applicationFormRepository.findByRecruitmentIdAndUserId(1L, 1L)
+            actual.shouldNotBeNull()
+        }
     }
-}
+})

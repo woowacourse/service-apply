@@ -4,142 +4,128 @@ import apply.createRecruitment
 import apply.createRecruitmentData
 import apply.createRecruitmentItem
 import apply.createRecruitmentItemData
-import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitmentitem.RecruitmentItem
 import apply.domain.recruitmentitem.RecruitmentItemRepository
+import apply.domain.term.Term
 import apply.domain.term.TermRepository
+import apply.domain.term.getById
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.style.BehaviorSpec
 import io.mockk.Runs
+import io.mockk.clearAllMocks
 import io.mockk.every
-import io.mockk.impl.annotations.MockK
 import io.mockk.just
-import io.mockk.slot
+import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Nested
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.springframework.data.repository.findByIdOrNull
-import support.test.UnitTest
 
-@UnitTest
-internal class RecruitmentServiceTest {
-    @MockK
-    lateinit var recruitmentRepository: RecruitmentRepository
+class RecruitmentServiceTest : BehaviorSpec({
+    val recruitmentRepository = mockk<RecruitmentRepository>()
+    val recruitmentItemRepository = mockk<RecruitmentItemRepository>()
+    val termRepository = mockk<TermRepository>()
 
-    @MockK
-    private lateinit var recruitmentItemRepository: RecruitmentItemRepository
+    val recruitmentService = RecruitmentService(recruitmentRepository, recruitmentItemRepository, termRepository)
 
-    @MockK
-    private lateinit var termRepository: TermRepository
+    Given("특정 기수가 있는 경우") {
+        every { termRepository.getById(any()) } returns Term.SINGLE
+        every { recruitmentRepository.save(any()) } returns createRecruitment(id = 1L)
+        every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns emptyList()
+        every { recruitmentItemRepository.deleteAll(any()) } just Runs
+        every { recruitmentItemRepository.saveAll<RecruitmentItem>(any()) } returns emptyList()
 
-    private lateinit var recruitmentService: RecruitmentService
-
-    @BeforeEach
-    internal fun setUp() {
-        recruitmentService = RecruitmentService(recruitmentRepository, recruitmentItemRepository, termRepository)
-    }
-
-    @Nested
-    inner class Save {
-        @BeforeEach
-        internal fun setUp() {
-            slot<Recruitment>().also { slot ->
-                every { recruitmentRepository.save(capture(slot)) } answers {
-                    slot.captured.run {
-                        Recruitment(title, period, 0L, recruitable, hidden, id)
-                    }
-                }
-            }
-            every { recruitmentItemRepository.deleteAll(any()) } just Runs
-            slot<List<RecruitmentItem>>().also { slot ->
-                every { recruitmentItemRepository.saveAll(capture(slot)) } answers {
-                    slot.captured.run {
-                        map {
-                            RecruitmentItem(
-                                it.recruitmentId,
-                                it.title,
-                                it.position,
-                                it.maximumLength,
-                                it.description,
-                                it.id
-                            )
-                        }
-                    }
-                }
-            }
-        }
-
-        @Test
-        fun `지원 항목 없이 새 지원을 생성하면 지원만 저장한다`() {
-            every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns emptyList()
-
+        When("모집 항목 없이 해당 기수에 대한 모집을 생성하면") {
             recruitmentService.save(createRecruitmentData())
 
-            verify { recruitmentRepository.save(any<Recruitment>()) }
-            verify { recruitmentItemRepository.deleteAll(mutableListOf()) }
-            verify { recruitmentItemRepository.saveAll(mutableListOf()) }
+            Then("모집만 저장된다") {
+                verify(exactly = 1) { recruitmentRepository.save(createRecruitment()) }
+                verify(exactly = 1) { recruitmentItemRepository.deleteAll(emptyList()) }
+                verify(exactly = 1) { recruitmentItemRepository.saveAll(emptyList()) }
+            }
         }
 
-        @Test
-        fun `지원 항목이 있는 경우 새 지원을 생성하면 지원 및 지원 항목을 저장한다`() {
-            every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns emptyList()
-
+        When("해당 기수에 대한 모집을 모집 항목과 함께 생성하면") {
             recruitmentService.save(createRecruitmentData(recruitmentItems = listOf(createRecruitmentItemData())))
 
-            verify { recruitmentRepository.save(any<Recruitment>()) }
-            verify { recruitmentItemRepository.deleteAll(mutableListOf()) }
-            verify { recruitmentItemRepository.saveAll(any<List<RecruitmentItem>>()) }
+            Then("모집 및 모집 항목이 저장된다") {
+                verify(exactly = 1) { recruitmentRepository.save(createRecruitment()) }
+                verify(exactly = 1) { recruitmentItemRepository.deleteAll(emptyList()) }
+                verify(exactly = 1) { recruitmentItemRepository.saveAll<RecruitmentItem>(any()) }
+            }
         }
+    }
 
-        @Test
-        fun `지원 항목이 없는 지원을 수정하면 지원만 수정한다`() {
-            every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns emptyList()
+    Given("모집 항목이 없는 특정 모집이 있는 경우") {
+        val recruitment = createRecruitment(id = 1L)
 
-            recruitmentService.save(createRecruitmentData(id = 1L))
+        every { termRepository.getById(any()) } returns Term.SINGLE
+        every { recruitmentRepository.save(any()) } returns recruitment
+        every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns emptyList()
+        every { recruitmentItemRepository.deleteAll(any()) } just Runs
+        every { recruitmentItemRepository.saveAll<RecruitmentItem>(any()) } returns emptyList()
 
-            verify { recruitmentRepository.save(createRecruitment(id = 1L)) }
-            verify { recruitmentItemRepository.deleteAll(mutableListOf()) }
-            verify { recruitmentItemRepository.saveAll(mutableListOf()) }
+        When("해당 모집을 수정하면") {
+            recruitmentService.save(createRecruitmentData(id = recruitment.id))
+
+            Then("해당 모집만 수정된다") {
+                verify(exactly = 1) { recruitmentRepository.save(createRecruitment(id = 1L)) }
+                verify(exactly = 1) { recruitmentItemRepository.deleteAll(emptyList()) }
+                verify(exactly = 1) { recruitmentItemRepository.saveAll<RecruitmentItem>(any()) }
+            }
         }
+    }
 
-        @Test
-        fun `지원 항목이 있는 지원에 대한 일부 지원 항목을 삭제하면 나머지 지원 항목만 수정한다`() {
-            every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(1L) } returns listOf(
-                createRecruitmentItem(id = 1L),
-                createRecruitmentItem(id = 2L)
-            )
+    Given("모집 항목이 있는 특정 모집이 있는 경우") {
+        val recruitment = createRecruitment(id = 1L)
+        val recruitmentItem1 = createRecruitmentItem(id = 1L)
+        val recruitmentItem2 = createRecruitmentItem(id = 2L)
+        val recruitmentItems = listOf(recruitmentItem1, recruitmentItem2)
 
+        every { termRepository.getById(any()) } returns Term.SINGLE
+        every { recruitmentRepository.save(any()) } returns recruitment
+        every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns recruitmentItems
+        every { recruitmentItemRepository.deleteAll(any()) } just Runs
+        every { recruitmentItemRepository.saveAll<RecruitmentItem>(any()) } returns emptyList()
+
+        When("일부 모집 항목을 삭제하고 모집을 수정하면") {
             recruitmentService.save(
                 createRecruitmentData(
-                    id = 1L,
-                    recruitmentItems = listOf(createRecruitmentItemData(id = 2L))
+                    recruitmentItems = listOf(createRecruitmentItemData(id = recruitmentItem1.id)),
+                    id = recruitment.id
                 )
             )
 
-            verify { recruitmentRepository.save(createRecruitment(id = 1L)) }
-            verify { recruitmentItemRepository.deleteAll(listOf(createRecruitmentItem(id = 1L))) }
-            verify { recruitmentItemRepository.saveAll(listOf(createRecruitmentItem(id = 2L))) }
+            Then("나머지 모집 항목만 수정된다") {
+                verify(exactly = 1) { recruitmentItemRepository.deleteAll(listOf(recruitmentItem2)) }
+                verify(exactly = 1) { recruitmentItemRepository.saveAll(listOf(recruitmentItem1)) }
+            }
         }
 
-        @Test
-        fun `지원 항목이 있는 지원에 대한 모든 지원 항목을 삭제하면 모든 지원 항목을 삭제한다`() {
-            every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(1L) } returns listOf(
-                createRecruitmentItem(id = 1L)
-            )
+        When("모든 모집 항목을 삭제하고 모집을 수정하면") {
+            recruitmentService.save(createRecruitmentData(recruitmentItems = emptyList(), id = recruitment.id))
 
-            recruitmentService.save(createRecruitmentData(id = 1L))
-
-            verify { recruitmentRepository.save(createRecruitment(id = 1L)) }
-            verify { recruitmentItemRepository.deleteAll(listOf(createRecruitmentItem(id = 1L))) }
-            verify { recruitmentItemRepository.saveAll(mutableListOf()) }
+            Then("모든 모집 항목이 삭제된다") {
+                verify(exactly = 1) { recruitmentItemRepository.deleteAll(recruitmentItems) }
+                verify(exactly = 1) { recruitmentItemRepository.saveAll(emptyList()) }
+            }
         }
     }
 
-    @Test
-    fun `모집 중인 모집은 삭제할 수 없다`() {
+    Given("모집 중인 모집이 있는 경우") {
         val recruitment = createRecruitment(recruitable = true)
+
         every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
-        assertThrows<IllegalStateException> { recruitmentService.deleteById(recruitment.id) }
+
+        When("해당 모집을 삭제하면") {
+            Then("예외가 발생한다") {
+                shouldThrow<IllegalStateException> {
+                    recruitmentService.deleteById(recruitment.id)
+                }
+            }
+        }
     }
-}
+
+    afterTest {
+        clearAllMocks(answers = false)
+    }
+})

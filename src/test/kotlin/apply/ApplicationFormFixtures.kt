@@ -17,7 +17,8 @@ fun createApplicationForm(
     referenceUrl: String = "https://example.com",
     applicationFormAnswers: ApplicationFormAnswers = createApplicationFormAnswers(),
     submitted: Boolean = false,
-    submittedDateTime: LocalDateTime? = null
+    submittedDateTime: LocalDateTime? = null,
+    id: Long = 0L
 ): ApplicationForm {
     return ApplicationForm(
         userId,
@@ -25,7 +26,8 @@ fun createApplicationForm(
         referenceUrl,
         applicationFormAnswers,
         submitted,
-        submittedDateTime
+        submittedDateTime,
+        id = id
     )
 }
 

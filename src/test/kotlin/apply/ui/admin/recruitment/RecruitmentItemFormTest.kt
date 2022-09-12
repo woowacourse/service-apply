@@ -7,7 +7,7 @@ import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 
 class RecruitmentItemFormTest : StringSpec({
-    "유효한 값을 입력하는 경우" {
+    "유효한 값을 입력한 경우" {
         val actual = createRecruitmentItemForm().bindOrNull()
         actual shouldBe createRecruitmentItemData()
     }
