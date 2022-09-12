@@ -96,12 +96,15 @@ tasks {
         dependsOn(test)
         baseDirFollowsSourceFile()
     }
-    val copyDocs = register<Copy>("copyDocs") {
+    register<Copy>("copyDocs") {
         dependsOn(asciidoctor)
         from("${asciidoctor.get().outputDir}/index.html")
         into("src/main/resources/static/docs")
     }
     bootJar {
-        dependsOn(copyDocs)
+        dependsOn(asciidoctor)
+        from("${asciidoctor.get().outputDir}/index.html") {
+            into("static/docs")
+        }
     }
 }

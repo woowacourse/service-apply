@@ -7,7 +7,7 @@ phases:
     commands:
       - echo Build Starting on `date`
       - chmod +x ./gradlew
-      - ./gradlew clean build -Pvaadin.productionMode -x test
+      - ./gradlew clean build -Pvaadin.productionMode
   post_build:
     commands:
       - echo $(basename ./build/libs/*.jar)
