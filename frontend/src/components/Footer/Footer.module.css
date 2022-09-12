@@ -65,15 +65,10 @@
 
 @media screen and (max-width: 513px) {
   .logo {
-    width: 9rem;
+    height: 1.5rem;
   }
 
   .copyright {
     font-size: 0.75rem;
-  }
-
-  .social a {
-    width: 2rem;
-    height: 2rem;
   }
 }
