@@ -10,6 +10,8 @@ import apply.domain.recruitment.getById
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 
+const val NO_BEFORE_EVALUATION: String = "이전 평가 없음"
+
 @Transactional
 @Service
 class EvaluationService(
@@ -36,11 +38,11 @@ class EvaluationService(
             }
         )
         return EvaluationResponse(
-            evaluation,
-            request.recruitment.title,
-            request.recruitment.id,
-            request.beforeEvaluation.title,
-            request.beforeEvaluation.id
+            evaluation.id,
+            evaluation.title,
+            evaluation.description,
+            evaluation.recruitmentId,
+            evaluation.beforeEvaluationId
         )
     }
 
@@ -55,24 +57,21 @@ class EvaluationService(
         val recruitment = recruitmentRepository.getById(evaluation.recruitmentId)
         val beforeEvaluation = findById(evaluation.beforeEvaluationId)
         return EvaluationResponse(
-            evaluation,
-            recruitment.title,
+            evaluation.id,
+            evaluation.title,
+            evaluation.description,
             recruitment.id,
-            beforeEvaluation?.title ?: "이전 평가 없음",
             beforeEvaluation?.id ?: 0
         )
     }
 
-    fun findAllWithRecruitment(): List<EvaluationResponse> {
+    fun findAllWithRecruitment(): List<EvaluationGridResponse> {
         return evaluationRepository.findAll().map {
-            EvaluationResponse(
+            EvaluationGridResponse(
                 it.id,
                 it.title,
-                it.description,
                 recruitmentRepository.getOne(it.recruitmentId).title,
-                it.recruitmentId,
-                findById(it.beforeEvaluationId)?.title ?: "이전 평가 없음",
-                it.beforeEvaluationId
+                findById(it.beforeEvaluationId)?.title ?: NO_BEFORE_EVALUATION
             )
         }
     }

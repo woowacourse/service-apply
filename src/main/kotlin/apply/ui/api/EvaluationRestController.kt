@@ -1,6 +1,7 @@
 package apply.ui.api
 
 import apply.application.EvaluationData
+import apply.application.EvaluationGridResponse
 import apply.application.EvaluationResponse
 import apply.application.EvaluationService
 import apply.domain.user.User
@@ -45,7 +46,7 @@ class EvaluationRestController(
     fun findAllWithRecruitment(
         @PathVariable recruitmentId: Long,
         @LoginUser(administrator = true) user: User
-    ): ResponseEntity<ApiResponse<List<EvaluationResponse>>> {
+    ): ResponseEntity<ApiResponse<List<EvaluationGridResponse>>> {
         val responses = evaluationService.findAllWithRecruitment()
         return ResponseEntity.ok(ApiResponse.success(responses))
     }

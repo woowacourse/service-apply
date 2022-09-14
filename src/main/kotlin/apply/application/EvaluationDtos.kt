@@ -62,13 +62,7 @@ data class EvaluationData(
         title = evaluation.title,
         description = evaluation.description,
         recruitment = RecruitmentSelectData(recruitment),
-        beforeEvaluation = EvaluationSelectData(
-            beforeEvaluation ?: Evaluation(
-                title = "이전 평가 없음",
-                description = "이전 평가 없음",
-                recruitmentId = recruitment.id
-            )
-        ),
+        beforeEvaluation = beforeEvaluation?.let(::EvaluationSelectData) ?: EvaluationSelectData(NO_BEFORE_EVALUATION),
         evaluationItems = evaluationItems.map(::EvaluationItemData),
         id = evaluation.id
     )
@@ -106,27 +100,16 @@ data class EvaluationResponse(
     val id: Long,
     val title: String,
     val description: String,
-    val recruitmentTitle: String,
     val recruitmentId: Long,
-    val beforeEvaluationTitle: String = "",
-    val beforeEvaluationId: Long = 0L
-) {
-    constructor(
-        evaluation: Evaluation,
-        recruitmentTitle: String,
-        recruitmentId: Long,
-        beforeEvaluationTitle: String,
-        beforeEvaluationId: Long
-    ) : this(
-        evaluation.id,
-        evaluation.title,
-        evaluation.description,
-        recruitmentTitle,
-        recruitmentId,
-        beforeEvaluationTitle,
-        beforeEvaluationId
-    )
-}
+    val beforeEvaluationId: Long
+)
+
+data class EvaluationGridResponse(
+    val id: Long,
+    val title: String,
+    val recruitmentTitle: String,
+    val beforeEvaluationTitle: String
+)
 
 data class EvaluationItemResponse(
     val title: String,
