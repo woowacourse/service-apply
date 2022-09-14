@@ -12,6 +12,8 @@ import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
+const val NO_BEFORE_EVALUATION: String = "이전 평가 없음"
+
 data class EvaluationSelectData(
     @field:NotBlank
     @field:Size(min = 1, max = 31)
@@ -102,14 +104,29 @@ data class EvaluationResponse(
     val description: String,
     val recruitmentId: Long,
     val beforeEvaluationId: Long
-)
+) {
+    constructor(evaluation: Evaluation) : this(
+        evaluation.id,
+        evaluation.title,
+        evaluation.description,
+        evaluation.recruitmentId,
+        evaluation.beforeEvaluationId
+    )
+}
 
 data class EvaluationGridResponse(
     val id: Long,
     val title: String,
     val recruitmentTitle: String,
     val beforeEvaluationTitle: String
-)
+) {
+    constructor(evaluation: Evaluation, recruitment: Recruitment, beforeEvaluation: Evaluation?) : this(
+        evaluation.id,
+        evaluation.title,
+        recruitment.title,
+        beforeEvaluation?.title ?: NO_BEFORE_EVALUATION
+    )
+}
 
 data class EvaluationItemResponse(
     val title: String,

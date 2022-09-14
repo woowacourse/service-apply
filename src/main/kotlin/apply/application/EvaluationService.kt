@@ -6,11 +6,8 @@ import apply.domain.evaluation.getById
 import apply.domain.evaluationItem.EvaluationItem
 import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.recruitment.RecruitmentRepository
-import apply.domain.recruitment.getById
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
-
-const val NO_BEFORE_EVALUATION: String = "이전 평가 없음"
 
 @Transactional
 @Service
@@ -37,13 +34,7 @@ class EvaluationService(
                 EvaluationItem(it.title, it.description, it.maximumScore, it.position, evaluation.id, it.id)
             }
         )
-        return EvaluationResponse(
-            evaluation.id,
-            evaluation.title,
-            evaluation.description,
-            evaluation.recruitmentId,
-            evaluation.beforeEvaluationId
-        )
+        return EvaluationResponse(evaluation)
     }
 
     private fun findEvaluationItemsToDelete(evaluationId: Long, excludedItemIds: List<Long>): List<EvaluationItem> {
@@ -53,25 +44,20 @@ class EvaluationService(
     }
 
     fun getById(id: Long): EvaluationResponse {
-        val evaluation = evaluationRepository.getById(id)
-        val recruitment = recruitmentRepository.getById(evaluation.recruitmentId)
-        val beforeEvaluation = findById(evaluation.beforeEvaluationId)
-        return EvaluationResponse(
-            evaluation.id,
-            evaluation.title,
-            evaluation.description,
-            recruitment.id,
-            beforeEvaluation?.id ?: 0
-        )
+        return evaluationRepository.getById(id).let(::EvaluationResponse)
     }
 
     fun findAllWithRecruitment(): List<EvaluationGridResponse> {
-        return evaluationRepository.findAll().map {
+        val evaluations = evaluationRepository.findAll()
+        val recruitmentsById = recruitmentRepository
+            .findAllById(evaluations.map { it.recruitmentId })
+            .associateBy { it.id }
+        val evaluationsById = evaluations.associateBy { it.id }
+        return evaluations.map {
             EvaluationGridResponse(
-                it.id,
-                it.title,
-                recruitmentRepository.getOne(it.recruitmentId).title,
-                findById(it.beforeEvaluationId)?.title ?: NO_BEFORE_EVALUATION
+                it,
+                recruitmentsById.getValue(it.recruitmentId),
+                evaluationsById[it.beforeEvaluationId]
             )
         }
     }
