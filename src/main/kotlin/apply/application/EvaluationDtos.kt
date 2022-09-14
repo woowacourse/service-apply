@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
-const val NO_BEFORE_EVALUATION: String = "이전 평가 없음"
+private const val NO_BEFORE_EVALUATION: String = "이전 평가 없음"
 
 data class EvaluationSelectData(
     @field:NotBlank
@@ -24,6 +24,10 @@ data class EvaluationSelectData(
         evaluation.title,
         evaluation.id
     )
+
+    companion object {
+        fun noBefore(): EvaluationSelectData = EvaluationSelectData(NO_BEFORE_EVALUATION)
+    }
 }
 
 data class RecruitmentSelectData(
@@ -64,7 +68,7 @@ data class EvaluationData(
         title = evaluation.title,
         description = evaluation.description,
         recruitment = RecruitmentSelectData(recruitment),
-        beforeEvaluation = beforeEvaluation?.let(::EvaluationSelectData) ?: EvaluationSelectData(NO_BEFORE_EVALUATION),
+        beforeEvaluation = beforeEvaluation?.let(::EvaluationSelectData) ?: EvaluationSelectData.noBefore(),
         evaluationItems = evaluationItems.map(::EvaluationItemData),
         id = evaluation.id
     )

@@ -3,7 +3,6 @@ package apply.ui.admin.evaluation
 import apply.application.EvaluationData
 import apply.application.EvaluationItemData
 import apply.application.EvaluationSelectData
-import apply.application.NO_BEFORE_EVALUATION
 import apply.application.RecruitmentSelectData
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.select.Select
@@ -39,7 +38,7 @@ class EvaluationForm() : BindingIdentityFormLayout<EvaluationData>(EvaluationDat
     ) : this() {
         recruitment.setItems(recruitments)
         recruitment.addValueChangeListener {
-            val evaluations = listOf(EvaluationSelectData(NO_BEFORE_EVALUATION)) + listener(it.value.id)
+            val evaluations = listOf(EvaluationSelectData.noBefore()) + listener(it.value.id)
             beforeEvaluation.setItems(evaluations)
         }
     }
