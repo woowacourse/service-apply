@@ -6,7 +6,6 @@ import apply.domain.evaluation.getById
 import apply.domain.evaluationItem.EvaluationItem
 import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.recruitment.RecruitmentRepository
-import apply.domain.recruitment.getById
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 
@@ -35,13 +34,7 @@ class EvaluationService(
                 EvaluationItem(it.title, it.description, it.maximumScore, it.position, evaluation.id, it.id)
             }
         )
-        return EvaluationResponse(
-            evaluation,
-            request.recruitment.title,
-            request.recruitment.id,
-            request.beforeEvaluation.title,
-            request.beforeEvaluation.id
-        )
+        return EvaluationResponse(evaluation)
     }
 
     private fun findEvaluationItemsToDelete(evaluationId: Long, excludedItemIds: List<Long>): List<EvaluationItem> {
@@ -51,35 +44,22 @@ class EvaluationService(
     }
 
     fun getById(id: Long): EvaluationResponse {
-        val evaluation = evaluationRepository.getById(id)
-        val recruitment = recruitmentRepository.getById(evaluation.recruitmentId)
-        val beforeEvaluation = findById(evaluation.beforeEvaluationId)
-        return EvaluationResponse(
-            evaluation,
-            recruitment.title,
-            recruitment.id,
-            beforeEvaluation?.title ?: "이전 평가 없음",
-            beforeEvaluation?.id ?: 0
-        )
+        return evaluationRepository.getById(id).let(::EvaluationResponse)
     }
 
-    fun findAllWithRecruitment(): List<EvaluationResponse> {
-        return evaluationRepository.findAll().map {
-            EvaluationResponse(
-                it.id,
-                it.title,
-                it.description,
-                recruitmentRepository.getOne(it.recruitmentId).title,
-                it.recruitmentId,
-                findById(it.beforeEvaluationId)?.title ?: "이전 평가 없음",
-                it.beforeEvaluationId
+    fun findAllWithRecruitment(): List<EvaluationGridResponse> {
+        val evaluations = evaluationRepository.findAll()
+        val recruitmentsById = recruitmentRepository
+            .findAllById(evaluations.map { it.recruitmentId })
+            .associateBy { it.id }
+        val evaluationsById = evaluations.associateBy { it.id }
+        return evaluations.map {
+            EvaluationGridResponse(
+                it,
+                recruitmentsById.getValue(it.recruitmentId),
+                evaluationsById[it.beforeEvaluationId]
             )
         }
-    }
-
-    fun findById(id: Long): Evaluation? {
-        if (id == 0L) return null
-        return evaluationRepository.getById(id)
     }
 
     fun deleteById(id: Long) {
@@ -93,10 +73,6 @@ class EvaluationService(
             .forEach { it.resetBeforeEvaluation() }
     }
 
-    fun findAllByRecruitmentId(recruitmentId: Long): List<Evaluation> {
-        return evaluationRepository.findAllByRecruitmentId(recruitmentId)
-    }
-
     fun getDataById(id: Long): EvaluationData {
         val evaluation = evaluationRepository.getById(id)
         val evaluationItems = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluation.id)
@@ -105,13 +81,18 @@ class EvaluationService(
         return EvaluationData(evaluation, recruitment, beforeEvaluation, evaluationItems)
     }
 
+    private fun findById(id: Long): Evaluation? {
+        if (id == 0L) return null
+        return evaluationRepository.getById(id)
+    }
+
     fun findAllRecruitmentSelectData(): List<RecruitmentSelectData> {
         return recruitmentRepository.findAll()
             .map(::RecruitmentSelectData)
             .sortedByDescending { it.id }
     }
 
-    fun getAllSelectDataByRecruitmentId(id: Long): List<EvaluationSelectData> {
-        return findAllByRecruitmentId(id).map { EvaluationSelectData(it) }
+    fun getAllSelectDataByRecruitmentId(recruitmentId: Long): List<EvaluationSelectData> {
+        return evaluationRepository.findAllByRecruitmentId(recruitmentId).map(::EvaluationSelectData)
     }
 }

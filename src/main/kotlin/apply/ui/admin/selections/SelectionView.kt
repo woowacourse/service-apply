@@ -3,6 +3,7 @@ package apply.ui.admin.selections
 import apply.application.ApplicantAndFormResponse
 import apply.application.ApplicantService
 import apply.application.AssignmentService
+import apply.application.EvaluationSelectData
 import apply.application.EvaluationService
 import apply.application.EvaluationTargetCsvService
 import apply.application.EvaluationTargetResponse
@@ -11,7 +12,6 @@ import apply.application.ExcelService
 import apply.application.RecruitmentItemService
 import apply.application.RecruitmentService
 import apply.domain.applicationform.ApplicationForm
-import apply.domain.evaluation.Evaluation
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.Text
@@ -59,7 +59,8 @@ class SelectionView(
     private val evaluationTargetCsvService: EvaluationTargetCsvService
 ) : VerticalLayout(), HasUrlParameter<Long> {
     private var recruitmentId: Long = 0L
-    private var evaluations: List<Evaluation> = evaluationService.findAllByRecruitmentId(recruitmentId)
+    private var evaluations: List<EvaluationSelectData> =
+        evaluationService.getAllSelectDataByRecruitmentId(recruitmentId)
     private var tabs: Tabs = Tabs()
     private var selectedTabIndex: Int = 0
     private var evaluationFileButtons: HorizontalLayout = createEvaluationFileButtons()
@@ -118,11 +119,10 @@ class SelectionView(
         val userResponses = applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId, keyword)
         tabsToGrids[Tab(TOTAL_APPLIED_USER_LABEL)] = createTotalUsersGrid(userResponses)
 
-        evaluations = evaluationService.findAllByRecruitmentId(recruitmentId)
+        evaluations = evaluationService.getAllSelectDataByRecruitmentId(recruitmentId)
         for (evaluation in evaluations) {
-            val evaluationTargetResponses =
-                evaluationTargetService.findAllByEvaluationIdAndKeyword(evaluation.id, keyword)
-            tabsToGrids[Tab(evaluation.title)] = createEvaluationTargetsGrid(evaluationTargetResponses)
+            val responses = evaluationTargetService.findAllByEvaluationIdAndKeyword(evaluation.id, keyword)
+            tabsToGrids[Tab(evaluation.title)] = createEvaluationTargetsGrid(responses)
         }
         return tabsToGrids
     }

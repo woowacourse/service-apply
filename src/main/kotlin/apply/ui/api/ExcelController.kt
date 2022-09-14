@@ -45,10 +45,10 @@ class ExcelController(
         @LoginUser(administrator = true) user: User
     ): ResponseEntity<InputStreamResource> {
         val excel = excelService.createTargetExcel(evaluationId)
-        val evaluation = evaluationService.findById(evaluationId)
+        val evaluation = evaluationService.getById(evaluationId)
         val headers = HttpHeaders().apply {
             contentDisposition = ContentDisposition.builder("attachment")
-                .filename("${evaluation?.title}.xlsx")
+                .filename("${evaluation.title}.xlsx")
                 .build()
         }
         return ResponseEntity.ok()

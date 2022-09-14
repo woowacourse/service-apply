@@ -12,6 +12,8 @@ import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
+private const val NO_BEFORE_EVALUATION: String = "이전 평가 없음"
+
 data class EvaluationSelectData(
     @field:NotBlank
     @field:Size(min = 1, max = 31)
@@ -22,6 +24,10 @@ data class EvaluationSelectData(
         evaluation.title,
         evaluation.id
     )
+
+    companion object {
+        fun noBefore(): EvaluationSelectData = EvaluationSelectData(NO_BEFORE_EVALUATION)
+    }
 }
 
 data class RecruitmentSelectData(
@@ -62,13 +68,7 @@ data class EvaluationData(
         title = evaluation.title,
         description = evaluation.description,
         recruitment = RecruitmentSelectData(recruitment),
-        beforeEvaluation = EvaluationSelectData(
-            beforeEvaluation ?: Evaluation(
-                title = "이전 평가 없음",
-                description = "이전 평가 없음",
-                recruitmentId = recruitment.id
-            )
-        ),
+        beforeEvaluation = beforeEvaluation?.let(::EvaluationSelectData) ?: EvaluationSelectData.noBefore(),
         evaluationItems = evaluationItems.map(::EvaluationItemData),
         id = evaluation.id
     )
@@ -106,25 +106,29 @@ data class EvaluationResponse(
     val id: Long,
     val title: String,
     val description: String,
-    val recruitmentTitle: String,
     val recruitmentId: Long,
-    val beforeEvaluationTitle: String = "",
-    val beforeEvaluationId: Long = 0L
+    val beforeEvaluationId: Long
 ) {
-    constructor(
-        evaluation: Evaluation,
-        recruitmentTitle: String,
-        recruitmentId: Long,
-        beforeEvaluationTitle: String,
-        beforeEvaluationId: Long
-    ) : this(
+    constructor(evaluation: Evaluation) : this(
         evaluation.id,
         evaluation.title,
         evaluation.description,
-        recruitmentTitle,
-        recruitmentId,
-        beforeEvaluationTitle,
-        beforeEvaluationId
+        evaluation.recruitmentId,
+        evaluation.beforeEvaluationId
+    )
+}
+
+data class EvaluationGridResponse(
+    val id: Long,
+    val title: String,
+    val recruitmentTitle: String,
+    val beforeEvaluationTitle: String
+) {
+    constructor(evaluation: Evaluation, recruitment: Recruitment, beforeEvaluation: Evaluation?) : this(
+        evaluation.id,
+        evaluation.title,
+        recruitment.title,
+        beforeEvaluation?.title ?: NO_BEFORE_EVALUATION
     )
 }
 
