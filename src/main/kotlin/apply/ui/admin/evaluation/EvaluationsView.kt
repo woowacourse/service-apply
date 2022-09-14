@@ -1,6 +1,6 @@
 package apply.ui.admin.evaluation
 
-import apply.application.EvaluationResponse
+import apply.application.EvaluationGridResponse
 import apply.application.EvaluationService
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
@@ -45,16 +45,16 @@ class EvaluationsView(private val evaluationService: EvaluationService) : Vertic
     }
 
     private fun createGrid(): Component {
-        return Grid<EvaluationResponse>(10).apply {
-            addSortableColumn("평가명", EvaluationResponse::title)
-            addSortableColumn("모집명", EvaluationResponse::recruitmentTitle)
-            addSortableColumn("이전 평가명", EvaluationResponse::beforeEvaluationTitle)
+        return Grid<EvaluationGridResponse>(10).apply {
+            addSortableColumn("평가명", EvaluationGridResponse::title)
+            addSortableColumn("모집명", EvaluationGridResponse::recruitmentTitle)
+            addSortableColumn("이전 평가명", EvaluationGridResponse::beforeEvaluationTitle)
             addColumn(createEditAndDeleteButton()).apply { isAutoWidth = true }
             setItems(evaluationService.findAllWithRecruitment())
         }
     }
 
-    private fun createEditAndDeleteButton(): Renderer<EvaluationResponse> {
+    private fun createEditAndDeleteButton(): Renderer<EvaluationGridResponse> {
         return ComponentRenderer { evaluationResponse ->
             HorizontalLayout(
                 createPrimarySmallButton("수정") {

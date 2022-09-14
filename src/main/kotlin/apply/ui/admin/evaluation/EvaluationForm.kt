@@ -4,7 +4,6 @@ import apply.application.EvaluationData
 import apply.application.EvaluationItemData
 import apply.application.EvaluationSelectData
 import apply.application.RecruitmentSelectData
-import apply.domain.evaluation.Evaluation
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.select.Select
 import com.vaadin.flow.component.textfield.TextArea
@@ -39,16 +38,8 @@ class EvaluationForm() : BindingIdentityFormLayout<EvaluationData>(EvaluationDat
     ) : this() {
         recruitment.setItems(recruitments)
         recruitment.addValueChangeListener {
-            val evaluations: List<EvaluationSelectData> = mutableListOf(
-                EvaluationSelectData(
-                    Evaluation(
-                        title = "이전 평가 없음",
-                        description = "이전 평가 없음",
-                        recruitmentId = it.value.id
-                    )
-                )
-            )
-            beforeEvaluation.setItems(evaluations.plus(listener(it.value.id)))
+            val evaluations = listOf(EvaluationSelectData.noBefore()) + listener(it.value.id)
+            beforeEvaluation.setItems(evaluations)
         }
     }
 

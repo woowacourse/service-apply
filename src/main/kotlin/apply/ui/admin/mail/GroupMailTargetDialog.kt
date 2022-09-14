@@ -1,11 +1,11 @@
 package apply.ui.admin.mail
 
+import apply.application.EvaluationSelectData
 import apply.application.EvaluationService
 import apply.application.MailTargetResponse
 import apply.application.MailTargetService
 import apply.application.RecruitmentResponse
 import apply.application.RecruitmentService
-import apply.domain.evaluation.Evaluation
 import apply.domain.evaluationtarget.EvaluationStatus
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.button.Button
@@ -55,7 +55,7 @@ class GroupMailTargetDialog(
     }
 
     private fun createSearchFilter(): HorizontalLayout {
-        val evaluationItem = createItemSelect<Evaluation>("평가")
+        val evaluationItem = createItemSelect<EvaluationSelectData>("평가")
         return HorizontalLayout(
             createRecruitmentItem(evaluationItem), evaluationItem, createEvaluationStatusItem(evaluationItem),
         ).apply {
@@ -63,13 +63,13 @@ class GroupMailTargetDialog(
         }
     }
 
-    private fun createRecruitmentItem(evaluationItem: Select<Evaluation>): Select<RecruitmentResponse> {
+    private fun createRecruitmentItem(evaluationItem: Select<EvaluationSelectData>): Select<RecruitmentResponse> {
         return createItemSelect<RecruitmentResponse>("모집").apply {
             setItems(*recruitmentService.findAll().toTypedArray())
             setItemLabelGenerator { it.title }
             addValueChangeListener {
                 evaluationItem.apply {
-                    setItems(*evaluationService.findAllByRecruitmentId(it.value.id).toTypedArray())
+                    setItems(*evaluationService.getAllSelectDataByRecruitmentId(it.value.id).toTypedArray())
                     setItemLabelGenerator { it.title }
                 }
             }
@@ -77,7 +77,7 @@ class GroupMailTargetDialog(
     }
 
     private fun createEvaluationStatusItem(
-        evaluationItem: Select<Evaluation>
+        evaluationItem: Select<EvaluationSelectData>
     ): Select<EvaluationStatus> {
         return createItemSelect<EvaluationStatus>("평가 상태").apply {
             val descriptionTooltip = TooltipConfiguration("평가되지 않은 탈락자는 나오지 않습니다.").apply { trigger = "mouseenter" }

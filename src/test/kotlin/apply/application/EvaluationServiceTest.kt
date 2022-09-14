@@ -3,7 +3,6 @@ package apply.application
 import apply.createEvaluation
 import apply.createRecruitment
 import apply.domain.evaluation.EvaluationRepository
-import apply.domain.evaluation.getById
 import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.recruitment.RecruitmentRepository
 import io.kotest.core.spec.style.BehaviorSpec
@@ -31,18 +30,15 @@ class EvaluationServiceTest : BehaviorSpec({
         val evaluation3 = createEvaluation(title = "평가3", recruitmentId = 2L, beforeEvaluationId = 0L, id = 3L)
 
         every { evaluationRepository.findAll() } returns listOf(evaluation1, evaluation2, evaluation3)
-        every { recruitmentRepository.getOne(1L) } returns recruitment1
-        every { recruitmentRepository.getOne(2L) } returns recruitment2
-        every { evaluationRepository.getById(1L) } returns evaluation1
-        every { evaluationRepository.getById(2L) } returns evaluation2
+        every { recruitmentRepository.findAllById(any()) } returns listOf(recruitment1, recruitment2)
 
         When("모든 평가를 모집과 함께 조회하면") {
             val actual = evaluationService.findAllWithRecruitment()
 
             Then("모집명과 평가명을 확인할 수 있다") {
-                actual[0] shouldBe EvaluationResponse(evaluation1, "모집1", 1L, "이전 평가 없음", 0L)
-                actual[1] shouldBe EvaluationResponse(evaluation2, "모집1", 1L, "평가1", 1L)
-                actual[2] shouldBe EvaluationResponse(evaluation3, "모집2", 2L, "이전 평가 없음", 0L)
+                actual[0] shouldBe EvaluationGridResponse(evaluation1.id, "평가1", "모집1", "이전 평가 없음")
+                actual[1] shouldBe EvaluationGridResponse(evaluation2.id, "평가2", "모집1", "평가1")
+                actual[2] shouldBe EvaluationGridResponse(evaluation3.id, "평가3", "모집2", "이전 평가 없음")
             }
         }
     }
