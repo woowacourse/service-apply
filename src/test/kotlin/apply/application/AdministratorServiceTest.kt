@@ -5,90 +5,131 @@ import apply.createAdministrator
 import apply.createAdministratorData
 import apply.domain.administrator.AdministratorRepository
 import apply.domain.administrator.getById
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.style.BehaviorSpec
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.shouldBe
+import io.mockk.clearAllMocks
 import io.mockk.every
-import io.mockk.impl.annotations.MockK
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertDoesNotThrow
-import org.junit.jupiter.api.assertThrows
-import support.test.UnitTest
+import io.mockk.mockk
+import support.test.spec.afterRootTest
 
-@UnitTest
-class AdministratorServiceTest {
+class AdministratorServiceTest : BehaviorSpec({
+    val administratorRepository = mockk<AdministratorRepository>()
 
-    /*
-    TODO : migrate to kotest
-     */
-    @MockK
-    private lateinit var administratorRepository: AdministratorRepository
+    val administratorService = AdministratorService(administratorRepository)
 
-    private lateinit var administratorService: AdministratorService
-
-    @BeforeEach
-    fun setUp() {
-        administratorService = AdministratorService(administratorRepository)
+    Given("특정 관리자명 또는 특정 관리자 아이디를 가진 관리자가 존재하지 않는 경우") {
+        val administrator = createAdministrator()
 
         every { administratorRepository.existsByName(any()) } returns false
         every { administratorRepository.existsByUsername(any()) } returns false
         every { administratorRepository.save(any()) } returns createAdministrator()
-    }
 
-    @Test
-    fun `관리자를 추가한다`() {
-        assertDoesNotThrow { administratorService.save(createAdministratorData()) }
-    }
+        When("관리자를 추가하면") {
+            val actual = administratorService.save(createAdministratorData())
 
-    @Test
-    fun `중복된 아이디로 관리자를 생성할 수 없다`() {
-        every { administratorRepository.existsByUsername(any()) } returns true
-        assertThrows<IllegalStateException> { administratorService.save(createAdministratorData()) }
-    }
-
-    @Test
-    fun `중복된 이름으로 관리자를 생성할 수 없다`() {
-        every { administratorRepository.existsByName(any()) } returns true
-        assertThrows<IllegalStateException> { administratorService.save(createAdministratorData()) }
-    }
-
-    @Test
-    fun `패스워드와 패스워드 확인이 일치하지 않으면 관리자를 생성할 수 없다`() {
-        assertThrows<IllegalStateException> {
-            administratorService.save(
-                createAdministratorData(
-                    password = "ABCD1234", passwordConfirmation = "4321DCBA"
-                )
-            )
+            Then("관리자가 추가된다") {
+                actual shouldBe AdministratorResponse(administrator)
+            }
         }
     }
 
-    @Test
-    fun `관리자 아이디로 관리자를 불러온다`() {
-        every { administratorRepository.findByUsername(any()) } returns createAdministrator()
+    Given("특정 관리자 아이디를 가진 관리자가 존재하는 경우") {
+        val administrator = createAdministrator()
 
-        val administrator = administratorService.loadUserByUsername(ADMINISTRATOR_USERNAME)
+        every { administratorRepository.existsByName(any()) } returns false
+        every { administratorRepository.existsByUsername(any()) } returns true
+        every { administratorRepository.save(any()) } returns createAdministrator()
+        every { administratorRepository.findByUsername(any()) } returns administrator
 
-        assertThat(administrator).isNotNull
+        When("관리자를 추가하면") {
+            Then("예외가 발생한다") {
+                shouldThrow<IllegalStateException> {
+                    administratorService.save(createAdministratorData())
+                }
+            }
+        }
+
+        When("관리자를 불러오면") {
+            val actual = administratorService.loadUserByUsername(ADMINISTRATOR_USERNAME)
+
+            Then("관리자를 불러온다") {
+                actual.username shouldBe ADMINISTRATOR_USERNAME
+            }
+        }
     }
 
-    @Test
-    fun `관리자 목록을 조회한다`() {
+    Given("특정 관리자명을 가진 관리자가 존재하는 경우") {
+        every { administratorRepository.existsByName(any()) } returns true
+        every { administratorRepository.existsByUsername(any()) } returns false
+        every { administratorRepository.save(any()) } returns createAdministrator()
+
+        When("관리자를 추가하면") {
+            Then("예외가 발생한다") {
+                shouldThrow<IllegalStateException> {
+                    administratorService.save(createAdministratorData())
+                }
+            }
+        }
+    }
+
+    Given("패스워드와 패스워드 확인이 일치하지 않는 경우") {
+        every { administratorRepository.existsByName(any()) } returns true
+        every { administratorRepository.existsByUsername(any()) } returns true
+        every { administratorRepository.save(any()) } returns createAdministrator()
+
+        When("관리자를 추가하면") {
+            Then("예외가 발생한다") {
+                shouldThrow<IllegalStateException> {
+                    administratorService.save(
+                        createAdministratorData(
+                            password = "ABCD1234", passwordConfirmation = "4321DCBA"
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+    Given("관리자가 존재하는 경우") {
+        val administrator = createAdministrator()
+
+        every { administratorRepository.getById(any()) } returns administrator
+
+        When("특정 관리자를 조회하면") {
+            val actual = administratorService.findById(administrator.id)
+
+            Then("해당 관리자가 조회된다") {
+                actual shouldBe AdministratorResponse(administrator)
+            }
+        }
+    }
+
+    Given("관리자가 여러 명인 경우") {
+        val administrator1 = createAdministrator(name = "adminA", username = "masterA", id = 1L)
+        val administrator2 = createAdministrator(name = "adminB", username = "masterB", id = 2L)
+        val administrator3 = createAdministrator(name = "adminC", username = "masterC", id = 3L)
         val administrators = listOf(
-            createAdministrator(name = "adminA", username = "masterA", id = 1L),
-            createAdministrator(name = "adminB", username = "masterB", id = 2L),
-            createAdministrator(name = "adminC", username = "masterC", id = 3L)
+            administrator1, administrator2, administrator3
         )
 
         every { administratorRepository.findAll() } returns administrators
 
-        assertThat(administratorService.findAll()).hasSize(3)
+        When("관리자 전체를 조회하면") {
+            val actual = administratorService.findAll()
+
+            Then("모든 관리자가 조회된다") {
+                actual shouldContainExactlyInAnyOrder listOf(
+                    AdministratorResponse(administrator1),
+                    AdministratorResponse(administrator2),
+                    AdministratorResponse(administrator3)
+                )
+            }
+        }
     }
 
-    @Test
-    fun `관리자 단건을 조회한다`() {
-        val administrator = createAdministrator()
-        every { administratorRepository.getById(any()) } returns administrator
-
-        assertThat(administratorService.findById(administrator.id))
+    afterRootTest {
+        clearAllMocks()
     }
-}
+})
