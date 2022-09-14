@@ -62,11 +62,6 @@ class EvaluationService(
         }
     }
 
-    fun findById(id: Long): Evaluation? {
-        if (id == 0L) return null
-        return evaluationRepository.getById(id)
-    }
-
     fun deleteById(id: Long) {
         evaluationRepository.deleteById(id)
         resetBeforeEvaluationContain(id)
@@ -88,6 +83,11 @@ class EvaluationService(
         val recruitment = recruitmentRepository.getOne(evaluation.recruitmentId)
         val beforeEvaluation = findById(evaluation.beforeEvaluationId)
         return EvaluationData(evaluation, recruitment, beforeEvaluation, evaluationItems)
+    }
+
+    private fun findById(id: Long): Evaluation? {
+        if (id == 0L) return null
+        return evaluationRepository.getById(id)
     }
 
     fun findAllRecruitmentSelectData(): List<RecruitmentSelectData> {
