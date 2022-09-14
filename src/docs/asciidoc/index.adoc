@@ -8,5 +8,6 @@
 
 include::application-form.adoc[]
 include::assignment.adoc[]
+include::mission.adoc[]
 include::recruitment.adoc[]
 include::user.adoc[]
