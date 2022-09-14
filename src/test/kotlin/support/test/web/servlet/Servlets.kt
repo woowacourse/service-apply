@@ -5,7 +5,6 @@ import org.springframework.http.HttpMethod
 import org.springframework.test.web.servlet.MockHttpServletRequestDsl
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder
 import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 
@@ -16,9 +15,9 @@ fun MockMvc.multipart(
     block: MockMultipartHttpServletRequestBuilder.() -> Unit = {}
 ): ResultActions {
     val builder = MockMvcRequestBuilders.multipart(urlTemplate, *vars)
-    MockHttpServletRequestBuilder::class.java.getDeclaredField("method").apply {
-        isAccessible = true
-        set(builder, method.name)
+    builder.with {
+        it.method = method.name
+        it
     }
     builder.apply(block)
     return perform(builder)
