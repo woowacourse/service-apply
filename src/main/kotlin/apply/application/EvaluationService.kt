@@ -73,10 +73,6 @@ class EvaluationService(
             .forEach { it.resetBeforeEvaluation() }
     }
 
-    fun findAllByRecruitmentId(recruitmentId: Long): List<Evaluation> {
-        return evaluationRepository.findAllByRecruitmentId(recruitmentId)
-    }
-
     fun getDataById(id: Long): EvaluationData {
         val evaluation = evaluationRepository.getById(id)
         val evaluationItems = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluation.id)
@@ -96,7 +92,7 @@ class EvaluationService(
             .sortedByDescending { it.id }
     }
 
-    fun getAllSelectDataByRecruitmentId(id: Long): List<EvaluationSelectData> {
-        return findAllByRecruitmentId(id).map { EvaluationSelectData(it) }
+    fun getAllSelectDataByRecruitmentId(recruitmentId: Long): List<EvaluationSelectData> {
+        return evaluationRepository.findAllByRecruitmentId(recruitmentId).map(::EvaluationSelectData)
     }
 }
