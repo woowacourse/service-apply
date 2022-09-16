@@ -40,11 +40,11 @@ class MissionService(
 
         val judgeItem = judgeItemRepository.save(
             JudgeItem(
-                mission.id,
-                request.evaluationItem?.id,
-                request.testName,
-                request.programingLanguage,
-                request.judgeItemId
+                missionId = mission.id,
+                evaluationItemId = request.evaluationItem?.id,
+                testName = request.testName,
+                programmingLanguage = request.programmingLanguage,
+                id = request.judgeItemId
             )
         )
 
@@ -104,7 +104,11 @@ class MissionService(
         val judgeItem = judgeItemRepository.findByMissionId(mission.id)
         val evaluationItemOptional = evaluationItemRepository.findById(judgeItem?.evaluationItemId ?: 0L)
         if (evaluationItemOptional.isPresent) {
-            return MissionData(mission, evaluation, JudgeItemData(judgeItem, EvaluationItemData(evaluationItemOptional.get())))
+            return MissionData(
+                mission,
+                evaluation,
+                JudgeItemData(judgeItem, EvaluationItemData(evaluationItemOptional.get()))
+            )
         }
         return MissionData(mission, evaluation, JudgeItemData(judgeItem, null))
     }
