@@ -4,9 +4,8 @@ import apply.domain.evaluation.Evaluation
 import apply.domain.mission.JudgeItem
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionStatus
-import apply.domain.mission.ProgramingLanguage
-import apply.domain.mission.ProgramingLanguage.JAVA
-import apply.domain.mission.ProgramingLanguage.JAVASCRIPT
+import apply.domain.mission.ProgrammingLanguage
+import apply.domain.mission.ProgrammingLanguage.NONE
 import java.time.LocalDateTime
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
@@ -29,9 +28,9 @@ data class MissionData(
     @field:NotBlank
     var description: String = "",
 
-    var testName: String = "",
-    var programingLanguage: ProgramingLanguage = JAVASCRIPT,
-    var evaluationItem: EvaluationItemData = EvaluationItemData(),
+    var testName: String? = "",
+    var programmingLanguage: ProgrammingLanguage? = NONE,
+    var evaluationItem: EvaluationItemData? = EvaluationItemData(),
     var judgeItemId: Long = 0L,
 
     @field:NotNull
@@ -49,7 +48,7 @@ data class MissionData(
         mission.description,
 
         judgeItemData.testName ?: "",
-        judgeItemData.programmingLanguage ?: JAVA,
+        judgeItemData.programmingLanguage ?: NONE,
         judgeItemData.evaluationItemData ?: EvaluationItemData(
             title = "평가 항목 없음",
             maximumScore = 0,
@@ -97,7 +96,7 @@ data class MissionResponse(
     val submittable: Boolean,
     val evaluationItemId: Long?,
     val testName: String?,
-    val programingLanguage: ProgramingLanguage?,
+    val programmingLanguage: ProgrammingLanguage?,
     val startDateTime: LocalDateTime,
     val endDateTime: LocalDateTime,
     val status: MissionStatus
@@ -142,7 +141,7 @@ data class JudgeItemData(
     val id: Long,
     val testName: String?,
     val evaluationItemData: EvaluationItemData?,
-    val programmingLanguage: ProgramingLanguage?
+    val programmingLanguage: ProgrammingLanguage?
 ) {
     constructor(judgeItem: JudgeItem?, evaluationItemData: EvaluationItemData?) : this(
         judgeItem?.id ?: 0L,
