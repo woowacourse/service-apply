@@ -18,7 +18,7 @@ class JudgeItem(
     var testName: String?,
 
     @Enumerated(EnumType.STRING)
-    var programmingLanguage: ProgramingLanguage?,
+    var programmingLanguage: ProgrammingLanguage?,
 
     id: Long = 0L
 ) : BaseEntity(id)
