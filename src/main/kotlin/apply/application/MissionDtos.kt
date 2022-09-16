@@ -94,9 +94,10 @@ data class MissionResponse(
     val title: String,
     val description: String,
     val submittable: Boolean,
-    val evaluationItemId: Long?,
     val testName: String?,
     val programmingLanguage: ProgrammingLanguage?,
+    val evaluationItemId: Long?,
+    val judgeItemId: Long?,
     val startDateTime: LocalDateTime,
     val endDateTime: LocalDateTime,
     val status: MissionStatus
@@ -106,9 +107,10 @@ data class MissionResponse(
         mission.title,
         mission.description,
         mission.submittable,
-        judgeItem?.evaluationItemId,
         judgeItem?.testName,
         judgeItem?.programmingLanguage,
+        judgeItem?.evaluationItemId,
+        judgeItem?.id,
         mission.period.startDateTime,
         mission.period.endDateTime,
         mission.status

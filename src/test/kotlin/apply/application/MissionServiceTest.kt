@@ -2,12 +2,15 @@ package apply.application
 
 import apply.createAssignment
 import apply.createEvaluation
+import apply.createJudgeItem
 import apply.createMission
 import apply.createMissionData
 import apply.createMissionResponse
 import apply.domain.assignment.AssignmentRepository
 import apply.domain.evaluation.EvaluationRepository
+import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.evaluationtarget.EvaluationTargetRepository
+import apply.domain.mission.JudgeItemRepository
 import apply.domain.mission.MissionRepository
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
@@ -26,15 +29,23 @@ class MissionServiceTest : BehaviorSpec({
     val missionRepository = mockk<MissionRepository>()
     val evaluationRepository = mockk<EvaluationRepository>()
     val evaluationTargetRepository = mockk<EvaluationTargetRepository>()
+    val evaluationItemRepository = mockk<EvaluationItemRepository>()
     val assignmentRepository = mockk<AssignmentRepository>()
+    val judgeItemRepository = mockk<JudgeItemRepository>()
 
     val missionService = MissionService(
-        missionRepository, evaluationRepository, evaluationTargetRepository, assignmentRepository
+        missionRepository,
+        evaluationRepository,
+        evaluationTargetRepository,
+        evaluationItemRepository,
+        assignmentRepository,
+        judgeItemRepository
     )
 
     Given("과제가 없는 평가가 있는 경우") {
         every { evaluationRepository.existsById(any()) } returns true
         every { missionRepository.existsByEvaluationId(any()) } returns false
+        every { judgeItemRepository.save(any()) } returns createJudgeItem()
         every { missionRepository.save(any()) } returns createMission()
 
         When("해당 평가에 대한 과제를 생성하면") {
