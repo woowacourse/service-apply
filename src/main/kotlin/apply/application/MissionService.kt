@@ -3,7 +3,10 @@ package apply.application
 import apply.domain.assignment.AssignmentRepository
 import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluation.getById
+import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.evaluationtarget.EvaluationTargetRepository
+import apply.domain.mission.JudgeItem
+import apply.domain.mission.JudgeItemRepository
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionRepository
 import apply.domain.mission.getById
@@ -16,11 +19,13 @@ class MissionService(
     private val missionRepository: MissionRepository,
     private val evaluationRepository: EvaluationRepository,
     private val evaluationTargetRepository: EvaluationTargetRepository,
-    private val assignmentRepository: AssignmentRepository
+    private val evaluationItemRepository: EvaluationItemRepository,
+    private val assignmentRepository: AssignmentRepository,
+    private val judgeItemRepository: JudgeItemRepository
 ) {
     fun save(request: MissionData): MissionResponse {
         validate(request)
-        return missionRepository.save(
+        val mission = missionRepository.save(
             Mission(
                 request.title,
                 request.description,
@@ -31,7 +36,19 @@ class MissionService(
                 request.hidden,
                 request.id
             )
-        ).let(::MissionResponse)
+        )
+
+        val judgeItem = judgeItemRepository.save(
+            JudgeItem(
+                mission.id,
+                request.evaluationItem?.id,
+                request.testName,
+                request.programingLanguage,
+                request.judgeItemId
+            )
+        )
+
+        return MissionResponse(mission, judgeItem)
     }
 
     private fun validate(request: MissionData) {
@@ -54,7 +71,9 @@ class MissionService(
     }
 
     fun getById(id: Long): MissionResponse {
-        return missionRepository.getById(id).let(::MissionResponse)
+        val mission = missionRepository.getById(id)
+        val judgeItem = judgeItemRepository.findByMissionId(mission.id)
+        return MissionResponse(mission, judgeItem)
     }
 
     fun findAllByRecruitmentId(recruitmentId: Long): List<MissionAndEvaluationResponse> {
@@ -82,6 +101,11 @@ class MissionService(
     fun getDataById(id: Long): MissionData {
         val mission = missionRepository.getById(id)
         val evaluation = evaluationRepository.getById(mission.evaluationId)
-        return MissionData(mission, evaluation)
+        val judgeItem = judgeItemRepository.findByMissionId(mission.id)
+        val evaluationItemOptional = evaluationItemRepository.findById(judgeItem?.evaluationItemId ?: 0L)
+        if (evaluationItemOptional.isPresent) {
+            return MissionData(mission, evaluation, JudgeItemData(judgeItem, EvaluationItemData(evaluationItemOptional.get())))
+        }
+        return MissionData(mission, evaluation, JudgeItemData(judgeItem, null))
     }
 }

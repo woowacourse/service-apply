@@ -1,8 +1,12 @@
 package apply.application
 
 import apply.domain.evaluation.Evaluation
+import apply.domain.mission.JudgeItem
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionStatus
+import apply.domain.mission.ProgramingLanguage
+import apply.domain.mission.ProgramingLanguage.JAVA
+import apply.domain.mission.ProgramingLanguage.JAVASCRIPT
 import java.time.LocalDateTime
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
@@ -25,6 +29,11 @@ data class MissionData(
     @field:NotBlank
     var description: String = "",
 
+    var testName: String = "",
+    var programingLanguage: ProgramingLanguage = JAVASCRIPT,
+    var evaluationItem: EvaluationItemData = EvaluationItemData(),
+    var judgeItemId: Long = 0L,
+
     @field:NotNull
     var submittable: Boolean = false,
 
@@ -32,12 +41,23 @@ data class MissionData(
     var hidden: Boolean = true,
     var id: Long = 0L
 ) {
-    constructor(mission: Mission, evaluation: Evaluation) : this(
+    constructor(mission: Mission, evaluation: Evaluation, judgeItemData: JudgeItemData) : this(
         mission.title,
         EvaluationSelectData(evaluation),
         mission.period.startDateTime,
         mission.period.endDateTime,
         mission.description,
+
+        judgeItemData.testName ?: "",
+        judgeItemData.programmingLanguage ?: JAVA,
+        judgeItemData.evaluationItemData ?: EvaluationItemData(
+            title = "평가 항목 없음",
+            maximumScore = 0,
+            position = 0,
+            description = "평가 항목 없음"
+        ),
+        judgeItemData.id,
+
         mission.submittable,
         mission.hidden,
         mission.id
@@ -75,15 +95,21 @@ data class MissionResponse(
     val title: String,
     val description: String,
     val submittable: Boolean,
+    val evaluationItemId: Long?,
+    val testName: String?,
+    val programingLanguage: ProgramingLanguage?,
     val startDateTime: LocalDateTime,
     val endDateTime: LocalDateTime,
     val status: MissionStatus
 ) {
-    constructor(mission: Mission) : this(
+    constructor(mission: Mission, judgeItem: JudgeItem?) : this(
         mission.id,
         mission.title,
         mission.description,
         mission.submittable,
+        judgeItem?.evaluationItemId,
+        judgeItem?.testName,
+        judgeItem?.programmingLanguage,
         mission.period.startDateTime,
         mission.period.endDateTime,
         mission.status
@@ -109,5 +135,19 @@ data class MyMissionResponse(
         mission.period.startDateTime,
         mission.period.endDateTime,
         mission.status
+    )
+}
+
+data class JudgeItemData(
+    val id: Long,
+    val testName: String?,
+    val evaluationItemData: EvaluationItemData?,
+    val programmingLanguage: ProgramingLanguage?
+) {
+    constructor(judgeItem: JudgeItem?, evaluationItemData: EvaluationItemData?) : this(
+        judgeItem?.id ?: 0L,
+        judgeItem?.testName,
+        evaluationItemData,
+        judgeItem?.programmingLanguage
     )
 }

@@ -31,7 +31,11 @@ class MissionsFormView(
     private var recruitmentId: Long = 0L
     private val title: Title = Title()
     private val missionForm: MissionForm by lazy {
-        MissionForm(evaluationService.getAllSelectDataByRecruitmentId(recruitmentId))
+        MissionForm(
+            evaluationService.getAllSelectDataByRecruitmentId(recruitmentId),
+        ) {
+            evaluationService.findEvaluationItems(it)
+        }
     }
     private val submitButton: Button = createSubmitButton()
     private val buttons: Component = createButtons()

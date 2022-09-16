@@ -7,15 +7,18 @@ import javax.persistence.EnumType
 import javax.persistence.Enumerated
 
 @Entity
-class AutoGradingItem(
+class JudgeItem(
     @Column
     val missionId: Long,
+
     @Column
-    val evaluationItemId: Long,
+    var evaluationItemId: Long?,
+
     @Column
-    val gradingName: String,
+    var testName: String?,
+
     @Enumerated(EnumType.STRING)
-    val programmingLanguage: ProgramingLanguage,
+    var programmingLanguage: ProgramingLanguage?,
 
     id: Long = 0L
 ) : BaseEntity(id)
