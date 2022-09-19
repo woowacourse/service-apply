@@ -1,7 +1,9 @@
 import classNames from "classnames";
 import { useMemo } from "react";
 
-import { BUTTON_LABEL, Mission, Recruitment } from "../../pages/MyApplication/MyApplication";
+import { BUTTON_LABEL } from "../../pages/MyApplication/MyApplication";
+import { Mission, Recruitment } from "../../pages/MyApplication/MyApplicationType";
+
 import { formatDateTime } from "../../utils/format/date";
 import ApplicationButtons from "./ApplicationButtons";
 import MissionDetail from "./MissionDetail";

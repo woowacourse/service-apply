@@ -11,13 +11,13 @@ import useRecruitmentContext from "../../hooks/useRecruitmentContext";
 import useTokenContext from "../../hooks/useTokenContext";
 import { missionsDummy, myApplicationDummy } from "../../mock/dummy";
 import { generateQuery } from "../../utils/route/query";
-import { RECRUITMENT_STATUS } from "./../../constants/recruitment";
 import styles from "./MyApplication.module.css";
+import { Mission, MyApplication, Recruitment } from "./MyApplicationType";
 
 export const BUTTON_LABEL = {
   BEFORE_SUBMISSION: "시작 전",
   EDIT: "수정하기",
-  SUBMIT: "제출하기", //작성하기
+  SUBMIT: "제출하기",
   UNSUBMITTABLE: "제출불가",
   COMPLETE: "제출완료",
   UNSUBMITTED: "미제출",
@@ -49,54 +49,11 @@ const isApplicationDisabled = (submitted: boolean, recruitable: boolean) => {
   return submitted || !recruitable;
 };
 
-//모집에 관한 타입 ex우아한테크코스 3기
-export type Recruitment = {
-  id: string;
-  title: string;
-  recruitable: boolean;
-  hidden: boolean;
-  startDateTime: `${string}-${string}-${string}T${string}:${string}:${string}`;
-  endDateTime: `${string}-${string}-${string}T${string}:${string}:${string}`;
-  status: keyof typeof RECRUITMENT_STATUS;
-};
-
-// 내 지원서에 대한 목록
-export type MyRecruitmentForm = {
-  recruitmentId: number;
-  submitted: boolean;
-};
-
-// 내 지원에 대한 미션의 목록 ex프리코스 3차
-export type Mission = {
-  id: string;
-  title: string;
-  description: string;
-  startDateTime: `${string}-${string}-${string}T${string}:${string}:${string}`;
-  endDateTime: `${string}-${string}-${string}T${string}:${string}:${string}`;
-  submitted: boolean;
-  submittable: boolean;
-  status: "SUBMITTABLE" | "SUBMITTING" | "UNSUBMITTABLE" | "ENDED";
-  //newly api
-  isAutomation: boolean;
-  judgement: {
-    testStatus: "NONE" | "PENDING" | "SUCCESS" | "FAIL";
-    pullRequestUrl: string;
-    commitUrl: string;
-    passCount: number;
-    totalCount: number;
-    message: string; //Pending일때만 빈문자열
-  };
-};
-
 const MyApplication = () => {
   const navigate = useNavigate();
   const { token } = useTokenContext();
   const { recruitment } = useRecruitmentContext();
 
-  type MyApplication = {
-    recruitmentId: number;
-    submitted: boolean;
-  };
   const [myApplications, setMyApplications] = useState<MyApplication[]>([]);
   const [missions, setMissions] = useState(missionsDummy as unknown as Record<string, Mission[]>);
 
@@ -116,8 +73,10 @@ const MyApplication = () => {
     [myApplications]
   );
 
-  //const { missions } = useMissions(recruitmentIds);
-
+  /**
+   * FIXME : const { missions } = useMissions(recruitmentIds);
+   * removed for mock dummy
+   */
   const routeToApplicationForm = (recruitment: Recruitment) => () => {
     navigate(
       {
@@ -192,7 +151,10 @@ const MyApplication = () => {
       const fetchMyRecruitments = async () => {
         const response = await fetchMyApplicationForms(token);
 
-        //setMyApplications(response.data);
+        /**
+         * FIXME : setMyApplications(response.data);
+         * removed for mock dummy
+         */
         setMyApplications(myApplicationDummy); //변경
       };
 

@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { Mission } from "../../pages/MyApplication/MyApplication";
+import { Mission } from "../../pages/MyApplication/MyApplicationType";
 import Button from "../@common/Button/Button";
 import styles from "./MyApplicationItem.module.css";
 
