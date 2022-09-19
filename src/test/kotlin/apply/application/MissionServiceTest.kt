@@ -2,7 +2,7 @@ package apply.application
 
 import apply.createAssignment
 import apply.createEvaluation
-import apply.createJudgeItem
+import apply.createJudgmentItem
 import apply.createMission
 import apply.createMissionData
 import apply.createMissionResponse
@@ -11,7 +11,7 @@ import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluation.getById
 import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.evaluationtarget.EvaluationTargetRepository
-import apply.domain.mission.JudgeItemRepository
+import apply.domain.mission.JudgmentItemRepository
 import apply.domain.mission.MissionRepository
 import apply.domain.mission.getById
 import io.kotest.assertions.throwables.shouldNotThrowAny
@@ -34,7 +34,7 @@ class MissionServiceTest : BehaviorSpec({
     val evaluationTargetRepository = mockk<EvaluationTargetRepository>()
     val evaluationItemRepository = mockk<EvaluationItemRepository>()
     val assignmentRepository = mockk<AssignmentRepository>()
-    val judgeItemRepository = mockk<JudgeItemRepository>()
+    val judgmentItemRepository = mockk<JudgmentItemRepository>()
 
     val missionService = MissionService(
         missionRepository,
@@ -42,13 +42,13 @@ class MissionServiceTest : BehaviorSpec({
         evaluationTargetRepository,
         evaluationItemRepository,
         assignmentRepository,
-        judgeItemRepository
+        judgmentItemRepository
     )
 
     Given("과제가 없는 평가가 있는 경우") {
         every { evaluationRepository.existsById(any()) } returns true
         every { missionRepository.existsByEvaluationId(any()) } returns false
-        every { judgeItemRepository.save(any()) } returns createJudgeItem()
+        every { judgmentItemRepository.save(any()) } returns createJudgmentItem()
         every { missionRepository.save(any()) } returns createMission()
 
         When("해당 평가에 대한 과제를 생성하면") {
@@ -181,15 +181,15 @@ class MissionServiceTest : BehaviorSpec({
     Given("과제에 등록된 자동채점 평가항목이 존재하지 않는 경우") {
         val mission = createMission(title = "과제", evaluationId = 1L)
         val evaluation = createEvaluation(id = 1L, title = "평가1", recruitmentId = 1L)
-        val judgeItem = createJudgeItem(id = 1L, missionId = 1L, evaluationItemId = null)
+        val judgmentItem = createJudgmentItem(id = 1L, missionId = 1L, evaluationItemId = null)
 
         every { missionRepository.getById(any()) } returns mission
         every { evaluationRepository.getById(any()) } returns evaluation
-        every { judgeItemRepository.findByMissionId(any()) } returns judgeItem
+        every { judgmentItemRepository.findByMissionId(any()) } returns judgmentItem
         every { evaluationItemRepository.findById(any()) } returns Optional.ofNullable(null)
 
         When("자동채점 평가항목을 조회하면") {
-            val actual = missionService.getDataById(judgeItem.id)
+            val actual = missionService.getDataById(judgmentItem.id)
                 .evaluationItem
 
             Then("과제와 관련된 자동채점 평가항목을 확인할 수 없다") {

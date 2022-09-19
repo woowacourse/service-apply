@@ -5,7 +5,7 @@ import apply.application.EvaluationSelectData
 import apply.application.MissionData
 import apply.application.MissionResponse
 import apply.application.MyMissionResponse
-import apply.domain.mission.JudgeItem
+import apply.domain.mission.JudgmentItem
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionStatus
 import apply.domain.mission.ProgrammingLanguage
@@ -39,7 +39,7 @@ fun createMissionData(
     testName: String? = "",
     programmingLanguage: ProgrammingLanguage? = NONE,
     evaluationItemData: EvaluationItemData = EvaluationItemData(),
-    judgeItemId: Long = 0L,
+    judgmentItemId: Long = 0L,
     submittable: Boolean = true,
     hidden: Boolean = true,
     id: Long = 0L
@@ -53,7 +53,7 @@ fun createMissionData(
         testName,
         programmingLanguage,
         evaluationItemData,
-        judgeItemId,
+        judgmentItemId,
         submittable,
         hidden,
         id
@@ -70,7 +70,7 @@ fun createMissionResponse(
     testName: String? = "",
     programmingLanguage: ProgrammingLanguage? = NONE,
     evaluationItemData: EvaluationItemData = EvaluationItemData(),
-    judgeItemId: Long = 0L,
+    judgmentItemId: Long = 0L,
     id: Long = 0L
 ): MissionResponse {
     return MissionResponse(
@@ -81,7 +81,7 @@ fun createMissionResponse(
         testName,
         programmingLanguage,
         evaluationItemData.id,
-        judgeItemId,
+        judgmentItemId,
         startDateTime,
         endDateTime,
         missionStatus
@@ -101,12 +101,12 @@ fun createMyMissionResponse(
     return MyMissionResponse(id, title, description, submittable, submitted, startDateTime, endDateTime, missionStatus)
 }
 
-fun createJudgeItem(
+fun createJudgmentItem(
     missionId: Long = 0L,
     evaluationItemId: Long? = 0L,
     testName: String? = "",
     programmingLanguage: ProgrammingLanguage? = NONE,
     id: Long = 0L
-): JudgeItem {
-    return JudgeItem(missionId, evaluationItemId, testName, programmingLanguage, id)
+): JudgmentItem {
+    return JudgmentItem(missionId, evaluationItemId, testName, programmingLanguage, id)
 }

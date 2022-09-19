@@ -24,7 +24,7 @@ class MissionForm() : BindingIdentityFormLayout<MissionData>(MissionData::class)
     private val startDateTime: DateTimePicker = DateTimePicker("시작 일시")
     private val endDateTime: DateTimePicker = DateTimePicker("종료 일시")
 
-    private var judgeItemId: Long = 0L
+    private var judgmentItemId: Long = 0L
     private val testName: TextField? = TextField("채점에 사용할 미션 이름")
     private val programmingLanguage: Select<ProgrammingLanguage>? =
         createItemSelect<ProgrammingLanguage>("언어 선택").apply {
@@ -62,12 +62,12 @@ class MissionForm() : BindingIdentityFormLayout<MissionData>(MissionData::class)
 
     override fun bindOrNull(): MissionData? {
         val missionData = bindDefaultOrNull()
-        missionData?.judgeItemId = judgeItemId
+        missionData?.judgmentItemId = judgmentItemId
         return missionData
     }
 
     override fun fill(data: MissionData) {
-        judgeItemId = data.judgeItemId
+        judgmentItemId = data.judgmentItemId
         fillDefault(data)
         evaluation.isReadOnly = true
     }

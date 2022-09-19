@@ -5,22 +5,20 @@ import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
-import javax.persistence.JoinColumn
-import javax.persistence.OneToOne
 
 @Entity
 class JudgmentItem(
-    @OneToOne(optional = false)
-    @JoinColumn
-    val mission: Mission,
+    @Column
+    val missionId: Long,
 
-    @Column(nullable = false)
-    var evaluationItemId: Long = 0L,
+    @Column
+    var evaluationItemId: Long?,
 
-    @Column(nullable = false)
-    var testName: String = "",
+    @Column
+    var testName: String?,
 
-    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    var programmingLanguage: ProgrammingLanguage = ProgrammingLanguage.NONE
-) : BaseEntity()
+    var programmingLanguage: ProgrammingLanguage?,
+
+    id: Long = 0L
+) : BaseEntity(id)
