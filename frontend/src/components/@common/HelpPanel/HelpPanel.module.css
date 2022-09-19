@@ -1,0 +1,46 @@
+.help-panel-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  color: var(--black);
+}
+
+.help-modal-container {
+  display: none;
+  width: 18rem;
+  height: fit-content;
+  padding: 0 0 0.5rem 0.25rem;
+  border-radius: 10px;
+  background-color: var(--gray-003);
+}
+
+.help-panel {
+  font-size: 1.05rem;
+  cursor: pointer;
+}
+
+.help-panel:hover + .help-modal-container {
+  display: block;
+  position: absolute;
+  bottom: 2rem;
+  right: 0;
+  box-shadow: 3px 3px 5px var(--gray-005);
+}
+
+.help-text {
+  font-size: 0.75rem;
+  margin-top: 0.35rem;
+  list-style: square;
+  margin-left: 1.2rem;
+}
+
+.help-modal-container:after {
+  content: "";
+  position: absolute;
+  border-top: 10px solid var(--gray-003);
+  border-right: 5px solid transparent;
+  border-left: 5px solid transparent;
+  bottom: -9px;
+  right: 5px;
+}
