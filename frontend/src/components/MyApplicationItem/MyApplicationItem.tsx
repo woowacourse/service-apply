@@ -3,6 +3,7 @@ import { useMemo } from "react";
 
 import { BUTTON_LABEL, Mission, Recruitment } from "../../pages/MyApplication/MyApplication";
 import { formatDateTime } from "../../utils/format/date";
+import ApplicationButtons from "./ApplicationButtons";
 import MissionDetail from "./MissionDetail";
 import styles from "./MyApplicationItem.module.css";
 import RecruitmentDetail from "./RecruitmentDetail";
@@ -83,6 +84,19 @@ const MyApplicationItem = ({
             )}
           </>
         )}
+        <ApplicationButtons>
+          {isMission && isMissionType(recruitment) && (
+            <>
+              <ApplicationButtons.Judgement
+                testStatus={recruitment.judgement.testStatus}
+                recruitmentStatus={recruitment.status}
+              />
+            </>
+          )}
+          <ApplicationButtons.Apply isButtonDisabled={isButtonDisabled}>
+            {buttonLabel}
+          </ApplicationButtons.Apply>
+        </ApplicationButtons>
       </div>
     </div>
   );
