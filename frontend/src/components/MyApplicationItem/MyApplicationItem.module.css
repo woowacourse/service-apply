@@ -1,0 +1,107 @@
+.content-wrapper {
+  width: 100%;
+  max-width: var(--pc-main-width);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.5rem 1rem;
+  background-color: var(--white);
+  border: 1px solid var(--gray-003);
+  position: relative;
+}
+
+.text-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  width: 100%;
+}
+
+.title {
+  font-size: 1.625rem;
+  font-weight: bold;
+}
+
+.date {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--gray-008);
+}
+
+.button {
+  min-width: 6rem;
+}
+
+.detail-container {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.875rem;
+  gap: 0.4rem;
+}
+
+.pending-container {
+  display: inline-flex;
+  gap: 0.3rem;
+  align-items: center;
+}
+
+.test-result-text {
+  font-size: 1.125rem;
+  margin-bottom: 0.2rem;
+  font-weight: bold;
+}
+.test-result-score.pending {
+  color: var(--blue);
+}
+.test-result-score.pass {
+  color: var(--green);
+}
+.test-result-score.fail {
+  color: var(--red);
+}
+
+.guide-container {
+  display: flex;
+  gap: 0.25rem;
+  margin-left: auto;
+  color: var(--gray-007);
+  font-size: 0.815rem;
+}
+
+.hr {
+  border: 0.5px solid var(--gray-003);
+}
+
+.commit-hash {
+  text-decoration: underline;
+  color: var(--blue);
+}
+
+.refresh-button {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.button-container {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.5rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.judgement-button {
+  background-color: var(--blue);
+}
+
+@media screen and (max-width: 513px) {
+  .date {
+    gap: 0.25rem;
+    font-size: 0.875rem;
+  }
+
+  .icon {
+    width: 1rem;
+  }
+}
