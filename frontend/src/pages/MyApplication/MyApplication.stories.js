@@ -1,8 +1,7 @@
-import React from "react";
 import { rest } from "msw";
-import MyApplication from "./MyApplication";
 import { API_BASE_URL } from "../../../.storybook/preview";
-import { missionDummy, myApplicationDummy } from "../../mock/dummy";
+import { missionsDummy, myApplicationDummy } from "../../mock/dummy";
+import MyApplication from "./MyApplication";
 
 export default {
   title: "pages/MyApplication",
@@ -24,7 +23,7 @@ Default.parameters = {
       }
     ),
     rest.get(`${API_BASE_URL}/api/recruitments/:recruitmentId/missions/me`, (req, res, ctx) => {
-      return res(ctx.json({ message: "", body: missionDummy }));
+      return res(ctx.json({ message: "", body: missionsDummy }));
     }),
   ],
 };
