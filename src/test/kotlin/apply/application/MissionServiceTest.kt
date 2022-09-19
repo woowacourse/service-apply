@@ -8,10 +8,12 @@ import apply.createMissionData
 import apply.createMissionResponse
 import apply.domain.assignment.AssignmentRepository
 import apply.domain.evaluation.EvaluationRepository
+import apply.domain.evaluation.getById
 import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.mission.JudgeItemRepository
 import apply.domain.mission.MissionRepository
+import apply.domain.mission.getById
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
@@ -24,6 +26,7 @@ import io.mockk.just
 import io.mockk.mockk
 import org.springframework.data.repository.findByIdOrNull
 import support.test.spec.afterRootTest
+import java.util.Optional
 
 class MissionServiceTest : BehaviorSpec({
     val missionRepository = mockk<MissionRepository>()
@@ -171,6 +174,27 @@ class MissionServiceTest : BehaviorSpec({
                 shouldThrow<NoSuchElementException> {
                     missionService.deleteById(1L)
                 }
+            }
+        }
+    }
+
+    Given("과제에 등록된 자동채점 평가항목이 존재하지 않는 경우") {
+        val mission = createMission(title = "과제", evaluationId = 1L)
+        val evaluation = createEvaluation(id = 1L, title = "평가1", recruitmentId = 1L)
+        val judgeItem = createJudgeItem(id = 1L, missionId = 1L, evaluationItemId = null)
+
+        every { missionRepository.getById(any()) } returns mission
+        every { evaluationRepository.getById(any()) } returns evaluation
+        every { judgeItemRepository.findByMissionId(any()) } returns judgeItem
+        every { evaluationItemRepository.findById(any()) } returns Optional.ofNullable(null)
+
+        When("자동채점 평가항목을 조회하면") {
+            val actual = missionService.getDataById(judgeItem.id)
+                .evaluationItem
+
+            Then("과제와 관련된 자동채점 평가항목을 확인할 수 없다") {
+                actual?.id shouldBe 0L
+                actual?.title shouldBe "평가 항목 없음"
             }
         }
     }

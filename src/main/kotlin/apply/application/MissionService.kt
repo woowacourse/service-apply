@@ -102,14 +102,15 @@ class MissionService(
         val mission = missionRepository.getById(id)
         val evaluation = evaluationRepository.getById(mission.evaluationId)
         val judgeItem = judgeItemRepository.findByMissionId(mission.id)
-        val evaluationItemOptional = evaluationItemRepository.findById(judgeItem?.evaluationItemId ?: 0L)
-        if (evaluationItemOptional.isPresent) {
-            return MissionData(
-                mission,
-                evaluation,
-                JudgeItemData(judgeItem, EvaluationItemData(evaluationItemOptional.get()))
-            )
+        val evaluationItemData = judgeItem?.evaluationItemId?.let {
+            evaluationItemRepository.findById(judgeItem.evaluationItemId!!)
+                .orElse(null)?.let(::EvaluationItemData)
         }
-        return MissionData(mission, evaluation, JudgeItemData(judgeItem, null))
+
+        return MissionData(
+            mission,
+            evaluation,
+            JudgeItemData(judgeItem, evaluationItemData)
+        )
     }
 }
