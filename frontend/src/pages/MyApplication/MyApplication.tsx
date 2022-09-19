@@ -12,7 +12,7 @@ import useTokenContext from "../../hooks/useTokenContext";
 import { missionsDummy, myApplicationDummy } from "../../mock/dummy";
 import { generateQuery } from "../../utils/route/query";
 import styles from "./MyApplication.module.css";
-import { Mission, MyApplication, Recruitment } from "./MyApplicationType";
+import { Mission, MyApplicationType, Recruitment } from "./MyApplicationType";
 
 export const BUTTON_LABEL = {
   BEFORE_SUBMISSION: "시작 전",
@@ -54,7 +54,7 @@ const MyApplication = () => {
   const { token } = useTokenContext();
   const { recruitment } = useRecruitmentContext();
 
-  const [myApplications, setMyApplications] = useState<MyApplication[]>([]);
+  const [myApplications, setMyApplications] = useState<MyApplicationType[]>([]);
   const [missions, setMissions] = useState(missionsDummy as unknown as Record<string, Mission[]>);
 
   const myRecruitments = useMemo(

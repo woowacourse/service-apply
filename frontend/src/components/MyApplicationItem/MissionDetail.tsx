@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { TbRefresh } from "react-icons/tb";
 import useTokenContext from "../../hooks/useTokenContext";
 import { judgementDummy, missionsDummy } from "../../mock/dummy";
-import { Mission } from "../../pages/MyApplication/MyApplication";
+import { Mission } from "../../pages/MyApplication/MyApplicationType";
 import HelpPanel from "../@common/HelpPanel/HelpPanel";
 import styles from "./MyApplicationItem.module.css";
 
