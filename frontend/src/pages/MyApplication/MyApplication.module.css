@@ -32,3 +32,10 @@
 .mission-recruit-item {
   margin-bottom: 1.25rem;
 }
+
+.application-category {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: var(--gray-004);
+  margin-bottom: 1rem;
+}
