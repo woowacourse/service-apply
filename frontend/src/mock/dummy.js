@@ -52,68 +52,137 @@ export const myApplicationDummy = [
   },
 ];
 
-export const missionDummy = [
-  {
-    id: 1,
-    title: "1차 프리코스",
-    description: "설명",
-    startDateTime: "2020-10-25T15:00:00",
-    endDateTime: nextMonth,
-    submitted: false,
-    submittable: true,
-    status: "ENDED",
-  },
-  {
-    id: 2,
-    title: "2차 프리코스",
-    description: "설명",
-    startDateTime: "2020-10-25T15:00:00",
-    endDateTime: nextMonth,
-    submitted: true,
-    submittable: true,
-    status: "ENDED",
-  },
-  {
-    id: 3,
-    title: "3차 프리코스",
-    description: "설명",
-    startDateTime: "2020-10-25T15:00:00",
-    endDateTime: prevMonth,
-    submitted: true,
-    submittable: true,
-    status: "SUBMITTING",
-  },
-  {
-    id: 4,
-    title: "4차 프리코스",
-    description: "설명",
-    startDateTime: "2020-10-25T15:00:00",
-    endDateTime: prevMonth,
-    submitted: false,
-    submittable: true,
-    status: "SUBMITTING",
-  },
-  {
-    id: 5,
-    title: "5차 프리코스",
-    description: "설명",
-    startDateTime: "2020-10-25T15:00:00",
-    endDateTime: prevMonth,
-    submitted: false,
-    submittable: false,
-    status: "SUBMITTABLE",
-  },
-  {
-    id: 6,
-    title: "6차 프리코스",
-    description: "설명",
-    startDateTime: "2020-10-25T15:00:00",
-    endDateTime: prevMonth,
-    submitted: false,
-    submittable: false,
-    status: "UNSUBMITTABLE",
-  },
-];
+export const missionsDummy = {
+  1: [
+    {
+      id: 1,
+      title: "1차 프리코스",
+      description: "설명",
+      startDateTime: "2020-10-25T15:00:00",
+      endDateTime: nextMonth,
+      submitted: false,
+      submittable: true,
+      status: "SUBMITTING",
+      //newly api
+      isAutomation: true,
+      judgement: {
+        testStatus: "NONE", //'NONE' 'PENDING' "COMPLETE"
+        pullRequestUrl: null,
+        commitUrl: null,
+        passCount: null,
+        totalCount: null,
+        message: null, //Pending일때만 빈문자열
+      },
+    },
+    {
+      id: 2,
+      title: "2차 프리코스",
+      description: "설명",
+      startDateTime: "2020-10-25T15:00:00",
+      endDateTime: nextMonth,
+      submitted: true,
+      submittable: true,
+      status: "SUBMITTING",
+      //newly api
+      isAutomation: true,
+      judgement: {
+        testStatus: "PENDING", //'NONE' 'PENDING' "COMPLETE"
+        pullRequestUrl: "https://github.com/woowacourse/jwp-dashboard-http/pull/298",
+        commitUrl:
+          "https://github.com/woowacourse/jwp-dashboard-http/pull/298/commits/6385bfdd2e9a4ae8c41cfffc1f7d8b28e79740ad",
+        passCount: null,
+        totalCount: null,
+        message: "", //Pending일때만 빈문자열
+      },
+    },
+    {
+      id: 3,
+      title: "3차 프리코스",
+      description: "설명",
+      startDateTime: "2020-10-25T15:00:00",
+      endDateTime: nextMonth,
+      submitted: true,
+      submittable: true,
+      status: "SUBMITTING",
+      //newly api
+      isAutomation: true,
+      judgement: {
+        testStatus: "SUCCESS", //'NONE' 'PENDING' "COMPLETE"
+        pullRequestUrl: "https://github.com/woowacourse/jwp-dashboard-http/pull/298",
+        commitUrl:
+          "https://github.com/woowacourse/jwp-dashboard-http/pull/298/commits/6385bfdd2e9a4ae8c41cfffc1f7d8b28e79740ad",
+        passCount: 1,
+        totalCount: 5,
+        message: "빌드에 성공했습니다", //Pending일때만 빈문자열
+      },
+    },
+    {
+      id: 4,
+      title: "4차 프리코스",
+      description: "설명",
+      startDateTime: "2020-10-25T15:00:00",
+      endDateTime: nextMonth,
+      submitted: true,
+      submittable: true,
+      status: "SUBMITTING",
+      //newly api
+      isAutomation: true,
+      judgement: {
+        testStatus: "FAIL", //'NONE' 'PENDING' "COMPLETE"
+        pullRequestUrl: "https://github.com/woowacourse/jwp-dashboard-http/pull/298",
+        commitUrl:
+          "https://github.com/woowacourse/jwp-dashboard-http/pull/298/commits/6385bfdd2e9a4ae8c41cfffc1f7d8b28e79740ad",
+        passCount: null,
+        totalCount: null,
+        message: "빌드에 실패했습니다", //Pending일때만 빈문자열
+      },
+    },
+    {
+      id: 5,
+      title: "5차 프리코스",
+      description: "설명",
+      startDateTime: "2020-10-25T15:00:00",
+      endDateTime: nextMonth,
+      submitted: true,
+      submittable: true,
+      status: "ENDED",
+      //newly api
+      isAutomation: true,
+      judgement: {
+        testStatus: "SUCCESS", //'NONE' 'PENDING' "COMPLETE"
+        pullRequestUrl: "https://github.com/woowacourse/jwp-dashboard-http/pull/298",
+        commitUrl:
+          "https://github.com/woowacourse/jwp-dashboard-http/pull/298/commits/6385bfdd2e9a4ae8c41cfffc1f7d8b28e79740ad",
+        passCount: 5,
+        totalCount: 5,
+        message: "빌드에 성공했습니다", //Pending일때만 빈문자열
+      },
+    },
+  ],
+  2: [
+    {
+      id: 6,
+      title: "2-1차 프리코스",
+      description: "설명",
+      startDateTime: "2020-10-25T15:00:00",
+      endDateTime: nextMonth,
+      submitted: true,
+      submittable: true,
+      status: "ENDED",
+      //newly api
+      isAutomation: true,
+      judgement: {
+        testStatus: "SUCCESS", //'NONE' 'PENDING' "COMPLETE"
+        pullRequestUrl: "https://github.com/woowacourse/jwp-dashboard-http/pull/298",
+        commitUrl:
+          "https://github.com/woowacourse/jwp-dashboard-http/pull/298/commits/6385bfdd2e9a4ae8c41cfffc1f7d8b28e79740ad",
+        passCount: 5,
+        totalCount: 5,
+        message: "빌드에 성공했습니다", //Pending일때만 빈문자열
+      },
+    },
+  ],
+};
 
 export const userInfoDummy = {
   id: 1,
@@ -122,4 +191,16 @@ export const userInfoDummy = {
   phoneNumber: "010-1234-1234",
   gender: "FEMALE",
   birthday: "2000-01-01",
+};
+
+export const judgementDummy = {
+  judgement: {
+    testStatus: "SUCCESS", //'NONE' 'PENDING' "COMPLETE"
+    pullRequestUrl: "https://github.com/woowacourse/jwp-dashboard-http/pull/298",
+    commitUrl:
+      "https://github.com/woowacourse/jwp-dashboard-http/pull/298/commits/6385bfdd2e9a4ae8c41cfffc1f7d8b28e79740ad",
+    passCount: 5,
+    totalCount: 5,
+    message: "빌드에 성공했습니다", //Pending일때만 빈문자열
+  },
 };
