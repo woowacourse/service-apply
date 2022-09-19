@@ -34,7 +34,10 @@ const TestResult = ({
     recruitmentId: string;
     token: string;
   }) => {
-    // FIXME : const response = await fetchMyMissionJudgement({ recruitmentId, missionId, token });
+    /**
+     * FIXME : const response = await fetchMyMissionJudgement({ recruitmentId, missionId, token });
+     * removed for mock dummy
+     */
     const response = judgementDummy;
     const missions = missionsDummy[recruitmentId as unknown as keyof typeof missionsDummy];
     const newMissions = missions.map((mission) => {

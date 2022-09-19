@@ -42,7 +42,7 @@ const Apply = ({ children, isButtonDisabled }: { children: string; isButtonDisab
       type="button"
       variant="contained"
       cancel={false}
-      disabled={isButtonDisabled} //작성, 수정하기 일 때 active, 아닐때 inactive
+      disabled={isButtonDisabled} //작성하기, 수정하기 -> active
     >
       {children}
     </Button>

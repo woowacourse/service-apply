@@ -1,4 +1,3 @@
-//모집에 관한 타입 ex우아한테크코스 3기
 import { RECRUITMENT_STATUS } from "./../../constants/recruitment";
 
 export type MyApplicationType = {
@@ -6,6 +5,7 @@ export type MyApplicationType = {
   submitted: boolean;
 };
 
+//모집에 관한 타입 ex우아한테크코스 3기
 export type Recruitment = {
   id: string;
   title: string;
