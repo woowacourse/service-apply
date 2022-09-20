@@ -41,16 +41,25 @@ class MissionService(
         val judgmentItem = judgmentItemRepository.save(
             JudgmentItem(
                 missionId = mission.id,
-                evaluationItemId = request.evaluationItem?.id,
+                evaluationItemId = request.evaluationItem.id,
                 testName = request.testName,
                 programmingLanguage = request.programmingLanguage,
                 id = request.judgmentItemId
             )
         )
 
+        // val judgmentItem = judgmentItemRepository.save(
+        //     JudgmentItem(
+        //         missionId = mission.id,
+        //         evaluationItemId = request.evaluationItem?.id ?: 0L,
+        //         testName = request.testName,
+        //         programmingLanguage = request.programmingLanguage ?: NONE,
+        //         id = request.judgmentItemId
+        //     )
+        // )
+
         return MissionResponse(mission, judgmentItem)
     }
-
     private fun validate(request: MissionData) {
         val evaluationId = request.evaluation.id
         require(evaluationRepository.existsById(evaluationId)) { "평가가 존재하지 않습니다. id: $evaluationId" }
@@ -103,7 +112,7 @@ class MissionService(
         val evaluation = evaluationRepository.getById(mission.evaluationId)
         val judgmentItem = judgmentItemRepository.findByMissionId(mission.id)
         val evaluationItemData = judgmentItem?.evaluationItemId?.let {
-            evaluationItemRepository.findById(judgmentItem.evaluationItemId!!)
+            evaluationItemRepository.findById(judgmentItem.evaluationItemId)
                 .orElse(null)?.let(::EvaluationItemData)
         }
 

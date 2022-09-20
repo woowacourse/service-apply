@@ -28,9 +28,9 @@ data class MissionData(
     @field:NotBlank
     var description: String = "",
 
-    var testName: String? = "",
-    var programmingLanguage: ProgrammingLanguage? = NONE,
-    var evaluationItem: EvaluationItemData? = EvaluationItemData(),
+    var testName: String = "",
+    var programmingLanguage: ProgrammingLanguage = NONE,
+    var evaluationItem: EvaluationItemData = EvaluationItemData(),
     var judgmentItemId: Long = 0L,
 
     @field:NotNull
@@ -47,14 +47,9 @@ data class MissionData(
         mission.period.endDateTime,
         mission.description,
 
-        judgmentItemData.testName ?: "",
-        judgmentItemData.programmingLanguage ?: NONE,
-        judgmentItemData.evaluationItemData ?: EvaluationItemData(
-            title = "평가 항목 없음",
-            maximumScore = 0,
-            position = 0,
-            description = "평가 항목 없음"
-        ),
+        judgmentItemData.testName,
+        judgmentItemData.programmingLanguage,
+        judgmentItemData.evaluationItemData,
         judgmentItemData.id,
 
         mission.submittable,
@@ -141,14 +136,14 @@ data class MyMissionResponse(
 
 data class JudgmentItemData(
     val id: Long,
-    val testName: String?,
-    val evaluationItemData: EvaluationItemData?,
-    val programmingLanguage: ProgrammingLanguage?
+    val testName: String,
+    val evaluationItemData: EvaluationItemData,
+    val programmingLanguage: ProgrammingLanguage
 ) {
     constructor(judgmentItem: JudgmentItem?, evaluationItemData: EvaluationItemData?) : this(
         judgmentItem?.id ?: 0L,
-        judgmentItem?.testName,
-        evaluationItemData,
-        judgmentItem?.programmingLanguage
+        judgmentItem?.testName ?: "",
+        evaluationItemData ?: EvaluationItemData(),
+        judgmentItem?.programmingLanguage ?: NONE
     )
 }

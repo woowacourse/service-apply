@@ -36,8 +36,8 @@ fun createMissionData(
     startDateTime: LocalDateTime = START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
     description: String = MISSION_DESCRIPTION,
-    testName: String? = "",
-    programmingLanguage: ProgrammingLanguage? = NONE,
+    testName: String = "",
+    programmingLanguage: ProgrammingLanguage = NONE,
     evaluationItemData: EvaluationItemData = EvaluationItemData(),
     judgmentItemId: Long = 0L,
     submittable: Boolean = true,
@@ -103,9 +103,9 @@ fun createMyMissionResponse(
 
 fun createJudgmentItem(
     missionId: Long = 0L,
-    evaluationItemId: Long? = 0L,
-    testName: String? = "",
-    programmingLanguage: ProgrammingLanguage? = NONE,
+    evaluationItemId: Long = 0L,
+    testName: String = "",
+    programmingLanguage: ProgrammingLanguage = NONE,
     id: Long = 0L
 ): JudgmentItem {
     return JudgmentItem(missionId, evaluationItemId, testName, programmingLanguage, id)

@@ -8,17 +8,18 @@ import javax.persistence.Enumerated
 
 @Entity
 class JudgmentItem(
-    @Column
+    @Column(nullable = false)
     val missionId: Long,
 
-    @Column
-    var evaluationItemId: Long?,
+    @Column(nullable = false)
+    var evaluationItemId: Long,
 
-    @Column
-    var testName: String?,
+    @Column(nullable = false)
+    var testName: String,
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    var programmingLanguage: ProgrammingLanguage?,
+    var programmingLanguage: ProgrammingLanguage,
 
     id: Long = 0L
 ) : BaseEntity(id)

@@ -25,16 +25,18 @@ class MissionForm() : BindingIdentityFormLayout<MissionData>(MissionData::class)
     private val endDateTime: DateTimePicker = DateTimePicker("종료 일시")
 
     private var judgmentItemId: Long = 0L
-    private val testName: TextField? = TextField("채점에 사용할 미션 이름")
-    private val programmingLanguage: Select<ProgrammingLanguage>? =
+    private val testName: TextField = TextField("채점에 사용할 미션 이름")
+    private val programmingLanguage: Select<ProgrammingLanguage> =
         createItemSelect<ProgrammingLanguage>("언어 선택").apply {
             setItems(*ProgrammingLanguage.values())
             setItemLabelGenerator { it.language }
+            value = ProgrammingLanguage.NONE
         }
-    private val evaluationItem: Select<EvaluationItemData>? = createItemSelect<EvaluationItemData>("평가 항목").apply {
-        setItemLabelGenerator(EvaluationItemData::title)
-        isEmptySelectionAllowed = false
-    }
+    private val evaluationItem: Select<EvaluationItemData> =
+        createItemSelect<EvaluationItemData>("평가 항목").apply {
+            setItemLabelGenerator(EvaluationItemData::title)
+            isEmptySelectionAllowed = false
+        }
 
     private val submittable: RadioButtonGroup<Boolean> = createBooleanRadioButtonGroup("제출 여부", "제출 시작", "제출 중지", false)
     private val hidden: RadioButtonGroup<Boolean> = createBooleanRadioButtonGroup("공개 여부", "비공개", "공개", true)
@@ -56,14 +58,15 @@ class MissionForm() : BindingIdentityFormLayout<MissionData>(MissionData::class)
         evaluation.setItems(evaluations)
         evaluation.addValueChangeListener {
             val evaluationItems: List<EvaluationItemData> = mutableListOf()
-            evaluationItem?.setItems(evaluationItems.plus(listener(it.value.id)))
+            evaluationItem.setItems(evaluationItems + listener(it.value.id))
+            evaluationItem.value = EvaluationItemData()
         }
     }
 
     override fun bindOrNull(): MissionData? {
-        val missionData = bindDefaultOrNull()
-        missionData?.judgmentItemId = judgmentItemId
-        return missionData
+        return bindDefaultOrNull().apply {
+            this?.judgmentItemId = judgmentItemId
+        }
     }
 
     override fun fill(data: MissionData) {
