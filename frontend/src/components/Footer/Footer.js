@@ -40,7 +40,7 @@ const Footer = () => {
             <i className="fa fa-instagram" aria-hidden="true" />
           </a>
         </div>
-        <p className={styles.copyright}>Copyright 2021. 우아한테크코스. All rights reserved.</p>
+        <p className={styles.copyright}>Copyright 우아한테크코스. All rights reserved.</p>
       </div>
     </footer>
   );
