@@ -10,7 +10,7 @@ const Footer = () => {
         <a target="_blank" href={FOOTER_LINK_URL.LOGO} rel="noreferrer noopener">
           <img
             className={styles.logo}
-            src="/assets/logo/logo_full_white.png"
+            src="/assets/logo/logo_full_light.png"
             alt="우아한테크코스 로고"
           />
         </a>
