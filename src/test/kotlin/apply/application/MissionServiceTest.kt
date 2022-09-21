@@ -181,7 +181,7 @@ class MissionServiceTest : BehaviorSpec({
     Given("과제에 등록된 자동채점 평가항목이 존재하지 않는 경우") {
         val mission = createMission(title = "과제", evaluationId = 1L)
         val evaluation = createEvaluation(id = 1L, title = "평가1", recruitmentId = 1L)
-        val judgmentItem = createJudgmentItem(id = 1L, missionId = 1L, evaluationItemId = null)
+        val judgmentItem = createJudgmentItem(id = 1L, missionId = 1L, evaluationItemId = 1L)
 
         every { missionRepository.getById(any()) } returns mission
         every { evaluationRepository.getById(any()) } returns evaluation
@@ -193,8 +193,8 @@ class MissionServiceTest : BehaviorSpec({
                 .evaluationItem
 
             Then("과제와 관련된 자동채점 평가항목을 확인할 수 없다") {
-                actual?.id shouldBe 0L
-                actual?.title shouldBe "평가 항목 없음"
+                actual.id shouldBe 0L
+                actual.title shouldBe "평가 항목 없음"
             }
         }
     }
