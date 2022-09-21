@@ -48,16 +48,6 @@ class MissionService(
             )
         )
 
-        // val judgmentItem = judgmentItemRepository.save(
-        //     JudgmentItem(
-        //         missionId = mission.id,
-        //         evaluationItemId = request.evaluationItem?.id ?: 0L,
-        //         testName = request.testName,
-        //         programmingLanguage = request.programmingLanguage ?: NONE,
-        //         id = request.judgmentItemId
-        //     )
-        // )
-
         return MissionResponse(mission, judgmentItem)
     }
     private fun validate(request: MissionData) {
@@ -111,10 +101,7 @@ class MissionService(
         val mission = missionRepository.getById(id)
         val evaluation = evaluationRepository.getById(mission.evaluationId)
         val judgmentItem = judgmentItemRepository.findByMissionId(mission.id)
-        val evaluationItemData = judgmentItem?.evaluationItemId?.let {
-            evaluationItemRepository.findById(judgmentItem.evaluationItemId)
-                .orElse(null)?.let(::EvaluationItemData)
-        }
+        val evaluationItemData = findEvaluationItemData(judgmentItem)
 
         return MissionData(
             mission,
@@ -122,4 +109,14 @@ class MissionService(
             JudgmentItemData(judgmentItem, evaluationItemData)
         )
     }
+
+    private fun findEvaluationItemData(judgmentItem: JudgmentItem?): EvaluationItemData? {
+        return judgmentItem?.evaluationItemId?.let {
+            findEvaluationItemByIdOrNull(judgmentItem.evaluationItemId)?.let(::EvaluationItemData)
+        }
+    }
+
+    private fun findEvaluationItemByIdOrNull(evaluationItemId: Long) =
+        evaluationItemRepository.findById(evaluationItemId)
+            .orElse(null)
 }
