@@ -9,7 +9,6 @@ import MessageTextarea from "../../components/@common/MessageTextarea/MessageTex
 import MessageTextInput from "../../components/@common/MessageTextInput/MessageTextInput";
 import CheckBox from "../../components/form/CheckBox/CheckBox";
 import Form from "../../components/form/Form/Form";
-import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
 import { FORM } from "../../constants/form";
 import { CONFIRM_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
 import { PATH, PARAM } from "../../constants/path";
@@ -121,11 +120,8 @@ const ApplicationRegister = () => {
 
   return (
     <div className={styles.box}>
-      {currentRecruitment && (
-        <RecruitmentItem className={styles["recruitment-item"]} recruitment={currentRecruitment} />
-      )}
-
       <Container title="지원서 작성" titleAlign={TITLE_ALIGN.LEFT}>
+        <h3 className={styles["recruitment-title"]}>{currentRecruitment.title}</h3>
         <Form onSubmit={handleSubmit}>
           {status === PARAM.APPLICATION_FORM_STATUS.EDIT && (
             <p className={styles["autosave-indicator"]}>
