@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2.625rem 0;
+  padding: 3rem 0;
   background: var(--black);
   color: var(--white);
   user-select: none;
@@ -10,37 +10,50 @@
 
 .content-wrapper {
   width: var(--pc-main-width);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .logo {
-  width: 200px;
-  transform: translateX(-6px);
-}
-
-.copyright {
-  margin-bottom: 1.25rem;
+  height: 2rem;
 }
 
 .social {
   display: flex;
+  align-items: center;
 }
 
 .social a {
-  width: 2.75rem;
-  height: 2.75rem;
-  color: var(--white);
-  margin-right: 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 100%;
-  border: 1px solid #fff;
+  padding: 0 1rem;
+  color: var(--white);
+  border: none;
   transition: all 0.2s ease;
 }
 
 .social a:hover {
-  color: #333;
-  background-color: #fff;
+  opacity: 0.6;
+}
+
+.social a::before {
+  content: "";
+  position: relative;
+  left: -1rem;
+  width: 1px;
+  height: 1rem;
+  background-color: var(--white);
+}
+
+.social a:last-child::after {
+  content: "";
+  position: relative;
+  left: 1rem;
+  width: 1px;
+  height: 1rem;
+  background-color: var(--white);
 }
 
 @media screen and (max-width: 800px) {
@@ -52,15 +65,10 @@
 
 @media screen and (max-width: 513px) {
   .logo {
-    width: 9rem;
+    height: 1.5rem;
   }
 
   .copyright {
     font-size: 0.75rem;
-  }
-
-  .social a {
-    width: 2rem;
-    height: 2rem;
   }
 }
