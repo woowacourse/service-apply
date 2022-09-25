@@ -2,6 +2,7 @@ package apply
 
 import apply.application.EvaluationItemData
 import apply.application.EvaluationSelectData
+import apply.application.JudgmentItemData
 import apply.application.MissionData
 import apply.application.MissionResponse
 import apply.application.MyMissionResponse
@@ -36,10 +37,7 @@ fun createMissionData(
     startDateTime: LocalDateTime = START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
     description: String = MISSION_DESCRIPTION,
-    testName: String = "",
-    programmingLanguage: ProgrammingLanguage = NONE,
-    evaluationItemData: EvaluationItemData = EvaluationItemData(),
-    judgmentItemId: Long = 0L,
+    judgmentItemData: JudgmentItemData = JudgmentItemData(),
     submittable: Boolean = true,
     hidden: Boolean = true,
     id: Long = 0L
@@ -50,10 +48,7 @@ fun createMissionData(
         startDateTime,
         endDateTime,
         description,
-        testName,
-        programmingLanguage,
-        evaluationItemData,
-        judgmentItemId,
+        judgmentItemData,
         submittable,
         hidden,
         id
