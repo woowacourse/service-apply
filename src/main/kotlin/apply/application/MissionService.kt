@@ -41,10 +41,10 @@ class MissionService(
         val judgmentItem = judgmentItemRepository.save(
             JudgmentItem(
                 missionId = mission.id,
-                evaluationItemId = request.evaluationItem.id,
-                testName = request.testName,
-                programmingLanguage = request.programmingLanguage,
-                id = request.judgmentItemId
+                evaluationItemId = request.JudgmentItemData.evaluationItemData.id,
+                testName = request.JudgmentItemData.testName,
+                programmingLanguage = request.JudgmentItemData.programmingLanguage,
+                id = request.JudgmentItemData.id
             )
         )
 

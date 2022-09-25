@@ -28,10 +28,7 @@ data class MissionData(
     @field:NotBlank
     var description: String = "",
 
-    var testName: String = "",
-    var programmingLanguage: ProgrammingLanguage = NONE,
-    var evaluationItem: EvaluationItemData = EvaluationItemData(),
-    var judgmentItemId: Long = 0L,
+    var JudgmentItemData: JudgmentItemData = JudgmentItemData(),
 
     @field:NotNull
     var submittable: Boolean = false,
@@ -46,12 +43,7 @@ data class MissionData(
         mission.period.startDateTime,
         mission.period.endDateTime,
         mission.description,
-
-        judgmentItemData.testName,
-        judgmentItemData.programmingLanguage,
-        judgmentItemData.evaluationItemData,
-        judgmentItemData.id,
-
+        judgmentItemData,
         mission.submittable,
         mission.hidden,
         mission.id
@@ -135,10 +127,10 @@ data class MyMissionResponse(
 }
 
 data class JudgmentItemData(
-    val id: Long,
-    val testName: String,
-    val evaluationItemData: EvaluationItemData,
-    val programmingLanguage: ProgrammingLanguage
+    var id: Long = 0L,
+    var testName: String = "",
+    var evaluationItemData: EvaluationItemData = EvaluationItemData(),
+    var programmingLanguage: ProgrammingLanguage = NONE
 ) {
     constructor(judgmentItem: JudgmentItem?, evaluationItemData: EvaluationItemData?) : this(
         judgmentItem?.id ?: 0L,
