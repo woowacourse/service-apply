@@ -11,13 +11,11 @@ const Template: ComponentStory<typeof Container> = (args: ContainerProps) => (
 );
 
 export const Default = Template.bind({});
-
 Default.args = {
   children: "내용물",
 };
 
 export const Narrow = Template.bind({});
-
 Narrow.args = {
   size: CONTAINER_SIZE.NARROW,
   children: "내용물",

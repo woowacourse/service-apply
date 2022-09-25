@@ -1,11 +1,10 @@
-import React, { TextareaHTMLAttributes } from "react";
 import classNames from "classnames";
 import Description from "../Description/Description";
 import Label from "../Label/Label";
 import Textarea from "../Textarea/Textarea";
 import styles from "./MessageTextarea.module.css";
 
-export type MessageTextareaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & {
+export type MessageTextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
   className?: string;
   label?: string;
   required?: boolean;
