@@ -1,22 +1,34 @@
+import React, { TextareaHTMLAttributes } from "react";
 import classNames from "classnames";
-import PropTypes from "prop-types";
 import Description from "../Description/Description";
 import Label from "../Label/Label";
 import Textarea from "../Textarea/Textarea";
 import styles from "./MessageTextarea.module.css";
 
+export type MessageTextareaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & {
+  className?: string;
+  label?: string;
+  required?: boolean;
+  description?: string;
+  maxLength?: number;
+  value?: string;
+  name: string;
+  errorMessage?: string;
+  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+};
+
 const MessageTextarea = ({
-  label,
-  name,
-  value,
-  description,
-  onChange,
-  maxLength,
-  required,
-  errorMessage,
   className,
+  label = "",
+  required = false,
+  description = "",
+  maxLength,
+  value = "",
+  name,
+  errorMessage,
+  onChange,
   ...props
-}) => {
+}: MessageTextareaProps) => {
   return (
     <div className={classNames(styles.box, className)}>
       <div className={styles["text-field"]}>
@@ -41,22 +53,6 @@ const MessageTextarea = ({
       <p className={styles["rule-field"]}>{errorMessage}</p>
     </div>
   );
-};
-
-MessageTextarea.propTypes = {
-  label: PropTypes.string,
-  required: PropTypes.bool,
-  description: PropTypes.node,
-  maxLength: PropTypes.number,
-  initialValue: PropTypes.string,
-  name: PropTypes.string.isRequired,
-};
-
-MessageTextarea.defaultProps = {
-  value: "",
-  label: "",
-  required: false,
-  description: "",
 };
 
 export default MessageTextarea;

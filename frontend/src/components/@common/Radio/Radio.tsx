@@ -1,9 +1,12 @@
-import React from "react";
-import PropTypes from "prop-types";
 import Label from "../Label/Label";
 import styles from "./Radio.module.css";
 
-const Radio = ({ label, required, ...props }) => {
+export type RadioProps = React.InputHTMLAttributes<HTMLInputElement> & {
+  required?: boolean;
+  label?: string;
+};
+
+const Radio = ({ required = false, label = "", ...props }: RadioProps) => {
   return (
     <Label className={styles["radio-label"]}>
       <input type="radio" required={required} {...props} />
@@ -11,16 +14,6 @@ const Radio = ({ label, required, ...props }) => {
       {label}
     </Label>
   );
-};
-
-Radio.propTypes = {
-  label: PropTypes.string,
-  required: PropTypes.bool,
-};
-
-Radio.defaultProps = {
-  label: "",
-  required: false,
 };
 
 export default Radio;

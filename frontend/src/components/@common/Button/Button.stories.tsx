@@ -1,12 +1,13 @@
 import React from "react";
-import Button from "./Button";
+import { ComponentMeta, ComponentStory } from "@storybook/react";
+import Button, { ButtonProps } from "./Button";
 
 export default {
   title: "form/Button",
   component: Button,
-};
+} as ComponentMeta<typeof Button>;
 
-const Template = (args) => <Button {...args} />;
+const Template: ComponentStory<typeof Button> = (args: ButtonProps) => <Button {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {
@@ -15,18 +16,18 @@ Default.args = {
 
 export const Outlined = Template.bind({});
 Outlined.args = {
-  children: "버튼",
   variant: "outlined",
+  children: "버튼",
 };
 
 export const Cancel = Template.bind({});
 Cancel.args = {
-  children: "취소",
   cancel: true,
+  children: "취소",
 };
 
 export const Disabled = Template.bind({});
 Disabled.args = {
-  children: "버튼",
   disabled: true,
+  children: "버튼",
 };

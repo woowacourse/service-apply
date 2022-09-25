@@ -1,22 +1,33 @@
 import classNames from "classnames";
-import PropTypes from "prop-types";
 import Description from "../Description/Description";
 import Label from "../Label/Label";
 import TextInput from "../TextInput/TextInput";
 import styles from "./MessageTextInput.module.css";
 
+export type MessageTextInputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, "type"> & {
+  className?: string;
+  label?: string;
+  required?: boolean;
+  description?: string;
+  value?: string;
+  name: string;
+  maxLength?: number;
+  errorMessage?: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+};
+
 const MessageTextInput = ({
-  label,
-  description,
-  value,
-  onChange,
+  className,
+  label = "",
+  required = false,
+  description = "",
+  value = "",
   name,
   maxLength,
-  required,
-  className,
   errorMessage,
+  onChange,
   ...props
-}) => {
+}: MessageTextInputProps) => {
   return (
     <div className={classNames(styles.box, className)}>
       <div className={styles["text-field"]}>
@@ -38,23 +49,6 @@ const MessageTextInput = ({
       </div>
     </div>
   );
-};
-
-MessageTextInput.propTypes = {
-  label: PropTypes.string,
-  initialValue: PropTypes.string,
-  name: PropTypes.string.isRequired,
-  required: PropTypes.bool,
-  description: PropTypes.node,
-  maxLength: PropTypes.number,
-  errorMessage: PropTypes.string,
-};
-
-MessageTextInput.defaultProps = {
-  label: "",
-  value: "",
-  required: false,
-  description: "",
 };
 
 export default MessageTextInput;

@@ -1,12 +1,23 @@
 import classNames from "classnames";
+<<<<<<< HEAD:frontend/src/components/@common/Container/Container.js
 import PropTypes from "prop-types";
+=======
+>>>>>>> 63fa356 (refactor: migrate common files to ts):frontend/src/components/@common/Container/Container.tsx
 import styles from "./Container.module.css";
 
 export const CONTAINER_SIZE = {
   DEFAULT: "default",
   NARROW: "narrow",
+} as const;
+
+export type ContainerProps = React.HTMLAttributes<HTMLDivElement> & {
+  size?: typeof CONTAINER_SIZE[keyof typeof CONTAINER_SIZE];
+  className?: string;
+  title?: string;
+  children: React.ReactNode;
 };
 
+<<<<<<< HEAD:frontend/src/components/@common/Container/Container.js
 export const TITLE_ALIGN = {
   LEFT: "left",
   CENTER: "center",
@@ -14,6 +25,9 @@ export const TITLE_ALIGN = {
 };
 
 const Container = ({ title, titleAlign, size, children, className, ...props }) => {
+=======
+const Container = ({ size = "default", className, title, children, ...props }: ContainerProps) => {
+>>>>>>> 63fa356 (refactor: migrate common files to ts):frontend/src/components/@common/Container/Container.tsx
   return (
     <div
       className={classNames(
@@ -38,6 +52,7 @@ const Container = ({ title, titleAlign, size, children, className, ...props }) =
 };
 
 export default Container;
+<<<<<<< HEAD:frontend/src/components/@common/Container/Container.js
 
 Container.propTypes = {
   title: PropTypes.string,
@@ -50,3 +65,5 @@ Container.defaultProps = {
   size: "default",
   titleAlign: "center",
 };
+=======
+>>>>>>> 63fa356 (refactor: migrate common files to ts):frontend/src/components/@common/Container/Container.tsx

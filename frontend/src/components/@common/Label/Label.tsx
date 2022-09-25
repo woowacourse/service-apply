@@ -1,9 +1,14 @@
 import React from "react";
-import PropTypes from "prop-types";
 import classNames from "classnames";
 import styles from "./Label.module.css";
 
-const Label = ({ children, className, required }) => {
+export type LabelProps = {
+  className?: string;
+  required?: boolean;
+  children: React.ReactNode;
+};
+
+const Label = ({ className = "", required = false, children }: LabelProps) => {
   return (
     <label
       className={classNames(styles.label, className, {
@@ -13,17 +18,6 @@ const Label = ({ children, className, required }) => {
       {children}
     </label>
   );
-};
-
-Label.propTypes = {
-  children: PropTypes.node.isRequired,
-  className: PropTypes.string,
-  required: PropTypes.bool,
-};
-
-Label.defaultProps = {
-  className: "",
-  required: false,
 };
 
 export default Label;
