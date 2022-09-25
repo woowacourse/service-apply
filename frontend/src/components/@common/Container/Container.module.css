@@ -1,7 +1,6 @@
 .box {
   width: var(--pc-main-width);
   background: var(--white);
-  border: 1px solid var(--gray-003);
   padding: 1.875rem 1.25rem;
   background-color: var(--white);
 }
@@ -12,11 +11,22 @@
 
 .title {
   font-size: 1.75rem;
-  text-align: center;
 }
 
 .title-with-children {
   margin: 0.875rem 0 3rem;
+}
+
+.title-align-center {
+  text-align: center;
+}
+
+.title-align-start {
+  text-align: start;
+}
+
+.title-align-end {
+  text-align: end;
 }
 
 @media screen and (max-width: 800px) {

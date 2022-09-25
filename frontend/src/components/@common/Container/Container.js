@@ -8,7 +8,13 @@ export const CONTAINER_SIZE = {
   NARROW: "narrow",
 };
 
-const Container = ({ title, size, children, className, ...props }) => {
+export const TITLE_ALIGN = {
+  CENTER: "center",
+  START: "start",
+  END: "end",
+};
+
+const Container = ({ title, titleAlign = "center", size, children, className, ...props }) => {
   return (
     <div
       className={classNames(
@@ -20,7 +26,7 @@ const Container = ({ title, size, children, className, ...props }) => {
     >
       {title && (
         <h2
-          className={classNames(styles.title, {
+          className={classNames(styles.title, styles[`title-align-${titleAlign}`], {
             [styles["title-with-children"]]: children,
           })}
         >
@@ -36,10 +42,12 @@ export default Container;
 
 Container.propTypes = {
   title: PropTypes.string,
+  titleAlign: PropTypes.oneOf(["center", "start", "end"]),
   size: PropTypes.oneOf(["default", "narrow"]),
   children: PropTypes.node,
 };
 
 Container.defaultProps = {
   size: "default",
+  titleAlign: "center",
 };
