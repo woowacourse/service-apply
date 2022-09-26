@@ -1,7 +1,6 @@
-import React from "react";
-import Recruits from "./Recruits";
-import Header from "../../components/Header/Header";
 import "../../App.css";
+import Header from "../../components/Header/Header";
+import Recruits from "./Recruits";
 
 export default {
   title: "pages/Recruits",
