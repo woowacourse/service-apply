@@ -1,5 +1,4 @@
-import React from "react";
-import { Route, MemoryRouter } from "react-router-dom";
+import { MemoryRouter, Route } from "react-router-dom";
 import SignUp from "./SignUp";
 
 export default {
