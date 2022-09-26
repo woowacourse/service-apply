@@ -4,9 +4,9 @@ import apply.application.AdministratorData
 import apply.application.AdministratorResponse
 import apply.domain.administrator.Administrator
 
-const val ADMINISTRATOR_NAME = "admin"
-const val ADMINISTRATOR_USERNAME = "master"
-const val ADMINISTRATOR_PASSWORD = "abcd1234"
+const val ADMINISTRATOR_NAME = "관리자"
+const val ADMINISTRATOR_USERNAME = "admin"
+const val ADMINISTRATOR_PASSWORD = "1234"
 
 fun createAdministrator(
     name: String = ADMINISTRATOR_NAME,
@@ -21,9 +21,9 @@ fun createAdministratorData(
     name: String = ADMINISTRATOR_NAME,
     username: String = ADMINISTRATOR_USERNAME,
     password: String = ADMINISTRATOR_PASSWORD,
-    passwordConfirmation: String = ADMINISTRATOR_PASSWORD
+    confirmPassword: String = ADMINISTRATOR_PASSWORD
 ): AdministratorData {
-    return AdministratorData(name, username, password, passwordConfirmation)
+    return AdministratorData(name, username, password, confirmPassword)
 }
 
 fun createAdministratorResponse(

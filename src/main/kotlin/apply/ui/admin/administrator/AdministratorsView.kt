@@ -1,4 +1,4 @@
-package apply.ui.admin.administrators
+package apply.ui.admin.administrator
 
 import apply.application.AdministratorResponse
 import apply.application.AdministratorService
@@ -27,7 +27,7 @@ class AdministratorsView(private val administratorService: AdministratorService)
     }
 
     private fun createTitle(): Component {
-        return HorizontalLayout(H1("관리자 계정 관리")).apply {
+        return HorizontalLayout(H1("관리자")).apply {
             setSizeFull()
             justifyContentMode = FlexComponent.JustifyContentMode.CENTER
         }

@@ -1,4 +1,4 @@
-package apply.ui.admin.administrators
+package apply.ui.admin.administrator
 
 import apply.application.AdministratorService
 import com.vaadin.flow.component.Component
@@ -17,9 +17,8 @@ class AdministratorFormDialog(
     displayName: String,
     reloadComponents: () -> Unit
 ) : Dialog() {
-
-    private val title = H2("관리자 $displayName")
-    private val administratorForm = AdministratorForm()
+    private val title: H2 = H2("관리자 $displayName")
+    private val administratorForm: AdministratorForm = AdministratorForm()
 
     init {
         add(createHeader(), administratorForm, createButtons(displayName, reloadComponents))

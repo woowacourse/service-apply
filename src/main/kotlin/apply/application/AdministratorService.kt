@@ -7,25 +7,23 @@ import apply.domain.administrator.getByUsername
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
+@Transactional
 @Service
-class AdministratorService(private val administratorRepository: AdministratorRepository) : UserDetailsService {
+class AdministratorService(
+    private val administratorRepository: AdministratorRepository
+) : UserDetailsService {
     override fun loadUserByUsername(username: String): UserDetails {
         return administratorRepository.getByUsername(username)
     }
 
     fun save(request: AdministratorData): AdministratorResponse {
-        check(!administratorRepository.existsByName(request.name)) { "이미 등록된 관리자명입니다." }
-        check(!administratorRepository.existsByUsername(request.username)) { "이미 등록된 관리자ID 입니다." }
-        check(request.password == request.passwordConfirmation) { "비밀번호가 일치하지 않습니다." }
-
-        return administratorRepository.save(
-            Administrator(
-                request.name,
-                request.username,
-                request.password
-            )
-        ).let(::AdministratorResponse)
+        check(!administratorRepository.existsByUsername(request.username)) { "이미 등록된 사용자명입니다." }
+        check(request.password == request.confirmPassword) { "비밀번호가 일치하지 않습니다." }
+        return administratorRepository
+            .save(Administrator(username = request.username, name = request.name, password = request.password))
+            .let(::AdministratorResponse)
     }
 
     fun findAll(): List<AdministratorResponse> {

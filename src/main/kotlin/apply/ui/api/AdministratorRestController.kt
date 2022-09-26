@@ -15,19 +15,18 @@ import org.springframework.web.bind.annotation.RestController
 import support.toUri
 import javax.validation.Valid
 
-@RequestMapping("/api/admin/administrators")
+@RequestMapping("/api/administrators")
 @RestController
 class AdministratorRestController(
     private val administratorService: AdministratorService
 ) {
-
     @PostMapping
     fun save(
         @RequestBody @Valid request: AdministratorData,
         @LoginUser(administrator = true) user: User
     ): ResponseEntity<ApiResponse<AdministratorResponse>> {
         val response = administratorService.save(request)
-        return ResponseEntity.created("/api/admin/administrators/${response.id}".toUri())
+        return ResponseEntity.created("/api/administrators/${response.id}".toUri())
             .body(ApiResponse.success(response))
     }
 

@@ -42,10 +42,6 @@ class AdministratorRepositoryTest(
             }
         }
 
-        expect("관리자 이름이 존재하는지 확인한다") {
-            administratorRepository.existsByName(administrator.name).shouldBeTrue()
-        }
-
         expect("관리자 아이디가 존재하는지 확인한다") {
             administratorRepository.existsByUsername(administrator.username).shouldBeTrue()
         }

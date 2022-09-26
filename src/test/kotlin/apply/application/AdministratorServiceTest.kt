@@ -22,7 +22,6 @@ class AdministratorServiceTest : BehaviorSpec({
     Given("특정 관리자명 또는 특정 관리자 아이디를 가진 관리자가 존재하지 않는 경우") {
         val administrator = createAdministrator()
 
-        every { administratorRepository.existsByName(any()) } returns false
         every { administratorRepository.existsByUsername(any()) } returns false
         every { administratorRepository.save(any()) } returns createAdministrator()
 
@@ -38,7 +37,6 @@ class AdministratorServiceTest : BehaviorSpec({
     Given("특정 관리자 아이디를 가진 관리자가 존재하는 경우") {
         val administrator = createAdministrator()
 
-        every { administratorRepository.existsByName(any()) } returns false
         every { administratorRepository.existsByUsername(any()) } returns true
         every { administratorRepository.save(any()) } returns createAdministrator()
         every { administratorRepository.findByUsername(any()) } returns administrator
@@ -60,22 +58,7 @@ class AdministratorServiceTest : BehaviorSpec({
         }
     }
 
-    Given("특정 관리자명을 가진 관리자가 존재하는 경우") {
-        every { administratorRepository.existsByName(any()) } returns true
-        every { administratorRepository.existsByUsername(any()) } returns false
-        every { administratorRepository.save(any()) } returns createAdministrator()
-
-        When("관리자를 추가하면") {
-            Then("예외가 발생한다") {
-                shouldThrow<IllegalStateException> {
-                    administratorService.save(createAdministratorData())
-                }
-            }
-        }
-    }
-
     Given("패스워드와 패스워드 확인이 일치하지 않는 경우") {
-        every { administratorRepository.existsByName(any()) } returns true
         every { administratorRepository.existsByUsername(any()) } returns true
         every { administratorRepository.save(any()) } returns createAdministrator()
 
@@ -84,7 +67,7 @@ class AdministratorServiceTest : BehaviorSpec({
                 shouldThrow<IllegalStateException> {
                     administratorService.save(
                         createAdministratorData(
-                            password = "ABCD1234", passwordConfirmation = "4321DCBA"
+                            password = "ABCD1234", confirmPassword = "4321DCBA"
                         )
                     )
                 }
@@ -107,9 +90,9 @@ class AdministratorServiceTest : BehaviorSpec({
     }
 
     Given("관리자가 여러 명인 경우") {
-        val administrator1 = createAdministrator(name = "adminA", username = "masterA", id = 1L)
-        val administrator2 = createAdministrator(name = "adminB", username = "masterB", id = 2L)
-        val administrator3 = createAdministrator(name = "adminC", username = "masterC", id = 3L)
+        val administrator1 = createAdministrator(name = "관리자1", username = "admin1", id = 1L)
+        val administrator2 = createAdministrator(name = "관리자2", username = "admin2", id = 2L)
+        val administrator3 = createAdministrator(name = "관리자3", username = "admin3", id = 3L)
         val administrators = listOf(
             administrator1, administrator2, administrator3
         )

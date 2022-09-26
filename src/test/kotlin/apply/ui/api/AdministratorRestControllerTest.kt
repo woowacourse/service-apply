@@ -12,8 +12,7 @@ import org.springframework.test.web.servlet.post
 import support.test.web.servlet.bearer
 
 @WebMvcTest(AdministratorRestController::class)
-internal class AdministratorRestControllerTest : RestControllerTest() {
-
+class AdministratorRestControllerTest : RestControllerTest() {
     @MockkBean
     private lateinit var administratorService: AdministratorService
 
@@ -22,7 +21,7 @@ internal class AdministratorRestControllerTest : RestControllerTest() {
         val response = createAdministratorResponse(id = 1L)
         every { administratorService.save(any()) } returns response
 
-        mockMvc.post("/api/admin/administrators") {
+        mockMvc.post("/api/administrators") {
             jsonContent(createAdministratorData())
             bearer("valid_token")
         }.andExpect {
@@ -40,7 +39,7 @@ internal class AdministratorRestControllerTest : RestControllerTest() {
         )
         every { administratorService.findAll() } returns responses
 
-        mockMvc.get("/api/admin/administrators") {
+        mockMvc.get("/api/administrators") {
             bearer("valid_token")
         }.andExpect {
             status { isOk }
@@ -53,7 +52,7 @@ internal class AdministratorRestControllerTest : RestControllerTest() {
         val response = createAdministratorResponse()
         every { administratorService.findById(any()) } returns response
 
-        mockMvc.get("/api/admin/administrators/1") {
+        mockMvc.get("/api/administrators/1") {
             bearer("valid_token")
         }.andExpect {
             status { isOk }
