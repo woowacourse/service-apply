@@ -1,5 +1,5 @@
-export const parseQuery = (query) => {
-  const queryObj = {};
+export const parseQuery = (query: URL["search"]) => {
+  const queryObj: Record<string, string> = {};
 
   query
     .slice(1)
@@ -13,7 +13,7 @@ export const parseQuery = (query) => {
   return queryObj;
 };
 
-export const generateQuery = (queryObj) => {
+export const generateQuery = (queryObj: Record<string, string>) => {
   const queryKeys = Object.keys(queryObj);
 
   return `?${queryKeys.map((key) => `${key}=${queryObj[key]}`).join("&")}`;

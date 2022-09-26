@@ -8,9 +8,9 @@ import MessageTextarea from "../../components/@common/MessageTextarea/MessageTex
 import MessageTextInput from "../../components/@common/MessageTextInput/MessageTextInput";
 import CancelButton from "../../components/form/CancelButton/CancelButton";
 import Form from "../../components/form/Form/Form";
-import FORM from "../../constants/form";
+import { FORM } from "../../constants/form";
 import { CONFIRM_MESSAGE, ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
-import PATH, { PARAM } from "../../constants/path";
+import { PATH, PARAM } from "../../constants/path";
 import useAssignmentForm, { ASSIGNMENT_FORM_NAME } from "../../hooks/useAssignmentForm";
 import useTokenContext from "../../hooks/useTokenContext";
 import styles from "./AssignmentSubmit.module.css";

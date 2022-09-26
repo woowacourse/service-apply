@@ -1,5 +1,5 @@
 import { Outlet, Navigate } from "react-router-dom";
-import PATH from "../../constants/path";
+import { PATH } from "../../constants/path";
 import useTokenContext from "../../hooks/useTokenContext";
 
 const PrivateRoute = ({ ...props }) => {

@@ -2,7 +2,7 @@ import classNames from "classnames";
 import React, { useMemo } from "react";
 import { generatePath, Link, useNavigate, useLocation } from "react-router-dom";
 import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
-import PATH, { PARAM } from "../../constants/path";
+import { PATH, PARAM } from "../../constants/path";
 import { RECRUITMENT_STATUS } from "../../constants/recruitment";
 import { RECRUITS_TAB, RECRUITS_TAB_LIST } from "../../constants/tab";
 import useRecruitmentContext from "../../hooks/useRecruitmentContext";

@@ -6,7 +6,7 @@ import MessageTextInput from "../../components/@common/MessageTextInput/MessageT
 import CancelButton from "../../components/form/CancelButton/CancelButton";
 import Form from "../../components/form/Form/Form";
 import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
-import PATH from "../../constants/path";
+import { PATH } from "../../constants/path";
 import usePasswordEditForm, { PASSWORD_EDIT_FORM_NAME } from "../../hooks/usePasswordEditForm";
 import useTokenContext from "../../hooks/useTokenContext";
 import styles from "./PasswordEdit.module.css";
