@@ -9,10 +9,13 @@ import javax.persistence.Entity
 
 @Entity
 class Administrator(
+    @Column(nullable = false, length = 30)
     val name: String,
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false, length = 30)
     private val username: String,
+
+    @Column(nullable = false)
     private val password: String,
     id: Long = 0L
 ) : BaseEntity(id), UserDetails {

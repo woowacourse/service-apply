@@ -3,6 +3,7 @@ package apply.application
 import apply.domain.administrator.Administrator
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Pattern
+import javax.validation.constraints.Size
 
 data class AdministratorData(
     @field:Pattern(
@@ -12,6 +13,7 @@ data class AdministratorData(
     var name: String = "",
 
     @field:NotBlank
+    @field:Size(min = 1, max = 30)
     var username: String = "",
 
     @field:NotBlank
