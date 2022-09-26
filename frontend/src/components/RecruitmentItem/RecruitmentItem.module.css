@@ -4,37 +4,54 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.25rem 1.5rem 1rem;
+  padding: 1.5rem 1rem;
   background-color: var(--white);
-  border: 1px solid var(--gray-003);
+
+  color: var(--gray-004);
+  cursor: default;
+}
+
+.active {
+  color: var(--black);
+  cursor: pointer;
+}
+
+.content-wrapper.active:hover {
+  background-color: var(--gray-002);
+  transition: 300ms ease-in-out;
 }
 
 .text-container {
   display: flex;
-  flex-direction: column;
   gap: 0.875rem;
 }
 
 .title {
-  font-size: 1.25rem;
+  font-size: 1.125rem;
   font-weight: bold;
+  min-width: 10rem;
 }
 
 .date {
   display: flex;
   align-items: center;
+  font-size: 1rem;
   gap: 0.5rem;
   color: var(--gray-008);
 }
 
-.button {
-  min-width: 6rem;
+.icon {
+  width: 1rem;
 }
 
 @media screen and (max-width: 513px) {
+  .title {
+    font-size: 1rem;
+    min-width: 8rem;
+  }
   .date {
     gap: 0.25rem;
-    font-size: 0.875rem;
+    font-size: 0.6rem;
   }
 
   .icon {
