@@ -2,7 +2,7 @@ import classNames from "classnames";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import MemberIcon from "../../assets/icon/member-icon.svg";
-import PATH from "../../constants/path";
+import { PATH } from "../../constants/path";
 import useTokenContext from "../../hooks/useTokenContext";
 import styles from "./Header.module.css";
 

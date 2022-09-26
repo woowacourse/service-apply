@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import myPageImage from "../../assets/image/myPage.svg";
 import Button, { BUTTON_VARIANT } from "../../components/@common/Button/Button";
 import Container from "../../components/@common/Container/Container";
-import PATH from "../../constants/path";
+import { PATH } from "../../constants/path";
 import useUserInfoContext from "../../hooks/useUserInfoContext";
 import * as styles from "./MyPage.module.css";
 

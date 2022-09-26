@@ -6,9 +6,9 @@ import MessageTextInput from "../../components/@common/MessageTextInput/MessageT
 import BirthField from "../../components/form/BirthField/BirthField";
 import CancelButton from "../../components/form/CancelButton/CancelButton";
 import Form from "../../components/form/Form/Form";
-import FORM from "../../constants/form";
+import { FORM } from "../../constants/form";
 import { ERROR_MESSAGE } from "../../constants/messages";
-import PATH from "../../constants/path";
+import { PATH } from "../../constants/path";
 import usePasswordFindForm, { PASSWORD_FIND_FORM_NAME } from "../../hooks/usePasswordFindForm";
 import styles from "./PasswordFind.module.css";
 

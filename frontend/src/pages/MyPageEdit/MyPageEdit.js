@@ -7,9 +7,9 @@ import MessageTextInput from "../../components/@common/MessageTextInput/MessageT
 import BirthField from "../../components/form/BirthField/BirthField";
 import CancelButton from "../../components/form/CancelButton/CancelButton";
 import Form from "../../components/form/Form/Form";
-import FORM from "../../constants/form";
+import { FORM } from "../../constants/form";
 import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
-import PATH from "../../constants/path";
+import { PATH } from "../../constants/path";
 import useMyPageEditForm, { MY_PAGE_EDIT_FORM_NAME } from "../../hooks/useMyPageEditForm";
 import useUserInfoContext from "../../hooks/useUserInfoContext";
 import * as styles from "./MyPageEdit.module.css";

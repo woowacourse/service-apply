@@ -1,4 +1,4 @@
-const PATH = {
+export const PATH = {
   HOME: "/",
   RECRUITS: "/recruits",
   SIGN_UP: "/sign-up",
@@ -11,7 +11,7 @@ const PATH = {
   EDIT_PASSWORD: "/edit",
   MY_PAGE: "/mypage",
   EDIT_MY_PAGE: "/mypage/edit",
-};
+} as const;
 
 export const PARAM = {
   APPLICATION_FORM_STATUS: {
@@ -22,6 +22,4 @@ export const PARAM = {
     EDIT: "edit",
     NEW: "new",
   },
-};
-
-export default PATH;
+} as const;

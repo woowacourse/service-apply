@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as Api from "../api";
-import PATH from "../constants/path";
+import { PATH } from "../constants/path";
 
 const useRecruitmentItem = (recruitmentId) => {
   const [recruitmentItems, setRecruitmentItems] = useState([]);

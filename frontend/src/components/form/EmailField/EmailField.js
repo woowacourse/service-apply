@@ -2,7 +2,7 @@ import classNames from "classnames";
 import PropTypes from "prop-types";
 import { useEffect } from "react";
 import { fetchAuthenticationCode, fetchVerifyAuthenticationCode } from "../../../api";
-import FORM from "../../../constants/form";
+import { FORM } from "../../../constants/form";
 import { ERROR_MESSAGE } from "../../../constants/messages";
 import { SIGN_UP_FORM_NAME } from "../../../hooks/useSignUpForm";
 import useTimer from "../../../hooks/useTimer";

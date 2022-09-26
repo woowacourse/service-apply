@@ -1,7 +1,14 @@
-export const formatLocalDate = ({ year, month, day }) =>
-  `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+export const formatLocalDate = ({
+  year,
+  month,
+  day,
+}: {
+  year: string;
+  month: string;
+  day: string;
+}) => `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
 
-export const formatDateTime = (value) => {
+export const formatDateTime = (value: Date) => {
   const year = value.getFullYear();
   const month = value.getMonth();
   const date = value.getDate();
@@ -15,7 +22,7 @@ export const formatDateTime = (value) => {
   ).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
 };
 
-export const formatDate = (value) => {
+export const formatDate = (value: Date) => {
   const year = value.getFullYear();
   const month = value.getMonth() + 1;
   const date = value.getDate();
@@ -23,5 +30,5 @@ export const formatDate = (value) => {
   return `${year}-${String(month).padStart(2, "0")}-${String(date).padStart(2, "0")}`;
 };
 
-export const formatTimerText = (seconds) =>
+export const formatTimerText = (seconds: number) =>
   `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;

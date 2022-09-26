@@ -2,7 +2,7 @@ import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Button from "../../components/@common/Button/Button";
 import Form from "../../components/form/Form/Form";
-import PATH from "../../constants/path";
+import { PATH } from "../../constants/path";
 import Container, { CONTAINER_SIZE } from "../../components/@common/Container/Container";
 
 import styles from "./PasswordFindResult.module.css";

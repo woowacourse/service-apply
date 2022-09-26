@@ -9,9 +9,9 @@ import EmailField, { EMAIL_STATUS } from "../../components/form/EmailField/Email
 import Form from "../../components/form/Form/Form";
 import GenderField from "../../components/form/GenderField/GenderField";
 import SummaryCheckField from "../../components/form/SummaryCheckField/SummaryCheckField";
-import FORM from "../../constants/form";
+import { FORM } from "../../constants/form";
 import { ERROR_MESSAGE } from "../../constants/messages";
-import PATH from "../../constants/path";
+import { PATH } from "../../constants/path";
 import { POLICY_SUMMARY } from "../../constants/policySummary";
 import useSignUpForm, { SIGN_UP_FORM_NAME } from "../../hooks/useSignUpForm";
 import useTokenContext from "../../hooks/useTokenContext";

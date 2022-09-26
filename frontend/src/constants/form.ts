@@ -1,4 +1,4 @@
-const FORM = {
+export const FORM = {
   EMAIL_MAX_LENGTH: 255,
   NAME_MAX_LENGTH: 30,
   PHONE_NUMBER_MAX_LENGTH: 13,
@@ -7,6 +7,4 @@ const FORM = {
   REFERENCE_URL_MAX_LENGTH: 255,
   GITHUB_USERNAME_MAX_LENGTH: 39,
   NOTE_MAX_LENGTH: 1000,
-};
-
-export default FORM;
+} as const;
