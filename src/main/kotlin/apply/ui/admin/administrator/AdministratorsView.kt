@@ -49,7 +49,7 @@ class AdministratorsView(private val administratorService: AdministratorService)
     private fun createGrid(): Component {
         return Grid<AdministratorResponse>(10).apply {
             addSortableColumn("관리자명", AdministratorResponse::name)
-            addSortableColumn("관리자 ID", AdministratorResponse::username)
+            addSortableColumn("관리자 사용자명", AdministratorResponse::username)
             addColumn(createEditAndDeleteButton()).apply { isAutoWidth = true }
             setItems(administratorService.findAll())
         }
