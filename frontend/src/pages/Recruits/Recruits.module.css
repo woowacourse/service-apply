@@ -10,46 +10,6 @@
   z-index: var(--nav-z-index);
 }
 
-.tab-list {
-  width: 100%;
-  max-width: var(--pc-main-width);
-  height: inherit;
-  display: flex;
-  align-items: center;
-  margin: 0 auto;
-  overflow-x: auto;
-  white-space: nowrap;
-}
-
-.tab-item {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: inherit;
-  flex: 1;
-}
-
-.tab-item.active {
-  position: relative;
-}
-
-.tab-item.active::after {
-  content: "";
-  display: block;
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 0.25rem;
-  color: var(--black-004);
-}
-
-.tab-item a {
-  text-decoration: none;
-  color: var(--gray-006);
-}
-
 .active a {
   color: var(--black-004);
   font-weight: bold;
@@ -57,13 +17,13 @@
 
 .recruitment-list-box {
   width: var(--pc-main-width);
-  margin: 3.625rem auto 0;
+  margin: 0 auto;
 }
 
 .recruitment-list {
   display: flex;
   flex-direction: column;
-  gap: 0.625rem;
+  gap: 1.125rem;
 }
 
 .empty-state-box {
@@ -75,14 +35,30 @@
   color: var(--gray-005);
 }
 
+.course-tab-list {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+  overflow: auto;
+}
+
 @media screen and (max-width: 800px) {
-  .tab-item,
   .empty-state-box {
     font-size: 0.875rem;
   }
 
   .recruitment-list-box {
     width: calc(100vw - 1rem);
-    margin-top: 3.625rem;
+    margin-top: 0;
+  }
+
+  .tab {
+    display: none;
+  }
+
+  .course-tab-list {
+    gap: 1rem;
+    margin-bottom: 1.5rem;
   }
 }

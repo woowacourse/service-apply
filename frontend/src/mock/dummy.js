@@ -5,7 +5,7 @@ const nextMonth = new Date().setMonth(now.getMonth() + 1);
 export const recruitmentDummy = [
   {
     id: 1,
-    title: "지원할 제목",
+    title: "우아한테크코스 1기",
     recruitable: true,
     hidden: false,
     startDateTime: "2020-10-05T10:00:00",
@@ -14,7 +14,7 @@ export const recruitmentDummy = [
   },
   {
     id: 2,
-    title: "웹 백엔드 2기",
+    title: "우아한테크코스 2기",
     recruitable: true,
     hidden: false,
     startDateTime: "2019-10-25T10:00:00",
@@ -23,7 +23,7 @@ export const recruitmentDummy = [
   },
   {
     id: 3,
-    title: "웹 프론트엔드 3기",
+    title: "우아한테크캠프 2기",
     recruitable: true,
     hidden: false,
     startDateTime: "2020-10-25T15:00:00",
@@ -32,7 +32,16 @@ export const recruitmentDummy = [
   },
   {
     id: 4,
-    title: "웹 프론트엔드 3기",
+    title: "우아한테크캠프 Pro 3기",
+    recruitable: true,
+    hidden: false,
+    startDateTime: "2020-10-25T15:00:00",
+    endDateTime: "2021-11-30T10:00:00",
+    status: "RECRUITING",
+  },
+  {
+    id: 5,
+    title: "우아한테크캠프 Pro 5기",
     recruitable: true,
     hidden: false,
     startDateTime: "2020-10-25T15:00:00",
@@ -40,7 +49,6 @@ export const recruitmentDummy = [
     status: "RECRUITING",
   },
 ];
-
 export const myApplicationDummy = [
   {
     recruitmentId: 1,
