@@ -1,21 +1,13 @@
 import classNames from "classnames";
-import React, { useMemo } from "react";
-import { generatePath, Link, useNavigate, useLocation } from "react-router-dom";
+import { useMemo } from "react";
+import { generatePath, Link, useLocation, useNavigate } from "react-router-dom";
 import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
-import { PATH, PARAM } from "../../constants/path";
-import { RECRUITMENT_STATUS } from "../../constants/recruitment";
+import { PARAM, PATH } from "../../constants/path";
 import { RECRUITS_TAB, RECRUITS_TAB_LIST } from "../../constants/tab";
 import useRecruitmentContext from "../../hooks/useRecruitmentContext";
 import useTokenContext from "../../hooks/useTokenContext";
 import { generateQuery } from "../../utils/route/query";
 import styles from "./Recruits.module.css";
-
-const BUTTON_LABEL = {
-  [RECRUITMENT_STATUS.RECRUITING]: "지원하기",
-  [RECRUITMENT_STATUS.RECRUITABLE]: "모집 예정",
-  [RECRUITMENT_STATUS.UNRECRUITABLE]: "일시 중지",
-  [RECRUITMENT_STATUS.ENDED]: "모집 종료",
-};
 
 const Recruits = () => {
   const { token } = useTokenContext();
@@ -97,8 +89,6 @@ const Recruits = () => {
                 <RecruitmentItem
                   key={recruitment.id}
                   recruitment={recruitment}
-                  isButtonDisabled={recruitment.status !== RECRUITMENT_STATUS.RECRUITING}
-                  buttonLabel={BUTTON_LABEL[recruitment.status]}
                   onClickButton={() => goToNewApplicationFormPage(recruitment)}
                   role="listitem"
                 />

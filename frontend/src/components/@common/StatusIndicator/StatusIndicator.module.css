@@ -1,0 +1,23 @@
+.statusIndicator-box {
+  text-align: right;
+  min-width: 5rem;
+}
+.statusIndicator {
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  text-align: right;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  user-select: none;
+
+  background: var(--gray-002);
+  color: var(--gray-006);
+  font-weight: bold;
+}
+
+.active {
+  background-color: var(--gray-002);
+  color: var(--blue);
+}
