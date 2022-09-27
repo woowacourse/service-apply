@@ -63,7 +63,7 @@
 .recruitment-list {
   display: flex;
   flex-direction: column;
-  gap: 1.125rem;
+  gap: 0.625rem;
 }
 
 .empty-state-box {
