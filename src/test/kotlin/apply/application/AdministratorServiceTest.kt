@@ -12,12 +12,17 @@ import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
+import org.springframework.security.crypto.password.PasswordEncoder
+import support.test.IntegrationTest
 import support.test.spec.afterRootTest
 
-class AdministratorServiceTest : BehaviorSpec({
+@IntegrationTest
+class AdministratorServiceTest(
+    private val passwordEncoder: PasswordEncoder
+) : BehaviorSpec({
     val administratorRepository = mockk<AdministratorRepository>()
 
-    val administratorService = AdministratorService(administratorRepository)
+    val administratorService = AdministratorService(administratorRepository, passwordEncoder)
 
     Given("특정 관리자명 또는 특정 관리자 아이디를 가진 관리자가 존재하지 않는 경우") {
         val administrator = createAdministrator()
