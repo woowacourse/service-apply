@@ -35,6 +35,6 @@ input[type="checkbox"] + .custom-checkbox::before {
 }
 
 input[type="checkbox"]:checked + .custom-checkbox::before {
-  background: var(--black);
+  color: var(--black-004);
   color: var(--white);
 }

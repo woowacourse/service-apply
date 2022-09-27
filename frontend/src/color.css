@@ -8,9 +8,11 @@
   --gray-007: #999;
   --gray-008: #666;
   --gray-009: #555;
-  --black: #333;
+  --black-001: #000;
+  --black-004: #333;
   --white: #fff;
-  --light-blue-gray: #f1f2f6;
+  --light-blue-gray: #f5f5f5;
+  --light-blue-green: #d5eaf1;
   --blue: #279cf6;
   --red: #ff0000;
 }
