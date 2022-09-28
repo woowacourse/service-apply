@@ -36,7 +36,7 @@ export default Container;
 
 Container.propTypes = {
   title: PropTypes.string,
-  titleAlign: PropTypes.oneOf(["center", "start", "end"]),
+  titleAlign: PropTypes.oneOf(["left", "center", "right"]),
   size: PropTypes.oneOf(["default", "narrow"]),
   children: PropTypes.node,
 };

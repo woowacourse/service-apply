@@ -125,7 +125,7 @@ const ApplicationRegister = () => {
         <RecruitmentItem className={styles["recruitment-item"]} recruitment={currentRecruitment} />
       )}
 
-      <Container title="지원서 작성" titleAlign="start">
+      <Container title="지원서 작성" titleAlign="left">
         <Form onSubmit={handleSubmit}>
           {status === PARAM.APPLICATION_FORM_STATUS.EDIT && (
             <p className={styles["autosave-indicator"]}>

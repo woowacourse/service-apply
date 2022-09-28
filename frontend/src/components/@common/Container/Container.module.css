@@ -17,16 +17,16 @@
   margin: 0.875rem 0 3rem;
 }
 
+.title-align-left {
+  text-align: left;
+}
+
 .title-align-center {
   text-align: center;
 }
 
-.title-align-start {
-  text-align: start;
-}
-
-.title-align-end {
-  text-align: end;
+.title-align-right {
+  text-align: right;
 }
 
 @media screen and (max-width: 800px) {
