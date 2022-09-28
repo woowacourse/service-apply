@@ -87,7 +87,7 @@ const AssignmentSubmit = () => {
   }, []);
 
   return (
-    <Container title={currentMission?.title ?? ""} titleAlign="left">
+    <Container title={currentMission?.title ?? ""} titleAlign="start">
       <Form onSubmit={handleSubmit} className={styles.form}>
         <MessageTextInput
           label="GitHub ID"

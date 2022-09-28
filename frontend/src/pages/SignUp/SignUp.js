@@ -51,7 +51,7 @@ const SignUp = () => {
   };
 
   return (
-    <Container title="회원가입" size={CONTAINER_SIZE.NARROW} titleAlign="left">
+    <Container title="회원가입" size={CONTAINER_SIZE.NARROW} titleAlign="start">
       <Form onSubmit={handleSubmit}>
         <SummaryCheckField
           label="개인정보 수집 및 이용 동의"

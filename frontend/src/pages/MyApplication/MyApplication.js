@@ -142,7 +142,7 @@ const MyApplication = () => {
 
   return (
     <div className={styles.box}>
-      <Container title="내 지원 현황" className={styles["page-title"]} titleAlign="left" />
+      <Container title="내 지원 현황" className={styles["page-title"]} titleAlign="start" />
       {myRecruitments.map(({ submitted, ...recruitment }, index) => (
         <Panel
           key={`recruitment-${recruitment.id}`}
