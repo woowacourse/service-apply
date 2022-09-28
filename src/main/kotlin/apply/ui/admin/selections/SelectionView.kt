@@ -73,9 +73,14 @@ class SelectionView(
     private var evaluationFileButtons: HorizontalLayout = createEvaluationFileButtons()
 
     override fun setParameter(event: BeforeEvent, @WildcardParameter parameter: Long) {
+        if (recruitmentId == parameter) {
+            return
+        }
         this.recruitmentId = parameter
+        removeAll()
         add(createTitle(), createContent())
     }
+
 
     private fun createTitle(): Component {
         return HorizontalLayout(H1(recruitmentService.getById(recruitmentId).title)).apply {

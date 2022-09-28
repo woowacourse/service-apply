@@ -35,9 +35,14 @@ class MissionsView(
     private var recruitmentId: Long = 0L
 
     override fun setParameter(event: BeforeEvent, @WildcardParameter parameter: Long) {
+        if (recruitmentId == parameter) {
+            return
+        }
         recruitmentId = parameter
+        removeAll()
         add(createTitle(), createButton(), createGrid())
     }
+
 
     private fun createTitle(): Component {
         return Title("${recruitmentService.getById(recruitmentId).title} 과제 관리")
