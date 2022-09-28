@@ -5,6 +5,7 @@ import com.vaadin.flow.component.HasText
 import com.vaadin.flow.component.Key
 import com.vaadin.flow.component.Text
 import com.vaadin.flow.component.button.Button
+import com.vaadin.flow.component.html.Div
 import com.vaadin.flow.component.html.H1
 import com.vaadin.flow.component.icon.Icon
 import com.vaadin.flow.component.icon.VaadinIcon
@@ -13,10 +14,12 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup
 import com.vaadin.flow.component.select.Select
+import com.vaadin.flow.component.tabs.Tab
 import com.vaadin.flow.component.tabs.Tabs
 import com.vaadin.flow.component.tabs.TabsVariant
 import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.data.renderer.ComponentRenderer
+import com.vaadin.flow.router.RouterLink
 
 fun createIntSelect(min: Int = 0, max: Int): Select<Int> {
     return Select(*(min..max).toList().toTypedArray())
@@ -101,6 +104,26 @@ fun createTabs(components: List<Component>): Component {
         isAutoselect = false
         addThemeVariants(TabsVariant.LUMO_MINIMAL)
         add(*components.toTypedArray())
+    }
+}
+
+fun createHiddenTab(component: Component): Tab {
+    return Tab(component).apply {
+        isVisible = false
+    }
+}
+
+fun createBorder(): Component {
+    return Div().apply {
+        setWidthFull()
+        style.set("border-top", "1px solid gray")
+    }
+}
+
+fun createRouteLink(title: String): RouterLink {
+    return RouterLink().apply {
+        text = title
+        style.set("justify-content", "center")
     }
 }
 

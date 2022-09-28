@@ -2,58 +2,98 @@ package apply.ui.admin
 
 import apply.application.RecruitmentResponse
 import com.vaadin.flow.component.Component
-import com.vaadin.flow.component.accordion.Accordion
-import com.vaadin.flow.component.details.DetailsVariant
-import com.vaadin.flow.component.html.Anchor
+import com.vaadin.flow.component.combobox.ComboBox
 import com.vaadin.flow.component.tabs.Tab
 import com.vaadin.flow.router.RouterLink
-import support.views.createTabs
+import support.views.HasUrlParamLayout
+import support.views.createBorder
+import support.views.createHiddenTab
+import support.views.createRouteLink
 
 infix fun String.of(navigationTarget: Class<out Component>): MenuItem {
     return SingleMenuItem(this, navigationTarget)
 }
 
-fun String.accordionOf(path: String, recruitments: List<RecruitmentResponse>): MenuItem {
-    return AccordionMenuItem(this, path, recruitments.map { it.toContent() })
+infix fun String.of(navigationTarget: Class<out HasUrlParamLayout<Long>>): ParamMenuItem {
+    return ParamMenuItem(this, navigationTarget)
 }
 
-private fun RecruitmentResponse.toContent(): AccordionContent = AccordionContent(id, title)
+fun String.createComboBoxTab(recruitments: List<RecruitmentResponse>, innerItems: List<ParamMenuItem>): MenuItem {
+    return ComboBoxMenuItem(this, recruitments.reversed(), innerItems)
+}
 
-sealed class MenuItem(protected val title: String) {
-    abstract fun toComponent(): Component
+sealed class MenuItem(protected val title: String = "") {
+    abstract fun toComponents(): List<Component>
+}
+
+fun createBorderItem(): MenuItem {
+    return BorderMenuItem()
+}
+
+class BorderMenuItem : MenuItem() {
+    override fun toComponents(): List<Component> {
+        return listOf(
+            Tab(createBorder()).apply {
+                isEnabled = false
+            }
+        )
+    }
 }
 
 class SingleMenuItem(
     title: String,
     private val navigationTarget: Class<out Component>
 ) : MenuItem(title) {
-    override fun toComponent(): Component {
-        return Tab(RouterLink(title, navigationTarget))
+    override fun toComponents(): List<Component> {
+        return listOf(
+            Tab(
+                createRouteLink(title).apply {
+                    setRoute(navigationTarget)
+                }
+            )
+        )
     }
 }
 
-data class AccordionContent(val id: Any, val title: String)
-
-class AccordionMenuItem(
+class ParamMenuItem(
     title: String,
-    private val path: String,
-    private val contents: List<AccordionContent>
+    val navigationTarget: Class<out HasUrlParamLayout<Long>>
 ) : MenuItem(title) {
-    override fun toComponent(): Component {
-        return Accordion().apply {
-            add(title, createTabs()).addThemeVariants(DetailsVariant.REVERSE)
-            close()
+    val link: RouterLink = createRouteLink(title)
+    val tab: Tab = createHiddenTab(link)
+    override fun toComponents(): List<Component> {
+        return listOf(tab)
+    }
+}
+
+class ComboBoxMenuItem(
+    title: String,
+    private val contents: List<RecruitmentResponse>,
+    private val innerItems: List<ParamMenuItem>
+) : MenuItem(title) {
+    override fun toComponents(): List<Component> {
+        val comboBox = ComboBox<RecruitmentResponse>("모집을 선택해 선발을 진행하세요.").apply {
+            placeholder = title
+            setItems(contents)
+            setItemLabelGenerator { it.title }
+
+            addValueChangeListener {
+                for (innerItem in innerItems) {
+                    routeEvent(innerItem)
+                }
+            }
+        }
+
+        return mutableListOf<Component>(Tab(comboBox)).apply {
+            addAll(innerItems.flatMap { it.toComponents() })
         }
     }
 
-    private fun createTabs(): Component? {
-        if (contents.isEmpty()) {
-            return null
+    private fun ComboBox<RecruitmentResponse>.routeEvent(paramMenuItem: ParamMenuItem) {
+        with(paramMenuItem) {
+            tab.isVisible = true
+            tab.isSelected = false
+            link.setRoute(navigationTarget, value.id)
         }
-        return createTabs(contents.toTabs(path))
-    }
-
-    private fun List<AccordionContent>.toTabs(path: String): List<Component> {
-        return map { Tab(Anchor("$path/${it.id}", it.title)) }
     }
 }

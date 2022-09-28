@@ -5,7 +5,9 @@ import apply.ui.admin.administrator.AdministratorsView
 import apply.ui.admin.cheater.CheatersView
 import apply.ui.admin.evaluation.EvaluationsView
 import apply.ui.admin.mail.MailsView
+import apply.ui.admin.mission.MissionsView
 import apply.ui.admin.recruitment.RecruitmentsView
+import apply.ui.admin.selections.SelectionView
 import apply.ui.admin.term.TermsView
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.applayout.AppLayout
@@ -32,7 +34,6 @@ class BaseLayout(
     private fun createDrawer(): Component {
         return VerticalLayout().apply {
             setSizeFull()
-            element.style.set("overflow", "auto")
             themeList["dark"] = true
             alignItems = FlexComponent.Alignment.CENTER
             add(createTitle(), createLogo(width), createMenu())
@@ -50,7 +51,7 @@ class BaseLayout(
     }
 
     private fun createMenu(): Component {
-        return createTabs(createMenuItems().map { it.toComponent() })
+        return createTabs(createMenuItems().flatMap { it.toComponents() })
     }
 
     private fun createMenuItems(): List<MenuItem> {
@@ -59,8 +60,15 @@ class BaseLayout(
             "기수 관리" of TermsView::class.java,
             "모집 관리" of RecruitmentsView::class.java,
             "평가 관리" of EvaluationsView::class.java,
-            "과제 관리".accordionOf("admin/missions", recruitments),
-            "선발 과정".accordionOf("admin/selections", recruitments),
+            createBorderItem(),
+            "모집선택".createComboBoxTab(
+                recruitments,
+                listOf(
+                    "과제 관리" of MissionsView::class.java,
+                    "선발 과정" of SelectionView::class.java,
+                )
+            ),
+            createBorderItem(),
             "부정행위자" of CheatersView::class.java,
             "메일 관리" of MailsView::class.java,
             "관리자" of AdministratorsView::class.java

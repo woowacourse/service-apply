@@ -36,9 +36,9 @@ import com.vaadin.flow.component.upload.receivers.MemoryBuffer
 import com.vaadin.flow.data.renderer.ComponentRenderer
 import com.vaadin.flow.data.renderer.Renderer
 import com.vaadin.flow.router.BeforeEvent
-import com.vaadin.flow.router.HasUrlParameter
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.router.WildcardParameter
+import support.views.HasUrlParamLayout
 import support.views.addSortableColumn
 import support.views.addSortableDateColumn
 import support.views.addSortableDateTimeColumn
@@ -64,7 +64,7 @@ class SelectionView(
     private val myMissionService: MyMissionService,
     private val excelService: ExcelService,
     private val evaluationTargetCsvService: EvaluationTargetCsvService
-) : VerticalLayout(), HasUrlParameter<Long> {
+) : HasUrlParamLayout<Long>() {
     private var recruitmentId: Long = 0L
     private var evaluations: List<EvaluationSelectData> =
         evaluationService.getAllSelectDataByRecruitmentId(recruitmentId)
@@ -80,7 +80,6 @@ class SelectionView(
         removeAll()
         add(createTitle(), createContent())
     }
-
 
     private fun createTitle(): Component {
         return HorizontalLayout(H1(recruitmentService.getById(recruitmentId).title)).apply {
