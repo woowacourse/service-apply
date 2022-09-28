@@ -8,7 +8,7 @@ export const CONTAINER_SIZE = {
   NARROW: "narrow",
 };
 
-const Container = ({ title, titleAlign = "center", size, children, className, ...props }) => {
+const Container = ({ title, titleAlign, size, children, className, ...props }) => {
   return (
     <div
       className={classNames(
