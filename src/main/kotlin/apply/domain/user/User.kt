@@ -6,7 +6,9 @@ import javax.persistence.AttributeOverride
 import javax.persistence.Column
 import javax.persistence.Embedded
 import javax.persistence.Entity
+import javax.persistence.Table
 
+@Table(name = "users")
 @Entity
 class User(
     @Embedded
