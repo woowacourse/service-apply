@@ -5,7 +5,7 @@ import apply.createUser
 import apply.security.LoginUserResolver
 import com.ninjasquad.springmockk.SpykBean
 import io.kotest.core.spec.style.StringSpec
-import io.kotest.matchers.longs.shouldNotBeZero
+import io.kotest.matchers.collections.shouldNotContainDuplicates
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.mockk.every
@@ -47,28 +47,30 @@ class AcceptanceDslTest(
         }
         val recruitment2 = with(client) {
             recruitment {
+                termId = 0L
+            }
+        }
+        val recruitment3 = with(client) {
+            recruitment {
                 title = "웹 백엔드 5기"
                 term = term {
                     name = "5기"
                 }
                 startDateTime = createLocalDateTime(2022, 10, 17)
                 endDateTime = createLocalDateTime(2022, 10, 24)
+                recruitmentItems = recruitmentItems {
+                    recruitmentItem {
+                        title = "프로그래밍 학습 과정과 현재 자신이 생각하는 역량은?"
+                        position = 1
+                    }
+                    recruitmentItem {
+                        title = "프로그래머가 되려는 이유는 무엇인가요?"
+                        position = 2
+                    }
+                }
             }
         }
-        val term = with(client) {
-            term {
-                name = "6기"
-            }
-        }
-        val recruitment3 = with(client) {
-            recruitment {
-                title = "웹 백엔드 6기"
-                termId = term.id
-            }
-        }
-        recruitment1.id.shouldNotBeZero()
-        recruitment2.title shouldBe "웹 백엔드 5기"
-        recruitment3.title shouldBe "웹 백엔드 6기"
+        listOf(recruitment1.id, recruitment2.id, recruitment3.id).shouldNotContainDuplicates()
     }
 
     afterTest {
@@ -81,18 +83,39 @@ private val now: LocalDateTime = now()
 data class Recruitment(
     var title: String = "웹 백엔드 4기",
     var term: Term? = null,
-    var termId: Long? = null,
+    var termId: Long = 0L,
     var startDateTime: LocalDateTime = now.minusYears(1),
     var endDateTime: LocalDateTime = now.plusYears(1),
     var recruitable: Boolean = false,
     var hidden: Boolean = true,
+    var recruitmentItems: List<RecruitmentItem> = emptyList(),
     var id: Long = 0L
 )
+
+data class RecruitmentItem(
+    var title: String = "프로그래밍 학습 과정과 현재 자신이 생각하는 역량은?",
+    var position: Int = 1,
+    var maximumLength: Int = 1000,
+    var description: String = "현재 어느 정도의 역량을 보유한 상태인지를 구체적으로 작성해 주세요.",
+    var id: Long = 0L
+)
+
+class RecruitmentItems {
+    val items: MutableList<RecruitmentItem> = mutableListOf()
+
+    fun recruitmentItem(block: RecruitmentItem.() -> Unit = {}) {
+        items.add(RecruitmentItem().apply(block))
+    }
+}
+
+fun recruitmentItems(block: RecruitmentItems.() -> Unit): List<RecruitmentItem> {
+    return RecruitmentItems().apply(block).items
+}
 
 fun WebTestClient.recruitment(block: Recruitment.() -> Unit = {}): Recruitment {
     val recruitment = Recruitment().apply(block)
     if (recruitment.term == null) {
-        recruitment.term = Term(id = recruitment.termId ?: term().id)
+        recruitment.term = Term(id = recruitment.termId)
     }
     post().uri("/api/recruitments")
         .contentType(APPLICATION_JSON)
