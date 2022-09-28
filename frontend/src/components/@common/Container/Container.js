@@ -8,12 +8,6 @@ export const CONTAINER_SIZE = {
   NARROW: "narrow",
 };
 
-export const TITLE_ALIGN = {
-  CENTER: "center",
-  START: "start",
-  END: "end",
-};
-
 const Container = ({ title, titleAlign = "center", size, children, className, ...props }) => {
   return (
     <div
