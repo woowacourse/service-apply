@@ -1,0 +1,17 @@
+.tab-item-wrapper {
+  width: fit-content;
+  padding: 0.75rem;
+  font-size: 1rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.tab-item-wrapper:hover {
+  font-weight: 600;
+}
+
+.checked {
+  font-weight: 600;
+  background-color: var(--light-blue-green);
+  border-radius: 50px;
+}

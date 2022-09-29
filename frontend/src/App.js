@@ -4,6 +4,7 @@ import "./api/api";
 import "./App.css";
 import Footer from "./components/Footer/Footer";
 import Header from "./components/Header/Header";
+import InquiryFloatingButton from "./components/InquiryFloatingButton/InquiryFloatingButton";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
 import { PATH } from "./constants/path";
@@ -66,6 +67,7 @@ const App = () => {
             </ScrollToTop>
           </main>
           <Footer />
+          <InquiryFloatingButton />
         </BrowserRouter>
       </RecruitmentProvider>
     </TokenProvider>

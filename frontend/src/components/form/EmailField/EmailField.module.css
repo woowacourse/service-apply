@@ -43,7 +43,7 @@
 
 .authenticated {
   font-size: 2rem;
-  background-color: var(--black);
+  background-color: var(--black-004);
   color: var(--white);
   display: flex;
   justify-content: center;
