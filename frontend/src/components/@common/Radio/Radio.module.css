@@ -29,5 +29,5 @@ input[type="radio"] + .custom-radio {
 }
 
 input[type="radio"]:checked + .custom-radio {
-  background: var(--black);
+  background: var(--black-004);
 }

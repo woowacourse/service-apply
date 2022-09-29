@@ -1,0 +1,40 @@
+.floating-wrapper {
+  position: fixed;
+  bottom: 4.5rem;
+  right: 4.5rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  padding-left: 1rem;
+  border-radius: 4.5rem;
+  background-color: var(--white);
+  box-shadow: 0 0 5px var(--gray-004);
+  cursor: pointer;
+}
+
+.inquire-text {
+  font-weight: 600;
+  color: var(--black-004);
+}
+
+.kakao-icon-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background-color: var(--black-001);
+}
+
+@media screen and (max-width: 512px) {
+  .inquire-text {
+    display: none;
+  }
+
+  .floating-wrapper {
+    right: 1.5rem;
+    bottom: 1.5rem;
+    padding-left: 0;
+  }
+}
