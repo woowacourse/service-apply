@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { generatePath } from "react-router";
 import { useNavigate } from "react-router-dom";
-import { fetchMyApplicationForms } from "../../api/application-forms";
+import { fetchMyApplicationForms } from "../../api/applicationForms";
 import Container from "../../components/@common/Container/Container";
 import Panel from "../../components/@common/Panel/Panel";
 import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
