@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../../components/@common/Button/Button";
-import Container, { CONTAINER_SIZE } from "../../components/@common/Container/Container";
+import Container, {
+  CONTAINER_SIZE,
+  TITLE_ALIGN,
+} from "../../components/@common/Container/Container";
 import MessageTextInput from "../../components/@common/MessageTextInput/MessageTextInput";
 import BirthField from "../../components/form/BirthField/BirthField";
 import CancelButton from "../../components/form/CancelButton/CancelButton";
@@ -51,7 +54,7 @@ const SignUp = () => {
   };
 
   return (
-    <Container title="회원가입" titleAlign="left" size={CONTAINER_SIZE.NARROW}>
+    <Container title="회원가입" titleAlign={TITLE_ALIGN.LEFT} size={CONTAINER_SIZE.NARROW}>
       <Form onSubmit={handleSubmit}>
         <SummaryCheckField
           label="개인정보 수집 및 이용 동의"

@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { generatePath } from "react-router";
 import { useNavigate } from "react-router-dom";
-import { fetchMyApplicationForms } from "../../api/applicationForms";
-import Container from "../../components/@common/Container/Container";
+import { fetchMyApplicationForms } from "../../api/application-forms";
+import Container, { TITLE_ALIGN } from "../../components/@common/Container/Container";
 import Panel from "../../components/@common/Panel/Panel";
 import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
 import { ERROR_MESSAGE } from "../../constants/messages";
@@ -142,7 +142,11 @@ const MyApplication = () => {
 
   return (
     <div className={styles.box}>
-      <Container title="내 지원 현황" titleAlign="left" className={styles["page-title"]} />
+      <Container
+        title="내 지원 현황"
+        titleAlign={TITLE_ALIGN.LEFT}
+        className={styles["page-title"]}
+      />
       {myRecruitments.map(({ submitted, ...recruitment }, index) => (
         <Panel
           key={`recruitment-${recruitment.id}`}

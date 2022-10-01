@@ -1,11 +1,16 @@
 import classNames from "classnames";
 import PropTypes from "prop-types";
-import React from "react";
 import styles from "./Container.module.css";
 
 export const CONTAINER_SIZE = {
   DEFAULT: "default",
   NARROW: "narrow",
+};
+
+export const TITLE_ALIGN = {
+  LEFT: "left",
+  CENTER: "center",
+  RIGHT: "right",
 };
 
 const Container = ({ title, titleAlign, size, children, className, ...props }) => {
@@ -36,8 +41,8 @@ export default Container;
 
 Container.propTypes = {
   title: PropTypes.string,
-  titleAlign: PropTypes.oneOf(["left", "center", "right"]),
-  size: PropTypes.oneOf(["default", "narrow"]),
+  titleAlign: PropTypes.oneOf(Object.values(TITLE_ALIGN)),
+  size: PropTypes.oneOf(Object.values(CONTAINER_SIZE)),
   children: PropTypes.node,
 };
 
