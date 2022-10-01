@@ -1,7 +1,7 @@
 .box {
   width: var(--pc-main-width);
   background: var(--white);
-  padding: 1.875rem 1.25rem;
+  padding: 2rem 1.25rem;
   background-color: var(--white);
 }
 
@@ -10,11 +10,11 @@
 }
 
 .title {
-  font-size: 1.75rem;
+  font-size: 2rem;
 }
 
 .title-with-children {
-  margin: 0.875rem 0 3rem;
+  margin-bottom: 2rem;
 }
 
 .title-align-left {
