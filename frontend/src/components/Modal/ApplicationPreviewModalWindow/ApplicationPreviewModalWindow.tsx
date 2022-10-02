@@ -4,20 +4,13 @@ import Button from "../../@common/Button/Button";
 import styles from "./ApplicationPreviewModalWindow.module.css";
 import ModalWindow from "../ModalWindow/ModalWindow";
 import CheckBox from "../../form/CheckBox/CheckBox";
-
-type RecruitmentItem = {
-  recruitmentId: number;
-  id: number;
-  position: number;
-  title: string;
-  description: string;
-  maximumLength: number;
-};
+import { RecruitmentItem } from "../../../../types/domains/recruitments";
+import { Answer, ApplicationForm } from "../../../../types/domains/applicationForms";
 
 type ApplicationPreviewModalWindowProps = {
   recruitmentItems: RecruitmentItem[];
-  answers: string[];
-  referenceUrl: string;
+  answers: Answer["contents"][];
+  referenceUrl: ApplicationForm["referenceUrl"];
   onClickConfirmButton: React.MouseEventHandler<HTMLButtonElement>;
   onClickDismissButton?: React.MouseEventHandler<HTMLButtonElement>;
 };
