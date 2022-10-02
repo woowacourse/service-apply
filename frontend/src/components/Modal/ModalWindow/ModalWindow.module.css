@@ -1,0 +1,58 @@
+@keyframes subtle-pop-up {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes drag-up {
+  from {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.box {
+  border-radius: 8px;
+  position: fixed;
+  margin: auto;
+  padding: 1.5rem;
+  max-width: 40rem;
+  z-index: var(--modal-window-z-index);
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  overflow: hidden;
+}
+
+@media only screen and (max-width: 420px) {
+  .box {
+    bottom: 0;
+    max-height: 400px;
+    min-height: 150px;
+    width: 100%;
+    animation: drag-up 0.3s forwards;
+  }
+}
+
+@media only screen and (min-width: 420px) {
+  .box {
+    inset: 4rem;
+    animation: subtle-pop-up 0.3s forwards;
+  }
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: bold;
+}
