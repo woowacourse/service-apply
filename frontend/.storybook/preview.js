@@ -7,6 +7,7 @@ import "../src/App.css";
 import { RecruitmentContext } from "../src/hooks/useRecruitmentContext";
 import { UserInfoContext } from "../src/hooks/useUserInfoContext";
 import { recruitmentDummy, userInfoDummy } from "../src/mock/dummy";
+import ModalProvider from "../src/provider/ModalProvider";
 import { recruitmentFilter } from "../src/provider/RecruitmentProvider";
 import TokenProvider from "../src/provider/TokenProvider";
 
@@ -35,9 +36,12 @@ export const decorators = [
     >
       <TokenProvider>
         <UserInfoContext.Provider value={{ userInfo: userInfoDummy }}>
-          <MemoryRouter>
-            <Story />
-          </MemoryRouter>
+          <ModalProvider>
+            <MemoryRouter>
+              <Story />
+            </MemoryRouter>
+            <div id="modal-root" />
+          </ModalProvider>
         </UserInfoContext.Provider>
       </TokenProvider>
     </RecruitmentContext.Provider>

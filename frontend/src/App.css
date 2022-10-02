@@ -5,6 +5,7 @@
   --pc-main-width: 800px;
   --pc-main-width-narrow: 512px;
 
+  --modal-portal-z-index: 1010;
   --tooltip-z-index: 1000;
   --tooltip-dimmed-z-index: 999;
   --header-z-index: 998;
