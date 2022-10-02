@@ -1,0 +1,51 @@
+.box {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  overflow-y: auto;
+  font-size: 0.875rem;
+  line-height: 1.4rem;
+  text-align: justify;
+}
+
+.application-item-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.application-item-title {
+  font-size: 1.125rem;
+  font-weight: bold;
+}
+
+.application-item-description {
+  font-size: 0.875rem;
+  color: #666666;
+}
+
+.application-item-answer {
+  white-space: pre-line;
+}
+
+.application-item-url {
+  text-decoration: underline;
+}
+
+.button-box {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.button {
+  width: 100%;
+}
