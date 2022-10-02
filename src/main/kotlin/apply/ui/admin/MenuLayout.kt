@@ -8,37 +8,53 @@ import apply.ui.admin.mission.MissionsView
 import apply.ui.admin.recruitment.RecruitmentsView
 import apply.ui.admin.selections.SelectionView
 import apply.ui.admin.term.TermsView
-import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
+import com.vaadin.flow.component.tabs.Tabs
 import support.views.createTabs
 
 class MenuLayout(
     private val recruitmentService: RecruitmentService
 ) : VerticalLayout() {
 
+    private val topMenu = createMenu(createTopMenuItems())
+    private val bottomMenu = createMenu(createBottomMenuItems())
+
     init {
         setHeightFull()
         isPadding = false
+        addMenuSelectSeparateEvent()
         add(createTopMenuLayer(), createBottomMenuLayer())
+    }
+
+    private fun addMenuSelectSeparateEvent() {
+        topMenu.addSelectedChangeListener {
+            bottomMenu.selectedIndex = -1
+            topMenu.selectedTab = it.selectedTab
+        }
+        bottomMenu.addSelectedChangeListener {
+            topMenu.selectedIndex = -1
+            bottomMenu.selectedTab = it.selectedTab
+        }
     }
 
     private fun createTopMenuLayer(): VerticalLayout {
         return VerticalLayout().apply {
             isPadding = false
-            add(createMenu(createTopMenuItems()))
+            add(topMenu)
         }
     }
 
     private fun createBottomMenuLayer(): VerticalLayout {
-        return VerticalLayout(createMenu(createBottomMenuItems())).apply {
+        return VerticalLayout().apply {
             isPadding = false
             setHeightFull()
             justifyContentMode = FlexComponent.JustifyContentMode.END
+            add(bottomMenu)
         }
     }
 
-    private fun createMenu(list: List<MenuItem>): Component {
+    private fun createMenu(list: List<MenuItem>): Tabs {
         return createTabs(list.flatMap { it.toComponents() })
     }
 
