@@ -13,10 +13,11 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.tabs.Tabs
 import support.views.createTabs
 
+private const val UNSELECT_ALL: Int = -1
+
 class MenuLayout(
     private val recruitmentService: RecruitmentService
 ) : VerticalLayout() {
-
     private val topMenu = createMenu(createTopMenuItems())
     private val bottomMenu = createMenu(createBottomMenuItems())
 
@@ -29,11 +30,11 @@ class MenuLayout(
 
     private fun addMenuSelectSeparateEvent() {
         topMenu.addSelectedChangeListener {
-            bottomMenu.selectedIndex = -1
+            bottomMenu.selectedIndex = UNSELECT_ALL
             topMenu.selectedTab = it.selectedTab
         }
         bottomMenu.addSelectedChangeListener {
-            topMenu.selectedIndex = -1
+            topMenu.selectedIndex = UNSELECT_ALL
             bottomMenu.selectedTab = it.selectedTab
         }
     }
@@ -78,9 +79,9 @@ class MenuLayout(
             "모집 관리" of RecruitmentsView::class.java,
             "평가 관리" of EvaluationsView::class.java,
             createBorderItem(),
-            "부정행위자" of CheatersView::class.java,
             "메일 관리" of MailsView::class.java,
-            "관리자 관리" of MailsView::class.java
+            "부정행위자" of CheatersView::class.java,
+            "관리자" of MailsView::class.java
         )
     }
 }
