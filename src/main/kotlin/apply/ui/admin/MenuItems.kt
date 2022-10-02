@@ -45,24 +45,31 @@ class SingleMenuItem(
     private val navigationTarget: Class<out Component>
 ) : MenuItem(title) {
     override fun toComponents(): List<Component> {
-        return listOf(
-            Tab(
-                createRouteLink(title).apply {
-                    setRoute(navigationTarget)
-                }
-            )
-        )
+        val link = createRouteLink(title).apply {
+            setRoute(navigationTarget)
+        }
+        return listOf(Tab(link))
     }
 }
 
 class ParamMenuItem(
     title: String,
-    val navigationTarget: Class<out HasUrlParamLayout<Long>>
+    private val navigationTarget: Class<out HasUrlParamLayout<Long>>
 ) : MenuItem(title) {
-    val link: RouterLink = createRouteLink(title)
-    val tab: Tab = createHiddenTab(link)
+    private val link: RouterLink = createRouteLink(title)
+    private val tab: Tab = createHiddenTab(link)
+
     override fun toComponents(): List<Component> {
         return listOf(tab)
+    }
+
+    fun show() {
+        tab.isVisible = true
+        tab.isSelected = false
+    }
+
+    fun setRoute(id: Long) {
+        link.setRoute(navigationTarget, id)
     }
 }
 
@@ -72,28 +79,28 @@ class ComboBoxMenuItem(
     private val innerItems: List<ParamMenuItem>
 ) : MenuItem(title) {
     override fun toComponents(): List<Component> {
-        val comboBox = ComboBox<RecruitmentResponse>("모집을 선택해 선발을 진행하세요.").apply {
+        val comboBoxTab = Tab(createComboBox()).apply {
+            style.set("justify-content", "center")
+        }
+
+        return mutableListOf<Component>().apply {
+            add(comboBoxTab)
+            addAll(innerItems.flatMap { it.toComponents() })
+        }
+    }
+
+    private fun createComboBox(): ComboBox<RecruitmentResponse> {
+        return ComboBox<RecruitmentResponse>("모집을 선택해 선발을 진행하세요.").apply {
             placeholder = title
             setItems(contents)
             setItemLabelGenerator { it.title }
 
             addValueChangeListener {
-                for (innerItem in innerItems) {
-                    routeEvent(innerItem)
+                innerItems.forEach {
+                    it.show()
+                    it.setRoute(value.id)
                 }
             }
-        }
-
-        return mutableListOf<Component>(Tab(comboBox)).apply {
-            addAll(innerItems.flatMap { it.toComponents() })
-        }
-    }
-
-    private fun ComboBox<RecruitmentResponse>.routeEvent(paramMenuItem: ParamMenuItem) {
-        with(paramMenuItem) {
-            tab.isVisible = true
-            tab.isSelected = false
-            link.setRoute(navigationTarget, value.id)
         }
     }
 }
