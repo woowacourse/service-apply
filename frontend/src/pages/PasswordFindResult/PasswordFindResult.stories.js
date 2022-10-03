@@ -1,5 +1,4 @@
-import React from "react";
-import { MemoryRouter, Route } from "react-router-dom";
+import { MemoryRouter } from "react-router-dom";
 import PasswordFindResult from "./PasswordFindResult";
 
 export default {
@@ -15,9 +14,7 @@ export default {
           },
         ]}
       >
-        <Route path="/find/result">
-          <Story />
-        </Route>
+        <Story />
       </MemoryRouter>
     ),
   ],

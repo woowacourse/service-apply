@@ -2,10 +2,24 @@ import { rest } from "msw";
 import { API_BASE_URL } from "../../../.storybook/preview";
 import { missionsDummy, myApplicationDummy } from "../../mock/dummy";
 import MyApplication from "./MyApplication";
+import { MemoryRouter } from "react-router-dom";
 
 export default {
   title: "pages/MyApplication",
   component: MyApplication,
+  decorators: [
+    (Story) => (
+      <MemoryRouter
+        initialEntries={[
+          {
+            pathname: "/applications/me",
+          },
+        ]}
+      >
+        <Story />
+      </MemoryRouter>
+    ),
+  ],
 };
 
 const Template = (args) => <MyApplication {...args} />;
