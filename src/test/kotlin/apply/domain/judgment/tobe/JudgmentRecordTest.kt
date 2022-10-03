@@ -51,12 +51,12 @@ class JudgmentRecordTest : StringSpec({
         }
     }
 
-    "자동 채점 기록 다시 시작" {
+    "자동 채점 기록 시작" {
         val record = createJudgmentRecord(
             result = JudgmentResult(passCount = 9, totalCount = 10),
             completedDateTime = now()
         )
-        record.restart()
+        record.start()
         assertSoftly(record) {
             result shouldBe JudgmentResult()
             completedDateTime.shouldBeNull()

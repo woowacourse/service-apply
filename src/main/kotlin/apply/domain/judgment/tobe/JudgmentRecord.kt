@@ -2,7 +2,6 @@ package apply.domain.judgment.tobe
 
 import support.domain.BaseEntity
 import java.time.LocalDateTime
-import java.time.LocalDateTime.now
 import javax.persistence.Column
 import javax.persistence.Embedded
 import javax.persistence.Entity
@@ -23,7 +22,7 @@ class JudgmentRecord(
     var result: JudgmentResult = JudgmentResult(),
 
     @Column(nullable = false)
-    var startedDateTime: LocalDateTime = now(),
+    var startedDateTime: LocalDateTime = LocalDateTime.now(),
     var completedDateTime: LocalDateTime? = null
 ) : BaseEntity() {
     init {
@@ -40,15 +39,21 @@ class JudgmentRecord(
     val status: JudgmentStatus
         get() = result.status
 
-    fun restart() {
+    fun start() {
         result = JudgmentResult()
-        startedDateTime = now()
+        startedDateTime = LocalDateTime.now()
         completedDateTime = null
+    }
+
+    fun renew() {
+        val now = LocalDateTime.now()
+        startedDateTime = now
+        completedDateTime = now
     }
 
     fun applyResult(result: JudgmentResult) {
         require(result.status != JudgmentStatus.STARTED)
         this.result = result
-        completedDateTime = now()
+        completedDateTime = LocalDateTime.now()
     }
 }

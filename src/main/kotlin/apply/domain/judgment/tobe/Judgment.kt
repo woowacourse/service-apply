@@ -1,6 +1,6 @@
 package apply.domain.judgment.tobe
 
-import support.domain.BaseEntity
+import support.domain.BaseRootEntity
 import java.time.LocalDateTime
 import javax.persistence.CascadeType
 import javax.persistence.Column
@@ -21,7 +21,7 @@ class Judgment(
     val type: JudgmentType,
     records: List<JudgmentRecord> = emptyList(),
     id: Long = 0L
-) : BaseEntity(id) {
+) : BaseRootEntity<Judgment>(id) {
     @OneToMany(cascade = [CascadeType.PERSIST, CascadeType.REMOVE])
     @JoinColumn(
         name = "judgment_id", nullable = false, updatable = false,
@@ -40,12 +40,23 @@ class Judgment(
 
     fun start(commit: Commit) {
         check(canStart()) { "자동 채점을 시작할 수 없습니다." }
-        findRecord(commit)?.restart() ?: records.add(JudgmentRecord(commit))
+        val record = findRecord(commit) ?: createRecord(commit)
+        if (record.completed) {
+            record.renew()
+        } else {
+            record.start()
+            registerEvent(JudgmentStartedEvent(id, commit))
+        }
     }
 
     private fun canStart(): Boolean {
         if (records.isEmpty()) return true
         return lastRecord.startedDateTime.plusMinutes(DELAY_MINUTES) < LocalDateTime.now()
+    }
+
+    private fun createRecord(commit: Commit): JudgmentRecord {
+        return JudgmentRecord(commit)
+            .also { records.add(it) }
     }
 
     fun success(commit: Commit, result: JudgmentResult) {
@@ -58,18 +69,12 @@ class Judgment(
         record.applyResult(JudgmentResult(message = message))
     }
 
-    private fun getRecord(commit: Commit): JudgmentRecord {
-        return findRecord(commit) ?: throw NoSuchElementException("커밋이 존재하지 않습니다. commit: $commit")
-    }
+    fun getResult(commit: Commit): JudgmentResult = getRecord(commit).result
 
-    fun completed(commit: Commit): Boolean {
-        val record = findRecord(commit)
-        return record != null && record.completed
-    }
+    private fun getRecord(commit: Commit): JudgmentRecord = findRecord(commit)
+        ?: throw NoSuchElementException("커밋이 존재하지 않습니다. commit: $commit")
 
-    private fun findRecord(commit: Commit): JudgmentRecord? {
-        return records.find { it.commit == commit }
-    }
+    private fun findRecord(commit: Commit): JudgmentRecord? = records.find { it.commit == commit }
 
     companion object {
         private const val DELAY_MINUTES: Long = 5
