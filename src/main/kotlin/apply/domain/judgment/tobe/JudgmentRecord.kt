@@ -17,21 +17,20 @@ import javax.persistence.UniqueConstraint
 class JudgmentRecord(
     @Embedded
     val commit: Commit,
-
+    result: JudgmentResult = JudgmentResult(),
+    startedDateTime: LocalDateTime = LocalDateTime.now(),
+    completedDateTime: LocalDateTime? = null
+) : BaseEntity() {
     @Embedded
-    var result: JudgmentResult = JudgmentResult(),
+    var result: JudgmentResult = result
+        private set
 
     @Column(nullable = false)
-    var startedDateTime: LocalDateTime = LocalDateTime.now(),
-    var completedDateTime: LocalDateTime? = null
-) : BaseEntity() {
-    init {
-        if (result.status == JudgmentStatus.STARTED) {
-            require(completedDateTime == null)
-        } else {
-            requireNotNull(completedDateTime)
-        }
-    }
+    var startedDateTime: LocalDateTime = startedDateTime
+        private set
+
+    var completedDateTime: LocalDateTime? = completedDateTime
+        private set
 
     val completed: Boolean
         get() = status in listOf(JudgmentStatus.SUCCEEDED, JudgmentStatus.FAILED)
@@ -39,13 +38,17 @@ class JudgmentRecord(
     val status: JudgmentStatus
         get() = result.status
 
+    init {
+        require(completed && completedDateTime != null || !completed && completedDateTime == null)
+    }
+
     fun start() {
         result = JudgmentResult()
         startedDateTime = LocalDateTime.now()
         completedDateTime = null
     }
 
-    fun renew() {
+    fun touch() {
         val now = LocalDateTime.now()
         startedDateTime = now
         completedDateTime = now

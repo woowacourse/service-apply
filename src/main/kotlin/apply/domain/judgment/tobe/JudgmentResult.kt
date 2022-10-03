@@ -14,14 +14,14 @@ data class JudgmentResult(
     @Column(nullable = false)
     val message: String = ""
 ) {
-    init {
-        require(totalCount >= passCount)
-    }
-
     val status: JudgmentStatus
         get() = when {
             message.isEmpty() && totalCount == 0 && passCount == 0 -> JudgmentStatus.STARTED
             totalCount != 0 -> JudgmentStatus.SUCCEEDED
             else -> JudgmentStatus.FAILED
         }
+
+    init {
+        require(totalCount >= passCount)
+    }
 }

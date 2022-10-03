@@ -6,6 +6,7 @@ import apply.domain.judgment.tobe.JudgmentStatus.SUCCEEDED
 import io.kotest.assertions.assertSoftly
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
+import io.kotest.inspectors.forAll
 import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.nulls.shouldBeNull
@@ -21,6 +22,18 @@ class JudgmentRecordTest : StringSpec({
             completedDateTime.shouldBeNull()
             completed.shouldBeFalse()
             status shouldBe STARTED
+        }
+    }
+
+    "자동 채점 기록 생성 실패" {
+        listOf(
+            JudgmentResult(passCount = 0, totalCount = 0, message = "") to now(),
+            JudgmentResult(passCount = 9, totalCount = 10) to null,
+            JudgmentResult(message = "message") to null
+        ).forAll { (result, completedDateTime) ->
+            shouldThrow<IllegalArgumentException> {
+                createJudgmentRecord(result = result, completedDateTime = completedDateTime)
+            }
         }
     }
 

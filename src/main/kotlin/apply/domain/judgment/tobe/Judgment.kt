@@ -42,7 +42,7 @@ class Judgment(
         check(canStart()) { "자동 채점을 시작할 수 없습니다." }
         val record = findRecord(commit) ?: createRecord(commit)
         if (record.completed) {
-            record.renew()
+            record.touch()
         } else {
             record.start()
             registerEvent(JudgmentStartedEvent(id, commit))
