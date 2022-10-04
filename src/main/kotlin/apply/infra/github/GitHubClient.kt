@@ -3,6 +3,7 @@ package apply.infra.github
 import apply.domain.judgment.AssignmentArchive
 import apply.domain.judgment.Commit
 import org.springframework.boot.web.client.RestTemplateBuilder
+import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.RequestEntity
 import org.springframework.stereotype.Component
@@ -27,7 +28,7 @@ class GitHubClient(
         val requestEntity = RequestEntity
             .get("${gitHubProperties.uri}/repos/$owner/$repo/pulls/$pullNumber/commits?per_page=$PAGE_SIZE".toUri())
             .accept(MediaType.APPLICATION_JSON)
-            // .header(HttpHeaders.AUTHORIZATION, "Bearer ${gitHubProperties.accessKey}")
+            .header(HttpHeaders.AUTHORIZATION, bearerToken(gitHubProperties.accessKey))
             .build()
         val zonedDateTime = endDateTime.atZone(ZoneId.systemDefault())
         return restTemplate.exchange<List<CommitResponse>>(requestEntity).body
@@ -41,6 +42,8 @@ class GitHubClient(
         val result = PULL_REQUEST_URL_PATTERN.find(pullRequestUrl) ?: throw IllegalArgumentException()
         return result.destructured.toList()
     }
+
+    private fun bearerToken(token: String): String = if (token.isEmpty()) "" else "Bearer $token"
 
     companion object {
         private const val PAGE_SIZE: Int = 100

@@ -21,7 +21,7 @@ fun createJudgment(
 fun createJudgmentRecord(
     commit: Commit = createCommit(),
     result: JudgmentResult = JudgmentResult(),
-    startedDateTime: LocalDateTime = LocalDateTime.now(),
+    startedDateTime: LocalDateTime = now(),
     completedDateTime: LocalDateTime? = null
 ): JudgmentRecord {
     return JudgmentRecord(commit, result, startedDateTime, completedDateTime)
