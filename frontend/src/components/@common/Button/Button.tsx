@@ -10,7 +10,6 @@ export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   className?: string;
   variant?: typeof BUTTON_VARIANT[keyof typeof BUTTON_VARIANT];
   cancel?: boolean;
-  type?: "button" | "submit" | "reset";
   children: React.ReactNode;
 };
 

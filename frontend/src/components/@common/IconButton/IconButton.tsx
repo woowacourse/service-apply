@@ -1,7 +1,6 @@
 import styles from "./IconButton.module.css";
 
 export type IconButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  type?: "button" | "submit" | "reset";
   className?: string;
   src: string;
   alt?: string;

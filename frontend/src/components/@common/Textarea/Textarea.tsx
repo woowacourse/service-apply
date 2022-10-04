@@ -2,10 +2,8 @@ import classNames from "classnames";
 import styles from "./Textarea.module.css";
 
 export type TextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
-  maxLength?: number;
   value?: string;
   className?: string;
-  readOnly?: boolean;
   onChange: React.ChangeEventHandler<HTMLTextAreaElement>;
 };
 

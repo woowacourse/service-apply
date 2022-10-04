@@ -7,11 +7,9 @@ import styles from "./MessageTextInput.module.css";
 export type MessageTextInputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, "type"> & {
   className?: string;
   label?: string;
-  required?: boolean;
   description?: string;
   value?: string;
   name: string;
-  maxLength?: number;
   errorMessage?: string;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
 };

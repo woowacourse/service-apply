@@ -2,7 +2,6 @@ import Label from "../Label/Label";
 import styles from "./Radio.module.css";
 
 export type RadioProps = React.InputHTMLAttributes<HTMLInputElement> & {
-  required?: boolean;
   label?: string;
 };
 
