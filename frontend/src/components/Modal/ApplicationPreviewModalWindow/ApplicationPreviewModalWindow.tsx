@@ -12,7 +12,6 @@ type ApplicationPreviewModalWindowProps = {
   answers: Answer["contents"][];
   referenceUrl: ApplicationForm["referenceUrl"];
   onClickConfirmButton: React.MouseEventHandler<HTMLButtonElement>;
-  onClickDismissButton?: React.MouseEventHandler<HTMLButtonElement>;
 };
 
 const ApplicationPreviewModalWindow = ({
@@ -20,13 +19,11 @@ const ApplicationPreviewModalWindow = ({
   answers,
   referenceUrl,
   onClickConfirmButton,
-  onClickDismissButton,
 }: ApplicationPreviewModalWindowProps) => {
   const { closeModal } = useModalContext();
   const [isChecked, setIsChecked] = useState(false);
 
   const handleClickDismissButton: React.MouseEventHandler<HTMLButtonElement> = (e) => {
-    onClickDismissButton?.(e);
     closeModal();
   };
 
@@ -70,6 +67,7 @@ const ApplicationPreviewModalWindow = ({
         onChange={(e: ChangeEvent) => {
           setIsChecked((e.target as HTMLInputElement).checked);
         }}
+        autoFocus
         required
       />
       <div className={styles["button-box"]}>

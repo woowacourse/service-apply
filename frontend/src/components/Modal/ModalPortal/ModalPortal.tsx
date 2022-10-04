@@ -19,7 +19,12 @@ const ModalPortal: React.FC<ModalPortalProps> = ({ children, closeModal }) => {
 
   if (ref.current && mounted) {
     return createPortal(
-      <div className={styles.box}>
+      <div
+        className={styles.box}
+        onKeyDown={(e) => {
+          if (e.key === "Escape") closeModal();
+        }}
+      >
         <div className={styles["dimmer-box"]} onClick={closeModal} />
         {children}
       </div>,
