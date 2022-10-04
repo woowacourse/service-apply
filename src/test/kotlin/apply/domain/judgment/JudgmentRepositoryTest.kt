@@ -1,7 +1,9 @@
-package apply.domain.judgment.tobe
+package apply.domain.judgment
 
-import apply.domain.judgment.tobe.JudgmentType.EXAMPLE
-import apply.domain.judgment.tobe.JudgmentType.REAL
+import apply.createCommit
+import apply.createJudgment
+import apply.domain.judgment.JudgmentType.EXAMPLE
+import apply.domain.judgment.JudgmentType.REAL
 import io.kotest.core.spec.style.ExpectSpec
 import io.kotest.extensions.spring.SpringExtension
 import io.kotest.matchers.longs.shouldNotBeZero

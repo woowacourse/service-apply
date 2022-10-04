@@ -1,4 +1,4 @@
-package apply.domain.judgment.tobe
+package apply.domain.judgment
 
 enum class JudgmentStatus {
     STARTED, SUCCEEDED, FAILED

@@ -1,4 +1,4 @@
-package apply.domain.judgment.tobe
+package apply.domain.judgment
 
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.repository.findByIdOrNull

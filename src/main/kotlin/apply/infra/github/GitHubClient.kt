@@ -1,5 +1,7 @@
-package apply.domain.judgment.tobe
+package apply.infra.github
 
+import apply.domain.judgment.AssignmentArchive
+import apply.domain.judgment.Commit
 import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.http.MediaType
 import org.springframework.http.RequestEntity

@@ -1,4 +1,4 @@
-package apply.domain.judgment.tobe
+package apply.domain.judgment
 
 import support.domain.BaseEntity
 import java.time.LocalDateTime

@@ -1,4 +1,4 @@
-package apply.domain.judgment.tobe
+package apply.infra.github
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding

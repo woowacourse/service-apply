@@ -1,4 +1,4 @@
-package apply.domain.judgment.tobe
+package apply.domain.judgment
 
 import javax.persistence.Column
 import javax.persistence.Embeddable

@@ -1,4 +1,4 @@
-package apply.domain.judgment.tobe
+package apply.infra.github
 
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.DeserializationContext

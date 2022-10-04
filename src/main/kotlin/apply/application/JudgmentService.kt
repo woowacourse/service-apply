@@ -1,7 +1,11 @@
-package apply.domain.judgment.tobe
+package apply.application
 
 import apply.domain.assignment.AssignmentRepository
 import apply.domain.assignment.getById
+import apply.domain.judgment.AssignmentArchive
+import apply.domain.judgment.Judgment
+import apply.domain.judgment.JudgmentRepository
+import apply.domain.judgment.JudgmentType
 import apply.domain.mission.MissionRepository
 import apply.domain.mission.getById
 import org.springframework.stereotype.Service
@@ -9,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @Transactional
 @Service
-class JudgmentStartService(
+class JudgmentService(
     private val judgmentRepository: JudgmentRepository,
     private val assignmentRepository: AssignmentRepository,
     private val missionRepository: MissionRepository,

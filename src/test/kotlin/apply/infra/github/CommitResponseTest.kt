@@ -1,4 +1,4 @@
-package apply.domain.judgment.tobe
+package apply.infra.github
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue

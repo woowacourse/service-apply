@@ -1,13 +1,13 @@
-package apply.domain.judgment.tobe
+package apply.infra.github
 
+import apply.PULL_REQUEST_URL
+import apply.createCommit
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import support.createLocalDateTime
 import support.test.IntegrationTest
 import java.time.LocalDateTime.now
-
-private const val PULL_REQUEST_URL: String = "https://github.com/woowacourse/service-apply/pull/367"
 
 @IntegrationTest
 class GitHubClientTest(

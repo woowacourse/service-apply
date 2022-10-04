@@ -1,5 +1,7 @@
-package apply.domain.judgment.tobe
+package apply.application
 
+import apply.domain.judgment.JudgmentRepository
+import apply.domain.judgment.JudgmentStartedEvent
 import apply.domain.mission.MissionRepository
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
