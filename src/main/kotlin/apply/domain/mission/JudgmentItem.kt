@@ -22,5 +22,5 @@ class JudgmentItem(
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    var language: Language = Language.NONE
+    var programmingLanguage: ProgrammingLanguage = ProgrammingLanguage.NONE
 ) : BaseEntity()

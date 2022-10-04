@@ -1,10 +1,10 @@
 create table judgment_item
 (
-    id                 bigint       not null auto_increment,
-    evaluation_item_id bigint       not null,
-    language           varchar(255) not null,
-    test_name          varchar(255) not null,
-    mission_id         bigint       not null,
+    id                   bigint       not null auto_increment,
+    evaluation_item_id   bigint       not null,
+    programming_language varchar(255) not null,
+    test_name            varchar(255) not null,
+    mission_id           bigint       not null,
     primary key (id)
 ) engine = InnoDB
   default charset = utf8mb4;
