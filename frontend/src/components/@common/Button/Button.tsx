@@ -17,7 +17,6 @@ const Button = ({
   className,
   variant = BUTTON_VARIANT.CONTAINED,
   cancel = false,
-  type,
   children,
   ...props
 }: ButtonProps) => {
@@ -26,7 +25,6 @@ const Button = ({
       className={classNames(className, styles[variant], styles.button, {
         [styles.cancel]: cancel,
       })}
-      type={type}
       {...props}
     >
       {children}

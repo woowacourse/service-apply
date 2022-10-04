@@ -6,9 +6,9 @@ export type IconButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   alt?: string;
 };
 
-const IconButton = ({ type, className, src, alt, ...props }: IconButtonProps) => {
+const IconButton = ({ className, src, alt, ...props }: IconButtonProps) => {
   return (
-    <button type={type} className={styles.button} {...props}>
+    <button className={styles.button} {...props}>
       <img src={src} alt={alt} className={className} />
     </button>
   );
