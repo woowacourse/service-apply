@@ -34,7 +34,7 @@
 }
 
 .buttons {
-  margin: 3.5rem 0 0;
+  margin-top: 3.5rem;
   display: flex;
   gap: 1rem;
 }
