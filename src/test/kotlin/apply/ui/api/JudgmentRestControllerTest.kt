@@ -18,9 +18,9 @@ class JudgmentRestControllerTest : RestControllerTest() {
     @Test
     fun `예제 테스트를 실행한다`() {
         val response = createLastJudgmentResponse()
-        every { judgmentService.judgeExample(any()) } returns response
+        every { judgmentService.judgeExample(any(), any()) } returns response
 
-        mockMvc.post("/api/assignments/{assignmentId}/judgments/judge-example", 1L) {
+        mockMvc.post("/api/recruitments/{recruitmentId}/missions/{missionId}/judgments/judge-example", 1L, 1L) {
             bearer("valid_token")
         }.andExpect {
             status { isOk }

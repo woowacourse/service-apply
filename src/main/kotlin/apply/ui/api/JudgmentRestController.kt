@@ -10,17 +10,18 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-@RequestMapping("/api/assignments")
+@RequestMapping("/api/recruitments/{recruitmentId}/missions/{missionId}")
 @RestController
 class JudgmentRestController(
     private val judgmentService: JudgmentService
 ) {
-    @PostMapping("/{assignmentId}/judgments/judge-example")
+    @PostMapping("/judgments/judge-example")
     fun judgeExample(
-        @PathVariable assignmentId: Long,
+        @PathVariable recruitmentId: Long,
+        @PathVariable missionId: Long,
         @LoginUser user: User
     ): ResponseEntity<ApiResponse<LastJudgmentResponse>> {
-        val response = judgmentService.judgeExample(assignmentId)
+        val response = judgmentService.judgeExample(user.id, missionId)
         return ResponseEntity.ok(ApiResponse.success(response))
     }
 }
