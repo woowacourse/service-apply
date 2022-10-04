@@ -28,6 +28,6 @@ class JudgmentService(
             ?: judgmentRepository.save(Judgment(assignmentId, JudgmentType.EXAMPLE))
         judgment.start(commit)
         judgmentRepository.save(judgment)
-        return LastJudgmentResponse(judgment.lastStatus, assignment.pullRequestUrl, commit, judgment.getResult(commit))
+        return LastJudgmentResponse(assignment.pullRequestUrl, judgment.lastRecord)
     }
 }

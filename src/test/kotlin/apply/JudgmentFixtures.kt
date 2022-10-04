@@ -5,9 +5,9 @@ import apply.domain.judgment.Commit
 import apply.domain.judgment.Judgment
 import apply.domain.judgment.JudgmentRecord
 import apply.domain.judgment.JudgmentResult
-import apply.domain.judgment.JudgmentStatus
 import apply.domain.judgment.JudgmentType
 import java.time.LocalDateTime
+import java.time.LocalDateTime.now
 
 fun createJudgment(
     assignmentId: Long = 1L,
@@ -34,10 +34,10 @@ fun createCommit(
 }
 
 fun createLastJudgmentResponse(
-    status: JudgmentStatus = JudgmentStatus.STARTED,
     pullRequestUrl: String = PULL_REQUEST_URL,
     commit: Commit = createCommit(),
-    result: JudgmentResult = JudgmentResult()
+    result: JudgmentResult = JudgmentResult(),
+    startedDateTime: LocalDateTime = now()
 ): LastJudgmentResponse {
-    return LastJudgmentResponse(status, pullRequestUrl, commit, result)
+    return LastJudgmentResponse(pullRequestUrl, commit, result, startedDateTime)
 }

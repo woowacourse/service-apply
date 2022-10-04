@@ -35,7 +35,7 @@ class Judgment(
     val lastStatus: JudgmentStatus
         get() = lastRecord.status
 
-    private val lastRecord: JudgmentRecord
+    val lastRecord: JudgmentRecord
         get() = records.maxByOrNull { it.startedDateTime } ?: throw NoSuchElementException()
 
     fun start(commit: Commit) {
