@@ -35,11 +35,12 @@ class GitHubClient(
             ?.filter { it.date <= zonedDateTime }
             ?.maxByOrNull { it.date }
             ?.let { Commit(it.hash) }
-            ?: throw IllegalArgumentException()
+            ?: throw IllegalArgumentException("해당 커밋이 존재하지 않습니다. endDateTime: $endDateTime")
     }
 
     private fun extract(pullRequestUrl: String): List<String> {
-        val result = PULL_REQUEST_URL_PATTERN.find(pullRequestUrl) ?: throw IllegalArgumentException()
+        val result = PULL_REQUEST_URL_PATTERN.find(pullRequestUrl)
+            ?: throw IllegalArgumentException("올바른 형식의 URL이어야 합니다")
         return result.destructured.toList()
     }
 
