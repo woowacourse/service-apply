@@ -16,7 +16,7 @@ export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 
 const Button = ({
   className,
-  variant = "contained",
+  variant = BUTTON_VARIANT.CONTAINED,
   cancel = false,
   type,
   children,

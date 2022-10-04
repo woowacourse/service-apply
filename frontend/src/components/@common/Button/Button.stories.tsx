@@ -1,5 +1,5 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import Button from "./Button";
+import Button, { BUTTON_VARIANT } from "./Button";
 
 export default {
   title: "form/Button",
@@ -15,7 +15,7 @@ Default.args = {
 
 export const Outlined = Template.bind({});
 Outlined.args = {
-  variant: "outlined",
+  variant: BUTTON_VARIANT.OUTLINED,
   children: "버튼",
 };
 
