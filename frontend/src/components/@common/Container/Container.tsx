@@ -15,12 +15,21 @@ export const TITLE_ALIGN = {
 
 export type ContainerProps = React.HTMLAttributes<HTMLDivElement> & {
   size?: typeof CONTAINER_SIZE[keyof typeof CONTAINER_SIZE];
+  className?: string;
   title?: string;
-  children: React.ReactNode;
   titleAlign: typeof TITLE_ALIGN[keyof typeof TITLE_ALIGN];
+  children: React.ReactNode;
+  onClick?: React.MouseEventHandler<HTMLDivElement>;
 };
 
-const Container = ({ title, titleAlign, size, children, className, ...props }: ContainerProps) => {
+const Container = ({
+  size = CONTAINER_SIZE.DEFAULT,
+  className,
+  title,
+  titleAlign,
+  children,
+  onClick,
+}: ContainerProps) => {
   return (
     <div
       className={classNames(
@@ -28,7 +37,7 @@ const Container = ({ title, titleAlign, size, children, className, ...props }: C
         { [styles.narrow]: size === CONTAINER_SIZE.NARROW },
         className
       )}
-      {...props}
+      onClick={onClick ?? (() => {})}
     >
       {title && (
         <h2
