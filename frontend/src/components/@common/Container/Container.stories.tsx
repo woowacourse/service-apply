@@ -1,14 +1,12 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import Container, { CONTAINER_SIZE, ContainerProps } from "./Container";
+import Container, { CONTAINER_SIZE } from "./Container";
 
 export default {
   title: "components/Container",
   component: Container,
 } as ComponentMeta<typeof Container>;
 
-const Template: ComponentStory<typeof Container> = (args: ContainerProps) => (
-  <Container {...args} />
-);
+const Template: ComponentStory<typeof Container> = (args) => <Container {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {

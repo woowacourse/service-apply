@@ -1,14 +1,12 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import Description, { DescriptionProps } from "./Description";
+import Description from "./Description";
 
 export default {
   title: "form/Description",
   component: Description,
 } as ComponentMeta<typeof Description>;
 
-const Template: ComponentStory<typeof Description> = (args: DescriptionProps) => (
-  <Description {...args} />
-);
+const Template: ComponentStory<typeof Description> = (args) => <Description {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {

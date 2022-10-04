@@ -1,12 +1,12 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import Label, { LabelProps } from "./Label";
+import Label from "./Label";
 
 export default {
   title: "form/Label",
   component: Label,
 } as ComponentMeta<typeof Label>;
 
-const Template: ComponentStory<typeof Label> = (args: LabelProps) => <Label {...args} />;
+const Template: ComponentStory<typeof Label> = (args) => <Label {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {
