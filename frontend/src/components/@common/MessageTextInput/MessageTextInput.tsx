@@ -5,7 +5,6 @@ import TextInput from "../TextInput/TextInput";
 import styles from "./MessageTextInput.module.css";
 
 export type MessageTextInputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, "type"> & {
-  className?: string;
   label?: string;
   description?: string;
   value?: string;

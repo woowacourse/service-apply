@@ -3,7 +3,6 @@ import styles from "./Textarea.module.css";
 
 export type TextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
   value?: string;
-  className?: string;
   onChange: React.ChangeEventHandler<HTMLTextAreaElement>;
 };
 

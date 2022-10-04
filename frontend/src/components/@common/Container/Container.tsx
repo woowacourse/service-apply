@@ -15,7 +15,6 @@ export const TITLE_ALIGN = {
 
 export type ContainerProps = React.HTMLAttributes<HTMLDivElement> & {
   size?: typeof CONTAINER_SIZE[keyof typeof CONTAINER_SIZE];
-  className?: string;
   title?: string;
   children: React.ReactNode;
   titleAlign: typeof TITLE_ALIGN[keyof typeof TITLE_ALIGN];

@@ -4,7 +4,6 @@ import styles from "./TextInput.module.css";
 export type TextInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   type?: "text" | "email" | "password" | "tel" | "number" | "url";
   value?: string;
-  className?: string;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
 };
 

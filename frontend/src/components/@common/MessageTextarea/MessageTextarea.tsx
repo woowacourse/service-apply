@@ -5,7 +5,6 @@ import Textarea from "../Textarea/Textarea";
 import styles from "./MessageTextarea.module.css";
 
 export type MessageTextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
-  className?: string;
   label?: string;
   description?: string;
   value?: string;

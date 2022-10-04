@@ -7,10 +7,8 @@ export const BUTTON_VARIANT = {
 } as const;
 
 export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  className?: string;
   variant?: typeof BUTTON_VARIANT[keyof typeof BUTTON_VARIANT];
   cancel?: boolean;
-  children: React.ReactNode;
 };
 
 const Button = ({
