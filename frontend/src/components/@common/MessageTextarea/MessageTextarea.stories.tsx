@@ -12,7 +12,7 @@ const Template: ComponentStory<typeof MessageTextarea> = (
 ) => {
   const [value, setValue] = useState("");
 
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleChange: React.ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     return setValue(e.target.value);
   };
 

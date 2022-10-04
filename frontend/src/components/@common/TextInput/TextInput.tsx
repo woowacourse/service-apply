@@ -7,7 +7,7 @@ export type TextInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   value?: string;
   className?: string;
   readOnly?: boolean;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
 };
 
 const TextInput = ({

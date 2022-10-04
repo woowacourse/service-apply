@@ -13,7 +13,7 @@ export type MessageTextInputProps = Omit<React.InputHTMLAttributes<HTMLInputElem
   name: string;
   maxLength?: number;
   errorMessage?: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
 };
 
 const MessageTextInput = ({

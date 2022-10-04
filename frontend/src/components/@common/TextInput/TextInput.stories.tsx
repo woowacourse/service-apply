@@ -10,7 +10,7 @@ export default {
 const Template: ComponentStory<typeof TextInput> = (args: Omit<TextInputProps, "onChange">) => {
   const [value, setValue] = useState("");
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     return setValue(e.target.value);
   };
 

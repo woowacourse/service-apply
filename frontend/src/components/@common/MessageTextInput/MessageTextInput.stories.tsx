@@ -12,7 +12,7 @@ const Template: ComponentStory<typeof MessageTextInput> = (
 ) => {
   const [value, setValue] = useState("");
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     return setValue(e.target.value);
   };
 

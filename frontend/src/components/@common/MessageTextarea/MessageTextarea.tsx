@@ -13,7 +13,7 @@ export type MessageTextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElem
   value?: string;
   name: string;
   errorMessage?: string;
-  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onChange: React.ChangeEventHandler<HTMLTextAreaElement>;
 };
 
 const MessageTextarea = ({

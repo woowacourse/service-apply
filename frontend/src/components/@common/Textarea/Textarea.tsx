@@ -6,7 +6,7 @@ export type TextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & 
   value?: string;
   className?: string;
   readOnly?: boolean;
-  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onChange: React.ChangeEventHandler<HTMLTextAreaElement>;
 };
 
 const Textarea = ({

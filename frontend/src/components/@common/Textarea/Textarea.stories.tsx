@@ -10,7 +10,7 @@ export default {
 const Template: ComponentStory<typeof Textarea> = (args: Omit<TextareaProps, "onChange">) => {
   const [value, setValue] = useState("");
 
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleChange: React.ChangeEventHandler<HTMLTextAreaElement> = (e) => {
     return setValue(e.target.value);
   };
 
