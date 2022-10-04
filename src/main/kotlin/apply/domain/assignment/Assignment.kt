@@ -27,7 +27,7 @@ class Assignment(
     @Column(nullable = false)
     var pullRequestUrl: String,
 
-    @Column(length = 5000)
+    @Column(nullable = false, length = 5000)
     var note: String,
     id: Long = 0L
 ) : BaseEntity(id) {
