@@ -5,4 +5,7 @@ import org.springframework.boot.context.properties.ConstructorBinding
 
 @ConfigurationProperties("github")
 @ConstructorBinding
-data class GitHubProperties(val accessKey: String)
+data class GitHubProperties(
+    val uri: String,
+    val accessKey: String
+)
