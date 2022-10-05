@@ -43,6 +43,9 @@ const ApplicationPreviewModalWindow = ({
             <span className={styles["application-item-description"]}>
               {recruitmentItem.description}
             </span>
+            <span className={styles["application-item-answer-length"]}>
+              {answers[index].length} / {recruitmentItem.maximumLength}
+            </span>
             <p className={styles["application-item-answer"]}>{answers[index]}</p>
           </div>
         ))}

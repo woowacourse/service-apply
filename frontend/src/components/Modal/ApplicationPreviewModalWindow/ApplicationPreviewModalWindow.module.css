@@ -18,17 +18,21 @@
 .application-item-box {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
 }
 
 .application-item-title {
   font-size: 1.125rem;
   font-weight: bold;
+  margin-bottom: 0.5rem;
 }
 
 .application-item-description {
-  font-size: 0.875rem;
   color: #666666;
+}
+
+.application-item-answer-length {
+  color: #999999;
+  align-self: flex-end;
 }
 
 .application-item-answer {
