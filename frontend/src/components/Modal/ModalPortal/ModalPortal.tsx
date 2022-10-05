@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { ModalContextValue } from "../../../provider/ModalProvider";
 import styles from "./ModalPortal.module.css";
 
 type ModalPortalProps = React.PropsWithChildren<{
-  closeModal: () => void;
+  closeModal: ModalContextValue["closeModal"];
 }>;
 
-const ModalPortal: React.FC<ModalPortalProps> = ({ children, closeModal }) => {
+const ModalPortal = ({ children, closeModal }: ModalPortalProps) => {
   const ref = useRef<Element | null>();
   const [mounted, setMounted] = useState(false);
 

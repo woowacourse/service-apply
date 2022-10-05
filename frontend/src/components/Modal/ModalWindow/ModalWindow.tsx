@@ -1,5 +1,4 @@
 import classNames from "classnames";
-import useModalContext from "../../../hooks/useModalContext";
 import styles from "./ModalWindow.module.css";
 
 interface ModalWindowProps

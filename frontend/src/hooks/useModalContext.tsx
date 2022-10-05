@@ -1,11 +1,6 @@
-import React, { useContext, createContext } from "react";
+import { useContext, createContext } from "react";
 import { ERROR_MESSAGE } from "../constants/messages";
-
-export type ModalContextValue = {
-  Modal: React.FC<{ children: NonNullable<React.ReactNode> }>;
-  openModal: () => void;
-  closeModal: () => void;
-};
+import { ModalContextValue } from "../provider/ModalProvider";
 
 export const ModalContext = createContext<ModalContextValue | null>(null);
 

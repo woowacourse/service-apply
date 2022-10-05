@@ -1,21 +1,27 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import ModalPortal from "../components/Modal/ModalPortal/ModalPortal";
 import { ModalContext } from "../hooks/useModalContext";
+
+export type ModalContextValue = {
+  Modal: (props: { children: NonNullable<React.ReactNode> }) => JSX.Element | null;
+  openModal: () => void;
+  closeModal: () => void;
+};
 
 const ModalProvider = ({ children }: { children: React.ReactNode }) => {
   const [isModalOpened, setIsModalOpened] = useState(false);
 
-  const openModal = () => {
+  const openModal: ModalContextValue["openModal"] = () => {
     document.body.style.overflow = "hidden";
     setIsModalOpened(true);
   };
 
-  const closeModal = () => {
+  const closeModal: ModalContextValue["closeModal"] = () => {
     document.body.style.overflow = "auto";
     setIsModalOpened(false);
   };
 
-  const Modal: React.FC<{ children: NonNullable<React.ReactNode> }> = (props) => {
+  const Modal: ModalContextValue["Modal"] = (props) => {
     if (isModalOpened) {
       return <ModalPortal closeModal={closeModal} {...props} />;
     }

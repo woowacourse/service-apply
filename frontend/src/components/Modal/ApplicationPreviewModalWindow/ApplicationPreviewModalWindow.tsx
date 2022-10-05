@@ -23,7 +23,7 @@ const ApplicationPreviewModalWindow = ({
   const { closeModal } = useModalContext();
   const [isChecked, setIsChecked] = useState(false);
 
-  const handleClickDismissButton: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+  const handleClickDismissButton: React.MouseEventHandler<HTMLButtonElement> = () => {
     closeModal();
   };
 
