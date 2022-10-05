@@ -40,6 +40,9 @@ class Mission(
     val isSubmitting: Boolean
         get() = status == MissionStatus.SUBMITTING
 
+    val ableToJudge: Boolean
+        get() = TODO("자동 채점 항목이 있는지 여부")
+
     constructor(
         title: String,
         description: String,
