@@ -9,6 +9,7 @@ import useRecruitmentContext from "../../hooks/useRecruitmentContext";
 import useTokenContext from "../../hooks/useTokenContext";
 import { generateQuery } from "../../utils/route/query";
 import styles from "./Recruits.module.css";
+
 const BUTTON_LABEL = {
   [RECRUITMENT_STATUS.RECRUITING]: "지원하기",
   [RECRUITMENT_STATUS.RECRUITABLE]: "모집 예정",
@@ -78,7 +79,13 @@ const Recruits = () => {
 
   return (
     <>
+      <div className={styles["program-introduce-box"]}>
+        <h1 className={styles["program-name"]}>프로그램 이름</h1>
+        <p className={styles["program-description"]}>프로그램 소개</p>
+      </div>
+
       <div className={styles["recruitment-list-box"]}>
+        <h2 className={styles["recruitment-list-title"]}>지원하기</h2>
         <div className={styles["course-tab-list"]}>
           {COURSE_TAB_LIST.map(({ name, label }) => (
             <TabItem
