@@ -10,7 +10,7 @@ import { formatTimerText } from "../../../utils/format/date";
 import Button, { BUTTON_VARIANT } from "../../@common/Button/Button";
 import Label from "../../@common/Label/Label";
 import TextInput from "../../@common/TextInput/TextInput";
-import * as styles from "./EmailField.module.css";
+import styles from "./EmailField.module.css";
 
 export const EMAIL_STATUS = {
   INPUT: "input",
