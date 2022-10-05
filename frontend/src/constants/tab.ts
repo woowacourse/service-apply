@@ -21,18 +21,22 @@ export const COURSE_TAB = {
   ALL: {
     name: "all",
     label: "전체",
+    description: "메인 소개",
   },
   WOOWA_TECH_COURSE: {
     name: "woowacourse",
     label: "우아한테크코스",
+    description: "우아한테크코스 소개",
   },
   WOOWA_TECH_CAMP: {
     name: "woowacamp",
     label: "우아한테크캠프",
+    description: "우아한테크캠프 소개",
   },
   WOOWA_TECH_CAMP_PRO: {
     name: "woowacamppro",
     label: "우아한테크캠프 Pro",
+    description: "우아한테크캠프 Pro 소개",
   },
 } as const;
 

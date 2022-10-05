@@ -19,7 +19,7 @@ const BUTTON_LABEL = {
 
 const Recruits = () => {
   const { token } = useTokenContext();
-  const [courseTabStatus, setCourseTabStatus] = useState(COURSE_TAB.ALL.label);
+  const [courseTabStatus, setCourseTabStatus] = useState(COURSE_TAB.ALL);
   const navigate = useNavigate();
 
   const query = new URLSearchParams(useLocation().search);
@@ -32,13 +32,13 @@ const Recruits = () => {
       return new Date(b.startDateTime) - new Date(a.startDateTime);
     });
 
-    if (courseTabStatus === COURSE_TAB.ALL.label) {
+    if (courseTabStatus.label === COURSE_TAB.ALL.label) {
       return sortedRecruitmentItem;
     }
 
-    if (courseTabStatus === COURSE_TAB.WOOWA_TECH_COURSE.label) {
+    if (courseTabStatus.label === COURSE_TAB.WOOWA_TECH_COURSE.label) {
       return sortedRecruitmentItem.filter((recruitmentItem) =>
-        recruitmentItem.title.includes(courseTabStatus)
+        recruitmentItem.title.includes(courseTabStatus.label)
       );
     }
 
@@ -46,7 +46,7 @@ const Recruits = () => {
       const fullCourseNameArray = recruitmentItem.title.split(" ");
       const courseName = fullCourseNameArray.slice(0, fullCourseNameArray.length - 1);
 
-      return courseName.join(" ").trim() === courseTabStatus;
+      return courseName.join(" ").trim() === courseTabStatus.label;
     });
   }, [recruitment, selectedTab, courseTabStatus]);
 
@@ -80,22 +80,26 @@ const Recruits = () => {
   return (
     <>
       <div className={styles["program-introduce-box"]}>
-        <h1 className={styles["program-name"]}>프로그램 이름</h1>
-        <p className={styles["program-description"]}>프로그램 소개</p>
+        <h1 className={styles["program-name"]}>
+          {courseTabStatus.name === COURSE_TAB.ALL.name
+            ? "메인 소개 타이틀"
+            : courseTabStatus.label}
+        </h1>
+        <p className={styles["program-description"]}>{courseTabStatus.description}</p>
       </div>
 
       <div className={styles["recruitment-list-box"]}>
         <h2 className={styles["recruitment-list-title"]}>지원하기</h2>
         <div className={styles["course-tab-list"]}>
-          {COURSE_TAB_LIST.map(({ name, label }) => (
+          {COURSE_TAB_LIST.map((courseTabItem) => (
             <TabItem
-              key={name}
-              checked={label === courseTabStatus}
+              key={courseTabItem.name}
+              checked={courseTabItem.label === courseTabStatus.label}
               onClickTabItem={() => {
-                setCourseTabStatus(label);
+                setCourseTabStatus(courseTabItem);
               }}
             >
-              {label}
+              {courseTabItem.label}
             </TabItem>
           ))}
         </div>
