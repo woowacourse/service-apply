@@ -139,7 +139,7 @@ const ApplicationRegister = () => {
               placeholder="내용을 입력해 주세요."
               maxLength={item.maximumLength}
               className={styles["label-bold"]}
-              showValueLength
+              showCount
               required
             />
           ))}

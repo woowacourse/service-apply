@@ -10,7 +10,7 @@ export type MessageTextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElem
   value?: string;
   name: string;
   errorMessage?: string;
-  showValueLength?: boolean;
+  showCount?: boolean;
   onChange: React.ChangeEventHandler<HTMLTextAreaElement>;
 };
 
@@ -23,7 +23,7 @@ const MessageTextarea = ({
   value = "",
   name,
   errorMessage,
-  showValueLength = false,
+  showCount = false,
   onChange,
   ...props
 }: MessageTextareaProps) => {
@@ -34,7 +34,7 @@ const MessageTextarea = ({
           {label}
         </Label>
         {description && <Description>{description}</Description>}
-        {showValueLength && maxLength && maxLength > 0 && (
+        {showCount && maxLength && maxLength > 0 && (
           <div className={styles["length-limit"]}>
             {value?.length} / {maxLength}
           </div>
