@@ -3,7 +3,8 @@
   flex-direction: column;
   gap: 1rem;
 
-  margin-bottom: 4rem;
+  width: var(--pc-main-width);
+  margin: 0 auto 4rem;
 }
 
 .program-name {
@@ -72,6 +73,10 @@
 @media screen and (max-width: 800px) {
   .empty-state-box {
     font-size: 0.875rem;
+  }
+
+  .program-introduce-box {
+    width: calc(100vw - 1rem);
   }
 
   .recruitment-list-box {
