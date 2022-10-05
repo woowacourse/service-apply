@@ -1,43 +1,18 @@
-import { useMemo, useState } from "react";
 import { generatePath, useNavigate } from "react-router-dom";
+import useTokenContext from "../../hooks/useTokenContext";
+import useRecruitList from "./../../hooks/useRecruitList";
 import TabItem from "../../components/@common/TabItem/TabItem";
 import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
-import { PATH, PARAM } from "../../constants/path";
-import { COURSE_TAB, COURSE_TAB_LIST, RECRUITS_TAB } from "../../constants/tab";
-import useRecruitmentContext from "../../hooks/useRecruitmentContext";
-import useTokenContext from "../../hooks/useTokenContext";
 import { generateQuery } from "../../utils/route/query";
+import { PATH, PARAM } from "../../constants/path";
+import { COURSE_TAB, COURSE_TAB_LIST } from "../../constants/tab";
 import styles from "./Recruits.module.css";
 
 const Recruits = () => {
   const { token } = useTokenContext();
-  const [courseTabStatus, setCourseTabStatus] = useState(COURSE_TAB.ALL);
   const navigate = useNavigate();
 
-  const { recruitment } = useRecruitmentContext();
-
-  const filteredRecruitment = useMemo(() => {
-    const sortedRecruitmentItem = recruitment[RECRUITS_TAB.ALL.name].sort((a, b) => {
-      return new Date(b.startDateTime) - new Date(a.startDateTime);
-    });
-
-    if (courseTabStatus.label === COURSE_TAB.ALL.label) {
-      return sortedRecruitmentItem;
-    }
-
-    if (courseTabStatus.label === COURSE_TAB.WOOWA_TECH_COURSE.label) {
-      return sortedRecruitmentItem.filter((recruitmentItem) =>
-        recruitmentItem.title.includes(courseTabStatus.label)
-      );
-    }
-
-    return sortedRecruitmentItem.filter((recruitmentItem) => {
-      const fullCourseNameArray = recruitmentItem.title.split(" ");
-      const courseName = fullCourseNameArray.slice(0, fullCourseNameArray.length - 1);
-
-      return courseName.join(" ").trim() === courseTabStatus.label;
-    });
-  }, [recruitment, courseTabStatus]);
+  const [courseTabStatus, setCourseTabStatus, filteredRecruitment] = useRecruitList();
 
   const goToNewApplicationFormPage = (recruitment) => {
     if (!token) {
@@ -92,7 +67,7 @@ const Recruits = () => {
             </TabItem>
           ))}
         </div>
-        {recruitment && (
+        {filteredRecruitment && (
           <div className={styles["recruitment-list"]} role="list">
             {filteredRecruitment.length === 0 ? (
               <div className={styles["empty-state-box"]}>해당하는 모집이 없습니다.</div>
