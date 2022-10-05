@@ -4,7 +4,6 @@ import styles from "./TextInput.module.css";
 export type TextInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   type?: "text" | "email" | "password" | "tel" | "number" | "url";
   value?: string;
-  onChange: React.ChangeEventHandler<HTMLInputElement>;
 };
 
 const TextInput = ({
@@ -17,7 +16,10 @@ const TextInput = ({
   ...props
 }: TextInputProps) => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (maxLength !== undefined && event.target.value.length > maxLength) {
+    if (
+      onChange === undefined ||
+      (maxLength !== undefined && event.target.value.length > maxLength)
+    ) {
       return;
     }
 

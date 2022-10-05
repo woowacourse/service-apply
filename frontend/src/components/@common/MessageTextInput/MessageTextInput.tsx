@@ -4,13 +4,13 @@ import Label from "../Label/Label";
 import TextInput from "../TextInput/TextInput";
 import styles from "./MessageTextInput.module.css";
 
-export type MessageTextInputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, "type"> & {
+export type MessageTextInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
+  type?: "text" | "email" | "password" | "tel" | "number" | "url";
   label?: string;
-  description?: string;
+  description?: JSX.Element | string;
   value?: string;
   name: string;
   errorMessage?: string;
-  onChange: React.ChangeEventHandler<HTMLInputElement>;
 };
 
 const MessageTextInput = ({
