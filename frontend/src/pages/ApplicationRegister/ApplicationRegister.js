@@ -12,7 +12,7 @@ import Form from "../../components/form/Form/Form";
 import ApplicationPreviewModalWindow from "../../components/Modal/ApplicationPreviewModalWindow/ApplicationPreviewModalWindow";
 import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
 import { FORM } from "../../constants/form";
-import { CONFIRM_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
+import { SUCCESS_MESSAGE } from "../../constants/messages";
 import { PATH, PARAM } from "../../constants/path";
 import useApplicationRegisterForm, {
   APPLICATION_REGISTER_FORM_NAME,

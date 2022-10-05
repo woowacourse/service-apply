@@ -55,7 +55,6 @@ export const SUCCESS_MESSAGE = {
 } as const;
 
 export const CONFIRM_MESSAGE = {
-  SUBMIT_APPLICATION: "제출하신 뒤에는 수정하실 수 없습니다. 정말로 제출하시겠습니까?",
   RESET_APPLICATION: "정말 초기화하시겠습니까?",
   CANCEL_ASSIGNMENT_SUBMIT: "정말 취소하시겠습니까? 작성하신 내용이 저장되지 않습니다.",
 } as const;
