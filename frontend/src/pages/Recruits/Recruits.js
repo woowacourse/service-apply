@@ -1,34 +1,23 @@
 import { useMemo, useState } from "react";
-import { generatePath, useNavigate, useLocation } from "react-router-dom";
+import { generatePath, useNavigate } from "react-router-dom";
 import TabItem from "../../components/@common/TabItem/TabItem";
 import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
 import { PATH, PARAM } from "../../constants/path";
-import { RECRUITMENT_STATUS } from "../../constants/recruitment";
 import { COURSE_TAB, COURSE_TAB_LIST, RECRUITS_TAB } from "../../constants/tab";
 import useRecruitmentContext from "../../hooks/useRecruitmentContext";
 import useTokenContext from "../../hooks/useTokenContext";
 import { generateQuery } from "../../utils/route/query";
 import styles from "./Recruits.module.css";
 
-const BUTTON_LABEL = {
-  [RECRUITMENT_STATUS.RECRUITING]: "지원하기",
-  [RECRUITMENT_STATUS.RECRUITABLE]: "모집 예정",
-  [RECRUITMENT_STATUS.UNRECRUITABLE]: "일시 중지",
-  [RECRUITMENT_STATUS.ENDED]: "모집 종료",
-};
-
 const Recruits = () => {
   const { token } = useTokenContext();
   const [courseTabStatus, setCourseTabStatus] = useState(COURSE_TAB.ALL);
   const navigate = useNavigate();
 
-  const query = new URLSearchParams(useLocation().search);
-  const selectedTab = query.get("status") ?? RECRUITS_TAB.ALL.name;
-
   const { recruitment } = useRecruitmentContext();
 
   const filteredRecruitment = useMemo(() => {
-    const sortedRecruitmentItem = recruitment[selectedTab].sort((a, b) => {
+    const sortedRecruitmentItem = recruitment[RECRUITS_TAB.ALL.name].sort((a, b) => {
       return new Date(b.startDateTime) - new Date(a.startDateTime);
     });
 
@@ -48,7 +37,7 @@ const Recruits = () => {
 
       return courseName.join(" ").trim() === courseTabStatus.label;
     });
-  }, [recruitment, selectedTab, courseTabStatus]);
+  }, [recruitment, courseTabStatus]);
 
   const goToNewApplicationFormPage = (recruitment) => {
     if (!token) {
