@@ -2,7 +2,7 @@ import styles from "./IconButton.module.css";
 
 export type IconButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   src: string;
-  alt?: string;
+  alt: string;
 };
 
 const IconButton = ({ className, src, alt, ...props }: IconButtonProps) => {
