@@ -1,6 +1,7 @@
 package apply.application
 
 import apply.domain.evaluation.Evaluation
+import apply.domain.evaluationItem.EvaluationItem
 import apply.domain.mission.JudgmentItem
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionStatus
@@ -28,7 +29,7 @@ data class MissionData(
     @field:NotBlank
     var description: String = "",
 
-    var JudgmentItemData: JudgmentItemData = JudgmentItemData(),
+    var judgmentItemData: JudgmentItemData = JudgmentItemData(),
 
     @field:NotNull
     var submittable: Boolean = false,
@@ -129,13 +130,20 @@ data class MyMissionResponse(
 data class JudgmentItemData(
     var id: Long = 0L,
     var testName: String = "",
-    var evaluationItemData: EvaluationItemData = EvaluationItemData(),
+    var evaluationItemSelectData: EvaluationItemSelectData = EvaluationItemSelectData(),
     var programmingLanguage: ProgrammingLanguage = NONE
 ) {
-    constructor(judgmentItem: JudgmentItem?, evaluationItemData: EvaluationItemData?) : this(
-        judgmentItem?.id ?: 0L,
-        judgmentItem?.testName ?: "",
-        evaluationItemData ?: EvaluationItemData(),
-        judgmentItem?.programmingLanguage ?: NONE
+    constructor(judgmentItem: JudgmentItem, evaluationItemSelectData: EvaluationItemSelectData) : this(
+        judgmentItem.id,
+        judgmentItem.testName,
+        evaluationItemSelectData,
+        judgmentItem.programmingLanguage
     )
+}
+
+data class EvaluationItemSelectData(
+    var title: String = "",
+    var id: Long = 0L
+) {
+    constructor(evaluationItem: EvaluationItem) : this(evaluationItem.title, evaluationItem.id)
 }
