@@ -67,7 +67,7 @@ const Recruits = () => {
             </TabItem>
           ))}
         </div>
-        {filteredRecruitment && (
+        {
           <div className={styles["recruitment-list"]} role="list">
             {filteredRecruitment.length === 0 ? (
               <div className={styles["empty-state-box"]}>해당하는 모집이 없습니다.</div>
@@ -82,7 +82,7 @@ const Recruits = () => {
               ))
             )}
           </div>
-        )}
+        }
       </div>
     </>
   );
