@@ -10,6 +10,7 @@ import apply.domain.mission.JudgmentItemRepository
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionRepository
 import apply.domain.mission.getById
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 
@@ -38,18 +39,22 @@ class MissionService(
             )
         )
 
-        val judgmentItem = judgmentItemRepository.save(
-            JudgmentItem(
-                missionId = mission.id,
-                evaluationItemId = request.JudgmentItemData.evaluationItemData.id,
-                testName = request.JudgmentItemData.testName,
-                programmingLanguage = request.JudgmentItemData.programmingLanguage,
-                id = request.JudgmentItemData.id
+        return if (request.judgmentItemData == JudgmentItemData()) {
+            MissionResponse(mission, JudgmentItem())
+        } else {
+            val judgmentItem = judgmentItemRepository.save(
+                JudgmentItem(
+                    missionId = mission.id,
+                    evaluationItemId = request.judgmentItemData.evaluationItemSelectData.id,
+                    testName = request.judgmentItemData.testName,
+                    programmingLanguage = request.judgmentItemData.programmingLanguage,
+                    id = request.judgmentItemData.id
+                )
             )
-        )
-
-        return MissionResponse(mission, judgmentItem)
+            MissionResponse(mission, judgmentItem)
+        }
     }
+
     private fun validate(request: MissionData) {
         val evaluationId = request.evaluation.id
         require(evaluationRepository.existsById(evaluationId)) { "평가가 존재하지 않습니다. id: $evaluationId" }
@@ -99,24 +104,17 @@ class MissionService(
 
     fun getDataById(id: Long): MissionData {
         val mission = missionRepository.getById(id)
+        val judgmentItemData = judgmentItemRepository.findByMissionId(mission.id)
+            ?.let { JudgmentItemData(it, findEvaluationItemData(it.evaluationItemId)) }
+            ?: JudgmentItemData()
         val evaluation = evaluationRepository.getById(mission.evaluationId)
-        val judgmentItem = judgmentItemRepository.findByMissionId(mission.id)
-        val evaluationItemData = findEvaluationItemData(judgmentItem)
-
-        return MissionData(
-            mission,
-            evaluation,
-            JudgmentItemData(judgmentItem, evaluationItemData)
-        )
+        return MissionData(mission, evaluation, judgmentItemData)
     }
 
-    private fun findEvaluationItemData(judgmentItem: JudgmentItem?): EvaluationItemData? {
-        return judgmentItem?.evaluationItemId?.let {
-            findEvaluationItemByIdOrNull(judgmentItem.evaluationItemId)?.let(::EvaluationItemData)
-        }
+    private fun findEvaluationItemData(evaluationItemId: Long): EvaluationItemSelectData {
+        return evaluationItemRepository
+            .findByIdOrNull(evaluationItemId)
+            ?.let(::EvaluationItemSelectData)
+            ?: EvaluationItemSelectData()
     }
-
-    private fun findEvaluationItemByIdOrNull(evaluationItemId: Long) =
-        evaluationItemRepository.findById(evaluationItemId)
-            .orElse(null)
 }
