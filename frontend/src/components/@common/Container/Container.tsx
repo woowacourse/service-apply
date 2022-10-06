@@ -28,7 +28,7 @@ const Container = ({
   title,
   titleAlign,
   children,
-  onClick,
+  onClick = () => {},
 }: ContainerProps) => {
   return (
     <div
@@ -37,7 +37,7 @@ const Container = ({
         { [styles.narrow]: size === CONTAINER_SIZE.NARROW },
         className
       )}
-      onClick={onClick ?? (() => {})}
+      onClick={onClick}
     >
       {title && (
         <h2
