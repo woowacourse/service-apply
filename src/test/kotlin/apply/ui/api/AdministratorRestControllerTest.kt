@@ -66,9 +66,9 @@ class AdministratorRestControllerTest : RestControllerTest() {
 
     @Test
     fun `관리자를 수정한다`() {
-        every { administratorService.update(any()) } just Runs
+        every { administratorService.update(any(), any()) } just Runs
 
-        mockMvc.put("/api/administrators") {
+        mockMvc.put("/api/administrators/{administratorId}", 1L) {
             jsonContent(createAdministratorUpdateFormData())
             bearer("valid_token")
         }.andExpect {

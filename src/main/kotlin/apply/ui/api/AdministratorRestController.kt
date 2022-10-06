@@ -49,12 +49,13 @@ class AdministratorRestController(
         return ResponseEntity.ok(ApiResponse.success(response))
     }
 
-    @PutMapping
+    @PutMapping("/{administratorId}")
     fun update(
+        @PathVariable administratorId: Long,
         @RequestBody @Valid request: UpdateAdministratorFormData,
         @LoginUser(administrator = true) user: User
     ): ResponseEntity<Unit> {
-        administratorService.update(request)
+        administratorService.update(administratorId, request)
         return ResponseEntity.noContent().build()
     }
 }

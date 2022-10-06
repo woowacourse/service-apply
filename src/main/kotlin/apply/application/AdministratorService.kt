@@ -42,10 +42,10 @@ class AdministratorService(
         return administratorRepository.getById(id).let(::AdministratorResponse)
     }
 
-    fun update(request: UpdateAdministratorFormData) {
-        check(request.password == request.passwordConfirmation) { "비밀번호가 일치하지 않습니다." }
+    fun update(administratorId: Long, request: UpdateAdministratorFormData) {
+        check(request.password == request.confirmPassword) { "비밀번호가 일치하지 않습니다." }
 
-        val administrator = administratorRepository.getById(request.id)
-        administrator.update(request.name, request.password)
+        val administrator = administratorRepository.getById(administratorId)
+        administrator.update(request.name, passwordEncoder.encode(request.password))
     }
 }

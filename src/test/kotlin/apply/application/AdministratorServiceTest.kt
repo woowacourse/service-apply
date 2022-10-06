@@ -114,7 +114,10 @@ class AdministratorServiceTest : BehaviorSpec({
         every { administratorRepository.getById(any()) } returns administrator
 
         When("해당 관리자를 수정하면") {
-            administratorService.update(createAdministratorUpdateFormData())
+            administratorService.update(
+                administratorId = administrator.id,
+                request = createAdministratorUpdateFormData()
+            )
 
             Then("관리자 정보를 수정할 수 있다") {
                 administrator.name shouldBe updateAdministratorFormData.name
@@ -126,8 +129,9 @@ class AdministratorServiceTest : BehaviorSpec({
             Then("예외가 발생한다") {
                 shouldThrow<IllegalStateException> {
                     administratorService.update(
-                        createAdministratorUpdateFormData(
-                            password = "ABCD1234", passwordConfirmation = "4321DCBA"
+                        administratorId = administrator.id,
+                        request = createAdministratorUpdateFormData(
+                            password = "ABCD1234", confirmPassword = "4321DCBA"
                         )
                     )
                 }
