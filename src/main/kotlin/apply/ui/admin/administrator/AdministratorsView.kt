@@ -13,6 +13,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.data.renderer.ComponentRenderer
 import com.vaadin.flow.data.renderer.Renderer
 import com.vaadin.flow.router.Route
+import support.views.EDIT_VALUE
 import support.views.NEW_VALUE
 import support.views.addSortableColumn
 import support.views.createDeleteButtonWithDialog
@@ -27,7 +28,7 @@ class AdministratorsView(private val administratorService: AdministratorService)
     }
 
     private fun createTitle(): Component {
-        return HorizontalLayout(H1("관리자")).apply {
+        return HorizontalLayout(H1("관리자 계정 관리")).apply {
             setSizeFull()
             justifyContentMode = FlexComponent.JustifyContentMode.CENTER
         }
@@ -36,7 +37,7 @@ class AdministratorsView(private val administratorService: AdministratorService)
     private fun createButton(): Component {
         return HorizontalLayout(
             createPrimaryButton("생성") {
-                AdministratorFormDialog(administratorService, NEW_VALUE.toDisplayName()) {
+                AdministratorCreateFormDialog(administratorService, NEW_VALUE.toDisplayName()) {
                     UI.getCurrent().page.reload()
                 }
             }
@@ -49,7 +50,7 @@ class AdministratorsView(private val administratorService: AdministratorService)
     private fun createGrid(): Component {
         return Grid<AdministratorResponse>(10).apply {
             addSortableColumn("관리자명", AdministratorResponse::name)
-            addSortableColumn("관리자 사용자명", AdministratorResponse::username)
+            addSortableColumn("관리자 ID", AdministratorResponse::username)
             addColumn(createEditAndDeleteButton()).apply { isAutoWidth = true }
             setItems(administratorService.findAll())
         }
@@ -58,9 +59,14 @@ class AdministratorsView(private val administratorService: AdministratorService)
     private fun createEditAndDeleteButton(): Renderer<AdministratorResponse> {
         return ComponentRenderer { administratorResponse ->
             HorizontalLayout(
-                // TODO : implement edit and delete logic
                 createPrimarySmallButton("수정") {
-                    // UI.getCurrent().navigate(AdministratorsFormView::class.java, "${administratorResponse.id}/$EDIT_VALUE")
+                    AdministratorUpdateFormDialog(
+                        administratorService,
+                        administratorResponse.id,
+                        EDIT_VALUE.toDisplayName()
+                    ) {
+                        UI.getCurrent().page.reload()
+                    }
                 },
                 createDeleteButtonWithDialog("관리자를 삭제하시겠습니까?") {
                     // administratorService.deleteById(administratorResponse.id)

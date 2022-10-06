@@ -112,6 +112,7 @@ class AdministratorServiceTest : BehaviorSpec({
         val updateAdministratorFormData = createAdministratorUpdateFormData()
 
         every { administratorRepository.getById(any()) } returns administrator
+        every { passwordEncoder.encode(any()) } returns updateAdministratorFormData.password
 
         When("해당 관리자를 수정하면") {
             administratorService.update(

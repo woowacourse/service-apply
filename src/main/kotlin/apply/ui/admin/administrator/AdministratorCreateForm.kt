@@ -5,7 +5,8 @@ import com.vaadin.flow.component.textfield.PasswordField
 import com.vaadin.flow.component.textfield.TextField
 import support.views.BindingIdentityFormLayout
 
-class AdministratorForm : BindingIdentityFormLayout<CreateAdministratorFormData>(CreateAdministratorFormData::class) {
+class AdministratorCreateForm :
+    BindingIdentityFormLayout<CreateAdministratorFormData>(CreateAdministratorFormData::class) {
     private val name: TextField = TextField("관리자명")
     private val username: TextField = TextField("관리자 사용자명")
     private val password: PasswordField = PasswordField("비밀번호")
@@ -21,7 +22,7 @@ class AdministratorForm : BindingIdentityFormLayout<CreateAdministratorFormData>
         return bindDefaultOrNull()
     }
 
-    override fun fill(administrator: CreateAdministratorFormData) {
-        fillDefault(administrator)
+    override fun fill(data: CreateAdministratorFormData) {
+        fillDefault(data)
     }
 }

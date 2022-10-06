@@ -12,16 +12,17 @@ import support.views.createContrastButton
 import support.views.createNotification
 import support.views.createPrimaryButton
 
-class AdministratorFormDialog(
+class AdministratorCreateFormDialog(
     private val administratorService: AdministratorService,
     displayName: String,
     reloadComponents: () -> Unit
 ) : Dialog() {
-    private val title: H2 = H2("관리자 $displayName")
-    private val administratorForm: AdministratorForm = AdministratorForm()
+
+    private val title = H2("관리자 $displayName")
+    private val administratorCreateForm = AdministratorCreateForm()
 
     init {
-        add(createHeader(), administratorForm, createButtons(displayName, reloadComponents))
+        add(createHeader(), administratorCreateForm, createButtons(displayName, reloadComponents))
         width = "800px"
         open()
     }
@@ -44,7 +45,7 @@ class AdministratorFormDialog(
 
     private fun getCreateSubmitButton(displayName: String, reloadComponent: () -> Unit): Component {
         return createPrimaryButton(displayName) {
-            administratorForm.bindOrNull()?.let {
+            administratorCreateForm.bindOrNull()?.let {
                 try {
                     administratorService.save(it)
                     reloadComponent()
