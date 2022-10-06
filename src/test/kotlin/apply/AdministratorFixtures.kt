@@ -31,9 +31,9 @@ fun createAdministratorUpdateFormData(
     id: Long = 0L,
     name: String = "Admin",
     password: String = "abcd12345",
-    passwordConfirmation: String = "abcd12345"
+    confirmPassword: String = "abcd12345"
 ): UpdateAdministratorFormData {
-    return UpdateAdministratorFormData(id, name, password, passwordConfirmation)
+    return UpdateAdministratorFormData(id, name, password, confirmPassword)
 }
 
 fun createAdministratorResponse(

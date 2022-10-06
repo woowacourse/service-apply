@@ -37,7 +37,7 @@ data class UpdateAdministratorFormData(
     var password: String = "",
 
     @field:NotBlank
-    var passwordConfirmation: String = ""
+    var confirmPassword: String = ""
 )
 
 data class AdministratorResponse(
