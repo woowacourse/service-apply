@@ -1,6 +1,7 @@
 package apply.ui.admin
 
 import apply.application.RecruitmentService
+import apply.ui.admin.administrator.AdministratorsView
 import apply.ui.admin.cheater.CheatersView
 import apply.ui.admin.evaluation.EvaluationsView
 import apply.ui.admin.mail.MailsView
@@ -61,7 +62,8 @@ class BaseLayout(
             "과제 관리".accordionOf("admin/missions", recruitments),
             "선발 과정".accordionOf("admin/selections", recruitments),
             "부정행위자" of CheatersView::class.java,
-            "메일 관리" of MailsView::class.java
+            "메일 관리" of MailsView::class.java,
+            "관리자" of AdministratorsView::class.java
         )
     }
 }
