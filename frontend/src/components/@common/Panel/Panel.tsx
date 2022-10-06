@@ -24,6 +24,7 @@ const Panel = ({ isOpen = false, className, title, children }: PanelProps) => {
         <h3 className={styles.title}>{title}</h3>
         <IconButton
           src={isPanelOpen ? "/assets/icon/arrow-up.svg" : "/assets/icon/arrow-down.svg"}
+          alt={isPanelOpen ? "패널 닫기" : "패널 열기"}
           aria-label={isPanelOpen ? "패널 닫기" : "패널 열기"}
         />
       </Container>
