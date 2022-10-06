@@ -7,7 +7,7 @@ import styles from "./MessageTextInput.module.css";
 export type MessageTextInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   type?: "text" | "email" | "password" | "tel" | "number" | "url";
   label?: string;
-  description?: JSX.Element | string;
+  description?: JSX.Element;
   value?: string;
   name: string;
   errorMessage?: string;
@@ -17,7 +17,7 @@ const MessageTextInput = ({
   className,
   label = "",
   required = false,
-  description = "",
+  description,
   value = "",
   name,
   maxLength,
