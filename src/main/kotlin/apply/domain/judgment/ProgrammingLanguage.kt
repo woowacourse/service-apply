@@ -1,4 +1,4 @@
-package apply.domain.mission
+package apply.domain.judgment
 
 enum class ProgrammingLanguage(val value: String) {
     NONE(""),

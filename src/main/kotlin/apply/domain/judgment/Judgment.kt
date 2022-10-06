@@ -38,14 +38,14 @@ class Judgment(
     val lastRecord: JudgmentRecord
         get() = records.maxByOrNull { it.startedDateTime } ?: throw NoSuchElementException()
 
-    fun start(commit: Commit) {
+    fun start(commit: Commit, judgmentItem: JudgmentItem) {
         check(canStart()) { "자동 채점을 시작할 수 없습니다." }
         val record = findRecord(commit) ?: createRecord(commit)
         if (record.completed) {
             record.touch()
         } else {
             record.start()
-            registerEvent(JudgmentStartedEvent(id, commit))
+            registerEvent(JudgmentStartedEvent(id, judgmentItem))
         }
     }
 

@@ -1,18 +1,15 @@
-package apply.domain.mission
+package apply.domain.judgment
 
 import support.domain.BaseEntity
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
-import javax.persistence.JoinColumn
-import javax.persistence.OneToOne
 
 @Entity
 class JudgmentItem(
-    @OneToOne(optional = false)
-    @JoinColumn
-    val mission: Mission,
+    @Column(nullable = false)
+    val missionId: Long,
 
     @Column(nullable = false)
     var evaluationItemId: Long = 0L,
@@ -22,5 +19,9 @@ class JudgmentItem(
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    var programmingLanguage: ProgrammingLanguage = ProgrammingLanguage.NONE
-) : BaseEntity()
+    var programmingLanguage: ProgrammingLanguage = ProgrammingLanguage.NONE,
+    id: Long = 0L
+) : BaseEntity(id) {
+    val isValid: Boolean
+        get() = evaluationItemId != 0L && testName != "" && programmingLanguage != ProgrammingLanguage.NONE
+}
