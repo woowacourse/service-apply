@@ -88,6 +88,7 @@ class DatabaseInitializer(
         val administrator = Administrator(
             id = 1L,
             name = "admin",
+            username = "admin",
             password = "{noop}1234"
         )
         administratorRepository.save(administrator)
