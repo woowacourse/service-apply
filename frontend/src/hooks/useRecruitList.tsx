@@ -1,16 +1,13 @@
 import { useState, useMemo } from "react";
-import { COURSE_TAB } from "../constants/tab";
 import useRecruitmentContext from "./useRecruitmentContext";
-import { RECRUITS_TAB } from "./../constants/tab";
+import { RECRUITS_TAB, COURSE_TAB } from "./../constants/tab";
 import { Recruitment } from "../../types/domains/recruitments";
 
 const useRecruitList = () => {
-  const [courseTabStatus, setCourseTabStatus] = useState(COURSE_TAB.ALL);
   const { recruitment } = useRecruitmentContext();
+  const [courseTabStatus, setCourseTabStatus] = useState(COURSE_TAB.ALL);
 
-  const filteredRecruitment: Recruitment[] | undefined = useMemo(() => {
-    if (!recruitment) return recruitment;
-
+  const filteredRecruitment: Recruitment[] = useMemo(() => {
     const allRecruitment: Recruitment[] = recruitment[RECRUITS_TAB.ALL.name];
     const sortedRecruitmentItem: Recruitment[] = allRecruitment.sort((a, b) => {
       return new Date(b.startDateTime).getTime() - new Date(a.startDateTime).getTime();
