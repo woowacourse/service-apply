@@ -23,7 +23,7 @@ class AdministratorServiceTest : BehaviorSpec({
 
     val administratorService = AdministratorService(administratorRepository, passwordEncoder)
 
-    Given("특정 명을 가진 관리자가 있는 경우") {
+    Given("특정 사용자명을 가진 관리자가 있는 경우") {
         val username = ADMINISTRATOR_USERNAME
         val administrator = createAdministrator(username = username, id = 1L)
 
