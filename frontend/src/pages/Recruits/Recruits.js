@@ -12,7 +12,7 @@ const Recruits = () => {
   const { token } = useTokenContext();
   const navigate = useNavigate();
 
-  const [courseTabStatus, setCourseTabStatus, filteredRecruitment] = useRecruitList();
+  const { courseTabStatus, setCourseTabStatus, filteredRecruitment } = useRecruitList();
 
   const goToNewApplicationFormPage = (recruitment) => {
     if (!token) {

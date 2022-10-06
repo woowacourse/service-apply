@@ -31,7 +31,7 @@ const useRecruitList = () => {
     });
   }, [recruitment, courseTabStatus]);
 
-  return [courseTabStatus, setCourseTabStatus, filteredRecruitment];
+  return { courseTabStatus, setCourseTabStatus, filteredRecruitment };
 };
 
 export default useRecruitList;
