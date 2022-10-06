@@ -1,8 +1,7 @@
 .box {
   width: var(--pc-main-width);
-  background: var(--white);
   padding: 2rem 1.25rem;
-  background-color: var(--white);
+  background: var(--white);
 }
 
 .narrow {
