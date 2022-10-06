@@ -1,11 +1,18 @@
 package apply.application
 
+import apply.domain.assignment.Assignment
 import apply.domain.assignment.AssignmentRepository
 import apply.domain.assignment.getByUserIdAndMissionId
 import apply.domain.judgment.AssignmentArchive
+import apply.domain.judgment.Commit
 import apply.domain.judgment.Judgment
+import apply.domain.judgment.JudgmentItemRepository
 import apply.domain.judgment.JudgmentRepository
+import apply.domain.judgment.JudgmentResult
 import apply.domain.judgment.JudgmentType
+import apply.domain.judgment.getById
+import apply.domain.judgment.getByMissionId
+import apply.domain.mission.Mission
 import apply.domain.mission.MissionRepository
 import apply.domain.mission.getById
 import org.springframework.stereotype.Service
@@ -17,17 +24,41 @@ class JudgmentService(
     private val judgmentRepository: JudgmentRepository,
     private val assignmentRepository: AssignmentRepository,
     private val missionRepository: MissionRepository,
+    private val judgmentItemRepository: JudgmentItemRepository,
     private val assignmentArchive: AssignmentArchive
 ) {
     fun judgeExample(userId: Long, missionId: Long): LastJudgmentResponse {
+        val mission = missionRepository.getById(missionId)
+        check(mission.isSubmitting) { "예제 테스트를 실행할 수 없습니다." }
         val assignment = assignmentRepository.getByUserIdAndMissionId(userId, missionId)
-        val mission = missionRepository.getById(assignment.missionId)
-        check(mission.isSubmitting && mission.ableToJudge) { "예제 테스트를 실행할 수 없습니다." }
+        return judge(assignment, mission, JudgmentType.EXAMPLE)
+    }
+
+    fun judgeReal(userId: Long, missionId: Long): LastJudgmentResponse {
+        val mission = missionRepository.getById(missionId)
+        val assignment = assignmentRepository.getByUserIdAndMissionId(userId, missionId)
+        return judge(assignment, mission, JudgmentType.REAL)
+    }
+
+    private fun judge(assignment: Assignment, mission: Mission, judgmentType: JudgmentType): LastJudgmentResponse {
+        val judgmentItem = judgmentItemRepository.getByMissionId(mission.id)
+        val judgment = judgmentRepository.findByAssignmentIdAndType(assignment.id, judgmentType)
+            ?: judgmentRepository.save(Judgment(assignment.id, judgmentType))
+
         val commit = assignmentArchive.getLastCommit(assignment.pullRequestUrl, mission.period.endDateTime)
-        val judgment = judgmentRepository.findByAssignmentIdAndType(assignment.id, JudgmentType.EXAMPLE)
-            ?: judgmentRepository.save(Judgment(assignment.id, JudgmentType.EXAMPLE))
-        judgment.start(commit)
+        judgment.start(commit, judgmentItem)
         judgmentRepository.save(judgment)
         return LastJudgmentResponse(assignment.pullRequestUrl, judgment.lastRecord)
+    }
+
+    fun success(request: JudgmentSuccessRequest) {
+        val judgment = judgmentRepository.getById(request.judgmentId)
+        judgment.success(Commit(request.commit), JudgmentResult(request.passCount, request.totalCount))
+        TODO("reflect result to evaluation answer")
+    }
+
+    fun fail(request: JudgmentFailRequest) {
+        val judgment = judgmentRepository.getById(request.judgmentId)
+        judgment.fail(Commit(request.commit), request.message)
     }
 }
