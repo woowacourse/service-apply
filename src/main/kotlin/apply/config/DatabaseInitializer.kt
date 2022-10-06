@@ -32,7 +32,6 @@ import apply.domain.user.User
 import apply.domain.user.UserRepository
 import org.springframework.boot.CommandLineRunner
 import org.springframework.context.annotation.Profile
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import support.createLocalDate
@@ -42,7 +41,6 @@ import support.createLocalDateTime
 @Transactional
 @Component
 class DatabaseInitializer(
-    private val passwordEncoder: PasswordEncoder,
     private val administratorRepository: AdministratorRepository,
     private val termRepository: TermRepository,
     private val recruitmentRepository: RecruitmentRepository,
@@ -91,7 +89,7 @@ class DatabaseInitializer(
             id = 1L,
             name = "admin",
             username = "admin",
-            password = passwordEncoder.encode("1234")
+            password = "{noop}1234"
         )
         administratorRepository.save(administrator)
     }

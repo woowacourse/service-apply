@@ -33,9 +33,9 @@ class AdministratorRestControllerTest : RestControllerTest() {
     @Test
     fun `모든 관리자를 조회한다`() {
         val responses = listOf(
-            createAdministratorResponse(name = "adminA", username = "masterA", id = 1L),
-            createAdministratorResponse(name = "adminB", username = "masterB", id = 2L),
-            createAdministratorResponse(name = "adminC", username = "masterC", id = 3L)
+            createAdministratorResponse(username = "admin1", id = 1L),
+            createAdministratorResponse(username = "admin2", id = 2L),
+            createAdministratorResponse(username = "admin3", id = 3L)
         )
         every { administratorService.findAll() } returns responses
 
@@ -52,7 +52,7 @@ class AdministratorRestControllerTest : RestControllerTest() {
         val response = createAdministratorResponse()
         every { administratorService.findById(any()) } returns response
 
-        mockMvc.get("/api/administrators/1") {
+        mockMvc.get("/api/administrators/{administratorId}", 1L) {
             bearer("valid_token")
         }.andExpect {
             status { isOk }

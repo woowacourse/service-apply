@@ -1,5 +1,6 @@
 package apply.domain.administrator
 
+import apply.ADMINISTRATOR_USERNAME
 import apply.createAdministrator
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.ExpectSpec
@@ -17,32 +18,32 @@ class AdministratorRepositoryTest(
     extensions(SpringTestExtension(SpringTestLifecycleMode.Root))
 
     context("관리자 조회") {
-        val administrator = createAdministrator()
-        administratorRepository.save(administrator)
+        val username = ADMINISTRATOR_USERNAME
+        val administrator = administratorRepository.save(createAdministrator(username = username))
 
-        expect("관리자 아이디로 관리자를 조회한다") {
-            val actual = administratorRepository.getByUsername(administrator.username)
+        expect("일치하는 사용자명을 가진 관리자를 조회한다") {
+            val actual = administratorRepository.getByUsername(username)
             actual shouldBe administrator
         }
 
-        expect("관리자 아이디가 존재하지 않으면 예외가 발생한다") {
+        expect("일치하는 사용자명을 가진 관리자가 없으면 예외가 발생한다") {
             shouldThrow<UsernameNotFoundException> {
-                administratorRepository.getByUsername("invalid-username")
+                administratorRepository.getByUsername("invalid_username")
             }
         }
 
-        expect("관리자 식별자로 관리자를 조회한다") {
+        expect("식별자로 관리자를 조회한다") {
             val actual = administratorRepository.getById(administrator.id)
             actual shouldBe administrator
         }
 
-        expect("관리자 식별자로 조회되는 관리자가 존재하지 않으면 예외가 발생한다") {
+        expect("일치하는 식별자를 가진 관리자가 없으면 예외가 발생한다") {
             shouldThrow<NoSuchElementException> {
                 administratorRepository.getById(-1L)
             }
         }
 
-        expect("관리자 아이디가 존재하는지 확인한다") {
+        expect("일치하는 사용자명을 가진 관리자가 있는지 확인한다") {
             administratorRepository.existsByUsername(administrator.username).shouldBeTrue()
         }
     }
