@@ -1,9 +1,10 @@
 package apply.ui.admin.mission
 
-import apply.application.EvaluationItemData
+import apply.application.EvaluationItemSelectData
 import apply.application.EvaluationSelectData
 import apply.application.MissionData
 import com.vaadin.flow.component.datetimepicker.DateTimePicker
+import com.vaadin.flow.component.html.H3
 import com.vaadin.flow.component.html.Hr
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup
 import com.vaadin.flow.component.select.Select
@@ -28,8 +29,8 @@ class MissionForm() : BindingIdentityFormLayout<MissionData>(MissionData::class)
 
     init {
         add(
-            title, evaluation, startDateTime, endDateTime, description,
-            Hr(), judgmentItemForm, Hr(),
+            H3("과제"), title, evaluation, startDateTime, endDateTime, description, Hr(),
+            H3("자동채점"), judgmentItemForm, Hr(),
             submittable, hidden
         )
         setResponsiveSteps(ResponsiveStep("0", 1))
@@ -38,24 +39,23 @@ class MissionForm() : BindingIdentityFormLayout<MissionData>(MissionData::class)
 
     constructor(
         evaluations: List<EvaluationSelectData>,
-        listener: (id: Long) -> List<EvaluationItemData>,
+        listener: (id: Long) -> List<EvaluationItemSelectData>,
     ) : this() {
         evaluation.setItems(evaluations)
         evaluation.addValueChangeListener {
-            val evaluationItems: List<EvaluationItemData> = mutableListOf()
-            judgmentItemForm.setEvaluationItem(evaluationItems + listener(it.value.id))
+            judgmentItemForm.setEvaluationItem(listener(it.value.id))
         }
     }
 
     override fun bindOrNull(): MissionData? {
         val missionData = bindDefaultOrNull()
-        judgmentItemForm.bindOrNull()?.let { missionData?.JudgmentItemData = it }
+        judgmentItemForm.bindOrNull()?.let { missionData?.judgmentItemData = it }
         return missionData
     }
 
     override fun fill(data: MissionData) {
         fillDefault(data)
-        judgmentItemForm.fill(data.JudgmentItemData)
+        judgmentItemForm.fill(data.judgmentItemData)
         evaluation.isReadOnly = true
     }
 }
