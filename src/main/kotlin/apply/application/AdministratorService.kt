@@ -20,7 +20,7 @@ class AdministratorService(
         return administratorRepository.getByUsername(username)
     }
 
-    fun save(request: AdministratorData): AdministratorResponse {
+    fun save(request: CreateAdministratorFormData): AdministratorResponse {
         check(!administratorRepository.existsByUsername(request.username)) { "이미 등록된 사용자명입니다." }
         check(request.password == request.confirmPassword) { "비밀번호가 일치하지 않습니다." }
         return administratorRepository
@@ -40,5 +40,12 @@ class AdministratorService(
 
     fun findById(id: Long): AdministratorResponse {
         return administratorRepository.getById(id).let(::AdministratorResponse)
+    }
+
+    fun update(request: UpdateAdministratorFormData) {
+        check(request.password == request.passwordConfirmation) { "비밀번호가 일치하지 않습니다." }
+
+        val administrator = administratorRepository.getById(request.id)
+        administrator.update(request.name, request.password)
     }
 }

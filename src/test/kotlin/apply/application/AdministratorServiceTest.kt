@@ -4,6 +4,7 @@ import apply.ADMINISTRATOR_PASSWORD
 import apply.ADMINISTRATOR_USERNAME
 import apply.createAdministrator
 import apply.createAdministratorData
+import apply.createAdministratorUpdateFormData
 import apply.domain.administrator.AdministratorRepository
 import apply.domain.administrator.getById
 import apply.domain.administrator.getByUsername
@@ -102,6 +103,34 @@ class AdministratorServiceTest : BehaviorSpec({
 
             Then("모든 관리자를 확인할 수 있다") {
                 actual shouldHaveSize 3
+            }
+        }
+    }
+
+    Given("정보 수정을 요청한 관리자가 있는 경우") {
+        val administrator = createAdministrator()
+        val updateAdministratorFormData = createAdministratorUpdateFormData()
+
+        every { administratorRepository.getById(any()) } returns administrator
+
+        When("해당 관리자를 수정하면") {
+            administratorService.update(createAdministratorUpdateFormData())
+
+            Then("관리자 정보를 수정할 수 있다") {
+                administrator.name shouldBe updateAdministratorFormData.name
+                administrator.password shouldBe updateAdministratorFormData.password
+            }
+        }
+
+        When("비밀번호와 확인 비밀번호를 일치시키지 않고 해당 관리자를 수정하면") {
+            Then("예외가 발생한다") {
+                shouldThrow<IllegalStateException> {
+                    administratorService.update(
+                        createAdministratorUpdateFormData(
+                            password = "ABCD1234", passwordConfirmation = "4321DCBA"
+                        )
+                    )
+                }
             }
         }
     }

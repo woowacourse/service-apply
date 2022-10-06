@@ -3,12 +3,14 @@ package apply.ui.api
 import apply.application.AdministratorService
 import apply.createAdministratorData
 import apply.createAdministratorResponse
+import apply.createAdministratorUpdateFormData
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
+import org.springframework.test.web.servlet.put
 import support.test.web.servlet.bearer
 
 @WebMvcTest(AdministratorRestController::class)
@@ -57,6 +59,18 @@ class AdministratorRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isOk }
             content { success(response) }
+        }
+    }
+
+    @Test
+    fun `관리자를 수정한다`() {
+        every { administratorService.update(any()) } returns Unit
+
+        mockMvc.put("/api/administrators") {
+            jsonContent(createAdministratorUpdateFormData())
+            bearer("valid_token")
+        }.andExpect {
+            status { isNoContent }
         }
     }
 }
