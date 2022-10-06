@@ -156,7 +156,7 @@ const ApplicationRegister = () => {
                 입력해주세요.
                 <div className={styles["description-url-small"]}>
                   여러 개가 있는 경우 Notion이나 Google 문서 등을 사용하여 하나로 묶어 주세요.
-                  링크를 공유하실 때에는 해당 링크가 공개 권한으로 접근 가능한지 확인해주세요.
+                  링크를 공유하실 때는 해당 링크가 공개 권한으로 접근 가능한지 확인해주세요.
                 </div>
               </div>
             }
