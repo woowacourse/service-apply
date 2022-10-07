@@ -1,6 +1,4 @@
-package apply.domain.judgment
-
-import apply.application.JudgmentRequest
+package apply.application
 
 interface JudgmentAgency {
     fun requestJudge(request: JudgmentRequest)
