@@ -5,7 +5,7 @@ import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
 
 class JudgmentItemTest : StringSpec({
-    "evaluationItemId가 0L이면 유효하지 않다" {
+    "자동 채점 항목의 평가항목이 0이면 유효하지 않다" {
         val judgmentItem = JudgmentItem(1L, 0L, "testName", ProgrammingLanguage.KOTLIN, 1L)
 
         val isValid = judgmentItem.isValid
@@ -13,7 +13,7 @@ class JudgmentItemTest : StringSpec({
         isValid.shouldBeFalse()
     }
 
-    "testName이 빈문자열이면 유효하지 않다" {
+    "자동 채점 항목의 테스트 이름이 빈문자열이면 유효하지 않다" {
         val judgmentItem = JudgmentItem(1L, 1L, "", ProgrammingLanguage.KOTLIN, 1L)
 
         val isValid = judgmentItem.isValid
@@ -21,7 +21,7 @@ class JudgmentItemTest : StringSpec({
         isValid.shouldBeFalse()
     }
 
-    "ProgrammingLanguage가 NONE이면 유효하지 않다" {
+    "자동 채점 항목의 프로그래밍 언어가 NONE이면 유효하지 않다" {
         val judgmentItem = JudgmentItem(1L, 1L, "testName", ProgrammingLanguage.NONE, 1L)
 
         val isValid = judgmentItem.isValid
@@ -29,7 +29,7 @@ class JudgmentItemTest : StringSpec({
         isValid.shouldBeFalse()
     }
 
-    "evaluationItemId 이 0이 아니고, testName이 빈문자열이 아니고, ProgrammingLanguage 이 NONE이 아니면 유효하다" {
+    "자동 채점 항목의 평가 항목이 0이 아니고, 테스트 이름이 빈 문자열이 아니고, 프로그래밍 언어가 NONE 이 아니라면 유효하다" {
         val judgmentItem = JudgmentItem(1L, 1L, "testName", ProgrammingLanguage.KOTLIN, 1L)
 
         val isValid = judgmentItem.isValid
