@@ -30,8 +30,8 @@ class MissionForm() : BindingIdentityFormLayout<MissionData>(MissionData::class)
     init {
         add(
             H3("과제"), title, evaluation, startDateTime, endDateTime, description, Hr(),
-            submittable, hidden,
-            H3("자동 채점"), judgmentItemForm, Hr()
+            H3("자동 채점"), judgmentItemForm, Hr(),
+            submittable, hidden
         )
         setResponsiveSteps(ResponsiveStep("0", 1))
         drawRequired()
