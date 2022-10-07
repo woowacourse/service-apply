@@ -3,6 +3,19 @@ import useRecruitmentContext from "./useRecruitmentContext";
 import { RECRUITS_TAB, COURSE_TAB } from "./../constants/tab";
 import { Recruitment } from "../../types/domains/recruitments";
 
+const matchProgram = (recruitmentTitle: string, programLabel: string) => {
+  const programList = Array.from(Object.values(COURSE_TAB)).sort(
+    (a, b) => b.label.length - a.label.length
+  );
+
+  const matchingProgram =
+    programList.find(({ label }) => {
+      return new RegExp(String.raw`^${label}`, "i").test(recruitmentTitle);
+    }) ?? COURSE_TAB.ALL;
+
+  return matchingProgram.label === programLabel;
+};
+
 const useRecruitList = () => {
   const { recruitment } = useRecruitmentContext();
   const [courseTabStatus, setCourseTabStatus] = useState(COURSE_TAB.ALL);
@@ -17,18 +30,9 @@ const useRecruitList = () => {
       return sortedRecruitmentItem;
     }
 
-    if (courseTabStatus.label === COURSE_TAB.WOOWA_TECH_COURSE.label) {
-      return sortedRecruitmentItem.filter((recruitmentItem) =>
-        recruitmentItem.title.includes(courseTabStatus.label)
-      );
-    }
-
-    return sortedRecruitmentItem.filter((recruitmentItem) => {
-      const fullCourseNameArray = recruitmentItem.title.split(" ");
-      const courseName = fullCourseNameArray.slice(0, fullCourseNameArray.length - 1);
-
-      return courseName.join(" ").trim() === courseTabStatus.label;
-    });
+    return sortedRecruitmentItem.filter((recruitmentItem) =>
+      matchProgram(recruitmentItem.title, courseTabStatus.label)
+    );
   }, [recruitment, courseTabStatus]);
 
   return { courseTabStatus, setCourseTabStatus, filteredRecruitment };
