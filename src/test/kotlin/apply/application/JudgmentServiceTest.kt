@@ -217,6 +217,7 @@ class JudgmentServiceTest : BehaviorSpec({
             val judgment = createJudgment(records = listOf(createJudgmentRecord(result = createJudgmentResult())))
             every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns judgment
             every { judgmentRepository.save(any()) } returns judgment
+
             Then("테스트를 실행한 뒤 새로운 테스트 실행 결과를 반환한다") {
                 val response = judgmentService.judgeReal(1L, 1L)
                 response shouldNotBe LastJudgmentResponse(

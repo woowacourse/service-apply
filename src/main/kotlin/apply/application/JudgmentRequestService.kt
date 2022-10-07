@@ -5,17 +5,15 @@ import apply.domain.assignment.getById
 import apply.domain.judgment.JudgmentItemRepository
 import apply.domain.judgment.JudgmentStartedEvent
 import apply.domain.judgment.getByMissionId
-import apply.domain.mission.MissionRepository
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.springframework.transaction.event.TransactionalEventListener
 
 @Service
 class JudgmentRequestService(
-    val missionRepository: MissionRepository,
-    val judgmentItemRepository: JudgmentItemRepository,
-    val judgmentAgency: JudgmentAgency,
-    val assignmentRepository: AssignmentRepository
+    private val judgmentItemRepository: JudgmentItemRepository,
+    private val judgmentAgency: JudgmentAgency,
+    private val assignmentRepository: AssignmentRepository
 ) {
     @Async
     @TransactionalEventListener
