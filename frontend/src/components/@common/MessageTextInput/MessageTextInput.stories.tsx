@@ -33,7 +33,12 @@ Required.args = {
 export const WithDescription = Template.bind({});
 WithDescription.args = {
   label: "이름",
-  description: "이름을 입력하세요.",
+  description: (
+    <div>
+      자신을 드러낼 수 있는 개인 블로그, GitHub, 포트폴리오 주소 등이 있다면 입력해 주세요.
+      <div>여러 개가 있는 경우 Notion, Google 문서 등을 사용하여 하나로 묶어 주세요.</div>
+    </div>
+  ),
 };
 
 export const MaxLength = Template.bind({});
