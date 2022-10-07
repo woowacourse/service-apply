@@ -27,6 +27,8 @@ const MessageTextarea = ({
   onChange,
   ...props
 }: MessageTextareaProps) => {
+  const shouldShowCount = showCount && maxLength && maxLength > 0;
+
   return (
     <div className={classNames(styles.box, className)}>
       <div className={styles["text-field"]}>
@@ -34,7 +36,7 @@ const MessageTextarea = ({
           {label}
         </Label>
         {description && <Description>{description}</Description>}
-        {showCount && maxLength && maxLength > 0 && (
+        {shouldShowCount && (
           <div className={styles["length-limit"]}>
             {value?.length} / {maxLength}
           </div>
