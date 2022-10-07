@@ -1,6 +1,7 @@
 package apply.domain.judgment
 
 import apply.createJudgmentRecord
+import apply.createJudgmentResult
 import apply.domain.judgment.JudgmentStatus.FAILED
 import apply.domain.judgment.JudgmentStatus.STARTED
 import apply.domain.judgment.JudgmentStatus.SUCCEEDED
@@ -19,10 +20,10 @@ class JudgmentRecordTest : StringSpec({
     "자동 채점 기록 생성" {
         val record = createJudgmentRecord()
         assertSoftly(record) {
-            result shouldBe JudgmentResult()
-            completedDateTime.shouldBeNull()
-            completed.shouldBeFalse()
-            status shouldBe STARTED
+            result shouldBe createJudgmentResult()
+            completedDateTime.shouldNotBeNull()
+            completed.shouldBeTrue()
+            status shouldBe SUCCEEDED
         }
     }
 

@@ -92,7 +92,7 @@ class JudgmentServiceTest : BehaviorSpec({
 
         When("해당 과제 제출물의 예제 테스트를 실행하면") {
             Then("예외가 발생한다") {
-                shouldThrow<NoSuchElementException> {
+                shouldThrow<IllegalStateException> {
                     judgmentService.judgeExample(1L, 1L)
                 }
             }
@@ -100,7 +100,7 @@ class JudgmentServiceTest : BehaviorSpec({
 
         When("해당 과제 제출물의 본 테스트를 실행하면") {
             Then("예외가 발생한다") {
-                shouldThrow<NoSuchElementException> {
+                shouldThrow<IllegalStateException> {
                     judgmentService.judgeReal(1L, 1L)
                 }
             }
