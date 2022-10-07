@@ -31,22 +31,23 @@ class JudgmentService(
         val mission = missionRepository.getById(missionId)
         check(mission.isSubmitting) { "예제 테스트를 실행할 수 없습니다." }
         val assignment = assignmentRepository.getByUserIdAndMissionId(userId, missionId)
-        return judge(assignment, mission, JudgmentType.EXAMPLE)
+        return judge(mission, assignment, JudgmentType.EXAMPLE)
     }
 
     fun judgeReal(userId: Long, missionId: Long): LastJudgmentResponse {
         val mission = missionRepository.getById(missionId)
         val assignment = assignmentRepository.getByUserIdAndMissionId(userId, missionId)
-        return judge(assignment, mission, JudgmentType.REAL)
+        return judge(mission, assignment, JudgmentType.REAL)
     }
 
-    private fun judge(assignment: Assignment, mission: Mission, judgmentType: JudgmentType): LastJudgmentResponse {
+    private fun judge(mission: Mission, assignment: Assignment, judgmentType: JudgmentType): LastJudgmentResponse {
         val judgmentItem = judgmentItemRepository.getByMissionId(mission.id)
+        check(judgmentItem.isValid) { "예제 테스트를 실행할 수 없습니다." }
         val judgment = judgmentRepository.findByAssignmentIdAndType(assignment.id, judgmentType)
             ?: judgmentRepository.save(Judgment(assignment.id, judgmentType))
 
         val commit = assignmentArchive.getLastCommit(assignment.pullRequestUrl, mission.period.endDateTime)
-        judgment.start(commit, judgmentItem)
+        judgment.start(commit)
         judgmentRepository.save(judgment)
         return LastJudgmentResponse(assignment.pullRequestUrl, judgment.lastRecord)
     }
