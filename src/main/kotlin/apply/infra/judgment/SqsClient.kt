@@ -2,8 +2,6 @@ package apply.infra.judgment
 
 import apply.application.JudgmentAgency
 import apply.application.JudgmentRequest
-import apply.domain.judgment.JudgmentType
-import apply.domain.judgment.ProgrammingLanguage
 import apply.infra.AwsProperties
 import com.amazonaws.auth.AWSStaticCredentialsProvider
 import com.amazonaws.regions.Regions
@@ -30,7 +28,7 @@ class SqsClient(
     override fun requestJudge(request: JudgmentRequest) {
         val message = SendMessageRequest()
             .withQueueUrl(client.getQueueUrl("queue-name").queueUrl)
-            .withMessageBody(objectMapper.writeValueAsString(request))
+            .withMessageBody(objectMapper.writeValueAsString(SqsRequest(request)))
         runCatching { client.sendMessage(message) }
             .onSuccess { logger.info { it.toString() } }
             .onFailure { e -> throw IllegalArgumentException(e) }
@@ -39,10 +37,18 @@ class SqsClient(
 
 data class SqsRequest(
     val judgmentId: Long,
-    val language: ProgrammingLanguage,
+    val testType: String,
+    val language: String,
     val testName: String,
-    val testType: JudgmentType,
     val pullRequestUrl: String,
     val commitHash: String
 ) {
+    constructor(request: JudgmentRequest) : this(
+        request.judgmentId,
+        request.judgmentType.toString(),
+        request.programmingLanguage.toString(),
+        request.testName,
+        request.pullRequestUrl,
+        request.commit.hash
+    )
 }
