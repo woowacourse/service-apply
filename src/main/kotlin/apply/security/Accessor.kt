@@ -1,4 +1,4 @@
-package apply.security.accessor
+package apply.security
 
 @Target(AnnotationTarget.VALUE_PARAMETER)
 @Retention(AnnotationRetention.RUNTIME)

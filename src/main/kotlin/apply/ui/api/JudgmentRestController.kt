@@ -5,7 +5,7 @@ import apply.application.JudgmentService
 import apply.application.LastJudgmentResponse
 import apply.application.SuccessJudgmentRequest
 import apply.domain.user.User
-import apply.security.accessor.Accessor
+import apply.security.Accessor
 import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
@@ -43,7 +43,7 @@ class JudgmentRestController(
     fun success(
         @PathVariable judgmentId: Long,
         @RequestBody request: SuccessJudgmentRequest,
-        @Accessor("lambda") ignored: String
+        @Accessor("lambda") ignored: Unit
     ): ResponseEntity<Void> {
         judgmentService.success(judgmentId, request)
         return ResponseEntity.ok().build()
@@ -53,7 +53,7 @@ class JudgmentRestController(
     fun fail(
         @PathVariable judgmentId: Long,
         @RequestBody request: FailJudgmentRequest,
-        @Accessor("lambda") ignored: String
+        @Accessor("lambda") ignored: Unit
     ): ResponseEntity<Void> {
         judgmentService.fail(judgmentId, request)
         return ResponseEntity.ok().build()

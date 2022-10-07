@@ -1,8 +1,8 @@
-package apply.security.accessor
+package apply.security
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding
 
-@ConfigurationProperties("lambda")
+@ConfigurationProperties("accessor")
 @ConstructorBinding
-data class LambdaAccessorProperties(val key: String)
+data class AccessorProperties(val keys: Map<String, String>)

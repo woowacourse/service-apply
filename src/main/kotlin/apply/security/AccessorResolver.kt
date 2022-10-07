@@ -1,8 +1,8 @@
-package apply.security.accessor;
+package apply.security
 
 import org.springframework.core.MethodParameter
 import org.springframework.http.HttpHeaders.AUTHORIZATION
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Component
 import org.springframework.web.bind.support.WebDataBinderFactory
 import org.springframework.web.context.request.NativeWebRequest
 import org.springframework.web.method.support.HandlerMethodArgumentResolver
@@ -10,7 +10,7 @@ import org.springframework.web.method.support.ModelAndViewContainer
 
 @Component
 class AccessorResolver(
-    private val lambdaAccessorProperties: LambdaAccessorProperties
+    private val accessorProperties: AccessorProperties
 ) : HandlerMethodArgumentResolver {
     override fun supportsParameter(parameter: MethodParameter): Boolean {
         return parameter.hasParameterAnnotation(Accessor::class.java)
@@ -21,11 +21,15 @@ class AccessorResolver(
         mavContainer: ModelAndViewContainer?,
         webRequest: NativeWebRequest,
         binderFactory: WebDataBinderFactory?
-    ): Any? {
-        val authorization = webRequest.getHeader(AUTHORIZATION) ?: throw UnauthorizedException()
-        if (lambdaAccessorProperties.key != authorization) {
-            throw UnauthorizedException()
+    ) {
+        val authorization = webRequest.getHeader(AUTHORIZATION) ?: throw LoginFailedException()
+        if (authorization != parameter.getKey()) {
+            throw LoginFailedException()
         }
-        return null
+    }
+
+    private fun MethodParameter.getKey(): String? {
+        val value = getParameterAnnotation(Accessor::class.java)?.value
+        return accessorProperties.keys[value]
     }
 }
