@@ -2,9 +2,9 @@ package apply.infra.judgment
 
 import apply.application.JudgmentRequest
 import apply.domain.judgment.JudgmentAgency
-import apply.infra.mail.AwsProperties
+import apply.domain.judgment.ProgrammingLanguage
+import apply.infra.AwsProperties
 import com.amazonaws.auth.AWSStaticCredentialsProvider
-import com.amazonaws.auth.BasicAWSCredentials
 import com.amazonaws.regions.Regions
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder
 import com.amazonaws.services.sqs.model.InvalidMessageContentsException
@@ -14,21 +14,13 @@ import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 
 @Component
-@Profile("dev")
 class SqsClient(
-    awsProperties: AwsProperties
+    awsProperties: AwsProperties,
+    private val objectMapper: ObjectMapper
 ) : JudgmentAgency {
-
-    private val client = AmazonSQSClientBuilder
+    private val client: AmazonSQS = AmazonSQSClientBuilder
         .standard()
-        .withCredentials(
-            AWSStaticCredentialsProvider(
-                BasicAWSCredentials(
-                    awsProperties.accessKey,
-                    awsProperties.secretKey
-                )
-            )
-        )
+        .withCredentials(AWSStaticCredentialsProvider(awsProperties.awsCredentials))
         .withRegion(Regions.AP_NORTHEAST_2)
         .build()
 
@@ -47,11 +39,11 @@ class SqsClient(
         }
     }
 
-    companion object {
-        private const val QUEUE_NAME: String = "queue-name"
-        private val OBJECT_MAPPER: ObjectMapper = ObjectMapper()
-
-        fun serialize(judgmentRequest: JudgmentRequest): String = OBJECT_MAPPER.writeValueAsString(judgmentRequest)
-            ?: throw IllegalArgumentException("데이터 직렬화에 실패했습니다. : $judgmentRequest")
-    }
+data class SqsRequest(
+    val judgmentId: Long,
+    val language: ProgrammingLanguage,
+    val testName: String,
+    val testType: JudgmentType,
+    val pullRequestUrl: String,
+    val commitHash: String
 }

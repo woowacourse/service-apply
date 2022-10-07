@@ -1,6 +1,7 @@
 package apply.infra.mail
 
 import apply.application.mail.MailSender
+import apply.infra.AwsProperties
 import com.amazonaws.auth.AWSStaticCredentialsProvider
 import com.amazonaws.auth.BasicAWSCredentials
 import com.amazonaws.regions.Regions
@@ -38,14 +39,7 @@ class AwsMailSender(
 ) : MailSender {
     private val client: AmazonSimpleEmailService = AmazonSimpleEmailServiceClientBuilder
         .standard()
-        .withCredentials(
-            AWSStaticCredentialsProvider(
-                BasicAWSCredentials(
-                    awsProperties.accessKey,
-                    awsProperties.secretKey
-                )
-            )
-        )
+        .withCredentials(AWSStaticCredentialsProvider(awsProperties.awsCredentials))
         .withRegion(Regions.AP_NORTHEAST_2)
         .build()
 
