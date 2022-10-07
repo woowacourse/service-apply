@@ -24,12 +24,12 @@ class JudgmentRequestServiceTest : BehaviorSpec({
     val judgmentRequestService = JudgmentRequestService(judgmentItemRepository, judgmentAgency, assignmentRepository)
 
 
-    Given("자동채점이 시작된 경우") {
+    Given("자동 채점이 시작된 경우") {
         every { assignmentRepository.getById(any()) } returns createAssignment()
         every { judgmentItemRepository.getByMissionId(any()) } returns createJudgmentItem()
         every { judgmentAgency.requestJudge(any()) } just Runs
 
-        When("자동채점 실행 요청을 보내면") {
+        When("자동 채점 실행 요청을 보내면") {
             Then("정상적으로 요청을 전송한다") {
                 val event = JudgmentStartedEvent(1L, 1L, JudgmentType.EXAMPLE, createCommit())
 

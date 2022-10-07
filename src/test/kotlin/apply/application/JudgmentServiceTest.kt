@@ -24,7 +24,6 @@ import apply.domain.mission.MissionRepository
 import apply.domain.mission.getById
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
-import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.mockk.clearAllMocks
@@ -32,7 +31,6 @@ import io.mockk.every
 import io.mockk.mockk
 import support.test.spec.afterRootTest
 import java.time.LocalDateTime
-
 
 class JudgmentServiceTest : BehaviorSpec({
     val judgmentRepository = mockk<JudgmentRepository>()
@@ -42,17 +40,12 @@ class JudgmentServiceTest : BehaviorSpec({
     val assignmentArchive = mockk<AssignmentArchive>()
 
     val judgmentService = JudgmentService(
-        judgmentRepository,
-        assignmentRepository,
-        missionRepository,
-        judgmentItemRepository,
-        assignmentArchive
+        judgmentRepository, assignmentRepository, missionRepository, judgmentItemRepository, assignmentArchive
     )
 
     Given("과제 제출 시간이 아닌 경우") {
         every { missionRepository.getById(any()) } returns createMission(
-            startDateTime = LocalDateTime.now().minusMinutes(2),
-            endDateTime = LocalDateTime.now().minusMinutes(1)
+            startDateTime = LocalDateTime.now().minusMinutes(2), endDateTime = LocalDateTime.now().minusMinutes(1)
         )
         every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns createAssignment()
 
@@ -87,13 +80,12 @@ class JudgmentServiceTest : BehaviorSpec({
         }
     }
 
-    Given("자동채점 항목이 유효하지 않는 경우") {
+    Given("자동 채점 항목이 유효하지 않는 경우") {
         every { missionRepository.getById(any()) } returns createMission()
         every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns createAssignment()
-        every { judgmentItemRepository.findByMissionId(any()) } returns
-                createJudgmentItem(
-                    evaluationItemId = 0L, testName = "", programmingLanguage = ProgrammingLanguage.NONE
-                )
+        every { judgmentItemRepository.findByMissionId(any()) } returns createJudgmentItem(
+            evaluationItemId = 0L, testName = "", programmingLanguage = ProgrammingLanguage.NONE
+        )
 
         When("해당 과제 제출물의 예제 테스트를 실행하면") {
             Then("예외가 발생한다") {
@@ -235,23 +227,23 @@ class JudgmentServiceTest : BehaviorSpec({
         }
     }
 
-    Given("이전에 자동채점을 실행한 경우") {
-        When("자동채점 응답 결과가 성공하면") {
+    Given("이전에 자동 채점을 실행한 경우") {
+        When("자동 채점 응답 결과가 성공하면") {
             val record = createJudgmentRecord(result = JudgmentResult(), completedDateTime = null)
             every { judgmentRepository.getById(any()) } returns createJudgment(records = listOf(record))
 
-            Then("자동채점 성공 결과를 저장한다") {
+            Then("자동 채점 성공 결과를 저장한다") {
                 judgmentService.success(1L, createJudgmentSuccessRequest())
 
                 record.status shouldBe JudgmentStatus.SUCCEEDED
             }
         }
 
-        When("자동채점 응답 결과가 실패면") {
+        When("자동 채점 응답 결과가 실패면") {
             val record = createJudgmentRecord(result = JudgmentResult(), completedDateTime = null)
             every { judgmentRepository.getById(any()) } returns createJudgment(records = listOf(record))
 
-            Then("자동채점 실패 결과를 저장한다") {
+            Then("자동 채점 실패 결과를 저장한다") {
                 judgmentService.fail(1L, createJudgmentFailRequest())
 
                 record.status shouldBe JudgmentStatus.FAILED

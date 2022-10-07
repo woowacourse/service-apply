@@ -49,7 +49,6 @@ class JudgmentRestController(
         return ResponseEntity.ok().build()
     }
 
-
     @PostMapping("/judgments/{judgmentId}/fail")
     fun fail(
         @PathVariable judgmentId: Long,
