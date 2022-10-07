@@ -54,7 +54,7 @@ class JudgmentService(
     fun success(judgmentId: Long, request: SuccessJudgmentRequest) {
         val judgment = judgmentRepository.getById(judgmentId)
         judgment.success(Commit(request.commit), JudgmentResult(request.passCount, request.totalCount))
-        TODO("reflect result to evaluation answer")
+        // TODO: reflect result to evaluation answer
     }
 
     fun fail(judgmentId: Long, request: FailJudgmentRequest) {

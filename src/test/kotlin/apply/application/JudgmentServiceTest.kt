@@ -5,21 +5,26 @@ import apply.PULL_REQUEST_URL
 import apply.createAssignment
 import apply.createCommit
 import apply.createJudgment
+import apply.createJudgmentFailRequest
 import apply.createJudgmentItem
 import apply.createJudgmentRecord
 import apply.createJudgmentResult
+import apply.createJudgmentSuccessRequest
 import apply.createMission
 import apply.domain.assignment.AssignmentRepository
 import apply.domain.assignment.getByUserIdAndMissionId
 import apply.domain.judgment.AssignmentArchive
 import apply.domain.judgment.JudgmentItemRepository
 import apply.domain.judgment.JudgmentRepository
+import apply.domain.judgment.JudgmentResult
 import apply.domain.judgment.JudgmentStatus
 import apply.domain.judgment.ProgrammingLanguage
+import apply.domain.judgment.getById
 import apply.domain.mission.MissionRepository
 import apply.domain.mission.getById
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
+import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.mockk.clearAllMocks
@@ -226,6 +231,30 @@ class JudgmentServiceTest : BehaviorSpec({
                     JudgmentStatus.STARTED,
                     startedDateTime = judgment.lastRecord.startedDateTime
                 )
+            }
+        }
+    }
+
+    Given("이전에 자동채점을 실행한 경우") {
+        When("자동채점 응답 결과가 성공하면") {
+            val record = createJudgmentRecord(result = JudgmentResult(), completedDateTime = null)
+            every { judgmentRepository.getById(any()) } returns createJudgment(records = listOf(record))
+
+            Then("자동채점 성공 결과를 저장한다") {
+                judgmentService.success(1L, createJudgmentSuccessRequest())
+
+                record.status shouldBe JudgmentStatus.SUCCEEDED
+            }
+        }
+
+        When("자동채점 응답 결과가 실패면") {
+            val record = createJudgmentRecord(result = JudgmentResult(), completedDateTime = null)
+            every { judgmentRepository.getById(any()) } returns createJudgment(records = listOf(record))
+
+            Then("자동채점 실패 결과를 저장한다") {
+                judgmentService.fail(1L, createJudgmentFailRequest())
+
+                record.status shouldBe JudgmentStatus.FAILED
             }
         }
     }
