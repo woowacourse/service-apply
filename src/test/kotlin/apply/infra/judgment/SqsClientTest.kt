@@ -1,6 +1,7 @@
 package apply.infra.judgment
 
 import apply.application.JudgmentRequest
+import apply.domain.judgment.Commit
 import apply.domain.judgment.JudgmentType
 import apply.domain.judgment.ProgrammingLanguage
 import io.kotest.core.spec.style.StringSpec
@@ -14,11 +15,11 @@ class SqsClientTest(
         sqsClient.requestJudge(
             JudgmentRequest(
                 1L,
+                JudgmentType.EXAMPLE,
                 ProgrammingLanguage.JAVA,
                 "baseball",
-                JudgmentType.EXAMPLE,
                 "",
-                ""
+                Commit("")
             )
         )
     }

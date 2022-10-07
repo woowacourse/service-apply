@@ -45,21 +45,20 @@ class JudgmentService(
         check(judgmentItem.isValid) { "예제 테스트를 실행할 수 없습니다." }
         val judgment = judgmentRepository.findByAssignmentIdAndType(assignment.id, judgmentType)
             ?: judgmentRepository.save(Judgment(assignment.id, judgmentType))
-
         val commit = assignmentArchive.getLastCommit(assignment.pullRequestUrl, mission.period.endDateTime)
         judgment.start(commit)
         judgmentRepository.save(judgment)
         return LastJudgmentResponse(assignment.pullRequestUrl, judgment.lastRecord)
     }
 
-    fun success(request: JudgmentSuccessRequest) {
-        val judgment = judgmentRepository.getById(request.judgmentId)
+    fun success(judgmentId: Long, request: SuccessJudgmentRequest) {
+        val judgment = judgmentRepository.getById(judgmentId)
         judgment.success(Commit(request.commit), JudgmentResult(request.passCount, request.totalCount))
         TODO("reflect result to evaluation answer")
     }
 
-    fun fail(request: JudgmentFailRequest) {
-        val judgment = judgmentRepository.getById(request.judgmentId)
+    fun fail(judgmentId: Long, request: FailJudgmentRequest) {
+        val judgment = judgmentRepository.getById(judgmentId)
         judgment.fail(Commit(request.commit), request.message)
     }
 }

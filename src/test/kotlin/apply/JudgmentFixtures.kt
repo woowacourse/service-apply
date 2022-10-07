@@ -1,8 +1,8 @@
 package apply
 
-import apply.application.JudgmentFailRequest
-import apply.application.JudgmentSuccessRequest
+import apply.application.FailJudgmentRequest
 import apply.application.LastJudgmentResponse
+import apply.application.SuccessJudgmentRequest
 import apply.domain.judgment.Commit
 import apply.domain.judgment.Judgment
 import apply.domain.judgment.JudgmentItem
@@ -68,4 +68,21 @@ fun createJudgmentItem(
     id: Long = 0L
 ): JudgmentItem {
     return JudgmentItem(missionId, evaluationItemId, testName, programmingLanguage, id)
+}
+
+fun createJudgmentSuccessRequest(
+    judgmentId: Long = 1L,
+    commit: String = COMMIT_HASH,
+    passCount: Int = 5,
+    totalCount: Int = 10
+): SuccessJudgmentRequest {
+    return SuccessJudgmentRequest(judgmentId, commit, passCount, totalCount)
+}
+
+fun createJudgmentFailRequest(
+    judgmentId: Long = 1L,
+    commit: String = COMMIT_HASH,
+    message: String = "빌드 실패"
+): FailJudgmentRequest {
+    return FailJudgmentRequest(judgmentId, commit, message)
 }

@@ -38,3 +38,16 @@ data class JudgmentRequest(
     val pullRequestUrl: String,
     val commit: Commit
 )
+
+data class SuccessJudgmentRequest(
+    val judgmentId: Long,
+    val commit: String,
+    val passCount: Int,
+    val totalCount: Int
+)
+
+data class FailJudgmentRequest(
+    val judgmentId: Long,
+    val commit: String,
+    val message: String
+)
