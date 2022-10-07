@@ -2,7 +2,6 @@ package apply.domain.judgment
 
 import apply.createCommit
 import apply.createJudgment
-import apply.createJudgmentItem
 import apply.createJudgmentRecord
 import apply.domain.judgment.JudgmentStatus.FAILED
 import apply.domain.judgment.JudgmentStatus.STARTED
@@ -14,11 +13,10 @@ import io.kotest.matchers.shouldBe
 import java.time.LocalDateTime.now
 
 class JudgmentTest : StringSpec({
-    val judgmentItem = createJudgmentItem()
     "자동 채점 시작" {
         val judgment = createJudgment()
         val commit = createCommit()
-        judgment.start(commit, judgmentItem)
+        judgment.start(commit)
         judgment.lastCommit shouldBe commit
         judgment.lastStatus shouldBe STARTED
     }
@@ -28,7 +26,7 @@ class JudgmentTest : StringSpec({
             records = listOf(createJudgmentRecord(createCommit("commit1"), startedDateTime = now()))
         )
         shouldThrow<IllegalStateException> {
-            judgment.start(createCommit("commit2"), judgmentItem)
+            judgment.start(createCommit("commit2"))
         }
     }
 
@@ -37,7 +35,7 @@ class JudgmentTest : StringSpec({
             records = listOf(createJudgmentRecord(createCommit("commit1"), startedDateTime = now().minusMinutes(5)))
         )
         val commit = createCommit("commit2")
-        shouldNotThrowAny { judgment.start(commit, judgmentItem) }
+        shouldNotThrowAny { judgment.start(commit) }
         judgment.lastCommit shouldBe commit
         judgment.lastStatus shouldBe STARTED
     }

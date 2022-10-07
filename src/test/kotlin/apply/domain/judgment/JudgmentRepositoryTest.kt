@@ -59,7 +59,7 @@ class JudgmentRepositoryTest(
 
         expect("새 커밋이 추가되면 자동 채점 기록을 저장한다") {
             val actual = judgmentRepository.getById(judgment.id)
-            actual.start(createCommit("commit2"), judgmentItem)
+            actual.start(createCommit("commit2"))
         }
 
         expect("특정 커밋의 자동 채점 기록을 수정한다") {
