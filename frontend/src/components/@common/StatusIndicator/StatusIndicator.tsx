@@ -2,7 +2,7 @@ import classNames from "classnames";
 import styles from "./StatusIndicator.module.css";
 
 export type StatusIndicatorProps = {
-  className: string;
+  className?: string;
   active: boolean;
   text: string;
 };
