@@ -11,14 +11,13 @@ export const TITLE_ALIGN = {
   LEFT: "left",
   CENTER: "center",
   RIGHT: "right",
-};
+} as const;
 
 export type ContainerProps = React.HTMLAttributes<HTMLDivElement> & {
   size?: typeof CONTAINER_SIZE[keyof typeof CONTAINER_SIZE];
   className?: string;
   title?: string;
   titleAlign: typeof TITLE_ALIGN[keyof typeof TITLE_ALIGN];
-  children: React.ReactNode;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
 };
 
@@ -26,7 +25,7 @@ const Container = ({
   size = CONTAINER_SIZE.DEFAULT,
   className,
   title,
-  titleAlign,
+  titleAlign = TITLE_ALIGN.CENTER,
   children,
   onClick = () => {},
 }: ContainerProps) => {
@@ -54,15 +53,3 @@ const Container = ({
 };
 
 export default Container;
-
-Container.propTypes = {
-  title: PropTypes.string,
-  titleAlign: PropTypes.oneOf(Object.values(TITLE_ALIGN)),
-  size: PropTypes.oneOf(Object.values(CONTAINER_SIZE)),
-  children: PropTypes.node,
-};
-
-Container.defaultProps = {
-  size: "default",
-  titleAlign: "center",
-};
