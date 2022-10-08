@@ -23,6 +23,6 @@ class JudgmentItem(
     id: Long = 0L
 ) : BaseEntity(id) {
     init {
-        require(evaluationItemId != 0L && testName.isNotEmpty() && programmingLanguage != ProgrammingLanguage.NONE) { "자동 채점 항목을 만들 수 없습니다." }
+        require(evaluationItemId != 0L && testName.isNotEmpty() && programmingLanguage != ProgrammingLanguage.NONE) { "자동 채점 평가 항목이 올바르지 않습니다." }
     }
 }
