@@ -1,4 +1,4 @@
-package apply.domain.judgment
+package apply.domain.mission
 
 import support.domain.BaseEntity
 import javax.persistence.Column
@@ -12,16 +12,19 @@ class JudgmentItem(
     val missionId: Long,
 
     @Column(nullable = false)
-    var evaluationItemId: Long = 0L,
+    var evaluationItemId: Long,
 
     @Column(nullable = false)
-    var testName: String = "",
+    var testName: String,
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    var programmingLanguage: ProgrammingLanguage = ProgrammingLanguage.NONE,
+    var programmingLanguage: ProgrammingLanguage,
     id: Long = 0L
 ) : BaseEntity(id) {
-    val isValid: Boolean
-        get() = evaluationItemId != 0L && testName != "" && programmingLanguage != ProgrammingLanguage.NONE
+    init {
+        require(evaluationItemId != 0L && testName.isNotEmpty() && programmingLanguage != ProgrammingLanguage.NONE) {
+            "자동 채점 항목을 만들 수 없습니다."
+        }
+    }
 }

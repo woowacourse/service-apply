@@ -2,9 +2,9 @@ package apply.application
 
 import apply.domain.assignment.AssignmentRepository
 import apply.domain.assignment.getById
-import apply.domain.judgment.JudgmentItemRepository
 import apply.domain.judgment.JudgmentStartedEvent
-import apply.domain.judgment.getByMissionId
+import apply.domain.mission.JudgmentItemRepository
+import apply.domain.mission.getByMissionId
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.springframework.transaction.event.TransactionalEventListener

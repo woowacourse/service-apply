@@ -4,7 +4,7 @@ import apply.domain.judgment.Commit
 import apply.domain.judgment.JudgmentRecord
 import apply.domain.judgment.JudgmentStatus
 import apply.domain.judgment.JudgmentType
-import apply.domain.judgment.ProgrammingLanguage
+import apply.domain.mission.ProgrammingLanguage
 import java.time.LocalDateTime
 
 data class LastJudgmentResponse(

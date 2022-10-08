@@ -5,12 +5,12 @@ import apply.application.LastJudgmentResponse
 import apply.application.SuccessJudgmentRequest
 import apply.domain.judgment.Commit
 import apply.domain.judgment.Judgment
-import apply.domain.judgment.JudgmentItem
 import apply.domain.judgment.JudgmentRecord
 import apply.domain.judgment.JudgmentResult
 import apply.domain.judgment.JudgmentStatus
 import apply.domain.judgment.JudgmentType
-import apply.domain.judgment.ProgrammingLanguage
+import apply.domain.mission.JudgmentItem
+import apply.domain.mission.ProgrammingLanguage
 import java.time.LocalDateTime
 import java.time.LocalDateTime.now
 

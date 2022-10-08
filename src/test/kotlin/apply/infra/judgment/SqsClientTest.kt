@@ -3,7 +3,7 @@ package apply.infra.judgment
 import apply.application.JudgmentRequest
 import apply.domain.judgment.Commit
 import apply.domain.judgment.JudgmentType
-import apply.domain.judgment.ProgrammingLanguage
+import apply.domain.mission.ProgrammingLanguage
 import io.kotest.core.spec.style.StringSpec
 import support.test.IntegrationTest
 
@@ -24,4 +24,3 @@ class SqsClientTest(
         )
     }
 })
-

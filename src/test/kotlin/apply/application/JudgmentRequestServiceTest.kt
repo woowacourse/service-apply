@@ -5,10 +5,9 @@ import apply.createCommit
 import apply.createJudgmentItem
 import apply.domain.assignment.AssignmentRepository
 import apply.domain.assignment.getById
-import apply.domain.judgment.JudgmentItemRepository
 import apply.domain.judgment.JudgmentStartedEvent
 import apply.domain.judgment.JudgmentType
-import apply.domain.judgment.getByMissionId
+import apply.domain.mission.JudgmentItemRepository
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.core.spec.style.BehaviorSpec
 import io.mockk.Runs
@@ -23,10 +22,9 @@ class JudgmentRequestServiceTest : BehaviorSpec({
 
     val judgmentRequestService = JudgmentRequestService(judgmentItemRepository, judgmentAgency, assignmentRepository)
 
-
     Given("자동 채점이 시작된 경우") {
         every { assignmentRepository.getById(any()) } returns createAssignment()
-        every { judgmentItemRepository.getByMissionId(any()) } returns createJudgmentItem()
+        every { judgmentItemRepository.findByMissionId(any()) } returns createJudgmentItem()
         every { judgmentAgency.requestJudge(any()) } just Runs
 
         When("자동 채점 실행 요청을 보내면") {

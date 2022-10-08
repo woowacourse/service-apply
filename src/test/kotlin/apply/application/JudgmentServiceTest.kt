@@ -6,7 +6,6 @@ import apply.createAssignment
 import apply.createCommit
 import apply.createJudgment
 import apply.createJudgmentFailRequest
-import apply.createJudgmentItem
 import apply.createJudgmentRecord
 import apply.createJudgmentResult
 import apply.createJudgmentSuccessRequest
@@ -14,12 +13,11 @@ import apply.createMission
 import apply.domain.assignment.AssignmentRepository
 import apply.domain.assignment.getByUserIdAndMissionId
 import apply.domain.judgment.AssignmentArchive
-import apply.domain.judgment.JudgmentItemRepository
 import apply.domain.judgment.JudgmentRepository
 import apply.domain.judgment.JudgmentResult
 import apply.domain.judgment.JudgmentStatus
-import apply.domain.judgment.ProgrammingLanguage
 import apply.domain.judgment.getById
+import apply.domain.mission.JudgmentItemRepository
 import apply.domain.mission.MissionRepository
 import apply.domain.mission.getById
 import io.kotest.assertions.throwables.shouldThrow
@@ -61,7 +59,7 @@ class JudgmentServiceTest : BehaviorSpec({
             val judgment = createJudgment()
             every { missionRepository.getById(any()) } returns createMission()
             every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns createAssignment()
-            every { judgmentItemRepository.findByMissionId(any()) } returns createJudgmentItem()
+            every { judgmentItemRepository.existsByMissionId(any()) } returns true
             every { assignmentArchive.getLastCommit(any(), any()) } returns createCommit()
             every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns judgment
             every { judgmentRepository.save(any()) } returns judgment
@@ -80,12 +78,10 @@ class JudgmentServiceTest : BehaviorSpec({
         }
     }
 
-    Given("자동 채점 항목이 유효하지 않는 경우") {
+    Given("자동 채점 항목이 존재하지 않는 경우") {
         every { missionRepository.getById(any()) } returns createMission()
         every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns createAssignment()
-        every { judgmentItemRepository.findByMissionId(any()) } returns createJudgmentItem(
-            evaluationItemId = 0L, testName = "", programmingLanguage = ProgrammingLanguage.NONE
-        )
+        every { judgmentItemRepository.existsByMissionId(any()) } returns false
 
         When("해당 과제 제출물의 예제 테스트를 실행하면") {
             Then("예외가 발생한다") {
@@ -107,7 +103,7 @@ class JudgmentServiceTest : BehaviorSpec({
     Given("테스트 이력이 존재하고 제출한 commit id와 최신 이력의 commit id가 같은 경우") {
         every { missionRepository.getById(any()) } returns createMission()
         every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns createAssignment()
-        every { judgmentItemRepository.findByMissionId(any()) } returns createJudgmentItem()
+        every { judgmentItemRepository.existsByMissionId(any()) } returns true
         every { assignmentArchive.getLastCommit(any(), any()) } returns createCommit()
 
         When("예제 테스트를 실행하면") {
@@ -151,7 +147,7 @@ class JudgmentServiceTest : BehaviorSpec({
     Given("테스트 이력이 존재하고 제출한 commit id와 최신 이력의 commit id가 다른 경우") {
         every { missionRepository.getById(any()) } returns createMission()
         every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns createAssignment()
-        every { judgmentItemRepository.findByMissionId(any()) } returns createJudgmentItem()
+        every { judgmentItemRepository.existsByMissionId(any()) } returns true
         every { assignmentArchive.getLastCommit(any(), any()) } returns createCommit("other-commit-hash")
 
         When("예제 테스트를 실행하면") {
@@ -190,9 +186,8 @@ class JudgmentServiceTest : BehaviorSpec({
     Given("테스트 실행 이력이 존재하지 않는 경우") {
         every { missionRepository.getById(any()) } returns createMission()
         every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns createAssignment()
-        every { judgmentItemRepository.findByMissionId(any()) } returns createJudgmentItem()
+        every { judgmentItemRepository.existsByMissionId(any()) } returns true
         every { assignmentArchive.getLastCommit(any(), any()) } returns createCommit("other-commit-hash")
-
 
         When("예제 테스트를 실행하면") {
             val judgment = createJudgment(records = listOf(createJudgmentRecord(result = createJudgmentResult())))
@@ -228,7 +223,7 @@ class JudgmentServiceTest : BehaviorSpec({
     }
 
     Given("이전에 자동 채점을 실행한 경우") {
-        When("자동 채점 응답 결과가 성공하면") {
+        When("자동 채점 응답 결과가 성공이면") {
             val record = createJudgmentRecord(result = JudgmentResult(), completedDateTime = null)
             every { judgmentRepository.getById(any()) } returns createJudgment(records = listOf(record))
 

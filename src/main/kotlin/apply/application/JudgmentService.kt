@@ -6,12 +6,11 @@ import apply.domain.assignment.getByUserIdAndMissionId
 import apply.domain.judgment.AssignmentArchive
 import apply.domain.judgment.Commit
 import apply.domain.judgment.Judgment
-import apply.domain.judgment.JudgmentItemRepository
+import apply.domain.mission.JudgmentItemRepository
 import apply.domain.judgment.JudgmentRepository
 import apply.domain.judgment.JudgmentResult
 import apply.domain.judgment.JudgmentType
 import apply.domain.judgment.getById
-import apply.domain.judgment.getByMissionId
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionRepository
 import apply.domain.mission.getById
@@ -41,8 +40,7 @@ class JudgmentService(
     }
 
     private fun judge(mission: Mission, assignment: Assignment, judgmentType: JudgmentType): LastJudgmentResponse {
-        val judgmentItem = judgmentItemRepository.getByMissionId(mission.id)
-        check(judgmentItem.isValid) { "예제 테스트를 실행할 수 없습니다." }
+        check(judgmentItemRepository.existsByMissionId(mission.id)) { "예제 테스트를 실행할 수 없습니다." }
         val judgment = judgmentRepository.findByAssignmentIdAndType(assignment.id, judgmentType)
             ?: judgmentRepository.save(Judgment(assignment.id, judgmentType))
         val commit = assignmentArchive.getLastCommit(assignment.pullRequestUrl, mission.period.endDateTime)

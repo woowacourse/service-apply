@@ -1,4 +1,4 @@
-package apply.domain.judgment
+package apply.domain.mission
 
 import org.springframework.data.jpa.repository.JpaRepository
 
@@ -8,4 +8,5 @@ fun JudgmentItemRepository.getByMissionId(missionId: Long): JudgmentItem {
 
 interface JudgmentItemRepository : JpaRepository<JudgmentItem, Long> {
     fun findByMissionId(missionId: Long): JudgmentItem?
+    fun existsByMissionId(missionId: Long): Boolean
 }
