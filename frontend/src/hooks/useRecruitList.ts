@@ -3,6 +3,8 @@ import useRecruitmentContext from "./useRecruitmentContext";
 import { RECRUITS_TAB, PROGRAM_TAB } from "../constants/tab";
 import { Recruitment } from "../../types/domains/recruitments";
 
+type ProgramTabStatus = typeof PROGRAM_TAB[keyof typeof PROGRAM_TAB];
+
 const matchProgram = (recruitmentTitle: string, programLabel: string) => {
   const programList = Array.from(Object.values(PROGRAM_TAB)).sort(
     (a, b) => b.label.length - a.label.length
@@ -16,7 +18,11 @@ const matchProgram = (recruitmentTitle: string, programLabel: string) => {
   return matchingProgram.label === programLabel;
 };
 
-const useRecruitList = () => {
+const useRecruitList: () => {
+  programTabStatus: ProgramTabStatus;
+  setProgramTabStatus: React.Dispatch<React.SetStateAction<ProgramTabStatus>>;
+  filteredRecruitment: Recruitment[];
+} = () => {
   const { recruitment } = useRecruitmentContext();
   const [programTabStatus, setProgramTabStatus] = useState<
     typeof PROGRAM_TAB[keyof typeof PROGRAM_TAB]
