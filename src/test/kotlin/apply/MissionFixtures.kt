@@ -1,16 +1,14 @@
 package apply
 
-import apply.application.EvaluationItemData
 import apply.application.EvaluationSelectData
 import apply.application.JudgmentItemData
 import apply.application.MissionData
 import apply.application.MissionResponse
 import apply.application.MyMissionResponse
-import apply.domain.mission.JudgmentItem
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionStatus
-import apply.domain.mission.ProgrammingLanguage
-import apply.domain.mission.ProgrammingLanguage.NONE
+import apply.domain.mission.judgmentItem.JudgmentItem
+import apply.domain.mission.judgmentItem.ProgrammingLanguage
 import java.time.LocalDateTime
 
 private const val MISSION_TITLE: String = "숫자야구게임"
@@ -62,10 +60,6 @@ fun createMissionResponse(
     startDateTime: LocalDateTime = START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
     missionStatus: MissionStatus = MissionStatus.SUBMITTING,
-    testName: String? = "",
-    programmingLanguage: ProgrammingLanguage? = NONE,
-    evaluationItemData: EvaluationItemData = EvaluationItemData(),
-    judgmentItemId: Long = 0L,
     id: Long = 0L
 ): MissionResponse {
     return MissionResponse(
@@ -73,10 +67,6 @@ fun createMissionResponse(
         title,
         description,
         submittable,
-        testName,
-        programmingLanguage,
-        evaluationItemData.id,
-        judgmentItemId,
         startDateTime,
         endDateTime,
         missionStatus
@@ -97,10 +87,10 @@ fun createMyMissionResponse(
 }
 
 fun createJudgmentItem(
-    missionId: Long = 0L,
-    evaluationItemId: Long = 0L,
-    testName: String = "",
-    programmingLanguage: ProgrammingLanguage = NONE,
+    missionId: Long = 1L,
+    evaluationItemId: Long = 1L,
+    testName: String = "base-ball",
+    programmingLanguage: ProgrammingLanguage = ProgrammingLanguage.JAVA,
     id: Long = 0L
 ): JudgmentItem {
     return JudgmentItem(missionId, evaluationItemId, testName, programmingLanguage, id)

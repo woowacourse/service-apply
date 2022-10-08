@@ -2,11 +2,10 @@ package apply.application
 
 import apply.domain.evaluation.Evaluation
 import apply.domain.evaluationItem.EvaluationItem
-import apply.domain.mission.JudgmentItem
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionStatus
-import apply.domain.mission.ProgrammingLanguage
-import apply.domain.mission.ProgrammingLanguage.NONE
+import apply.domain.mission.judgmentItem.JudgmentItem
+import apply.domain.mission.judgmentItem.ProgrammingLanguage
 import java.time.LocalDateTime
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
@@ -82,23 +81,15 @@ data class MissionResponse(
     val title: String,
     val description: String,
     val submittable: Boolean,
-    val testName: String?,
-    val programmingLanguage: ProgrammingLanguage?,
-    val evaluationItemId: Long?,
-    val judgmentItemId: Long?,
     val startDateTime: LocalDateTime,
     val endDateTime: LocalDateTime,
     val status: MissionStatus
 ) {
-    constructor(mission: Mission, judgmentItem: JudgmentItem?) : this(
+    constructor(mission: Mission) : this(
         mission.id,
         mission.title,
         mission.description,
         mission.submittable,
-        judgmentItem?.testName,
-        judgmentItem?.programmingLanguage,
-        judgmentItem?.evaluationItemId,
-        judgmentItem?.id,
         mission.period.startDateTime,
         mission.period.endDateTime,
         mission.status
@@ -131,7 +122,7 @@ data class JudgmentItemData(
     var id: Long = 0L,
     var testName: String = "",
     var evaluationItemSelectData: EvaluationItemSelectData = EvaluationItemSelectData(),
-    var programmingLanguage: ProgrammingLanguage = NONE
+    var programmingLanguage: ProgrammingLanguage = ProgrammingLanguage.NONE
 ) {
     constructor(judgmentItem: JudgmentItem, evaluationItemSelectData: EvaluationItemSelectData) : this(
         judgmentItem.id,

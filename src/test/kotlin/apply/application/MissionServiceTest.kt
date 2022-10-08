@@ -10,8 +10,8 @@ import apply.domain.assignment.AssignmentRepository
 import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluationItem.EvaluationItemRepository
 import apply.domain.evaluationtarget.EvaluationTargetRepository
-import apply.domain.mission.JudgmentItemRepository
 import apply.domain.mission.MissionRepository
+import apply.domain.mission.judgmentItem.JudgmentItemRepository
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
