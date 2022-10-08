@@ -41,7 +41,7 @@ const PasswordEdit = () => {
 
   return (
     <Container size={CONTAINER_SIZE.NARROW} title="비밀번호 변경">
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit} className={styles.box}>
         <MessageTextInput
           label="기존 비밀번호"
           placeholder="기존 비밀번호를 입력해 주세요"
