@@ -2,16 +2,16 @@ import classNames from "classnames";
 import { useMemo } from "react";
 import { generatePath } from "react-router";
 import { useNavigate } from "react-router-dom";
-import { Recruitment } from "../../../types/domains/recruitments";
-import { BUTTON_LABEL } from "../../pages/MyApplication/MyApplication";
-import { formatDateTime } from "../../utils/format/date";
-import { generateQuery } from "../../utils/route/query";
-import { PARAM, PATH } from "./../../constants/path";
-import ApplicationButtons from "./compounds/ApplicationButtons/ApplicationButtons";
-import RecruitmentDetail from "./compounds/RecruitmentDetail/RecruitmentDetail";
-import styles from "./MyApplicationItem.module.css";
+import { Recruitment } from "../../../../types/domains/recruitments";
+import { PARAM, PATH } from "../../../constants/path";
+import { BUTTON_LABEL } from "../../../pages/MyApplication/MyApplication";
+import { formatDateTime } from "../../../utils/format/date";
+import { generateQuery } from "../../../utils/route/query";
+import ApplyButton from "../MyApplicationButtons/ApplyButton";
+import styles from "../MyApplicationItem.module.css";
+import RecruitmentDetail from "../RecruitmentDetail/RecruitmentDetail";
 
-type MyRecruitmentItemProps = {
+type MyApplicationFormItemProps = {
   recruitment: Recruitment;
   submitted: boolean;
 };
@@ -28,7 +28,7 @@ const isApplicationDisabled = (submitted: boolean, recruitable: boolean) => {
   return submitted || !recruitable;
 };
 
-const MyRecruitmentItem = ({ recruitment, submitted }: MyRecruitmentItemProps) => {
+const MyApplicationFormItem = ({ recruitment, submitted }: MyApplicationFormItemProps) => {
   const navigate = useNavigate();
 
   const formattedStartDateTime = useMemo(
@@ -61,28 +61,25 @@ const MyRecruitmentItem = ({ recruitment, submitted }: MyRecruitmentItemProps) =
   };
 
   return (
-    <div className={classNames(styles["content-wrapper"])}>
+    <div className={classNames(styles["content-box"])}>
       <div className={styles["text-container"]}>
-        <RecruitmentDetail>
-          <RecruitmentDetail.Title>{recruitment.title}</RecruitmentDetail.Title>
-          <RecruitmentDetail.Date
-            startDate={formattedStartDateTime}
-            endDate={formattedEndDateTime}
-          />
+        <RecruitmentDetail startDate={formattedStartDateTime} endDate={formattedEndDateTime}>
+          {recruitment.title}
         </RecruitmentDetail>
-        <ApplicationButtons>
-          <ApplicationButtons.Apply
+
+        <div className={styles["button-container"]}>
+          <ApplyButton
             isButtonDisabled={isButtonDisabled}
             onClick={() => {
               routeToApplicationForm(recruitment);
             }}
           >
             {buttonLabel}
-          </ApplicationButtons.Apply>
-        </ApplicationButtons>
+          </ApplyButton>
+        </div>
       </div>
     </div>
   );
 };
 
-export default MyRecruitmentItem;
+export default MyApplicationFormItem;

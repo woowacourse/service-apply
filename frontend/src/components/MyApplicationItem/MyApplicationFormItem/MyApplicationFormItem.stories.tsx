@@ -1,9 +1,9 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import MyRecruitmentItem from "./MyRecruitmentItem";
+import MyApplicationFormItem from "./MyApplicationFormItem";
 
 export default {
   title: "components/MyRecruitmentItem",
-  component: MyRecruitmentItem,
+  component: MyApplicationFormItem,
   decorators: [
     (Story) => (
       <div
@@ -19,10 +19,10 @@ export default {
       </div>
     ),
   ],
-} as ComponentMeta<typeof MyRecruitmentItem>;
+} as ComponentMeta<typeof MyApplicationFormItem>;
 
-const Template: ComponentStory<typeof MyRecruitmentItem> = (args) => (
-  <MyRecruitmentItem {...args} />
+const Template: ComponentStory<typeof MyApplicationFormItem> = (args) => (
+  <MyApplicationFormItem {...args} />
 );
 
 export const Default = Template.bind({});

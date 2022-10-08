@@ -2,16 +2,18 @@ import classNames from "classnames";
 import { useEffect, useMemo, useState } from "react";
 import { generatePath } from "react-router";
 import { useNavigate } from "react-router-dom";
-import { Mission } from "../../../types/domains/recruitments";
-import { PARAM } from "../../constants/path";
-import { MISSION_STATUS } from "../../constants/recruitment";
-import { BUTTON_LABEL } from "../../pages/MyApplication/MyApplication";
-import { formatDateTime } from "../../utils/format/date";
-import { PATH } from "./../../constants/path";
-import ApplicationButtons from "./compounds/ApplicationButtons/ApplicationButtons";
-import MissionDetail from "./compounds/MissionDetail/MissionDetail";
-import RecruitmentDetail from "./compounds/RecruitmentDetail/RecruitmentDetail";
-import styles from "./MyApplicationItem.module.css";
+import { Mission } from "../../../../types/domains/recruitments";
+import { PARAM } from "../../../constants/path";
+import { MISSION_STATUS } from "../../../constants/recruitment";
+import { BUTTON_LABEL } from "../../../pages/MyApplication/MyApplication";
+import { formatDateTime } from "../../../utils/format/date";
+import MissionDetail from "../MissionDetail/MissionDetail";
+import ApplyButton from "../MyApplicationButtons/ApplyButton";
+import JudgmentButton from "../MyApplicationButtons/JudgmentButton";
+import RefreshButton from "../MyApplicationButtons/RefreshButton";
+import styles from "../MyApplicationItem.module.css";
+import RecruitmentDetail from "../RecruitmentDetail/RecruitmentDetail";
+import { PATH } from "./../../../constants/path";
 
 type MyMissionItemProps = {
   mission: Mission;
@@ -70,37 +72,28 @@ const MyMissionItem = ({ mission, recruitmentId }: MyMissionItemProps) => {
     };
 
   return (
-    <div className={classNames(styles["content-wrapper"], styles["mission-recruit-item"])}>
+    <div className={classNames(styles["content-box"])}>
       <div className={styles["text-container"]}>
-        <RecruitmentDetail>
-          <RecruitmentDetail.Title>{missionItem.title}</RecruitmentDetail.Title>
-          <RecruitmentDetail.Date
-            startDate={formattedStartDateTime}
-            endDate={formattedEndDateTime}
-          />
+        <RecruitmentDetail startDate={formattedStartDateTime} endDate={formattedEndDateTime}>
+          {missionItem.title}
         </RecruitmentDetail>
 
         <hr className={styles["auto-judgment-detail-contour"]} />
 
-        <MissionDetail>
-          <MissionDetail.TestResult judgment={missionItem.judgment} />
-          <MissionDetail.PullRequestUrl judgment={missionItem.judgment} />
-          <MissionDetail.CommitHash judgment={missionItem.judgment} />
-          <MissionDetail.Guide />
-        </MissionDetail>
+        <MissionDetail judgment={missionItem.judgment} />
 
-        <ApplicationButtons>
-          <ApplicationButtons.Refresh
+        <div className={styles["button-container"]}>
+          <RefreshButton
             recruitmentId={Number(recruitmentId)}
             missionItem={missionItem}
             setMission={setMissionItem}
           />
-          <ApplicationButtons.Judgment
+          <JudgmentButton
             recruitmentId={Number(recruitmentId)}
             missionItem={missionItem}
             setMission={setMissionItem}
           />
-          <ApplicationButtons.Apply
+          <ApplyButton
             isButtonDisabled={missionItem.status !== MISSION_STATUS.SUBMITTING}
             onClick={routeToAssignmentSubmit({
               recruitmentId: String(recruitmentId),
@@ -108,8 +101,8 @@ const MyMissionItem = ({ mission, recruitmentId }: MyMissionItemProps) => {
             })}
           >
             {applyButtonLabel}
-          </ApplicationButtons.Apply>
-        </ApplicationButtons>
+          </ApplyButton>
+        </div>
       </div>
     </div>
   );

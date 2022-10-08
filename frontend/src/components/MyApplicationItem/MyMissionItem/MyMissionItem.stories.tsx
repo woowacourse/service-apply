@@ -1,5 +1,5 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import { missionsDummy } from "./../../mock/dummy";
+import { missionsDummy } from "./../../../mock/dummy";
 import MyMissionItem from "./MyMissionItem";
 
 export default {

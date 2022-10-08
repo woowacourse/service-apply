@@ -1,6 +1,4 @@
 import axios from "axios";
-import { headers } from "./api";
-import { RequestWithToken, ResponseDataWithMessage } from "../../types/utility";
 import {
   Assignment,
   AssignmentData,
@@ -8,6 +6,8 @@ import {
   Recruitment,
   RecruitmentItem,
 } from "../../types/domains/recruitments";
+import { RequestWithToken, ResponseDataWithMessage } from "../../types/utility";
+import { headers } from "./api";
 
 export type FetchRecruitmentItemsRequest = number;
 
@@ -17,6 +17,11 @@ export type FetchRecruitmentsResponseData = ResponseDataWithMessage<Recruitment[
 
 export type FetchMyMissionsRequest = RequestWithToken<{
   recruitmentId: number;
+}>;
+
+export type FetchMyMissionJudgmentRequest = RequestWithToken<{
+  recruitmentId: number;
+  missionId: number;
 }>;
 
 export type FetchMyMissionsResponseData = ResponseDataWithMessage<Mission[]>;
@@ -44,6 +49,13 @@ export type PatchAssignmentRequest = RequestWithToken<{
 
 export type PatchAssignmentResponseData = void;
 
+export type PostJudgmentRequest = RequestWithToken<{
+  recruitmentId: number;
+  missionId: number;
+}>;
+
+export type PostJudgmentResponseData = Mission["judgment"];
+
 export const fetchRecruitmentItems = (recruitmentId: FetchRecruitmentItemsRequest) =>
   axios.get<FetchRecruitmentItemsResponseData>(`/api/recruitments/${recruitmentId}/items`);
 
@@ -56,9 +68,25 @@ export const fetchMyMissions = ({ token, recruitmentId }: FetchMyMissionsRequest
     headers({ token })
   );
 
+export const fetchMyMissionJudgment = ({
+  recruitmentId,
+  missionId,
+  token,
+}: FetchMyMissionJudgmentRequest) =>
+  axios.get(
+    `/api/recruitments/${recruitmentId}/missions/${missionId}/judgment`,
+    headers({ token })
+  );
+
 export const fetchAssignment = ({ token, recruitmentId, missionId }: FetchAssignmentRequest) =>
   axios.get<FetchAssignmentResponseData>(
     `/api/recruitments/${recruitmentId}/missions/${missionId}/assignments/me`,
+    headers({ token })
+  );
+
+export const postMyMissionJudgment = ({ recruitmentId, missionId, token }: PostJudgmentRequest) =>
+  axios.post<PostJudgmentResponseData>(
+    `/api/recruitments/${recruitmentId}/missions/${missionId}/judgment`,
     headers({ token })
   );
 

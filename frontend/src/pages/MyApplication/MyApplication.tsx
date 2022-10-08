@@ -3,11 +3,11 @@ import { Mission, MyApplicationType, Recruitment } from "../../../types/domains/
 import { fetchMyApplicationForms } from "../../api/applicationForms";
 import Container from "../../components/@common/Container/Container";
 import Panel from "../../components/@common/Panel/Panel";
-import MyMissionItem from "../../components/MyApplicationItem/MyMissionItem";
+import MyApplicationFormItem from "../../components/MyApplicationItem/MyApplicationFormItem/MyApplicationFormItem";
+import MyMissionItem from "../../components/MyApplicationItem/MyMissionItem/MyMissionItem";
 import { ERROR_MESSAGE } from "../../constants/messages";
 import useRecruitmentContext from "../../hooks/useRecruitmentContext";
 import useTokenContext from "../../hooks/useTokenContext";
-import MyRecruitmentItem from "./../../components/MyApplicationItem/MyRecruitmentItem";
 import useMissions from "./../../hooks/useMissions";
 import styles from "./MyApplication.module.css";
 
@@ -81,7 +81,7 @@ const MyApplication = () => {
           >
             <div className={styles["recruit-panel-inner"]}>
               <div className={styles["application-category"]}>지원서</div>
-              <MyRecruitmentItem
+              <MyApplicationFormItem
                 recruitment={{ ...recruitment, title: "내 지원서" }}
                 submitted={submitted}
               />
