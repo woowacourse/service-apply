@@ -33,25 +33,35 @@ import javax.mail.util.ByteArrayDataSource
 
 @Component
 class AwsMailSender(
-    private val mailProperties: MailProperties, awsProperties: AwsProperties
+    private val mailProperties: MailProperties,
+    awsProperties: AwsProperties
 ) : MailSender {
-    private val client: AmazonSimpleEmailService = AmazonSimpleEmailServiceClientBuilder.standard()
-        .withCredentials(AWSStaticCredentialsProvider(awsProperties.awsCredentials)).withRegion(Regions.AP_NORTHEAST_2)
+    private val client: AmazonSimpleEmailService = AmazonSimpleEmailServiceClientBuilder
+        .standard()
+        .withCredentials(AWSStaticCredentialsProvider(awsProperties.awsCredentials))
+        .withRegion(Regions.AP_NORTHEAST_2)
         .build()
 
     private val rateLimiter = RateLimiter(14)
 
     override fun send(toAddress: String, subject: String, body: String) {
         rateLimiter.acquire()
-        val request = SendEmailRequest().withSource(mailProperties.username)
-            .withDestination(Destination().withToAddresses(toAddress)).withMessage(
-                Message().withSubject(createContent(subject)).withBody(Body().withHtml(createContent(body)))
+        val request = SendEmailRequest()
+            .withSource(mailProperties.username)
+            .withDestination(Destination().withToAddresses(toAddress))
+            .withMessage(
+                Message()
+                    .withSubject(createContent(subject))
+                    .withBody(Body().withHtml(createContent(body)))
             )
         client.sendEmail(request)
     }
 
     override fun sendBcc(
-        toAddresses: List<String>, subject: String, body: String, attachments: Map<String, ByteArrayResource>
+        toAddresses: List<String>,
+        subject: String,
+        body: String,
+        attachments: Map<String, ByteArrayResource>
     ) {
         rateLimiter.acquire()
         val multipartMimeMessage = MultipartMimeMessage(
@@ -75,7 +85,11 @@ private class MultipartMimeMessage(
     val message: MimeMessage = MimeMessage(Session.getDefaultInstance(Properties()))
 ) {
     constructor(
-        subject: String, userName: String, recipient: List<String>, body: String, files: Map<String, ByteArrayResource>
+        subject: String,
+        userName: String,
+        recipient: List<String>,
+        body: String,
+        files: Map<String, ByteArrayResource>
     ) : this() {
         val mimeMultipart = MimeMultipart("mixed")
         setSubject(subject)
@@ -95,7 +109,8 @@ private class MultipartMimeMessage(
 
     fun setRecipient(recipient: List<String>) {
         message.setRecipients(
-            RecipientType.BCC, recipient.map { InternetAddress(it) }.toTypedArray()
+            RecipientType.BCC,
+            recipient.map { InternetAddress(it) }.toTypedArray()
         )
     }
 
@@ -114,7 +129,8 @@ private class MultipartMimeMessage(
         for ((fileName, fileData) in files) {
             val bodyPart = MimeBodyPart()
             val fds: DataSource = ByteArrayDataSource(
-                fileData.byteArray, findMimeContentTypeByFileName(fileName)
+                fileData.byteArray,
+                findMimeContentTypeByFileName(fileName)
             )
             bodyPart.dataHandler = DataHandler(fds)
             bodyPart.fileName = fileName

@@ -10,7 +10,6 @@ import io.mockk.mockk
 import org.springframework.core.MethodParameter
 import org.springframework.web.context.request.NativeWebRequest
 
-
 class AccessorResolverTest : StringSpec({
 
     val methodParameter = mockk<MethodParameter>()
