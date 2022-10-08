@@ -1,0 +1,34 @@
+.button-container {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.5rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.refresh-button {
+  background-color: var(--blue-gray);
+}
+
+.judgment-button {
+  background-color: var(--blue-gray);
+}
+
+.apply-button {
+  background-color: var(--black-004);
+}
+
+@media screen and (max-width: 800px) {
+  .button-container {
+    position: static;
+    gap: 0.4rem;
+    margin-left: auto;
+  }
+
+  .judgment-button,
+  .apply-button,
+  .refresh-button {
+    padding: 0.5rem;
+    font-size: 0.75rem;
+  }
+}

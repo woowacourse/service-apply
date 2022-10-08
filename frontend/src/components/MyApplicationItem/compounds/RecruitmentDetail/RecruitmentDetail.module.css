@@ -1,0 +1,22 @@
+.title {
+  font-size: 26px;
+  font-weight: bold;
+}
+
+.date {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--gray-008);
+}
+
+@media screen and (max-width: 32.0625rem) {
+  .date {
+    gap: 4px;
+    font-size: 14px;
+  }
+
+  .icon {
+    width: 16px;
+  }
+}
