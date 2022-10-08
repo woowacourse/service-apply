@@ -1,5 +1,6 @@
 .box {
   display: flex;
+  margin-top: 3rem;
 }
 
 .illust-box {
@@ -33,7 +34,7 @@
 }
 
 .buttons {
-  margin: 3.5rem 0 2rem;
+  margin-top: 3.5rem;
   display: flex;
   gap: 1rem;
 }

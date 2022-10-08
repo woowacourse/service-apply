@@ -3,7 +3,7 @@ import { useLocation, useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
 import { fetchAssignment, patchAssignment, postAssignment } from "../../api/recruitments";
 import Button from "../../components/@common/Button/Button";
-import Container from "../../components/@common/Container/Container";
+import Container, { TITLE_ALIGN } from "../../components/@common/Container/Container";
 import MessageTextarea from "../../components/@common/MessageTextarea/MessageTextarea";
 import MessageTextInput from "../../components/@common/MessageTextInput/MessageTextInput";
 import CancelButton from "../../components/form/CancelButton/CancelButton";
@@ -87,7 +87,7 @@ const AssignmentSubmit = () => {
   }, []);
 
   return (
-    <Container title={currentMission?.title ?? ""}>
+    <Container title={currentMission?.title ?? ""} titleAlign={TITLE_ALIGN.LEFT}>
       <Form onSubmit={handleSubmit} className={styles.form}>
         <MessageTextInput
           label="GitHub ID"

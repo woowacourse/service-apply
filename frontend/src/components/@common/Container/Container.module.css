@@ -1,9 +1,7 @@
 .box {
   width: var(--pc-main-width);
+  padding: 2rem 1.25rem;
   background: var(--white);
-  border: 1px solid var(--gray-003);
-  padding: 1.875rem 1.25rem;
-  background-color: var(--white);
 }
 
 .narrow {
@@ -11,12 +9,23 @@
 }
 
 .title {
-  font-size: 1.75rem;
-  text-align: center;
+  font-size: 2rem;
 }
 
 .title-with-children {
-  margin: 0.875rem 0 3rem;
+  margin-bottom: 2rem;
+}
+
+.title-align-left {
+  text-align: left;
+}
+
+.title-align-center {
+  text-align: center;
+}
+
+.title-align-right {
+  text-align: right;
 }
 
 @media screen and (max-width: 800px) {

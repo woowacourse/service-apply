@@ -2,7 +2,7 @@ import { generatePath } from "react-router";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import * as Api from "../../api";
 import Button, { BUTTON_VARIANT } from "../../components/@common/Button/Button";
-import Container from "../../components/@common/Container/Container";
+import Container, { TITLE_ALIGN } from "../../components/@common/Container/Container";
 import Description from "../../components/@common/Description/Description";
 import Label from "../../components/@common/Label/Label";
 import MessageTextarea from "../../components/@common/MessageTextarea/MessageTextarea";
@@ -125,7 +125,7 @@ const ApplicationRegister = () => {
         <RecruitmentItem className={styles["recruitment-item"]} recruitment={currentRecruitment} />
       )}
 
-      <Container title="지원서 작성">
+      <Container title="지원서 작성" titleAlign={TITLE_ALIGN.LEFT}>
         <Form onSubmit={handleSubmit}>
           {status === PARAM.APPLICATION_FORM_STATUS.EDIT && (
             <p className={styles["autosave-indicator"]}>
