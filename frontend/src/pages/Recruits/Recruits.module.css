@@ -62,7 +62,7 @@
   color: var(--gray-005);
 }
 
-.course-tab-list {
+.program-tab-list {
   display: flex;
   align-items: center;
   gap: 1.5rem;
@@ -90,7 +90,7 @@
     display: none;
   }
 
-  .course-tab-list {
+  .program-tab-list {
     gap: 1rem;
     margin-bottom: 1.5rem;
   }

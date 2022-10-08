@@ -17,7 +17,7 @@ export const RECRUITS_TAB = {
   },
 } as const;
 
-export const COURSE_TAB = {
+export const PROGRAM_TAB = {
   ALL: {
     name: "all",
     label: "전체",
@@ -47,9 +47,9 @@ export const RECRUITS_TAB_LIST = [
   RECRUITS_TAB.ENDED,
 ] as const;
 
-export const COURSE_TAB_LIST = [
-  COURSE_TAB.ALL,
-  COURSE_TAB.WOOWA_TECH_COURSE,
-  COURSE_TAB.WOOWA_TECH_CAMP,
-  COURSE_TAB.WOOWA_TECH_CAMP_PRO,
+export const PROGRAM_TAB_LIST = [
+  PROGRAM_TAB.ALL,
+  PROGRAM_TAB.WOOWA_TECH_COURSE,
+  PROGRAM_TAB.WOOWA_TECH_CAMP,
+  PROGRAM_TAB.WOOWA_TECH_CAMP_PRO,
 ] as const;

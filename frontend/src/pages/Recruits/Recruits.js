@@ -5,14 +5,14 @@ import TabItem from "../../components/@common/TabItem/TabItem";
 import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
 import { generateQuery } from "../../utils/route/query";
 import { PATH, PARAM } from "../../constants/path";
-import { COURSE_TAB, COURSE_TAB_LIST } from "../../constants/tab";
+import { PROGRAM_TAB, PROGRAM_TAB_LIST } from "../../constants/tab";
 import styles from "./Recruits.module.css";
 
 const Recruits = () => {
   const { token } = useTokenContext();
   const navigate = useNavigate();
 
-  const { courseTabStatus, setCourseTabStatus, filteredRecruitment } = useRecruitList();
+  const { programTabStatus, setProgramTabStatus, filteredRecruitment } = useRecruitList();
 
   const goToNewApplicationFormPage = (recruitment) => {
     if (!token) {
@@ -45,25 +45,25 @@ const Recruits = () => {
     <>
       <div className={styles["program-introduce-box"]}>
         <h1 className={styles["program-name"]}>
-          {courseTabStatus.name === COURSE_TAB.ALL.name
+          {programTabStatus.name === PROGRAM_TAB.ALL.name
             ? "메인 소개 타이틀"
-            : courseTabStatus.label}
+            : programTabStatus.label}
         </h1>
-        <p className={styles["program-description"]}>{courseTabStatus.description}</p>
+        <p className={styles["program-description"]}>{programTabStatus.description}</p>
       </div>
 
       <div className={styles["recruitment-list-box"]}>
         <h2 className={styles["recruitment-list-title"]}>지원하기</h2>
-        <div className={styles["course-tab-list"]}>
-          {COURSE_TAB_LIST.map((courseTabItem) => (
+        <div className={styles["program-tab-list"]}>
+          {PROGRAM_TAB_LIST.map((programTabListItem) => (
             <TabItem
-              key={courseTabItem.name}
-              checked={courseTabItem.label === courseTabStatus.label}
+              key={programTabListItem.name}
+              checked={programTabListItem.label === programTabStatus.label}
               onClickTabItem={() => {
-                setCourseTabStatus(courseTabItem);
+                setProgramTabStatus(programTabListItem);
               }}
             >
-              {courseTabItem.label}
+              {programTabListItem.label}
             </TabItem>
           ))}
         </div>
