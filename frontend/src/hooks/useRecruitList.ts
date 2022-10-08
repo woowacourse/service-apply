@@ -18,7 +18,9 @@ const matchProgram = (recruitmentTitle: string, programLabel: string) => {
 
 const useRecruitList = () => {
   const { recruitment } = useRecruitmentContext();
-  const [courseTabStatus, setCourseTabStatus] = useState(COURSE_TAB.ALL);
+  const [courseTabStatus, setCourseTabStatus] = useState<
+    typeof COURSE_TAB[keyof typeof COURSE_TAB]
+  >(COURSE_TAB.ALL);
 
   const filteredRecruitment: Recruitment[] = useMemo(() => {
     const allRecruitment: Recruitment[] = recruitment[RECRUITS_TAB.ALL.name];
