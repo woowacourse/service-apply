@@ -58,3 +58,9 @@ export const CONFIRM_MESSAGE = {
   RESET_APPLICATION: "정말 초기화하시겠습니까?",
   CANCEL_ASSIGNMENT_SUBMIT: "정말 취소하시겠습니까? 작성하신 내용이 저장되지 않습니다.",
 } as const;
+
+export const MY_MISSION_TOOLTIP_MESSAGE = [
+  "예제 테스트 성적은 실제 성적과 무관합니다.",
+  "제출완료 후에는 예제 테스트를 실행할 수 없습니다.",
+  "예제 테스트를 실행하지 않아도 제출된 Pull Request를 기반으로 채점을 진행합니다.",
+] as const;
