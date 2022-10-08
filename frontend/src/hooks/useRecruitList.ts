@@ -18,32 +18,41 @@ const matchProgram = (recruitmentTitle: string, programLabel: string) => {
   return matchingProgram.label === programLabel;
 };
 
+const sortRecruitmentsByStartDateTime: (recruitments: Recruitment[]) => Recruitment[] = (
+  recruitments
+) =>
+  recruitments.sort((a, b) => {
+    return new Date(b.startDateTime).getTime() - new Date(a.startDateTime).getTime();
+  });
+
+const filterRecruitmentsByProgramLabel: (
+  recruitments: Recruitment[],
+  programLabel: ProgramTabStatus["label"]
+) => Recruitment[] = (recruitments, programLabel) =>
+  recruitments.filter((recruitmentItem) => matchProgram(recruitmentItem.title, programLabel));
+
 const useRecruitList: () => {
   programTabStatus: ProgramTabStatus;
   setProgramTabStatus: React.Dispatch<React.SetStateAction<ProgramTabStatus>>;
-  filteredRecruitment: Recruitment[];
+  filteredRecruitments: Recruitment[];
 } = () => {
   const { recruitment } = useRecruitmentContext();
   const [programTabStatus, setProgramTabStatus] = useState<
     typeof PROGRAM_TAB[keyof typeof PROGRAM_TAB]
   >(PROGRAM_TAB.ALL);
 
-  const filteredRecruitment: Recruitment[] = useMemo(() => {
-    const allRecruitment: Recruitment[] = recruitment[RECRUITS_TAB.ALL.name];
-    const sortedRecruitmentItem: Recruitment[] = allRecruitment.sort((a, b) => {
-      return new Date(b.startDateTime).getTime() - new Date(a.startDateTime).getTime();
-    });
+  const filteredRecruitments: Recruitment[] = useMemo(() => {
+    const recruitments: Recruitment[] = recruitment[RECRUITS_TAB.ALL.name];
+    const sortedRecruitments: Recruitment[] = sortRecruitmentsByStartDateTime(recruitments);
 
     if (programTabStatus.label === PROGRAM_TAB.ALL.label) {
-      return sortedRecruitmentItem;
+      return sortedRecruitments;
     }
 
-    return sortedRecruitmentItem.filter((recruitmentItem) =>
-      matchProgram(recruitmentItem.title, programTabStatus.label)
-    );
+    return filterRecruitmentsByProgramLabel(sortedRecruitments, programTabStatus.label);
   }, [recruitment, programTabStatus]);
 
-  return { programTabStatus, setProgramTabStatus, filteredRecruitment };
+  return { programTabStatus, setProgramTabStatus, filteredRecruitments };
 };
 
 export default useRecruitList;

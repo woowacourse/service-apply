@@ -12,7 +12,7 @@ const Recruits = () => {
   const { token } = useTokenContext();
   const navigate = useNavigate();
 
-  const { programTabStatus, setProgramTabStatus, filteredRecruitment } = useRecruitList();
+  const { programTabStatus, setProgramTabStatus, filteredRecruitments } = useRecruitList();
 
   const goToNewApplicationFormPage = (recruitment) => {
     if (!token) {
@@ -69,10 +69,10 @@ const Recruits = () => {
         </div>
         {
           <div className={styles["recruitment-list"]} role="list">
-            {filteredRecruitment.length === 0 ? (
+            {filteredRecruitments.length === 0 ? (
               <div className={styles["empty-state-box"]}>해당하는 모집이 없습니다.</div>
             ) : (
-              filteredRecruitment.map((recruitment) => (
+              filteredRecruitments.map((recruitment) => (
                 <RecruitmentItem
                   key={recruitment.id}
                   recruitment={recruitment}
