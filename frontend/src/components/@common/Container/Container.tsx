@@ -1,5 +1,4 @@
 import classNames from "classnames";
-import PropTypes from "prop-types";
 import styles from "./Container.module.css";
 
 export const CONTAINER_SIZE = {
@@ -13,11 +12,12 @@ export const TITLE_ALIGN = {
   RIGHT: "right",
 } as const;
 
-export type ContainerProps = React.HTMLAttributes<HTMLDivElement> & {
+export type ContainerProps = {
   size?: typeof CONTAINER_SIZE[keyof typeof CONTAINER_SIZE];
   className?: string;
   title?: string;
   titleAlign: typeof TITLE_ALIGN[keyof typeof TITLE_ALIGN];
+  children: React.ReactNode;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
 };
 
