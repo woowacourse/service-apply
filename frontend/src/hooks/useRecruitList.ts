@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import useRecruitmentContext from "./useRecruitmentContext";
-import { RECRUITS_TAB, COURSE_TAB } from "./../constants/tab";
+import { RECRUITS_TAB, COURSE_TAB } from "../constants/tab";
 import { Recruitment } from "../../types/domains/recruitments";
 
 const matchProgram = (recruitmentTitle: string, programLabel: string) => {
