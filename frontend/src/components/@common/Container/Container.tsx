@@ -16,7 +16,7 @@ export type ContainerProps = {
   size?: typeof CONTAINER_SIZE[keyof typeof CONTAINER_SIZE];
   className?: string;
   title?: string;
-  titleAlign: typeof TITLE_ALIGN[keyof typeof TITLE_ALIGN];
+  titleAlign?: typeof TITLE_ALIGN[keyof typeof TITLE_ALIGN];
   children: React.ReactNode;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
 };
