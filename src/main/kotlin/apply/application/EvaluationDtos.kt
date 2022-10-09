@@ -1,7 +1,7 @@
 package apply.application
 
 import apply.domain.evaluation.Evaluation
-import apply.domain.evaluationItem.EvaluationItem
+import apply.domain.evaluationitem.EvaluationItem
 import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.recruitment.Recruitment
 import apply.domain.user.User

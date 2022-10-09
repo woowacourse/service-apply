@@ -1,8 +1,8 @@
 package apply.application
 
 import apply.domain.assignment.AssignmentRepository
-import apply.domain.evaluationItem.EvaluationItem
-import apply.domain.evaluationItem.EvaluationItemRepository
+import apply.domain.evaluationitem.EvaluationItem
+import apply.domain.evaluationitem.EvaluationItemRepository
 import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionRepository
@@ -12,9 +12,9 @@ import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.apache.commons.csv.CSVRecord
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.io.ByteArrayInputStream
 import java.io.InputStream
-import javax.transaction.Transactional
 
 @Transactional
 @Service

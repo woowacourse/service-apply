@@ -1,6 +1,9 @@
 package apply.application
 
 import apply.domain.evaluation.Evaluation
+import apply.domain.evaluationitem.EvaluationItem
+import apply.domain.judgmentitem.JudgmentItem
+import apply.domain.judgmentitem.ProgrammingLanguage
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionStatus
 import java.time.LocalDateTime
@@ -24,6 +27,7 @@ data class MissionData(
 
     @field:NotBlank
     var description: String = "",
+    var judgmentItemData: JudgmentItemData = JudgmentItemData(),
 
     @field:NotNull
     var submittable: Boolean = false,
@@ -32,12 +36,13 @@ data class MissionData(
     var hidden: Boolean = true,
     var id: Long = 0L
 ) {
-    constructor(mission: Mission, evaluation: Evaluation) : this(
+    constructor(mission: Mission, evaluation: Evaluation, judgmentItemData: JudgmentItemData) : this(
         mission.title,
         EvaluationSelectData(evaluation),
         mission.period.startDateTime,
         mission.period.endDateTime,
         mission.description,
+        judgmentItemData,
         mission.submittable,
         mission.hidden,
         mission.id
@@ -110,4 +115,25 @@ data class MyMissionResponse(
         mission.period.endDateTime,
         mission.status
     )
+}
+
+data class JudgmentItemData(
+    var id: Long = 0L,
+    var testName: String = "",
+    var evaluationItemSelectData: EvaluationItemSelectData = EvaluationItemSelectData(),
+    var programmingLanguage: ProgrammingLanguage = ProgrammingLanguage.NONE
+) {
+    constructor(judgmentItem: JudgmentItem, evaluationItemSelectData: EvaluationItemSelectData) : this(
+        judgmentItem.id,
+        judgmentItem.testName,
+        evaluationItemSelectData,
+        judgmentItem.programmingLanguage
+    )
+}
+
+data class EvaluationItemSelectData(
+    var title: String = "",
+    var id: Long = 0L
+) {
+    constructor(evaluationItem: EvaluationItem) : this(evaluationItem.title, evaluationItem.id)
 }
