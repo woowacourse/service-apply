@@ -24,9 +24,7 @@ class EvaluationTarget(
 
     @Embedded
     var evaluationAnswers: EvaluationAnswers = EvaluationAnswers(),
-
     var note: String = "",
-
     id: Long = 0L
 ) : BaseEntity(id) {
     constructor(evaluationId: Long, userId: Long) : this(

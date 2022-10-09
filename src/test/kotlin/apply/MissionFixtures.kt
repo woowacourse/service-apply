@@ -1,6 +1,7 @@
 package apply
 
 import apply.application.EvaluationSelectData
+import apply.application.JudgmentItemData
 import apply.application.MissionData
 import apply.application.MissionResponse
 import apply.application.MyMissionResponse
@@ -32,11 +33,22 @@ fun createMissionData(
     startDateTime: LocalDateTime = START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
     description: String = MISSION_DESCRIPTION,
+    judgmentItemData: JudgmentItemData = JudgmentItemData(),
     submittable: Boolean = true,
     hidden: Boolean = true,
     id: Long = 0L
 ): MissionData {
-    return MissionData(title, evaluation, startDateTime, endDateTime, description, submittable, hidden, id)
+    return MissionData(
+        title,
+        evaluation,
+        startDateTime,
+        endDateTime,
+        description,
+        judgmentItemData,
+        submittable,
+        hidden,
+        id
+    )
 }
 
 fun createMissionResponse(
@@ -48,7 +60,15 @@ fun createMissionResponse(
     missionStatus: MissionStatus = MissionStatus.SUBMITTING,
     id: Long = 0L
 ): MissionResponse {
-    return MissionResponse(id, title, description, submittable, startDateTime, endDateTime, missionStatus)
+    return MissionResponse(
+        id,
+        title,
+        description,
+        submittable,
+        startDateTime,
+        endDateTime,
+        missionStatus
+    )
 }
 
 fun createMyMissionResponse(
