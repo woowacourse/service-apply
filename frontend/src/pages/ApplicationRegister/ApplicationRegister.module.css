@@ -5,6 +5,14 @@
   gap: 1rem;
 }
 
+.recruitment-title {
+  margin-bottom: 2.5rem;
+
+  font-size: 1.125rem;
+  font-weight: normal;
+  color: var(--gray-007);
+}
+
 .label-bold label {
   font-weight: bold;
 }
