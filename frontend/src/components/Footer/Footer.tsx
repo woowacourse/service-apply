@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "./Footer.module.css";
 
 import { FOOTER_LINK_URL } from "../../constants/url";

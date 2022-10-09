@@ -1,4 +1,3 @@
-import React from "react";
 import Footer from "./Footer";
 
 export default {
@@ -6,8 +5,6 @@ export default {
   component: Footer,
 };
 
-const Template = (args) => <Footer {...args} />;
+const Template = () => <Footer />;
 
 export const Default = Template.bind({});
-
-Default.args = {};
