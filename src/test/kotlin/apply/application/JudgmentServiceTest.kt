@@ -7,7 +7,6 @@ import apply.createCommit
 import apply.createJudgment
 import apply.createJudgmentFailRequest
 import apply.createJudgmentRecord
-import apply.createJudgmentResult
 import apply.createJudgmentSuccessRequest
 import apply.createMission
 import apply.domain.assignment.AssignmentRepository
@@ -16,19 +15,20 @@ import apply.domain.judgment.AssignmentArchive
 import apply.domain.judgment.JudgmentRepository
 import apply.domain.judgment.JudgmentResult
 import apply.domain.judgment.JudgmentStatus
+import apply.domain.judgment.JudgmentType
 import apply.domain.judgment.getById
 import apply.domain.mission.JudgmentItemRepository
 import apply.domain.mission.MissionRepository
 import apply.domain.mission.getById
+import io.kotest.assertions.assertSoftly
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
 import support.test.spec.afterRootTest
-import java.time.LocalDateTime
+import java.time.LocalDateTime.now
 
 class JudgmentServiceTest : BehaviorSpec({
     val judgmentRepository = mockk<JudgmentRepository>()
@@ -41,39 +41,44 @@ class JudgmentServiceTest : BehaviorSpec({
         judgmentRepository, assignmentRepository, missionRepository, judgmentItemRepository, assignmentArchive
     )
 
-    Given("과제 제출 시간이 아닌 경우") {
+    Given("예제 자동 채점 시 과제 제출 시간이 아닌 경우") {
         every { missionRepository.getById(any()) } returns createMission(
-            startDateTime = LocalDateTime.now().minusMinutes(2), endDateTime = LocalDateTime.now().minusMinutes(1)
+            startDateTime = now().minusMinutes(2), endDateTime = now().minusMinutes(1)
         )
-        every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns createAssignment()
 
-        When("해당 과제 제출물의 예제 테스트를 실행하면") {
+        When("해당 과제 제출물의 예제 자동 채점을 실행하면") {
             Then("예외가 발생한다") {
                 shouldThrow<IllegalStateException> {
                     judgmentService.judgeExample(1L, 1L)
                 }
             }
         }
+    }
 
-        When("해당 과제 제출물의 본 테스트를 실행하면") {
-            val judgment = createJudgment()
-            every { missionRepository.getById(any()) } returns createMission()
-            every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns createAssignment()
-            every { judgmentItemRepository.existsByMissionId(any()) } returns true
-            every { assignmentArchive.getLastCommit(any(), any()) } returns createCommit()
-            every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns judgment
-            every { judgmentRepository.save(any()) } returns judgment
+    Given("본 자동 채점 시 과제 제출 시간이 아닌 경우") {
+        val judgment = createJudgment(type = JudgmentType.REAL)
+        val missionId = 1L
+
+        every { missionRepository.getById(any()) } returns createMission(
+            startDateTime = now().minusMinutes(2), endDateTime = now().minusMinutes(1)
+        )
+        every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns createAssignment()
+        every { missionRepository.getById(any()) } returns createMission(id = missionId)
+        every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns createAssignment()
+        every { judgmentItemRepository.existsByMissionId(any()) } returns true
+        every { assignmentArchive.getLastCommit(any(), any()) } returns createCommit()
+        every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns judgment
+        every { judgmentRepository.save(any()) } returns judgment
+
+        When("해당 과제 제출물의 본 자동 채점를 실행하면") {
+            val actual = judgmentService.judgeReal(1L, missionId)
 
             Then("정상적으로 채점을 진행한다") {
-                val actual = judgmentService.judgeReal(1L, 1L)
-                val expected = LastJudgmentResponse(
-                    PULL_REQUEST_URL,
-                    COMMIT_HASH,
-                    JudgmentStatus.STARTED,
-                    startedDateTime = judgment.lastRecord.startedDateTime
-                )
-
-                actual shouldBe expected
+                assertSoftly(actual) {
+                    pullRequestUrl shouldBe PULL_REQUEST_URL
+                    commitHash shouldBe COMMIT_HASH
+                    status shouldBe JudgmentStatus.STARTED
+                }
             }
         }
     }
@@ -83,7 +88,7 @@ class JudgmentServiceTest : BehaviorSpec({
         every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns createAssignment()
         every { judgmentItemRepository.existsByMissionId(any()) } returns false
 
-        When("해당 과제 제출물의 예제 테스트를 실행하면") {
+        When("해당 과제 제출물의 예제 자동 채점을 실행하면") {
             Then("예외가 발생한다") {
                 shouldThrow<IllegalStateException> {
                     judgmentService.judgeExample(1L, 1L)
@@ -91,7 +96,7 @@ class JudgmentServiceTest : BehaviorSpec({
             }
         }
 
-        When("해당 과제 제출물의 본 테스트를 실행하면") {
+        When("해당 과제 제출물의 본 자동 채점을 실행하면") {
             Then("예외가 발생한다") {
                 shouldThrow<IllegalStateException> {
                     judgmentService.judgeReal(1L, 1L)
@@ -100,147 +105,202 @@ class JudgmentServiceTest : BehaviorSpec({
         }
     }
 
-    Given("테스트 이력이 존재하고 제출한 commit id와 최신 이력의 commit id가 같은 경우") {
-        every { missionRepository.getById(any()) } returns createMission()
+    Given("예제 자동 채점 기록이 존재하고 이전 커밋과 최신 커밋이 같은 경우") {
+        val judgment = createJudgment(
+            type = JudgmentType.EXAMPLE,
+            records = listOf(
+                createJudgmentRecord(
+                    result = JudgmentResult(9, 10),
+                    completedDateTime = now()
+                )
+            )
+        )
+
+        every { missionRepository.getById(any()) } returns createMission(submittable = true)
         every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns createAssignment()
         every { judgmentItemRepository.existsByMissionId(any()) } returns true
+        every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns judgment
         every { assignmentArchive.getLastCommit(any(), any()) } returns createCommit()
+        every { judgmentRepository.save(any()) } returns judgment
 
-        When("예제 테스트를 실행하면") {
-            val judgment = createJudgment(records = listOf(createJudgmentRecord(result = createJudgmentResult())))
-            every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns judgment
-            every { judgmentRepository.save(any()) } returns judgment
+        When("예제 자동 채점을 실행하면") {
+            val actual = judgmentService.judgeExample(1L, 1L)
 
-            Then("기존의 최신 테스트 실행 결과를 반환한다") {
-                val response = judgmentService.judgeExample(1L, 1L)
-                response shouldBe LastJudgmentResponse(
-                    PULL_REQUEST_URL,
-                    COMMIT_HASH,
-                    JudgmentStatus.SUCCEEDED,
-                    5,
-                    10,
-                    startedDateTime = judgment.lastRecord.startedDateTime
-                )
-            }
-        }
-
-        // todo: 추후 정책 수정될 수도 있음
-        When("본 테스트를 실행하면") {
-            val judgment = createJudgment(records = listOf(createJudgmentRecord(result = createJudgmentResult())))
-            every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns judgment
-            every { judgmentRepository.save(any()) } returns judgment
-
-            Then("기존의 최신 테스트 실행 결과를 반환한다") {
-                val response = judgmentService.judgeReal(1L, 1L)
-                response shouldBe LastJudgmentResponse(
-                    PULL_REQUEST_URL,
-                    COMMIT_HASH,
-                    JudgmentStatus.SUCCEEDED,
-                    5,
-                    10,
-                    startedDateTime = judgment.lastRecord.startedDateTime
-                )
+            Then("이전의 자동 채점 결과를 반환한다") {
+                assertSoftly(actual) {
+                    pullRequestUrl shouldBe PULL_REQUEST_URL
+                    commitHash shouldBe COMMIT_HASH
+                    status shouldBe JudgmentStatus.SUCCEEDED
+                    passCount shouldBe 9
+                    totalCount shouldBe 10
+                }
             }
         }
     }
 
-    Given("테스트 이력이 존재하고 제출한 commit id와 최신 이력의 commit id가 다른 경우") {
-        every { missionRepository.getById(any()) } returns createMission()
+    Given("본 자동 채점 기록이 존재하고 이전 커밋과 최신 커밋이 같은 경우") {
+        val judgment = createJudgment(
+            type = JudgmentType.REAL,
+            records = listOf(
+                createJudgmentRecord(
+                    result = JudgmentResult(9, 10),
+                    completedDateTime = now()
+                )
+            )
+        )
+
+        every { missionRepository.getById(any()) } returns createMission(submittable = true)
         every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns createAssignment()
         every { judgmentItemRepository.existsByMissionId(any()) } returns true
-        every { assignmentArchive.getLastCommit(any(), any()) } returns createCommit("other-commit-hash")
+        every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns judgment
+        every { assignmentArchive.getLastCommit(any(), any()) } returns createCommit()
+        every { judgmentRepository.save(any()) } returns judgment
 
-        When("예제 테스트를 실행하면") {
-            val judgment = createJudgment(records = listOf(createJudgmentRecord(result = createJudgmentResult())))
-            every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns judgment
-            every { judgmentRepository.save(any()) } returns judgment
+        When("본 자동 채점을 실행하면") {
+            val actual = judgmentService.judgeReal(1L, 1L)
 
-            Then("테스트를 실행한 뒤 새로운 테스트 실행 결과를 반환한다") {
-                val response = judgmentService.judgeExample(1L, 1L)
-                response shouldNotBe LastJudgmentResponse(
-                    PULL_REQUEST_URL,
-                    COMMIT_HASH,
-                    JudgmentStatus.STARTED,
-                    startedDateTime = judgment.lastRecord.startedDateTime
-                )
-            }
-        }
-
-        When("본 테스트를 실행하면") {
-            val judgment = createJudgment(records = listOf(createJudgmentRecord(result = createJudgmentResult())))
-            every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns judgment
-            every { judgmentRepository.save(any()) } returns judgment
-
-            Then("테스트를 실행한 뒤 새로운 테스트 실행 결과를 반환한다") {
-                val response = judgmentService.judgeReal(1L, 1L)
-                response shouldNotBe LastJudgmentResponse(
-                    PULL_REQUEST_URL,
-                    COMMIT_HASH,
-                    JudgmentStatus.STARTED,
-                    startedDateTime = judgment.lastRecord.startedDateTime
-                )
+            Then("이전의 자동 채점 결과를 반환한다") {
+                assertSoftly(actual) {
+                    pullRequestUrl shouldBe PULL_REQUEST_URL
+                    commitHash shouldBe COMMIT_HASH
+                    status shouldBe JudgmentStatus.SUCCEEDED
+                    passCount shouldBe 9
+                    totalCount shouldBe 10
+                }
             }
         }
     }
 
-    Given("테스트 실행 이력이 존재하지 않는 경우") {
+    Given("예제 자동 채점 기록이 존재하고 이전 커밋과 최신 커밋이 다른 경우") {
+        val assignment = createAssignment(pullRequestUrl = PULL_REQUEST_URL, id = 1L)
+        val judgment = createJudgment(
+            assignmentId = assignment.id,
+            type = JudgmentType.EXAMPLE,
+            records = listOf(
+                createJudgmentRecord(
+                    commit = createCommit("commit1"),
+                    startedDateTime = now().minusMinutes(5)
+                )
+            )
+        )
+        val commit = createCommit("commit2")
+
+        every { missionRepository.getById(any()) } returns createMission(submittable = true)
+        every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns assignment
+        every { judgmentItemRepository.existsByMissionId(any()) } returns true
+        every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns judgment
+        every { assignmentArchive.getLastCommit(any(), any()) } returns commit
+        every { judgmentRepository.save(any()) } returns judgment
+
+        When("예제 자동 채점을 실행하면") {
+            val actual = judgmentService.judgeExample(1L, 1L)
+
+            Then("최신 커밋에 대한 자동 채점 결과를 확인할 수 있다") {
+                assertSoftly(actual) {
+                    pullRequestUrl shouldBe PULL_REQUEST_URL
+                    commitHash shouldBe commit.hash
+                    status shouldBe JudgmentStatus.STARTED
+                }
+            }
+        }
+    }
+
+    Given("본 자동 채점 기록이 존재하고 이전 커밋과 최신 커밋이 다른 경우") {
+        val assignment = createAssignment(pullRequestUrl = PULL_REQUEST_URL, id = 1L)
+        val judgment = createJudgment(
+            assignmentId = assignment.id,
+            type = JudgmentType.REAL,
+            records = listOf(
+                createJudgmentRecord(
+                    commit = createCommit("commit1"),
+                    startedDateTime = now().minusMinutes(5)
+                )
+            )
+        )
+        val commit = createCommit("commit2")
+
+        every { missionRepository.getById(any()) } returns createMission()
+        every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns assignment
+        every { judgmentItemRepository.existsByMissionId(any()) } returns true
+        every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns judgment
+        every { assignmentArchive.getLastCommit(any(), any()) } returns commit
+        every { judgmentRepository.save(any()) } returns judgment
+
+        When("자동 채점을 실행하면") {
+            val actual = judgmentService.judgeReal(1L, 1L)
+
+            Then("최신 커밋에 대한 자동 채점 결과를 확인할 수 있다") {
+                assertSoftly(actual) {
+                    pullRequestUrl shouldBe PULL_REQUEST_URL
+                    commitHash shouldBe commit.hash
+                    status shouldBe JudgmentStatus.STARTED
+                }
+            }
+        }
+    }
+
+    Given("예제 자동 채점 기록이 존재하지 않는 경우") {
+        val judgment = createJudgment(type = JudgmentType.EXAMPLE)
+
         every { missionRepository.getById(any()) } returns createMission()
         every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns createAssignment()
         every { judgmentItemRepository.existsByMissionId(any()) } returns true
-        every { assignmentArchive.getLastCommit(any(), any()) } returns createCommit("other-commit-hash")
+        every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns judgment
+        every { assignmentArchive.getLastCommit(any(), any()) } returns createCommit()
+        every { judgmentRepository.save(any()) } returns judgment
 
-        When("예제 테스트를 실행하면") {
-            val judgment = createJudgment(records = listOf(createJudgmentRecord(result = createJudgmentResult())))
-            every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns judgment
-            every { judgmentRepository.save(any()) } returns judgment
+        When("예제 자동 채점을 실행하면") {
+            val actual = judgmentService.judgeExample(1L, 1L)
 
-            Then("테스트를 실행한 뒤 새로운 테스트 실행 결과를 반환한다") {
-                val response = judgmentService.judgeExample(1L, 1L)
-                response shouldNotBe LastJudgmentResponse(
-                    PULL_REQUEST_URL,
-                    COMMIT_HASH,
-                    JudgmentStatus.STARTED,
-                    startedDateTime = judgment.lastRecord.startedDateTime
-                )
+            Then("해당 커밋에 대한 자동 채점 결과를 확인할 수 있다") {
+                assertSoftly(actual) {
+                    pullRequestUrl shouldBe PULL_REQUEST_URL
+                    commitHash shouldBe COMMIT_HASH
+                    status shouldBe JudgmentStatus.STARTED
+                }
             }
         }
+    }
 
-        When("본 테스트를 실행하면") {
-            val judgment = createJudgment(records = listOf(createJudgmentRecord(result = createJudgmentResult())))
-            every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns judgment
-            every { judgmentRepository.save(any()) } returns judgment
+    Given("본 자동 채점 기록이 존재하지 않는 경우") {
+        val judgment = createJudgment(type = JudgmentType.REAL)
 
-            Then("테스트를 실행한 뒤 새로운 테스트 실행 결과를 반환한다") {
-                val response = judgmentService.judgeReal(1L, 1L)
-                response shouldNotBe LastJudgmentResponse(
-                    PULL_REQUEST_URL,
-                    COMMIT_HASH,
-                    JudgmentStatus.STARTED,
-                    startedDateTime = judgment.lastRecord.startedDateTime
-                )
+        every { missionRepository.getById(any()) } returns createMission()
+        every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns createAssignment()
+        every { judgmentItemRepository.existsByMissionId(any()) } returns true
+        every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns judgment
+        every { assignmentArchive.getLastCommit(any(), any()) } returns createCommit()
+        every { judgmentRepository.save(any()) } returns judgment
+
+        When("본 자동 채점을 실행하면") {
+            val actual = judgmentService.judgeReal(1L, 1L)
+
+            Then("해당 커밋에 대한 자동 채점 결과를 확인할 수 있다") {
+                assertSoftly(actual) {
+                    pullRequestUrl shouldBe PULL_REQUEST_URL
+                    commitHash shouldBe COMMIT_HASH
+                    status shouldBe JudgmentStatus.STARTED
+                }
             }
         }
     }
 
     Given("이전에 자동 채점을 실행한 경우") {
-        When("자동 채점 응답 결과가 성공이면") {
-            val record = createJudgmentRecord(result = JudgmentResult(), completedDateTime = null)
-            every { judgmentRepository.getById(any()) } returns createJudgment(records = listOf(record))
+        val record = createJudgmentRecord(result = JudgmentResult(), completedDateTime = null)
+        every { judgmentRepository.getById(any()) } returns createJudgment(records = listOf(record))
 
-            Then("자동 채점 성공 결과를 저장한다") {
-                judgmentService.success(1L, createJudgmentSuccessRequest())
+        When("자동 채점 성공 응답 결과를 저장하면") {
+            judgmentService.success(1L, createJudgmentSuccessRequest())
 
+            Then("이전 채점 기록의 상태가 성공이 된다") {
                 record.status shouldBe JudgmentStatus.SUCCEEDED
             }
         }
 
-        When("자동 채점 응답 결과가 실패면") {
-            val record = createJudgmentRecord(result = JudgmentResult(), completedDateTime = null)
-            every { judgmentRepository.getById(any()) } returns createJudgment(records = listOf(record))
+        When("자동 채점 실패 응답 결과를 저장하면") {
+            judgmentService.fail(1L, createJudgmentFailRequest())
 
-            Then("자동 채점 실패 결과를 저장한다") {
-                judgmentService.fail(1L, createJudgmentFailRequest())
-
+            Then("이전 채점 기록의 상태가 실패가 된다") {
                 record.status shouldBe JudgmentStatus.FAILED
             }
         }

@@ -1,5 +1,5 @@
 = 자동 채점 관련 API
 
-== 예제 테스트 실행
+== 예제 채점 실행
 
 operation::judgment-judge-example-post[snippets='http-request,http-response']

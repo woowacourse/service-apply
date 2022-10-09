@@ -51,7 +51,7 @@ class Judgment(
 
     private fun canStart(): Boolean {
         if (records.isEmpty()) return true
-        return lastRecord.startedDateTime.plusMinutes(DELAY_MINUTES) < LocalDateTime.now()
+        return lastRecord.completed || lastRecord.startedDateTime.plusMinutes(DELAY_MINUTES) < LocalDateTime.now()
     }
 
     private fun createRecord(commit: Commit): JudgmentRecord {

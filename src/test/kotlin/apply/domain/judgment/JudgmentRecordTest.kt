@@ -1,7 +1,6 @@
 package apply.domain.judgment
 
 import apply.createJudgmentRecord
-import apply.createJudgmentResult
 import apply.domain.judgment.JudgmentStatus.FAILED
 import apply.domain.judgment.JudgmentStatus.STARTED
 import apply.domain.judgment.JudgmentStatus.SUCCEEDED
@@ -17,13 +16,33 @@ import io.kotest.matchers.shouldBe
 import java.time.LocalDateTime.now
 
 class JudgmentRecordTest : StringSpec({
-    "자동 채점 기록 생성" {
+    "시작한 자동 채점 기록 생성" {
         val record = createJudgmentRecord()
         assertSoftly(record) {
-            result shouldBe createJudgmentResult()
+            result shouldBe JudgmentResult()
+            completedDateTime.shouldBeNull()
+            completed.shouldBeFalse()
+            status shouldBe STARTED
+        }
+    }
+
+    "성공한 자동 채점 기록 생성" {
+        val record = createJudgmentRecord(result = JudgmentResult(9, 10), completedDateTime = now())
+        assertSoftly(record) {
+            result shouldBe JudgmentResult(passCount = 9, totalCount = 10)
             completedDateTime.shouldNotBeNull()
             completed.shouldBeTrue()
             status shouldBe SUCCEEDED
+        }
+    }
+
+    "실패한 자동 채점 기록 생성" {
+        val record = createJudgmentRecord(result = JudgmentResult(message = "빌드 실패"), completedDateTime = now())
+        assertSoftly(record) {
+            result shouldBe JudgmentResult(message = "빌드 실패")
+            completedDateTime.shouldNotBeNull()
+            completed.shouldBeTrue()
+            status shouldBe FAILED
         }
     }
 

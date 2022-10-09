@@ -21,7 +21,7 @@ class JudgmentTest : StringSpec({
         judgment.lastStatus shouldBe STARTED
     }
 
-    "마지막 자동 채점 기록 이후 5분이 지나지 않은 경우 예외가 발생한다" {
+    "마지막 자동 채점 시작 후 5분이 지나지 않은 경우 채점을 시작할 수 없다" {
         val judgment = createJudgment(
             records = listOf(createJudgmentRecord(createCommit("commit1"), startedDateTime = now()))
         )
@@ -30,7 +30,43 @@ class JudgmentTest : StringSpec({
         }
     }
 
-    "마지막 자동 채점 기록 이후 5분이 지나야 시작할 수 있다" {
+    "마지막 자동 채점이 성공이면 시작 시각과 관계 없이 채점을 시작할 수 있다" {
+        val now = now()
+        val judgment = createJudgment(
+            records = listOf(
+                createJudgmentRecord(
+                    createCommit("commit1"),
+                    JudgmentResult(passCount = 9, totalCount = 10),
+                    startedDateTime = now.minusMinutes(2),
+                    completedDateTime = now.minusMinutes(1)
+                )
+            )
+        )
+        val commit = createCommit("commit2")
+        shouldNotThrowAny { judgment.start(commit) }
+        judgment.lastCommit shouldBe commit
+        judgment.lastStatus shouldBe STARTED
+    }
+
+    "마지막 자동 채점이 실패이면 시작 시각과 관계 없이 채점을 시작할 수 있다" {
+        val now = now()
+        val judgment = createJudgment(
+            records = listOf(
+                createJudgmentRecord(
+                    createCommit("commit1"),
+                    JudgmentResult(message = "빌드 실패"),
+                    startedDateTime = now.minusMinutes(2),
+                    completedDateTime = now.minusMinutes(1)
+                )
+            )
+        )
+        val commit = createCommit("commit2")
+        shouldNotThrowAny { judgment.start(commit) }
+        judgment.lastCommit shouldBe commit
+        judgment.lastStatus shouldBe STARTED
+    }
+
+    "마지막 자동 채점의 상태와 상관없이 채점 시작 이후 5분이 지나면 채점을 시작할 수 있다" {
         val judgment = createJudgment(
             records = listOf(createJudgmentRecord(createCommit("commit1"), startedDateTime = now().minusMinutes(5)))
         )

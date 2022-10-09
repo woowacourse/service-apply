@@ -27,19 +27,11 @@ fun createJudgment(
 
 fun createJudgmentRecord(
     commit: Commit = createCommit(),
-    result: JudgmentResult = createJudgmentResult(),
-    startedDateTime: LocalDateTime = now().minusMinutes(10),
-    completedDateTime: LocalDateTime? = now().minusMinutes(5)
+    result: JudgmentResult = JudgmentResult(),
+    startedDateTime: LocalDateTime = now(),
+    completedDateTime: LocalDateTime? = null
 ): JudgmentRecord {
     return JudgmentRecord(commit, result, startedDateTime, completedDateTime)
-}
-
-fun createJudgmentResult(
-    passCount: Int = 5,
-    totalCount: Int = 10,
-    message: String = "",
-): JudgmentResult {
-    return JudgmentResult(passCount, totalCount, message)
 }
 
 fun createCommit(
