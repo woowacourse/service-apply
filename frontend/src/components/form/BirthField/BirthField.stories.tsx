@@ -9,6 +9,7 @@ export default {
 const Template: ComponentStory<typeof BirthField> = (args) => <BirthField {...args} />;
 
 export const Default = Template.bind({});
+
 export const Required = Template.bind({});
 Required.args = {
   required: true,
