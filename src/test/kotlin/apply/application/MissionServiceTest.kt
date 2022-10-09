@@ -22,6 +22,7 @@ import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
+import io.mockk.runs
 import org.springframework.data.repository.findByIdOrNull
 import support.test.spec.afterRootTest
 
@@ -47,6 +48,7 @@ class MissionServiceTest : BehaviorSpec({
         every { missionRepository.existsByEvaluationId(any()) } returns false
         every { judgmentItemRepository.save(any()) } returns createJudgmentItem()
         every { missionRepository.save(any()) } returns createMission()
+        every { judgmentItemRepository.deleteByMissionId(any()) } just runs
 
         When("해당 평가에 대한 과제를 생성하면") {
             val actual = missionService.save(createMissionData())
