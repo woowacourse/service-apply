@@ -295,7 +295,7 @@ class DatabaseInitializer(
                 answers = ApplicationFormAnswers(
                     mutableListOf(
                         ApplicationFormAnswer("책임감", 1L),
-                        ApplicationFormAnswer("스타트업을 하고 싶습니다.", 2L),
+                        ApplicationFormAnswer("스타트업을 하고 싶습니다.", 2L)
                     )
                 )
             ),
@@ -361,7 +361,7 @@ class DatabaseInitializer(
                 evaluationAnswers = EvaluationAnswers(
                     listOf(
                         EvaluationAnswer(score = 2, evaluationItemId = 2L),
-                        EvaluationAnswer(score = 1, evaluationItemId = 3L),
+                        EvaluationAnswer(score = 1, evaluationItemId = 3L)
                     )
                 )
             ),
