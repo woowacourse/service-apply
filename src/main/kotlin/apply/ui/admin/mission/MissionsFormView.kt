@@ -32,7 +32,7 @@ class MissionsFormView(
     private val title: Title = Title()
     private val missionForm: MissionForm by lazy {
         MissionForm(evaluationService.getAllSelectDataByRecruitmentId(recruitmentId)) {
-            evaluationService.findEvaluationItems(it)
+            missionService.findEvaluationItems(it)
         }
     }
     private val submitButton: Button = createSubmitButton()

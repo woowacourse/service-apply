@@ -89,8 +89,7 @@ class MissionService(
     }
 
     fun getById(id: Long): MissionResponse {
-        val mission = missionRepository.getById(id)
-        return MissionResponse(mission)
+        return missionRepository.getById(id).let(::MissionResponse)
     }
 
     fun findAllByRecruitmentId(recruitmentId: Long): List<MissionAndEvaluationResponse> {
@@ -122,6 +121,11 @@ class MissionService(
             ?: JudgmentItemData()
         val evaluation = evaluationRepository.getById(mission.evaluationId)
         return MissionData(mission, evaluation, judgmentItemData)
+    }
+
+    fun findEvaluationItems(evaluationId: Long): List<EvaluationItemSelectData> {
+        val evaluationItems = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluationId)
+        return evaluationItems.map(::EvaluationItemSelectData)
     }
 
     private fun findEvaluationItemData(evaluationItemId: Long): EvaluationItemSelectData {

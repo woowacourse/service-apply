@@ -5,8 +5,6 @@ import apply.application.JudgmentItemData
 import apply.application.MissionData
 import apply.application.MissionResponse
 import apply.application.MyMissionResponse
-import apply.domain.judgmentitem.JudgmentItem
-import apply.domain.judgmentitem.ProgrammingLanguage
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionStatus
 import java.time.LocalDateTime
@@ -84,14 +82,4 @@ fun createMyMissionResponse(
     id: Long = 0L
 ): MyMissionResponse {
     return MyMissionResponse(id, title, description, submittable, submitted, startDateTime, endDateTime, missionStatus)
-}
-
-fun createJudgmentItem(
-    missionId: Long = 1L,
-    evaluationItemId: Long = 1L,
-    testName: String = "base-ball",
-    programmingLanguage: ProgrammingLanguage = ProgrammingLanguage.JAVA,
-    id: Long = 0L
-): JudgmentItem {
-    return JudgmentItem(missionId, evaluationItemId, testName, programmingLanguage, id)
 }

@@ -95,9 +95,4 @@ class EvaluationService(
     fun getAllSelectDataByRecruitmentId(recruitmentId: Long): List<EvaluationSelectData> {
         return evaluationRepository.findAllByRecruitmentId(recruitmentId).map(::EvaluationSelectData)
     }
-
-    fun findEvaluationItems(evaluationId: Long): List<EvaluationItemSelectData> {
-        val evaluationItems = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluationId)
-        return evaluationItems.map(::EvaluationItemSelectData)
-    }
 }
