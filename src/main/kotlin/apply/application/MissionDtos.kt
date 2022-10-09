@@ -27,7 +27,6 @@ data class MissionData(
 
     @field:NotBlank
     var description: String = "",
-
     var judgmentItemData: JudgmentItemData = JudgmentItemData(),
 
     @field:NotNull
