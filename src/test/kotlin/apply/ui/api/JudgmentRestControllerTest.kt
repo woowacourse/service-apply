@@ -2,8 +2,8 @@ package apply.ui.api
 
 import apply.application.JudgmentService
 import apply.createCancelJudgmentRequest
-import apply.createJudgmentFailRequest
-import apply.createJudgmentSuccessRequest
+import apply.createFailJudgmentRequest
+import apply.createSuccessJudgmentRequest
 import apply.createLastJudgmentResponse
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
@@ -55,7 +55,7 @@ class JudgmentRestControllerTest : RestControllerTest() {
         every { judgmentService.success(any(), any()) } just Runs
 
         mockMvc.post("/api/recruitments/{recruitmentId}/missions/{missionId}/judgments/pass", 1L, 1L) {
-            jsonContent(createJudgmentSuccessRequest())
+            jsonContent(createSuccessJudgmentRequest())
         }.andExpect {
             status { isOk }
         }.andDo {
@@ -68,7 +68,7 @@ class JudgmentRestControllerTest : RestControllerTest() {
         every { judgmentService.fail(any(), any()) } just Runs
 
         mockMvc.post("/api/recruitments/{recruitmentId}/missions/{missionId}/judgments/fail", 1L, 1L) {
-            jsonContent(createJudgmentFailRequest())
+            jsonContent(createFailJudgmentRequest())
         }.andExpect {
             status { isOk }
         }.andDo {

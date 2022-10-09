@@ -63,7 +63,7 @@ fun createJudgmentItem(
     return JudgmentItem(missionId, evaluationItemId, testName, programmingLanguage, id)
 }
 
-fun createJudgmentSuccessRequest(
+fun createSuccessJudgmentRequest(
     judgmentId: Long = 1L,
     commit: String = COMMIT_HASH,
     passCount: Int = 5,
@@ -72,7 +72,7 @@ fun createJudgmentSuccessRequest(
     return SuccessJudgmentRequest(judgmentId, commit, passCount, totalCount)
 }
 
-fun createJudgmentFailRequest(
+fun createFailJudgmentRequest(
     judgmentId: Long = 1L,
     commit: String = COMMIT_HASH,
     message: String = "빌드 실패"

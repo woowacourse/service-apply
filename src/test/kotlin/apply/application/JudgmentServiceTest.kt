@@ -5,9 +5,9 @@ import apply.PULL_REQUEST_URL
 import apply.createAssignment
 import apply.createCommit
 import apply.createJudgment
-import apply.createJudgmentFailRequest
+import apply.createFailJudgmentRequest
 import apply.createJudgmentRecord
-import apply.createJudgmentSuccessRequest
+import apply.createSuccessJudgmentRequest
 import apply.createMission
 import apply.domain.assignment.AssignmentRepository
 import apply.domain.assignment.getByUserIdAndMissionId
@@ -290,7 +290,7 @@ class JudgmentServiceTest : BehaviorSpec({
         every { judgmentRepository.getById(any()) } returns createJudgment(records = listOf(record))
 
         When("자동 채점 성공 응답 결과를 저장하면") {
-            judgmentService.success(1L, createJudgmentSuccessRequest())
+            judgmentService.success(1L, createSuccessJudgmentRequest())
 
             Then("이전 채점 기록의 상태가 성공이 된다") {
                 record.status shouldBe JudgmentStatus.SUCCEEDED
@@ -298,7 +298,7 @@ class JudgmentServiceTest : BehaviorSpec({
         }
 
         When("자동 채점 실패 응답 결과를 저장하면") {
-            judgmentService.fail(1L, createJudgmentFailRequest())
+            judgmentService.fail(1L, createFailJudgmentRequest())
 
             Then("이전 채점 기록의 상태가 실패가 된다") {
                 record.status shouldBe JudgmentStatus.FAILED
