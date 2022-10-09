@@ -1,37 +1,53 @@
-import classNames from "classnames";
-import PropTypes from "prop-types";
 import { useEffect } from "react";
+import classNames from "classnames";
+
+import Label from "../../@common/Label/Label";
+import TextInput from "../../@common/TextInput/TextInput";
+import Button, { BUTTON_VARIANT } from "../../@common/Button/Button";
+
+import { SIGN_UP_FORM_NAME } from "../../../hooks/useSignUpForm";
+import useTimer from "../../../hooks/useTimer";
+
 import { fetchAuthenticationCode, fetchVerifyAuthenticationCode } from "../../../api";
 import { FORM } from "../../../constants/form";
 import { ERROR_MESSAGE } from "../../../constants/messages";
-import { SIGN_UP_FORM_NAME } from "../../../hooks/useSignUpForm";
-import useTimer from "../../../hooks/useTimer";
 import { formatTimerText } from "../../../utils/format/date";
-import Button, { BUTTON_VARIANT } from "../../@common/Button/Button";
-import Label from "../../@common/Label/Label";
-import TextInput from "../../@common/TextInput/TextInput";
+import { ValueOf } from "../../../../types/utility";
 import styles from "./EmailField.module.css";
 
 export const EMAIL_STATUS = {
   INPUT: "input",
   WAITING_AUTHENTICATION: "waiting for authentication",
   AUTHENTICATED: "authenticated",
-};
+} as const;
 
 const AUTHENTICATED_CODE_VALIDITY_SECONDS = 600;
+
+type EmailFieldProps = {
+  emailValue: string;
+  emailErrorMessage: string;
+  authenticationCodeValue: string;
+  authenticationCodeErrorMessage: string;
+  emailStatus: ValueOf<typeof EMAIL_STATUS>;
+  onChangeEmail: React.ChangeEventHandler<HTMLInputElement>;
+  onChangeAuthenticationCode: React.ChangeEventHandler<HTMLInputElement>;
+  resetAuthenticationCode: () => void;
+  setEmailStatus: React.Dispatch<React.SetStateAction<ValueOf<typeof EMAIL_STATUS>>>;
+  setErrorMessage: (name: string, errorMessage: string) => void;
+};
 
 const EmailField = ({
   emailValue,
   emailErrorMessage,
-  onChangeEmail,
   authenticationCodeValue,
   authenticationCodeErrorMessage,
+  emailStatus,
+  onChangeEmail,
   onChangeAuthenticationCode,
   resetAuthenticationCode,
-  emailStatus,
   setEmailStatus,
   setErrorMessage,
-}) => {
+}: EmailFieldProps) => {
   const { timerSeconds, startTimer, resetTimer } = useTimer(AUTHENTICATED_CODE_VALIDITY_SECONDS);
 
   const getEmailButton = () => {
@@ -56,15 +72,11 @@ const EmailField = ({
     }
 
     if (emailStatus === EMAIL_STATUS.AUTHENTICATED) {
-      return (
-        <div className={classNames(styles["authenticated"], styles["input-button"])} disabled>
-          ✓
-        </div>
-      );
+      return <div className={classNames(styles["authenticated"], styles["input-button"])}>✓</div>;
     }
   };
 
-  const handleChangeEmail = (event) => {
+  const handleChangeEmail: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     setEmailStatus(EMAIL_STATUS.INPUT);
     resetAuthenticationCode();
     onChangeEmail(event);
@@ -171,18 +183,6 @@ const EmailField = ({
       )}
     </>
   );
-};
-
-EmailField.propTypes = {
-  emailValue: PropTypes.string.isRequired,
-  emailErrorMessage: PropTypes.string,
-  onChangeEmail: PropTypes.func.isRequired,
-  authenticationCodeValue: PropTypes.string.isRequired,
-  authenticationCodeErrorMessage: PropTypes.string,
-  onChangeAuthenticationCode: PropTypes.func.isRequired,
-  resetAuthenticationCode: PropTypes.func.isRequired,
-  emailStatus: PropTypes.string.isRequired,
-  setEmailStatus: PropTypes.func.isRequired,
 };
 
 export default EmailField;
