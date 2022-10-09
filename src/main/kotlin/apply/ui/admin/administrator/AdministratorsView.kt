@@ -28,7 +28,7 @@ class AdministratorsView(private val administratorService: AdministratorService)
     }
 
     private fun createTitle(): Component {
-        return HorizontalLayout(H1("관리자 계정 관리")).apply {
+        return HorizontalLayout(H1("관리자")).apply {
             setSizeFull()
             justifyContentMode = FlexComponent.JustifyContentMode.CENTER
         }
@@ -50,7 +50,7 @@ class AdministratorsView(private val administratorService: AdministratorService)
     private fun createGrid(): Component {
         return Grid<AdministratorResponse>(10).apply {
             addSortableColumn("관리자명", AdministratorResponse::name)
-            addSortableColumn("관리자 ID", AdministratorResponse::username)
+            addSortableColumn("관리자 사용자명", AdministratorResponse::username)
             addColumn(createEditAndDeleteButton()).apply { isAutoWidth = true }
             setItems(administratorService.findAll())
         }
