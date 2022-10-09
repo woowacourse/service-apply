@@ -148,10 +148,11 @@ const ApplicationRegister = () => {
             type="url"
             description={
               <div className={styles["description-url"]}>
-                자신을 드러낼 수 있는 개인 블로그, GitHub, 포트폴리오 주소 등이 있다면 입력해
+                작성한 몰입 경험과 관련된 개인 블로그, GitHub, 그 외 증빙 자료 등이 있다면 입력해
                 주세요.
                 <div className={styles["description-url-small"]}>
-                  여러 개가 있는 경우 Notion, Google 문서 등을 사용하여 하나로 묶어 주세요.
+                  여러 개가 있는 경우 Notion이나 Google 문서 등을 사용하여 하나로 묶어 주세요.
+                  링크를 공유하실 때는 해당 링크가 공개 권한으로 접근 가능한지 확인해 주세요.
                 </div>
               </div>
             }
