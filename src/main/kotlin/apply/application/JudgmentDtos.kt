@@ -51,3 +51,9 @@ data class FailJudgmentRequest(
     val commit: String,
     val message: String
 )
+
+data class CancelJudgmentRequest(
+    val judgmentId: Long,
+    val commit: String,
+    val message: String
+)

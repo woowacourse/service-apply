@@ -110,7 +110,7 @@ class JudgmentServiceTest : BehaviorSpec({
             type = JudgmentType.EXAMPLE,
             records = listOf(
                 createJudgmentRecord(
-                    result = JudgmentResult(9, 10),
+                    result = JudgmentResult(9, 10, status = JudgmentStatus.SUCCEEDED),
                     completedDateTime = now()
                 )
             )
@@ -143,7 +143,7 @@ class JudgmentServiceTest : BehaviorSpec({
             type = JudgmentType.REAL,
             records = listOf(
                 createJudgmentRecord(
-                    result = JudgmentResult(9, 10),
+                    result = JudgmentResult(9, 10, status = JudgmentStatus.SUCCEEDED),
                     completedDateTime = now()
                 )
             )

@@ -12,15 +12,11 @@ data class JudgmentResult(
     val totalCount: Int = 0,
 
     @Column(nullable = false)
-    val message: String = ""
-) {
-    val status: JudgmentStatus
-        get() = when {
-            message.isEmpty() && totalCount == 0 && passCount == 0 -> JudgmentStatus.STARTED
-            totalCount != 0 -> JudgmentStatus.SUCCEEDED
-            else -> JudgmentStatus.FAILED
-        }
+    val message: String = "",
 
+    @Column(nullable = false)
+    val status: JudgmentStatus = JudgmentStatus.STARTED
+) {
     init {
         require(totalCount >= passCount)
     }

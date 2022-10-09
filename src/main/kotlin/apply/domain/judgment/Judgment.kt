@@ -41,7 +41,7 @@ class Judgment(
     fun start(commit: Commit) {
         check(canStart()) { "자동 채점을 시작할 수 없습니다." }
         val record = findRecord(commit) ?: createRecord(commit)
-        if (record.completed) {
+        if (record.touchable) {
             record.touch()
         } else {
             record.start()
@@ -59,17 +59,20 @@ class Judgment(
             .also { records.add(it) }
     }
 
-    fun success(commit: Commit, result: JudgmentResult) {
+    fun success(commit: Commit, passCount: Int, totalCount: Int) {
         val record = getRecord(commit)
-        record.applyResult(result)
+        record.applyResult(JudgmentResult(passCount, totalCount, status = JudgmentStatus.SUCCEEDED))
     }
 
     fun fail(commit: Commit, message: String) {
         val record = getRecord(commit)
-        record.applyResult(JudgmentResult(message = message))
+        record.applyResult(JudgmentResult(message = message, status = JudgmentStatus.FAILED))
     }
 
-    fun getResult(commit: Commit): JudgmentResult = getRecord(commit).result
+    fun cancel(commit: Commit, message: String) {
+        val record = getRecord(commit)
+        record.applyResult(JudgmentResult(message = message, status = JudgmentStatus.CANCELLED))
+    }
 
     private fun getRecord(commit: Commit): JudgmentRecord = findRecord(commit)
         ?: throw NoSuchElementException("커밋이 존재하지 않습니다. commit: $commit")

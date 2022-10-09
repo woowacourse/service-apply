@@ -1,5 +1,6 @@
 package apply
 
+import apply.application.CancelJudgmentRequest
 import apply.application.FailJudgmentRequest
 import apply.application.LastJudgmentResponse
 import apply.application.SuccessJudgmentRequest
@@ -77,4 +78,12 @@ fun createJudgmentFailRequest(
     message: String = "빌드 실패"
 ): FailJudgmentRequest {
     return FailJudgmentRequest(judgmentId, commit, message)
+}
+
+fun createCancelJudgmentRequest(
+    judgmentId: Long = 1L,
+    commit: String = COMMIT_HASH,
+    message: String = "서버 실패"
+): CancelJudgmentRequest {
+    return CancelJudgmentRequest(judgmentId, commit, message)
 }

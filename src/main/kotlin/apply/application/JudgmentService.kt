@@ -8,7 +8,6 @@ import apply.domain.judgment.Commit
 import apply.domain.judgment.Judgment
 import apply.domain.mission.JudgmentItemRepository
 import apply.domain.judgment.JudgmentRepository
-import apply.domain.judgment.JudgmentResult
 import apply.domain.judgment.JudgmentType
 import apply.domain.judgment.getById
 import apply.domain.mission.Mission
@@ -51,12 +50,17 @@ class JudgmentService(
 
     fun success(judgmentId: Long, request: SuccessJudgmentRequest) {
         val judgment = judgmentRepository.getById(judgmentId)
-        judgment.success(Commit(request.commit), JudgmentResult(request.passCount, request.totalCount))
+        judgment.success(Commit(request.commit), request.passCount, request.totalCount)
         // TODO: reflect result to evaluation answer
     }
 
     fun fail(judgmentId: Long, request: FailJudgmentRequest) {
         val judgment = judgmentRepository.getById(judgmentId)
         judgment.fail(Commit(request.commit), request.message)
+    }
+
+    fun cancel(judgmentId: Long, request: CancelJudgmentRequest) {
+        val judgment = judgmentRepository.getById(judgmentId)
+        judgment.cancel(Commit(request.commit), request.message)
     }
 }
