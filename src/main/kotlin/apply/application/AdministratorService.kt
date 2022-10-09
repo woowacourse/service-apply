@@ -44,7 +44,6 @@ class AdministratorService(
 
     fun update(administratorId: Long, request: UpdateAdministratorFormData) {
         check(request.password == request.confirmPassword) { "비밀번호가 일치하지 않습니다." }
-
         val administrator = administratorRepository.getById(administratorId)
         administrator.update(request.name, passwordEncoder.encode(request.password))
     }
