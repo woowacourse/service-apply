@@ -3,7 +3,6 @@ package apply.ui.api
 import apply.application.AdministratorService
 import apply.createAdministratorData
 import apply.createAdministratorResponse
-import apply.createAdministratorUpdateFormData
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
 import io.mockk.every
@@ -69,7 +68,7 @@ class AdministratorRestControllerTest : RestControllerTest() {
         every { administratorService.update(any(), any()) } just Runs
 
         mockMvc.put("/api/administrators/{administratorId}", 1L) {
-            jsonContent(createAdministratorUpdateFormData())
+            jsonContent(createAdministratorData())
             bearer("valid_token")
         }.andExpect {
             status { isNoContent }

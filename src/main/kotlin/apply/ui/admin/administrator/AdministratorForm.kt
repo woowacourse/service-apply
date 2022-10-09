@@ -1,12 +1,12 @@
 package apply.ui.admin.administrator
 
-import apply.application.CreateAdministratorFormData
+import apply.application.AdministratorData
 import com.vaadin.flow.component.textfield.PasswordField
 import com.vaadin.flow.component.textfield.TextField
 import support.views.BindingIdentityFormLayout
 
-class AdministratorCreateForm :
-    BindingIdentityFormLayout<CreateAdministratorFormData>(CreateAdministratorFormData::class) {
+class AdministratorForm :
+    BindingIdentityFormLayout<AdministratorData>(AdministratorData::class) {
     private val name: TextField = TextField("관리자명")
     private val username: TextField = TextField("관리자 사용자명")
     private val password: PasswordField = PasswordField("비밀번호")
@@ -18,11 +18,12 @@ class AdministratorCreateForm :
         drawRequired()
     }
 
-    override fun bindOrNull(): CreateAdministratorFormData? {
+    override fun bindOrNull(): AdministratorData? {
         return bindDefaultOrNull()
     }
 
-    override fun fill(data: CreateAdministratorFormData) {
+    override fun fill(data: AdministratorData) {
         fillDefault(data)
+        username.isReadOnly = true
     }
 }

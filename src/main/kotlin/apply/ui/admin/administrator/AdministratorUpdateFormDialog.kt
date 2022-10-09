@@ -1,5 +1,6 @@
 package apply.ui.admin.administrator
 
+import apply.application.AdministratorData
 import apply.application.AdministratorService
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.button.Button
@@ -15,13 +16,15 @@ import support.views.createPrimaryButton
 class AdministratorUpdateFormDialog(
     private val administratorService: AdministratorService,
     private val administratorId: Long,
+    administratorData: AdministratorData,
     displayName: String,
     reloadComponents: () -> Unit
 ) : Dialog() {
     private val title = H2("관리자 $displayName")
-    private val administratorForm = AdministratorUpdateForm()
+    private val administratorForm = AdministratorForm()
 
     init {
+        administratorForm.fill(administratorData)
         add(createHeader(), administratorForm, createButtons(displayName, reloadComponents))
         width = "800px"
         open()

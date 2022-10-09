@@ -1,5 +1,6 @@
 package apply.ui.admin.administrator
 
+import apply.application.AdministratorData
 import apply.application.AdministratorResponse
 import apply.application.AdministratorService
 import apply.ui.admin.BaseLayout
@@ -63,6 +64,10 @@ class AdministratorsView(private val administratorService: AdministratorService)
                     AdministratorUpdateFormDialog(
                         administratorService,
                         administratorResponse.id,
+                        AdministratorData(
+                            name = administratorResponse.name,
+                            username = administratorResponse.username
+                        ),
                         EDIT_VALUE.toDisplayName()
                     ) {
                         UI.getCurrent().page.reload()

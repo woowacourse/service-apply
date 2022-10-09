@@ -1,9 +1,8 @@
 package apply.ui.api
 
+import apply.application.AdministratorData
 import apply.application.AdministratorResponse
 import apply.application.AdministratorService
-import apply.application.CreateAdministratorFormData
-import apply.application.UpdateAdministratorFormData
 import apply.domain.user.User
 import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
@@ -24,7 +23,7 @@ class AdministratorRestController(
 ) {
     @PostMapping
     fun save(
-        @RequestBody @Valid request: CreateAdministratorFormData,
+        @RequestBody @Valid request: AdministratorData,
         @LoginUser(administrator = true) user: User
     ): ResponseEntity<ApiResponse<AdministratorResponse>> {
         val response = administratorService.save(request)
@@ -52,7 +51,7 @@ class AdministratorRestController(
     @PutMapping("/{administratorId}")
     fun update(
         @PathVariable administratorId: Long,
-        @RequestBody @Valid request: UpdateAdministratorFormData,
+        @RequestBody @Valid request: AdministratorData,
         @LoginUser(administrator = true) user: User
     ): ResponseEntity<Unit> {
         administratorService.update(administratorId, request)

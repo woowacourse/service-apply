@@ -19,10 +19,10 @@ class AdministratorCreateFormDialog(
 ) : Dialog() {
 
     private val title = H2("관리자 $displayName")
-    private val administratorCreateForm = AdministratorCreateForm()
+    private val administratorForm = AdministratorForm()
 
     init {
-        add(createHeader(), administratorCreateForm, createButtons(displayName, reloadComponents))
+        add(createHeader(), administratorForm, createButtons(displayName, reloadComponents))
         width = "800px"
         open()
     }
@@ -45,7 +45,7 @@ class AdministratorCreateFormDialog(
 
     private fun getCreateSubmitButton(displayName: String, reloadComponent: () -> Unit): Component {
         return createPrimaryButton(displayName) {
-            administratorCreateForm.bindOrNull()?.let {
+            administratorForm.bindOrNull()?.let {
                 try {
                     administratorService.save(it)
                     reloadComponent()

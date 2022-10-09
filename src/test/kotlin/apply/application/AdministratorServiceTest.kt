@@ -4,7 +4,6 @@ import apply.ADMINISTRATOR_PASSWORD
 import apply.ADMINISTRATOR_USERNAME
 import apply.createAdministrator
 import apply.createAdministratorData
-import apply.createAdministratorUpdateFormData
 import apply.domain.administrator.AdministratorRepository
 import apply.domain.administrator.getById
 import apply.domain.administrator.getByUsername
@@ -47,7 +46,7 @@ class AdministratorServiceTest : BehaviorSpec({
         every { administratorRepository.save(any()) } returns createAdministrator(username = username)
 
         When("관리자를 생성하면") {
-            val actual = administratorService.save(createAdministratorData(username = username))
+            val actual = administratorService.save(AdministratorData(username = username))
 
             Then("관리자가 생성된다") {
                 actual.username shouldBe ADMINISTRATOR_USERNAME
@@ -108,21 +107,27 @@ class AdministratorServiceTest : BehaviorSpec({
     }
 
     Given("정보 수정을 요청한 관리자가 있는 경우") {
+        val updateName = "변경된이름"
+        val updatePassword = "12345"
+
         val administrator = createAdministrator()
-        val updateAdministratorFormData = createAdministratorUpdateFormData()
 
         every { administratorRepository.getById(any()) } returns administrator
-        every { passwordEncoder.encode(any()) } returns updateAdministratorFormData.password
+        every { passwordEncoder.encode(any()) } returns updatePassword
 
         When("해당 관리자를 수정하면") {
             administratorService.update(
                 administratorId = administrator.id,
-                request = createAdministratorUpdateFormData()
+                request = AdministratorData(
+                    name = updateName,
+                    password = updatePassword,
+                    confirmPassword = updatePassword
+                )
             )
 
             Then("관리자 정보를 수정할 수 있다") {
-                administrator.name shouldBe updateAdministratorFormData.name
-                administrator.password shouldBe updateAdministratorFormData.password
+                administrator.name shouldBe updateName
+                administrator.password shouldBe updatePassword
             }
         }
 
@@ -131,7 +136,7 @@ class AdministratorServiceTest : BehaviorSpec({
                 shouldThrow<IllegalStateException> {
                     administratorService.update(
                         administratorId = administrator.id,
-                        request = createAdministratorUpdateFormData(
+                        request = createAdministratorData(
                             password = "ABCD1234", confirmPassword = "4321DCBA"
                         )
                     )
