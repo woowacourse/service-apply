@@ -1,8 +1,14 @@
-import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
-import Button, { BUTTON_VARIANT } from "../../@common/Button/Button";
 
-const CancelButton = ({ confirmMessage }) => {
+import Button, { BUTTON_VARIANT } from "../../@common/Button/Button";
+import { ValueOf } from "../../../../types/utility";
+import { CONFIRM_MESSAGE } from "../../../constants/messages";
+
+type CancelButtonProps = {
+  confirmMessage?: ValueOf<typeof CONFIRM_MESSAGE>;
+};
+
+const CancelButton = ({ confirmMessage }: CancelButtonProps) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -16,10 +22,6 @@ const CancelButton = ({ confirmMessage }) => {
       취소
     </Button>
   );
-};
-
-CancelButton.propTypes = {
-  confirmMessage: PropTypes.string,
 };
 
 export default CancelButton;
