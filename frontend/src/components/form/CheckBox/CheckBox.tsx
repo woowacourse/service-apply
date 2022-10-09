@@ -1,9 +1,20 @@
-import PropTypes from "prop-types";
 import React from "react";
+
 import Label from "../../@common/Label/Label";
 import styles from "./CheckBox.module.css";
 
-const CheckBox = ({ label, name, checked, onChange, required, ...props }) => {
+type CheckBoxProps = React.InputHTMLAttributes<HTMLInputElement> & {
+  label: string;
+};
+
+const CheckBox = ({
+  name,
+  checked = false,
+  required = false,
+  label,
+  onChange,
+  ...props
+}: CheckBoxProps) => {
   return (
     <Label className={styles.checkbox}>
       <input
@@ -18,20 +29,6 @@ const CheckBox = ({ label, name, checked, onChange, required, ...props }) => {
       {label}
     </Label>
   );
-};
-
-CheckBox.propTypes = {
-  checked: PropTypes.bool.isRequired,
-  onChange: PropTypes.func.isRequired,
-  name: PropTypes.string,
-  label: PropTypes.string,
-  required: PropTypes.bool,
-};
-
-CheckBox.defaultProps = {
-  label: "",
-  required: false,
-  checked: false,
 };
 
 export default CheckBox;
