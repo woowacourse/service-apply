@@ -1,4 +1,4 @@
-package apply.domain.evaluationItem
+package apply.domain.evaluationitem
 
 import org.springframework.data.jpa.repository.JpaRepository
 

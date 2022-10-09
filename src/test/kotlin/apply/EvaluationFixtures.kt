@@ -3,7 +3,7 @@ package apply
 import apply.application.EvaluationItemData
 import apply.application.EvaluationItemScoreData
 import apply.domain.evaluation.Evaluation
-import apply.domain.evaluationItem.EvaluationItem
+import apply.domain.evaluationitem.EvaluationItem
 import apply.domain.evaluationtarget.EvaluationAnswer
 import apply.domain.evaluationtarget.EvaluationAnswers
 import apply.domain.evaluationtarget.EvaluationStatus

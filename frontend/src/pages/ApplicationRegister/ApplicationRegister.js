@@ -2,14 +2,13 @@ import { generatePath } from "react-router";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import * as Api from "../../api";
 import Button, { BUTTON_VARIANT } from "../../components/@common/Button/Button";
-import Container from "../../components/@common/Container/Container";
+import Container, { TITLE_ALIGN } from "../../components/@common/Container/Container";
 import Description from "../../components/@common/Description/Description";
 import Label from "../../components/@common/Label/Label";
 import MessageTextarea from "../../components/@common/MessageTextarea/MessageTextarea";
 import MessageTextInput from "../../components/@common/MessageTextInput/MessageTextInput";
 import CheckBox from "../../components/form/CheckBox/CheckBox";
 import Form from "../../components/form/Form/Form";
-import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
 import { FORM } from "../../constants/form";
 import { CONFIRM_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
 import { PATH, PARAM } from "../../constants/path";
@@ -121,11 +120,8 @@ const ApplicationRegister = () => {
 
   return (
     <div className={styles.box}>
-      {currentRecruitment && (
-        <RecruitmentItem className={styles["recruitment-item"]} recruitment={currentRecruitment} />
-      )}
-
-      <Container title="지원서 작성">
+      <Container title="지원서 작성" titleAlign={TITLE_ALIGN.LEFT}>
+        <h3 className={styles["recruitment-title"]}>{currentRecruitment.title}</h3>
         <Form onSubmit={handleSubmit}>
           {status === PARAM.APPLICATION_FORM_STATUS.EDIT && (
             <p className={styles["autosave-indicator"]}>
@@ -152,10 +148,11 @@ const ApplicationRegister = () => {
             type="url"
             description={
               <div className={styles["description-url"]}>
-                자신을 드러낼 수 있는 개인 블로그, GitHub, 포트폴리오 주소 등이 있다면 입력해
+                작성한 몰입 경험과 관련된 개인 블로그, GitHub, 그 외 증빙 자료 등이 있다면 입력해
                 주세요.
                 <div className={styles["description-url-small"]}>
-                  여러 개가 있는 경우 Notion, Google 문서 등을 사용하여 하나로 묶어 주세요.
+                  여러 개가 있는 경우 Notion이나 Google 문서 등을 사용하여 하나로 묶어 주세요.
+                  링크를 공유하실 때는 해당 링크가 공개 권한으로 접근 가능한지 확인해 주세요.
                 </div>
               </div>
             }

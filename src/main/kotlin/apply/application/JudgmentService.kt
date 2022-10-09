@@ -6,10 +6,10 @@ import apply.domain.assignment.getByUserIdAndMissionId
 import apply.domain.judgment.AssignmentArchive
 import apply.domain.judgment.Commit
 import apply.domain.judgment.Judgment
-import apply.domain.mission.JudgmentItemRepository
 import apply.domain.judgment.JudgmentRepository
 import apply.domain.judgment.JudgmentType
 import apply.domain.judgment.getById
+import apply.domain.judgmentitem.JudgmentItemRepository
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionRepository
 import apply.domain.mission.getById

@@ -1,4 +1,4 @@
-package apply.domain.evaluationItem
+package apply.domain.evaluationitem
 
 import support.domain.BaseEntity
 import javax.persistence.Column
@@ -20,6 +20,5 @@ class EvaluationItem(
 
     @Column(nullable = false)
     val evaluationId: Long,
-
     id: Long = 0L
 ) : BaseEntity(id)

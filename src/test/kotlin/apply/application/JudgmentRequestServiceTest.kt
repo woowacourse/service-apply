@@ -7,7 +7,7 @@ import apply.domain.assignment.AssignmentRepository
 import apply.domain.assignment.getById
 import apply.domain.judgment.JudgmentStartedEvent
 import apply.domain.judgment.JudgmentType
-import apply.domain.mission.JudgmentItemRepository
+import apply.domain.judgmentitem.JudgmentItemRepository
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.core.spec.style.BehaviorSpec
 import io.mockk.Runs

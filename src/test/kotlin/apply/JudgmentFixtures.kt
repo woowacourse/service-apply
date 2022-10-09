@@ -10,8 +10,8 @@ import apply.domain.judgment.JudgmentRecord
 import apply.domain.judgment.JudgmentResult
 import apply.domain.judgment.JudgmentStatus
 import apply.domain.judgment.JudgmentType
-import apply.domain.mission.JudgmentItem
-import apply.domain.mission.ProgrammingLanguage
+import apply.domain.judgmentitem.JudgmentItem
+import apply.domain.judgmentitem.ProgrammingLanguage
 import java.time.LocalDateTime
 import java.time.LocalDateTime.now
 

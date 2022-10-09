@@ -3,8 +3,7 @@ package apply.application
 import apply.domain.assignment.AssignmentRepository
 import apply.domain.assignment.getById
 import apply.domain.judgment.JudgmentStartedEvent
-import apply.domain.mission.JudgmentItemRepository
-import apply.domain.mission.getByMissionId
+import apply.domain.judgmentitem.JudgmentItemRepository
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.springframework.transaction.event.TransactionalEventListener
@@ -19,7 +18,8 @@ class JudgmentRequestService(
     @TransactionalEventListener
     fun request(event: JudgmentStartedEvent) {
         val assignment = assignmentRepository.getById(event.assignmentId)
-        val judgmentItem = judgmentItemRepository.getByMissionId(assignment.missionId)
+        val judgmentItem = judgmentItemRepository.findByMissionId(assignment.missionId)
+            ?: throw NoSuchElementException()
         judgmentAgency.requestJudge(
             JudgmentRequest(
                 event.judgmentId,

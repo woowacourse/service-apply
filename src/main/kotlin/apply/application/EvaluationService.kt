@@ -3,11 +3,11 @@ package apply.application
 import apply.domain.evaluation.Evaluation
 import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluation.getById
-import apply.domain.evaluationItem.EvaluationItem
-import apply.domain.evaluationItem.EvaluationItemRepository
+import apply.domain.evaluationitem.EvaluationItem
+import apply.domain.evaluationitem.EvaluationItemRepository
 import apply.domain.recruitment.RecruitmentRepository
 import org.springframework.stereotype.Service
-import javax.transaction.Transactional
+import org.springframework.transaction.annotation.Transactional
 
 @Transactional
 @Service

@@ -6,7 +6,7 @@ import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.user.UserRepository
 import apply.domain.user.findAllByEmailIn
 import org.springframework.stereotype.Service
-import javax.transaction.Transactional
+import org.springframework.transaction.annotation.Transactional
 
 @Transactional
 @Service

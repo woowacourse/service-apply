@@ -17,7 +17,7 @@ import apply.domain.judgment.JudgmentResult
 import apply.domain.judgment.JudgmentStatus
 import apply.domain.judgment.JudgmentType
 import apply.domain.judgment.getById
-import apply.domain.mission.JudgmentItemRepository
+import apply.domain.judgmentitem.JudgmentItemRepository
 import apply.domain.mission.MissionRepository
 import apply.domain.mission.getById
 import io.kotest.assertions.assertSoftly
