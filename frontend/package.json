@@ -64,6 +64,7 @@
     "@storybook/react": "^6.3.4",
     "@types/node": "^18.6.4",
     "@types/react": "^18.0.16",
+    "@types/react-datepicker": "^4.4.2",
     "@types/react-dom": "^18.0.6",
     "babel-loader": "8.1.0",
     "eslint-config-prettier": "^8.3.0",
