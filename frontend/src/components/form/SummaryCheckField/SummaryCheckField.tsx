@@ -1,9 +1,18 @@
-import PropTypes from "prop-types";
 import React from "react";
+
 import CheckBox from "../CheckBox/CheckBox";
 import styles from "./SummaryCheckField.module.css";
 
-const SummaryCheckField = ({ children, label, required, ...props }) => {
+type SummaryCheckFieldProps = React.InputHTMLAttributes<HTMLInputElement> & {
+  label: string;
+};
+
+const SummaryCheckField = ({
+  label,
+  required = false,
+  children,
+  ...props
+}: SummaryCheckFieldProps) => {
   return (
     <div className={styles.box}>
       <CheckBox label={label} required={required} {...props} />
@@ -12,17 +21,6 @@ const SummaryCheckField = ({ children, label, required, ...props }) => {
       </div>
     </div>
   );
-};
-
-SummaryCheckField.propTypes = {
-  children: PropTypes.node.isRequired,
-  label: PropTypes.string,
-  required: PropTypes.bool,
-};
-
-SummaryCheckField.defaultProps = {
-  label: "",
-  required: false,
 };
 
 export default SummaryCheckField;
