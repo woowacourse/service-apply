@@ -13,6 +13,7 @@ import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluationitem.EvaluationItem
 import apply.domain.evaluationitem.EvaluationItemRepository
 import apply.domain.evaluationtarget.EvaluationAnswer
+import apply.domain.evaluationtarget.EvaluationAnswers
 import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
@@ -186,10 +187,17 @@ class DatabaseInitializer(
     private fun populateEvaluationItems() {
         val evaluationItems = listOf(
             EvaluationItem(
+                title = "학습과정/역량",
+                description = "학습 기간과 전공 유무도 고려한다.",
+                evaluationId = 1L,
+                maximumScore = 5,
+                position = 1
+            ),
+            EvaluationItem(
                 title = "README.md 파일에 기능 목록이 추가되어 있는가?",
                 description = "[리뷰 절차]\n" +
                     "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
-                evaluationId = 1L,
+                evaluationId = 2L,
                 maximumScore = 2,
                 position = 1
             ),
@@ -197,7 +205,7 @@ class DatabaseInitializer(
                 title = "하드코딩을 상수화 했는가?",
                 description = "[리뷰 절차]\n" +
                     "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
-                evaluationId = 1L,
+                evaluationId = 2L,
                 maximumScore = 2,
                 position = 2
             ),
@@ -205,9 +213,17 @@ class DatabaseInitializer(
                 title = "인덴트가 2 이하인가?",
                 description = "[리뷰 절차]\n" +
                     "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
-                evaluationId = 1L,
+                evaluationId = 2L,
                 maximumScore = 3,
                 position = 3
+            ),
+            EvaluationItem(
+                title = "기능 요구사항을 만족하는가?",
+                description = "[리뷰 절차]\n" +
+                    "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
+                evaluationId = 2L,
+                maximumScore = 10,
+                position = 4
             )
         )
         evaluationItemRepository.saveAll(evaluationItems)
@@ -322,19 +338,35 @@ class DatabaseInitializer(
             EvaluationTarget(
                 evaluationId = 1L,
                 administratorId = 1L,
-                userId = 1L
+                userId = 1L,
+                evaluationStatus = EvaluationStatus.PASS
             ),
             EvaluationTarget(
                 evaluationId = 1L,
                 administratorId = 1L,
-                userId = 2L
-            ).apply {
-                evaluationAnswers.add(EvaluationAnswer(score = 2, evaluationItemId = 1L))
-                evaluationAnswers.add(EvaluationAnswer(score = 1, evaluationItemId = 2L))
+                userId = 2L,
                 evaluationStatus = EvaluationStatus.PASS
-            },
+            ),
             EvaluationTarget(
                 evaluationId = 2L,
+                administratorId = 1L,
+                userId = 1L,
+                evaluationStatus = EvaluationStatus.WAITING
+            ),
+            EvaluationTarget(
+                evaluationId = 2L,
+                administratorId = 1L,
+                userId = 2L,
+                evaluationStatus = EvaluationStatus.PASS,
+                evaluationAnswers = EvaluationAnswers(
+                    listOf(
+                        EvaluationAnswer(score = 2, evaluationItemId = 2L),
+                        EvaluationAnswer(score = 1, evaluationItemId = 3L),
+                    )
+                )
+            ),
+            EvaluationTarget(
+                evaluationId = 3L,
                 userId = 2L
             )
         )
