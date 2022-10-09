@@ -1,6 +1,7 @@
 package apply.ui.api
 
 import apply.application.JudgmentService
+import apply.createCancelJudgmentRequest
 import apply.createJudgmentFailRequest
 import apply.createJudgmentSuccessRequest
 import apply.createLastJudgmentResponse
@@ -50,7 +51,7 @@ class JudgmentRestControllerTest : RestControllerTest() {
     }
 
     @Test
-    fun `성공 결과를 수신한다`() {
+    fun `자동 채점 성공 결과를 반영한다`() {
         every { judgmentService.success(any(), any()) } just Runs
 
         mockMvc.post("/api/recruitments/{recruitmentId}/missions/{missionId}/judgments/pass", 1L, 1L) {
@@ -63,7 +64,7 @@ class JudgmentRestControllerTest : RestControllerTest() {
     }
 
     @Test
-    fun `실패 결과를 수신한다`() {
+    fun `자동 채점 실패 결과를 반영한다`() {
         every { judgmentService.fail(any(), any()) } just Runs
 
         mockMvc.post("/api/recruitments/{recruitmentId}/missions/{missionId}/judgments/fail", 1L, 1L) {
@@ -72,6 +73,19 @@ class JudgmentRestControllerTest : RestControllerTest() {
             status { isOk }
         }.andDo {
             handle(document("judgment-fail-result-post"))
+        }
+    }
+
+    @Test
+    fun `자동 채점 취소 결과를 반영한다`() {
+        every { judgmentService.cancel(any(), any()) } just Runs
+
+        mockMvc.post("/api/recruitments/{recruitmentId}/missions/{missionId}/judgments/cancel", 1L, 1L) {
+            jsonContent(createCancelJudgmentRequest())
+        }.andExpect {
+            status { isOk }
+        }.andDo {
+            handle(document("judgment-cancel-result-post"))
         }
     }
 }

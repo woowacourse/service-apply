@@ -1,5 +1,6 @@
 package apply.ui.api
 
+import apply.application.CancelJudgmentRequest
 import apply.application.FailJudgmentRequest
 import apply.application.JudgmentService
 import apply.application.LastJudgmentResponse
@@ -56,6 +57,16 @@ class JudgmentRestController(
         @Accessor("lambda") ignored: Unit
     ): ResponseEntity<Void> {
         judgmentService.fail(judgmentId, request)
+        return ResponseEntity.ok().build()
+    }
+
+    @PostMapping("/judgments/{judgmentId}/cancel")
+    fun cancel(
+        @PathVariable judgmentId: Long,
+        @RequestBody request: CancelJudgmentRequest,
+        @Accessor("lambda") ignored: Unit
+    ): ResponseEntity<Void> {
+        judgmentService.cancel(judgmentId, request)
         return ResponseEntity.ok().build()
     }
 }
