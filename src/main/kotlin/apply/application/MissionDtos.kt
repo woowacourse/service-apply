@@ -1,11 +1,11 @@
 package apply.application
 
 import apply.domain.evaluation.Evaluation
-import apply.domain.evaluationItem.EvaluationItem
+import apply.domain.evaluationitem.EvaluationItem
+import apply.domain.judgmentitem.JudgmentItem
+import apply.domain.judgmentitem.ProgrammingLanguage
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionStatus
-import apply.domain.mission.judgmentItem.JudgmentItem
-import apply.domain.mission.judgmentItem.ProgrammingLanguage
 import java.time.LocalDateTime
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull

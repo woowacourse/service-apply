@@ -16,8 +16,8 @@ import apply.domain.cheater.Cheater
 import apply.domain.cheater.CheaterRepository
 import apply.domain.evaluation.Evaluation
 import apply.domain.evaluation.EvaluationRepository
-import apply.domain.evaluationItem.EvaluationItem
-import apply.domain.evaluationItem.EvaluationItemRepository
+import apply.domain.evaluationitem.EvaluationItem
+import apply.domain.evaluationitem.EvaluationItemRepository
 import apply.domain.evaluationtarget.EvaluationAnswer
 import apply.domain.evaluationtarget.EvaluationAnswers
 import apply.domain.evaluationtarget.EvaluationStatus

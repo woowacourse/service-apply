@@ -1,4 +1,4 @@
-package apply.domain.mission.judgmentItem
+package apply.domain.judgmentitem
 
 import org.springframework.data.jpa.repository.JpaRepository
 

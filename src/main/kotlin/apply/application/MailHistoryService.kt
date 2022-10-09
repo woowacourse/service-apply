@@ -4,7 +4,7 @@ import apply.application.mail.MailData
 import apply.domain.mail.MailHistoryRepository
 import apply.domain.mail.getById
 import org.springframework.stereotype.Service
-import javax.transaction.Transactional
+import org.springframework.transaction.annotation.Transactional
 
 @Transactional
 @Service

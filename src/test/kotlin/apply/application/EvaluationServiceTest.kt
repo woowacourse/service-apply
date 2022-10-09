@@ -3,7 +3,7 @@ package apply.application
 import apply.createEvaluation
 import apply.createRecruitment
 import apply.domain.evaluation.EvaluationRepository
-import apply.domain.evaluationItem.EvaluationItemRepository
+import apply.domain.evaluationitem.EvaluationItemRepository
 import apply.domain.recruitment.RecruitmentRepository
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.booleans.shouldBeFalse

@@ -10,7 +10,7 @@ import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitment.getById
 import apply.domain.recruitmentitem.RecruitmentItemRepository
 import org.springframework.stereotype.Service
-import javax.transaction.Transactional
+import org.springframework.transaction.annotation.Transactional
 
 @Transactional
 @Service

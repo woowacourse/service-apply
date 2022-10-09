@@ -1,7 +1,7 @@
 package apply.application
 
 import apply.domain.assignment.AssignmentRepository
-import apply.domain.evaluationItem.EvaluationItemRepository
+import apply.domain.evaluationitem.EvaluationItemRepository
 import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionRepository

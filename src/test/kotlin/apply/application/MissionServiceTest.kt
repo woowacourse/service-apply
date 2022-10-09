@@ -2,16 +2,15 @@ package apply.application
 
 import apply.createAssignment
 import apply.createEvaluation
-import apply.createJudgmentItem
 import apply.createMission
 import apply.createMissionData
 import apply.createMissionResponse
 import apply.domain.assignment.AssignmentRepository
 import apply.domain.evaluation.EvaluationRepository
-import apply.domain.evaluationItem.EvaluationItemRepository
+import apply.domain.evaluationitem.EvaluationItemRepository
 import apply.domain.evaluationtarget.EvaluationTargetRepository
+import apply.domain.judgmentitem.JudgmentItemRepository
 import apply.domain.mission.MissionRepository
-import apply.domain.mission.judgmentItem.JudgmentItemRepository
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
@@ -22,7 +21,6 @@ import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
-import io.mockk.runs
 import org.springframework.data.repository.findByIdOrNull
 import support.test.spec.afterRootTest
 
@@ -46,9 +44,8 @@ class MissionServiceTest : BehaviorSpec({
     Given("과제가 없는 평가가 있는 경우") {
         every { evaluationRepository.existsById(any()) } returns true
         every { missionRepository.existsByEvaluationId(any()) } returns false
-        every { judgmentItemRepository.save(any()) } returns createJudgmentItem()
         every { missionRepository.save(any()) } returns createMission()
-        every { judgmentItemRepository.deleteByMissionId(any()) } just runs
+        every { judgmentItemRepository.findByMissionId(any()) } returns null
 
         When("해당 평가에 대한 과제를 생성하면") {
             val actual = missionService.save(createMissionData())

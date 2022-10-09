@@ -5,10 +5,10 @@ import apply.application.JudgmentItemData
 import apply.application.MissionData
 import apply.application.MissionResponse
 import apply.application.MyMissionResponse
+import apply.domain.judgmentitem.JudgmentItem
+import apply.domain.judgmentitem.ProgrammingLanguage
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionStatus
-import apply.domain.mission.judgmentItem.JudgmentItem
-import apply.domain.mission.judgmentItem.ProgrammingLanguage
 import java.time.LocalDateTime
 
 private const val MISSION_TITLE: String = "숫자야구게임"

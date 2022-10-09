@@ -1,7 +1,6 @@
 package apply.domain.evaluationitem
 
 import apply.createEvaluationItem
-import apply.domain.evaluationItem.EvaluationItemRepository
 import io.kotest.core.spec.style.ExpectSpec
 import io.kotest.extensions.spring.SpringTestExtension
 import io.kotest.extensions.spring.SpringTestLifecycleMode

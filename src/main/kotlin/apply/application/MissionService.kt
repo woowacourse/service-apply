@@ -3,16 +3,16 @@ package apply.application
 import apply.domain.assignment.AssignmentRepository
 import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluation.getById
-import apply.domain.evaluationItem.EvaluationItemRepository
+import apply.domain.evaluationitem.EvaluationItemRepository
 import apply.domain.evaluationtarget.EvaluationTargetRepository
-import apply.domain.mission.judgmentItem.JudgmentItem
-import apply.domain.mission.judgmentItem.JudgmentItemRepository
+import apply.domain.judgmentitem.JudgmentItem
+import apply.domain.judgmentitem.JudgmentItemRepository
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionRepository
 import apply.domain.mission.getById
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
-import javax.transaction.Transactional
+import org.springframework.transaction.annotation.Transactional
 
 @Transactional
 @Service
@@ -38,19 +38,9 @@ class MissionService(
                 request.id
             )
         )
-        if (request.judgmentItemData != JudgmentItemData()) {
-            judgmentItemRepository.save(
-                JudgmentItem(
-                    mission.id,
-                    request.judgmentItemData.evaluationItemSelectData.id,
-                    request.judgmentItemData.testName,
-                    request.judgmentItemData.programmingLanguage,
-                    request.judgmentItemData.id
-                )
-            )
-        } else {
-            judgmentItemRepository.deleteByMissionId(mission.id)
-        }
+        judgmentItemRepository.findByMissionId(mission.id)
+            ?.update(request)
+            ?: createJudgmentItem(request, mission.id)
         return MissionResponse(mission)
     }
 
@@ -71,6 +61,31 @@ class MissionService(
 
     private fun isNew(request: MissionData): Boolean {
         return request.id == 0L || !missionRepository.existsById(request.id)
+    }
+
+    private fun JudgmentItem.update(request: MissionData) {
+        if (request.judgmentItemData == JudgmentItemData()) {
+            judgmentItemRepository.deleteByMissionId(request.id)
+        } else {
+            update(
+                request.judgmentItemData.evaluationItemSelectData.id,
+                request.judgmentItemData.testName,
+                request.judgmentItemData.programmingLanguage
+            )
+        }
+    }
+
+    private fun createJudgmentItem(request: MissionData, missionId: Long) {
+        if (request.judgmentItemData != JudgmentItemData()) {
+            judgmentItemRepository.save(
+                JudgmentItem(
+                    missionId,
+                    request.judgmentItemData.evaluationItemSelectData.id,
+                    request.judgmentItemData.testName,
+                    request.judgmentItemData.programmingLanguage
+                )
+            )
+        }
     }
 
     fun getById(id: Long): MissionResponse {

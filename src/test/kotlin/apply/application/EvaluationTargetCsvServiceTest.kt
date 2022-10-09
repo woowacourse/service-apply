@@ -2,7 +2,7 @@ package apply.application
 
 import apply.createEvaluationItem
 import apply.domain.assignment.AssignmentRepository
-import apply.domain.evaluationItem.EvaluationItemRepository
+import apply.domain.evaluationitem.EvaluationItemRepository
 import apply.domain.mission.MissionRepository
 import apply.utils.CsvGenerator
 import io.kotest.assertions.throwables.shouldNotThrowAny

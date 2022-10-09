@@ -32,6 +32,9 @@ create table judgment_record
 ) engine = InnoDB
   default charset = utf8mb4;
 
+alter table judgment_item
+    add constraint uk_judgment_item unique (mission_id);
+
 alter table judgment_record
     add constraint uk_judgment_record unique (judgment_id, commit_hash);
 

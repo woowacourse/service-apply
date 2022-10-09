@@ -1,4 +1,4 @@
-package apply.domain.evaluationItem
+package apply.domain.evaluationitem
 
 import support.domain.BaseEntity
 import javax.persistence.Column
