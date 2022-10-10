@@ -6,7 +6,7 @@ import CheckBox from "../form/CheckBox/CheckBox";
 import { RecruitmentItem } from "../../../types/domains/recruitments";
 import { Answer, ApplicationForm } from "../../../types/domains/applicationForms";
 
-type ApplicationPreviewModalWindowProps = {
+type ApplicationPreviewModalProps = {
   recruitmentItems: RecruitmentItem[];
   answers: Answer["contents"][];
   referenceUrl: ApplicationForm["referenceUrl"];
@@ -18,7 +18,7 @@ const ApplicationPreviewModal = ({
   answers,
   referenceUrl,
   onClickConfirmButton,
-}: ApplicationPreviewModalWindowProps) => {
+}: ApplicationPreviewModalProps) => {
   const { closeModal } = useModalContext();
   const [isChecked, setIsChecked] = useState(false);
 
