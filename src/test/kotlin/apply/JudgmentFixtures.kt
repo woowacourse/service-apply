@@ -56,7 +56,7 @@ fun createLastJudgmentResponse(
 fun createJudgmentItem(
     missionId: Long = 1L,
     evaluationItemId: Long = 1L,
-    testName: String = "test-name",
+    testName: String = "baseball",
     programmingLanguage: ProgrammingLanguage = ProgrammingLanguage.KOTLIN,
     id: Long = 0L
 ): JudgmentItem {
@@ -65,7 +65,7 @@ fun createJudgmentItem(
 
 fun createSuccessJudgmentRequest(
     commit: String = COMMIT_HASH,
-    passCount: Int = 5,
+    passCount: Int = 9,
     totalCount: Int = 10
 ): SuccessJudgmentRequest {
     return SuccessJudgmentRequest(commit, passCount, totalCount)

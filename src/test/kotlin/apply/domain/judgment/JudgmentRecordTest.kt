@@ -17,8 +17,8 @@ import io.kotest.matchers.shouldBe
 import java.time.LocalDateTime.now
 
 class JudgmentRecordTest : StringSpec({
-    "시작한 자동 채점 기록 생성" {
-        val record = createJudgmentRecord()
+    "시작 자동 채점 기록 생성" {
+        val record = createJudgmentRecord(result = JudgmentResult())
         assertSoftly(record) {
             result shouldBe JudgmentResult()
             completedDateTime.shouldBeNull()
@@ -28,10 +28,13 @@ class JudgmentRecordTest : StringSpec({
         }
     }
 
-    "성공한 자동 채점 기록 생성" {
-        val record = createJudgmentRecord(result = JudgmentResult(9, 10, status = SUCCEEDED), completedDateTime = now())
+    "성공 자동 채점 기록 생성" {
+        val record = createJudgmentRecord(
+            result = JudgmentResult(passCount = 9, totalCount = 10, status = SUCCEEDED),
+            completedDateTime = now()
+        )
         assertSoftly(record) {
-            result shouldBe JudgmentResult(passCount = 9, totalCount = 10, status = SUCCEEDED)
+            result shouldBe JudgmentResult(9, 10, status = SUCCEEDED)
             completedDateTime.shouldNotBeNull()
             completed.shouldBeTrue()
             touchable.shouldBeTrue()
@@ -39,9 +42,11 @@ class JudgmentRecordTest : StringSpec({
         }
     }
 
-    "실패한 자동 채점 기록 생성" {
-        val record =
-            createJudgmentRecord(result = JudgmentResult(message = "빌드 실패", status = FAILED), completedDateTime = now())
+    "실패 자동 채점 기록 생성" {
+        val record = createJudgmentRecord(
+            result = JudgmentResult(message = "빌드 실패", status = FAILED),
+            completedDateTime = now()
+        )
         assertSoftly(record) {
             result shouldBe JudgmentResult(message = "빌드 실패", status = FAILED)
             completedDateTime.shouldNotBeNull()
@@ -51,7 +56,7 @@ class JudgmentRecordTest : StringSpec({
         }
     }
 
-    "취소한 자동 채점 기록 생성" {
+    "취소 자동 채점 기록 생성" {
         val record = createJudgmentRecord(
             result = JudgmentResult(message = "서버 실패", status = CANCELLED),
             completedDateTime = now()
@@ -69,8 +74,8 @@ class JudgmentRecordTest : StringSpec({
         listOf(
             JudgmentResult(passCount = 0, totalCount = 0, message = "", status = STARTED) to now(),
             JudgmentResult(passCount = 9, totalCount = 10, status = SUCCEEDED) to null,
-            JudgmentResult(message = "message", status = FAILED) to null,
-            JudgmentResult(message = "message", status = CANCELLED) to null
+            JudgmentResult(message = "빌드 실패", status = FAILED) to null,
+            JudgmentResult(message = "서버 실패", status = CANCELLED) to null
         ).forAll { (result, completedDateTime) ->
             shouldThrow<IllegalArgumentException> {
                 createJudgmentRecord(result = result, completedDateTime = completedDateTime)
@@ -107,7 +112,7 @@ class JudgmentRecordTest : StringSpec({
         }
     }
 
-    "취소한 자동 채점 결과 적용" {
+    "취소된 자동 채점 결과 적용" {
         val record = createJudgmentRecord()
         record.applyResult(JudgmentResult(message = "message", status = CANCELLED))
         assertSoftly(record) {
@@ -128,7 +133,6 @@ class JudgmentRecordTest : StringSpec({
             result shouldBe JudgmentResult(status = STARTED)
             completedDateTime.shouldBeNull()
             completed.shouldBeFalse()
-            touchable.shouldBeFalse()
             status shouldBe STARTED
         }
     }

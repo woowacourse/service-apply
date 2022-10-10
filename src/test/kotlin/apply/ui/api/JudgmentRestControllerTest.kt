@@ -3,8 +3,8 @@ package apply.ui.api
 import apply.application.JudgmentService
 import apply.createCancelJudgmentRequest
 import apply.createFailJudgmentRequest
-import apply.createSuccessJudgmentRequest
 import apply.createLastJudgmentResponse
+import apply.createSuccessJudgmentRequest
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
 import io.mockk.every
@@ -21,7 +21,7 @@ class JudgmentRestControllerTest : RestControllerTest() {
     private lateinit var judgmentService: JudgmentService
 
     @Test
-    fun `예제 채점을 실행한다`() {
+    fun `예제 테스트를 실행한다`() {
         val response = createLastJudgmentResponse()
         every { judgmentService.judgeExample(any(), any()) } returns response
 
@@ -36,7 +36,7 @@ class JudgmentRestControllerTest : RestControllerTest() {
     }
 
     @Test
-    fun `본 채점을 실행한다`() {
+    fun `본 자동 채점을 실행한다`() {
         val response = createLastJudgmentResponse()
         every { judgmentService.judgeReal(any(), any()) } returns response
 
@@ -45,8 +45,6 @@ class JudgmentRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isOk }
             content { success(response) }
-        }.andDo {
-            handle(document("judgment-judge-real-post"))
         }
     }
 

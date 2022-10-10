@@ -2,7 +2,6 @@ package apply.domain.judgment
 
 import apply.createCommit
 import apply.createJudgment
-import apply.createJudgmentItem
 import apply.domain.judgment.JudgmentType.EXAMPLE
 import apply.domain.judgment.JudgmentType.REAL
 import io.kotest.core.spec.style.ExpectSpec
@@ -51,7 +50,6 @@ class JudgmentRepositoryTest(
     }
 
     context("자동 채점 수정") {
-        val judgmentItem = createJudgmentItem()
         val commit = createCommit("commit1")
         val judgment = judgmentRepository.save(
             createJudgment(records = listOf(JudgmentRecord(commit, startedDateTime = now().minusDays(1))))

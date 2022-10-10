@@ -12,8 +12,8 @@ import org.springframework.transaction.event.TransactionalEventListener
 @Service
 class JudgmentRequestService(
     private val judgmentItemRepository: JudgmentItemRepository,
-    private val judgmentAgency: JudgmentAgency,
-    private val assignmentRepository: AssignmentRepository
+    private val assignmentRepository: AssignmentRepository,
+    private val judgmentAgency: JudgmentAgency
 ) {
     @Async
     @TransactionalEventListener

@@ -12,7 +12,6 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.inspectors.forAll
 import io.kotest.matchers.nulls.shouldBeNull
-import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import java.time.LocalDateTime.now
 
@@ -25,7 +24,7 @@ class JudgmentTest : StringSpec({
         judgment.lastStatus shouldBe STARTED
     }
 
-    "마지막 자동 채점 시작 후 5분이 지나지 않은 경우 채점을 시작할 수 없다" {
+    "자동 채점이 완료되지 않고 시작 후 5분이 지나지 않은 경우 자동 채점을 시작할 수 없다" {
         val judgment = createJudgment(
             records = listOf(createJudgmentRecord(createCommit("commit1"), startedDateTime = now()))
         )
@@ -34,16 +33,14 @@ class JudgmentTest : StringSpec({
         }
     }
 
-    "마지막 자동 채점이 완료되었다면 시작 시각과 관계 없이 채점을 시작할 수 있다" {
+    "자동 채점이 완료되면 시작 일시에 관계없이 자동 채점을 시작할 수 있다" {
         listOf(SUCCEEDED, FAILED, CANCELLED).forAll { status ->
-            val now = now()
             val judgment = createJudgment(
                 records = listOf(
                     createJudgmentRecord(
                         createCommit("commit1"),
-                        JudgmentResult(passCount = 9, totalCount = 10, status = status),
-                        startedDateTime = now.minusMinutes(2),
-                        completedDateTime = now.minusMinutes(1)
+                        JudgmentResult(status = status),
+                        completedDateTime = now()
                     )
                 )
             )
@@ -54,7 +51,7 @@ class JudgmentTest : StringSpec({
         }
     }
 
-    "마지막 자동 채점의 완료 여부와 관계없이 채점 시작 이후 5분이 지나면 채점을 시작할 수 있다" {
+    "자동 채점 완료 여부와 상관없이 시작 5분 후에 자동 채점을 시작할 수 있다" {
         val judgment = createJudgment(
             records = listOf(createJudgmentRecord(createCommit("commit1"), startedDateTime = now().minusMinutes(5)))
         )
@@ -64,43 +61,36 @@ class JudgmentTest : StringSpec({
         judgment.lastStatus shouldBe STARTED
     }
 
-    "마지막 자동 채점이 갱신 가능하다면 채점 시작 시 이전 결과의 생성과 완료 일시만 변경한다" {
+    "특정 커밋에 대한 결과가 이미 있는 경우 자동 채점 기록의 시작 및 완료 일시만 변경한다" {
         listOf(
             JudgmentResult(passCount = 9, totalCount = 10, status = SUCCEEDED),
             JudgmentResult(message = "빌드 실패", status = FAILED)
-        ).forAll { judgmentResult ->
+        ).forAll { result ->
             val now = now()
             val commit = createCommit("commit")
             val judgment = createJudgment(
-                records = listOf(
-                    createJudgmentRecord(
-                        commit,
-                        judgmentResult,
-                        startedDateTime = now.minusMinutes(10),
-                        completedDateTime = now.minusMinutes(9)
-                    )
-                )
+                records = listOf(createJudgmentRecord(commit, result, startedDateTime = now, completedDateTime = now))
             )
             shouldNotThrowAny { judgment.start(commit) }
             judgment.lastCommit shouldBe commit
-            judgment.lastStatus shouldBe judgmentResult.status
-            judgment.lastRecord.completedDateTime.shouldNotBeNull()
+            judgment.lastStatus shouldBe result.status
+            judgment.lastRecord.startedDateTime shouldBe judgment.lastRecord.completedDateTime
         }
     }
 
-    "마지막 자동 채점이 갱신 불가능하다면 채점 기록을 초기화하고 자동 채점을 시작한다" {
+    "특정 커밋에 대해 다시 채점해야 하는 경우 자동 채점 기록을 초기화하고 자동 채점을 시작한다" {
         listOf(
             JudgmentResult(status = STARTED) to null,
-            JudgmentResult(message = "서버 실패", status = CANCELLED) to now().minusMinutes(10)
-        ).forAll { (judgmentResult, completedDateTime) ->
+            JudgmentResult(message = "서버 실패", status = CANCELLED) to now()
+        ).forAll { (result, completedDateTime) ->
             val now = now()
             val commit = createCommit("commit")
             val judgment = createJudgment(
                 records = listOf(
                     createJudgmentRecord(
                         commit,
-                        judgmentResult,
-                        startedDateTime = now.minusMinutes(10),
+                        result,
+                        startedDateTime = now.minusMinutes(5),
                         completedDateTime = completedDateTime
                     )
                 )
@@ -115,7 +105,7 @@ class JudgmentTest : StringSpec({
     "자동 채점 성공" {
         val commit = createCommit()
         val judgment = createJudgment(records = listOf(createJudgmentRecord(commit)))
-        judgment.success(commit, 9, 10)
+        judgment.success(commit, passCount = 9, totalCount = 10)
         judgment.lastStatus shouldBe SUCCEEDED
     }
 
