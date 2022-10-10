@@ -50,4 +50,10 @@ class AssignmentService(
         val assignment = assignmentRepository.findByUserIdAndMissionId(evaluationTarget.userId, mission.id)
         return AssignmentData(assignment)
     }
+
+    fun findJudgementRequestDataByEvaluationTargetId(evaluationTargetId: Long): JudgementRequestData? {
+        val evaluationTarget = evaluationTargetRepository.getById(evaluationTargetId)
+        val mission = missionRepository.findByEvaluationId(evaluationTarget.evaluationId) ?: return null
+        return JudgementRequestData(userId = evaluationTarget.userId, missionId = mission.id)
+    }
 }

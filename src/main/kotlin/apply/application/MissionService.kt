@@ -134,4 +134,12 @@ class MissionService(
             ?.let(::EvaluationItemSelectData)
             ?: EvaluationItemSelectData()
     }
+
+    fun findByEvaluationId(evaluationId: Long): Mission? {
+        return missionRepository.findByEvaluationId(evaluationId)
+    }
+
+    fun findJudgmentItemByMissionId(missionId: Long): JudgmentItem? {
+        return judgmentItemRepository.findByMissionId(missionId)
+    }
 }

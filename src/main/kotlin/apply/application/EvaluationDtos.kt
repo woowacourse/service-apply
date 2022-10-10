@@ -169,6 +169,32 @@ data class EvaluationTargetData(
     var evaluationStatus: EvaluationStatus = EvaluationStatus.WAITING
 )
 
+data class EvaluationJudgementData(
+    val judgmentResult: String,
+    val passCount: Int,
+    val totalCount: Int
+) {
+    constructor(
+        playStatus: String,
+        commitHash: String,
+        statusCode: Int,
+        message: String,
+        passCount: Int,
+        totalCount: Int
+    ) : this(makeJudgementResult(playStatus, commitHash, statusCode, message), passCount, totalCount)
+
+    companion object {
+        fun makeJudgementResult(playStatus: String, commitHash: String, statusCode: Int, message: String): String {
+            return """
+                실행상태: $playStatus
+                commit_Hash: $commitHash
+                statusCode: $statusCode
+                message:  $message
+            """.trimIndent()
+        }
+    }
+}
+
 data class MailTargetResponse(
     val email: String,
     val name: String? = null

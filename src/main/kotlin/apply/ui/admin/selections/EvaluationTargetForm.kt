@@ -26,10 +26,13 @@ class EvaluationTargetForm() : BindingFormLayout<EvaluationTargetData>(Evaluatio
         drawRequired()
     }
 
-    constructor(evaluationItems: List<EvaluationItemResponse>) : this() {
+    constructor(evaluationItems: List<EvaluationItemResponse>, judgmentEvaluationItemId: Long) : this() {
         evaluationItems.forEach {
             val answerForm = EvaluationItemScoreForm(it.title, it.description, it.maximumScore).apply {
                 setColspan(this, 2)
+            }
+            if (judgmentEvaluationItemId == it.id) {
+                answerForm.element.style.set("-webkit-text-fill-color", "red")
             }
             evaluationItemScores.add(answerForm)
             addComponentAtIndex(getIndexOfLastAnswer(), answerForm)
