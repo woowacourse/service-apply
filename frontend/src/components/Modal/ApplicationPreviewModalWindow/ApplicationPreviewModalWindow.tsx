@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from "react";
 import useModalContext from "../../../hooks/useModalContext";
-import Button from "../../@common/Button/Button";
+import Button, { BUTTON_VARIANT } from "../../@common/Button/Button";
 import styles from "./ApplicationPreviewModalWindow.module.css";
 import ModalWindow from "../ModalWindow/ModalWindow";
 import CheckBox from "../../form/CheckBox/CheckBox";
@@ -76,7 +76,7 @@ const ApplicationPreviewModalWindow = ({
       <div className={styles["button-box"]}>
         <Button
           type="button"
-          variant="contained"
+          variant={BUTTON_VARIANT.CONTAINED}
           className={styles.button}
           cancel={true}
           onClick={handleClickDismissButton}
@@ -85,7 +85,7 @@ const ApplicationPreviewModalWindow = ({
         </Button>
         <Button
           type="submit"
-          variant="contained"
+          variant={BUTTON_VARIANT.CONTAINED}
           className={styles.button}
           cancel={false}
           onClick={handleClickConfirmButton}
