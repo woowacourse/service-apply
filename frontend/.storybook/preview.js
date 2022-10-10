@@ -37,7 +37,6 @@ export const decorators = [
         <UserInfoContext.Provider value={{ userInfo: userInfoDummy }}>
           <ModalProvider>
             <Story />
-            <div id="modal-root" />
           </ModalProvider>
         </UserInfoContext.Provider>
       </TokenProvider>
