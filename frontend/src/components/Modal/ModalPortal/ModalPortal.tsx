@@ -3,9 +3,10 @@ import { createPortal } from "react-dom";
 import { ModalContextValue } from "../../../provider/ModalProvider";
 import styles from "./ModalPortal.module.css";
 
-type ModalPortalProps = React.PropsWithChildren<{
+type ModalPortalProps = {
   closeModal: ModalContextValue["closeModal"];
-}>;
+  children: NonNullable<React.ReactNode>;
+};
 
 const ModalPortal = ({ children, closeModal }: ModalPortalProps) => {
   const ref = useRef<Element | null>(null);
