@@ -1,13 +1,13 @@
-import { PropsWithChildren } from "react";
 import classNames from "classnames";
 import styles from "./TabItem.module.css";
 
 type TabItemProps = {
   checked: boolean;
-  onClickTabItem: () => void;
+  children: React.ReactNode;
+  onClickTabItem: React.MouseEventHandler<HTMLDivElement>;
 };
 
-const TabItem = ({ children, checked, onClickTabItem }: PropsWithChildren<TabItemProps>) => {
+const TabItem = ({ checked, children, onClickTabItem }: TabItemProps) => {
   return (
     <div
       onClick={onClickTabItem}

@@ -1,14 +1,12 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import StatusIndicator, { StatusIndicatorProps } from "./StatusIndicator";
+import StatusIndicator from "./StatusIndicator";
 
 export default {
   title: "components/StatusIndicator",
   component: StatusIndicator,
 } as ComponentMeta<typeof StatusIndicator>;
 
-const Template: ComponentStory<typeof StatusIndicator> = (args: StatusIndicatorProps) => (
-  <StatusIndicator {...args} />
-);
+const Template: ComponentStory<typeof StatusIndicator> = (args) => <StatusIndicator {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {

@@ -1,12 +1,12 @@
-import React from "react";
+import { ComponentMeta, ComponentStory } from "@storybook/react";
 import Label from "./Label";
 
 export default {
   title: "form/Label",
   component: Label,
-};
+} as ComponentMeta<typeof Label>;
 
-const Template = (args) => <Label {...args} />;
+const Template: ComponentStory<typeof Label> = (args) => <Label {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {
@@ -15,6 +15,6 @@ Default.args = {
 
 export const Required = Template.bind({});
 Required.args = {
-  children: "이름",
   required: true,
+  children: "이름",
 };
