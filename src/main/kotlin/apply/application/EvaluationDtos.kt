@@ -169,26 +169,36 @@ data class EvaluationTargetData(
     var evaluationStatus: EvaluationStatus = EvaluationStatus.WAITING
 )
 
-data class EvaluationJudgementData(
+data class JudgmentData(
     val judgmentResult: String,
     val passCount: Int,
     val totalCount: Int
 ) {
     constructor(
+        judgmentResponse: LastJudgmentResponse
+    ) : this(
+        makeJudgementResult(
+            judgmentResponse.status.toString(),
+            judgmentResponse.commitHash,
+            judgmentResponse.message
+        ),
+        judgmentResponse.passCount,
+        judgmentResponse.totalCount
+    )
+
+    constructor(
         playStatus: String,
         commitHash: String,
-        statusCode: Int,
         message: String,
         passCount: Int,
         totalCount: Int
-    ) : this(makeJudgementResult(playStatus, commitHash, statusCode, message), passCount, totalCount)
+    ) : this(makeJudgementResult(playStatus, commitHash, message), passCount, totalCount)
 
     companion object {
-        fun makeJudgementResult(playStatus: String, commitHash: String, statusCode: Int, message: String): String {
+        fun makeJudgementResult(status: String, commitHash: String, message: String): String {
             return """
-                실행상태: $playStatus
+                실행상태: $status
                 commit_Hash: $commitHash
-                statusCode: $statusCode
                 message:  $message
             """.trimIndent()
         }

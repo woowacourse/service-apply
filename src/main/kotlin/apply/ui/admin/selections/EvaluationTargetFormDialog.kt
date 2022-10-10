@@ -1,9 +1,9 @@
 package apply.ui.admin.selections
 
 import apply.application.AssignmentService
-import apply.application.EvaluationJudgementData
 import apply.application.EvaluationTargetData
 import apply.application.EvaluationTargetService
+import apply.application.JudgmentData
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.dialog.Dialog
@@ -23,7 +23,8 @@ class EvaluationTargetFormDialog(
     private val evaluationTargetService: EvaluationTargetService,
     private val assignmentService: AssignmentService,
     private val evaluationTargetId: Long,
-    private val judgmentEvaluationItemId: Long,
+    private val judgmentItemId: Long,
+    judgmentEvaluationItemId: Long,
     reloadComponents: () -> Unit
 ) : Dialog() {
     private val title: H2 = H2()
@@ -32,7 +33,6 @@ class EvaluationTargetFormDialog(
         isReadOnly = true
     }
     private val evaluationTargetForm: BindingFormLayout<EvaluationTargetData>
-    private val evaluationJudgementForm: BindingFormLayout<EvaluationJudgementData>
 
     init {
         val evaluationResponse = evaluationTargetService.getGradeEvaluation(evaluationTargetId)
@@ -40,25 +40,10 @@ class EvaluationTargetFormDialog(
             .apply { fill(evaluationResponse.evaluationTarget) }
         title.text = evaluationResponse.title
         description.value = evaluationResponse.description
-
-        val judgmentResponse = EvaluationJudgementData("채점 완료", "3d15az6", 0, "빌드 성공", 5, 10)
-        evaluationJudgementForm = EvaluationJudgmentForm(judgmentResponse)
-            .apply { fill(judgmentResponse) }
-
         add(
             createHeader(),
-            createAssignmentForm()
-        )
-
-        // if automation
-        val judgmentFormLayout = FormLayout()
-        judgmentFormLayout.add(H3("자동채점"), createJudgmentRequestButton())
-        judgmentFormLayout.setResponsiveSteps(FormLayout.ResponsiveStep("0", 6))
-        add(
-            judgmentFormLayout,
-            evaluationJudgementForm,
-        )
-        add(
+            createAssignmentForm(),
+            createJudgmentFormLayout(),
             evaluationTargetForm,
             createButtons(reloadComponents)
         )
@@ -78,6 +63,24 @@ class EvaluationTargetFormDialog(
         return assignmentService.findByEvaluationTargetId(evaluationTargetId)
             ?.let { AssignmentForm(it) }
             ?: FormLayout()
+    }
+
+    private fun createJudgmentFormLayout(): Component {
+        return if (judgmentItemId != 0L) {
+            val judgmentHeaderForm = FormLayout()
+            judgmentHeaderForm.add(H3("자동 채점"), createJudgmentRequestButton())
+            judgmentHeaderForm.setResponsiveSteps(FormLayout.ResponsiveStep("0", 6))
+            // TODO: LastJudgmentResponse: 자동 채점 결과 받아오기
+            // val judgmentData = JudgmentData(LastJudgmentResponse("url", JudgmentRecord()))
+            val judgmentData = JudgmentData("채점 완료", "3d15az6", "빌드 성공", 5, 10)
+            val judgementForm = JudgmentForm(judgmentData)
+                .apply { fill(judgmentData) }
+            val judgmentFormLayout = FormLayout(judgmentHeaderForm, judgementForm)
+            judgmentFormLayout.setResponsiveSteps(FormLayout.ResponsiveStep("0", 1))
+            judgmentFormLayout
+        } else {
+            FormLayout()
+        }
     }
 
     private fun createButtons(reloadComponent: () -> Unit): Component {
@@ -109,8 +112,8 @@ class EvaluationTargetFormDialog(
             val judgementRequestData =
                 assignmentService.findJudgementRequestDataByEvaluationTargetId(evaluationTargetId)
             println("createJudgmentRequestButton 실행됨")
-            println("userId : ${judgementRequestData?.userId}") // userId
-            println("missionId : ${judgementRequestData?.missionId}") // missionId
+            println("userId : ${judgementRequestData?.userId}")
+            println("missionId : ${judgementRequestData?.missionId}")
         }
     }
 }

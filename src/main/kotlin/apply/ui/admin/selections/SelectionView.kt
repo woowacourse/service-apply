@@ -177,7 +177,13 @@ class SelectionView(
                     missionService.findJudgmentItemByMissionId(it.id)
                 }
                 val evaluationItemId = judgmentItem?.evaluationItemId ?: 0L
-                EvaluationTargetFormDialog(evaluationTargetService, assignmentService, response.id, evaluationItemId) {
+                EvaluationTargetFormDialog(
+                    evaluationTargetService,
+                    assignmentService,
+                    response.id,
+                    judgmentItem?.id ?: 0L,
+                    evaluationItemId
+                ) {
                     selectedTabIndex = tabs.selectedIndex
                     removeAll()
                     add(createTitle(), createContent())
@@ -185,6 +191,11 @@ class SelectionView(
             }
         }
     }
+
+    // JudgmentItemId -> 있으면 -> evaluationItemId -> 구하기
+    // JudgmentItemId -> 없으면 -> 끗
+    // 현재는 일단 둘다 구해서 넘김;
+    //
 
     private fun createTabComponents(tabsToGrids: Map<Tab, Component>): Pair<Tabs, Div> {
         val tabs = Tabs().apply {
