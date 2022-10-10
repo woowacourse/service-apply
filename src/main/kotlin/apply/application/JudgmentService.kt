@@ -64,8 +64,16 @@ class JudgmentService(
     }
 
     fun findExample(userId: Long, missionId: Long): LastJudgmentResponse? {
+        return find(userId, missionId, JudgmentType.EXAMPLE)
+    }
+
+    fun findReal(userId: Long, missionId: Long): LastJudgmentResponse? {
+        return find(userId, missionId, JudgmentType.REAL)
+    }
+
+    private fun find(userId: Long, missionId: Long, judgmentType: JudgmentType): LastJudgmentResponse? {
         val assignment = assignmentRepository.getByUserIdAndMissionId(userId, missionId)
-        val judgment = judgmentRepository.findByAssignmentIdAndType(assignment.id, JudgmentType.EXAMPLE)
+        val judgment = judgmentRepository.findByAssignmentIdAndType(assignment.id, judgmentType)
         return judgment?.let { LastJudgmentResponse(assignment.pullRequestUrl, judgment.lastRecord) }
     }
 

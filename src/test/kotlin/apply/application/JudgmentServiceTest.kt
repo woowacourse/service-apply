@@ -5,13 +5,18 @@ import apply.PULL_REQUEST_URL
 import apply.createAssignment
 import apply.createCancelJudgmentRequest
 import apply.createCommit
+import apply.createEvaluationTarget
 import apply.createFailJudgmentRequest
 import apply.createJudgment
+import apply.createJudgmentItem
 import apply.createJudgmentRecord
 import apply.createMission
 import apply.createSuccessJudgmentRequest
 import apply.domain.assignment.AssignmentRepository
+import apply.domain.assignment.getById
 import apply.domain.assignment.getByUserIdAndMissionId
+import apply.domain.evaluationtarget.EvaluationTargetRepository
+import apply.domain.evaluationtarget.getByEvaluationIdAndUserId
 import apply.domain.judgment.AssignmentArchive
 import apply.domain.judgment.JudgmentRepository
 import apply.domain.judgment.JudgmentResult
@@ -312,7 +317,34 @@ class JudgmentServiceTest : BehaviorSpec({
         When("예제 자동 채점 결과를 조회하면") {
             val actual = judgmentService.findExample(1L, 1L)
 
-            Then("자동 채점 결과를 돌려준다") {
+            Then("예제 자동 채점 결과를 돌려준다") {
+                actual.shouldNotBeNull()
+                actual.status shouldBe SUCCEEDED
+            }
+        }
+    }
+
+    Given("특정 과제 제출물에 대한 본 자동 채점 기록이 있는 경우") {
+        val assignment = createAssignment(pullRequestUrl = PULL_REQUEST_URL)
+        val judgment = createJudgment(
+            assignmentId = assignment.id,
+            type = REAL,
+            records = listOf(
+                createJudgmentRecord(
+                    commit = createCommit(COMMIT_HASH),
+                    result = JudgmentResult(passCount = 9, totalCount = 10, status = SUCCEEDED),
+                    completedDateTime = now()
+                )
+            )
+        )
+
+        every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns assignment
+        every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns judgment
+
+        When("본 자동 채점 결과를 조회하면") {
+            val actual = judgmentService.findExample(1L, 1L)
+
+            Then("본 자동 채점 결과를 돌려준다") {
                 actual.shouldNotBeNull()
                 actual.status shouldBe SUCCEEDED
             }

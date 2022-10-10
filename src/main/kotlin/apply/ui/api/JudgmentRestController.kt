@@ -51,6 +51,16 @@ class JudgmentRestController(
         return ResponseEntity.ok(ApiResponse.success(response))
     }
 
+    @GetMapping("/recruitments/{recruitmentId}/missions/{missionId}/judgments/judge-real")
+    fun findReal(
+        @PathVariable recruitmentId: Long,
+        @PathVariable missionId: Long,
+        @LoginUser(administrator = true) user: User
+    ): ResponseEntity<ApiResponse<LastJudgmentResponse>> {
+        val response = judgmentService.findReal(user.id, missionId)
+        return ResponseEntity.ok(ApiResponse.success(response))
+    }
+
     @PostMapping("/recruitments/{recruitmentId}/missions/{missionId}/judgments/judge-all")
     fun judgeAll(
         @PathVariable recruitmentId: Long,
