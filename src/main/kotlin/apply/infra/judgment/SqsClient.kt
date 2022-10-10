@@ -45,8 +45,8 @@ data class SqsRequest(
 ) {
     constructor(request: JudgmentRequest) : this(
         request.judgmentId,
-        request.judgmentType.toString(),
-        request.programmingLanguage.toString(),
+        request.judgmentType.name,
+        request.programmingLanguage.name,
         request.testName,
         request.pullRequestUrl,
         request.commit.hash
