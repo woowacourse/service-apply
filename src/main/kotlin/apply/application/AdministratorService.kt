@@ -21,17 +21,26 @@ class AdministratorService(
     }
 
     fun save(request: AdministratorData): AdministratorResponse {
-        check(!administratorRepository.existsByUsername(request.username)) { "이미 등록된 사용자명입니다." }
         check(request.password == request.confirmPassword) { "비밀번호가 일치하지 않습니다." }
-        return administratorRepository
-            .save(
-                Administrator(
-                    username = request.username,
-                    name = request.name,
-                    password = passwordEncoder.encode(request.password)
-                )
+        val administrator = if (request.id == 0L) create(request) else update(request)
+        return administrator.let(::AdministratorResponse)
+    }
+
+    private fun create(request: AdministratorData): Administrator {
+        check(!administratorRepository.existsByUsername(request.username)) { "이미 등록된 사용자명입니다." }
+        return administratorRepository.save(
+            Administrator(
+                username = request.username,
+                name = request.name,
+                password = passwordEncoder.encode(request.password)
             )
-            .let(::AdministratorResponse)
+        )
+    }
+
+    private fun update(request: AdministratorData): Administrator {
+        return administratorRepository.getById(request.id).apply {
+            update(request.name, passwordEncoder.encode(request.password))
+        }
     }
 
     fun findAll(): List<AdministratorResponse> {
@@ -40,12 +49,6 @@ class AdministratorService(
 
     fun findById(id: Long): AdministratorResponse {
         return administratorRepository.getById(id).let(::AdministratorResponse)
-    }
-
-    fun update(administratorId: Long, request: AdministratorData) {
-        check(request.password == request.confirmPassword) { "비밀번호가 일치하지 않습니다." }
-        val administrator = administratorRepository.getById(administratorId)
-        administrator.update(request.name, passwordEncoder.encode(request.password))
     }
 
     fun deleteById(administratorId: Long) {

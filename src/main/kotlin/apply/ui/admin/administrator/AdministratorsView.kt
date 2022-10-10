@@ -1,11 +1,11 @@
 package apply.ui.admin.administrator
 
-import apply.application.AdministratorData
 import apply.application.AdministratorResponse
 import apply.application.AdministratorService
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
+import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.html.H1
 import com.vaadin.flow.component.orderedlayout.FlexComponent
@@ -38,7 +38,7 @@ class AdministratorsView(private val administratorService: AdministratorService)
     private fun createButton(): Component {
         return HorizontalLayout(
             createPrimaryButton("생성") {
-                AdministratorCreateFormDialog(administratorService, NEW_VALUE.toDisplayName()) {
+                AdministratorFormDialog(administratorService, NEW_VALUE.toDisplayName()) {
                     UI.getCurrent().page.reload()
                 }
             }
@@ -52,33 +52,33 @@ class AdministratorsView(private val administratorService: AdministratorService)
         return Grid<AdministratorResponse>(10).apply {
             addSortableColumn("관리자명", AdministratorResponse::name)
             addSortableColumn("관리자 사용자명", AdministratorResponse::username)
-            addColumn(createEditAndDeleteButton()).apply { isAutoWidth = true }
+            addColumn(createButtonRenderer()).apply { isAutoWidth = true }
             setItems(administratorService.findAll())
         }
     }
 
-    private fun createEditAndDeleteButton(): Renderer<AdministratorResponse> {
-        return ComponentRenderer { administratorResponse ->
+    private fun createButtonRenderer(): Renderer<AdministratorResponse> {
+        return ComponentRenderer { administrator ->
             HorizontalLayout(
-                createPrimarySmallButton("수정") {
-                    AdministratorUpdateFormDialog(
-                        administratorService,
-                        administratorResponse.id,
-                        AdministratorData(
-                            name = administratorResponse.name,
-                            username = administratorResponse.username
-                        ),
-                        EDIT_VALUE.toDisplayName()
-                    ) {
-                        UI.getCurrent().page.reload()
-                    }
-                },
-                createDeleteButtonWithDialog("관리자를 삭제하시겠습니까?") {
-                    administratorService.deleteById(administratorResponse.id)
-                }
+                createEditButton(administrator),
+                createDeleteButton(administrator)
             ).apply {
                 justifyContentMode = FlexComponent.JustifyContentMode.END
             }
+        }
+    }
+
+    private fun createEditButton(administrator: AdministratorResponse): Button {
+        return createPrimarySmallButton("수정") {
+            AdministratorFormDialog(administratorService, EDIT_VALUE.toDisplayName(), administrator) {
+                UI.getCurrent().page.reload()
+            }
+        }
+    }
+
+    private fun createDeleteButton(administrator: AdministratorResponse): Button {
+        return createDeleteButtonWithDialog("관리자를 삭제하시겠습니까?") {
+            administratorService.deleteById(administrator.id)
         }
     }
 }

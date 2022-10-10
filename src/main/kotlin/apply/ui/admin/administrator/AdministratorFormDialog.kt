@@ -1,6 +1,7 @@
 package apply.ui.admin.administrator
 
 import apply.application.AdministratorData
+import apply.application.AdministratorResponse
 import apply.application.AdministratorService
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.button.Button
@@ -13,21 +14,27 @@ import support.views.createContrastButton
 import support.views.createNotification
 import support.views.createPrimaryButton
 
-class AdministratorUpdateFormDialog(
+class AdministratorFormDialog(
     private val administratorService: AdministratorService,
-    private val administratorId: Long,
-    administratorData: AdministratorData,
     displayName: String,
     reloadComponents: () -> Unit
 ) : Dialog() {
-    private val title = H2("관리자 $displayName")
-    private val administratorForm = AdministratorForm()
+    private val title: H2 = H2("관리자 $displayName")
+    private val administratorForm: AdministratorForm = AdministratorForm()
 
     init {
-        administratorForm.fill(administratorData)
         add(createHeader(), administratorForm, createButtons(displayName, reloadComponents))
         width = "800px"
         open()
+    }
+
+    constructor(
+        administratorService: AdministratorService,
+        displayName: String,
+        administrator: AdministratorResponse,
+        reloadComponents: () -> Unit
+    ) : this(administratorService, displayName, reloadComponents) {
+        administratorForm.fill(AdministratorData(administrator.name, administrator.username, id = administrator.id))
     }
 
     private fun createHeader(): VerticalLayout {
@@ -50,7 +57,7 @@ class AdministratorUpdateFormDialog(
         return createPrimaryButton(displayName) {
             administratorForm.bindOrNull()?.let {
                 try {
-                    administratorService.update(administratorId, it)
+                    administratorService.save(it)
                     reloadComponent()
                     close()
                 } catch (e: Exception) {

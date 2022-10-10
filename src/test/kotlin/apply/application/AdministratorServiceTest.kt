@@ -49,7 +49,7 @@ class AdministratorServiceTest : BehaviorSpec({
         every { administratorRepository.save(any()) } returns createAdministrator(username = username)
 
         When("관리자를 생성하면") {
-            val actual = administratorService.save(AdministratorData(username = username))
+            val actual = administratorService.save(createAdministratorData(username = username))
 
             Then("관리자가 생성된다") {
                 actual.username shouldBe ADMINISTRATOR_USERNAME
@@ -117,45 +117,6 @@ class AdministratorServiceTest : BehaviorSpec({
 
             Then("모든 관리자를 확인할 수 있다") {
                 actual shouldHaveSize 3
-            }
-        }
-    }
-
-    Given("정보 수정을 요청한 관리자가 있는 경우") {
-        val updateName = "변경된이름"
-        val updatePassword = "12345"
-
-        val administrator = createAdministrator()
-
-        every { administratorRepository.getById(any()) } returns administrator
-        every { passwordEncoder.encode(any()) } returns updatePassword
-
-        When("해당 관리자를 수정하면") {
-            administratorService.update(
-                administratorId = administrator.id,
-                request = AdministratorData(
-                    name = updateName,
-                    password = updatePassword,
-                    confirmPassword = updatePassword
-                )
-            )
-
-            Then("관리자 정보를 수정할 수 있다") {
-                administrator.name shouldBe updateName
-                administrator.password shouldBe updatePassword
-            }
-        }
-
-        When("비밀번호와 확인 비밀번호를 일치시키지 않고 해당 관리자를 수정하면") {
-            Then("예외가 발생한다") {
-                shouldThrow<IllegalStateException> {
-                    administratorService.update(
-                        administratorId = administrator.id,
-                        request = createAdministratorData(
-                            password = "ABCD1234", confirmPassword = "4321DCBA"
-                        )
-                    )
-                }
             }
         }
     }

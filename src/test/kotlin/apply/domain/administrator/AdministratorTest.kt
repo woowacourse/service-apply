@@ -8,11 +8,10 @@ import io.kotest.matchers.shouldBe
 class AdministratorTest : StringSpec({
     "관리자명과 비밀번호를 수정한다" {
         val administrator = createAdministrator("케이", "kth990303", "1234")
-        administrator.update("케이케이", "12345")
+        administrator.update("조조그린", "5678")
         assertSoftly(administrator) {
-            administrator.name shouldBe "케이케이"
-            administrator.username shouldBe "kth990303"
-            administrator.password shouldBe "12345"
+            administrator.name shouldBe "조조그린"
+            administrator.password shouldBe "5678"
         }
     }
 })

@@ -8,7 +8,7 @@ import apply.domain.mission.Mission
 import apply.domain.mission.MissionRepository
 import apply.domain.mission.getById
 import org.springframework.stereotype.Service
-import javax.transaction.Transactional
+import org.springframework.transaction.annotation.Transactional
 
 @Transactional
 @Service
