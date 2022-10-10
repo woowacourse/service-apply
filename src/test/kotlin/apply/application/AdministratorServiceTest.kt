@@ -11,9 +11,12 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
+import io.mockk.Runs
 import io.mockk.clearAllMocks
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
+import io.mockk.verify
 import org.springframework.security.crypto.password.PasswordEncoder
 import support.test.spec.afterRootTest
 
@@ -79,13 +82,25 @@ class AdministratorServiceTest : BehaviorSpec({
     Given("특정 관리자가 있는 경우") {
         val administrator = createAdministrator(id = 1L)
 
+        every { administratorRepository.existsById(any()) } returns true
         every { administratorRepository.getById(any()) } returns administrator
+        every { administratorRepository.deleteById(any()) } just Runs
 
         When("해당 관리자를 조회하면") {
             val actual = administratorService.findById(administrator.id)
 
             Then("관리자를 확인할 수 있다") {
                 actual shouldBe AdministratorResponse(administrator)
+            }
+        }
+
+        When("해당 관리자를 삭제하면") {
+            administratorService.deleteById(administrator.id)
+
+            Then("관리자를 삭제할 수 있다") {
+                verify(exactly = 1) {
+                    administratorRepository.deleteById(administrator.id)
+                }
             }
         }
     }

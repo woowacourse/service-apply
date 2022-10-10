@@ -9,6 +9,7 @@ import io.mockk.every
 import io.mockk.just
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 import org.springframework.test.web.servlet.put
@@ -68,6 +69,18 @@ class AdministratorRestControllerTest : RestControllerTest() {
         every { administratorService.update(any(), any()) } just Runs
 
         mockMvc.put("/api/administrators/{administratorId}", 1L) {
+            jsonContent(createAdministratorData())
+            bearer("valid_token")
+        }.andExpect {
+            status { isNoContent }
+        }
+    }
+
+    @Test
+    fun `관리자를 삭제한다`() {
+        every { administratorService.deleteById(any()) } just Runs
+
+        mockMvc.delete("/api/administrators/{administratorId}", 1L) {
             jsonContent(createAdministratorData())
             bearer("valid_token")
         }.andExpect {

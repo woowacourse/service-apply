@@ -47,4 +47,8 @@ class AdministratorService(
         val administrator = administratorRepository.getById(administratorId)
         administrator.update(request.name, passwordEncoder.encode(request.password))
     }
+
+    fun deleteById(administratorId: Long) {
+        administratorRepository.deleteById(administratorId)
+    }
 }
