@@ -36,7 +36,7 @@ const ApplicationPreviewModalWindow = ({
     <ModalWindow title="지원서 미리보기" className={styles.box}>
       <div className={styles.content}>
         {recruitmentItems.map((recruitmentItem, index) => (
-          <div key={index} className={styles["application-item-box"]}>
+          <div key={recruitmentItem.id} className={styles["application-item-box"]}>
             <h3 className={styles["application-item-title"]}>
               {recruitmentItem.position}. {recruitmentItem.title}
             </h3>
