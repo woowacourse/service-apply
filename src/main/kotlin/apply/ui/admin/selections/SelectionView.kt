@@ -39,6 +39,7 @@ import com.vaadin.flow.router.WildcardParameter
 import support.views.addSortableColumn
 import support.views.addSortableDateColumn
 import support.views.addSortableDateTimeColumn
+import support.views.createContrastButtonWithDialog
 import support.views.createCsvUpload
 import support.views.createNormalButton
 import support.views.createPrimaryButton
@@ -92,7 +93,8 @@ class SelectionView(
             tabs,
             HorizontalLayout(
                 createLoadButton(tabs),
-                createResultDownloadButton()
+                createResultDownloadButton(),
+                createAllJudgeRequestButton()
             )
         ).apply {
             setWidthFull()
@@ -214,6 +216,15 @@ class SelectionView(
         return createSuccessButton("평가지 다운로드") {
             val evaluation = evaluations[tabs.selectedIndex - 1]
             downloadFile("${evaluation.title}.csv", evaluationTargetCsvService.createTargetCsv(evaluation.id))
+        }
+    }
+
+    private fun createAllJudgeRequestButton(): Button {
+        return createContrastButtonWithDialog("전체 채점하기", "실행하시겠습니까?") {
+            // TODO: 전체 채점하기 Service 와 연결
+            // val evaluation = evaluations.first { it.title == tabs.selectedTab.label }
+            // println("evaluationId : $evaluation.id")
+            // println("전체 채점하기")
         }
     }
 
