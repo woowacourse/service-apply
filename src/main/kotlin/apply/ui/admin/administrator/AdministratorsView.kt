@@ -74,7 +74,7 @@ class AdministratorsView(private val administratorService: AdministratorService)
                     }
                 },
                 createDeleteButtonWithDialog("관리자를 삭제하시겠습니까?") {
-                    // administratorService.deleteById(administratorResponse.id)
+                    administratorService.deleteById(administratorResponse.id)
                 }
             ).apply {
                 justifyContentMode = FlexComponent.JustifyContentMode.END
