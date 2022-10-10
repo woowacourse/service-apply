@@ -9,6 +9,7 @@ import apply.domain.user.User
 import apply.security.Accessor
 import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -27,6 +28,16 @@ class JudgmentRestController(
         @LoginUser user: User
     ): ResponseEntity<ApiResponse<LastJudgmentResponse>> {
         val response = judgmentService.judgeExample(user.id, missionId)
+        return ResponseEntity.ok(ApiResponse.success(response))
+    }
+
+    @GetMapping("/recruitments/{recruitmentId}/missions/{missionId}/judgments/judge-example")
+    fun findExample(
+        @PathVariable recruitmentId: Long,
+        @PathVariable missionId: Long,
+        @LoginUser user: User
+    ): ResponseEntity<ApiResponse<LastJudgmentResponse>> {
+        val response = judgmentService.findExample(user.id, missionId)
         return ResponseEntity.ok(ApiResponse.success(response))
     }
 

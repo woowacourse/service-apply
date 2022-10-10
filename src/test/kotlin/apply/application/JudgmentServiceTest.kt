@@ -28,6 +28,8 @@ import apply.domain.mission.getById
 import io.kotest.assertions.assertSoftly
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.every
@@ -251,6 +253,48 @@ class JudgmentServiceTest : BehaviorSpec({
                     passCount shouldBe 0
                     totalCount shouldBe 0
                 }
+            }
+        }
+    }
+
+    Given("특정 과제 제출물에 대한 예제 자동 채점 기록이 있는 경우") {
+        val assignment = createAssignment(pullRequestUrl = PULL_REQUEST_URL)
+        val judgment = createJudgment(
+            assignmentId = assignment.id,
+            type = EXAMPLE,
+            records = listOf(
+                createJudgmentRecord(
+                    commit = createCommit(COMMIT_HASH),
+                    result = JudgmentResult(passCount = 9, totalCount = 10, status = SUCCEEDED),
+                    completedDateTime = now()
+                )
+            )
+        )
+
+        every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns assignment
+        every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns judgment
+
+        When("예제 자동 채점 결과를 조회하면") {
+            val actual = judgmentService.findExample(1L, 1L)
+
+            Then("자동 채점 결과를 돌려준다") {
+                actual.shouldNotBeNull()
+                actual.status shouldBe SUCCEEDED
+            }
+        }
+    }
+
+    Given("특정 과제 제출물에 대한 예제 자동 채점 기록이 없는 경우") {
+        val assignment = createAssignment(pullRequestUrl = PULL_REQUEST_URL)
+
+        every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns assignment
+        every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns null
+
+        When("예제 자동 채점 결과를 조회하면") {
+            val actual = judgmentService.findExample(1L, 1L)
+
+            Then("null을 돌려준다") {
+                actual.shouldBeNull()
             }
         }
     }
