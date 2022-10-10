@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { ModalContextValue } from "../../../provider/ModalProvider";
+import { ModalContextValue } from "../../../hooks/useModalContext";
 import styles from "./ModalPortal.module.css";
 
 type ModalPortalProps = {
@@ -35,6 +35,7 @@ const ModalPortal = ({ children, closeModal }: ModalPortalProps) => {
         }}
       >
         <div className={styles["dimmer-box"]} onClick={closeModal} />
+
         {children}
       </div>,
       ref.current

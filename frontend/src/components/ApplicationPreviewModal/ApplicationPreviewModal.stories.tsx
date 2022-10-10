@@ -1,14 +1,14 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import useModalContext from "../../../hooks/useModalContext";
-import Button, { BUTTON_VARIANT } from "../../@common/Button/Button";
-import ApplicationPreviewModalWindow from "./ApplicationPreviewModalWindow";
+import useModalContext from "../../hooks/useModalContext";
+import Button, { BUTTON_VARIANT } from "../@common/Button/Button";
+import ApplicationPreviewModal from "./ApplicationPreviewModal";
 
 export default {
-  title: "components/ApplicationPreviewModalWindow",
-  component: ApplicationPreviewModalWindow,
-} as ComponentMeta<typeof ApplicationPreviewModalWindow>;
+  title: "components/ApplicationPreviewModal",
+  component: ApplicationPreviewModal,
+} as ComponentMeta<typeof ApplicationPreviewModal>;
 
-const Template: ComponentStory<typeof ApplicationPreviewModalWindow> = (args) => {
+const Template: ComponentStory<typeof ApplicationPreviewModal> = (args) => {
   const { Modal, openModal } = useModalContext();
 
   return (
@@ -23,7 +23,7 @@ const Template: ComponentStory<typeof ApplicationPreviewModalWindow> = (args) =>
         open modal
       </Button>
       <Modal>
-        <ApplicationPreviewModalWindow {...args} />
+        <ApplicationPreviewModal {...args} />
       </Modal>
     </div>
   );

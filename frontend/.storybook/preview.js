@@ -3,10 +3,10 @@ import axios from "axios";
 import { initializeWorker, mswDecorator } from "msw-storybook-addon";
 import "../src/api/api";
 import "../src/App.css";
+import { ModalProvider } from "../src/hooks/useModalContext";
 import { RecruitmentContext } from "../src/hooks/useRecruitmentContext";
 import { UserInfoContext } from "../src/hooks/useUserInfoContext";
 import { recruitmentDummy, userInfoDummy } from "../src/mock/dummy";
-import ModalProvider from "../src/provider/ModalProvider";
 import { recruitmentFilter } from "../src/provider/RecruitmentProvider";
 import TokenProvider from "../src/provider/TokenProvider";
 

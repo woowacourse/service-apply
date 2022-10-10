@@ -1,11 +1,10 @@
 import { ChangeEvent, useState } from "react";
-import useModalContext from "../../../hooks/useModalContext";
-import Button, { BUTTON_VARIANT } from "../../@common/Button/Button";
-import styles from "./ApplicationPreviewModalWindow.module.css";
-import ModalWindow from "../ModalWindow/ModalWindow";
-import CheckBox from "../../form/CheckBox/CheckBox";
-import { RecruitmentItem } from "../../../../types/domains/recruitments";
-import { Answer, ApplicationForm } from "../../../../types/domains/applicationForms";
+import useModalContext from "../../hooks/useModalContext";
+import Button, { BUTTON_VARIANT } from "../@common/Button/Button";
+import styles from "./ApplicationPreviewModal.module.css";
+import CheckBox from "../form/CheckBox/CheckBox";
+import { RecruitmentItem } from "../../../types/domains/recruitments";
+import { Answer, ApplicationForm } from "../../../types/domains/applicationForms";
 
 type ApplicationPreviewModalWindowProps = {
   recruitmentItems: RecruitmentItem[];
@@ -14,7 +13,7 @@ type ApplicationPreviewModalWindowProps = {
   onClickConfirmButton: React.MouseEventHandler<HTMLButtonElement>;
 };
 
-const ApplicationPreviewModalWindow = ({
+const ApplicationPreviewModal = ({
   recruitmentItems,
   answers,
   referenceUrl,
@@ -33,7 +32,7 @@ const ApplicationPreviewModalWindow = ({
   };
 
   return (
-    <ModalWindow className={styles.box}>
+    <div className={styles.box}>
       <h2 id="dialogTitle" className={styles.title}>
         지원서 미리보기
       </h2>
@@ -97,8 +96,8 @@ const ApplicationPreviewModalWindow = ({
           제출
         </Button>
       </div>
-    </ModalWindow>
+    </div>
   );
 };
 
-export default ApplicationPreviewModalWindow;
+export default ApplicationPreviewModal;

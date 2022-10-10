@@ -1,6 +1,4 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import useModalContext from "../../../hooks/useModalContext";
-import Button, { BUTTON_VARIANT } from "../../@common/Button/Button";
 import ModalWindow from "./ModalWindow";
 
 export default {
@@ -9,29 +7,14 @@ export default {
 } as ComponentMeta<typeof ModalWindow>;
 
 const Template: ComponentStory<typeof ModalWindow> = (args) => {
-  const { Modal, openModal } = useModalContext();
-
-  return (
-    <div style={{ height: "200vh", backgroundColor: "white", padding: "1rem" }}>
-      <Button
-        type="button"
-        variant={BUTTON_VARIANT.CONTAINED}
-        cancel={false}
-        className
-        onClick={openModal}
-      >
-        open modal
-      </Button>
-      <Modal>
-        <ModalWindow {...args} />
-      </Modal>
-    </div>
-  );
+  return <ModalWindow {...args} />;
 };
 
 export const Default = Template.bind({});
 
-Default.args = {};
+Default.args = {
+  children: "modal text",
+};
 
 export const LongContent = Template.bind({});
 

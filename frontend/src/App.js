@@ -22,7 +22,7 @@ import SignUp from "./pages/SignUp/SignUp";
 import RecruitmentProvider from "./provider/RecruitmentProvider";
 import TokenProvider from "./provider/TokenProvider";
 import UserInfoProvider from "./provider/UserInfoProvider";
-import ModalProvider from "./provider/ModalProvider";
+import { ModalProvider } from "./hooks/useModalContext";
 
 const App = () => {
   return (

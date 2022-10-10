@@ -9,7 +9,7 @@ import MessageTextarea from "../../components/@common/MessageTextarea/MessageTex
 import MessageTextInput from "../../components/@common/MessageTextInput/MessageTextInput";
 import CheckBox from "../../components/form/CheckBox/CheckBox";
 import Form from "../../components/form/Form/Form";
-import ApplicationPreviewModalWindow from "../../components/Modal/ApplicationPreviewModalWindow/ApplicationPreviewModalWindow";
+import ApplicationPreviewModal from "../../components/ApplicationPreviewModal/ApplicationPreviewModal";
 import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
 import { FORM } from "../../constants/form";
 import { SUCCESS_MESSAGE } from "../../constants/messages";
@@ -197,7 +197,7 @@ const ApplicationRegister = () => {
         </Form>
       </Container>
       <Modal>
-        <ApplicationPreviewModalWindow
+        <ApplicationPreviewModal
           recruitmentItems={recruitmentItems}
           answers={form[APPLICATION_REGISTER_FORM_NAME.ANSWERS]}
           referenceUrl={form[APPLICATION_REGISTER_FORM_NAME.REFERENCE_URL]}
