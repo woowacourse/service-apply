@@ -1,6 +1,6 @@
+import { MemoryRouter, Route } from "react-router-dom";
+import { missionsDummy } from "../../mock/dummy";
 import AssignmentSubmit from "./AssignmentSubmit";
-import { Route, MemoryRouter } from "react-router-dom";
-import { missionDummy } from "../../mock/dummy";
 
 export default {
   title: "pages/AssignmentSubmit",
@@ -13,7 +13,7 @@ export default {
             pathname: "/assignment/new",
             state: {
               recruitmentId: 1,
-              currentMission: missionDummy[0],
+              currentMission: missionsDummy[0],
             },
           },
         ]}

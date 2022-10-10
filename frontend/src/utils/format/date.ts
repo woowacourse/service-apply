@@ -15,7 +15,9 @@ export const formatDateTime = (value: Date) => {
   const hour = value.getHours();
   const minute = value.getMinutes();
 
-  if (isNaN(year) || isNaN(month) || isNaN(date) || isNaN(hour) || isNaN(minute)) return value;
+  if (isNaN(year) || isNaN(month) || isNaN(date) || isNaN(hour) || isNaN(minute)) {
+    return `${value}`;
+  }
 
   return `${year}-${String(month + 1).padStart(2, "0")}-${String(date).padStart(2, "0")} ${String(
     hour

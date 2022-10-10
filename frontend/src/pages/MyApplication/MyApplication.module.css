@@ -16,19 +16,21 @@
 }
 
 .subtitle {
-  font-size: 1.75rem;
   margin-bottom: 3.5rem;
   margin-top: 1rem;
+  font-size: 1.75rem;
   text-align: center;
 }
 
-.hr {
+.recruitment-mission-contour {
   margin: 1.625rem 0;
   border: none;
-
   border-top: 1.5px solid var(--gray-002);
 }
 
-.mission-recruit-item {
-  margin-bottom: 1.25rem;
+.application-category {
+  margin-bottom: 1rem;
+  color: var(--gray-004);
+  font-size: 1.25rem;
+  font-weight: bold;
 }

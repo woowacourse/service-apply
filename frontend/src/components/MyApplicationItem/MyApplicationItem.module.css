@@ -1,0 +1,39 @@
+.content-box {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: var(--pc-main-width);
+  padding: 1.25rem 1.5rem 1rem;
+  margin-bottom: 1.25rem;
+  background-color: var(--white);
+  border: 1px solid var(--gray-003);
+}
+
+.text-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  width: 100%;
+}
+
+.auto-judgment-detail-contour {
+  border: 0.5px solid var(--gray-003);
+}
+
+.button-container {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.5rem;
+  display: flex;
+  gap: 1rem;
+}
+
+@media screen and (max-width: 800px) {
+  .button-container {
+    position: static;
+    gap: 0.4rem;
+    margin-left: auto;
+  }
+}

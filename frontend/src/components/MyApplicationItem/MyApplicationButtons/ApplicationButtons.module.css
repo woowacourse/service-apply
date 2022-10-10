@@ -1,0 +1,20 @@
+.refresh-button {
+  background-color: var(--blue-gray);
+}
+
+.judgment-button {
+  background-color: var(--blue-gray);
+}
+
+.apply-button {
+  background-color: var(--black-004);
+}
+
+@media screen and (max-width: 800px) {
+  .judgment-button,
+  .apply-button,
+  .refresh-button {
+    padding: 0.5rem;
+    font-size: 0.75rem;
+  }
+}
