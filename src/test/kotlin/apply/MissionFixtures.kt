@@ -2,7 +2,9 @@ package apply
 
 import apply.application.EvaluationSelectData
 import apply.application.JudgmentItemData
+import apply.application.LastJudgmentResponse
 import apply.application.MissionData
+import apply.application.MissionJudgmentResponse
 import apply.application.MissionResponse
 import apply.application.MyMissionResponse
 import apply.domain.mission.Mission
@@ -82,4 +84,30 @@ fun createMyMissionResponse(
     id: Long = 0L
 ): MyMissionResponse {
     return MyMissionResponse(id, title, description, submittable, submitted, startDateTime, endDateTime, missionStatus)
+}
+
+fun createMissionJudgmentResponse(
+    title: String = MISSION_TITLE,
+    description: String = MISSION_DESCRIPTION,
+    submittable: Boolean = true,
+    submitted: Boolean = true,
+    startDateTime: LocalDateTime = START_DATE_TIME,
+    endDateTime: LocalDateTime = END_DATE_TIME,
+    missionStatus: MissionStatus = MissionStatus.SUBMITTING,
+    isAutomation: Boolean = true,
+    judgment: LastJudgmentResponse? = createLastJudgmentResponse(),
+    id: Long = 0L
+): MissionJudgmentResponse {
+    return MissionJudgmentResponse(
+        id,
+        title,
+        description,
+        submittable,
+        submitted,
+        startDateTime,
+        endDateTime,
+        missionStatus,
+        isAutomation,
+        judgment
+    )
 }
