@@ -9,6 +9,7 @@ import apply.application.EvaluationTargetCsvService
 import apply.application.EvaluationTargetResponse
 import apply.application.EvaluationTargetService
 import apply.application.ExcelService
+import apply.application.JudgmentService
 import apply.application.MissionService
 import apply.application.RecruitmentItemService
 import apply.application.RecruitmentService
@@ -57,6 +58,7 @@ class SelectionView(
     private val evaluationService: EvaluationService,
     private val evaluationTargetService: EvaluationTargetService,
     private val assignmentService: AssignmentService,
+    private val judgmentService: JudgmentService,
     private val excelService: ExcelService,
     private val evaluationTargetCsvService: EvaluationTargetCsvService,
     private val missionService: MissionService,
@@ -179,6 +181,7 @@ class SelectionView(
                 EvaluationTargetFormDialog(
                     evaluationTargetService,
                     assignmentService,
+                    judgmentService,
                     response.id,
                     judgmentItem?.id,
                     judgmentItem?.evaluationItemId

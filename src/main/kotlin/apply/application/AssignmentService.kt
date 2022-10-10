@@ -7,6 +7,7 @@ import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.evaluationtarget.getById
 import apply.domain.mission.MissionRepository
+import apply.domain.mission.getByEvaluationId
 import apply.domain.mission.getById
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -51,9 +52,9 @@ class AssignmentService(
         return AssignmentData(assignment)
     }
 
-    fun findJudgementRequestDataByEvaluationTargetId(evaluationTargetId: Long): JudgementRequestData? {
+    fun findJudgementRequestDataByEvaluationTargetId(evaluationTargetId: Long): JudgementRequestData {
         val evaluationTarget = evaluationTargetRepository.getById(evaluationTargetId)
-        val mission = missionRepository.findByEvaluationId(evaluationTarget.evaluationId) ?: return null
+        val mission = missionRepository.getByEvaluationId(evaluationTarget.evaluationId)
         return JudgementRequestData(userId = evaluationTarget.userId, missionId = mission.id)
     }
 }

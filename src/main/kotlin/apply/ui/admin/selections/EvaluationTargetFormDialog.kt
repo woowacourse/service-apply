@@ -4,6 +4,7 @@ import apply.application.AssignmentService
 import apply.application.EvaluationTargetData
 import apply.application.EvaluationTargetService
 import apply.application.JudgmentData
+import apply.application.JudgmentService
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.dialog.Dialog
@@ -22,6 +23,7 @@ import support.views.createPrimaryButton
 class EvaluationTargetFormDialog(
     private val evaluationTargetService: EvaluationTargetService,
     private val assignmentService: AssignmentService,
+    private val judgmentService: JudgmentService,
     private val evaluationTargetId: Long,
     private val judgmentItemId: Long?,
     judgmentEvaluationItemId: Long?,
@@ -70,7 +72,8 @@ class EvaluationTargetFormDialog(
             val judgmentHeaderForm = FormLayout(H3("자동 채점"), createJudgmentRequestButton())
             judgmentHeaderForm.setResponsiveSteps(FormLayout.ResponsiveStep("0", 6))
 
-            // TODO: LastJudgmentResponse: 자동 채점 결과 받아오기
+            // TODO: 자동 채점 결과 받아오기
+            // val judgmentData = JudgmentData(LastJudgmentResponse())
             val judgmentData = JudgmentData("채점 완료", "3d15az6", "빌드 성공", 5, 10)
             val judgementForm = JudgmentForm(judgmentData)
                 .apply { fill(judgmentData) }
@@ -108,13 +111,11 @@ class EvaluationTargetFormDialog(
 
     private fun createJudgmentRequestButton(): Button {
         return createContrastButtonWithDialog("실행", "실행하시겠습니까?") {
-            // TODO: LastJudgmentResponse: 자동 채점 요청하기
-            // val judgementRequestData =
-            //     assignmentService.findJudgementRequestDataByEvaluationTargetId(evaluationTargetId)
-            // println("createJudgmentRequestButton 실행됨")
-            // println("userId : ${judgementRequestData?.userId}")
-            // println("missionId : ${judgementRequestData?.missionId}")
-            // judgmentService.judgeReal(userId, missionId)
+            val judgementRequestData = assignmentService.findJudgementRequestDataByEvaluationTargetId(evaluationTargetId)
+            val userId = judgementRequestData.userId
+            val missionId = judgementRequestData.missionId
+            // TODO: 채점 요청후 결과 반영코드 추가
+            judgmentService.judgeReal(userId, missionId)
         }
     }
 }

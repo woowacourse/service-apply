@@ -115,8 +115,8 @@ private fun createConfirmDialog(
     return Dialog(Text(text)).apply {
         add(
             HorizontalLayout(
-                createCancelButton(cancelListener),
-                createConfirmButton(confirmListener)
+                createConfirmButton(confirmListener),
+                createCancelButton(cancelListener)
             ).apply {
                 justifyContentMode = FlexComponent.JustifyContentMode.CENTER
             }
