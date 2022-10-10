@@ -8,7 +8,9 @@ export type ModalContextValue = {
   closeModal: () => void;
 };
 
-const ModalProvider = ({ children }: { children: React.ReactNode }) => {
+type ModalProviderProps = { children: React.ReactNode };
+
+const ModalProvider = ({ children }: ModalProviderProps) => {
   const [isModalOpened, setIsModalOpened] = useState(false);
 
   const openModal: ModalContextValue["openModal"] = () => {
