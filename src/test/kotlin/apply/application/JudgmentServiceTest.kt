@@ -227,7 +227,7 @@ class JudgmentServiceTest : BehaviorSpec({
         every { assignmentArchive.getLastCommit(any(), any()) } returns commit
         every { judgmentRepository.save(any()) } returns judgment
 
-        When("자동 채점을 실행하면") {
+        When("본 자동 채점을 실행하면") {
             val actual = judgmentService.judgeReal(1L, 1L)
 
             Then("최신 커밋에 대한 자동 채점 결과를 확인할 수 있다") {
