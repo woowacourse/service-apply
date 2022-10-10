@@ -6,6 +6,10 @@ import org.springframework.data.repository.findByIdOrNull
 fun EvaluationTargetRepository.getById(id: Long): EvaluationTarget = findByIdOrNull(id)
     ?: throw NoSuchElementException("평가 대상자가 존재하지 않습니다. id: $id")
 
+fun EvaluationTargetRepository.getByEvaluationIdAndUserId(evaluationId: Long, userId: Long) =
+    findByEvaluationIdAndUserId(evaluationId, userId)
+        ?: throw NoSuchElementException("평가 대상자가 존재하지 않습니다. evaluationId: $evaluationId, userId: $userId")
+
 interface EvaluationTargetRepository : JpaRepository<EvaluationTarget, Long> {
     fun findByEvaluationIdAndUserId(evaluationId: Long, userId: Long): EvaluationTarget?
     fun findAllByEvaluationId(evaluationId: Long): List<EvaluationTarget>

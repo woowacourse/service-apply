@@ -51,4 +51,8 @@ class EvaluationTarget(
         this.evaluationAnswers = evaluationAnswers
         this.note = note
     }
+
+    fun addEvaluationAnswer(evaluationAnswer: EvaluationAnswer) {
+        evaluationAnswers.add(evaluationAnswer)
+    }
 }

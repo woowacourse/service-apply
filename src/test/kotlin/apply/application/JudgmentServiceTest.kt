@@ -23,6 +23,7 @@ import apply.domain.judgment.JudgmentType.EXAMPLE
 import apply.domain.judgment.JudgmentType.REAL
 import apply.domain.judgment.getById
 import apply.domain.judgmentitem.JudgmentItemRepository
+import apply.domain.judgmentitem.getByMissionId
 import apply.domain.mission.MissionRepository
 import apply.domain.mission.getById
 import io.kotest.assertions.assertSoftly
@@ -43,10 +44,11 @@ class JudgmentServiceTest : BehaviorSpec({
     val assignmentRepository = mockk<AssignmentRepository>()
     val missionRepository = mockk<MissionRepository>()
     val judgmentItemRepository = mockk<JudgmentItemRepository>()
+    val evaluationTargetRepository = mockk<EvaluationTargetRepository>()
     val assignmentArchive = mockk<AssignmentArchive>()
 
     val judgmentService = JudgmentService(
-        judgmentRepository, assignmentRepository, missionRepository, judgmentItemRepository, assignmentArchive
+        judgmentRepository, assignmentRepository, missionRepository, judgmentItemRepository, evaluationTargetRepository, assignmentArchive
     )
 
     Given("과제 제출물을 제출할 수 없는 과제가 있는 경우") {
@@ -336,8 +338,16 @@ class JudgmentServiceTest : BehaviorSpec({
         val commit = createCommit()
         val record = createJudgmentRecord(commit, JudgmentResult(), completedDateTime = null)
         val judgment = createJudgment(records = listOf(record), id = 1L)
+        val assignment = createAssignment()
+        val mission = createMission()
+        val judgmentItem = createJudgmentItem()
+        val evaluationTarget = createEvaluationTarget()
 
         every { judgmentRepository.getById(any()) } returns judgment
+        every { assignmentRepository.getById(any()) } returns assignment
+        every { missionRepository.getById(any()) } returns mission
+        every { judgmentItemRepository.getByMissionId(any()) } returns judgmentItem
+        every { evaluationTargetRepository.getByEvaluationIdAndUserId(any(), any()) } returns evaluationTarget
 
         When("해당 커밋의 자동 채점이 성공하면") {
             judgmentService.success(judgment.id, createSuccessJudgmentRequest(commit = commit.hash))
@@ -345,6 +355,9 @@ class JudgmentServiceTest : BehaviorSpec({
             Then("자동 채점 기록의 상태가 성공으로 변경된다") {
                 record.commit shouldBe commit
                 record.status shouldBe SUCCEEDED
+            }
+            Then("점수가 반영된다") {
+                evaluationTarget.evaluationAnswers.countTotalScore() shouldBe record.result.passCount
             }
         }
 

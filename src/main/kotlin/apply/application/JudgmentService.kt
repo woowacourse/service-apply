@@ -2,7 +2,11 @@ package apply.application
 
 import apply.domain.assignment.Assignment
 import apply.domain.assignment.AssignmentRepository
+import apply.domain.assignment.getById
 import apply.domain.assignment.getByUserIdAndMissionId
+import apply.domain.evaluationtarget.EvaluationAnswer
+import apply.domain.evaluationtarget.EvaluationTargetRepository
+import apply.domain.evaluationtarget.getByEvaluationIdAndUserId
 import apply.domain.judgment.AssignmentArchive
 import apply.domain.judgment.Commit
 import apply.domain.judgment.Judgment
@@ -10,6 +14,7 @@ import apply.domain.judgment.JudgmentRepository
 import apply.domain.judgment.JudgmentType
 import apply.domain.judgment.getById
 import apply.domain.judgmentitem.JudgmentItemRepository
+import apply.domain.judgmentitem.getByMissionId
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionRepository
 import apply.domain.mission.getById
@@ -22,6 +27,7 @@ class JudgmentService(
     private val assignmentRepository: AssignmentRepository,
     private val missionRepository: MissionRepository,
     private val judgmentItemRepository: JudgmentItemRepository,
+    private val evaluationTargetRepository: EvaluationTargetRepository,
     private val assignmentArchive: AssignmentArchive
 ) {
     @Transactional
@@ -67,7 +73,14 @@ class JudgmentService(
     fun success(judgmentId: Long, request: SuccessJudgmentRequest) {
         val judgment = judgmentRepository.getById(judgmentId)
         judgment.success(Commit(request.commit), request.passCount, request.totalCount)
-        // TODO: reflect result to evaluation answer
+
+        val assignment = assignmentRepository.getById(judgment.assignmentId)
+        val mission = missionRepository.getById(assignment.missionId)
+        val judgmentItem = judgmentItemRepository.getByMissionId(mission.id)
+        val evaluationTarget =
+            evaluationTargetRepository.getByEvaluationIdAndUserId(mission.evaluationId, assignment.userId)
+
+        evaluationTarget.addEvaluationAnswer(EvaluationAnswer(request.passCount, judgmentItem.evaluationItemId))
     }
 
     @Transactional

@@ -18,6 +18,7 @@ class EvaluationAnswers(
         get() = _answers
 
     fun add(evaluationAnswer: EvaluationAnswer) {
+        _answers.removeIf { it.evaluationItemId == evaluationAnswer.evaluationItemId }
         _answers.add(evaluationAnswer)
     }
 
