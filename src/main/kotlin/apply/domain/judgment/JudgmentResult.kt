@@ -2,6 +2,8 @@ package apply.domain.judgment
 
 import javax.persistence.Column
 import javax.persistence.Embeddable
+import javax.persistence.EnumType
+import javax.persistence.Enumerated
 
 @Embeddable
 data class JudgmentResult(
@@ -15,6 +17,7 @@ data class JudgmentResult(
     val message: String = "",
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     val status: JudgmentStatus = JudgmentStatus.STARTED
 ) {
     init {

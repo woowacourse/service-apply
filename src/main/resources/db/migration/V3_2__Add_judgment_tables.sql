@@ -18,22 +18,23 @@ create table judgment
 ) engine = InnoDB
   default charset = utf8mb4;
 
+alter table judgment_item
+    add constraint uk_judgment_item unique (mission_id);
+
 create table judgment_record
 (
     id                  bigint       not null auto_increment,
     commit_hash         char(40)     not null,
-    completed_date_time datetime(6),
-    message             varchar(255) not null,
     pass_count          integer      not null,
     total_count         integer      not null,
+    message             varchar(255) not null,
+    status              varchar(255) not null,
     started_date_time   datetime(6)  not null,
+    completed_date_time datetime(6),
     judgment_id         bigint       not null,
     primary key (id)
 ) engine = InnoDB
   default charset = utf8mb4;
-
-alter table judgment_item
-    add constraint uk_judgment_item unique (mission_id);
 
 alter table judgment_record
     add constraint uk_judgment_record unique (judgment_id, commit_hash);
