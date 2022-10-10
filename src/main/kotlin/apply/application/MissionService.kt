@@ -128,8 +128,7 @@ class MissionService(
         return evaluationItems.map(::EvaluationItemSelectData)
     }
 
-    // private fun findEvaluationItemData(evaluationItemId: Long): EvaluationItemSelectData {
-    fun findEvaluationItemData(evaluationItemId: Long): EvaluationItemSelectData {
+    private fun findEvaluationItemData(evaluationItemId: Long): EvaluationItemSelectData {
         return evaluationItemRepository
             .findByIdOrNull(evaluationItemId)
             ?.let(::EvaluationItemSelectData)

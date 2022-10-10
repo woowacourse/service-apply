@@ -26,7 +26,7 @@ class EvaluationTargetForm() : BindingFormLayout<EvaluationTargetData>(Evaluatio
         drawRequired()
     }
 
-    constructor(evaluationItems: List<EvaluationItemResponse>, judgmentEvaluationItemId: Long) : this() {
+    constructor(evaluationItems: List<EvaluationItemResponse>, judgmentEvaluationItemId: Long?) : this() {
         evaluationItems.forEach {
             val answerForm = EvaluationItemScoreForm(it.title, it.description, it.maximumScore).apply {
                 setColspan(this, 2)

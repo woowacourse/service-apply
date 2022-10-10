@@ -23,8 +23,8 @@ class EvaluationTargetFormDialog(
     private val evaluationTargetService: EvaluationTargetService,
     private val assignmentService: AssignmentService,
     private val evaluationTargetId: Long,
-    private val judgmentItemId: Long,
-    judgmentEvaluationItemId: Long,
+    private val judgmentItemId: Long?,
+    judgmentEvaluationItemId: Long?,
     reloadComponents: () -> Unit
 ) : Dialog() {
     private val title: H2 = H2()
@@ -66,12 +66,11 @@ class EvaluationTargetFormDialog(
     }
 
     private fun createJudgmentFormLayout(): Component {
-        return if (judgmentItemId != 0L) {
-            val judgmentHeaderForm = FormLayout()
-            judgmentHeaderForm.add(H3("자동 채점"), createJudgmentRequestButton())
+        return if (judgmentItemId != null) {
+            val judgmentHeaderForm = FormLayout(H3("자동 채점"), createJudgmentRequestButton())
             judgmentHeaderForm.setResponsiveSteps(FormLayout.ResponsiveStep("0", 6))
+
             // TODO: LastJudgmentResponse: 자동 채점 결과 받아오기
-            // val judgmentData = JudgmentData(LastJudgmentResponse("url", JudgmentRecord()))
             val judgmentData = JudgmentData("채점 완료", "3d15az6", "빌드 성공", 5, 10)
             val judgementForm = JudgmentForm(judgmentData)
                 .apply { fill(judgmentData) }
@@ -109,11 +108,13 @@ class EvaluationTargetFormDialog(
 
     private fun createJudgmentRequestButton(): Button {
         return createContrastButtonWithDialog("실행", "실행하시겠습니까?") {
-            val judgementRequestData =
-                assignmentService.findJudgementRequestDataByEvaluationTargetId(evaluationTargetId)
-            println("createJudgmentRequestButton 실행됨")
-            println("userId : ${judgementRequestData?.userId}")
-            println("missionId : ${judgementRequestData?.missionId}")
+            // TODO: LastJudgmentResponse: 자동 채점 요청하기
+            // val judgementRequestData =
+            //     assignmentService.findJudgementRequestDataByEvaluationTargetId(evaluationTargetId)
+            // println("createJudgmentRequestButton 실행됨")
+            // println("userId : ${judgementRequestData?.userId}")
+            // println("missionId : ${judgementRequestData?.missionId}")
+            // judgmentService.judgeReal(userId, missionId)
         }
     }
 }

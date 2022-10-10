@@ -186,13 +186,14 @@ data class JudgmentData(
         judgmentResponse.totalCount
     )
 
+    // TODO: constructor 교체하고 지우기
     constructor(
-        playStatus: String,
+        status: String,
         commitHash: String,
         message: String,
         passCount: Int,
         totalCount: Int
-    ) : this(makeJudgementResult(playStatus, commitHash, message), passCount, totalCount)
+    ) : this(makeJudgementResult(status, commitHash, message), passCount, totalCount)
 
     companion object {
         fun makeJudgementResult(status: String, commitHash: String, message: String): String {
