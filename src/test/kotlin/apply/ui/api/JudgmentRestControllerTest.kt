@@ -54,7 +54,7 @@ class JudgmentRestControllerTest : RestControllerTest() {
     fun `자동 채점 성공 결과를 반영한다`() {
         every { judgmentService.success(any(), any()) } just Runs
 
-        mockMvc.post("/api/recruitments/{recruitmentId}/missions/{missionId}/judgments/pass", 1L, 1L) {
+        mockMvc.post("/api/judgments/{judgmentId}/success", 1L) {
             jsonContent(createSuccessJudgmentRequest())
         }.andExpect {
             status { isOk }
@@ -67,7 +67,7 @@ class JudgmentRestControllerTest : RestControllerTest() {
     fun `자동 채점 실패 결과를 반영한다`() {
         every { judgmentService.fail(any(), any()) } just Runs
 
-        mockMvc.post("/api/recruitments/{recruitmentId}/missions/{missionId}/judgments/fail", 1L, 1L) {
+        mockMvc.post("/api/judgments/{judgmentId}/fail", 1L) {
             jsonContent(createFailJudgmentRequest())
         }.andExpect {
             status { isOk }
@@ -80,7 +80,7 @@ class JudgmentRestControllerTest : RestControllerTest() {
     fun `자동 채점 취소 결과를 반영한다`() {
         every { judgmentService.cancel(any(), any()) } just Runs
 
-        mockMvc.post("/api/recruitments/{recruitmentId}/missions/{missionId}/judgments/cancel", 1L, 1L) {
+        mockMvc.post("/api/judgments/{judgmentId}/cancel", 1L) {
             jsonContent(createCancelJudgmentRequest())
         }.andExpect {
             status { isOk }

@@ -64,26 +64,23 @@ fun createJudgmentItem(
 }
 
 fun createSuccessJudgmentRequest(
-    judgmentId: Long = 1L,
     commit: String = COMMIT_HASH,
     passCount: Int = 5,
     totalCount: Int = 10
 ): SuccessJudgmentRequest {
-    return SuccessJudgmentRequest(judgmentId, commit, passCount, totalCount)
+    return SuccessJudgmentRequest(commit, passCount, totalCount)
 }
 
 fun createFailJudgmentRequest(
-    judgmentId: Long = 1L,
     commit: String = COMMIT_HASH,
     message: String = "빌드 실패"
 ): FailJudgmentRequest {
-    return FailJudgmentRequest(judgmentId, commit, message)
+    return FailJudgmentRequest(commit, message)
 }
 
 fun createCancelJudgmentRequest(
-    judgmentId: Long = 1L,
     commit: String = COMMIT_HASH,
     message: String = "서버 실패"
 ): CancelJudgmentRequest {
-    return CancelJudgmentRequest(judgmentId, commit, message)
+    return CancelJudgmentRequest(commit, message)
 }

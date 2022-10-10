@@ -3,6 +3,7 @@ package apply.application
 import apply.COMMIT_HASH
 import apply.PULL_REQUEST_URL
 import apply.createAssignment
+import apply.createCancelJudgmentRequest
 import apply.createCommit
 import apply.createJudgment
 import apply.createFailJudgmentRequest
@@ -302,6 +303,14 @@ class JudgmentServiceTest : BehaviorSpec({
 
             Then("이전 채점 기록의 상태가 실패가 된다") {
                 record.status shouldBe JudgmentStatus.FAILED
+            }
+        }
+
+        When("자동 채점 취소 응답 결과를 저장하면") {
+            judgmentService.cancel(1L, createCancelJudgmentRequest())
+
+            Then("이전 채점 기록의 상태가 취소가 된다") {
+                record.status shouldBe JudgmentStatus.CANCELLED
             }
         }
     }
