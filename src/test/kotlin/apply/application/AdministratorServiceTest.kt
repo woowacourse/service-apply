@@ -84,23 +84,12 @@ class AdministratorServiceTest : BehaviorSpec({
 
         every { administratorRepository.existsById(any()) } returns true
         every { administratorRepository.getById(any()) } returns administrator
-        every { administratorRepository.deleteById(any()) } just Runs
 
         When("해당 관리자를 조회하면") {
             val actual = administratorService.findById(administrator.id)
 
             Then("관리자를 확인할 수 있다") {
                 actual shouldBe AdministratorResponse(administrator)
-            }
-        }
-
-        When("해당 관리자를 삭제하면") {
-            administratorService.deleteById(administrator.id)
-
-            Then("관리자를 삭제할 수 있다") {
-                verify(exactly = 1) {
-                    administratorRepository.deleteById(administrator.id)
-                }
             }
         }
     }
@@ -117,6 +106,47 @@ class AdministratorServiceTest : BehaviorSpec({
 
             Then("모든 관리자를 확인할 수 있다") {
                 actual shouldHaveSize 3
+            }
+        }
+    }
+
+    Given("수정할 관리자가 있는 경우") {
+        val updateName = "변경된이름"
+        val updatePassword = "12345"
+
+        val administrator = createAdministrator(id = 1L)
+
+        every { administratorRepository.getById(any()) } returns administrator
+        every { passwordEncoder.encode(any()) } returns updatePassword
+
+        When("해당 관리자를 수정하면") {
+            administratorService.save(
+                AdministratorData(
+                    name = updateName,
+                    username = ADMINISTRATOR_USERNAME,
+                    password = updatePassword,
+                    confirmPassword = updatePassword,
+                    id = 1L
+                )
+            )
+
+            Then("관리자 정보를 수정할 수 있다") {
+                administrator.name shouldBe updateName
+                administrator.password shouldBe updatePassword
+            }
+        }
+    }
+
+    Given("삭제할 관리자가 있는 경우") {
+        every { administratorRepository.deleteById(any()) } just Runs
+
+        When("해당 관리자를 삭제하면") {
+            administratorService.deleteById(1L)
+
+            Then("관리자를 삭제할 수 있다") {
+                verify(exactly = 1) {
+                    administratorRepository.deleteById(1L)
+                }
             }
         }
     }
