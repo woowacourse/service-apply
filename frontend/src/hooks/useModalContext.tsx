@@ -48,7 +48,9 @@ export const ModalProvider = ({ children }: ModalProviderProps) => {
 const useModalContext = () => {
   const modalContext = useContext(ModalContext);
 
-  if (!modalContext) throw Error(ERROR_MESSAGE.HOOKS.CANNOT_FIND_MODAL_CONTEXT);
+  if (!modalContext) {
+    throw Error(ERROR_MESSAGE.HOOKS.CANNOT_FIND_MODAL_CONTEXT);
+  }
 
   return modalContext;
 };

@@ -119,6 +119,10 @@ const ApplicationRegister = () => {
     openModal();
   };
 
+  const handleClickConfirmButton = () => {
+    save(form);
+  };
+
   return (
     <div className={styles.box}>
       <Container title="지원서 작성" titleAlign={TITLE_ALIGN.LEFT}>
@@ -200,9 +204,7 @@ const ApplicationRegister = () => {
           recruitmentItems={recruitmentItems}
           answers={form[APPLICATION_REGISTER_FORM_NAME.ANSWERS]}
           referenceUrl={form[APPLICATION_REGISTER_FORM_NAME.REFERENCE_URL]}
-          onClickConfirmButton={() => {
-            save(form);
-          }}
+          onClickConfirmButton={handleClickConfirmButton}
         />
       </Modal>
     </div>
