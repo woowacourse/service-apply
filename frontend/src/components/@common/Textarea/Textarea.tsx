@@ -1,10 +1,20 @@
-import React from "react";
-import PropTypes from "prop-types";
 import classNames from "classnames";
 import styles from "./Textarea.module.css";
 
-const Textarea = ({ className, readOnly, value, maxLength, onChange, ...props }) => {
-  const handleChange = (event) => {
+export type TextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
+  value?: string;
+  onChange: React.ChangeEventHandler<HTMLTextAreaElement>;
+};
+
+const Textarea = ({
+  maxLength,
+  value = "",
+  className = "",
+  readOnly = false,
+  onChange,
+  ...props
+}: TextareaProps) => {
+  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     event.target.value = event.target.value.replaceAll("\r\n", "\n");
 
     if (maxLength !== undefined && event.target.value.length > maxLength) {
@@ -14,7 +24,7 @@ const Textarea = ({ className, readOnly, value, maxLength, onChange, ...props })
     onChange(event);
   };
 
-  const trimEnd = (event) => {
+  const trimEnd = (event: React.FocusEvent<HTMLTextAreaElement>) => {
     event.target.value = event.target.value.trimEnd();
 
     onChange(event);
@@ -30,19 +40,6 @@ const Textarea = ({ className, readOnly, value, maxLength, onChange, ...props })
       {...props}
     />
   );
-};
-
-Textarea.propTypes = {
-  className: PropTypes.string,
-  readOnly: PropTypes.bool,
-  value: PropTypes.string,
-  maxLength: PropTypes.number,
-};
-
-Textarea.defaultProps = {
-  className: "",
-  readOnly: false,
-  value: "",
 };
 
 export default Textarea;

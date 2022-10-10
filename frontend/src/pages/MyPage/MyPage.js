@@ -5,7 +5,7 @@ import Button, { BUTTON_VARIANT } from "../../components/@common/Button/Button";
 import Container from "../../components/@common/Container/Container";
 import { PATH } from "../../constants/path";
 import useUserInfoContext from "../../hooks/useUserInfoContext";
-import * as styles from "./MyPage.module.css";
+import styles from "./MyPage.module.css";
 
 const MyPage = () => {
   const navigate = useNavigate();

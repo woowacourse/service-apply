@@ -12,7 +12,7 @@ import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
 import { PATH } from "../../constants/path";
 import useMyPageEditForm, { MY_PAGE_EDIT_FORM_NAME } from "../../hooks/useMyPageEditForm";
 import useUserInfoContext from "../../hooks/useUserInfoContext";
-import * as styles from "./MyPageEdit.module.css";
+import styles from "./MyPageEdit.module.css";
 
 const MyPageEdit = () => {
   const navigate = useNavigate();
