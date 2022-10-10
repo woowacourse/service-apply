@@ -5,12 +5,12 @@
   --pc-main-width: 800px;
   --pc-main-width-narrow: 512px;
 
-  --modal-window-z-index: 1020;
-  --modal-portal-z-index: 1010;
-  --tooltip-z-index: 1000;
-  --tooltip-dimmed-z-index: 999;
-  --header-z-index: 998;
-  --nav-z-index: 997;
+  --modal-window-z-index: 1000;
+  --modal-portal-z-index: 990;
+  --tooltip-z-index: 980;
+  --tooltip-dimmed-z-index: 970;
+  --header-z-index: 960;
+  --nav-z-index: 950;
 }
 
 * {
