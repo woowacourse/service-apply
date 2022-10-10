@@ -27,12 +27,12 @@
 }
 
 .application-item-description {
-  color: #666666;
+  color: var(--gray-008);
   margin-bottom: 0.5rem;
 }
 
 .application-item-answer-length {
-  color: #999999;
+  color: var(--gray-007);
   align-self: flex-end;
 }
 
