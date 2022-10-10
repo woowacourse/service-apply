@@ -13,6 +13,12 @@
   font-size: 0.875rem;
   line-height: 1.4rem;
   text-align: justify;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.content::-webkit-scrollbar {
+  display: none;
 }
 
 .application-item-box {

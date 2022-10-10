@@ -25,7 +25,6 @@
 .box {
   position: fixed;
   margin: auto;
-  padding: 1.5rem;
   max-width: 40rem;
   z-index: var(--modal-window-z-index);
   display: flex;
@@ -37,8 +36,9 @@
 @media only screen and (max-width: 420px) {
   .box {
     bottom: 0;
-    max-height: 400px;
-    min-height: 150px;
+    padding: 1rem;
+    max-height: 80%;
+    min-height: 10rem;
     width: 100%;
     border-radius: 8px 8px 0 0;
     animation: drag-up 0.3s forwards;
@@ -49,6 +49,7 @@
   .box {
     left: 4rem;
     right: 4rem;
+    padding: 1.5rem;
     max-height: calc(100% - 8rem);
     border-radius: 8px;
     animation: subtle-pop-up 0.3s forwards;
