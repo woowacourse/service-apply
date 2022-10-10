@@ -2,8 +2,8 @@ package apply.infra.judgment
 
 import apply.application.JudgmentRequest
 import apply.domain.judgment.Commit
-import apply.domain.judgment.JudgmentType
-import apply.domain.judgmentitem.ProgrammingLanguage
+import apply.domain.judgment.JudgmentType.EXAMPLE
+import apply.domain.judgmentitem.ProgrammingLanguage.JAVA
 import io.kotest.core.spec.style.StringSpec
 import support.test.IntegrationTest
 
@@ -14,12 +14,12 @@ class SqsClientTest(
     "성공적인 전송".config(enabled = false) {
         sqsClient.requestJudge(
             JudgmentRequest(
-                1L,
-                JudgmentType.EXAMPLE,
-                ProgrammingLanguage.JAVA,
-                "baseball",
-                "",
-                Commit("")
+                judgmentId = 1L,
+                judgmentType = EXAMPLE,
+                programmingLanguage = JAVA,
+                testName = "onboarding",
+                pullRequestUrl = "https://github.com/woowacourse/java-onboarding-precourse-test/pull/3",
+                commit = Commit("862a30c9bde7340c71c66ef8382973f4e23d796d")
             )
         )
     }

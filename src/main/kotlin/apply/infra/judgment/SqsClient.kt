@@ -3,6 +3,7 @@ package apply.infra.judgment
 import apply.application.JudgmentAgency
 import apply.application.JudgmentRequest
 import apply.infra.AwsProperties
+import apply.infra.AwsSqsProperties
 import com.amazonaws.auth.AWSStaticCredentialsProvider
 import com.amazonaws.regions.Regions
 import com.amazonaws.services.sqs.AmazonSQS
@@ -17,6 +18,7 @@ private val logger = KotlinLogging.logger {}
 @Component
 class SqsClient(
     awsProperties: AwsProperties,
+    private val awsSqsProperties: AwsSqsProperties,
     private val objectMapper: ObjectMapper
 ) : JudgmentAgency {
     private val client: AmazonSQS = AmazonSQSClientBuilder
@@ -26,29 +28,12 @@ class SqsClient(
         .build()
 
     override fun requestJudge(request: JudgmentRequest) {
+        val messageBody = objectMapper.writeValueAsString(SqsRequest(request))
         val message = SendMessageRequest()
-            .withQueueUrl(client.getQueueUrl("queue-name").queueUrl)
-            .withMessageBody(objectMapper.writeValueAsString(SqsRequest(request)))
+            .withQueueUrl(awsSqsProperties.queueUrl)
+            .withMessageBody(messageBody)
         runCatching { client.sendMessage(message) }
-            .onSuccess { logger.info { it.toString() } }
+            .onSuccess { logger.info { "request: $messageBody, response: $it" } }
             .onFailure { e -> throw IllegalArgumentException(e) }
     }
-}
-
-data class SqsRequest(
-    val judgmentId: Long,
-    val testType: String,
-    val language: String,
-    val testName: String,
-    val pullRequestUrl: String,
-    val commitHash: String
-) {
-    constructor(request: JudgmentRequest) : this(
-        request.judgmentId,
-        request.judgmentType.name,
-        request.programmingLanguage.name,
-        request.testName,
-        request.pullRequestUrl,
-        request.commit.hash
-    )
 }

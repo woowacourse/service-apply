@@ -10,3 +10,7 @@ import org.springframework.boot.context.properties.ConstructorBinding
 data class AwsProperties(val accessKey: String, val secretKey: String) {
     val awsCredentials: AWSCredentials = BasicAWSCredentials(accessKey, secretKey)
 }
+
+@ConfigurationProperties("aws.sqs")
+@ConstructorBinding
+data class AwsSqsProperties(val queueUrl: String)
