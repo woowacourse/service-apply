@@ -8,13 +8,20 @@ type ModalPortalProps = React.PropsWithChildren<{
 }>;
 
 const ModalPortal = ({ children, closeModal }: ModalPortalProps) => {
-  const ref = useRef<Element | null>();
+  const ref = useRef<Element | null>(null);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
 
-    const modalRoot = document.getElementById("modal-root");
+    let modalRoot = document.getElementById("modal-root");
+
+    if (!modalRoot) {
+      modalRoot = document.createElement("div");
+      modalRoot.id = "modal-root";
+      document.body.appendChild(modalRoot);
+    }
+
     ref.current = modalRoot;
   }, []);
 
