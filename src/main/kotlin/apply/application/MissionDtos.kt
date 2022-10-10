@@ -117,6 +117,36 @@ data class MyMissionResponse(
     )
 }
 
+data class MissionJudgmentResponse(
+    val id: Long,
+    val title: String,
+    val description: String,
+    val submittable: Boolean,
+    val submitted: Boolean,
+    val startDateTime: LocalDateTime,
+    val endDateTime: LocalDateTime,
+    val status: MissionStatus,
+    val isAutomation: Boolean,
+    val judgment: LastJudgmentResponse?,
+) {
+    constructor(
+        myMissionResponse: MyMissionResponse,
+        lastJudgmentResponse: LastJudgmentResponse?,
+        isAutomation: Boolean
+    ) : this(
+        myMissionResponse.id,
+        myMissionResponse.title,
+        myMissionResponse.description,
+        myMissionResponse.submittable,
+        myMissionResponse.submitted,
+        myMissionResponse.startDateTime,
+        myMissionResponse.endDateTime,
+        myMissionResponse.status,
+        isAutomation,
+        lastJudgmentResponse
+    )
+}
+
 data class JudgmentItemData(
     var id: Long = 0L,
     var testName: String = "",

@@ -1,10 +1,11 @@
 package apply.ui.api
 
+import apply.application.JudgmentService
 import apply.application.MissionAndEvaluationResponse
 import apply.application.MissionData
+import apply.application.MissionJudgmentResponse
 import apply.application.MissionResponse
 import apply.application.MissionService
-import apply.application.MyMissionResponse
 import apply.domain.user.User
 import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
@@ -20,7 +21,8 @@ import support.toUri
 @RequestMapping("/api/recruitments/{recruitmentId}/missions")
 @RestController
 class MissionRestController(
-    private val missionService: MissionService
+    private val missionService: MissionService,
+    private val judgmentService: JudgmentService
 ) {
     @PostMapping
     fun save(
@@ -56,8 +58,11 @@ class MissionRestController(
     fun findMyMissionsByRecruitmentId(
         @PathVariable recruitmentId: Long,
         @LoginUser user: User
-    ): ResponseEntity<ApiResponse<List<MyMissionResponse>>> {
-        val responses = missionService.findAllByUserIdAndRecruitmentId(user.id, recruitmentId)
+    ): ResponseEntity<ApiResponse<List<MissionJudgmentResponse>>> {
+        val missionResponses = missionService.findAllByUserIdAndRecruitmentId(user.id, recruitmentId)
+        val judgmentResponses = missionResponses.associateBy({ it }, { judgmentService.findExample(user.id, it.id) })
+        val responses = judgmentResponses.map { MissionJudgmentResponse(it.key, it.value, it.value != null) }
+
         return ResponseEntity.ok(ApiResponse.success(responses))
     }
 
