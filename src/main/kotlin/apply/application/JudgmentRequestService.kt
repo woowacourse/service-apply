@@ -1,20 +1,34 @@
 package apply.application
 
-import apply.domain.judgment.JudgmentRepository
+import apply.domain.assignment.AssignmentRepository
+import apply.domain.assignment.getById
 import apply.domain.judgment.JudgmentStartedEvent
-import apply.domain.mission.MissionRepository
+import apply.domain.judgmentitem.JudgmentItemRepository
+import apply.domain.judgmentitem.getByMissionId
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.springframework.transaction.event.TransactionalEventListener
 
 @Service
 class JudgmentRequestService(
-    val missionRepository: MissionRepository,
-    val judgmentRepository: JudgmentRepository
+    private val judgmentItemRepository: JudgmentItemRepository,
+    private val assignmentRepository: AssignmentRepository,
+    private val judgmentAgency: JudgmentAgency
 ) {
     @Async
     @TransactionalEventListener
     fun request(event: JudgmentStartedEvent) {
-        TODO("Not yet implemented")
+        val assignment = assignmentRepository.getById(event.assignmentId)
+        val judgmentItem = judgmentItemRepository.getByMissionId(assignment.missionId)
+        judgmentAgency.requestJudge(
+            JudgmentRequest(
+                event.judgmentId,
+                event.type,
+                judgmentItem.programmingLanguage,
+                judgmentItem.testName,
+                assignment.pullRequestUrl,
+                event.commit
+            )
+        )
     }
 }

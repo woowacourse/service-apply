@@ -1,9 +1,14 @@
 package apply.ui.api
 
 import apply.application.JudgmentService
+import apply.createCancelJudgmentRequest
+import apply.createFailJudgmentRequest
 import apply.createLastJudgmentResponse
+import apply.createSuccessJudgmentRequest
 import com.ninjasquad.springmockk.MockkBean
+import io.mockk.Runs
 import io.mockk.every
+import io.mockk.just
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
@@ -27,6 +32,58 @@ class JudgmentRestControllerTest : RestControllerTest() {
             content { success(response) }
         }.andDo {
             handle(document("judgment-judge-example-post"))
+        }
+    }
+
+    @Test
+    fun `본 자동 채점을 실행한다`() {
+        val response = createLastJudgmentResponse()
+        every { judgmentService.judgeReal(any(), any()) } returns response
+
+        mockMvc.post("/api/recruitments/{recruitmentId}/missions/{missionId}/judgments/judge-real", 1L, 1L) {
+            bearer("valid_token")
+        }.andExpect {
+            status { isOk }
+            content { success(response) }
+        }
+    }
+
+    @Test
+    fun `자동 채점 성공 결과를 반영한다`() {
+        every { judgmentService.success(any(), any()) } just Runs
+
+        mockMvc.post("/api/judgments/{judgmentId}/success", 1L) {
+            jsonContent(createSuccessJudgmentRequest())
+        }.andExpect {
+            status { isOk }
+        }.andDo {
+            handle(document("judgment-success-result-post"))
+        }
+    }
+
+    @Test
+    fun `자동 채점 실패 결과를 반영한다`() {
+        every { judgmentService.fail(any(), any()) } just Runs
+
+        mockMvc.post("/api/judgments/{judgmentId}/fail", 1L) {
+            jsonContent(createFailJudgmentRequest())
+        }.andExpect {
+            status { isOk }
+        }.andDo {
+            handle(document("judgment-fail-result-post"))
+        }
+    }
+
+    @Test
+    fun `자동 채점 취소 결과를 반영한다`() {
+        every { judgmentService.cancel(any(), any()) } just Runs
+
+        mockMvc.post("/api/judgments/{judgmentId}/cancel", 1L) {
+            jsonContent(createCancelJudgmentRequest())
+        }.andExpect {
+            status { isOk }
+        }.andDo {
+            handle(document("judgment-cancel-result-post"))
         }
     }
 }

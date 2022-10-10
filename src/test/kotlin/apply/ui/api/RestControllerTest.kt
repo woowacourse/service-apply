@@ -1,6 +1,7 @@
 package apply.ui.api
 
 import apply.createUser
+import apply.security.AccessorResolver
 import apply.security.LoginFailedException
 import apply.security.LoginUser
 import apply.security.LoginUserResolver
@@ -37,6 +38,9 @@ import support.test.TestEnvironment
 abstract class RestControllerTest {
     @MockkBean
     private lateinit var loginUserResolver: LoginUserResolver
+
+    @MockkBean
+    private lateinit var accessorResolver: AccessorResolver
 
     @Autowired
     lateinit var objectMapper: ObjectMapper
@@ -75,6 +79,7 @@ abstract class RestControllerTest {
                 }
             }
         }
+        every { accessorResolver.supportsParameter(any()) } returns false
     }
 
     fun MockHttpServletRequestDsl.jsonContent(value: Any) {

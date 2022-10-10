@@ -33,6 +33,9 @@ class JudgmentRecord(
         private set
 
     val completed: Boolean
+        get() = status in listOf(JudgmentStatus.SUCCEEDED, JudgmentStatus.FAILED, JudgmentStatus.CANCELLED)
+
+    val touchable: Boolean
         get() = status in listOf(JudgmentStatus.SUCCEEDED, JudgmentStatus.FAILED)
 
     val status: JudgmentStatus

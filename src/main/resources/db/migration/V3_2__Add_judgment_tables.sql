@@ -25,6 +25,7 @@ create table judgment_record
     completed_date_time datetime(6),
     message             varchar(255) not null,
     pass_count          integer      not null,
+    status              varchar(255) not null,
     total_count         integer      not null,
     started_date_time   datetime(6)  not null,
     judgment_id         bigint       not null,
