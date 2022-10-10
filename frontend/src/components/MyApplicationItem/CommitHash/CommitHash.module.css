@@ -1,0 +1,4 @@
+.commit-hash {
+  color: var(--blue);
+  text-decoration: underline;
+}

@@ -1,0 +1,23 @@
+.pending-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.test-result-text {
+  margin-bottom: 0.2rem;
+  font-size: 1.125rem;
+  font-weight: bold;
+}
+
+.test-result-score.pending {
+  color: var(--blue);
+}
+
+.test-result-score.pass {
+  color: var(--green);
+}
+
+.test-result-score.fail {
+  color: var(--red);
+}

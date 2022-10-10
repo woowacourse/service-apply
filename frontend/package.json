@@ -68,7 +68,7 @@
     "babel-loader": "8.1.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "msw": "^0.34.0",
+    "msw": "^0.47.4",
     "msw-storybook-addon": "^1.2.0",
     "prettier": "^2.3.2",
     "typescript": "^4.7.4"

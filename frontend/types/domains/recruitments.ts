@@ -1,6 +1,7 @@
+import { JUDGMENT_STATUS } from "./../../src/constants/judgment";
+import { MISSION_STATUS, RECRUITMENT_STATUS } from "./../../src/constants/recruitment";
 import { ISO8601DateString } from "./common";
-
-export type RecruitmentStatus = "RECRUITABLE" | "RECRUITING" | "UNRECRUITABLE" | "ENDED";
+export type RecruitmentStatus = keyof typeof RECRUITMENT_STATUS;
 
 export type Recruitment = {
   id: number;
@@ -33,7 +34,18 @@ export type Mission = {
   submitted: boolean;
   startDateTime: ISO8601DateString;
   endDateTime: ISO8601DateString;
-  status: RecruitmentStatus;
+  status: MissionStatus;
+  isAutomation: boolean;
+  judgment: {
+    pullRequestUrl: string;
+    commitHash: string;
+    status: TestStatus;
+    passCount: number;
+    totalCount: number;
+    message: string;
+    startedDateTime: ISO8601DateString;
+    commitUrl: string;
+  } | null;
 };
 
 export type Assignment = {
@@ -44,3 +56,12 @@ export type Assignment = {
 };
 
 export type AssignmentData = Omit<Assignment, "id">;
+
+export type MissionStatus = keyof typeof MISSION_STATUS;
+
+export type TestStatus = keyof typeof JUDGMENT_STATUS;
+
+export type MyApplicationType = {
+  recruitmentId: number;
+  submitted: boolean;
+};
