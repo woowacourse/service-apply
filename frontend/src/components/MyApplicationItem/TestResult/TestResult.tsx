@@ -9,7 +9,7 @@ type TestResultProps = {
 
 const TestResult = ({ judgment }: TestResultProps) => {
   if (judgment === null) {
-    return <span className={classNames(styles["test-result-score"])}>없음</span>;
+    return <span className={styles["test-result-text"]}>예제 테스트 결과 : 없음</span>;
   }
 
   const { passCount, totalCount, message, status } = judgment;

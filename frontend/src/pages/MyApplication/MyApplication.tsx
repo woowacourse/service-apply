@@ -12,7 +12,7 @@ import useMissions from "./../../hooks/useMissions";
 import styles from "./MyApplication.module.css";
 
 export const BUTTON_LABEL = {
-  BEFORE_SUBMISSION: "시작 전",
+  BEFORE_SUBMISSION: "준비 중",
   EDIT: "수정하기",
   SUBMIT: "제출하기",
   UNSUBMITTABLE: "제출불가",

@@ -6,14 +6,14 @@ type PullRequestUrlProps = {
 
 const PullRequestUrl = ({ judgment }: PullRequestUrlProps) => {
   if (judgment === null) {
-    return <span>{`Pull request 주소 : - `} </span>;
+    return <span>Pull request 주소 : - </span>;
   }
 
   const pullRequestUrl = judgment.pullRequestUrl;
 
   return (
     <div>
-      <span>{`Pull request 주소 : ${pullRequestUrl}`}</span>
+      <span>Pull request 주소 : {pullRequestUrl}</span>
     </div>
   );
 };

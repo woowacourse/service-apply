@@ -2,6 +2,7 @@ import classNames from "classnames";
 import { Mission, Recruitment } from "../../../../types/domains/recruitments";
 import { fetchMyMissionJudgment } from "../../../api";
 import { JUDGMENT_STATUS } from "../../../constants/judgment";
+import { MISSION_STATUS } from "../../../constants/recruitment";
 import useTokenContext from "../../../hooks/useTokenContext";
 import Button, { BUTTON_VARIANT } from "../../@common/Button/Button";
 import styles from "./ApplicationButtons.module.css";
@@ -17,7 +18,7 @@ const RefreshButton = ({ recruitmentId, missionItem, setMission }: RefreshButton
   const missionId = missionItem.id;
   const status = missionItem.judgment?.status;
 
-  if (status !== JUDGMENT_STATUS.STARTED) {
+  if (status !== JUDGMENT_STATUS.STARTED || missionItem.status !== MISSION_STATUS.SUBMITTING) {
     return null;
   }
 

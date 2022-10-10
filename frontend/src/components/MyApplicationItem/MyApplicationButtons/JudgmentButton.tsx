@@ -18,10 +18,6 @@ const JudgmentButton = ({ missionItem, recruitmentId, setMission }: JudgmentButt
   const missionStatus = missionItem.status;
   const judgment = missionItem.judgment;
 
-  if (judgment === null) {
-    return null;
-  }
-
   const handleJudgeMission = async ({
     missionId,
     recruitmentId,
@@ -46,7 +42,8 @@ const JudgmentButton = ({ missionItem, recruitmentId, setMission }: JudgmentButt
       variant={BUTTON_VARIANT.CONTAINED}
       cancel={false}
       disabled={
-        judgment.status === JUDGMENT_STATUS.STARTED ||
+        missionItem.submitted === false ||
+        judgment?.status === JUDGMENT_STATUS.STARTED ||
         missionStatus === MISSION_STATUS.ENDED ||
         missionStatus === MISSION_STATUS.UNSUBMITTABLE
       }

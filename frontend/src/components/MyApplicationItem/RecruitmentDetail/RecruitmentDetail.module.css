@@ -10,7 +10,7 @@
   color: var(--gray-008);
 }
 
-@media screen and (max-width: 32.0625rem) {
+@media screen and (max-width: 513px) {
   .date {
     gap: 4px;
     font-size: 14px;
