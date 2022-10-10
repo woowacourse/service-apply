@@ -79,6 +79,7 @@ abstract class RestControllerTest {
                 }
             }
         }
+        every { accessorResolver.supportsParameter(any()) } returns false
     }
 
     fun MockHttpServletRequestDsl.jsonContent(value: Any) {

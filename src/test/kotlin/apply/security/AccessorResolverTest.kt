@@ -13,7 +13,6 @@ import java.nio.charset.StandardCharsets
 import java.util.Base64
 
 class AccessorResolverTest : StringSpec({
-
     val methodParameter = mockk<MethodParameter>()
     val webRequest = mockk<NativeWebRequest>()
 
