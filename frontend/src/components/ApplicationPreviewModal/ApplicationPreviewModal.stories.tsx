@@ -18,7 +18,7 @@ const Template: ComponentStory<typeof ApplicationPreviewModal> = (args) => {
         type="button"
         variant={BUTTON_VARIANT.CONTAINED}
         cancel={false}
-        className
+        className=""
         onClick={openModal}
       >
         open modal
