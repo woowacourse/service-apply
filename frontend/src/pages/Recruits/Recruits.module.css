@@ -8,12 +8,14 @@
 }
 
 .program-name {
-  font-size: 3rem;
+  font-size: 2.5rem;
   font-weight: bold;
+  white-space: pre-line;
 }
 
 .program-description {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
+  white-space: pre-line;
 }
 
 .tab {
@@ -93,5 +95,27 @@
   .program-tab-list {
     gap: 1rem;
     margin-bottom: 1.5rem;
+  }
+}
+
+@media screen and (max-width: 512px) {
+  .program-introduce-box {
+    margin: 0 auto 3rem;
+  }
+
+  .program-name {
+    font-size: 2rem;
+    font-weight: bold;
+    white-space: pre-line;
+  }
+
+  .program-description {
+    font-size: 1rem;
+    white-space: pre-line;
+  }
+
+  .recruitment-list-title {
+    font-size: 1.5rem;
+    font-weight: bold;
   }
 }
