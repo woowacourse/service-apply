@@ -65,6 +65,19 @@ class JudgmentRestControllerTest : RestControllerTest() {
     }
 
     @Test
+    fun `본 자동 채점 결과를 조회한다`() {
+        val response = createLastJudgmentResponse()
+        every { judgmentService.findReal(any(), any()) } returns response
+
+        mockMvc.get("/api/recruitments/{recruitmentId}/missions/{missionId}/judgments/judge-real", 1L, 1L) {
+            bearer("valid_token")
+        }.andExpect {
+            status { isOk }
+            content { success(response) }
+        }
+    }
+
+    @Test
     fun `전체 자동 채점을 실행한다`() {
         every { judgmentService.judgeAll(any()) } returns Unit
 

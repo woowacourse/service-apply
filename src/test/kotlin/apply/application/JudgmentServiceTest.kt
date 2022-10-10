@@ -322,9 +322,14 @@ class JudgmentServiceTest : BehaviorSpec({
         When("예제 자동 채점 결과를 조회하면") {
             val actual = judgmentService.findExample(1L, 1L)
 
-            Then("예제 자동 채점 결과를 돌려준다") {
+            Then("예제 자동 채점 결과를 확인할 수 있다") {
                 actual.shouldNotBeNull()
-                actual.status shouldBe SUCCEEDED
+                assertSoftly(actual) {
+                    commitHash shouldBe COMMIT_HASH
+                    passCount shouldBe 9
+                    totalCount shouldBe 10
+                    status shouldBe SUCCEEDED
+                }
             }
         }
     }
@@ -349,9 +354,14 @@ class JudgmentServiceTest : BehaviorSpec({
         When("본 자동 채점 결과를 조회하면") {
             val actual = judgmentService.findExample(1L, 1L)
 
-            Then("본 자동 채점 결과를 돌려준다") {
+            Then("본 자동 채점 결과를 확인할 수 있다") {
                 actual.shouldNotBeNull()
-                actual.status shouldBe SUCCEEDED
+                assertSoftly(actual) {
+                    commitHash shouldBe COMMIT_HASH
+                    passCount shouldBe 9
+                    totalCount shouldBe 10
+                    status shouldBe SUCCEEDED
+                }
             }
         }
     }
@@ -365,7 +375,7 @@ class JudgmentServiceTest : BehaviorSpec({
         When("예제 자동 채점 결과를 조회하면") {
             val actual = judgmentService.findExample(1L, 1L)
 
-            Then("null을 돌려준다") {
+            Then("null을 반환한다") {
                 actual.shouldBeNull()
             }
         }
