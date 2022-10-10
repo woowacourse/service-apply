@@ -7,7 +7,7 @@ type CommitHashProps = {
 
 const CommitHash = ({ judgment }: CommitHashProps) => {
   if (judgment === null) {
-    return <span>{`예제 테스트 실행 Commit : - `} </span>;
+    return <span>예제 테스트 실행 Commit : - </span>;
   }
 
   const commitUrl = judgment.commitUrl;

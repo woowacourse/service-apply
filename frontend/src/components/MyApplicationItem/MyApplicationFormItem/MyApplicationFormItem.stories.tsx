@@ -40,6 +40,7 @@ Default.args = {
     endDateTime: "2020-11-05T10:00:00",
     status: "ENDED",
   },
+  submitted: false,
 };
 
 export const Recruiting = Template.bind({});
@@ -57,4 +58,23 @@ Recruiting.args = {
     endDateTime: "2021-11-30T10:00:00",
     status: "RECRUITING",
   },
+  submitted: false,
+};
+
+export const AfterRecruit = Template.bind({});
+AfterRecruit.args = {
+  recruitment: {
+    id: 3,
+    title: "우아한테크캠프 2기",
+    recruitable: true,
+    term: {
+      id: 1,
+      name: "name",
+    },
+    hidden: false,
+    startDateTime: "2020-10-25T15:00:00",
+    endDateTime: "2021-11-30T10:00:00",
+    status: "RECRUITING",
+  },
+  submitted: true,
 };

@@ -26,30 +26,30 @@ const Template: ComponentStory<typeof MyMissionItem> = (args) => <MyMissionItem 
 
 export const NotSubmittedMission = Template.bind({});
 NotSubmittedMission.args = {
-  mission: missionsDummy["1"][0],
+  mission: missionsDummy["2"][0],
   recruitmentId: "1",
 };
 
 export const PendingJudgmentMission = Template.bind({});
 PendingJudgmentMission.args = {
-  mission: missionsDummy["1"][1],
+  mission: missionsDummy["2"][2],
   recruitmentId: "1",
 };
 
 export const NoPassJudgmentMission = Template.bind({});
 NoPassJudgmentMission.args = {
-  mission: missionsDummy["1"][2],
-  recruitmentId: "1",
+  mission: missionsDummy["2"][5],
+  recruitmentId: "7",
 };
 
 export const FailJudgmentMission = Template.bind({});
 FailJudgmentMission.args = {
-  mission: missionsDummy["1"][3],
-  recruitmentId: "1",
+  mission: missionsDummy["2"][6],
+  recruitmentId: "8",
 };
 
 export const PassJudgmentMission = Template.bind({});
 PassJudgmentMission.args = {
-  mission: missionsDummy["1"][4],
-  recruitmentId: "1",
+  mission: missionsDummy["2"][4],
+  recruitmentId: "6",
 };
