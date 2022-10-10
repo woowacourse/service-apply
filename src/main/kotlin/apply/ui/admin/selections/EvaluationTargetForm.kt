@@ -32,7 +32,7 @@ class EvaluationTargetForm() : BindingFormLayout<EvaluationTargetData>(Evaluatio
                 setColspan(this, 2)
             }
             if (judgmentEvaluationItemId == it.id) {
-                answerForm.element.style.set("-webkit-text-fill-color", "red")
+                answerForm.changeColor("red")
             }
             evaluationItemScores.add(answerForm)
             addComponentAtIndex(getIndexOfLastAnswer(), answerForm)

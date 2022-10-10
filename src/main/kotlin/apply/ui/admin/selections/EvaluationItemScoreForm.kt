@@ -35,4 +35,9 @@ class EvaluationItemScoreForm() : BindingIdentityFormLayout<EvaluationItemScoreD
     override fun fill(data: EvaluationItemScoreData) {
         fillDefault(data)
     }
+
+    fun changeColor(color: String) {
+        title.style.set("-webkit-text-fill-color", color)
+        score.style.set("-webkit-text-fill-color", color)
+    }
 }
