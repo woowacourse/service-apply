@@ -10,7 +10,6 @@ import MessageTextInput from "../../components/@common/MessageTextInput/MessageT
 import CheckBox from "../../components/form/CheckBox/CheckBox";
 import Form from "../../components/form/Form/Form";
 import ApplicationPreviewModal from "../../components/ApplicationPreviewModal/ApplicationPreviewModal";
-import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
 import { FORM } from "../../constants/form";
 import { SUCCESS_MESSAGE } from "../../constants/messages";
 import { PATH, PARAM } from "../../constants/path";
