@@ -53,7 +53,12 @@ class JudgmentServiceTest : BehaviorSpec({
     val assignmentArchive = mockk<AssignmentArchive>()
 
     val judgmentService = JudgmentService(
-        judgmentRepository, assignmentRepository, missionRepository, judgmentItemRepository, evaluationTargetRepository, assignmentArchive
+        judgmentRepository,
+        assignmentRepository,
+        missionRepository,
+        judgmentItemRepository,
+        evaluationTargetRepository,
+        assignmentArchive
     )
 
     Given("과제 제출물을 제출할 수 없는 과제가 있는 경우") {
@@ -289,7 +294,7 @@ class JudgmentServiceTest : BehaviorSpec({
         every { judgmentRepository.save(any()) } returns judgment
 
         When("전체 자동 채점을 요청하면") {
-            Then("정상으로 동작한다") {
+            Then("모든 과제 제출물들의 본 자동 채점을 실행한다") {
                 shouldNotThrowAny {
                     judgmentService.judgeAll(mission.id)
                 }
