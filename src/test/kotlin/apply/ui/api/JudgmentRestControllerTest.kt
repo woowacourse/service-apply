@@ -65,6 +65,17 @@ class JudgmentRestControllerTest : RestControllerTest() {
     }
 
     @Test
+    fun `다건의 자동 채점을 실행한다`() {
+        every { judgmentService.judgeAll(any()) } returns Unit
+
+        mockMvc.post("/api/recruitments/{recruitmentId}/missions/{missionId}/judgments/judge-all", 1L, 1L) {
+            bearer("valid_token")
+        }.andExpect {
+            status { isOk }
+        }
+    }
+
+    @Test
     fun `자동 채점 성공 결과를 반영한다`() {
         every { judgmentService.success(any(), any()) } just Runs
 

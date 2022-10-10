@@ -51,12 +51,22 @@ class JudgmentRestController(
         return ResponseEntity.ok(ApiResponse.success(response))
     }
 
+    @PostMapping("/recruitments/{recruitmentId}/missions/{missionId}/judgments/judge-all")
+    fun judgeAll(
+        @PathVariable recruitmentId: Long,
+        @PathVariable missionId: Long,
+        @LoginUser(administrator = true) user: User
+    ): ResponseEntity<Unit> {
+        judgmentService.judgeAll(missionId)
+        return ResponseEntity.ok().build()
+    }
+
     @PostMapping("/judgments/{judgmentId}/success")
     fun success(
         @PathVariable judgmentId: Long,
         @RequestBody request: SuccessJudgmentRequest,
         @Accessor("lambda") ignored: Unit
-    ): ResponseEntity<Void> {
+    ): ResponseEntity<Unit> {
         judgmentService.success(judgmentId, request)
         return ResponseEntity.ok().build()
     }
@@ -66,7 +76,7 @@ class JudgmentRestController(
         @PathVariable judgmentId: Long,
         @RequestBody request: FailJudgmentRequest,
         @Accessor("lambda") ignored: Unit
-    ): ResponseEntity<Void> {
+    ): ResponseEntity<Unit> {
         judgmentService.fail(judgmentId, request)
         return ResponseEntity.ok().build()
     }
@@ -76,7 +86,7 @@ class JudgmentRestController(
         @PathVariable judgmentId: Long,
         @RequestBody request: CancelJudgmentRequest,
         @Accessor("lambda") ignored: Unit
-    ): ResponseEntity<Void> {
+    ): ResponseEntity<Unit> {
         judgmentService.cancel(judgmentId, request)
         return ResponseEntity.ok().build()
     }
