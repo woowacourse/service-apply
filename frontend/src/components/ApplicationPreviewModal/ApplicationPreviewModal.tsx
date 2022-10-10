@@ -5,6 +5,7 @@ import styles from "./ApplicationPreviewModal.module.css";
 import CheckBox from "../form/CheckBox/CheckBox";
 import { RecruitmentItem } from "../../../types/domains/recruitments";
 import { Answer, ApplicationForm } from "../../../types/domains/applicationForms";
+import CancelButton from "../form/CancelButton/CancelButton";
 
 type ApplicationPreviewModalWindowProps = {
   recruitmentItems: RecruitmentItem[];
@@ -80,9 +81,9 @@ const ApplicationPreviewModal = ({
       <div className={styles["button-box"]}>
         <Button
           type="button"
-          variant={BUTTON_VARIANT.CONTAINED}
+          variant={BUTTON_VARIANT.OUTLINED}
           className={styles.button}
-          cancel={true}
+          cancel={false}
           onClick={handleClickDismissButton}
         >
           취소
@@ -95,7 +96,7 @@ const ApplicationPreviewModal = ({
           onClick={handleClickConfirmButton}
           disabled={!isChecked}
         >
-          제출
+          최종 제출
         </Button>
       </div>
     </div>

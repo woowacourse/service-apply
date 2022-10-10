@@ -57,12 +57,12 @@
 }
 
 .button-box {
-  width: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   gap: 1rem;
 }
 
 .button {
-  width: 100%;
+  width: 12rem;
+  max-width: 100%;
 }
