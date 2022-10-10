@@ -80,14 +80,13 @@ class JudgmentService(
     @Transactional
     fun success(judgmentId: Long, request: SuccessJudgmentRequest) {
         val judgment = judgmentRepository.getById(judgmentId)
-        judgment.success(Commit(request.commit), request.passCount, request.totalCount)
-
         val assignment = assignmentRepository.getById(judgment.assignmentId)
         val mission = missionRepository.getById(assignment.missionId)
         val judgmentItem = judgmentItemRepository.getByMissionId(mission.id)
         val evaluationTarget =
             evaluationTargetRepository.getByEvaluationIdAndUserId(mission.evaluationId, assignment.userId)
 
+        judgment.success(Commit(request.commit), request.passCount, request.totalCount)
         evaluationTarget.addEvaluationAnswer(EvaluationAnswer(request.passCount, judgmentItem.evaluationItemId))
     }
 

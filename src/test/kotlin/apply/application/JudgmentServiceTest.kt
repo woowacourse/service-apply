@@ -399,11 +399,9 @@ class JudgmentServiceTest : BehaviorSpec({
         When("해당 커밋의 자동 채점이 성공하면") {
             judgmentService.success(judgment.id, createSuccessJudgmentRequest(commit = commit.hash))
 
-            Then("자동 채점 기록의 상태가 성공으로 변경된다") {
+            Then("자동 채점 기록의 상태가 성공으로 변경되고 점수가 입력된다") {
                 record.commit shouldBe commit
                 record.status shouldBe SUCCEEDED
-            }
-            Then("점수가 반영된다") {
                 evaluationTarget.evaluationAnswers.countTotalScore() shouldBe record.result.passCount
             }
         }
