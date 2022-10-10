@@ -26,22 +26,22 @@ class EvaluationTargetForm() : BindingFormLayout<EvaluationTargetData>(Evaluatio
         drawRequired()
     }
 
-    constructor(evaluationItems: List<EvaluationItemResponse>, judgmentEvaluationItemId: Long?) : this() {
+    constructor(evaluationItems: List<EvaluationItemResponse>, evaluationItemId: Long?) : this() {
         evaluationItems.forEach {
             val answerForm = EvaluationItemScoreForm(it.title, it.description, it.maximumScore).apply {
                 setColspan(this, 2)
-            }
-            if (judgmentEvaluationItemId == it.id) {
-                answerForm.changeColor("red")
+                if (it.id == evaluationItemId) {
+                    changeTextColor("red")
+                }
             }
             evaluationItemScores.add(answerForm)
             addComponentAtIndex(getIndexOfLastAnswer(), answerForm)
         }
     }
 
-    private fun sumOfScore() = evaluationItemScores.map { it.score.value }.sum()
+    private fun sumOfScore(): Int = evaluationItemScores.sumOf { it.score.value }
 
-    private fun getIndexOfLastAnswer() = (children.count() - FIXED_ADDED_COMPONENT_COUNT).toInt()
+    private fun getIndexOfLastAnswer(): Int = (children.count() - FIXED_ADDED_COMPONENT_COUNT).toInt()
 
     override fun bindOrNull(): EvaluationTargetData? {
         val result = bindDefaultOrNull()
@@ -64,6 +64,6 @@ class EvaluationTargetForm() : BindingFormLayout<EvaluationTargetData>(Evaluatio
     }
 
     companion object {
-        private const val FIXED_ADDED_COMPONENT_COUNT = 3
+        private const val FIXED_ADDED_COMPONENT_COUNT: Int = 3
     }
 }

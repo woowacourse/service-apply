@@ -3,6 +3,7 @@ package apply.application
 import apply.domain.evaluation.Evaluation
 import apply.domain.evaluationitem.EvaluationItem
 import apply.domain.evaluationtarget.EvaluationStatus
+import apply.domain.judgment.JudgmentStatus
 import apply.domain.recruitment.Recruitment
 import apply.domain.user.User
 import javax.validation.Valid
@@ -170,41 +171,13 @@ data class EvaluationTargetData(
 )
 
 data class JudgmentData(
-    val judgmentResult: String,
+    val commitHash: String,
+    val status: JudgmentStatus,
     val passCount: Int,
-    val totalCount: Int
-) {
-    constructor(
-        judgmentResponse: LastJudgmentResponse
-    ) : this(
-        makeJudgementResult(
-            judgmentResponse.status.toString(),
-            judgmentResponse.commitHash,
-            judgmentResponse.message
-        ),
-        judgmentResponse.passCount,
-        judgmentResponse.totalCount
-    )
-
-    // TODO: constructor 교체하고 지우기
-    constructor(
-        status: String,
-        commitHash: String,
-        message: String,
-        passCount: Int,
-        totalCount: Int
-    ) : this(makeJudgementResult(status, commitHash, message), passCount, totalCount)
-
-    companion object {
-        fun makeJudgementResult(status: String, commitHash: String, message: String): String {
-            return """
-                실행상태: $status
-                commit_Hash: $commitHash
-                message:  $message
-            """.trimIndent()
-        }
-    }
-}
+    val totalCount: Int,
+    val message: String,
+    val id: Long
+)
 
 data class MailTargetResponse(
     val email: String,

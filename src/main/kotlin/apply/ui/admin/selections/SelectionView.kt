@@ -98,7 +98,7 @@ class SelectionView(
             HorizontalLayout(
                 createLoadButton(tabs),
                 createResultDownloadButton(),
-                createAllJudgeRequestButton()
+                createJudgeAllButton()
             )
         ).apply {
             setWidthFull()
@@ -234,12 +234,9 @@ class SelectionView(
         }
     }
 
-    private fun createAllJudgeRequestButton(): Button {
-        return createContrastButtonWithDialog("전체 채점하기", "실행하시겠습니까?") {
-            // TODO: 전체 채점하기 Service 와 연결
-            // val evaluation = evaluations.first { it.title == tabs.selectedTab.label }
-            // println("evaluationId : $evaluation.id")
-            // println("전체 채점하기")
+    private fun createJudgeAllButton(): Button {
+        return createContrastButtonWithDialog("전체 자동 채점하기", "자동 채점을 실행하시겠습니까?") {
+            // TODO: 전체 자동 채점 기능 구현
         }
     }
 

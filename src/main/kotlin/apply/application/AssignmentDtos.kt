@@ -49,8 +49,3 @@ data class AssignmentResponse(
         assignment.note
     )
 }
-
-data class JudgementRequestData(
-    val userId: Long,
-    val missionId: Long
-)

@@ -2,6 +2,7 @@ package apply.application
 
 import apply.domain.assignment.Assignment
 import apply.domain.assignment.AssignmentRepository
+import apply.domain.assignment.getById
 import apply.domain.assignment.getByUserIdAndMissionId
 import apply.domain.judgment.AssignmentArchive
 import apply.domain.judgment.Commit
@@ -33,8 +34,15 @@ class JudgmentService(
     }
 
     fun judgeReal(userId: Long, missionId: Long): LastJudgmentResponse {
-        val mission = missionRepository.getById(missionId)
-        val assignment = assignmentRepository.getByUserIdAndMissionId(userId, missionId)
+        return judgeReal(assignmentRepository.getByUserIdAndMissionId(userId, missionId))
+    }
+
+    fun judgeReal(assignmentId: Long): LastJudgmentResponse {
+        return judgeReal(assignmentRepository.getById(assignmentId))
+    }
+
+    private fun judgeReal(assignment: Assignment): LastJudgmentResponse {
+        val mission = missionRepository.getById(assignment.missionId)
         return judge(mission, assignment, JudgmentType.REAL)
     }
 
