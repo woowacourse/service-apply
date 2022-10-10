@@ -22,6 +22,10 @@ const ApplicationPreviewModal = ({
   const { closeModal } = useModalContext();
   const [isChecked, setIsChecked] = useState(false);
 
+  const handleChangeConfirmCheckbox: React.FormEventHandler<HTMLInputElement> = (e) => {
+    setIsChecked((e.target as HTMLInputElement).checked);
+  };
+
   const handleClickDismissButton: React.MouseEventHandler<HTMLButtonElement> = () => {
     closeModal();
   };
@@ -69,9 +73,7 @@ const ApplicationPreviewModal = ({
         name="confirm-submit"
         label="제출한 뒤에는 수정할 수 없음을 확인했습니다."
         checked={isChecked}
-        onChange={(e: ChangeEvent) => {
-          setIsChecked((e.target as HTMLInputElement).checked);
-        }}
+        onChange={handleChangeConfirmCheckbox}
         autoFocus
         required
       />
