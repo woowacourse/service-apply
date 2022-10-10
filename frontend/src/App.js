@@ -26,55 +26,57 @@ import ModalProvider from "./provider/ModalProvider";
 
 const App = () => {
   return (
-    <TokenProvider>
-      <RecruitmentProvider>
-        <ModalProvider>
-          <BrowserRouter>
-            <Header />
-            <main className="main">
-              <ScrollToTop>
-                <Routes>
-                  <Route path={PATH.HOME} element={<Recruits />} />
-                  <Route path={PATH.RECRUITS} element={<Recruits />} />
-                  <Route path={PATH.SIGN_UP} element={<SignUp />} />
-                  <Route path={PATH.LOGIN} element={<Login />} />
-                  <Route path={PATH.FIND_PASSWORD} element={<PasswordFind />} />
-                  <Route path={PATH.FIND_PASSWORD_RESULT} element={<PasswordFindResult />} />
-                  <Route element={<PrivateRoute />}>
-                    <Route path={PATH.APPLICATION_FORM} element={<ApplicationRegister />} />
-                    <Route path={PATH.EDIT_PASSWORD} element={<PasswordEdit />} />
-                    <Route path={PATH.MY_APPLICATION} element={<MyApplication />} />
-                    <Route path={PATH.ASSIGNMENT} element={<AssignmentSubmit />} />
-                  </Route>
+    <>
+      <TokenProvider>
+        <RecruitmentProvider>
+          <ModalProvider>
+            <BrowserRouter>
+              <Header />
+              <main className="main">
+                <ScrollToTop>
+                  <Routes>
+                    <Route path={PATH.HOME} element={<Recruits />} />
+                    <Route path={PATH.RECRUITS} element={<Recruits />} />
+                    <Route path={PATH.SIGN_UP} element={<SignUp />} />
+                    <Route path={PATH.LOGIN} element={<Login />} />
+                    <Route path={PATH.FIND_PASSWORD} element={<PasswordFind />} />
+                    <Route path={PATH.FIND_PASSWORD_RESULT} element={<PasswordFindResult />} />
+                    <Route element={<PrivateRoute />}>
+                      <Route path={PATH.APPLICATION_FORM} element={<ApplicationRegister />} />
+                      <Route path={PATH.EDIT_PASSWORD} element={<PasswordEdit />} />
+                      <Route path={PATH.MY_APPLICATION} element={<MyApplication />} />
+                      <Route path={PATH.ASSIGNMENT} element={<AssignmentSubmit />} />
+                    </Route>
 
-                  <Route element={<PrivateRoute />}>
-                    <Route
-                      path={PATH.MY_PAGE}
-                      element={
-                        <UserInfoProvider>
-                          <MyPage />
-                        </UserInfoProvider>
-                      }
-                    />
-                    <Route
-                      path={PATH.EDIT_MY_PAGE}
-                      element={
-                        <UserInfoProvider>
-                          <MyPageEdit />
-                        </UserInfoProvider>
-                      }
-                    />
-                  </Route>
-                </Routes>
-              </ScrollToTop>
-            </main>
-            <Footer />
-            <div id="modal-root" />
-            <InquiryFloatingButton />
-          </BrowserRouter>
-        </ModalProvider>
-      </RecruitmentProvider>
-    </TokenProvider>
+                    <Route element={<PrivateRoute />}>
+                      <Route
+                        path={PATH.MY_PAGE}
+                        element={
+                          <UserInfoProvider>
+                            <MyPage />
+                          </UserInfoProvider>
+                        }
+                      />
+                      <Route
+                        path={PATH.EDIT_MY_PAGE}
+                        element={
+                          <UserInfoProvider>
+                            <MyPageEdit />
+                          </UserInfoProvider>
+                        }
+                      />
+                    </Route>
+                  </Routes>
+                </ScrollToTop>
+              </main>
+              <Footer />
+              <InquiryFloatingButton />
+            </BrowserRouter>
+          </ModalProvider>
+        </RecruitmentProvider>
+      </TokenProvider>
+      <div id="modal-root" />
+    </>
   );
 };
 
