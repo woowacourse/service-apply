@@ -4,6 +4,11 @@
   gap: 1.5rem;
 }
 
+.title {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
 .content {
   flex: 1;
   display: flex;

@@ -31,14 +31,11 @@ const Template: ComponentStory<typeof ModalWindow> = (args) => {
 
 export const Default = Template.bind({});
 
-Default.args = {
-  title: "Title",
-};
+Default.args = {};
 
 export const LongContent = Template.bind({});
 
 LongContent.args = {
-  title: "Title",
   children: (
     <>
       <p>
