@@ -12,6 +12,12 @@ const ModalPortal = ({ children, closeModal }: ModalPortalProps) => {
   const ref = useRef<Element | null>(null);
   const [mounted, setMounted] = useState(false);
 
+  const handleKeyDown: React.KeyboardEventHandler<HTMLDivElement> = (e) => {
+    if (e.key === "Escape") {
+      closeModal();
+    }
+  };
+
   useEffect(() => {
     setMounted(true);
 
@@ -28,14 +34,8 @@ const ModalPortal = ({ children, closeModal }: ModalPortalProps) => {
 
   if (ref.current && mounted) {
     return createPortal(
-      <div
-        className={styles.box}
-        onKeyDown={(e) => {
-          if (e.key === "Escape") closeModal();
-        }}
-      >
+      <div className={styles.box} onKeyDown={handleKeyDown}>
         <div className={styles["dimmer-box"]} onClick={closeModal} />
-
         {children}
       </div>,
       ref.current

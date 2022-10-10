@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import useModalContext from "../../hooks/useModalContext";
 import Button, { BUTTON_VARIANT } from "../@common/Button/Button";
 import styles from "./ApplicationPreviewModal.module.css";
