@@ -7,8 +7,11 @@ import org.springframework.web.bind.support.WebDataBinderFactory
 import org.springframework.web.context.request.NativeWebRequest
 import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.method.support.ModelAndViewContainer
+import java.nio.charset.Charset
+import java.nio.charset.StandardCharsets
+import java.util.Base64
 
-private const val BEARER = "Bearer"
+private const val BASIC = "Basic"
 
 @Component
 class AccessorResolver(
@@ -25,30 +28,38 @@ class AccessorResolver(
         binderFactory: WebDataBinderFactory?
     ) {
         val token = extractBearerToken(webRequest)
-        if (token != parameter.getKey()) {
+        val decoded = token.decode(StandardCharsets.UTF_8)
+
+        if (!isAuthenticated(decoded, parameter)) {
             throw LoginFailedException()
         }
     }
 
     private fun extractBearerToken(request: NativeWebRequest): String {
         val authorization = request.getHeader(AUTHORIZATION) ?: throw LoginFailedException()
-        val (tokenType, token) = splitToTokenFormat(authorization)
-        if (tokenType != BEARER) {
+        val (tokenType, token) = splitToPair(authorization, " ")
+        if (tokenType != BASIC) {
             throw LoginFailedException()
         }
         return token
     }
 
-    private fun splitToTokenFormat(authorization: String): Pair<String, String> {
+    private fun splitToPair(value: String, delimiter: String): Pair<String, String> {
         return try {
-            val tokenFormat = authorization.split(" ")
+            val tokenFormat = value.split(delimiter)
             tokenFormat[0] to tokenFormat[1]
         } catch (e: IndexOutOfBoundsException) {
             throw LoginFailedException()
         }
     }
-    private fun MethodParameter.getKey(): String? {
+
+    private fun String.decode(charset: Charset): String = Base64.getDecoder().decode(this).toString(charset)
+
+    private fun isAuthenticated(decoded: String, parameter: MethodParameter) =
+        splitToPair(decoded, ":") == parameter.getAuthentication()
+
+    private fun MethodParameter.getAuthentication(): Pair<String?, String?> {
         val value = getParameterAnnotation(Accessor::class.java)?.value
-        return accessorProperties.keys[value]
+        return value to accessorProperties.keys[value]
     }
 }

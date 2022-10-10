@@ -9,6 +9,8 @@ import io.mockk.every
 import io.mockk.mockk
 import org.springframework.core.MethodParameter
 import org.springframework.web.context.request.NativeWebRequest
+import java.nio.charset.StandardCharsets
+import java.util.Base64
 
 class AccessorResolverTest : StringSpec({
 
@@ -32,7 +34,8 @@ class AccessorResolverTest : StringSpec({
     }
 
     "Authorization 헤더 값과 accessor 키 값이 일치하면 성공한다" {
-        every { webRequest.getHeader(any()) } returns "lambda-key"
+        val encoded = Base64.getEncoder().encode("lambda:lambda-key".toByteArray()).toString(StandardCharsets.UTF_8)
+        every { webRequest.getHeader(any()) } returns "Basic $encoded"
         every { methodParameter.getParameterAnnotation<Accessor>(any()) } returns Accessor("lambda")
 
         shouldNotThrowAny {
@@ -40,8 +43,19 @@ class AccessorResolverTest : StringSpec({
         }
     }
 
-    "Authorization 헤더 값과 accessor 키 값이 일치하지 않으면 실패한다" {
-        every { webRequest.getHeader(any()) } returns "invalid-key"
+    "Authorization 헤더 값과 accessor의 username 값이 일치하지 않으면 실패한다" {
+        val encoded = Base64.getEncoder().encode("invalid:lambda-key".toByteArray()).toString(StandardCharsets.UTF_8)
+        every { webRequest.getHeader(any()) } returns "Basic $encoded"
+        every { methodParameter.getParameterAnnotation<Accessor>(any()) } returns Accessor("lambda")
+
+        shouldThrow<LoginFailedException> {
+            accessorResolver.resolveArgument(methodParameter, null, webRequest, null)
+        }
+    }
+
+    "Authorization 헤더 값과 accessor의 password 값이 일치하지 않으면 실패한다" {
+        val encoded = Base64.getEncoder().encode("lambda:invalid-key".toByteArray()).toString(StandardCharsets.UTF_8)
+        every { webRequest.getHeader(any()) } returns "Basic $encoded"
         every { methodParameter.getParameterAnnotation<Accessor>(any()) } returns Accessor("lambda")
 
         shouldThrow<LoginFailedException> {
