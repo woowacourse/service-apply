@@ -3,3 +3,15 @@
 == 예제 테스트 실행
 
 operation::judgment-judge-example-post[snippets='http-request,http-response']
+
+== 자동 채점 성공
+
+operation::judgment-success-result-post[snippets='http-request,http-response']
+
+== 자동 채점 실패
+
+operation::judgment-fail-result-post[snippets='http-request,http-response']
+
+== 자동 채점 취소
+
+operation::judgment-cancel-result-post[snippets='http-request,http-response']

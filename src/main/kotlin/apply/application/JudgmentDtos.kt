@@ -1,7 +1,10 @@
 package apply.application
 
+import apply.domain.judgment.Commit
 import apply.domain.judgment.JudgmentRecord
 import apply.domain.judgment.JudgmentStatus
+import apply.domain.judgment.JudgmentType
+import apply.domain.judgmentitem.ProgrammingLanguage
 import java.time.LocalDateTime
 
 data class LastJudgmentResponse(
@@ -26,3 +29,28 @@ data class LastJudgmentResponse(
         record.startedDateTime
     )
 }
+
+data class JudgmentRequest(
+    val judgmentId: Long,
+    val judgmentType: JudgmentType,
+    val programmingLanguage: ProgrammingLanguage,
+    val testName: String,
+    val pullRequestUrl: String,
+    val commit: Commit
+)
+
+data class SuccessJudgmentRequest(
+    val commit: String,
+    val passCount: Int,
+    val totalCount: Int
+)
+
+data class FailJudgmentRequest(
+    val commit: String,
+    val message: String
+)
+
+data class CancelJudgmentRequest(
+    val commit: String,
+    val message: String
+)
