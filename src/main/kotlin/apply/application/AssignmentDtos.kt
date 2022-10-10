@@ -19,7 +19,7 @@ data class AssignmentRequest(
     )
     val pullRequestUrl: String,
 
-    @field:Size(max = 1000)
+    @field:Size(max = 5000)
     @field:NotBlank
     val note: String
 )
