@@ -29,7 +29,6 @@ class AccessorResolver(
     ) {
         val token = extractBearerToken(webRequest)
         val decoded = token.decode(StandardCharsets.UTF_8)
-
         if (!isAuthenticated(decoded, parameter)) {
             throw LoginFailedException()
         }
@@ -37,26 +36,18 @@ class AccessorResolver(
 
     private fun extractBearerToken(request: NativeWebRequest): String {
         val authorization = request.getHeader(AUTHORIZATION) ?: throw LoginFailedException()
-        val (tokenType, token) = splitToPair(authorization, " ")
+        val (tokenType, token) = authorization.split(" ")
         if (tokenType != BASIC) {
             throw LoginFailedException()
         }
         return token
     }
 
-    private fun splitToPair(value: String, delimiter: String): Pair<String, String> {
-        return try {
-            val tokenFormat = value.split(delimiter)
-            tokenFormat[0] to tokenFormat[1]
-        } catch (e: IndexOutOfBoundsException) {
-            throw LoginFailedException()
-        }
-    }
-
     private fun String.decode(charset: Charset): String = Base64.getDecoder().decode(this).toString(charset)
 
-    private fun isAuthenticated(decoded: String, parameter: MethodParameter) =
-        splitToPair(decoded, ":") == parameter.getAuthentication()
+    private fun isAuthenticated(decoded: String, parameter: MethodParameter): Boolean {
+        return decoded.split(":") == parameter.getAuthentication().toList()
+    }
 
     private fun MethodParameter.getAuthentication(): Pair<String?, String?> {
         val value = getParameterAnnotation(Accessor::class.java)?.value
