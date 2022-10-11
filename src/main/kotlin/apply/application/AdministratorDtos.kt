@@ -20,7 +20,8 @@ data class AdministratorData(
     var password: String = "",
 
     @field:NotBlank
-    var confirmPassword: String = ""
+    var confirmPassword: String = "",
+    var id: Long = 0L
 )
 
 data class AdministratorResponse(

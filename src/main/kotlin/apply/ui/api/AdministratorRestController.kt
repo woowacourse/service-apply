@@ -6,6 +6,7 @@ import apply.application.AdministratorService
 import apply.domain.user.User
 import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -45,5 +46,14 @@ class AdministratorRestController(
     ): ResponseEntity<ApiResponse<AdministratorResponse>> {
         val response = administratorService.findById(administratorId)
         return ResponseEntity.ok(ApiResponse.success(response))
+    }
+
+    @DeleteMapping("/{administratorId}")
+    fun deleteById(
+        @PathVariable administratorId: Long,
+        @LoginUser(administrator = true) user: User
+    ): ResponseEntity<Unit> {
+        administratorService.deleteById(administratorId)
+        return ResponseEntity.noContent().build()
     }
 }

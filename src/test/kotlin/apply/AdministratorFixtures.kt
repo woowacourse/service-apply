@@ -21,9 +21,10 @@ fun createAdministratorData(
     name: String = ADMINISTRATOR_NAME,
     username: String = ADMINISTRATOR_USERNAME,
     password: String = ADMINISTRATOR_PASSWORD,
-    confirmPassword: String = ADMINISTRATOR_PASSWORD
+    confirmPassword: String = ADMINISTRATOR_PASSWORD,
+    id: Long = 0L
 ): AdministratorData {
-    return AdministratorData(name, username, password, confirmPassword)
+    return AdministratorData(name, username, password, confirmPassword, id)
 }
 
 fun createAdministratorResponse(
