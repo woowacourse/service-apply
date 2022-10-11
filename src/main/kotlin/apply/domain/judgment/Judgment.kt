@@ -7,6 +7,7 @@ import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
+import javax.persistence.FetchType
 import javax.persistence.ForeignKey
 import javax.persistence.JoinColumn
 import javax.persistence.OneToMany
@@ -22,7 +23,7 @@ class Judgment(
     records: List<JudgmentRecord> = emptyList(),
     id: Long = 0L
 ) : BaseRootEntity<Judgment>(id) {
-    @OneToMany(cascade = [CascadeType.PERSIST, CascadeType.REMOVE])
+    @OneToMany(cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE], fetch = FetchType.EAGER)
     @JoinColumn(
         name = "judgment_id", nullable = false, updatable = false,
         foreignKey = ForeignKey(name = "fk_judgment_record_judgment_id_ref_judgment_id")
