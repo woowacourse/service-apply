@@ -1,9 +1,12 @@
 import { ISO8601DateString } from "../../types/domains/common";
 import { MissionStatus, TestStatus } from "../../types/domains/recruitments";
 
-const overFiveMinuteFromNow = new Date();
-overFiveMinuteFromNow.setMinutes(overFiveMinuteFromNow.getMinutes() - 3);
-const startedJudgeDateTime = overFiveMinuteFromNow.toISOString().replace(/\..*/, "");
+const now = new Date();
+const min = 3;
+const afterFiveMinuteFromNow = new Date(
+  now.getTime() - min * 60 * 1000 - now.getTimezoneOffset() * 60000
+);
+export const startedJudgeDateTime = afterFiveMinuteFromNow.toISOString().replace(/\..*/, "");
 
 export const recruitmentDummy = [
   {
@@ -331,7 +334,7 @@ export const missionsDummy = {
         passCount: 4,
         totalCount: 5,
         message: "빌드를 실패했습니다.",
-        startedDateTime: "2022-10-04T19:36:16.621467" as ISO8601DateString,
+        startedDateTime: startedJudgeDateTime as ISO8601DateString,
         commitUrl:
           "https://github.com/woowacourse/service-apply/pull/367/commits/642951e1324eaf66914bd53df339d94cad5667e3",
       },
@@ -353,7 +356,7 @@ export const missionsDummy = {
         passCount: 0,
         totalCount: 0,
         message: "빌드를 실패했습니다.",
-        startedDateTime: "2022-10-04T19:36:16.621467" as ISO8601DateString,
+        startedDateTime: startedJudgeDateTime as ISO8601DateString,
         commitUrl:
           "https://github.com/woowacourse/service-apply/pull/367/commits/642951e1324eaf66914bd53df339d94cad5667e3",
       },
@@ -467,7 +470,7 @@ export const missionsDummy = {
         passCount: 4,
         totalCount: 5,
         message: "빌드를 실패했습니다.",
-        startedDateTime: "2022-10-04T19:36:16.621467" as ISO8601DateString,
+        startedDateTime: startedJudgeDateTime as ISO8601DateString,
         commitUrl:
           "https://github.com/woowacourse/service-apply/pull/367/commits/642951e1324eaf66914bd53df339d94cad5667e3",
       },
@@ -489,7 +492,7 @@ export const missionsDummy = {
         passCount: 0,
         totalCount: 0,
         message: "빌드를 실패했습니다.",
-        startedDateTime: "2022-10-04T19:36:16.621467" as ISO8601DateString,
+        startedDateTime: startedJudgeDateTime as ISO8601DateString,
         commitUrl:
           "https://github.com/woowacourse/service-apply/pull/367/commits/642951e1324eaf66914bd53df339d94cad5667e3",
       },

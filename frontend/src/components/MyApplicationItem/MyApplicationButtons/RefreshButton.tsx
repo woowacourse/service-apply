@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import classNames from "classnames";
 import { Mission, Recruitment } from "../../../../types/domains/recruitments";
 import { fetchMyMissionJudgment } from "../../../api";
@@ -5,6 +6,7 @@ import { JUDGMENT_STATUS } from "../../../constants/judgment";
 import { MISSION_STATUS } from "../../../constants/recruitment";
 import useTokenContext from "../../../hooks/useTokenContext";
 import Button, { BUTTON_VARIANT } from "../../@common/Button/Button";
+import { isJudgmentTimedOut } from "./../../../utils/validation/judgmentTime";
 import styles from "./ApplicationButtons.module.css";
 
 type RefreshButtonProps = {
@@ -26,6 +28,10 @@ const RefreshButton = ({ recruitmentId, missionItem, setMission }: RefreshButton
     return null;
   }
 
+  if (missionItem.judgment && isJudgmentTimedOut(missionItem.judgment.startedDateTime)) {
+    return null;
+  }
+
   const handleRefreshMission = async ({
     missionId,
     recruitmentId,
@@ -35,13 +41,17 @@ const RefreshButton = ({ recruitmentId, missionItem, setMission }: RefreshButton
     recruitmentId: string;
     token: string;
   }) => {
-    const response = await fetchMyMissionJudgment({
-      recruitmentId: Number(recruitmentId),
-      missionId: Number(missionId),
-      token,
-    });
+    try {
+      const response = await fetchMyMissionJudgment({
+        recruitmentId: Number(recruitmentId),
+        missionId: Number(missionId),
+        token,
+      });
 
-    setMission({ ...missionItem, judgment: response.data });
+      setMission({ ...missionItem, judgment: response.data });
+    } catch (error) {
+      alert((error as AxiosError).response?.data.message);
+    }
   };
 
   return (
