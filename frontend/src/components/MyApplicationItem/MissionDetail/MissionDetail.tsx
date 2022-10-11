@@ -2,8 +2,8 @@ import { Mission } from "../../../../types/domains/recruitments";
 import { MY_MISSION_TOOLTIP_MESSAGE } from "../../../constants/messages";
 import Tooltip from "../../@common/Tooltip/Tooltip";
 import CommitHash from "../CommitHash/CommitHash";
+import JudgmentResult from "../JudgmentResult/JudgmentResult";
 import PullRequestUrl from "../PullRequestUrl/PullRequestUrl";
-import TestResult from "../TestResult/TestResult";
 import styles from "./MissionDetail.module.css";
 
 type MissionDetailProps = {
@@ -13,7 +13,7 @@ type MissionDetailProps = {
 const MissionDetail = ({ judgment }: MissionDetailProps) => {
   return (
     <div className={styles["detail-container"]}>
-      <TestResult judgment={judgment} />
+      <JudgmentResult judgment={judgment} />
       <PullRequestUrl judgment={judgment} />
       <CommitHash judgment={judgment} />
       <div className={styles["guide-container"]}>

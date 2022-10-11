@@ -4,20 +4,20 @@
   gap: 0.3rem;
 }
 
-.test-result-text {
+.judgment-result-text {
   margin-bottom: 0.2rem;
   font-size: 1.125rem;
   font-weight: bold;
 }
 
-.test-result-score.pending {
+.judgment-result-score.pending {
   color: var(--blue);
 }
 
-.test-result-score.pass {
+.judgment-result-score.pass {
   color: var(--green);
 }
 
-.test-result-score.fail {
+.judgment-result-score.fail {
   color: var(--red);
 }

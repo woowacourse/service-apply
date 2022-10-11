@@ -1,9 +1,9 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import TestResult from "./TestResult";
+import JudgmentResult from "./JudgmentResult";
 
 export default {
-  title: "components/TestResult",
-  component: TestResult,
+  title: "components/JudgmentResult",
+  component: JudgmentResult,
   decorators: [
     (Story) => (
       <div
@@ -19,9 +19,9 @@ export default {
       </div>
     ),
   ],
-} as ComponentMeta<typeof TestResult>;
+} as ComponentMeta<typeof JudgmentResult>;
 
-const Template: ComponentStory<typeof TestResult> = (args) => <TestResult {...args} />;
+const Template: ComponentStory<typeof JudgmentResult> = (args) => <JudgmentResult {...args} />;
 
 export const NoResultText = Template.bind({});
 NoResultText.args = {
