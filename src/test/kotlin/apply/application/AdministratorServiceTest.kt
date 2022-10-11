@@ -79,6 +79,31 @@ class AdministratorServiceTest : BehaviorSpec({
         }
     }
 
+    Given("특정 관리자가 존재하고 변경할 정보가 있는 경우") {
+        val administrator = createAdministrator(name = "조조그린", password = "1234", id = 1L)
+        val name = "케이"
+        val password = "5678"
+
+        every { administratorRepository.getById(any()) } returns administrator
+        every { passwordEncoder.encode(any()) } returns password
+
+        When("해당 관리자의 정보를 수정하면") {
+            administratorService.save(
+                createAdministratorData(
+                    name = name,
+                    password = password,
+                    confirmPassword = password,
+                    id = 1L
+                )
+            )
+
+            Then("정보가 수정된다") {
+                administrator.name shouldBe name
+                administrator.password shouldBe password
+            }
+        }
+    }
+
     Given("특정 관리자가 있는 경우") {
         val administrator = createAdministrator(id = 1L)
 
@@ -110,34 +135,7 @@ class AdministratorServiceTest : BehaviorSpec({
         }
     }
 
-    Given("수정할 관리자가 있는 경우") {
-        val updateName = "변경된이름"
-        val updatePassword = "12345"
-
-        val administrator = createAdministrator(id = 1L)
-
-        every { administratorRepository.getById(any()) } returns administrator
-        every { passwordEncoder.encode(any()) } returns updatePassword
-
-        When("해당 관리자를 수정하면") {
-            administratorService.save(
-                AdministratorData(
-                    name = updateName,
-                    username = ADMINISTRATOR_USERNAME,
-                    password = updatePassword,
-                    confirmPassword = updatePassword,
-                    id = 1L
-                )
-            )
-
-            Then("관리자 정보를 수정할 수 있다") {
-                administrator.name shouldBe updateName
-                administrator.password shouldBe updatePassword
-            }
-        }
-    }
-
-    Given("삭제할 관리자가 있는 경우") {
+    Given("삭제할 특정 관리자가 있는 경우") {
         every { administratorRepository.deleteById(any()) } just Runs
 
         When("해당 관리자를 삭제하면") {
