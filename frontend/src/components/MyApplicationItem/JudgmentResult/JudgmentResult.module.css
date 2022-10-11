@@ -10,6 +10,10 @@
   font-weight: bold;
 }
 
+.judgment-result-score.default {
+  color: var(--black);
+}
+
 .judgment-result-score.pending {
   color: var(--blue);
 }
