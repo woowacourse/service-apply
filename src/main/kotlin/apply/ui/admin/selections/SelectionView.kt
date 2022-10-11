@@ -174,17 +174,7 @@ class SelectionView(
     private fun createEvaluationButtonRenderer(): Renderer<EvaluationTargetResponse> {
         return ComponentRenderer { response ->
             createPrimarySmallButton("평가하기") {
-                val evaluationId = evaluations[tabs.selectedIndex - 1].id
-                val judgmentItem = missionService.findByEvaluationId(evaluationId)?.let {
-                    missionService.findJudgmentItemByMissionId(it.id)
-                }
-                EvaluationTargetFormDialog(
-                    evaluationTargetService,
-                    assignmentService,
-                    judgmentService,
-                    response.id,
-                    judgmentItem?.evaluationItemId
-                ) {
+                EvaluationTargetFormDialog(evaluationTargetService, assignmentService, judgmentService, response.id) {
                     selectedTabIndex = tabs.selectedIndex
                     removeAll()
                     add(createTitle(), createContent())

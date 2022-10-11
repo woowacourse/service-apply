@@ -56,6 +56,7 @@ data class CancelJudgmentRequest(
 )
 
 data class JudgmentData(
+    val evaluationItemId: Long,
     val assignmentId: Long,
     val commitHash: String?,
     val status: JudgmentStatus?,
@@ -65,7 +66,8 @@ data class JudgmentData(
     val startedDateTime: LocalDateTime?,
     val id: Long
 ) {
-    constructor(id: Long?, assignmentId: Long?, judgmentRecord: JudgmentRecord?) : this(
+    constructor(id: Long?, evaluationItemId: Long?, assignmentId: Long?, judgmentRecord: JudgmentRecord?) : this(
+        evaluationItemId ?: 0L,
         assignmentId ?: 0L,
         judgmentRecord?.commit?.hash,
         judgmentRecord?.status,

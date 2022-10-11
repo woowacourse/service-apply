@@ -40,7 +40,8 @@ fun createAssignmentResponse(
 fun createAssignmentData(
     githubUsername: String = GITHUB_USERNAME,
     pullRequestUrl: String = PULL_REQUEST_URL,
-    note: String = NOTE
+    note: String = NOTE,
+    id: Long = 0L
 ): AssignmentData {
-    return AssignmentData(githubUsername, pullRequestUrl, note)
+    return AssignmentData(githubUsername, pullRequestUrl, note, id)
 }
