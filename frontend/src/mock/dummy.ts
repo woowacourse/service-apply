@@ -150,7 +150,7 @@ export const missionsDummy = {
       judgment: {
         pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
-        status: "SUCCESS" as TestStatus,
+        status: "SUCCEEDED" as TestStatus,
         passCount: 5,
         totalCount: 5,
         message: "",
@@ -172,7 +172,7 @@ export const missionsDummy = {
       judgment: {
         pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
-        status: "SUCCESS" as TestStatus,
+        status: "SUCCEEDED" as TestStatus,
         passCount: 5,
         totalCount: 5,
         message: "",
@@ -194,7 +194,7 @@ export const missionsDummy = {
       judgment: {
         pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
-        status: "SUCCESS" as TestStatus,
+        status: "SUCCEEDED" as TestStatus,
         passCount: 4,
         totalCount: 5,
         message: "",
@@ -308,7 +308,7 @@ export const missionsDummy = {
       judgment: {
         pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
-        status: "SUCCESS" as TestStatus,
+        status: "SUCCEEDED" as TestStatus,
         passCount: 5,
         totalCount: 5,
         message: "빌드를 실패했습니다.",
@@ -330,7 +330,7 @@ export const missionsDummy = {
       judgment: {
         pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
-        status: "SUCCESS" as TestStatus,
+        status: "SUCCEEDED" as TestStatus,
         passCount: 4,
         totalCount: 5,
         message: "빌드를 실패했습니다.",
@@ -444,7 +444,7 @@ export const missionsDummy = {
       judgment: {
         pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
-        status: "SUCCESS" as TestStatus,
+        status: "SUCCEEDED" as TestStatus,
         passCount: 5,
         totalCount: 5,
         message: "빌드를 실패했습니다.",
@@ -466,7 +466,7 @@ export const missionsDummy = {
       judgment: {
         pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
-        status: "SUCCESS" as TestStatus,
+        status: "SUCCEEDED" as TestStatus,
         passCount: 4,
         totalCount: 5,
         message: "빌드를 실패했습니다.",
@@ -512,7 +512,7 @@ export const userInfoDummy = {
 export const judgmentDummy = {
   pullRequestUrl: "https://github.com/woowacourse/jwp-dashboard-http/pull/298",
   commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
-  status: "SUCCESS" as TestStatus,
+  status: "SUCCEEDED" as TestStatus,
   passCount: 5,
   totalCount: 5,
   message: "빌드에 성공했습니다",

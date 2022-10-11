@@ -74,7 +74,7 @@ export const fetchMyMissionJudgment = ({
   token,
 }: FetchMyMissionJudgmentRequest) =>
   axios.get(
-    `/api/recruitments/${recruitmentId}/missions/${missionId}/judgment/judge-example`,
+    `/api/recruitments/${recruitmentId}/missions/${missionId}/judgments/judge-example`,
     headers({ token })
   );
 
@@ -86,7 +86,8 @@ export const fetchAssignment = ({ token, recruitmentId, missionId }: FetchAssign
 
 export const postMyMissionJudgment = ({ recruitmentId, missionId, token }: PostJudgmentRequest) =>
   axios.post<PostJudgmentResponseData>(
-    `/api/recruitments/${recruitmentId}/missions/${missionId}/judgment/judge-example`,
+    `/api/recruitments/${recruitmentId}/missions/${missionId}/judgments/judge-example`,
+    {},
     headers({ token })
   );
 

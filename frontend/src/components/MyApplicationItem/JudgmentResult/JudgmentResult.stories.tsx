@@ -52,7 +52,7 @@ PassResultText.args = {
   judgment: {
     pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
     commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
-    status: "SUCCESS",
+    status: "SUCCEEDED",
     passCount: 5,
     totalCount: 5,
     message: "",
@@ -67,7 +67,7 @@ NoPassResultText.args = {
   judgment: {
     pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
     commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
-    status: "SUCCESS",
+    status: "SUCCEEDED",
     passCount: 4,
     totalCount: 5,
     message: "",
@@ -82,7 +82,7 @@ FailJudgmentMission.args = {
   judgment: {
     pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
     commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
-    status: "FAIL",
+    status: "FAILED",
     passCount: 0,
     totalCount: 0,
     message: "빌드에 실패했습니다",
