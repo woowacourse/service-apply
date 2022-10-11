@@ -54,3 +54,25 @@ data class CancelJudgmentRequest(
     val commit: String,
     val message: String
 )
+
+data class JudgmentData(
+    val assignmentId: Long,
+    val commitHash: String?,
+    val status: JudgmentStatus?,
+    val passCount: Int?,
+    val totalCount: Int?,
+    val message: String?,
+    val startedDateTime: LocalDateTime?,
+    val id: Long
+) {
+    constructor(id: Long?, assignmentId: Long?, judgmentRecord: JudgmentRecord?) : this(
+        assignmentId ?: 0L,
+        judgmentRecord?.commit?.hash,
+        judgmentRecord?.status,
+        judgmentRecord?.result?.passCount,
+        judgmentRecord?.result?.totalCount,
+        judgmentRecord?.result?.message,
+        judgmentRecord?.startedDateTime,
+        id ?: 0L
+    )
+}

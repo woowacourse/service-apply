@@ -3,9 +3,8 @@ package apply.ui.admin.selections
 import apply.application.AssignmentService
 import apply.application.EvaluationTargetData
 import apply.application.EvaluationTargetService
-import apply.application.JudgmentData
 import apply.application.JudgmentService
-import apply.domain.judgment.JudgmentStatus
+import apply.domain.judgment.JudgmentType
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.dialog.Dialog
@@ -24,7 +23,6 @@ class EvaluationTargetFormDialog(
     private val assignmentService: AssignmentService,
     private val judgmentService: JudgmentService,
     private val evaluationTargetId: Long,
-    private val judgmentItemId: Long?,
     evaluationItemId: Long?,
     reloadComponents: () -> Unit
 ) : Dialog() {
@@ -67,24 +65,9 @@ class EvaluationTargetFormDialog(
     }
 
     private fun createJudgmentForm(): Component {
-        return if (judgmentItemId != null) {
-            val judgmentData = JudgmentData(
-                "642951e1324eaf66914bd53df339d94cad5667e3",
-                JudgmentStatus.STARTED,
-                9,
-                10,
-                """
-                    동해 물과 백두산이 마르고 닳도록
-                    하느님이 보우하사 우리나라 만세
-                    무궁화 삼천리 화려강산
-                    대한 사람 대한으로 길이 보전하세
-                """.trimIndent(),
-                1L
-            ) // TODO: 조회 기능 구현
-            JudgmentForm(judgmentData, judgmentService)
-        } else {
-            FormLayout()
-        }
+        return judgmentService.findByEvaluationTargetId(evaluationTargetId, JudgmentType.REAL)
+            ?.let { JudgmentForm(it, judgmentService) }
+            ?: FormLayout()
     }
 
     private fun createButtons(reloadComponent: () -> Unit): Component {

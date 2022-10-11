@@ -40,14 +40,15 @@ class JudgmentForm(
 
     private fun createJudgmentRequestButton(): Button {
         return createContrastButtonWithDialog("실행", "자동 채점을 실행하시겠습니까?") {
-            judgmentService.judgeReal(judgmentData.id)
+            judgmentService.judgeRealByAssignmentId(judgmentData.assignmentId)
         }
     }
 
     private fun createTextArea(): Component {
         val message = """
             |status: ${judgmentData.status}
-            |commit hash: ${judgmentData.commitHash}
+            |commitHash: ${judgmentData.commitHash}
+            |startedDateTime: ${judgmentData.startedDateTime}
             |message: ${judgmentData.message}
         """.trimMargin()
         return TextArea("마지막 자동 채점 기록").apply {

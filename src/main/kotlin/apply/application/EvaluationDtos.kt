@@ -3,7 +3,6 @@ package apply.application
 import apply.domain.evaluation.Evaluation
 import apply.domain.evaluationitem.EvaluationItem
 import apply.domain.evaluationtarget.EvaluationStatus
-import apply.domain.judgment.JudgmentStatus
 import apply.domain.recruitment.Recruitment
 import apply.domain.user.User
 import javax.validation.Valid
@@ -168,15 +167,6 @@ data class EvaluationTargetData(
 
     @field:NotNull
     var evaluationStatus: EvaluationStatus = EvaluationStatus.WAITING
-)
-
-data class JudgmentData(
-    val commitHash: String,
-    val status: JudgmentStatus,
-    val passCount: Int,
-    val totalCount: Int,
-    val message: String,
-    val id: Long
 )
 
 data class MailTargetResponse(

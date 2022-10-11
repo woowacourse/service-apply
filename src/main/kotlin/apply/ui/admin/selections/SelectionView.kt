@@ -183,7 +183,6 @@ class SelectionView(
                     assignmentService,
                     judgmentService,
                     response.id,
-                    judgmentItem?.id,
                     judgmentItem?.evaluationItemId
                 ) {
                     selectedTabIndex = tabs.selectedIndex

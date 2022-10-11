@@ -4,6 +4,8 @@ import apply.domain.assignment.Assignment
 import apply.domain.assignment.AssignmentRepository
 import apply.domain.assignment.getById
 import apply.domain.assignment.getByUserIdAndMissionId
+import apply.domain.evaluationtarget.EvaluationTargetRepository
+import apply.domain.evaluationtarget.getById
 import apply.domain.judgment.AssignmentArchive
 import apply.domain.judgment.Commit
 import apply.domain.judgment.Judgment
@@ -24,6 +26,7 @@ class JudgmentService(
     private val assignmentRepository: AssignmentRepository,
     private val missionRepository: MissionRepository,
     private val judgmentItemRepository: JudgmentItemRepository,
+    private val evaluationTargetRepository: EvaluationTargetRepository,
     private val assignmentArchive: AssignmentArchive
 ) {
     fun judgeExample(userId: Long, missionId: Long): LastJudgmentResponse {
@@ -37,7 +40,7 @@ class JudgmentService(
         return judgeReal(assignmentRepository.getByUserIdAndMissionId(userId, missionId))
     }
 
-    fun judgeReal(assignmentId: Long): LastJudgmentResponse {
+    fun judgeRealByAssignmentId(assignmentId: Long): LastJudgmentResponse {
         return judgeReal(assignmentRepository.getById(assignmentId))
     }
 
@@ -48,11 +51,11 @@ class JudgmentService(
 
     private fun judge(mission: Mission, assignment: Assignment, judgmentType: JudgmentType): LastJudgmentResponse {
         check(judgmentItemRepository.existsByMissionId(mission.id)) { "예제 테스트를 실행할 수 없습니다." }
-        val judgment = judgmentRepository.findByAssignmentIdAndType(assignment.id, judgmentType)
+        var judgment = judgmentRepository.findByAssignmentIdAndType(assignment.id, judgmentType)
             ?: judgmentRepository.save(Judgment(assignment.id, judgmentType))
         val commit = assignmentArchive.getLastCommit(assignment.pullRequestUrl, mission.period.endDateTime)
         judgment.start(commit)
-        judgmentRepository.save(judgment)
+        judgment = judgmentRepository.save(judgment)
         return LastJudgmentResponse(assignment.pullRequestUrl, judgment.lastRecord)
     }
 
@@ -70,5 +73,15 @@ class JudgmentService(
     fun cancel(judgmentId: Long, request: CancelJudgmentRequest) {
         val judgment = judgmentRepository.getById(judgmentId)
         judgment.cancel(Commit(request.commit), request.message)
+    }
+
+    fun findByEvaluationTargetId(evaluationTargetId: Long, type: JudgmentType): JudgmentData? {
+        val evaluationTarget = evaluationTargetRepository.getById(evaluationTargetId)
+        val mission = missionRepository.findByEvaluationId(evaluationTarget.evaluationId) ?: return null
+        judgmentItemRepository.findByMissionId(mission.id) ?: return null
+        val assignment = assignmentRepository.findByUserIdAndMissionId(evaluationTarget.userId, mission.id)
+        return assignment
+            ?.let { judgmentRepository.findByAssignmentIdAndType(it.id, type) }
+            .let { JudgmentData(it?.id, assignment?.id, it?.lastRecord) }
     }
 }

@@ -12,6 +12,7 @@ import apply.createMission
 import apply.createSuccessJudgmentRequest
 import apply.domain.assignment.AssignmentRepository
 import apply.domain.assignment.getByUserIdAndMissionId
+import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.judgment.AssignmentArchive
 import apply.domain.judgment.JudgmentRepository
 import apply.domain.judgment.JudgmentResult
@@ -40,10 +41,16 @@ class JudgmentServiceTest : BehaviorSpec({
     val assignmentRepository = mockk<AssignmentRepository>()
     val missionRepository = mockk<MissionRepository>()
     val judgmentItemRepository = mockk<JudgmentItemRepository>()
+    val evaluationTargetRepository = mockk<EvaluationTargetRepository>()
     val assignmentArchive = mockk<AssignmentArchive>()
 
     val judgmentService = JudgmentService(
-        judgmentRepository, assignmentRepository, missionRepository, judgmentItemRepository, assignmentArchive
+        judgmentRepository,
+        assignmentRepository,
+        missionRepository,
+        judgmentItemRepository,
+        evaluationTargetRepository,
+        assignmentArchive
     )
 
     Given("과제 제출물을 제출할 수 없는 과제가 있는 경우") {

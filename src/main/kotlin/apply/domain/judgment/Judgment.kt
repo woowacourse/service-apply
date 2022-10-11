@@ -22,7 +22,7 @@ class Judgment(
     records: List<JudgmentRecord> = emptyList(),
     id: Long = 0L
 ) : BaseRootEntity<Judgment>(id) {
-    @OneToMany(cascade = [CascadeType.PERSIST, CascadeType.REMOVE])
+    @OneToMany(cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE])
     @JoinColumn(
         name = "judgment_id", nullable = false, updatable = false,
         foreignKey = ForeignKey(name = "fk_judgment_record_judgment_id_ref_judgment_id")
