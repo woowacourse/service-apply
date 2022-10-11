@@ -21,7 +21,8 @@ class AdministratorForm : BindingIdentityFormLayout<AdministratorData>(Administr
         return bindDefaultOrNull()
     }
 
-    override fun fill(administrator: AdministratorData) {
-        fillDefault(administrator)
+    override fun fill(data: AdministratorData) {
+        fillDefault(data)
+        username.isReadOnly = true
     }
 }
