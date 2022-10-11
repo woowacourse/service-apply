@@ -44,7 +44,7 @@ const MyApplicationFormItem = ({ recruitment, submitted }: MyApplicationFormItem
   const isButtonDisabled = isApplicationDisabled(submitted, recruitment.recruitable);
   const buttonLabel = applicationLabel(submitted, recruitment.recruitable);
 
-  const routeToApplicationForm = (recruitment: Recruitment) => () => {
+  const routeToApplicationForm = (recruitment: Recruitment) => {
     navigate(
       {
         pathname: generatePath(PATH.APPLICATION_FORM, {
