@@ -21,20 +21,16 @@ class JudgmentForm(
                 setResponsiveSteps(ResponsiveStep("0", 6))
             },
             FormLayout(
-                createTextArea(),
-                FormLayout().apply {
-                    add(
-                        IntegerField("통과 개수").apply {
-                            value = judgmentData.passCount
-                            isReadOnly = true
-                        },
-                        IntegerField("총 개수").apply {
-                            value = judgmentData.totalCount
-                            isReadOnly = true
-                        }
-                    )
+                IntegerField("통과 개수").apply {
+                    value = judgmentData.passCount
+                    isReadOnly = true
+                },
+                IntegerField("총 개수").apply {
+                    value = judgmentData.totalCount
+                    isReadOnly = true
                 }
-            )
+            ),
+            createTextArea()
         )
         setResponsiveSteps(ResponsiveStep("0", 1))
     }
