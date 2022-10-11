@@ -16,7 +16,7 @@ export const autoGradeHandler = [
     return res(ctx.json({ message: "", body: missionsDummy[recruitmentId] }));
   }),
   rest.get(
-    `${MOCK_API_BASE_URL}/recruitments/:recruitmentId/missions/:missionId/judgment/judge-example`,
+    `${MOCK_API_BASE_URL}/recruitments/:recruitmentId/missions/:missionId/judgments/judge-example`,
     (req, res, ctx) => {
       const mockedMissionJudgment = { ...judgmentDummy };
 
@@ -24,7 +24,7 @@ export const autoGradeHandler = [
     }
   ),
   rest.post(
-    `${MOCK_API_BASE_URL}/recruitments/:recruitmentId/missions/:missionId/judgment/judge-example`,
+    `${MOCK_API_BASE_URL}/recruitments/:recruitmentId/missions/:missionId/judgments/judge-example`,
     (req, res, ctx) => {
       const mockedMissionJudgment = { ...judgmentDummy };
 

@@ -6,6 +6,7 @@ import { JUDGMENT_STATUS } from "../../../constants/judgment";
 import { MISSION_STATUS } from "../../../constants/recruitment";
 import useTokenContext from "../../../hooks/useTokenContext";
 import Button, { BUTTON_VARIANT } from "../../@common/Button/Button";
+import { isJudgmentTimedOut } from "./../../../utils/validation/judgmentTime";
 import styles from "./ApplicationButtons.module.css";
 
 type JudgmentButtonProps = {
@@ -62,7 +63,8 @@ const JudgmentButton = ({ missionItem, recruitmentId, setMission }: JudgmentButt
       cancel={false}
       disabled={
         missionItem.submitted === false ||
-        judgment?.status === JUDGMENT_STATUS.STARTED ||
+        (judgment?.status === JUDGMENT_STATUS.STARTED &&
+          !isJudgmentTimedOut(judgment.startedDateTime)) ||
         missionStatus === MISSION_STATUS.ENDED ||
         missionStatus === MISSION_STATUS.UNSUBMITTABLE
       }
