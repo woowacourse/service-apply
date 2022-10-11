@@ -40,7 +40,7 @@ class GitHubClient(
 
     private fun extract(pullRequestUrl: String): List<String> {
         val result = PULL_REQUEST_URL_PATTERN.find(pullRequestUrl)
-            ?: throw IllegalArgumentException("올바른 형식의 URL이어야 합니다")
+            ?: throw IllegalArgumentException("올바른 형식의 Pull Request URL이어야 합니다")
         return result.destructured.toList()
     }
 
