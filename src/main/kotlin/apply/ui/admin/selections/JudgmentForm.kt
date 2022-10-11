@@ -8,7 +8,8 @@ import com.vaadin.flow.component.formlayout.FormLayout
 import com.vaadin.flow.component.html.H3
 import com.vaadin.flow.component.textfield.IntegerField
 import com.vaadin.flow.component.textfield.TextArea
-import support.views.createContrastButtonWithDialog
+import support.views.createContrastButton
+import support.views.createNotification
 
 class JudgmentForm(
     private val judgmentData: JudgmentData,
@@ -39,20 +40,25 @@ class JudgmentForm(
     }
 
     private fun createJudgmentRequestButton(): Button {
-        return createContrastButtonWithDialog("실행", "자동 채점을 실행하시겠습니까?") {
-            judgmentService.judgeRealByAssignmentId(judgmentData.assignmentId)
+        return createContrastButton("실행") {
+            try {
+                judgmentService.judgeRealByAssignmentId(judgmentData.assignmentId)
+                createNotification("자동 채점이 실행되었습니다.")
+            } catch (e: Exception) {
+                createNotification(e.localizedMessage)
+            }
         }
     }
 
     private fun createTextArea(): Component {
-        val message = """
+        val result = """
             |status: ${judgmentData.status}
             |commitHash: ${judgmentData.commitHash}
             |startedDateTime: ${judgmentData.startedDateTime}
             |message: ${judgmentData.message}
         """.trimMargin()
         return TextArea("마지막 자동 채점 기록").apply {
-            value = message
+            value = result
             minHeight = "135px"
             isReadOnly = true
         }
