@@ -50,6 +50,7 @@
 
 .application-item-answer {
   white-space: pre-line;
+  word-break: keep-all;
 }
 
 .application-item-url {
