@@ -46,7 +46,7 @@ const Recruits = () => {
       <div className={styles["program-introduce-box"]}>
         <h1 className={styles["program-name"]}>
           {programTabStatus.name === PROGRAM_TAB.ALL.name
-            ? `우아한교육프로그램과\n함께할 개발자를 찾고 있어요!`
+            ? `우아한형제들의 교육 프로그램과\n함께할 개발자를 찾고 있어요!`
             : programTabStatus.label}
         </h1>
         <p className={styles["program-description"]}>{programTabStatus.description}</p>
