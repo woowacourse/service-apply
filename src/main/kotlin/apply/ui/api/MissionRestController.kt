@@ -60,9 +60,8 @@ class MissionRestController(
         @LoginUser user: User
     ): ResponseEntity<ApiResponse<List<MissionJudgmentResponse>>> {
         val missionResponses = missionService.findAllByUserIdAndRecruitmentId(user.id, recruitmentId)
-        val judgmentResponses = missionResponses.associateBy({ it }, { judgmentService.findExample(user.id, it.id) })
+        val judgmentResponses = missionResponses.associateWith { judgmentService.findExample(user.id, it.id) }
         val responses = judgmentResponses.map { MissionJudgmentResponse(it.key, it.value, it.value != null) }
-
         return ResponseEntity.ok(ApiResponse.success(responses))
     }
 
