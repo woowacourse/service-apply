@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import classNames from "classnames";
 import { Mission, Recruitment } from "../../../../types/domains/recruitments";
-import { fetchMyMissionJudgment, postMyMissionJudgment } from "../../../api/recruitments";
+import { postMyMissionJudgment } from "../../../api/recruitments";
 import { JUDGMENT_STATUS } from "../../../constants/judgment";
 import { MISSION_STATUS } from "../../../constants/recruitment";
 import useTokenContext from "../../../hooks/useTokenContext";
@@ -25,13 +25,6 @@ const JudgmentButton = ({ missionItem, recruitmentId, setMission }: JudgmentButt
 
     const errorMessage = error.response?.data.message;
     alert(errorMessage);
-
-    const response = await fetchMyMissionJudgment({
-      recruitmentId: Number(recruitmentId),
-      missionId: Number(missionId),
-      token,
-    });
-    setMission({ ...missionItem, judgment: response.data });
   };
 
   const handleJudgeMission = async ({
