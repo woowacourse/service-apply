@@ -2,7 +2,7 @@ import { Mission } from "../../../types/domains/recruitments";
 import { JUDGMENT_STATUS } from "../../constants/judgment";
 import { isJudgmentTimedOut } from "../validation/judgmentTime";
 
-type JudgmentResultType = { text: string; type: "default" | "fail" | "pass" | "pending" };
+type JudgmentResultType = { text: string; type: "default" | "fail" | "pass" | "started" };
 
 const formatJudgmentResult = (judgment: Mission["judgment"]): JudgmentResultType => {
   if (judgment === null) {
@@ -17,7 +17,7 @@ const formatJudgmentResult = (judgment: Mission["judgment"]): JudgmentResultType
 
   switch (status) {
     case JUDGMENT_STATUS.STARTED:
-      return { text: "테스트 중", type: "pending" };
+      return { text: "테스트 중", type: "started" };
     case JUDGMENT_STATUS.SUCCEEDED:
       const isPass = passCount / totalCount === 1;
       return { text: `${passCount} / ${totalCount}`, type: isPass ? "pass" : "fail" };

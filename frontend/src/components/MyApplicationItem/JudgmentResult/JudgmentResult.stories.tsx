@@ -32,8 +32,8 @@ NoResultText.args = {
   judgment: null,
 };
 
-export const PendingResultText = Template.bind({});
-PendingResultText.args = {
+export const StartedResultText = Template.bind({});
+StartedResultText.args = {
   judgment: {
     pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
     commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",

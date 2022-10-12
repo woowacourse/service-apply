@@ -1,9 +1,3 @@
-.pending-container {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-}
-
 .judgment-result-text {
   margin-bottom: 0.2rem;
   font-size: 1.125rem;
@@ -14,7 +8,7 @@
   color: var(--black);
 }
 
-.judgment-result-score.pending {
+.judgment-result-score.started {
   color: var(--blue);
 }
 
