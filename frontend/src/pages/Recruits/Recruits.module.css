@@ -2,9 +2,8 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
-
   width: var(--pc-main-width);
-  margin: 0 auto 4rem;
+  height: 10rem;
 }
 
 .program-name {
@@ -98,11 +97,13 @@
   }
 }
 
-@media screen and (max-width: 512px) {
+@media screen and (max-width: 800px) {
   .program-introduce-box {
-    margin: 0 auto 3rem;
+    height: 12rem;
   }
+}
 
+@media screen and (max-width: 512px) {
   .program-name {
     font-size: 2rem;
     font-weight: bold;
