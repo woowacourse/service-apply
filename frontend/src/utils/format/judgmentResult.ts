@@ -19,8 +19,8 @@ const formatJudgmentResult = (judgment: Mission["judgment"]): JudgmentResultType
     case JUDGMENT_STATUS.STARTED:
       return { text: "테스트 중", type: "started" };
     case JUDGMENT_STATUS.SUCCEEDED:
-      const isPass = passCount / totalCount === 1;
-      return { text: `${passCount} / ${totalCount}`, type: isPass ? "pass" : "fail" };
+      const isPassAllCases = passCount === totalCount;
+      return { text: `${passCount} / ${totalCount}`, type: isPassAllCases ? "pass" : "fail" };
     case JUDGMENT_STATUS.FAILED:
     case JUDGMENT_STATUS.CANCELLED:
       return { text: "예기치 못한 오류로 인하여 실행에 실패하였습니다.", type: "error" };
