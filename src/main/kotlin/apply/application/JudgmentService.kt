@@ -18,6 +18,7 @@ import apply.domain.judgmentitem.JudgmentItemRepository
 import apply.domain.judgmentitem.getByMissionId
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionRepository
+import apply.domain.mission.getByEvaluationId
 import apply.domain.mission.getById
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -55,10 +56,17 @@ class JudgmentService(
     }
 
     fun judgeAll(missionId: Long) {
-        val mission = missionRepository.getById(missionId)
-        val assignments = assignmentRepository.findAllByMissionId(missionId)
-        for (assignment in assignments) {
-            runCatching { judge(mission, assignment, JudgmentType.REAL) }
+        judgeAll(missionRepository.getById(missionId))
+    }
+
+    fun judgeAllByEvaluationId(evaluationId: Long) {
+        judgeAll(missionRepository.getByEvaluationId(evaluationId))
+    }
+
+    private fun judgeAll(mission: Mission) {
+        val assignments = assignmentRepository.findAllByMissionId(mission.id)
+        assignments.forEach {
+            runCatching { judge(mission, it, JudgmentType.REAL) }
         }
     }
 
@@ -83,7 +91,7 @@ class JudgmentService(
     private fun find(userId: Long, missionId: Long, judgmentType: JudgmentType): LastJudgmentResponse? {
         val assignment = assignmentRepository.getByUserIdAndMissionId(userId, missionId)
         val judgment = judgmentRepository.findByAssignmentIdAndType(assignment.id, judgmentType)
-        return judgment?.let { LastJudgmentResponse(assignment.pullRequestUrl, judgment.lastRecord) }
+        return judgment?.let { LastJudgmentResponse(assignment.pullRequestUrl, it.lastRecord) }
     }
 
     @Transactional
