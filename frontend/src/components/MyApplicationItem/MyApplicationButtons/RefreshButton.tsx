@@ -47,8 +47,9 @@ const RefreshButton = ({ recruitmentId, missionItem, setMission }: RefreshButton
         missionId: Number(missionId),
         token,
       });
-
       setMission({ ...missionItem, judgment: response.data });
+
+      alert("새로고침 되었습니다");
     } catch (error) {
       alert((error as AxiosError).response?.data.message);
     }
@@ -61,7 +62,6 @@ const RefreshButton = ({ recruitmentId, missionItem, setMission }: RefreshButton
       variant={BUTTON_VARIANT.CONTAINED}
       cancel={false}
       onClick={() => {
-        alert("새로고침 되었습니다");
         handleRefreshMission({
           missionId: String(missionId),
           recruitmentId: String(recruitmentId),
