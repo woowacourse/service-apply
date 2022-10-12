@@ -17,6 +17,9 @@ import apply.domain.evaluationtarget.EvaluationAnswers
 import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
+import apply.domain.judgmentitem.JudgmentItem
+import apply.domain.judgmentitem.JudgmentItemRepository
+import apply.domain.judgmentitem.ProgrammingLanguage
 import apply.domain.mail.MailHistory
 import apply.domain.mail.MailHistoryRepository
 import apply.domain.mission.Mission
@@ -52,6 +55,7 @@ class DatabaseInitializer(
     private val applicationFormRepository: ApplicationFormRepository,
     private val evaluationTargetRepository: EvaluationTargetRepository,
     private val missionRepository: MissionRepository,
+    private val judgmentItemRepository: JudgmentItemRepository,
     private val assignmentRepository: AssignmentRepository,
     private val mailHistoryRepository: MailHistoryRepository,
     private val database: Database
@@ -81,6 +85,7 @@ class DatabaseInitializer(
         populateApplicationForms()
         populateEvaluationTargets()
         populateMissions()
+        populateJudgmentItems()
         populateAssignments()
         populateMailHistories()
     }
@@ -219,7 +224,7 @@ class DatabaseInitializer(
                 position = 3
             ),
             EvaluationItem(
-                title = "기능 요구사항을 만족하는가?",
+                title = "기능 요구 사항을 만족하는가?",
                 description = "[리뷰 절차]\n" +
                     "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
                 evaluationId = 2L,
@@ -396,6 +401,18 @@ class DatabaseInitializer(
             )
         )
         missionRepository.saveAll(missions)
+    }
+
+    private fun populateJudgmentItems() {
+        val judgmentItems = listOf(
+            JudgmentItem(
+                missionId = 1L,
+                evaluationItemId = 5L,
+                testName = "baseball",
+                programmingLanguage = ProgrammingLanguage.JAVA
+            )
+        )
+        judgmentItemRepository.saveAll(judgmentItems)
     }
 
     private fun populateAssignments() {
