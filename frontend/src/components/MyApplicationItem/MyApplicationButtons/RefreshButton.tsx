@@ -28,7 +28,7 @@ const RefreshButton = ({ recruitmentId, missionItem, setMission }: RefreshButton
     return null;
   }
 
-  if (missionItem.judgment && isJudgmentTimedOut(missionItem.judgment.startedDateTime)) {
+  if (isJudgmentTimedOut(missionItem.judgment)) {
     return null;
   }
 

@@ -63,8 +63,7 @@ const JudgmentButton = ({ missionItem, recruitmentId, setMission }: JudgmentButt
       cancel={false}
       disabled={
         missionItem.submitted === false ||
-        (judgment?.status === JUDGMENT_STATUS.STARTED &&
-          !isJudgmentTimedOut(judgment.startedDateTime)) ||
+        (judgment?.status === JUDGMENT_STATUS.STARTED && !isJudgmentTimedOut(judgment)) ||
         missionStatus === MISSION_STATUS.ENDED ||
         missionStatus === MISSION_STATUS.UNSUBMITTABLE
       }

@@ -1,7 +1,11 @@
-import { ISO8601DateString } from "../../../types/domains/common";
+import { Mission } from "../../../types/domains/recruitments";
 
-export const isJudgmentTimedOut = (time: ISO8601DateString) => {
-  const startedDateTime = new Date(time);
+export const isJudgmentTimedOut = (judgment: Mission["judgment"]) => {
+  if (!judgment) {
+    return false;
+  }
+
   const now = new Date();
+  const startedDateTime = new Date(judgment.startedDateTime);
   return now.getTime() - startedDateTime.getTime() > 300000;
 };
