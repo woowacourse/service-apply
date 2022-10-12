@@ -35,7 +35,7 @@ export const recruitmentDummy = [
   },
   {
     id: 4,
-    title: "우아한테크캠프 1기",
+    title: "우아한테크캠프 Pro 1기",
     recruitable: true,
     hidden: false,
     startDateTime: "2020-10-25T15:00:00" as ISO8601DateString,
