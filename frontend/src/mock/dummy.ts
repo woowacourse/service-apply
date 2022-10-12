@@ -140,7 +140,7 @@ export const missionsDummy = {
     },
     {
       id: 5,
-      title: "과제제출 시작 & 제출 후 & STARTED & 5분 후",
+      title: "과제제출 시작 & 제출 후 & !STARTED & 5분 후",
       description: "설명",
       startDateTime: "2020-10-25T15:00:00" as ISO8601DateString,
       endDateTime: "2020-11-25T15:00:00" as ISO8601DateString,
@@ -222,6 +222,28 @@ export const missionsDummy = {
         totalCount: 0,
         message: "빌드에 실패했습니다",
         startedDateTime: startedJudgeDateTime as ISO8601DateString,
+        commitUrl:
+          "https://github.com/woowacourse/service-apply/pull/367/commits/642951e1324eaf66914bd53df339d94cad5667e3",
+      },
+    },
+    {
+      id: 23,
+      title: "과제제출 시작 & 제출 후 & STARTED & 시간초과",
+      description: "설명",
+      startDateTime: "2020-10-25T15:00:00" as ISO8601DateString,
+      endDateTime: "2020-11-25T15:00:00" as ISO8601DateString,
+      submitted: true,
+      submittable: true,
+      status: MISSION_STATUS.SUBMITTING,
+      isAutomation: true,
+      judgment: {
+        pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
+        commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
+        status: JUDGMENT_STATUS.STARTED,
+        passCount: 0,
+        totalCount: 0,
+        message: "",
+        startedDateTime: "2022-10-04T19:36:16.621467" as ISO8601DateString,
         commitUrl:
           "https://github.com/woowacourse/service-apply/pull/367/commits/642951e1324eaf66914bd53df339d94cad5667e3",
       },

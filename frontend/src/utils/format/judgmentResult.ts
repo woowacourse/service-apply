@@ -9,7 +9,7 @@ const formatJudgmentResult = (judgment: Mission["judgment"]): JudgmentResultType
     return { text: "없음", type: "default" };
   }
 
-  if (isJudgmentTimedOut(judgment)) {
+  if (judgment.status === JUDGMENT_STATUS.STARTED && isJudgmentTimedOut(judgment)) {
     return { text: "예기치 못한 오류로 실행 시간을 초과하였습니다.", type: "error" };
   }
 
