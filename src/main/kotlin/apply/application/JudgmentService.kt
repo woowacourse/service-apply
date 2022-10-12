@@ -20,6 +20,7 @@ import apply.domain.mission.Mission
 import apply.domain.mission.MissionRepository
 import apply.domain.mission.getByEvaluationId
 import apply.domain.mission.getById
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -55,10 +56,12 @@ class JudgmentService(
         return judge(mission, assignment, JudgmentType.REAL)
     }
 
+    @Async
     fun judgeAll(missionId: Long) {
         judgeAll(missionRepository.getById(missionId))
     }
 
+    @Async
     fun judgeAllByEvaluationId(evaluationId: Long) {
         judgeAll(missionRepository.getByEvaluationId(evaluationId))
     }
