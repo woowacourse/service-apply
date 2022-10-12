@@ -19,3 +19,7 @@
 .judgment-result-score.fail {
   color: var(--red);
 }
+
+.judgment-result-score.error {
+  color: var(--red);
+}
