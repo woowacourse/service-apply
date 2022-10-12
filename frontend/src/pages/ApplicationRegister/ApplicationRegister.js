@@ -52,6 +52,22 @@ const ApplicationRegister = () => {
       recruitmentItemId: item.id,
     }));
 
+  const reloadToEdit = () => {
+    if (status === PARAM.APPLICATION_FORM_STATUS.EDIT) {
+      return;
+    }
+
+    navigate(
+      {
+        pathname: generatePath(PATH.APPLICATION_FORM, {
+          status: PARAM.APPLICATION_FORM_STATUS.EDIT,
+        }),
+        search: generateQuery({ recruitmentId }),
+      },
+      { state: { currentRecruitment }, replace: true }
+    );
+  };
+
   const handleSaveError = (error) => {
     if (!error) return;
 
@@ -93,18 +109,7 @@ const ApplicationRegister = () => {
 
       setModifiedDateTime(formatDateTime(new Date()));
       alert(SUCCESS_MESSAGE.API.SAVE_APPLICATION);
-
-      if (status === PARAM.APPLICATION_FORM_STATUS.EDIT) return;
-
-      const path = {
-        pathname: generatePath(PATH.APPLICATION_FORM, {
-          status: PARAM.APPLICATION_FORM_STATUS.EDIT,
-        }),
-        state: { currentRecruitment },
-        search: generateQuery({ recruitmentId }),
-      };
-
-      navigate(path, { replace: true });
+      reloadToEdit();
     } catch (error) {
       handleSaveError(error);
     }
