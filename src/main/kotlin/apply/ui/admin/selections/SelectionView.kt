@@ -223,7 +223,6 @@ class SelectionView(
 
     private fun createJudgeAllButton(tabs: Tabs): Button {
         return createContrastButtonWithDialog("전체 자동 채점하기", "자동 채점을 실행하시겠습니까?") {
-            println(selectedEvaluation(tabs))
             val evaluation = selectedEvaluation(tabs)
             judgmentService.judgeAllByEvaluationId(evaluation.id)
             selectedTabIndex = tabs.selectedIndex

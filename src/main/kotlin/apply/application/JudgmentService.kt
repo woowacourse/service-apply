@@ -36,7 +36,9 @@ class JudgmentService(
     @Transactional
     fun judgeExample(userId: Long, missionId: Long): LastJudgmentResponse {
         val mission = missionRepository.getById(missionId)
-        check(mission.isSubmitting) { "예제 테스트를 실행할 수 없습니다." }
+        check(mission.isSubmitting && judgmentItemRepository.existsByMissionId(mission.id)) {
+            "예제 테스트를 실행할 수 없습니다."
+        }
         val assignment = assignmentRepository.getByUserIdAndMissionId(userId, missionId)
         return judge(mission, assignment, JudgmentType.EXAMPLE)
     }
@@ -53,6 +55,7 @@ class JudgmentService(
 
     private fun judgeReal(assignment: Assignment): LastJudgmentResponse {
         val mission = missionRepository.getById(assignment.missionId)
+        check(judgmentItemRepository.existsByMissionId(mission.id)) { "자동 채점을 실행할 수 없습니다." }
         return judge(mission, assignment, JudgmentType.REAL)
     }
 
@@ -67,6 +70,7 @@ class JudgmentService(
     }
 
     private fun judgeAll(mission: Mission) {
+        check(judgmentItemRepository.existsByMissionId(mission.id)) { "자동 채점을 실행할 수 없습니다." }
         val assignments = assignmentRepository.findAllByMissionId(mission.id)
         assignments.forEach {
             runCatching { judge(mission, it, JudgmentType.REAL) }
@@ -74,7 +78,6 @@ class JudgmentService(
     }
 
     private fun judge(mission: Mission, assignment: Assignment, judgmentType: JudgmentType): LastJudgmentResponse {
-        check(judgmentItemRepository.existsByMissionId(mission.id)) { "예제 테스트를 실행할 수 없습니다." }
         var judgment = judgmentRepository.findByAssignmentIdAndType(assignment.id, judgmentType)
             ?: judgmentRepository.save(Judgment(assignment.id, judgmentType))
         val commit = assignmentArchive.getLastCommit(assignment.pullRequestUrl, mission.period.endDateTime)
@@ -92,7 +95,7 @@ class JudgmentService(
     }
 
     private fun find(userId: Long, missionId: Long, judgmentType: JudgmentType): LastJudgmentResponse? {
-        val assignment = assignmentRepository.getByUserIdAndMissionId(userId, missionId)
+        val assignment = assignmentRepository.findByUserIdAndMissionId(userId, missionId) ?: return null
         val judgment = judgmentRepository.findByAssignmentIdAndType(assignment.id, judgmentType)
         return judgment?.let { LastJudgmentResponse(assignment.pullRequestUrl, it.lastRecord) }
     }
@@ -103,8 +106,8 @@ class JudgmentService(
         val assignment = assignmentRepository.getById(judgment.assignmentId)
         val mission = missionRepository.getById(assignment.missionId)
         val judgmentItem = judgmentItemRepository.getByMissionId(mission.id)
-        val evaluationTarget =
-            evaluationTargetRepository.getByEvaluationIdAndUserId(mission.evaluationId, assignment.userId)
+        val evaluationTarget = evaluationTargetRepository
+            .getByEvaluationIdAndUserId(mission.evaluationId, assignment.userId)
 
         judgment.success(Commit(request.commit), request.passCount, request.totalCount)
         evaluationTarget.addEvaluationAnswer(EvaluationAnswer(request.passCount, judgmentItem.evaluationItemId))
