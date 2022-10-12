@@ -9,6 +9,8 @@ import apply.application.EvaluationTargetCsvService
 import apply.application.EvaluationTargetResponse
 import apply.application.EvaluationTargetService
 import apply.application.ExcelService
+import apply.application.JudgmentService
+import apply.application.MissionService
 import apply.application.RecruitmentItemService
 import apply.application.RecruitmentService
 import apply.domain.applicationform.ApplicationForm
@@ -39,6 +41,7 @@ import com.vaadin.flow.router.WildcardParameter
 import support.views.addSortableColumn
 import support.views.addSortableDateColumn
 import support.views.addSortableDateTimeColumn
+import support.views.createContrastButtonWithDialog
 import support.views.createCsvUpload
 import support.views.createNormalButton
 import support.views.createPrimaryButton
@@ -55,8 +58,10 @@ class SelectionView(
     private val evaluationService: EvaluationService,
     private val evaluationTargetService: EvaluationTargetService,
     private val assignmentService: AssignmentService,
+    private val judgmentService: JudgmentService,
     private val excelService: ExcelService,
-    private val evaluationTargetCsvService: EvaluationTargetCsvService
+    private val evaluationTargetCsvService: EvaluationTargetCsvService,
+    private val missionService: MissionService,
 ) : VerticalLayout(), HasUrlParameter<Long> {
     private var recruitmentId: Long = 0L
     private var evaluations: List<EvaluationSelectData> =
@@ -92,7 +97,8 @@ class SelectionView(
             tabs,
             HorizontalLayout(
                 createLoadButton(tabs),
-                createResultDownloadButton()
+                createResultDownloadButton(),
+                createJudgeAllButton()
             )
         ).apply {
             setWidthFull()
@@ -168,7 +174,7 @@ class SelectionView(
     private fun createEvaluationButtonRenderer(): Renderer<EvaluationTargetResponse> {
         return ComponentRenderer { response ->
             createPrimarySmallButton("평가하기") {
-                EvaluationTargetFormDialog(evaluationTargetService, assignmentService, response.id) {
+                EvaluationTargetFormDialog(evaluationTargetService, assignmentService, judgmentService, response.id) {
                     selectedTabIndex = tabs.selectedIndex
                     removeAll()
                     add(createTitle(), createContent())
@@ -214,6 +220,12 @@ class SelectionView(
         return createSuccessButton("평가지 다운로드") {
             val evaluation = evaluations[tabs.selectedIndex - 1]
             downloadFile("${evaluation.title}.csv", evaluationTargetCsvService.createTargetCsv(evaluation.id))
+        }
+    }
+
+    private fun createJudgeAllButton(): Button {
+        return createContrastButtonWithDialog("전체 자동 채점하기", "자동 채점을 실행하시겠습니까?") {
+            // TODO: 전체 자동 채점 기능 구현
         }
     }
 
