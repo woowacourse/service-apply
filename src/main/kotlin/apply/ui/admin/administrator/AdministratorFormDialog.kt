@@ -1,5 +1,7 @@
 package apply.ui.admin.administrator
 
+import apply.application.AdministratorData
+import apply.application.AdministratorResponse
 import apply.application.AdministratorService
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.button.Button
@@ -24,6 +26,15 @@ class AdministratorFormDialog(
         add(createHeader(), administratorForm, createButtons(displayName, reloadComponents))
         width = "800px"
         open()
+    }
+
+    constructor(
+        administratorService: AdministratorService,
+        displayName: String,
+        administrator: AdministratorResponse,
+        reloadComponents: () -> Unit
+    ) : this(administratorService, displayName, reloadComponents) {
+        administratorForm.fill(AdministratorData(administrator.name, administrator.username, id = administrator.id))
     }
 
     private fun createHeader(): VerticalLayout {

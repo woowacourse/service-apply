@@ -4,9 +4,12 @@ import apply.application.AdministratorService
 import apply.createAdministratorData
 import apply.createAdministratorResponse
 import com.ninjasquad.springmockk.MockkBean
+import io.mockk.Runs
 import io.mockk.every
+import io.mockk.just
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 import support.test.web.servlet.bearer
@@ -57,6 +60,18 @@ class AdministratorRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isOk }
             content { success(response) }
+        }
+    }
+
+    @Test
+    fun `관리자를 삭제한다`() {
+        every { administratorService.deleteById(any()) } just Runs
+
+        mockMvc.delete("/api/administrators/{administratorId}", 1L) {
+            jsonContent(createAdministratorData())
+            bearer("valid_token")
+        }.andExpect {
+            status { isNoContent }
         }
     }
 }

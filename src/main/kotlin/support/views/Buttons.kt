@@ -100,7 +100,7 @@ fun createSuccessButtonWithDialog(text: String, message: String, clickListener: 
 }
 
 fun createContrastButtonWithDialog(text: String, message: String, clickListener: ClickListener): Button {
-    return createContrastSmallButton(text) { createConfirmDialog(message, clickListener) }
+    return createContrastButton(text) { createConfirmDialog(message, clickListener) }
 }
 
 fun createDeleteButtonWithDialog(message: String, clickListener: ClickListener): Button {

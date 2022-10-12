@@ -40,7 +40,7 @@ class Judgment(
         get() = records.maxByOrNull { it.startedDateTime } ?: throw NoSuchElementException()
 
     fun start(commit: Commit) {
-        check(canStart()) { "예제 테스트를 실행할 수 없습니다." }
+        check(canStart()) { "자동 채점을 시작할 수 없습니다." }
         val record = findRecord(commit) ?: createRecord(commit)
         if (record.touchable) {
             record.touch()

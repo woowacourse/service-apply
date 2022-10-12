@@ -1,8 +1,12 @@
 package apply.ui.admin.selections
 
+import apply.application.AssignmentData
 import apply.application.AssignmentService
 import apply.application.EvaluationTargetData
 import apply.application.EvaluationTargetService
+import apply.application.JudgmentData
+import apply.application.JudgmentService
+import apply.domain.judgment.JudgmentType
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.dialog.Dialog
@@ -18,7 +22,8 @@ import support.views.createPrimaryButton
 
 class EvaluationTargetFormDialog(
     private val evaluationTargetService: EvaluationTargetService,
-    private val assignmentService: AssignmentService,
+    assignmentService: AssignmentService,
+    private val judgmentService: JudgmentService,
     private val evaluationTargetId: Long,
     reloadComponents: () -> Unit
 ) : Dialog() {
@@ -28,15 +33,23 @@ class EvaluationTargetFormDialog(
         isReadOnly = true
     }
     private val evaluationTargetForm: BindingFormLayout<EvaluationTargetData>
+    private val assignment: AssignmentData? = assignmentService.findByEvaluationTargetId(evaluationTargetId)
+    private val judgment: JudgmentData? =
+        judgmentService.findByEvaluationTargetId(evaluationTargetId, JudgmentType.REAL)
 
     init {
         val response = evaluationTargetService.getGradeEvaluation(evaluationTargetId)
-        evaluationTargetForm = EvaluationTargetForm(response.evaluationItems)
+        evaluationTargetForm = EvaluationTargetForm(response.evaluationItems, judgment?.evaluationItemId)
             .apply { fill(response.evaluationTarget) }
         title.text = response.title
         description.value = response.description
-
-        add(createHeader(), createAssignmentForm(), evaluationTargetForm, createButtons(reloadComponents))
+        add(
+            createHeader(),
+            createAssignmentForm(),
+            createJudgmentForm(),
+            evaluationTargetForm,
+            createButtons(reloadComponents)
+        )
         width = "800px"
         open()
     }
@@ -50,9 +63,11 @@ class EvaluationTargetFormDialog(
     }
 
     private fun createAssignmentForm(): Component {
-        return assignmentService.findByEvaluationTargetId(evaluationTargetId)
-            ?.let { AssignmentForm(it) }
-            ?: FormLayout()
+        return assignment?.let { AssignmentForm(it) } ?: FormLayout()
+    }
+
+    private fun createJudgmentForm(): Component {
+        return judgment?.let { JudgmentForm(it, judgmentService) } ?: FormLayout()
     }
 
     private fun createButtons(reloadComponent: () -> Unit): Component {
