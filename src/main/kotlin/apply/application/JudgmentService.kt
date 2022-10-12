@@ -18,12 +18,11 @@ import apply.domain.judgmentitem.JudgmentItemRepository
 import apply.domain.judgmentitem.getByMissionId
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionRepository
-import apply.domain.mission.getByEvaluationId
 import apply.domain.mission.getById
-import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
+@Transactional
 @Service
 class JudgmentService(
     private val judgmentRepository: JudgmentRepository,
@@ -33,7 +32,6 @@ class JudgmentService(
     private val evaluationTargetRepository: EvaluationTargetRepository,
     private val assignmentArchive: AssignmentArchive
 ) {
-    @Transactional
     fun judgeExample(userId: Long, missionId: Long): LastJudgmentResponse {
         val mission = missionRepository.getById(missionId)
         check(mission.isSubmitting && judgmentItemRepository.existsByMissionId(mission.id)) {
@@ -43,64 +41,12 @@ class JudgmentService(
         return judge(mission, assignment, JudgmentType.EXAMPLE)
     }
 
-    @Transactional
-    fun judgeReal(userId: Long, missionId: Long): LastJudgmentResponse {
-        return judgeReal(assignmentRepository.getByUserIdAndMissionId(userId, missionId))
-    }
-
-    @Transactional
-    fun judgeRealByAssignmentId(assignmentId: Long): LastJudgmentResponse {
-        return judgeReal(assignmentRepository.getById(assignmentId))
-    }
-
-    private fun judgeReal(assignment: Assignment): LastJudgmentResponse {
-        val mission = missionRepository.getById(assignment.missionId)
-        check(judgmentItemRepository.existsByMissionId(mission.id)) { "자동 채점을 실행할 수 없습니다." }
-        return judge(mission, assignment, JudgmentType.REAL)
-    }
-
-    @Async
-    fun judgeAll(missionId: Long) {
-        judgeAll(missionRepository.getById(missionId))
-    }
-
-    @Async
-    fun judgeAllByEvaluationId(evaluationId: Long) {
-        judgeAll(missionRepository.getByEvaluationId(evaluationId))
-    }
-
-    private fun judgeAll(mission: Mission) {
-        check(judgmentItemRepository.existsByMissionId(mission.id)) { "자동 채점을 실행할 수 없습니다." }
-        val assignments = assignmentRepository.findAllByMissionId(mission.id)
-        assignments.forEach {
-            runCatching { judge(mission, it, JudgmentType.REAL) }
-        }
-    }
-
-    private fun judge(mission: Mission, assignment: Assignment, judgmentType: JudgmentType): LastJudgmentResponse {
-        var judgment = judgmentRepository.findByAssignmentIdAndType(assignment.id, judgmentType)
-            ?: judgmentRepository.save(Judgment(assignment.id, judgmentType))
-        val commit = assignmentArchive.getLastCommit(assignment.pullRequestUrl, mission.period.endDateTime)
-        judgment.start(commit)
-        judgment = judgmentRepository.save(judgment)
-        return LastJudgmentResponse(assignment.pullRequestUrl, judgment.lastRecord)
-    }
-
     fun findExample(userId: Long, missionId: Long): LastJudgmentResponse? {
-        return find(userId, missionId, JudgmentType.EXAMPLE)
-    }
-
-    fun findReal(userId: Long, missionId: Long): LastJudgmentResponse? {
-        return find(userId, missionId, JudgmentType.REAL)
-    }
-
-    private fun find(userId: Long, missionId: Long, judgmentType: JudgmentType): LastJudgmentResponse? {
         val assignment = assignmentRepository.findByUserIdAndMissionId(userId, missionId) ?: return null
-        val judgment = judgmentRepository.findByAssignmentIdAndType(assignment.id, judgmentType)
+        val judgment = judgmentRepository.findByAssignmentIdAndType(assignment.id, JudgmentType.EXAMPLE)
         return judgment?.let { LastJudgmentResponse(assignment.pullRequestUrl, it.lastRecord) }
     }
 
-    @Transactional
     fun success(judgmentId: Long, request: SuccessJudgmentRequest) {
         val judgment = judgmentRepository.getById(judgmentId)
         val assignment = assignmentRepository.getById(judgment.assignmentId)
@@ -108,21 +54,34 @@ class JudgmentService(
         val judgmentItem = judgmentItemRepository.getByMissionId(mission.id)
         val evaluationTarget = evaluationTargetRepository
             .getByEvaluationIdAndUserId(mission.evaluationId, assignment.userId)
-
         judgment.success(Commit(request.commit), request.passCount, request.totalCount)
         evaluationTarget.addEvaluationAnswer(EvaluationAnswer(request.passCount, judgmentItem.evaluationItemId))
     }
 
-    @Transactional
     fun fail(judgmentId: Long, request: FailJudgmentRequest) {
         val judgment = judgmentRepository.getById(judgmentId)
         judgment.fail(Commit(request.commit), request.message)
     }
 
-    @Transactional
     fun cancel(judgmentId: Long, request: CancelJudgmentRequest) {
         val judgment = judgmentRepository.getById(judgmentId)
         judgment.cancel(Commit(request.commit), request.message)
+    }
+
+    fun judgeReal(assignmentId: Long): LastJudgmentResponse {
+        val assignment = assignmentRepository.getById(assignmentId)
+        val mission = missionRepository.getById(assignment.missionId)
+        check(judgmentItemRepository.existsByMissionId(mission.id)) { "자동 채점을 실행할 수 없습니다." }
+        return judge(mission, assignment, JudgmentType.REAL)
+    }
+
+    fun judge(mission: Mission, assignment: Assignment, judgmentType: JudgmentType): LastJudgmentResponse {
+        var judgment = judgmentRepository.findByAssignmentIdAndType(assignment.id, judgmentType)
+            ?: judgmentRepository.save(Judgment(assignment.id, judgmentType))
+        val commit = assignmentArchive.getLastCommit(assignment.pullRequestUrl, mission.period.endDateTime)
+        judgment.start(commit)
+        judgment = judgmentRepository.save(judgment)
+        return LastJudgmentResponse(assignment.pullRequestUrl, judgment.lastRecord)
     }
 
     fun findByEvaluationTargetId(evaluationTargetId: Long, type: JudgmentType): JudgmentData? {

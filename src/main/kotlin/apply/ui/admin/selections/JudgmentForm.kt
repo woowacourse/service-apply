@@ -38,7 +38,7 @@ class JudgmentForm(
     private fun createJudgmentRequestButton(): Button {
         return createContrastButton("실행") {
             try {
-                judgmentService.judgeRealByAssignmentId(judgmentData.assignmentId)
+                judgmentService.judgeReal(judgmentData.assignmentId)
                 createNotification("자동 채점이 실행되었습니다.")
             } catch (e: Exception) {
                 createNotification(e.localizedMessage)

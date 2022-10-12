@@ -9,6 +9,7 @@ import apply.application.EvaluationTargetCsvService
 import apply.application.EvaluationTargetResponse
 import apply.application.EvaluationTargetService
 import apply.application.ExcelService
+import apply.application.JudgmentAllService
 import apply.application.JudgmentService
 import apply.application.RecruitmentItemService
 import apply.application.RecruitmentService
@@ -58,6 +59,7 @@ class SelectionView(
     private val evaluationTargetService: EvaluationTargetService,
     private val assignmentService: AssignmentService,
     private val judgmentService: JudgmentService,
+    private val judgmentAllService: JudgmentAllService,
     private val excelService: ExcelService,
     private val evaluationTargetCsvService: EvaluationTargetCsvService
 ) : VerticalLayout(), HasUrlParameter<Long> {
@@ -203,7 +205,7 @@ class SelectionView(
 
     private fun createLoadButton(tabs: Tabs): Button {
         return createPrimaryButton("평가 대상자 불러오기") {
-            val evaluation = selectedEvaluation(tabs)
+            val evaluation = tabs.findEvaluation() ?: return@createPrimaryButton
             evaluationTargetService.load(evaluation.id)
             selectedTabIndex = tabs.selectedIndex
             removeAll()
@@ -223,19 +225,13 @@ class SelectionView(
 
     private fun createJudgeAllButton(tabs: Tabs): Button {
         return createContrastButtonWithDialog("전체 자동 채점하기", "자동 채점을 실행하시겠습니까?") {
-            val evaluation = selectedEvaluation(tabs)
-            judgmentService.judgeAllByEvaluationId(evaluation.id)
-            selectedTabIndex = tabs.selectedIndex
-            removeAll()
-            add(
-                createTitle(),
-                createContent()
-            )
+            val evaluation = tabs.findEvaluation() ?: return@createContrastButtonWithDialog
+            judgmentAllService.judgeAll(evaluation.id)
         }
     }
 
-    private fun selectedEvaluation(tabs: Tabs): EvaluationSelectData {
-        return evaluations.first { it.title == tabs.selectedTab.label }
+    private fun Tabs.findEvaluation(): EvaluationSelectData? {
+        return evaluations.find { it.title == selectedTab.label }
     }
 
     private fun createEvaluationFileUpload(): Upload {

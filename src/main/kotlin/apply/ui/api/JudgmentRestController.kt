@@ -2,6 +2,7 @@ package apply.ui.api
 
 import apply.application.CancelJudgmentRequest
 import apply.application.FailJudgmentRequest
+import apply.application.JudgmentAllService
 import apply.application.JudgmentService
 import apply.application.LastJudgmentResponse
 import apply.application.SuccessJudgmentRequest
@@ -19,7 +20,8 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api")
 @RestController
 class JudgmentRestController(
-    private val judgmentService: JudgmentService
+    private val judgmentService: JudgmentService,
+    private val judgmentAllService: JudgmentAllService
 ) {
     @PostMapping("/recruitments/{recruitmentId}/missions/{missionId}/judgments/judge-example")
     fun judgeExample(
@@ -39,36 +41,6 @@ class JudgmentRestController(
     ): ResponseEntity<ApiResponse<LastJudgmentResponse>> {
         val response = judgmentService.findExample(user.id, missionId)
         return ResponseEntity.ok(ApiResponse.success(response))
-    }
-
-    @PostMapping("/recruitments/{recruitmentId}/missions/{missionId}/judgments/judge-real")
-    fun judgeReal(
-        @PathVariable recruitmentId: Long,
-        @PathVariable missionId: Long,
-        @LoginUser(administrator = true) user: User
-    ): ResponseEntity<ApiResponse<LastJudgmentResponse>> {
-        val response = judgmentService.judgeReal(user.id, missionId)
-        return ResponseEntity.ok(ApiResponse.success(response))
-    }
-
-    @GetMapping("/recruitments/{recruitmentId}/missions/{missionId}/judgments/judge-real")
-    fun findReal(
-        @PathVariable recruitmentId: Long,
-        @PathVariable missionId: Long,
-        @LoginUser(administrator = true) user: User
-    ): ResponseEntity<ApiResponse<LastJudgmentResponse>> {
-        val response = judgmentService.findReal(user.id, missionId)
-        return ResponseEntity.ok(ApiResponse.success(response))
-    }
-
-    @PostMapping("/recruitments/{recruitmentId}/missions/{missionId}/judgments/judge-all")
-    fun judgeAll(
-        @PathVariable recruitmentId: Long,
-        @PathVariable missionId: Long,
-        @LoginUser(administrator = true) user: User
-    ): ResponseEntity<Unit> {
-        judgmentService.judgeAll(missionId)
-        return ResponseEntity.ok().build()
     }
 
     @PostMapping("/judgments/{judgmentId}/success")
@@ -98,6 +70,25 @@ class JudgmentRestController(
         @Accessor("lambda") ignored: Unit
     ): ResponseEntity<Unit> {
         judgmentService.cancel(judgmentId, request)
+        return ResponseEntity.ok().build()
+    }
+
+    @PostMapping("/evaluations/{evaluationId}/assignments/{assignmentId}/judgments/judge-real")
+    fun judgeReal(
+        @PathVariable evaluationId: Long,
+        @PathVariable assignmentId: Long,
+        @LoginUser(administrator = true) user: User
+    ): ResponseEntity<ApiResponse<LastJudgmentResponse>> {
+        val response = judgmentService.judgeReal(assignmentId)
+        return ResponseEntity.ok(ApiResponse.success(response))
+    }
+
+    @PostMapping("/evaluations/{evaluationId}/judgments/judge-all")
+    fun judgeAll(
+        @PathVariable evaluationId: Long,
+        @LoginUser(administrator = true) user: User
+    ): ResponseEntity<Unit> {
+        judgmentAllService.judgeAll(evaluationId)
         return ResponseEntity.ok().build()
     }
 }
