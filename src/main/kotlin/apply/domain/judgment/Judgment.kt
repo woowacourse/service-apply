@@ -63,6 +63,7 @@ class Judgment(
     fun success(commit: Commit, passCount: Int, totalCount: Int) {
         val record = getRecord(commit)
         record.applyResult(JudgmentResult(passCount, totalCount, status = JudgmentStatus.SUCCEEDED))
+        registerEvent(JudgmentSucceededEvent(id, assignmentId, type, passCount, totalCount))
     }
 
     fun fail(commit: Commit, message: String) {

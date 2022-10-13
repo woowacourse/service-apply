@@ -2,14 +2,20 @@ package apply.application
 
 import apply.createAssignment
 import apply.createCommit
+import apply.createJudgment
 import apply.createJudgmentItem
+import apply.createJudgmentRecord
 import apply.createMission
+import apply.createSuccessJudgmentRequest
 import apply.domain.assignment.AssignmentRepository
 import apply.domain.judgment.AssignmentArchive
 import apply.domain.judgment.JudgmentRepository
+import apply.domain.judgment.JudgmentResult
 import apply.domain.judgment.JudgmentStartedEvent
-import apply.domain.judgment.JudgmentStatus
-import apply.domain.judgment.JudgmentType
+import apply.domain.judgment.JudgmentStatus.*
+import apply.domain.judgment.JudgmentSucceededEvent
+import apply.domain.judgment.JudgmentType.*
+import apply.domain.judgment.getById
 import apply.domain.judgmentitem.JudgmentItemRepository
 import apply.domain.mission.MissionRepository
 import com.ninjasquad.springmockk.MockkBean
@@ -53,7 +59,7 @@ class JudgmentIntegrationTest(
             Then("마지막 커밋에 대한 자동 채점 기록을 확인할 수 있고 자동 채점이 저장된다") {
                 assertSoftly(actual) {
                     commitHash shouldBe commit.hash
-                    status shouldBe JudgmentStatus.STARTED
+                    status shouldBe STARTED
                     passCount shouldBe 0
                     totalCount shouldBe 0
                 }
@@ -92,9 +98,33 @@ class JudgmentIntegrationTest(
         When("해당 과제 제출물의 자동 채점을 실행하면") {
             Then("예외가 발생하고 자동 채점이 저장되지 않는다") {
                 shouldThrowAny {
-                    judgmentService.judge(mission, assignment, JudgmentType.REAL)
+                    judgmentService.judge(mission, assignment, REAL)
                 }
                 judgmentRepository.findAll().shouldBeEmpty()
+            }
+        }
+    }
+
+    Given("특정 자동 채점의 특정 커밋에 대한 자동 채점 기록이 있는 경우") {
+        val userId = 1L
+        val mission = missionRepository.save(createMission())
+        judgmentItemRepository.save(createJudgmentItem(mission.id))
+        val assignment = assignmentRepository.save(createAssignment(userId, mission.id))
+        val commit = createCommit()
+        val judgment = judgmentRepository.save(
+            createJudgment(assignment.id, EXAMPLE, listOf(createJudgmentRecord(commit)))
+        )
+
+        When("해당 커밋의 자동 채점이 성공하면") {
+            judgmentService.success(
+                judgment.id,
+                createSuccessJudgmentRequest(commit.hash, passCount = 9, totalCount = 10)
+            )
+
+            Then("자동 채점 기록의 상태가 성공으로 변경되고 점수가 입력된다") {
+                val actual = judgmentRepository.getById(judgment.id)
+                actual.lastRecord.result shouldBe JudgmentResult(passCount = 9, totalCount = 10, status = SUCCEEDED)
+                events.count<JudgmentSucceededEvent>() shouldBe 1
             }
         }
     }
