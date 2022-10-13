@@ -35,7 +35,7 @@ export type Mission = {
   startDateTime: ISO8601DateString;
   endDateTime: ISO8601DateString;
   status: MissionStatus;
-  isAutomation: boolean;
+  runnable: boolean;
   judgment: {
     pullRequestUrl: string;
     commitHash: string;

@@ -87,7 +87,7 @@ export const missionsDummy = {
       submitted: false,
       submittable: true,
       status: MISSION_STATUS.SUBMITTABLE,
-      isAutomation: true,
+      runnable: true,
       judgment: null,
     },
   ],
@@ -101,7 +101,7 @@ export const missionsDummy = {
       submitted: false,
       submittable: true,
       status: MISSION_STATUS.SUBMITTING,
-      isAutomation: true,
+      runnable: true,
       judgment: null,
     },
     {
@@ -113,7 +113,7 @@ export const missionsDummy = {
       submitted: true,
       submittable: true,
       status: MISSION_STATUS.SUBMITTING,
-      isAutomation: true,
+      runnable: true,
       judgment: null,
     },
     {
@@ -125,7 +125,7 @@ export const missionsDummy = {
       submitted: true,
       submittable: true,
       status: MISSION_STATUS.SUBMITTING,
-      isAutomation: true,
+      runnable: true,
       judgment: {
         pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
@@ -147,7 +147,7 @@ export const missionsDummy = {
       submitted: true,
       submittable: true,
       status: MISSION_STATUS.SUBMITTING,
-      isAutomation: true,
+      runnable: true,
       judgment: {
         pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
@@ -169,7 +169,7 @@ export const missionsDummy = {
       submitted: true,
       submittable: true,
       status: MISSION_STATUS.SUBMITTING,
-      isAutomation: true,
+      runnable: true,
       judgment: {
         pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
@@ -191,7 +191,7 @@ export const missionsDummy = {
       submitted: true,
       submittable: true,
       status: MISSION_STATUS.SUBMITTING,
-      isAutomation: true,
+      runnable: true,
       judgment: {
         pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
@@ -213,7 +213,7 @@ export const missionsDummy = {
       submitted: true,
       submittable: true,
       status: MISSION_STATUS.SUBMITTING,
-      isAutomation: true,
+      runnable: true,
       judgment: {
         pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
@@ -235,7 +235,7 @@ export const missionsDummy = {
       submitted: true,
       submittable: true,
       status: MISSION_STATUS.SUBMITTING,
-      isAutomation: true,
+      runnable: true,
       judgment: {
         pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
@@ -259,7 +259,7 @@ export const missionsDummy = {
       submitted: false,
       submittable: false,
       status: MISSION_STATUS.ENDED,
-      isAutomation: true,
+      runnable: true,
       judgment: null,
     },
     {
@@ -271,7 +271,7 @@ export const missionsDummy = {
       submitted: true,
       submittable: false,
       status: MISSION_STATUS.ENDED,
-      isAutomation: true,
+      runnable: true,
       judgment: null,
     },
     {
@@ -283,7 +283,7 @@ export const missionsDummy = {
       submitted: true,
       submittable: false,
       status: MISSION_STATUS.ENDED,
-      isAutomation: true,
+      runnable: true,
       judgment: {
         pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
@@ -305,7 +305,7 @@ export const missionsDummy = {
       submitted: true,
       submittable: true,
       status: MISSION_STATUS.ENDED,
-      isAutomation: true,
+      runnable: true,
       judgment: {
         pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
@@ -327,7 +327,7 @@ export const missionsDummy = {
       submitted: true,
       submittable: true,
       status: MISSION_STATUS.ENDED,
-      isAutomation: true,
+      runnable: true,
       judgment: {
         pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
@@ -349,7 +349,7 @@ export const missionsDummy = {
       submitted: true,
       submittable: true,
       status: MISSION_STATUS.ENDED,
-      isAutomation: true,
+      runnable: true,
       judgment: {
         pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
@@ -371,7 +371,7 @@ export const missionsDummy = {
       submitted: true,
       submittable: true,
       status: MISSION_STATUS.ENDED,
-      isAutomation: true,
+      runnable: true,
       judgment: {
         pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
@@ -395,7 +395,7 @@ export const missionsDummy = {
       submitted: false,
       submittable: false,
       status: MISSION_STATUS.UNSUBMITTABLE,
-      isAutomation: true,
+      runnable: true,
       judgment: null,
     },
     {
@@ -407,7 +407,7 @@ export const missionsDummy = {
       submitted: true,
       submittable: false,
       status: MISSION_STATUS.UNSUBMITTABLE,
-      isAutomation: true,
+      runnable: true,
       judgment: null,
     },
     {
@@ -419,7 +419,7 @@ export const missionsDummy = {
       submitted: true,
       submittable: false,
       status: MISSION_STATUS.UNSUBMITTABLE,
-      isAutomation: true,
+      runnable: true,
       judgment: {
         pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
@@ -441,7 +441,7 @@ export const missionsDummy = {
       submitted: true,
       submittable: true,
       status: MISSION_STATUS.UNSUBMITTABLE,
-      isAutomation: true,
+      runnable: true,
       judgment: {
         pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
@@ -463,7 +463,7 @@ export const missionsDummy = {
       submitted: true,
       submittable: true,
       status: MISSION_STATUS.UNSUBMITTABLE,
-      isAutomation: true,
+      runnable: true,
       judgment: {
         pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
@@ -485,7 +485,7 @@ export const missionsDummy = {
       submitted: true,
       submittable: true,
       status: MISSION_STATUS.UNSUBMITTABLE,
-      isAutomation: true,
+      runnable: true,
       judgment: {
         pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
@@ -507,7 +507,7 @@ export const missionsDummy = {
       submitted: true,
       submittable: true,
       status: MISSION_STATUS.UNSUBMITTABLE,
-      isAutomation: true,
+      runnable: true,
       judgment: {
         pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
