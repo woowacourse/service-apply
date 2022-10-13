@@ -4,8 +4,6 @@ import apply.domain.assignment.Assignment
 import apply.domain.assignment.AssignmentRepository
 import apply.domain.assignment.getById
 import apply.domain.assignment.getByUserIdAndMissionId
-import apply.domain.evaluationtarget.EvaluationTargetRepository
-import apply.domain.evaluationtarget.getById
 import apply.domain.judgment.AssignmentArchive
 import apply.domain.judgment.Commit
 import apply.domain.judgment.Judgment
@@ -26,7 +24,6 @@ class JudgmentService(
     private val assignmentRepository: AssignmentRepository,
     private val missionRepository: MissionRepository,
     private val judgmentItemRepository: JudgmentItemRepository,
-    private val evaluationTargetRepository: EvaluationTargetRepository,
     private val assignmentArchive: AssignmentArchive
 ) {
     fun judgeExample(userId: Long, missionId: Long): LastJudgmentResponse {
@@ -38,7 +35,7 @@ class JudgmentService(
         return judge(mission, assignment, JudgmentType.EXAMPLE)
     }
 
-    fun findExample(userId: Long, missionId: Long): LastJudgmentResponse? {
+    fun findLastExampleJudgment(userId: Long, missionId: Long): LastJudgmentResponse? {
         val assignment = assignmentRepository.findByUserIdAndMissionId(userId, missionId) ?: return null
         val judgment = judgmentRepository.findByAssignmentIdAndType(assignment.id, JudgmentType.EXAMPLE)
         return judgment?.let { LastJudgmentResponse(assignment.pullRequestUrl, it.lastRecord) }
@@ -76,22 +73,5 @@ class JudgmentService(
         judgment.start(commit)
         judgment = judgmentRepository.save(judgment)
         return LastJudgmentResponse(assignment.pullRequestUrl, judgment.lastRecord)
-    }
-
-    fun findByEvaluationTargetId(evaluationTargetId: Long, type: JudgmentType): JudgmentData? {
-        val evaluationTarget = evaluationTargetRepository.getById(evaluationTargetId)
-        val mission = missionRepository.findByEvaluationId(evaluationTarget.evaluationId) ?: return null
-        val judgmentItem = judgmentItemRepository.findByMissionId(mission.id) ?: return null
-        val assignment = assignmentRepository.findByUserIdAndMissionId(evaluationTarget.userId, mission.id)
-        return assignment
-            ?.let { judgmentRepository.findByAssignmentIdAndType(it.id, type) }
-            .let {
-                JudgmentData(
-                    id = it?.id,
-                    evaluationItemId = judgmentItem.evaluationItemId,
-                    assignmentId = assignment?.id,
-                    judgmentRecord = it?.lastRecord
-                )
-            }
     }
 }

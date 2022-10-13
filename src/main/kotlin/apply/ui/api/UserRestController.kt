@@ -79,16 +79,16 @@ class UserRestController(
         @RequestParam keyword: String,
         @LoginUser(administrator = true) user: User
     ): ResponseEntity<ApiResponse<List<UserResponse>>> {
-        val users = userService.findAllByKeyword(keyword)
-        return ResponseEntity.ok(ApiResponse.success(users))
+        val responses = userService.findAllByKeyword(keyword)
+        return ResponseEntity.ok(ApiResponse.success(responses))
     }
 
     @GetMapping("/me")
     fun getMyInformation(
         @LoginUser user: User
     ): ResponseEntity<ApiResponse<UserResponse>> {
-        val user = userService.getInformation(user.id)
-        return ResponseEntity.ok(ApiResponse.success(user))
+        val response = userService.getInformation(user.id)
+        return ResponseEntity.ok(ApiResponse.success(response))
     }
 
     @PatchMapping("/information")

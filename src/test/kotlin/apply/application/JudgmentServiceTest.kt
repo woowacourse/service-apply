@@ -10,7 +10,6 @@ import apply.createMission
 import apply.domain.assignment.AssignmentRepository
 import apply.domain.assignment.getById
 import apply.domain.assignment.getByUserIdAndMissionId
-import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.judgment.AssignmentArchive
 import apply.domain.judgment.JudgmentRepository
 import apply.domain.judgment.JudgmentResult
@@ -38,7 +37,6 @@ class JudgmentServiceTest : BehaviorSpec({
     val assignmentRepository = mockk<AssignmentRepository>()
     val missionRepository = mockk<MissionRepository>()
     val judgmentItemRepository = mockk<JudgmentItemRepository>()
-    val evaluationTargetRepository = mockk<EvaluationTargetRepository>()
     val assignmentArchive = mockk<AssignmentArchive>()
 
     val judgmentService = JudgmentService(
@@ -46,7 +44,6 @@ class JudgmentServiceTest : BehaviorSpec({
         assignmentRepository,
         missionRepository,
         judgmentItemRepository,
-        evaluationTargetRepository,
         assignmentArchive
     )
 
@@ -279,7 +276,7 @@ class JudgmentServiceTest : BehaviorSpec({
         every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns judgment
 
         When("예제 자동 채점 결과를 조회하면") {
-            val actual = judgmentService.findExample(1L, 1L)
+            val actual = judgmentService.findLastExampleJudgment(1L, 1L)
 
             Then("예제 자동 채점 결과를 확인할 수 있다") {
                 actual.shouldNotBeNull()
@@ -311,7 +308,7 @@ class JudgmentServiceTest : BehaviorSpec({
         every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns judgment
 
         When("본 자동 채점 결과를 조회하면") {
-            val actual = judgmentService.findExample(1L, 1L)
+            val actual = judgmentService.findLastExampleJudgment(1L, 1L)
 
             Then("본 자동 채점 결과를 확인할 수 있다") {
                 actual.shouldNotBeNull()
@@ -332,7 +329,7 @@ class JudgmentServiceTest : BehaviorSpec({
         every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns null
 
         When("예제 자동 채점 결과를 조회하면") {
-            val actual = judgmentService.findExample(1L, 1L)
+            val actual = judgmentService.findLastExampleJudgment(1L, 1L)
 
             Then("null을 반환한다") {
                 actual.shouldBeNull()

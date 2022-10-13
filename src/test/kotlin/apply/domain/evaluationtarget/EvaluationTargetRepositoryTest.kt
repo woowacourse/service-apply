@@ -6,7 +6,6 @@ import apply.domain.evaluationtarget.EvaluationStatus.PASS
 import io.kotest.core.spec.style.ExpectSpec
 import io.kotest.extensions.spring.SpringExtension
 import io.kotest.inspectors.forAll
-import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.longs.shouldBeZero
 import io.kotest.matchers.shouldBe
@@ -31,13 +30,6 @@ class EvaluationTargetRepositoryTest(
         expect("특정 평가의 평가 대상자를 조회한다") {
             val actual = evaluationTargetRepository.findAllByEvaluationId(evaluationId)
             actual shouldHaveSize 2
-        }
-
-        expect("특정 회원이 특정 평가의 평가 대상자인지 확인한다") {
-            listOf(1L, 2L).forAll { userId ->
-                val actual = evaluationTargetRepository.existsByUserIdAndEvaluationId(userId, evaluationId)
-                actual.shouldBeTrue()
-            }
         }
     }
 

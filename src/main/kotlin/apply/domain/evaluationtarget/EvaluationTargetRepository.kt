@@ -21,5 +21,5 @@ interface EvaluationTargetRepository : JpaRepository<EvaluationTarget, Long> {
         evaluationStatus: EvaluationStatus
     ): List<EvaluationTarget>
 
-    fun existsByUserIdAndEvaluationId(userId: Long, evaluationId: Long): Boolean
+    fun findAllByUserIdAndEvaluationIdIn(userId: Long, evaluationIds: Collection<Long>): List<EvaluationTarget>
 }

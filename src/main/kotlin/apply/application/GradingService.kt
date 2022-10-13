@@ -11,11 +11,13 @@ import apply.domain.judgmentitem.JudgmentItemRepository
 import apply.domain.judgmentitem.getByMissionId
 import apply.domain.mission.MissionRepository
 import apply.domain.mission.getById
+import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.transaction.event.TransactionalEventListener
 
 @Transactional
+@Service
 class GradingService(
     private val evaluationTargetRepository: EvaluationTargetRepository,
     private val missionRepository: MissionRepository,

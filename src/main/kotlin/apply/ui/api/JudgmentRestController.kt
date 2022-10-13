@@ -39,7 +39,7 @@ class JudgmentRestController(
         @PathVariable missionId: Long,
         @LoginUser user: User
     ): ResponseEntity<ApiResponse<LastJudgmentResponse>> {
-        val response = judgmentService.findExample(user.id, missionId)
+        val response = judgmentService.findLastExampleJudgment(user.id, missionId)
         return ResponseEntity.ok(ApiResponse.success(response))
     }
 

@@ -43,7 +43,7 @@ class JudgmentRestControllerTest : RestControllerTest() {
     @Test
     fun `예제 테스트 결과를 조회한다`() {
         val response = createLastJudgmentResponse()
-        every { judgmentService.findExample(any(), any()) } returns response
+        every { judgmentService.findLastExampleJudgment(any(), any()) } returns response
 
         mockMvc.get("/api/recruitments/{recruitmentId}/missions/{missionId}/judgments/judge-example", 1L, 1L) {
             bearer("valid_token")

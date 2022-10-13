@@ -1,14 +1,11 @@
 package apply.application
 
-import apply.createAssignment
 import apply.createEvaluation
 import apply.createMission
 import apply.createMissionData
 import apply.createMissionResponse
-import apply.domain.assignment.AssignmentRepository
 import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluationitem.EvaluationItemRepository
-import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.judgmentitem.JudgmentItemRepository
 import apply.domain.mission.MissionRepository
 import io.kotest.assertions.throwables.shouldNotThrowAny
@@ -27,17 +24,13 @@ import support.test.spec.afterRootTest
 class MissionServiceTest : BehaviorSpec({
     val missionRepository = mockk<MissionRepository>()
     val evaluationRepository = mockk<EvaluationRepository>()
-    val evaluationTargetRepository = mockk<EvaluationTargetRepository>()
     val evaluationItemRepository = mockk<EvaluationItemRepository>()
-    val assignmentRepository = mockk<AssignmentRepository>()
     val judgmentItemRepository = mockk<JudgmentItemRepository>()
 
     val missionService = MissionService(
         missionRepository,
         evaluationRepository,
-        evaluationTargetRepository,
         evaluationItemRepository,
-        assignmentRepository,
         judgmentItemRepository
     )
 
@@ -98,34 +91,6 @@ class MissionServiceTest : BehaviorSpec({
                 actual shouldContainExactlyInAnyOrder listOf(
                     MissionAndEvaluationResponse(mission1, evaluation1),
                     MissionAndEvaluationResponse(mission2, evaluation2)
-                )
-            }
-        }
-    }
-
-    Given("과제 및 평가 대상자가 있는 평가가 있고 해당 평가 대상자가 제출한 과제 제출물이 있는 경우") {
-        val mission1 = createMission(id = 1L, hidden = false)
-        val mission2 = createMission(id = 2L, hidden = false)
-        val recruitmentId = 1L
-        val userId = 1L
-
-        every { evaluationRepository.findAllByRecruitmentId(any()) } returns listOf(
-            createEvaluation(recruitmentId = recruitmentId, id = 1L),
-            createEvaluation(recruitmentId = recruitmentId, id = 2L)
-        )
-        every { evaluationTargetRepository.existsByUserIdAndEvaluationId(any(), any()) } returns true
-        every { missionRepository.findAllByEvaluationIdIn(any()) } returns listOf(mission1, mission2)
-        every { assignmentRepository.findAllByUserId(any()) } returns listOf(
-            createAssignment(id = userId, missionId = mission1.id)
-        )
-
-        When("해당 사용자의 특정 모집에 대한 모든 과제를 조회하면") {
-            val actual = missionService.findAllByUserIdAndRecruitmentId(userId, recruitmentId)
-
-            Then("과제 및 과제 제출물이 제출되었는지 확인할 수 있다") {
-                actual shouldContainExactlyInAnyOrder listOf(
-                    MyMissionResponse(mission1, true),
-                    MyMissionResponse(mission2, false)
                 )
             }
         }

@@ -6,7 +6,7 @@ import apply.application.EvaluationTargetData
 import apply.application.EvaluationTargetService
 import apply.application.JudgmentData
 import apply.application.JudgmentService
-import apply.domain.judgment.JudgmentType
+import apply.application.MyMissionService
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.dialog.Dialog
@@ -23,6 +23,7 @@ import support.views.createPrimaryButton
 class EvaluationTargetFormDialog(
     private val evaluationTargetService: EvaluationTargetService,
     assignmentService: AssignmentService,
+    myMissionService: MyMissionService,
     private val judgmentService: JudgmentService,
     private val evaluationTargetId: Long,
     reloadComponents: () -> Unit
@@ -34,8 +35,7 @@ class EvaluationTargetFormDialog(
     }
     private val evaluationTargetForm: BindingFormLayout<EvaluationTargetData>
     private val assignment: AssignmentData? = assignmentService.findByEvaluationTargetId(evaluationTargetId)
-    private val judgment: JudgmentData? =
-        judgmentService.findByEvaluationTargetId(evaluationTargetId, JudgmentType.REAL)
+    private val judgment: JudgmentData? = myMissionService.findLastRealJudgmentByEvaluationTargetId(evaluationTargetId)
 
     init {
         val response = evaluationTargetService.getGradeEvaluation(evaluationTargetId)

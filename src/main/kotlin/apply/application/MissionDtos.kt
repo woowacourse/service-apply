@@ -103,9 +103,16 @@ data class MyMissionResponse(
     val submitted: Boolean,
     val startDateTime: LocalDateTime,
     val endDateTime: LocalDateTime,
-    val status: MissionStatus
+    val status: MissionStatus,
+    val runnable: Boolean,
+    val judgment: LastJudgmentResponse?
 ) {
-    constructor(mission: Mission, submitted: Boolean) : this(
+    constructor(
+        mission: Mission,
+        submitted: Boolean = false,
+        runnable: Boolean = false,
+        judgment: LastJudgmentResponse? = null
+    ) : this(
         mission.id,
         mission.title,
         mission.description,
@@ -113,37 +120,9 @@ data class MyMissionResponse(
         submitted,
         mission.period.startDateTime,
         mission.period.endDateTime,
-        mission.status
-    )
-}
-
-data class MissionJudgmentResponse(
-    val id: Long,
-    val title: String,
-    val description: String,
-    val submittable: Boolean,
-    val submitted: Boolean,
-    val startDateTime: LocalDateTime,
-    val endDateTime: LocalDateTime,
-    val status: MissionStatus,
-    val isAutomation: Boolean,
-    val judgment: LastJudgmentResponse?,
-) {
-    constructor(
-        myMissionResponse: MyMissionResponse,
-        lastJudgmentResponse: LastJudgmentResponse?,
-        isAutomation: Boolean
-    ) : this(
-        myMissionResponse.id,
-        myMissionResponse.title,
-        myMissionResponse.description,
-        myMissionResponse.submittable,
-        myMissionResponse.submitted,
-        myMissionResponse.startDateTime,
-        myMissionResponse.endDateTime,
-        myMissionResponse.status,
-        isAutomation,
-        lastJudgmentResponse
+        mission.status,
+        runnable,
+        judgment
     )
 }
 

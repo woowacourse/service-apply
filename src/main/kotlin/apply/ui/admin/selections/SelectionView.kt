@@ -11,6 +11,7 @@ import apply.application.EvaluationTargetService
 import apply.application.ExcelService
 import apply.application.JudgmentAllService
 import apply.application.JudgmentService
+import apply.application.MyMissionService
 import apply.application.RecruitmentItemService
 import apply.application.RecruitmentService
 import apply.domain.applicationform.ApplicationForm
@@ -52,14 +53,15 @@ import support.views.downloadFile
 
 @Route(value = "admin/selections", layout = BaseLayout::class)
 class SelectionView(
-    private val applicantService: ApplicantService,
     private val recruitmentService: RecruitmentService,
     private val recruitmentItemService: RecruitmentItemService,
+    private val applicantService: ApplicantService,
     private val evaluationService: EvaluationService,
     private val evaluationTargetService: EvaluationTargetService,
     private val assignmentService: AssignmentService,
     private val judgmentService: JudgmentService,
     private val judgmentAllService: JudgmentAllService,
+    private val myMissionService: MyMissionService,
     private val excelService: ExcelService,
     private val evaluationTargetCsvService: EvaluationTargetCsvService
 ) : VerticalLayout(), HasUrlParameter<Long> {
@@ -174,7 +176,13 @@ class SelectionView(
     private fun createEvaluationButtonRenderer(): Renderer<EvaluationTargetResponse> {
         return ComponentRenderer { response ->
             createPrimarySmallButton("평가하기") {
-                EvaluationTargetFormDialog(evaluationTargetService, assignmentService, judgmentService, response.id) {
+                EvaluationTargetFormDialog(
+                    evaluationTargetService,
+                    assignmentService,
+                    myMissionService,
+                    judgmentService,
+                    response.id
+                ) {
                     selectedTabIndex = tabs.selectedIndex
                     removeAll()
                     add(createTitle(), createContent())
@@ -277,7 +285,6 @@ class SelectionView(
                 )
                 items.plusElement(referenceItem)
             }
-
             else -> items
         }
     }
