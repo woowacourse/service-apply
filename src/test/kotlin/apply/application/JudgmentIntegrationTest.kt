@@ -117,7 +117,8 @@ class JudgmentIntegrationTest(
         val commit = createCommit()
         judgmentRepository.save(
             createJudgment(
-                assignment.id, EXAMPLE, listOf(
+                assignment.id, EXAMPLE,
+                listOf(
                     createJudgmentRecord(
                         commit,
                         JudgmentResult(passCount = 9, totalCount = 10, status = SUCCEEDED),
@@ -152,7 +153,8 @@ class JudgmentIntegrationTest(
         val commit = createCommit()
         judgmentRepository.save(
             createJudgment(
-                assignment.id, REAL, listOf(
+                assignment.id, REAL,
+                listOf(
                     createJudgmentRecord(
                         commit,
                         JudgmentResult(passCount = 9, totalCount = 10, status = SUCCEEDED),

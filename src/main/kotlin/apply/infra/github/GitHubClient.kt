@@ -6,7 +6,11 @@ import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.RequestEntity
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
+import org.springframework.web.client.HttpClientErrorException.Forbidden
+import org.springframework.web.client.HttpClientErrorException.NotFound
+import org.springframework.web.client.HttpClientErrorException.Unauthorized
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.client.exchange
 import support.toUri
@@ -30,12 +34,16 @@ class GitHubClient(
             .accept(MediaType.APPLICATION_JSON)
             .header(HttpHeaders.AUTHORIZATION, bearerToken(gitHubProperties.accessKey))
             .build()
-        val zonedDateTime = endDateTime.atZone(ZoneId.systemDefault())
-        return restTemplate.exchange<List<CommitResponse>>(requestEntity).body
-            ?.filter { it.date <= zonedDateTime }
-            ?.maxByOrNull { it.date }
-            ?.let { Commit(it.hash) }
-            ?: throw IllegalArgumentException("해당 커밋이 존재하지 않습니다. endDateTime: $endDateTime")
+        return runCatching { restTemplate.exchange<List<CommitResponse>>(requestEntity) }
+            .onFailure {
+                when (it) {
+                    is Unauthorized -> throw RuntimeException("유효한 토큰이 아닙니다.")
+                    is Forbidden -> throw RuntimeException("요청 한도에 도달했습니다.")
+                    is NotFound -> throw IllegalArgumentException("PR이 존재하지 않습니다. pullRequestUrl: $pullRequestUrl")
+                    else -> throw RuntimeException("예기치 않은 예외가 발생했습니다.", it)
+                }
+            }
+            .map { it.last(endDateTime) }.getOrThrow()
     }
 
     private fun extract(pullRequestUrl: String): List<String> {
@@ -45,6 +53,15 @@ class GitHubClient(
     }
 
     private fun bearerToken(token: String): String = if (token.isEmpty()) "" else "Bearer $token"
+
+    private fun ResponseEntity<List<CommitResponse>>.last(endDateTime: LocalDateTime): Commit {
+        val zonedDateTime = endDateTime.atZone(ZoneId.systemDefault())
+        return body
+            ?.filter { it.date <= zonedDateTime }
+            ?.maxByOrNull { it.date }
+            ?.let { Commit(it.hash) }
+            ?: throw IllegalArgumentException("해당 커밋이 존재하지 않습니다. endDateTime: $endDateTime")
+    }
 
     companion object {
         private const val PAGE_SIZE: Int = 100
