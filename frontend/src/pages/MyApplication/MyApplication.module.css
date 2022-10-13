@@ -35,7 +35,7 @@
   font-weight: bold;
 }
 
-@media screen and (max-width: 420px) {
+@media screen and (max-width: 512px) {
   .box {
     width: calc(100vw - 1rem);
   }
