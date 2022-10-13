@@ -20,7 +20,6 @@ import apply.domain.judgmentitem.getByMissionId
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionRepository
 import apply.domain.mission.getById
-import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.transaction.event.TransactionalEventListener
@@ -56,12 +55,13 @@ class JudgmentService(
         judgmentRepository.save(judgment)
     }
 
-    @TransactionalEventListener
+    @TransactionalEventListener(condition = "#event.type.name() == 'REAL'")
     fun changeAnswer(event: JudgmentSucceededEvent) {
         val assignment = assignmentRepository.getById(event.assignmentId)
         val mission = missionRepository.getById(assignment.missionId)
         val judgmentItem = judgmentItemRepository.getByMissionId(mission.id)
-        val evaluationTarget = evaluationTargetRepository.getByEvaluationIdAndUserId(mission.evaluationId, assignment.userId)
+        val evaluationTarget = evaluationTargetRepository
+            .getByEvaluationIdAndUserId(mission.evaluationId, assignment.userId)
         evaluationTarget.addEvaluationAnswer(EvaluationAnswer(event.passCount, judgmentItem.evaluationItemId))
     }
 

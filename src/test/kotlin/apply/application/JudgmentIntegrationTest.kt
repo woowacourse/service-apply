@@ -105,11 +105,8 @@ class JudgmentIntegrationTest(
         }
     }
 
-    Given("특정 자동 채점의 특정 커밋에 대한 자동 채점 기록이 있는 경우") {
-        val userId = 1L
-        val mission = missionRepository.save(createMission())
-        judgmentItemRepository.save(createJudgmentItem(mission.id))
-        val assignment = assignmentRepository.save(createAssignment(userId, mission.id))
+    Given("특정 예제 자동 채점에 특정 커밋에 대한 자동 채점 기록이 있는 경우") {
+        val assignment = assignmentRepository.save(createAssignment(1L, 1L))
         val commit = createCommit()
         val judgment = judgmentRepository.save(
             createJudgment(assignment.id, EXAMPLE, listOf(createJudgmentRecord(commit)))
@@ -121,7 +118,28 @@ class JudgmentIntegrationTest(
                 createSuccessJudgmentRequest(commit.hash, passCount = 9, totalCount = 10)
             )
 
-            Then("자동 채점 기록의 상태가 성공으로 변경되고 점수가 입력된다") {
+            Then("자동 채점 기록의 상태가 성공이 된다") {
+                val actual = judgmentRepository.getById(judgment.id)
+                actual.lastRecord.result shouldBe JudgmentResult(passCount = 9, totalCount = 10, status = SUCCEEDED)
+                events.count<JudgmentSucceededEvent>() shouldBe 1
+            }
+        }
+    }
+
+    Given("특정 본 자동 채점의 특정 커밋에 대한 자동 채점 기록이 있는 경우") {
+        val assignment = assignmentRepository.save(createAssignment(1L, 1L))
+        val commit = createCommit()
+        val judgment = judgmentRepository.save(
+            createJudgment(assignment.id, REAL, listOf(createJudgmentRecord(commit)))
+        )
+
+        When("해당 커밋의 자동 채점이 성공하면") {
+            judgmentService.success(
+                judgment.id,
+                createSuccessJudgmentRequest(commit.hash, passCount = 9, totalCount = 10)
+            )
+
+            Then("자동 채점 기록의 상태가 성공이 된다") {
                 val actual = judgmentRepository.getById(judgment.id)
                 actual.lastRecord.result shouldBe JudgmentResult(passCount = 9, totalCount = 10, status = SUCCEEDED)
                 events.count<JudgmentSucceededEvent>() shouldBe 1
