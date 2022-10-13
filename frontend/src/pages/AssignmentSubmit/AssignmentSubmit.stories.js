@@ -1,4 +1,4 @@
-import { MemoryRouter, Route } from "react-router-dom";
+import { MemoryRouter } from "react-router-dom";
 import { missionsDummy } from "../../mock/dummy";
 import AssignmentSubmit from "./AssignmentSubmit";
 
@@ -18,9 +18,7 @@ export default {
           },
         ]}
       >
-        <Route path="/assignment/:status">
-          <Story />
-        </Route>
+        <Story />
       </MemoryRouter>
     ),
   ],
