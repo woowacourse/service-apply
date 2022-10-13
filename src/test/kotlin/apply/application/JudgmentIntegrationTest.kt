@@ -7,6 +7,7 @@ import apply.createMission
 import apply.domain.assignment.AssignmentRepository
 import apply.domain.judgment.AssignmentArchive
 import apply.domain.judgment.JudgmentRepository
+import apply.domain.judgment.JudgmentStartedEvent
 import apply.domain.judgment.JudgmentStatus
 import apply.domain.judgment.JudgmentType
 import apply.domain.judgmentitem.JudgmentItemRepository
@@ -19,10 +20,14 @@ import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.mockk.every
+import org.springframework.context.annotation.Import
 import support.test.IntegrationTest
+import support.test.context.event.Events
+import support.test.context.event.RecordEventsConfiguration
 import support.test.spec.afterRootTest
 
-@MockkBean(AssignmentArchive::class)
+@MockkBean(value = [AssignmentArchive::class, JudgmentAgency::class], relaxUnitFun = true)
+@Import(RecordEventsConfiguration::class)
 @IntegrationTest
 class JudgmentIntegrationTest(
     private val judgmentService: JudgmentService,
@@ -30,7 +35,8 @@ class JudgmentIntegrationTest(
     private val judgmentItemRepository: JudgmentItemRepository,
     private val assignmentRepository: AssignmentRepository,
     private val judgmentRepository: JudgmentRepository,
-    private val assignmentArchive: AssignmentArchive
+    private val assignmentArchive: AssignmentArchive,
+    private val events: Events
 ) : BehaviorSpec({
     Given("과제 제출물을 제출할 수 있는 특정 과제에 대한 과제 제출물이 있는 경우") {
         val userId = 1L
@@ -51,6 +57,7 @@ class JudgmentIntegrationTest(
                     passCount shouldBe 0
                     totalCount shouldBe 0
                 }
+                events.count<JudgmentStartedEvent>() shouldBe 1
                 judgmentRepository.findAll().shouldHaveSize(1)
             }
         }
@@ -97,5 +104,6 @@ class JudgmentIntegrationTest(
         assignmentRepository.deleteAll()
         judgmentItemRepository.deleteAll()
         missionRepository.deleteAll()
+        events.clear()
     }
 })
