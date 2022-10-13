@@ -1,9 +1,9 @@
 import { addDecorator } from "@storybook/react";
 import axios from "axios";
 import { initializeWorker, mswDecorator } from "msw-storybook-addon";
-import { MemoryRouter } from "react-router-dom";
 import "../src/api/api";
 import "../src/App.css";
+import { ModalProvider } from "../src/hooks/useModalContext";
 import { RecruitmentContext } from "../src/hooks/useRecruitmentContext";
 import { UserInfoContext } from "../src/hooks/useUserInfoContext";
 import { recruitmentDummy, userInfoDummy } from "../src/mock/dummy";
@@ -35,9 +35,9 @@ export const decorators = [
     >
       <TokenProvider>
         <UserInfoContext.Provider value={{ userInfo: userInfoDummy }}>
-          <MemoryRouter>
+          <ModalProvider>
             <Story />
-          </MemoryRouter>
+          </ModalProvider>
         </UserInfoContext.Provider>
       </TokenProvider>
     </RecruitmentContext.Provider>

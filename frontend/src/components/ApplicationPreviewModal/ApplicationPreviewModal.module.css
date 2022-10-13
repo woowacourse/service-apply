@@ -1,0 +1,69 @@
+.box {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  overflow: hidden;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  overflow-y: auto;
+  font-size: 0.875rem;
+  line-height: 1.4rem;
+  text-align: justify;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.content::-webkit-scrollbar {
+  display: none;
+}
+
+.application-item-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.application-item-title {
+  font-size: 1.125rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.application-item-description {
+  color: var(--gray-008);
+  margin-bottom: 0.5rem;
+}
+
+.application-item-answer-length {
+  color: var(--gray-007);
+  align-self: flex-end;
+}
+
+.application-item-answer {
+  white-space: pre-line;
+  word-break: break-all;
+}
+
+.application-item-url {
+  text-decoration: underline;
+}
+
+.button-box {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.button {
+  width: 12rem;
+  max-width: 100%;
+}

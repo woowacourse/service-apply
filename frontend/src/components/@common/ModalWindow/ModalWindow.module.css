@@ -1,0 +1,57 @@
+@keyframes drag-up {
+  from {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes subtle-pop-up {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.box {
+  position: fixed;
+  margin: auto;
+  max-width: 40rem;
+  z-index: var(--modal-window-z-index);
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  overflow: hidden;
+}
+
+@media only screen and (max-width: 420px) {
+  .box {
+    bottom: 0;
+    padding: 1rem;
+    max-height: 80%;
+    min-height: 10rem;
+    width: 100%;
+    border-radius: 8px 8px 0 0;
+    animation: drag-up 0.3s forwards;
+  }
+}
+
+@media only screen and (min-width: 420px) {
+  .box {
+    left: 4rem;
+    right: 4rem;
+    padding: 1.5rem;
+    max-height: calc(100% - 8rem);
+    border-radius: 8px;
+    animation: subtle-pop-up 0.3s forwards;
+  }
+}

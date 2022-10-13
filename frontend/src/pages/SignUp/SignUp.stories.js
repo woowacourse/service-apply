@@ -1,4 +1,4 @@
-import { MemoryRouter, Route } from "react-router-dom";
+import { MemoryRouter } from "react-router-dom";
 import SignUp from "./SignUp";
 
 export default {
@@ -16,9 +16,7 @@ export default {
           },
         ]}
       >
-        <Route path="/applicants/new">
-          <Story />
-        </Route>
+        <Story />
       </MemoryRouter>
     ),
   ],

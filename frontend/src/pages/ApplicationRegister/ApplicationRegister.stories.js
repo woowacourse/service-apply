@@ -1,6 +1,5 @@
-import React from "react";
 import { rest } from "msw";
-import { Route, MemoryRouter } from "react-router-dom";
+import { MemoryRouter } from "react-router-dom";
 
 import ApplicationRegister from "./ApplicationRegister";
 import { API_BASE_URL } from "../../../.storybook/preview";
@@ -29,9 +28,7 @@ export default {
           },
         ]}
       >
-        <Route path="/application-forms/:status">
-          <Story />
-        </Route>
+        <Story />
       </MemoryRouter>
     ),
   ],

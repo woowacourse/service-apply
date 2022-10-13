@@ -9,12 +9,14 @@ import MessageTextarea from "../../components/@common/MessageTextarea/MessageTex
 import MessageTextInput from "../../components/@common/MessageTextInput/MessageTextInput";
 import CheckBox from "../../components/form/CheckBox/CheckBox";
 import Form from "../../components/form/Form/Form";
+import ApplicationPreviewModal from "../../components/ApplicationPreviewModal/ApplicationPreviewModal";
 import { FORM } from "../../constants/form";
-import { CONFIRM_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
+import { SUCCESS_MESSAGE } from "../../constants/messages";
 import { PATH, PARAM } from "../../constants/path";
 import useApplicationRegisterForm, {
   APPLICATION_REGISTER_FORM_NAME,
 } from "../../hooks/useApplicationRegisterForm";
+import useModalContext from "../../hooks/useModalContext";
 import useRecruitmentItem from "../../hooks/useRecruitmentItem";
 import useTokenContext from "../../hooks/useTokenContext";
 import { formatDateTime } from "../../utils/format/date";
@@ -29,6 +31,7 @@ const ApplicationRegister = () => {
   const { recruitmentId = null } = parseQuery(location.search);
   const currentRecruitment = location.state?.currentRecruitment ?? null;
   const { recruitmentItems = [] } = useRecruitmentItem(recruitmentId);
+  const { Modal, openModal } = useModalContext();
 
   const {
     form,
@@ -113,8 +116,10 @@ const ApplicationRegister = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    if (!window.confirm(CONFIRM_MESSAGE.SUBMIT_APPLICATION)) return;
+    openModal();
+  };
 
+  const handleClickConfirmButton = () => {
     save(form);
   };
 
@@ -194,6 +199,14 @@ const ApplicationRegister = () => {
           </div>
         </Form>
       </Container>
+      <Modal>
+        <ApplicationPreviewModal
+          recruitmentItems={recruitmentItems}
+          answers={form[APPLICATION_REGISTER_FORM_NAME.ANSWERS]}
+          referenceUrl={form[APPLICATION_REGISTER_FORM_NAME.REFERENCE_URL]}
+          onClickConfirmButton={handleClickConfirmButton}
+        />
+      </Modal>
     </div>
   );
 };
