@@ -72,11 +72,13 @@ class Judgment(
     fun fail(commit: Commit, message: String) {
         val record = getRecord(commit)
         record.applyResult(JudgmentResult(message = message, status = JudgmentStatus.FAILED))
+        registerEvent(JudgmentFailedEvent(id, assignmentId, type))
     }
 
     fun cancel(commit: Commit, message: String) {
         val record = getRecord(commit)
         record.applyResult(JudgmentResult(message = message, status = JudgmentStatus.CANCELLED))
+        registerEvent(JudgmentCancelledEvent(id, assignmentId, type))
     }
 
     private fun getRecord(commit: Commit): JudgmentRecord = findRecord(commit)

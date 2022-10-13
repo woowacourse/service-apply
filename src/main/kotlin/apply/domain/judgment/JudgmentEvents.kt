@@ -22,3 +22,15 @@ data class JudgmentSucceededEvent(
     val passCount: Int,
     val totalCount: Int
 )
+
+data class JudgmentFailedEvent(
+    val judgmentId: Long,
+    val assignmentId: Long,
+    val type: JudgmentType
+)
+
+data class JudgmentCancelledEvent(
+    val judgmentId: Long,
+    val assignmentId: Long,
+    val type: JudgmentType
+)

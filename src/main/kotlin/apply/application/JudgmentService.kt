@@ -79,11 +79,13 @@ class JudgmentService(
     fun fail(judgmentId: Long, request: FailJudgmentRequest) {
         val judgment = judgmentRepository.getById(judgmentId)
         judgment.fail(Commit(request.commit), request.message)
+        judgmentRepository.save(judgment)
     }
 
     fun cancel(judgmentId: Long, request: CancelJudgmentRequest) {
         val judgment = judgmentRepository.getById(judgmentId)
         judgment.cancel(Commit(request.commit), request.message)
+        judgmentRepository.save(judgment)
     }
 
     fun judgeReal(assignmentId: Long): LastJudgmentResponse {

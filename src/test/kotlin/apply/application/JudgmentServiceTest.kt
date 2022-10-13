@@ -3,32 +3,22 @@ package apply.application
 import apply.COMMIT_HASH
 import apply.PULL_REQUEST_URL
 import apply.createAssignment
-import apply.createCancelJudgmentRequest
 import apply.createCommit
-import apply.createEvaluationTarget
-import apply.createFailJudgmentRequest
 import apply.createJudgment
-import apply.createJudgmentItem
 import apply.createJudgmentRecord
 import apply.createMission
-import apply.createSuccessJudgmentRequest
 import apply.domain.assignment.AssignmentRepository
 import apply.domain.assignment.getById
 import apply.domain.assignment.getByUserIdAndMissionId
 import apply.domain.evaluationtarget.EvaluationTargetRepository
-import apply.domain.evaluationtarget.getByEvaluationIdAndUserId
 import apply.domain.judgment.AssignmentArchive
 import apply.domain.judgment.JudgmentRepository
 import apply.domain.judgment.JudgmentResult
-import apply.domain.judgment.JudgmentStatus.CANCELLED
-import apply.domain.judgment.JudgmentStatus.FAILED
 import apply.domain.judgment.JudgmentStatus.STARTED
 import apply.domain.judgment.JudgmentStatus.SUCCEEDED
 import apply.domain.judgment.JudgmentType.EXAMPLE
 import apply.domain.judgment.JudgmentType.REAL
-import apply.domain.judgment.getById
 import apply.domain.judgmentitem.JudgmentItemRepository
-import apply.domain.judgmentitem.getByMissionId
 import apply.domain.mission.MissionRepository
 import apply.domain.mission.getById
 import io.kotest.assertions.assertSoftly
@@ -346,59 +336,6 @@ class JudgmentServiceTest : BehaviorSpec({
 
             Then("null을 반환한다") {
                 actual.shouldBeNull()
-            }
-        }
-    }
-
-    Given("특정 자동 채점의 특정 커밋에 대한 자동 채점 기록이 있는 경우") {
-        val commit = createCommit()
-        val record = createJudgmentRecord(commit, JudgmentResult(), completedDateTime = null)
-        val judgment = createJudgment(records = listOf(record), id = 1L)
-        val assignment = createAssignment()
-        val mission = createMission()
-        val judgmentItem = createJudgmentItem()
-        val evaluationTarget = createEvaluationTarget()
-
-        every { judgmentRepository.getById(any()) } returns judgment
-        every { assignmentRepository.getById(any()) } returns assignment
-        every { missionRepository.getById(any()) } returns mission
-        every { judgmentItemRepository.getByMissionId(any()) } returns judgmentItem
-        every { evaluationTargetRepository.getByEvaluationIdAndUserId(any(), any()) } returns evaluationTarget
-
-        When("해당 커밋의 자동 채점이 성공하면") {
-            judgmentService.success(judgment.id, createSuccessJudgmentRequest(commit = commit.hash))
-
-            Then("자동 채점 기록의 상태가 성공으로 변경되고 점수가 입력된다") {
-                record.commit shouldBe commit
-                record.status shouldBe SUCCEEDED
-                evaluationTarget.evaluationAnswers.countTotalScore() shouldBe record.result.passCount
-            }
-        }
-    }
-
-    Given("특정 자동 채점의 특정 커밋에 대한 자동 채점 기록이 있는 경우2") {
-        val commit = createCommit()
-        val record = createJudgmentRecord(commit, JudgmentResult(), completedDateTime = null)
-        val judgment = createJudgment(records = listOf(record), id = 1L)
-        val mission = createMission()
-
-        every { missionRepository.getById(any()) } returns mission
-
-        When("해당 커밋의 자동 채점이 실패하면") {
-            judgmentService.fail(judgment.id, createFailJudgmentRequest(commit = commit.hash))
-
-            Then("자동 채점 기록의 상태가 실패로 변경된다") {
-                record.commit shouldBe commit
-                record.status shouldBe FAILED
-            }
-        }
-
-        When("해당 커밋의 자동 채점이 취소되면") {
-            judgmentService.cancel(judgment.id, createCancelJudgmentRequest(commit = commit.hash))
-
-            Then("자동 채점 기록의 상태가 취소로 변경된다") {
-                record.commit shouldBe commit
-                record.status shouldBe CANCELLED
             }
         }
     }

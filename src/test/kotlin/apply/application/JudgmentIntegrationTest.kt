@@ -1,7 +1,9 @@
 package apply.application
 
 import apply.createAssignment
+import apply.createCancelJudgmentRequest
 import apply.createCommit
+import apply.createFailJudgmentRequest
 import apply.createJudgment
 import apply.createJudgmentItem
 import apply.createJudgmentRecord
@@ -9,9 +11,13 @@ import apply.createMission
 import apply.createSuccessJudgmentRequest
 import apply.domain.assignment.AssignmentRepository
 import apply.domain.judgment.AssignmentArchive
+import apply.domain.judgment.JudgmentCancelledEvent
+import apply.domain.judgment.JudgmentFailedEvent
 import apply.domain.judgment.JudgmentRepository
 import apply.domain.judgment.JudgmentResult
 import apply.domain.judgment.JudgmentStartedEvent
+import apply.domain.judgment.JudgmentStatus.CANCELLED
+import apply.domain.judgment.JudgmentStatus.FAILED
 import apply.domain.judgment.JudgmentStatus.STARTED
 import apply.domain.judgment.JudgmentStatus.SUCCEEDED
 import apply.domain.judgment.JudgmentSucceededEvent
@@ -222,6 +228,30 @@ class JudgmentIntegrationTest(
                 events.count<JudgmentSucceededEvent>() shouldBe 1
             }
         }
+
+        When("해당 커밋의 자동 채점이 실패하면") {
+            judgmentService.fail(judgment.id, createFailJudgmentRequest(commit.hash))
+
+            Then("자동 채점 기록의 상태가 실패가 된다") {
+                val actual = judgmentRepository.getById(judgment.id)
+                actual.lastRecord.result.status shouldBe FAILED
+                events.count<JudgmentFailedEvent>() shouldBe 1
+            }
+        }
+
+        When("해당 커밋의 자동 채점이 취소되면") {
+            judgmentService.cancel(judgment.id, createCancelJudgmentRequest(commit.hash))
+
+            Then("자동 채점 기록의 상태가 취소가 된다") {
+                val actual = judgmentRepository.getById(judgment.id)
+                actual.lastRecord.result.status shouldBe CANCELLED
+                events.count<JudgmentCancelledEvent>() shouldBe 1
+            }
+        }
+    }
+
+    afterEach {
+        events.clear()
     }
 
     afterRootTest {
@@ -229,6 +259,5 @@ class JudgmentIntegrationTest(
         assignmentRepository.deleteAll()
         judgmentItemRepository.deleteAll()
         missionRepository.deleteAll()
-        events.clear()
     }
 })
