@@ -44,6 +44,9 @@ class Judgment(
         val record = findRecord(commit) ?: createRecord(commit)
         if (record.touchable) {
             record.touch()
+            registerEvent(
+                JudgmentTouchedEvent(id, assignmentId, type, record.result.passCount, record.result.totalCount)
+            )
         } else {
             record.start()
             registerEvent(JudgmentStartedEvent(id, assignmentId, type, commit))

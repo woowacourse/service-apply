@@ -7,6 +7,14 @@ data class JudgmentStartedEvent(
     val commit: Commit
 )
 
+data class JudgmentTouchedEvent(
+    val judgmentId: Long,
+    val assignmentId: Long,
+    val type: JudgmentType,
+    val passCount: Int,
+    val totalCount: Int
+)
+
 data class JudgmentSucceededEvent(
     val judgmentId: Long,
     val assignmentId: Long,

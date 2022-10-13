@@ -13,6 +13,7 @@ import apply.domain.judgment.Commit
 import apply.domain.judgment.Judgment
 import apply.domain.judgment.JudgmentRepository
 import apply.domain.judgment.JudgmentSucceededEvent
+import apply.domain.judgment.JudgmentTouchedEvent
 import apply.domain.judgment.JudgmentType
 import apply.domain.judgment.getById
 import apply.domain.judgmentitem.JudgmentItemRepository
@@ -53,6 +54,16 @@ class JudgmentService(
         val judgment = judgmentRepository.getById(judgmentId)
         judgment.success(Commit(request.commit), request.passCount, request.totalCount)
         judgmentRepository.save(judgment)
+    }
+
+    @TransactionalEventListener(condition = "#event.type.name() == 'REAL'")
+    fun changeAnswer(event: JudgmentTouchedEvent) {
+        val assignment = assignmentRepository.getById(event.assignmentId)
+        val mission = missionRepository.getById(assignment.missionId)
+        val judgmentItem = judgmentItemRepository.getByMissionId(mission.id)
+        val evaluationTarget = evaluationTargetRepository
+            .getByEvaluationIdAndUserId(mission.evaluationId, assignment.userId)
+        evaluationTarget.addEvaluationAnswer(EvaluationAnswer(event.passCount, judgmentItem.evaluationItemId))
     }
 
     @TransactionalEventListener(condition = "#event.type.name() == 'REAL'")

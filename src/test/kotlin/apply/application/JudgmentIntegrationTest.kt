@@ -12,9 +12,12 @@ import apply.domain.judgment.AssignmentArchive
 import apply.domain.judgment.JudgmentRepository
 import apply.domain.judgment.JudgmentResult
 import apply.domain.judgment.JudgmentStartedEvent
-import apply.domain.judgment.JudgmentStatus.*
+import apply.domain.judgment.JudgmentStatus.STARTED
+import apply.domain.judgment.JudgmentStatus.SUCCEEDED
 import apply.domain.judgment.JudgmentSucceededEvent
-import apply.domain.judgment.JudgmentType.*
+import apply.domain.judgment.JudgmentTouchedEvent
+import apply.domain.judgment.JudgmentType.EXAMPLE
+import apply.domain.judgment.JudgmentType.REAL
 import apply.domain.judgment.getById
 import apply.domain.judgmentitem.JudgmentItemRepository
 import apply.domain.mission.MissionRepository
@@ -31,6 +34,7 @@ import support.test.IntegrationTest
 import support.test.context.event.Events
 import support.test.context.event.RecordEventsConfiguration
 import support.test.spec.afterRootTest
+import java.time.LocalDateTime.now
 
 @MockkBean(value = [AssignmentArchive::class, JudgmentAgency::class], relaxUnitFun = true)
 @Import(RecordEventsConfiguration::class)
@@ -101,6 +105,77 @@ class JudgmentIntegrationTest(
                     judgmentService.judge(mission, assignment, REAL)
                 }
                 judgmentRepository.findAll().shouldBeEmpty()
+            }
+        }
+    }
+
+    Given("특정 과제 제출물에 대한 예제 자동 채점 기록이 있고 이전 커밋과 마지막 커밋이 동일한 경우") {
+        val userId = 1L
+        val mission = missionRepository.save(createMission(submittable = true))
+        judgmentItemRepository.save(createJudgmentItem(mission.id))
+        val assignment = assignmentRepository.save(createAssignment(userId, mission.id))
+        val commit = createCommit()
+        judgmentRepository.save(
+            createJudgment(
+                assignment.id, EXAMPLE, listOf(
+                    createJudgmentRecord(
+                        commit,
+                        JudgmentResult(passCount = 9, totalCount = 10, status = SUCCEEDED),
+                        completedDateTime = now()
+                    )
+                )
+            )
+        )
+
+        every { assignmentArchive.getLastCommit(any(), any()) } returns commit
+
+        When("해당 과제 제출물의 예제 테스트를 실행하면") {
+            val actual = judgmentService.judgeExample(userId, mission.id)
+
+            Then("해당 커밋에 대한 자동 채점 기록을 확인할 수 있다") {
+                assertSoftly(actual) {
+                    commitHash shouldBe commit.hash
+                    status shouldBe SUCCEEDED
+                    passCount shouldBe 9
+                    totalCount shouldBe 10
+                }
+                events.count<JudgmentStartedEvent>() shouldBe 0
+                events.count<JudgmentTouchedEvent>() shouldBe 1
+            }
+        }
+    }
+
+    Given("특정 과제 제출물에 대한 본 자동 채점 기록이 있고 이전 커밋과 마지막 커밋이 동일한 경우") {
+        val mission = missionRepository.save(createMission())
+        judgmentItemRepository.save(createJudgmentItem(mission.id))
+        val assignment = assignmentRepository.save(createAssignment(1L, mission.id))
+        val commit = createCommit()
+        judgmentRepository.save(
+            createJudgment(
+                assignment.id, REAL, listOf(
+                    createJudgmentRecord(
+                        commit,
+                        JudgmentResult(passCount = 9, totalCount = 10, status = SUCCEEDED),
+                        completedDateTime = now()
+                    )
+                )
+            )
+        )
+
+        every { assignmentArchive.getLastCommit(any(), any()) } returns commit
+
+        When("해당 과제 제출물의 본 자동 채점을 실행하면") {
+            val actual = judgmentService.judgeReal(assignment.id)
+
+            Then("해당 커밋에 대한 자동 채점 기록을 확인할 수 있다") {
+                assertSoftly(actual) {
+                    commitHash shouldBe commit.hash
+                    status shouldBe SUCCEEDED
+                    passCount shouldBe 9
+                    totalCount shouldBe 10
+                }
+                events.count<JudgmentStartedEvent>() shouldBe 0
+                events.count<JudgmentTouchedEvent>() shouldBe 1
             }
         }
     }
