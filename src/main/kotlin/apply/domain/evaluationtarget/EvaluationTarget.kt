@@ -52,7 +52,7 @@ class EvaluationTarget(
         this.note = note
     }
 
-    fun addEvaluationAnswer(evaluationAnswer: EvaluationAnswer) {
-        evaluationAnswers.add(evaluationAnswer)
+    fun updateScore(evaluationItemId: Long, score: Int) {
+        evaluationAnswers.add(evaluationItemId, score)
     }
 }

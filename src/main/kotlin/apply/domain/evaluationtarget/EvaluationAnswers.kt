@@ -17,9 +17,9 @@ class EvaluationAnswers(
     val answers: List<EvaluationAnswer>
         get() = _answers
 
-    fun add(evaluationAnswer: EvaluationAnswer) {
-        _answers.removeIf { it.evaluationItemId == evaluationAnswer.evaluationItemId }
-        _answers.add(evaluationAnswer)
+    fun add(evaluationItemId: Long, score: Int) {
+        _answers.removeIf { it.evaluationItemId == evaluationItemId }
+        _answers.add(EvaluationAnswer(score, evaluationItemId))
     }
 
     fun allZero(): Boolean = answers.all { it.score == 0 }

@@ -4,26 +4,20 @@ import apply.domain.assignment.Assignment
 import apply.domain.assignment.AssignmentRepository
 import apply.domain.assignment.getById
 import apply.domain.assignment.getByUserIdAndMissionId
-import apply.domain.evaluationtarget.EvaluationAnswer
 import apply.domain.evaluationtarget.EvaluationTargetRepository
-import apply.domain.evaluationtarget.getByEvaluationIdAndUserId
 import apply.domain.evaluationtarget.getById
 import apply.domain.judgment.AssignmentArchive
 import apply.domain.judgment.Commit
 import apply.domain.judgment.Judgment
 import apply.domain.judgment.JudgmentRepository
-import apply.domain.judgment.JudgmentSucceededEvent
-import apply.domain.judgment.JudgmentTouchedEvent
 import apply.domain.judgment.JudgmentType
 import apply.domain.judgment.getById
 import apply.domain.judgmentitem.JudgmentItemRepository
-import apply.domain.judgmentitem.getByMissionId
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionRepository
 import apply.domain.mission.getById
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.transaction.event.TransactionalEventListener
 
 @Transactional
 @Service
@@ -54,26 +48,6 @@ class JudgmentService(
         val judgment = judgmentRepository.getById(judgmentId)
         judgment.success(Commit(request.commit), request.passCount, request.totalCount)
         judgmentRepository.save(judgment)
-    }
-
-    @TransactionalEventListener(condition = "#event.type.name() == 'REAL'")
-    fun changeAnswer(event: JudgmentTouchedEvent) {
-        val assignment = assignmentRepository.getById(event.assignmentId)
-        val mission = missionRepository.getById(assignment.missionId)
-        val judgmentItem = judgmentItemRepository.getByMissionId(mission.id)
-        val evaluationTarget = evaluationTargetRepository
-            .getByEvaluationIdAndUserId(mission.evaluationId, assignment.userId)
-        evaluationTarget.addEvaluationAnswer(EvaluationAnswer(event.passCount, judgmentItem.evaluationItemId))
-    }
-
-    @TransactionalEventListener(condition = "#event.type.name() == 'REAL'")
-    fun changeAnswer(event: JudgmentSucceededEvent) {
-        val assignment = assignmentRepository.getById(event.assignmentId)
-        val mission = missionRepository.getById(assignment.missionId)
-        val judgmentItem = judgmentItemRepository.getByMissionId(mission.id)
-        val evaluationTarget = evaluationTargetRepository
-            .getByEvaluationIdAndUserId(mission.evaluationId, assignment.userId)
-        evaluationTarget.addEvaluationAnswer(EvaluationAnswer(event.passCount, judgmentItem.evaluationItemId))
     }
 
     fun fail(judgmentId: Long, request: FailJudgmentRequest) {
