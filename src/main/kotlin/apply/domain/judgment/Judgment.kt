@@ -44,9 +44,8 @@ class Judgment(
         val record = findRecord(commit) ?: createRecord(commit)
         if (record.touchable) {
             record.touch()
-            registerEvent(
-                JudgmentTouchedEvent(id, assignmentId, type, record.result.passCount, record.result.totalCount)
-            )
+            val event = JudgmentTouchedEvent(id, assignmentId, type, record.result.passCount, record.result.totalCount)
+            registerEvent(event)
         } else {
             record.start()
             registerEvent(JudgmentStartedEvent(id, assignmentId, type, commit))
@@ -59,8 +58,7 @@ class Judgment(
     }
 
     private fun createRecord(commit: Commit): JudgmentRecord {
-        return JudgmentRecord(commit)
-            .also { records.add(it) }
+        return JudgmentRecord(commit).also { records.add(it) }
     }
 
     fun success(commit: Commit, passCount: Int, totalCount: Int) {
