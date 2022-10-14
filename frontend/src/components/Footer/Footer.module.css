@@ -63,7 +63,7 @@
   }
 }
 
-@media screen and (max-width: 513px) {
+@media screen and (max-width: 512px) {
   .logo {
     height: 1.5rem;
   }

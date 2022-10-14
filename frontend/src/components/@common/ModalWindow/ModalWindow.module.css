@@ -33,7 +33,7 @@
   overflow: hidden;
 }
 
-@media only screen and (max-width: 420px) {
+@media only screen and (max-width: 512px) {
   .box {
     bottom: 0;
     padding: 1rem;
@@ -45,7 +45,7 @@
   }
 }
 
-@media only screen and (min-width: 420px) {
+@media only screen and (min-width: 512px) {
   .box {
     left: 4rem;
     right: 4rem;
