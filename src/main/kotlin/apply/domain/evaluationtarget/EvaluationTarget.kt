@@ -51,4 +51,8 @@ class EvaluationTarget(
         this.evaluationAnswers = evaluationAnswers
         this.note = note
     }
+
+    fun updateScore(evaluationItemId: Long, score: Int) {
+        evaluationAnswers.add(evaluationItemId, score)
+    }
 }

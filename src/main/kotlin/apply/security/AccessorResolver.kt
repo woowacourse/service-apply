@@ -11,7 +11,7 @@ import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
 import java.util.Base64
 
-private const val BASIC = "Basic"
+private const val BASIC: String = "Basic"
 
 @Component
 class AccessorResolver(
@@ -27,14 +27,14 @@ class AccessorResolver(
         webRequest: NativeWebRequest,
         binderFactory: WebDataBinderFactory?
     ) {
-        val token = extractBearerToken(webRequest)
+        val token = extractBasicToken(webRequest)
         val decoded = token.decode(StandardCharsets.UTF_8)
         if (!isAuthenticated(decoded, parameter)) {
             throw LoginFailedException()
         }
     }
 
-    private fun extractBearerToken(request: NativeWebRequest): String {
+    private fun extractBasicToken(request: NativeWebRequest): String {
         val authorization = request.getHeader(AUTHORIZATION) ?: throw LoginFailedException()
         val (tokenType, token) = authorization.split(" ")
         if (tokenType != BASIC) {

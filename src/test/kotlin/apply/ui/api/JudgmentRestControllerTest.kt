@@ -1,5 +1,6 @@
 package apply.ui.api
 
+import apply.application.JudgmentAllService
 import apply.application.JudgmentService
 import apply.createCancelJudgmentRequest
 import apply.createFailJudgmentRequest
@@ -12,6 +13,7 @@ import io.mockk.just
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
+import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 import support.test.web.servlet.bearer
 
@@ -19,6 +21,9 @@ import support.test.web.servlet.bearer
 class JudgmentRestControllerTest : RestControllerTest() {
     @MockkBean
     private lateinit var judgmentService: JudgmentService
+
+    @MockkBean
+    private lateinit var judgmentAllService: JudgmentAllService
 
     @Test
     fun `예제 테스트를 실행한다`() {
@@ -36,15 +41,17 @@ class JudgmentRestControllerTest : RestControllerTest() {
     }
 
     @Test
-    fun `본 자동 채점을 실행한다`() {
+    fun `예제 테스트 결과를 조회한다`() {
         val response = createLastJudgmentResponse()
-        every { judgmentService.judgeReal(any(), any()) } returns response
+        every { judgmentService.findLastExampleJudgment(any(), any()) } returns response
 
-        mockMvc.post("/api/recruitments/{recruitmentId}/missions/{missionId}/judgments/judge-real", 1L, 1L) {
+        mockMvc.get("/api/recruitments/{recruitmentId}/missions/{missionId}/judgments/judge-example", 1L, 1L) {
             bearer("valid_token")
         }.andExpect {
             status { isOk }
             content { success(response) }
+        }.andDo {
+            handle(document("judgment-judge-example-get"))
         }
     }
 
@@ -57,7 +64,7 @@ class JudgmentRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isOk }
         }.andDo {
-            handle(document("judgment-success-result-post"))
+            handle(document("judgment-success-post"))
         }
     }
 
@@ -70,7 +77,7 @@ class JudgmentRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isOk }
         }.andDo {
-            handle(document("judgment-fail-result-post"))
+            handle(document("judgment-fail-post"))
         }
     }
 
@@ -83,7 +90,31 @@ class JudgmentRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isOk }
         }.andDo {
-            handle(document("judgment-cancel-result-post"))
+            handle(document("judgment-cancel-post"))
+        }
+    }
+
+    @Test
+    fun `본 자동 채점을 실행한다`() {
+        val response = createLastJudgmentResponse()
+        every { judgmentService.judgeReal(any()) } returns response
+
+        mockMvc.post("/api/evaluations/{evaluationId}/assignments/{assignmentId}/judgments/judge-real", 1L, 1L) {
+            bearer("valid_token")
+        }.andExpect {
+            status { isOk }
+            content { success(response) }
+        }
+    }
+
+    @Test
+    fun `전체 자동 채점을 실행한다`() {
+        every { judgmentAllService.judgeAll(any()) } just Runs
+
+        mockMvc.post("/api/evaluations/{evaluationId}/judgments/judge-all", 1L) {
+            bearer("valid_token")
+        }.andExpect {
+            status { isOk }
         }
     }
 }

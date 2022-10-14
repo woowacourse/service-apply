@@ -2,11 +2,14 @@ package apply.ui.api
 
 import apply.application.MissionAndEvaluationResponse
 import apply.application.MissionService
+import apply.application.MyMissionService
 import apply.createEvaluation
+import apply.createLastJudgmentResponse
 import apply.createMission
 import apply.createMissionData
 import apply.createMissionResponse
 import apply.createMyMissionResponse
+import apply.domain.judgment.JudgmentStatus
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
 import io.mockk.every
@@ -23,6 +26,9 @@ import support.test.web.servlet.bearer
 class MissionRestControllerTest : RestControllerTest() {
     @MockkBean
     private lateinit var missionService: MissionService
+
+    @MockkBean
+    private lateinit var missionQueryService: MyMissionService
 
     @Test
     fun `과제를 추가한다`() {
@@ -69,8 +75,17 @@ class MissionRestControllerTest : RestControllerTest() {
 
     @Test
     fun `나의 과제들을 조회한다`() {
-        val responses = listOf(createMyMissionResponse(id = 1L), createMyMissionResponse(id = 2L))
-        every { missionService.findAllByUserIdAndRecruitmentId(any(), any()) } returns responses
+        val responses = listOf(
+            createMyMissionResponse(id = 1L, runnable = false, judgment = null),
+            createMyMissionResponse(id = 2L, runnable = true, judgment = createLastJudgmentResponse()),
+            createMyMissionResponse(
+                id = 3L,
+                runnable = true,
+                judgment = createLastJudgmentResponse(passCount = 9, totalCount = 10, status = JudgmentStatus.SUCCEEDED)
+            )
+        )
+
+        every { missionQueryService.findAllByUserIdAndRecruitmentId(any(), any()) } returns responses
 
         mockMvc.get("/api/recruitments/{recruitmentId}/missions/me", 1L) {
             bearer("valid_token")

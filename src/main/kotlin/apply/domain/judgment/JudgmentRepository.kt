@@ -8,4 +8,5 @@ fun JudgmentRepository.getById(id: Long): Judgment = findByIdOrNull(id)
 
 interface JudgmentRepository : JpaRepository<Judgment, Long> {
     fun findByAssignmentIdAndType(assignmentId: Long, type: JudgmentType): Judgment?
+    fun findAllByAssignmentIdInAndType(assignmentIds: Collection<Long>, type: JudgmentType): List<Judgment>
 }

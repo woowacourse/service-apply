@@ -9,8 +9,9 @@ import apply.application.EvaluationTargetCsvService
 import apply.application.EvaluationTargetResponse
 import apply.application.EvaluationTargetService
 import apply.application.ExcelService
+import apply.application.JudgmentAllService
 import apply.application.JudgmentService
-import apply.application.MissionService
+import apply.application.MyMissionService
 import apply.application.RecruitmentItemService
 import apply.application.RecruitmentService
 import apply.domain.applicationform.ApplicationForm
@@ -52,16 +53,17 @@ import support.views.downloadFile
 
 @Route(value = "admin/selections", layout = BaseLayout::class)
 class SelectionView(
-    private val applicantService: ApplicantService,
     private val recruitmentService: RecruitmentService,
     private val recruitmentItemService: RecruitmentItemService,
+    private val applicantService: ApplicantService,
     private val evaluationService: EvaluationService,
     private val evaluationTargetService: EvaluationTargetService,
     private val assignmentService: AssignmentService,
     private val judgmentService: JudgmentService,
+    private val judgmentAllService: JudgmentAllService,
+    private val myMissionService: MyMissionService,
     private val excelService: ExcelService,
-    private val evaluationTargetCsvService: EvaluationTargetCsvService,
-    private val missionService: MissionService,
+    private val evaluationTargetCsvService: EvaluationTargetCsvService
 ) : VerticalLayout(), HasUrlParameter<Long> {
     private var recruitmentId: Long = 0L
     private var evaluations: List<EvaluationSelectData> =
@@ -98,7 +100,7 @@ class SelectionView(
             HorizontalLayout(
                 createLoadButton(tabs),
                 createResultDownloadButton(),
-                createJudgeAllButton()
+                createJudgeAllButton(tabs)
             )
         ).apply {
             setWidthFull()
@@ -174,7 +176,13 @@ class SelectionView(
     private fun createEvaluationButtonRenderer(): Renderer<EvaluationTargetResponse> {
         return ComponentRenderer { response ->
             createPrimarySmallButton("평가하기") {
-                EvaluationTargetFormDialog(evaluationTargetService, assignmentService, judgmentService, response.id) {
+                EvaluationTargetFormDialog(
+                    evaluationTargetService,
+                    assignmentService,
+                    myMissionService,
+                    judgmentService,
+                    response.id
+                ) {
                     selectedTabIndex = tabs.selectedIndex
                     removeAll()
                     add(createTitle(), createContent())
@@ -205,7 +213,7 @@ class SelectionView(
 
     private fun createLoadButton(tabs: Tabs): Button {
         return createPrimaryButton("평가 대상자 불러오기") {
-            val evaluation = evaluations.first { it.title == tabs.selectedTab.label }
+            val evaluation = tabs.findEvaluation() ?: return@createPrimaryButton
             evaluationTargetService.load(evaluation.id)
             selectedTabIndex = tabs.selectedIndex
             removeAll()
@@ -223,10 +231,15 @@ class SelectionView(
         }
     }
 
-    private fun createJudgeAllButton(): Button {
+    private fun createJudgeAllButton(tabs: Tabs): Button {
         return createContrastButtonWithDialog("전체 자동 채점하기", "자동 채점을 실행하시겠습니까?") {
-            // TODO: 전체 자동 채점 기능 구현
+            val evaluation = tabs.findEvaluation() ?: return@createContrastButtonWithDialog
+            judgmentAllService.judgeAll(evaluation.id)
         }
+    }
+
+    private fun Tabs.findEvaluation(): EvaluationSelectData? {
+        return evaluations.find { it.title == selectedTab.label }
     }
 
     private fun createEvaluationFileUpload(): Upload {

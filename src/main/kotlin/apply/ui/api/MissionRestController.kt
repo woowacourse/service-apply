@@ -5,6 +5,7 @@ import apply.application.MissionData
 import apply.application.MissionResponse
 import apply.application.MissionService
 import apply.application.MyMissionResponse
+import apply.application.MyMissionService
 import apply.domain.user.User
 import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
@@ -20,7 +21,8 @@ import support.toUri
 @RequestMapping("/api/recruitments/{recruitmentId}/missions")
 @RestController
 class MissionRestController(
-    private val missionService: MissionService
+    private val missionService: MissionService,
+    private val missionQueryService: MyMissionService
 ) {
     @PostMapping
     fun save(
@@ -57,7 +59,7 @@ class MissionRestController(
         @PathVariable recruitmentId: Long,
         @LoginUser user: User
     ): ResponseEntity<ApiResponse<List<MyMissionResponse>>> {
-        val responses = missionService.findAllByUserIdAndRecruitmentId(user.id, recruitmentId)
+        val responses = missionQueryService.findAllByUserIdAndRecruitmentId(user.id, recruitmentId)
         return ResponseEntity.ok(ApiResponse.success(responses))
     }
 
