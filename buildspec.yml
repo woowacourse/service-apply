@@ -3,6 +3,7 @@ phases:
   pre_build:
     commands:
       - export LC_ALL="en_US.utf8"
+      - export TZ="Asia/Seoul"
   build:
     commands:
       - echo Build Starting on `date`

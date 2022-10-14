@@ -43,3 +43,12 @@ alter table judgment_record
     add constraint fk_judgment_record_judgment_id_ref_judgment_id
         foreign key (judgment_id)
             references judgment (id);
+
+alter table administrator
+    modify name varchar(30) not null,
+    add username varchar(30) not null after password,
+    add constraint uk_administrator unique (username),
+    drop index `UK_qv926x9u07ru5erc4vn3lxhcg`;
+
+alter table assignment
+    modify note varchar(5000) not null;
