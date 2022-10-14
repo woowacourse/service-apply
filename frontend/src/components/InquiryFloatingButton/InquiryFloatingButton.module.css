@@ -1,7 +1,7 @@
 .floating-wrapper {
   position: fixed;
-  bottom: 4.5rem;
-  right: 4.5rem;
+  right: 24px;
+  bottom: 24px;
   display: flex;
   gap: 0.5rem;
   align-items: center;
@@ -33,8 +33,6 @@
   }
 
   .floating-wrapper {
-    right: 1.5rem;
-    bottom: 1.5rem;
     padding-left: 0;
   }
 }
