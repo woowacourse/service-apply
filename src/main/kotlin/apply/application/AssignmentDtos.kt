@@ -15,7 +15,7 @@ data class AssignmentRequest(
 
     @field:Pattern(
         regexp = "https://github\\.com(/[\\w\\-]+){2}/pull/[1-9]\\d*",
-        message = "올바른 형식의 URL이어야 합니다"
+        message = "올바른 형식의 Pull Request URL이어야 합니다"
     )
     val pullRequestUrl: String,
 

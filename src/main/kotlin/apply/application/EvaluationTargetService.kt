@@ -149,7 +149,6 @@ class EvaluationTargetService(
 
     fun grade(evaluationTargetId: Long, request: EvaluationTargetData) {
         val evaluationTarget = evaluationTargetRepository.getById(evaluationTargetId)
-
         val evaluationAnswers = request.evaluationItemScores
             .map { EvaluationAnswer(it.score, it.id) }
             .toMutableList()

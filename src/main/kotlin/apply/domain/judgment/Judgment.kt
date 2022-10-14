@@ -7,6 +7,7 @@ import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
+import javax.persistence.FetchType
 import javax.persistence.ForeignKey
 import javax.persistence.JoinColumn
 import javax.persistence.OneToMany
@@ -22,7 +23,7 @@ class Judgment(
     records: List<JudgmentRecord> = emptyList(),
     id: Long = 0L
 ) : BaseRootEntity<Judgment>(id) {
-    @OneToMany(cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE])
+    @OneToMany(cascade = [CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE], fetch = FetchType.EAGER)
     @JoinColumn(
         name = "judgment_id", nullable = false, updatable = false,
         foreignKey = ForeignKey(name = "fk_judgment_record_judgment_id_ref_judgment_id")
@@ -43,6 +44,8 @@ class Judgment(
         val record = findRecord(commit) ?: createRecord(commit)
         if (record.touchable) {
             record.touch()
+            val event = JudgmentTouchedEvent(id, assignmentId, type, record.result.passCount, record.result.totalCount)
+            registerEvent(event)
         } else {
             record.start()
             registerEvent(JudgmentStartedEvent(id, assignmentId, type, commit))
@@ -55,23 +58,25 @@ class Judgment(
     }
 
     private fun createRecord(commit: Commit): JudgmentRecord {
-        return JudgmentRecord(commit)
-            .also { records.add(it) }
+        return JudgmentRecord(commit).also { records.add(it) }
     }
 
     fun success(commit: Commit, passCount: Int, totalCount: Int) {
         val record = getRecord(commit)
         record.applyResult(JudgmentResult(passCount, totalCount, status = JudgmentStatus.SUCCEEDED))
+        registerEvent(JudgmentSucceededEvent(id, assignmentId, type, passCount, totalCount))
     }
 
     fun fail(commit: Commit, message: String) {
         val record = getRecord(commit)
         record.applyResult(JudgmentResult(message = message, status = JudgmentStatus.FAILED))
+        registerEvent(JudgmentFailedEvent(id, assignmentId, type))
     }
 
     fun cancel(commit: Commit, message: String) {
         val record = getRecord(commit)
         record.applyResult(JudgmentResult(message = message, status = JudgmentStatus.CANCELLED))
+        registerEvent(JudgmentCancelledEvent(id, assignmentId, type))
     }
 
     private fun getRecord(commit: Commit): JudgmentRecord = findRecord(commit)

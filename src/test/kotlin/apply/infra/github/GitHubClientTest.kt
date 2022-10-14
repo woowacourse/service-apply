@@ -26,8 +26,14 @@ class GitHubClientTest(
     }
 
     "해당 커밋이 없으면 예외가 발생한다" {
-        shouldThrow<RuntimeException> {
+        shouldThrow<IllegalArgumentException> {
             gitHubClient.getLastCommit(PULL_REQUEST_URL, createLocalDateTime(2018))
+        }
+    }
+
+    "PR이 없으면 예외가 발생한다" {
+        shouldThrow<IllegalArgumentException> {
+            gitHubClient.getLastCommit("https://github.com/woowacourse/service-apply/pull/1", now)
         }
     }
 })

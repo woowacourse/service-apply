@@ -2,6 +2,7 @@ package apply
 
 import apply.application.EvaluationSelectData
 import apply.application.JudgmentItemData
+import apply.application.LastJudgmentResponse
 import apply.application.MissionData
 import apply.application.MissionResponse
 import apply.application.MyMissionResponse
@@ -79,7 +80,20 @@ fun createMyMissionResponse(
     startDateTime: LocalDateTime = START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
     missionStatus: MissionStatus = MissionStatus.SUBMITTING,
+    runnable: Boolean = true,
+    judgment: LastJudgmentResponse? = createLastJudgmentResponse(),
     id: Long = 0L
 ): MyMissionResponse {
-    return MyMissionResponse(id, title, description, submittable, submitted, startDateTime, endDateTime, missionStatus)
+    return MyMissionResponse(
+        id,
+        title,
+        description,
+        submittable,
+        submitted,
+        startDateTime,
+        endDateTime,
+        missionStatus,
+        runnable,
+        judgment
+    )
 }
