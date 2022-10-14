@@ -63,10 +63,10 @@ class MyMissionService(
             val judgmentItem = judgmentItems.find { it.missionId == mission.id }
             val judgment = judgments.findLastJudgment(assignment, judgmentItem)
             MyMissionResponse(
-                mission,
+                mission = mission,
                 submitted = assignment != null,
                 runnable = assignment != null && judgmentItem != null,
-                judgment
+                judgment = judgment
             )
         }
     }
@@ -75,12 +75,9 @@ class MyMissionService(
         assignment: Assignment?,
         judgmentItem: JudgmentItem?
     ): LastJudgmentResponse? {
-        return if (assignment != null && judgmentItem != null) {
-            find { it.assignmentId == assignment.id }
-                ?.let { LastJudgmentResponse(assignment.pullRequestUrl, it.lastRecord) }
-        } else {
-            null
-        }
+        if (assignment == null || judgmentItem == null) return null
+        val judgment = find { it.assignmentId == assignment.id } ?: return null
+        return LastJudgmentResponse(assignment.pullRequestUrl, judgment.lastRecord)
     }
 
     fun findLastRealJudgmentByEvaluationTargetId(evaluationTargetId: Long): JudgmentData? {
@@ -88,15 +85,13 @@ class MyMissionService(
         val mission = missionRepository.findByEvaluationId(evaluationTarget.evaluationId) ?: return null
         val judgmentItem = judgmentItemRepository.findByMissionId(mission.id) ?: return null
         val assignment = assignmentRepository.findByUserIdAndMissionId(evaluationTarget.userId, mission.id)
-        return assignment
-            ?.let { judgmentRepository.findByAssignmentIdAndType(it.id, JudgmentType.REAL) }
-            .let {
-                JudgmentData(
-                    id = it?.id,
-                    evaluationItemId = judgmentItem.evaluationItemId,
-                    assignmentId = assignment?.id,
-                    judgmentRecord = it?.lastRecord
-                )
-            }
+            ?: return JudgmentData(evaluationItemId = judgmentItem.evaluationItemId)
+        val judgment = judgmentRepository.findByAssignmentIdAndType(assignment.id, JudgmentType.REAL)
+        return JudgmentData(
+            id = judgment?.id,
+            evaluationItemId = judgmentItem.evaluationItemId,
+            assignmentId = assignment.id,
+            judgmentRecord = judgment?.lastRecord
+        )
     }
 }

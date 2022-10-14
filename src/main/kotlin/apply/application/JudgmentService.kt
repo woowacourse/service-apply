@@ -67,9 +67,9 @@ class JudgmentService(
     }
 
     fun judge(mission: Mission, assignment: Assignment, judgmentType: JudgmentType): LastJudgmentResponse {
+        val commit = assignmentArchive.getLastCommit(assignment.pullRequestUrl, mission.period.endDateTime)
         var judgment = judgmentRepository.findByAssignmentIdAndType(assignment.id, judgmentType)
             ?: judgmentRepository.save(Judgment(assignment.id, judgmentType))
-        val commit = assignmentArchive.getLastCommit(assignment.pullRequestUrl, mission.period.endDateTime)
         judgment.start(commit)
         judgment = judgmentRepository.save(judgment)
         return LastJudgmentResponse(assignment.pullRequestUrl, judgment.lastRecord)

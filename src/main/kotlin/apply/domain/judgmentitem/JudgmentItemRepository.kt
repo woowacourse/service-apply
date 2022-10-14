@@ -7,7 +7,7 @@ fun JudgmentItemRepository.getByMissionId(missionId: Long): JudgmentItem = findB
 
 interface JudgmentItemRepository : JpaRepository<JudgmentItem, Long> {
     fun findByMissionId(missionId: Long): JudgmentItem?
-    fun findAllByMissionIdIn(missionId: Collection<Long>): List<JudgmentItem>
+    fun findAllByMissionIdIn(missionIds: Collection<Long>): List<JudgmentItem>
     fun deleteByMissionId(missionId: Long)
     fun existsByMissionId(missionId: Long): Boolean
 }

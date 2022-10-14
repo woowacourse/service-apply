@@ -66,8 +66,13 @@ data class JudgmentData(
     val startedDateTime: LocalDateTime?,
     val id: Long
 ) {
-    constructor(id: Long?, evaluationItemId: Long?, assignmentId: Long?, judgmentRecord: JudgmentRecord?) : this(
-        evaluationItemId ?: 0L,
+    constructor(
+        id: Long? = null,
+        evaluationItemId: Long,
+        assignmentId: Long? = null,
+        judgmentRecord: JudgmentRecord? = null
+    ) : this(
+        evaluationItemId,
         assignmentId ?: 0L,
         judgmentRecord?.commit?.hash,
         judgmentRecord?.status,
