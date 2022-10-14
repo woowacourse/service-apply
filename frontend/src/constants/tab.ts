@@ -28,11 +28,6 @@ export const PROGRAM_TAB = {
     label: "우아한테크코스",
     description: `일반 사용자용 서비스를 개발하는 회사가 필요로 하는 역량을 가진 개발자를 양성하기 위한 프로그램입니다.\n자기주도 학습, 현장 중심 경험, 깊이 있는 협업을 통해 성장하실 분들을 찾고 있어요.`,
   },
-  WOOWA_TECH_CAMP: {
-    name: "woowacamp",
-    label: "우아한테크캠프",
-    description: `다양한 미니 프로젝트를 통해 실제 서비스를 만들며 개발 지식을 익히는 교육형 인턴 과정입니다.\n프로그래밍 기본 지식과 개발자로 살고 싶은 열정이 있는 분들을 찾고 있어요.`,
-  },
   WOOWA_TECH_CAMP_PRO: {
     name: "woowacamppro",
     label: "우아한테크캠프 Pro",
@@ -50,6 +45,5 @@ export const RECRUITS_TAB_LIST = [
 export const PROGRAM_TAB_LIST = [
   PROGRAM_TAB.ALL,
   PROGRAM_TAB.WOOWA_TECH_COURSE,
-  PROGRAM_TAB.WOOWA_TECH_CAMP,
   PROGRAM_TAB.WOOWA_TECH_CAMP_PRO,
 ] as const;
