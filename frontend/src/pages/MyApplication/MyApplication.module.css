@@ -1,5 +1,5 @@
 .box {
-  width: 50rem;
+  width: var(--pc-main-width);
   margin: 0 auto;
 }
 
@@ -33,4 +33,10 @@
   color: var(--gray-004);
   font-size: 1.25rem;
   font-weight: bold;
+}
+
+@media screen and (max-width: 512px) {
+  .box {
+    width: calc(100vw - 1rem);
+  }
 }
