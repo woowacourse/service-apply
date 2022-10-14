@@ -35,11 +35,11 @@ export type Mission = {
   startDateTime: ISO8601DateString;
   endDateTime: ISO8601DateString;
   status: MissionStatus;
-  isAutomation: boolean;
+  runnable: boolean;
   judgment: {
     pullRequestUrl: string;
     commitHash: string;
-    status: TestStatus;
+    status: JudgmentStatus;
     passCount: number;
     totalCount: number;
     message: string;
@@ -59,7 +59,7 @@ export type AssignmentData = Omit<Assignment, "id">;
 
 export type MissionStatus = keyof typeof MISSION_STATUS;
 
-export type TestStatus = keyof typeof JUDGMENT_STATUS;
+export type JudgmentStatus = keyof typeof JUDGMENT_STATUS;
 
 export type MyApplicationType = {
   recruitmentId: number;

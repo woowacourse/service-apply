@@ -1,0 +1,25 @@
+.judgment-result-text {
+  margin-bottom: 0.2rem;
+  font-size: 1.125rem;
+  font-weight: bold;
+}
+
+.judgment-result-score.default {
+  color: var(--black);
+}
+
+.judgment-result-score.started {
+  color: var(--blue);
+}
+
+.judgment-result-score.pass {
+  color: var(--green);
+}
+
+.judgment-result-score.fail {
+  color: var(--red);
+}
+
+.judgment-result-score.error {
+  color: var(--red);
+}

@@ -12,6 +12,7 @@
   padding: 0.5rem 0.25rem;
   border-radius: 10px;
   background-color: var(--gray-003);
+  z-index: var(--tooltip-z-index);
 }
 
 .tooltip {
