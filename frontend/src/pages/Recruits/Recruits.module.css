@@ -104,6 +104,10 @@
 }
 
 @media screen and (max-width: 512px) {
+  .program-introduce-box {
+    height: 10rem;
+  }
+
   .program-name {
     font-size: 1.75rem;
     font-weight: bold;
