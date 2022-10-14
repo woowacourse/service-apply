@@ -47,7 +47,7 @@ export const Recruiting = Template.bind({});
 Recruiting.args = {
   recruitment: {
     id: 3,
-    title: "우아한테크캠프 2기",
+    title: "우아한테크코스 2기",
     recruitable: true,
     term: {
       id: 1,
@@ -65,7 +65,7 @@ export const AfterRecruit = Template.bind({});
 AfterRecruit.args = {
   recruitment: {
     id: 3,
-    title: "우아한테크캠프 2기",
+    title: "우아한테크캠프 Pro 2기",
     recruitable: true,
     term: {
       id: 1,
