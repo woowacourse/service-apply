@@ -21,25 +21,34 @@ const Login = () => {
   const { login } = useAuth();
   const { form, errorMessage, handleChanges, handleCapsLockState, isEmpty } = useLoginForm();
 
+  const routeToApplicationRegister = (currentRecruitment) => {
+    navigate(
+      {
+        pathname: generatePath(PATH.APPLICATION_FORM, {
+          status: PARAM.APPLICATION_FORM_STATUS.NEW,
+        }),
+        search: generateQuery({ recruitmentId: currentRecruitment.id }),
+      },
+      {
+        state: {
+          currentRecruitment,
+        },
+      }
+    );
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
       await login(form);
 
-      const path = currentRecruitment
-        ? {
-            pathname: generatePath(PATH.APPLICATION_FORM, {
-              status: PARAM.APPLICATION_FORM_STATUS.NEW,
-            }),
-            search: generateQuery({ recruitmentId: currentRecruitment.id }),
-            state: {
-              currentRecruitment,
-            },
-          }
-        : PATH.RECRUITS;
+      if (!currentRecruitment) {
+        navigate({ pathname: PATH.RECRUITS });
+        return;
+      }
 
-      navigate(path);
+      routeToApplicationRegister(currentRecruitment);
     } catch (error) {
       alert(ERROR_MESSAGE.API.LOGIN_FAILURE);
     }
