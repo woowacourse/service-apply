@@ -105,7 +105,7 @@
 
 @media screen and (max-width: 512px) {
   .program-name {
-    font-size: 2rem;
+    font-size: 1.75rem;
     font-weight: bold;
     white-space: pre-line;
   }
