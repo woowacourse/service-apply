@@ -30,8 +30,8 @@ NotSubmittedMission.args = {
   recruitmentId: "1",
 };
 
-export const PendingJudgmentMission = Template.bind({});
-PendingJudgmentMission.args = {
+export const StartedJudgmentMission = Template.bind({});
+StartedJudgmentMission.args = {
   mission: missionsDummy["2"][2],
   recruitmentId: "1",
 };

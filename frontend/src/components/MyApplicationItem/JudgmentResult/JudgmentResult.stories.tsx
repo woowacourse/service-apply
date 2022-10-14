@@ -1,9 +1,11 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import TestResult from "./TestResult";
+import { ISO8601DateString } from "../../../../types/domains/common";
+import { startedJudgeDateTime } from "./../../../mock/dummy";
+import JudgmentResultText from "./JudgmentResult";
 
 export default {
-  title: "components/TestResult",
-  component: TestResult,
+  title: "components/JudgmentResult",
+  component: JudgmentResultText,
   decorators: [
     (Story) => (
       <div
@@ -19,25 +21,27 @@ export default {
       </div>
     ),
   ],
-} as ComponentMeta<typeof TestResult>;
+} as ComponentMeta<typeof JudgmentResultText>;
 
-const Template: ComponentStory<typeof TestResult> = (args) => <TestResult {...args} />;
+const Template: ComponentStory<typeof JudgmentResultText> = (args) => (
+  <JudgmentResultText {...args} />
+);
 
 export const NoResultText = Template.bind({});
 NoResultText.args = {
   judgment: null,
 };
 
-export const PendingResultText = Template.bind({});
-PendingResultText.args = {
+export const StartedResultText = Template.bind({});
+StartedResultText.args = {
   judgment: {
     pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
     commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
     status: "STARTED",
     passCount: 0,
     totalCount: 0,
-    message: "빌드를 실패했습니다.",
-    startedDateTime: "2020-10-25T15:00:00",
+    message: "",
+    startedDateTime: startedJudgeDateTime as ISO8601DateString,
     commitUrl:
       "https://github.com/woowacourse/service-apply/pull/367/commits/642951e1324eaf66914bd53df339d94cad5667e3",
   },
@@ -48,11 +52,11 @@ PassResultText.args = {
   judgment: {
     pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
     commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
-    status: "SUCCESS",
+    status: "SUCCEEDED",
     passCount: 5,
     totalCount: 5,
     message: "",
-    startedDateTime: "2020-10-25T15:00:00",
+    startedDateTime: startedJudgeDateTime as ISO8601DateString,
     commitUrl:
       "https://github.com/woowacourse/service-apply/pull/367/commits/642951e1324eaf66914bd53df339d94cad5667e3",
   },
@@ -63,11 +67,11 @@ NoPassResultText.args = {
   judgment: {
     pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
     commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
-    status: "SUCCESS",
+    status: "SUCCEEDED",
     passCount: 4,
     totalCount: 5,
     message: "",
-    startedDateTime: "2020-10-25T15:00:00",
+    startedDateTime: startedJudgeDateTime as ISO8601DateString,
     commitUrl:
       "https://github.com/woowacourse/service-apply/pull/367/commits/642951e1324eaf66914bd53df339d94cad5667e3",
   },
@@ -78,11 +82,11 @@ FailJudgmentMission.args = {
   judgment: {
     pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
     commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
-    status: "FAIL",
+    status: "FAILED",
     passCount: 0,
     totalCount: 0,
     message: "빌드에 실패했습니다",
-    startedDateTime: "2020-10-25T15:00:00",
+    startedDateTime: startedJudgeDateTime as ISO8601DateString,
     commitUrl:
       "https://github.com/woowacourse/service-apply/pull/367/commits/642951e1324eaf66914bd53df339d94cad5667e3",
   },
