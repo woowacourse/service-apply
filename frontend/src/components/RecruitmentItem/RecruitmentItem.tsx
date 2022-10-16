@@ -31,23 +31,15 @@ const RecruitmentItem = ({
   const active = recruitment.status === RECRUITMENT_STATUS.RECRUITING;
   const indicatorText = INDICATOR_LABEL[recruitment.status];
 
-  /**
-   * FIXME
-   * 1. formatDateTime util 함수의 반환값이 string | Date 형식이다.
-   * 2. Date로 추론되기 때문에 아래와 같은 에러 메시지가 발생한다.
-   *    2-1. This JSX tag's 'children' prop expects a single child of type 'ReactNode', but multiple children were provided.
-   * 3. formatDateTime util 함수의 반환값에 대해서 논의가 필요하다.
-   * 4. 우선, 해당 코드에서는 string으로 타입 단언을 진행했다.
-   */
   const formattedStartDateTime = useMemo(
     () => (recruitment.startDateTime ? formatDateTime(new Date(recruitment.startDateTime)) : ""),
     [recruitment.startDateTime]
-  ) as string;
+  );
 
   const formattedEndDateTime = useMemo(
     () => (recruitment.endDateTime ? formatDateTime(new Date(recruitment.endDateTime)) : ""),
     [recruitment.endDateTime]
-  ) as string;
+  );
 
   return (
     <div
