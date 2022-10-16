@@ -9,18 +9,18 @@ import { Recruitment } from "../../../types/domains/recruitments";
 import CalendarIcon from "../../assets/icon/calendar-icon.svg";
 import styles from "./RecruitmentItem.module.css";
 
+export type RecruitmentItemProps = React.HTMLAttributes<HTMLDivElement> & {
+  className?: string;
+  recruitment: Recruitment;
+  onClickButton?: React.MouseEventHandler<HTMLDivElement>;
+};
+
 const INDICATOR_LABEL = {
   [RECRUITMENT_STATUS.RECRUITING]: "모집 중",
   [RECRUITMENT_STATUS.RECRUITABLE]: "모집 예정",
   [RECRUITMENT_STATUS.UNRECRUITABLE]: "일시 중지",
   [RECRUITMENT_STATUS.ENDED]: "모집 종료",
 } as const;
-
-export type RecruitmentItemProps = React.HTMLAttributes<HTMLDivElement> & {
-  className?: string;
-  recruitment: Recruitment;
-  onClickButton?: React.MouseEventHandler<HTMLDivElement>;
-};
 
 const RecruitmentItem = ({
   className,
