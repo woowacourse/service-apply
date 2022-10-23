@@ -10,7 +10,7 @@ import styles from "./BirthField.module.css";
 registerLocale("ko", ko);
 
 type BirthFieldProps = Omit<ReactDatePickerProps, "value"> & {
-  value: Date | null;
+  value?: Date | null;
 };
 
 const BirthField = ({
