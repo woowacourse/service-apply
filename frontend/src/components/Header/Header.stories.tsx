@@ -1,7 +1,16 @@
-import { MemoryRouter, Route } from "react-router-dom";
+import { addDecorator } from "@storybook/react";
+import { MemoryRouter } from "react-router-dom";
 import Header from "./Header";
 
-export default {
+type DecoratorFunction = Parameters<typeof addDecorator>[0];
+
+type HeaderMetaData = {
+  title: string;
+  component: () => JSX.Element;
+  decorators?: DecoratorFunction[];
+};
+
+const HeaderMeta: HeaderMetaData = {
   title: "components/Header",
   component: Header,
   decorators: [
@@ -18,6 +27,8 @@ export default {
     ),
   ],
 };
+
+export default HeaderMeta;
 
 const Template = () => <Header />;
 
