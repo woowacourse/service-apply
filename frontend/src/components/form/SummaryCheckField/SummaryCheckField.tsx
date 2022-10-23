@@ -4,11 +4,11 @@ import CheckBox from "../CheckBox/CheckBox";
 import styles from "./SummaryCheckField.module.css";
 
 type SummaryCheckFieldProps = React.InputHTMLAttributes<HTMLInputElement> & {
-  label: string;
+  label?: string;
 };
 
 const SummaryCheckField = ({
-  label,
+  label = "",
   required = false,
   children,
   ...props

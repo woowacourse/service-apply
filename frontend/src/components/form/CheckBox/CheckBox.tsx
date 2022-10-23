@@ -4,14 +4,14 @@ import Label from "../../@common/Label/Label";
 import styles from "./CheckBox.module.css";
 
 type CheckBoxProps = React.InputHTMLAttributes<HTMLInputElement> & {
-  label: string;
+  label?: string;
 };
 
 const CheckBox = ({
   name,
   checked = false,
   required = false,
-  label,
+  label = "",
   onChange,
   ...props
 }: CheckBoxProps) => {
