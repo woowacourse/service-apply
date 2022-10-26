@@ -28,33 +28,6 @@ class MenuLayout(
         add(createTopMenuLayer(), createBottomMenuLayer())
     }
 
-    private fun addMenuSelectSeparateEvent() {
-        topMenu.addSelectedChangeListener {
-            bottomMenu.selectedIndex = UNSELECT_ALL
-            topMenu.selectedTab = it.selectedTab
-        }
-        bottomMenu.addSelectedChangeListener {
-            topMenu.selectedIndex = UNSELECT_ALL
-            bottomMenu.selectedTab = it.selectedTab
-        }
-    }
-
-    private fun createTopMenuLayer(): VerticalLayout {
-        return VerticalLayout().apply {
-            isPadding = false
-            add(topMenu)
-        }
-    }
-
-    private fun createBottomMenuLayer(): VerticalLayout {
-        return VerticalLayout().apply {
-            isPadding = false
-            setHeightFull()
-            justifyContentMode = FlexComponent.JustifyContentMode.END
-            add(bottomMenu)
-        }
-    }
-
     private fun createMenu(list: List<MenuItem>): Tabs {
         return createTabs(list.flatMap { it.toComponents() })
     }
@@ -83,5 +56,32 @@ class MenuLayout(
             "부정행위자" of CheatersView::class.java,
             "관리자" of MailsView::class.java
         )
+    }
+
+    private fun addMenuSelectSeparateEvent() {
+        topMenu.addSelectedChangeListener {
+            bottomMenu.selectedIndex = UNSELECT_ALL
+            topMenu.selectedTab = it.selectedTab
+        }
+        bottomMenu.addSelectedChangeListener {
+            topMenu.selectedIndex = UNSELECT_ALL
+            bottomMenu.selectedTab = it.selectedTab
+        }
+    }
+
+    private fun createTopMenuLayer(): VerticalLayout {
+        return VerticalLayout().apply {
+            isPadding = false
+            add(topMenu)
+        }
+    }
+
+    private fun createBottomMenuLayer(): VerticalLayout {
+        return VerticalLayout().apply {
+            isPadding = false
+            setHeightFull()
+            justifyContentMode = FlexComponent.JustifyContentMode.END
+            add(bottomMenu)
+        }
     }
 }
