@@ -1,6 +1,7 @@
 package apply.ui.admin
 
 import apply.application.RecruitmentService
+import apply.ui.admin.administrator.AdministratorsView
 import apply.ui.admin.cheater.CheatersView
 import apply.ui.admin.evaluation.EvaluationsView
 import apply.ui.admin.mail.MailsView
@@ -54,7 +55,7 @@ class MenuLayout(
             createBorderItem(),
             "메일 관리" of MailsView::class.java,
             "부정행위자" of CheatersView::class.java,
-            "관리자" of MailsView::class.java
+            "관리자" of AdministratorsView::class.java
         )
     }
 
