@@ -22,12 +22,12 @@ fun String.createComboBoxTab(recruitments: List<RecruitmentResponse>, innerItems
     return ComboBoxMenuItem(this, recruitments.reversed(), innerItems)
 }
 
-sealed class MenuItem(protected val title: String = "") {
-    abstract fun toComponents(): List<Component>
-}
-
 fun createBorderItem(): MenuItem {
     return BorderMenuItem()
+}
+
+sealed class MenuItem(protected val title: String = "") {
+    abstract fun toComponents(): List<Component>
 }
 
 class BorderMenuItem : MenuItem() {
