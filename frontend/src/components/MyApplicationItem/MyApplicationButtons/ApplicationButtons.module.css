@@ -1,9 +1,9 @@
 .refresh-button {
-  background-color: var(--blue-gray);
+  background-color: var(--blue-gray-500);
 }
 
 .judgment-button {
-  background-color: var(--blue-gray);
+  background-color: var(--blue-gray-500);
 }
 
 .apply-button {

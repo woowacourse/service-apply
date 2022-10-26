@@ -12,6 +12,6 @@
 
 .checked {
   font-weight: 600;
-  background-color: var(--light-blue-green);
+  background-color: var(--blue-gray-100);
   border-radius: 50px;
 }
