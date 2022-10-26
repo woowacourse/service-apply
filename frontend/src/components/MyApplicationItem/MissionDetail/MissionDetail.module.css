@@ -10,6 +10,6 @@
   display: flex;
   gap: 0.25rem;
   margin-left: auto;
-  color: var(--gray-007);
+  color: var(--gray-700);
   font-size: 0.815rem;
 }

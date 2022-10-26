@@ -7,7 +7,7 @@
 }
 
 .apply-button {
-  background-color: var(--black-004);
+  background-color: var(--black-400);
 }
 
 @media screen and (max-width: 800px) {

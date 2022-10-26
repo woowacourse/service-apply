@@ -7,7 +7,7 @@
   padding: 1.5rem 1rem;
 
   background-color: var(--white);
-  color: var(--gray-004);
+  color: var(--gray-400);
   cursor: default;
 }
 
@@ -17,7 +17,7 @@
 }
 
 .content-wrapper.active:hover {
-  background-color: var(--gray-002);
+  background-color: var(--gray-200);
   transition: 300ms ease-in-out;
 }
 
@@ -31,7 +31,7 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 1rem;
-  color: var(--gray-008);
+  color: var(--gray-800);
 }
 
 .icon {

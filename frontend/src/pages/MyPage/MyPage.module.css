@@ -22,14 +22,14 @@
 
 .info-title {
   flex: 1;
-  color: var(--gray-007);
+  color: var(--gray-700);
   text-align: right;
   padding: 0.5rem 0;
 }
 
 .info-data {
   flex: 5;
-  border-bottom: 1px solid var(--gray-006);
+  border-bottom: 1px solid var(--gray-600);
   padding: 0.5rem;
 }
 

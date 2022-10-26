@@ -11,7 +11,7 @@
   height: fit-content;
   padding: 0.5rem 0.25rem;
   border-radius: 10px;
-  background-color: var(--gray-003);
+  background-color: var(--gray-300);
   z-index: var(--tooltip-z-index);
 }
 
@@ -26,14 +26,14 @@
   position: absolute;
   bottom: 2rem;
   right: 0;
-  box-shadow: 3px 3px 5px var(--gray-005);
+  box-shadow: 3px 3px 5px var(--gray-500);
 }
 
 .tooltip-text {
   margin-left: 1.2rem;
   font-size: 0.75rem;
   list-style: square;
-  color: var(--black-004);
+  color: var(--black-400);
 }
 
 .tooltip-modal-container:after {
@@ -41,7 +41,7 @@
   position: absolute;
   bottom: -9px;
   right: 5px;
-  border-top: 10px solid var(--gray-003);
+  border-top: 10px solid var(--gray-300);
   border-right: 5px solid transparent;
   border-left: 5px solid transparent;
 }

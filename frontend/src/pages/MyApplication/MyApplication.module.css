@@ -25,12 +25,12 @@
 .recruitment-mission-contour {
   margin: 1.625rem 0;
   border: none;
-  border-top: 1.5px solid var(--gray-002);
+  border-top: 1.5px solid var(--gray-200);
 }
 
 .application-category {
   margin-bottom: 1rem;
-  color: var(--gray-004);
+  color: var(--gray-400);
   font-size: 1.25rem;
   font-weight: bold;
 }

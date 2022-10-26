@@ -11,7 +11,7 @@
   justify-content: center;
   align-items: center;
   background: var(--white);
-  border-bottom: 1px solid var(--gray-003);
+  border-bottom: 1px solid var(--gray-300);
   z-index: var(--header-z-index);
 }
 
@@ -25,7 +25,7 @@
   font-size: 1.375rem;
   display: flex;
   align-items: center;
-  color: var(--black-004);
+  color: var(--black-400);
 }
 
 .logo {
@@ -43,7 +43,7 @@
 
 .link-container,
 .link-container button {
-  color: var(--gray-008);
+  color: var(--gray-800);
 }
 
 .member-menu-container {
@@ -90,7 +90,7 @@
   right: 0;
   width: 10rem;
   background-color: var(--white);
-  border: 1px solid var(--gray-003);
+  border: 1px solid var(--gray-300);
   z-index: var(--tooltip-z-index);
 }
 
@@ -100,7 +100,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-bottom: 1px solid var(--gray-003);
+  border-bottom: 1px solid var(--gray-300);
   font-weight: 400;
   cursor: pointer;
   user-select: none;
@@ -133,7 +133,7 @@
   width: 1px;
   height: 1.25rem;
   margin: 0 0.75rem;
-  background-color: var(--gray-008);
+  background-color: var(--gray-800);
 }
 
 @media screen and (max-width: 800px) {

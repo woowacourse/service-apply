@@ -12,12 +12,12 @@
   appearance: none;
   user-select: none;
 
-  background: var(--gray-002);
-  color: var(--gray-006);
+  background: var(--gray-200);
+  color: var(--gray-600);
   font-weight: bold;
 }
 
 .active {
-  background-color: var(--gray-002);
+  background-color: var(--gray-200);
   color: var(--blue);
 }

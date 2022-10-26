@@ -6,7 +6,7 @@
 
 .text-input {
   padding: 12px;
-  border: 1px solid var(--gray-006);
+  border: 1px solid var(--gray-600);
   border-radius: 4px;
   transition-duration: 0.5s;
   line-height: 30px;

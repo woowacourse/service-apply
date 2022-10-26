@@ -12,7 +12,7 @@
   margin: 0;
   padding: 0.75rem;
   max-height: 140px;
-  border: 1px solid var(--gray-006);
+  border: 1px solid var(--gray-600);
   border-radius: 0.25rem;
   transition-duration: 0.5s;
 }
