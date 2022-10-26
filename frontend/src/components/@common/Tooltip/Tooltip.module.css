@@ -33,7 +33,7 @@
   margin-left: 1.2rem;
   font-size: 0.75rem;
   list-style: square;
-  color: var(--black-400);
+  color: var(--gray-900);
 }
 
 .tooltip-modal-container:after {

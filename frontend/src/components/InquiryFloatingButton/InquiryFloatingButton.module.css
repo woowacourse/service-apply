@@ -14,7 +14,7 @@
 
 .inquire-text {
   font-weight: 600;
-  color: var(--black-400);
+  color: var(--gray-900);
 }
 
 .kakao-icon-box {
@@ -24,7 +24,7 @@
   width: 3.5rem;
   height: 3.5rem;
   border-radius: 50%;
-  background-color: var(--black-100);
+  background-color: var(--black);
 }
 
 @media screen and (max-width: 512px) {

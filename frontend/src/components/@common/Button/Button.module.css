@@ -8,14 +8,14 @@
 }
 
 .contained {
-  background-color: var(--black-400);
+  background-color: var(--gray-900);
   color: var(--white);
 }
 
 .outlined {
-  color: var(--black-400);
+  color: var(--gray-900);
   background-color: var(--white);
-  border: 1px solid var(--black-400);
+  border: 1px solid var(--gray-900);
 }
 
 .outlined:enabled:hover {
@@ -23,12 +23,12 @@
 }
 
 .contained {
-  background-color: var(--black-400);
+  background-color: var(--gray-900);
   color: var(--white);
 }
 
 .cancel {
-  background: var(--gray-800);
+  background: var(--gray-700);
 }
 button:disabled {
   cursor: default;

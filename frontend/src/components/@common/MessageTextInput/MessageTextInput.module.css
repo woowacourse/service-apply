@@ -15,7 +15,7 @@
 
 .length-limit {
   align-self: flex-end;
-  color: var(--gray-700);
+  color: var(--gray-600);
   font-size: 0.875rem;
 }
 

@@ -30,7 +30,7 @@
 }
 
 .active a {
-  color: var(--black-400);
+  color: var(--gray-900);
   font-weight: bold;
 }
 
@@ -60,7 +60,7 @@
   padding: 2rem 0;
 
   font-weight: 700;
-  color: var(--gray-600);
+  color: var(--gray-500);
 }
 
 .program-tab-list {
