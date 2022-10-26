@@ -26,7 +26,7 @@
   position: absolute;
   bottom: 2rem;
   right: 0;
-  box-shadow: 3px 3px 5px var(--gray-500);
+  box-shadow: 3px 3px 5px var(--gray-400);
 }
 
 .tooltip-text {
