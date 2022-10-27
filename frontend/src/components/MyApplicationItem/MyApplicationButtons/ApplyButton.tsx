@@ -3,7 +3,7 @@ import Button, { BUTTON_VARIANT } from "../../@common/Button/Button";
 import styles from "./ApplicationButtons.module.css";
 
 type ApplyButtonProps = {
-  children: string;
+  children: Readonly<string>;
   isButtonDisabled: boolean;
   onClick: () => void;
 };

@@ -4,35 +4,30 @@ import { generatePath } from "react-router";
 import { useNavigate } from "react-router-dom";
 import { Recruitment, RecruitmentStatus } from "../../../../types/domains/recruitments";
 import { PARAM, PATH } from "../../../constants/path";
-import { BUTTON_LABEL } from "../../../pages/MyApplication/MyApplication";
 import { formatDateTime } from "../../../utils/format/date";
 import { generateQuery } from "../../../utils/route/query";
 import ApplyButton from "../MyApplicationButtons/ApplyButton";
 import styles from "../MyApplicationItem.module.css";
 import RecruitmentDetail from "../RecruitmentDetail/RecruitmentDetail";
-import { RECRUITMENT_STATUS } from "./../../../constants/recruitment";
+import { BUTTON_LABEL, RECRUITMENT_STATUS } from "./../../../constants/recruitment";
 
 type MyApplicationFormItemProps = {
   recruitment: Recruitment;
   submitted: boolean;
 };
 
+const APPLICATION_STATUS = {
+  [RECRUITMENT_STATUS.RECRUITABLE]: BUTTON_LABEL.BEFORE_SUBMISSION,
+  [RECRUITMENT_STATUS.RECRUITING]: BUTTON_LABEL.EDIT,
+  [RECRUITMENT_STATUS.UNRECRUITABLE]: BUTTON_LABEL.UNSUBMITTABLE,
+  [RECRUITMENT_STATUS.ENDED]: BUTTON_LABEL.UNSUBMITTED,
+} as const;
+
 const applicationLabel = (submitted: boolean, status: RecruitmentStatus) => {
   if (submitted) {
     return BUTTON_LABEL.COMPLETE;
   }
-  switch (status) {
-    case RECRUITMENT_STATUS.RECRUITABLE:
-      return BUTTON_LABEL.BEFORE_SUBMISSION;
-    case RECRUITMENT_STATUS.RECRUITING:
-      return BUTTON_LABEL.EDIT;
-    case RECRUITMENT_STATUS.UNRECRUITABLE:
-      return BUTTON_LABEL.UNSUBMITTABLE;
-    case RECRUITMENT_STATUS.ENDED:
-      return BUTTON_LABEL.UNSUBMITTED;
-    default:
-      return BUTTON_LABEL.UNSUBMITTABLE;
-  }
+  return APPLICATION_STATUS[status];
 };
 
 const isApplicationDisabled = (submitted: boolean, status: RecruitmentStatus) => {
