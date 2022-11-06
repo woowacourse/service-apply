@@ -9,7 +9,7 @@ import support.views.createIntSelect
 
 class EvaluationItemForm() : BindingIdentityFormLayout<EvaluationItemData>(EvaluationItemData::class) {
     private val title: TextField = TextField("항목명")
-    private val maximumScore: Select<Int> = createIntSelect(max = 10).apply { label = "최대 점수" }
+    private val maximumScore: Select<Int> = createIntSelect(max = 100).apply { label = "최대 점수" }
     private val position: Select<Int> = createIntSelect(max = 10).apply { label = "순서" }
     private val description: TextArea = TextArea("설명")
 
