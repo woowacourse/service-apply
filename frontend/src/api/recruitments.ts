@@ -6,14 +6,14 @@ import {
   Recruitment,
   RecruitmentItem,
 } from "../../types/domains/recruitments";
-import { RequestWithToken, ResponseDataWithMessage } from "../../types/utility";
+import { RequestWithToken } from "../../types/utility";
 import { headers } from "./api";
 
 export type FetchRecruitmentItemsRequest = number;
 
-export type FetchRecruitmentItemsResponseData = ResponseDataWithMessage<RecruitmentItem[]>;
+export type FetchRecruitmentItemsResponseData = RecruitmentItem[];
 
-export type FetchRecruitmentsResponseData = ResponseDataWithMessage<Recruitment[]>;
+export type FetchRecruitmentsResponseData = Recruitment[];
 
 export type FetchMyMissionsRequest = RequestWithToken<{
   recruitmentId: number;
@@ -24,14 +24,14 @@ export type FetchMyMissionJudgmentRequest = RequestWithToken<{
   missionId: number;
 }>;
 
-export type FetchMyMissionsResponseData = ResponseDataWithMessage<Mission[]>;
+export type FetchMyMissionsResponseData = Mission[];
 
 export type FetchAssignmentRequest = RequestWithToken<{
   recruitmentId: number;
   missionId: number;
 }>;
 
-export type FetchAssignmentResponseData = ResponseDataWithMessage<Assignment>;
+export type FetchAssignmentResponseData = Assignment;
 
 export type PostAssignmentRequest = RequestWithToken<{
   recruitmentId: number;
@@ -39,7 +39,7 @@ export type PostAssignmentRequest = RequestWithToken<{
   assignmentData: AssignmentData;
 }>;
 
-export type PostAssignmentResponseData = ResponseDataWithMessage<Assignment>;
+export type PostAssignmentResponseData = Assignment;
 
 export type PatchAssignmentRequest = RequestWithToken<{
   recruitmentId: number;

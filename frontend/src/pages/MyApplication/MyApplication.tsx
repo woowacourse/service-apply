@@ -54,8 +54,7 @@ const MyApplication = () => {
   useEffect(() => {
     try {
       const fetchMyRecruitments = async () => {
-        const response = await fetchMyApplicationForms(token);
-        const myApplication = response.data as unknown as MyApplicationType[];
+        const { data: myApplication } = await fetchMyApplicationForms(token);
         setMyApplications(myApplication);
       };
 

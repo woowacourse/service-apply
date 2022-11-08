@@ -1,7 +1,7 @@
 import axios from "axios";
 import { headers } from "./api";
 import { formatDate } from "../utils/format/date";
-import { RequestWithToken, ResponseDataWithMessage } from "../../types/utility";
+import { RequestWithToken } from "../../types/utility";
 import { User } from "../../types/domains/user";
 
 type FetchRegisterRequest = Omit<User, "id"> & {
@@ -9,11 +9,11 @@ type FetchRegisterRequest = Omit<User, "id"> & {
   authenticationCode: string;
 };
 
-type FetchRegisterResponseData = ResponseDataWithMessage<string>;
+type FetchRegisterResponseData = string;
 
 type FetchLoginRequest = Pick<User, "email" | "password">;
 
-type FetchLoginResponseData = ResponseDataWithMessage<string>;
+type FetchLoginResponseData = string;
 
 type FetchPasswordFindRequest = Pick<User, "name" | "email" | "password" | "birthday">;
 
@@ -29,7 +29,7 @@ type FetchPasswordEditResponseData = void;
 
 type FetchUserInfoRequest = RequestWithToken;
 
-type FetchUserInfoResponseData = ResponseDataWithMessage<Omit<User, "password">>;
+type FetchUserInfoResponseData = Omit<User, "password">;
 
 type FetchUserInfoEditRequest = RequestWithToken<{ phoneNumber: string }>;
 
