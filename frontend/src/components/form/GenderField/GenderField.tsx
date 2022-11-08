@@ -6,7 +6,7 @@ import styles from "./GenderField.module.css";
 type GenderFieldProps = {
   className?: string;
   required?: boolean;
-  value: string;
+  value: "MALE" | "FEMALE";
   onChange: React.ChangeEventHandler<HTMLInputElement>;
 };
 
