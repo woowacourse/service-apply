@@ -11,7 +11,7 @@ import CheckBox from "../../components/form/CheckBox/CheckBox";
 import Form from "../../components/form/Form/Form";
 import ApplicationPreviewModal from "../../components/ApplicationPreviewModal/ApplicationPreviewModal";
 import { FORM } from "../../constants/form";
-import { SUCCESS_MESSAGE } from "../../constants/messages";
+import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
 import { PATH, PARAM } from "../../constants/path";
 import useApplicationRegisterForm, {
   APPLICATION_REGISTER_FORM_NAME,
@@ -71,11 +71,8 @@ const ApplicationRegister = () => {
     );
   };
 
-  const handleSaveError = (error) => {
-    if (!error) return;
-
-    // TODO: 서버 에러응답을 클라이언트에서 분기처리하여 메시지 표시한다.
-    alert(error.response.data.message);
+  const handleSaveError = () => {
+    alert(ERROR_MESSAGE.API.LOAD_APPLICATION_FORM);
   };
 
   const save = async ({ referenceUrl, answers }) => {
@@ -94,7 +91,7 @@ const ApplicationRegister = () => {
       alert(SUCCESS_MESSAGE.API.SUBMIT_APPLICATION);
       navigate(PATH.HOME, { replace: true });
     } catch (error) {
-      handleSaveError(error);
+      handleSaveError();
     }
   };
 
@@ -114,7 +111,7 @@ const ApplicationRegister = () => {
       alert(SUCCESS_MESSAGE.API.SAVE_APPLICATION);
       reloadToEdit();
     } catch (error) {
-      handleSaveError(error);
+      handleSaveError();
     }
   };
 

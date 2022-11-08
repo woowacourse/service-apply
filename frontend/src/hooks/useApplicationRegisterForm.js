@@ -113,10 +113,8 @@ const useApplicationRegisterForm = ({
     );
   };
 
-  const handleLoadFormError = (error) => {
-    if (!error) return;
-    // TODO: 서버 에러응답을 클라이언트에서 분기처리하여 메시지 표시한다.
-    alert(error.response.data.message);
+  const handleLoadFormError = () => {
+    alert(ERROR_MESSAGE.API.LOAD_APPLICATION_FORM);
     navigate(PATH.RECRUITS);
   };
 
@@ -129,7 +127,7 @@ const useApplicationRegisterForm = ({
       setForm({ referenceUrl });
       setModifiedDateTime(formatDateTime(new Date(modifiedDateTime)));
     } catch (error) {
-      handleLoadFormError(error);
+      handleLoadFormError();
     }
   };
 
