@@ -98,9 +98,8 @@ const MyMissionItem = ({ mission, recruitmentId }: MyMissionItemProps) => {
               recruitmentId: String(recruitmentId),
               mission,
             })}
-          >
-            {applyButtonLabel}
-          </ApplyButton>
+            label={applyButtonLabel}
+          />
         </div>
       </div>
     </div>

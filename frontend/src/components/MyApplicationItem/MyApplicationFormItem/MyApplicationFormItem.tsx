@@ -48,7 +48,7 @@ const MyApplicationFormItem = ({ recruitment, submitted }: MyApplicationFormItem
   );
 
   const isButtonDisabled = isApplicationDisabled(submitted, recruitment.status);
-  const buttonLabel = applicationLabel(submitted, recruitment.status);
+  const applyButtonLabel = applicationLabel(submitted, recruitment.status);
 
   const routeToApplicationForm = (recruitment: Recruitment) => {
     navigate(
@@ -79,9 +79,8 @@ const MyApplicationFormItem = ({ recruitment, submitted }: MyApplicationFormItem
             onClick={() => {
               routeToApplicationForm(recruitment);
             }}
-          >
-            {buttonLabel}
-          </ApplyButton>
+            label={applyButtonLabel}
+          />
         </div>
       </div>
     </div>

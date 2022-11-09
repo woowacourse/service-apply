@@ -3,12 +3,12 @@ import Button, { BUTTON_VARIANT } from "../../@common/Button/Button";
 import styles from "./ApplicationButtons.module.css";
 
 type ApplyButtonProps = {
-  children: Readonly<string>;
+  readonly label: string;
   isButtonDisabled: boolean;
   onClick: () => void;
 };
 
-const ApplyButton = ({ children, isButtonDisabled, onClick }: ApplyButtonProps) => {
+const ApplyButton = ({ label, isButtonDisabled, onClick }: ApplyButtonProps) => {
   return (
     <Button
       className={classNames(styles["apply-button"])}
@@ -18,7 +18,7 @@ const ApplyButton = ({ children, isButtonDisabled, onClick }: ApplyButtonProps) 
       disabled={isButtonDisabled}
       onClick={onClick}
     >
-      {children}
+      {label}
     </Button>
   );
 };
