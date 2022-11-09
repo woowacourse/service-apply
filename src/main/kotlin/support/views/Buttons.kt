@@ -107,7 +107,7 @@ fun createSuccessButtonWithDialog(
 fun createContrastButtonWithDialog(
     text: String,
     message: String,
-    clickListener: ClickListener,
+    clickListener: ClickListener
 ): Button {
     return createContrastButton(text) { createConfirmDialog(message, clickListener) }
 }
