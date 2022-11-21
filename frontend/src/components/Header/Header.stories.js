@@ -9,7 +9,7 @@ export default {
       <MemoryRouter
         initialEntries={[
           {
-            pathname: "/'",
+            pathname: "/",
           },
         ]}
       >
