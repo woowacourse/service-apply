@@ -53,8 +53,8 @@ AfterSubmit.args = {
   submitted: true,
 };
 
-export const BeforeSubmitRecruitable = Template.bind({});
-BeforeSubmitRecruitable.args = {
+export const BeforeSubmitAndRecruitable = Template.bind({});
+BeforeSubmitAndRecruitable.args = {
   recruitment: {
     id: 3,
     title: "우아한테크코스 2기",
@@ -71,8 +71,8 @@ BeforeSubmitRecruitable.args = {
   submitted: false,
 };
 
-export const BeforeSubmitRecruiting = Template.bind({});
-BeforeSubmitRecruiting.args = {
+export const BeforeSubmitAndRecruiting = Template.bind({});
+BeforeSubmitAndRecruiting.args = {
   recruitment: {
     id: 3,
     title: "우아한테크캠프 Pro 2기",
@@ -89,8 +89,8 @@ BeforeSubmitRecruiting.args = {
   submitted: false,
 };
 
-export const BeforeSubmitUnrecruitable = Template.bind({});
-BeforeSubmitUnrecruitable.args = {
+export const BeforeSubmitAndUnrecruitable = Template.bind({});
+BeforeSubmitAndUnrecruitable.args = {
   recruitment: {
     id: 3,
     title: "우아한테크캠프 Pro 2기",
@@ -107,8 +107,8 @@ BeforeSubmitUnrecruitable.args = {
   submitted: false,
 };
 
-export const BeforeSubmitEnded = Template.bind({});
-BeforeSubmitEnded.args = {
+export const BeforeSubmitAndEnded = Template.bind({});
+BeforeSubmitAndEnded.args = {
   recruitment: {
     id: 3,
     title: "우아한테크캠프 Pro 2기",
