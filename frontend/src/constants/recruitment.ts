@@ -13,7 +13,7 @@ export const MISSION_STATUS = {
 } as const;
 
 export const BUTTON_LABEL = {
-  BEFORE_SUBMISSION: "준비 중",
+  BEFORE_SUBMIT: "준비 중",
   EDIT: "수정하기",
   SUBMIT: "제출하기",
   UNSUBMITTABLE: "제출불가",

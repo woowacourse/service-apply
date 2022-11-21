@@ -21,7 +21,7 @@ type MyMissionItemProps = {
 
 const missionLabel = (submitted: boolean, missionStatus: Mission["status"]) => {
   const labelMap = {
-    SUBMITTABLE: BUTTON_LABEL.BEFORE_SUBMISSION,
+    SUBMITTABLE: BUTTON_LABEL.BEFORE_SUBMIT,
     SUBMITTING: submitted ? BUTTON_LABEL.EDIT : BUTTON_LABEL.SUBMIT,
     UNSUBMITTABLE: BUTTON_LABEL.UNSUBMITTABLE,
     ENDED: submitted ? BUTTON_LABEL.COMPLETE : BUTTON_LABEL.UNSUBMITTED,
