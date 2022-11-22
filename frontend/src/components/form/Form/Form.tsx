@@ -6,7 +6,7 @@ import styles from "./Form.module.css";
 type FormProps = {
   className?: string;
   children: JSX.Element;
-  onSubmit?: React.FormEventHandler<HTMLFormElement>;
+  onSubmit: React.FormEventHandler<HTMLFormElement>;
 };
 
 const Form = ({ className = "", children, onSubmit }: FormProps) => {
