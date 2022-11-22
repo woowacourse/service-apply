@@ -18,7 +18,7 @@ const HeaderMeta: HeaderMetaData = {
       <MemoryRouter
         initialEntries={[
           {
-            pathname: "/'",
+            pathname: "/",
           },
         ]}
       >
