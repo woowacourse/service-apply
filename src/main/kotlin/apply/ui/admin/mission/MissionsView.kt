@@ -9,6 +9,7 @@ import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.grid.Grid
+import com.vaadin.flow.component.html.H1
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
@@ -20,7 +21,6 @@ import com.vaadin.flow.router.Route
 import com.vaadin.flow.router.WildcardParameter
 import support.views.EDIT_VALUE
 import support.views.NEW_VALUE
-import support.views.Title
 import support.views.addSortableColumn
 import support.views.addSortableDateTimeColumn
 import support.views.createDeleteButtonWithDialog
@@ -37,10 +37,14 @@ class MissionsView(
     override fun setParameter(event: BeforeEvent, @WildcardParameter parameter: Long) {
         recruitmentId = parameter
         add(createTitle(), createButton(), createGrid())
+        setSizeFull()
     }
 
     private fun createTitle(): Component {
-        return Title("${recruitmentService.getById(recruitmentId).title} 과제 관리")
+        return HorizontalLayout(H1("${recruitmentService.getById(recruitmentId).title} 과제 관리")).apply {
+            setWidthFull()
+            justifyContentMode = FlexComponent.JustifyContentMode.CENTER
+        }
     }
 
     private fun createButton(): Component {
@@ -49,7 +53,7 @@ class MissionsView(
                 UI.getCurrent().navigate(MissionsFormView::class.java, "$recruitmentId/$NEW_VALUE")
             }
         ).apply {
-            setSizeFull()
+            setWidthFull()
             justifyContentMode = FlexComponent.JustifyContentMode.END
         }
     }
