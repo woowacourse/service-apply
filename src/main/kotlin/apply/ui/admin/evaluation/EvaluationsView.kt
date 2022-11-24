@@ -24,11 +24,12 @@ import support.views.createPrimarySmallButton
 class EvaluationsView(private val evaluationService: EvaluationService) : VerticalLayout() {
     init {
         add(createTitle(), createButton(), createGrid())
+        setSizeFull()
     }
 
     private fun createTitle(): Component {
         return HorizontalLayout(H1("평가 관리")).apply {
-            setSizeFull()
+            setWidthFull()
             justifyContentMode = FlexComponent.JustifyContentMode.CENTER
         }
     }
@@ -39,7 +40,7 @@ class EvaluationsView(private val evaluationService: EvaluationService) : Vertic
                 UI.getCurrent().navigate(EvaluationsFormView::class.java, NEW_VALUE)
             }
         ).apply {
-            setSizeFull()
+            setWidthFull()
             justifyContentMode = FlexComponent.JustifyContentMode.END
         }
     }
