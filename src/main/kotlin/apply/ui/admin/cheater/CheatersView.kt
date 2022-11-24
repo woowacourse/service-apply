@@ -27,11 +27,12 @@ class CheatersView(
 ) : VerticalLayout() {
     init {
         add(createTitle(), createAddCheater(), createCheaterGrid())
+        setSizeFull()
     }
 
     private fun createTitle(): Component {
         return HorizontalLayout(H1("부정행위자")).apply {
-            setSizeFull()
+            setWidthFull()
             justifyContentMode = FlexComponent.JustifyContentMode.CENTER
         }
     }
@@ -45,7 +46,7 @@ class CheatersView(
             }
         ).apply {
             justifyContentMode = FlexComponent.JustifyContentMode.END
-            setSizeFull()
+            setWidthFull()
         }
     }
 

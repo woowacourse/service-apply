@@ -27,11 +27,12 @@ import support.views.toDisplayName
 class TermsView(private val termService: TermService) : VerticalLayout() {
     init {
         add(createTitle(), createButton(), createGrid())
+        setSizeFull()
     }
 
     private fun createTitle(): Component {
         return HorizontalLayout(H1("기수 관리")).apply {
-            setSizeFull()
+            setWidthFull()
             justifyContentMode = FlexComponent.JustifyContentMode.CENTER
         }
     }
@@ -44,7 +45,7 @@ class TermsView(private val termService: TermService) : VerticalLayout() {
                 }
             }
         ).apply {
-            setSizeFull()
+            setWidthFull()
             justifyContentMode = FlexComponent.JustifyContentMode.END
         }
     }

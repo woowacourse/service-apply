@@ -75,6 +75,7 @@ class SelectionView(
     override fun setParameter(event: BeforeEvent, @WildcardParameter parameter: Long) {
         this.recruitmentId = parameter
         add(createTitle(), createContent())
+        setSizeFull()
     }
 
     private fun createTitle(): Component {
@@ -106,7 +107,7 @@ class SelectionView(
             setWidthFull()
             justifyContentMode = FlexComponent.JustifyContentMode.BETWEEN
         }
-        return VerticalLayout(menu, grids, evaluationFileButtons).apply { setWidthFull() }
+        return VerticalLayout(menu, grids, evaluationFileButtons).apply { setSizeFull() }
     }
 
     private fun createEvaluationFileButtons(): HorizontalLayout {
@@ -146,6 +147,7 @@ class SelectionView(
             addSortableColumn("부정행위자") { if (it.isCheater) "O" else "X" }
             addColumn(createButtonRenderer()).apply { isAutoWidth = true }
             setItems(users)
+            setSizeFull()
         }
     }
 
@@ -170,6 +172,7 @@ class SelectionView(
             addSortableColumn("평가자", EvaluationTargetResponse::administratorId)
             addColumn(createEvaluationButtonRenderer()).apply { isAutoWidth = true }
             setItems(evaluationTargets)
+            setSizeFull()
         }
     }
 
@@ -206,7 +209,7 @@ class SelectionView(
             tabs = this
         }
 
-        val grids = Div(*tabsToGrids.values.toTypedArray()).apply { setWidthFull() }
+        val grids = Div(*tabsToGrids.values.toTypedArray()).apply { setSizeFull() }
 
         return tabs to grids
     }

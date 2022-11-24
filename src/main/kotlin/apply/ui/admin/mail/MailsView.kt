@@ -26,11 +26,12 @@ class MailsView(
 ) : VerticalLayout() {
     init {
         add(createTitle(), createButton(), createGrid())
+        setSizeFull()
     }
 
     private fun createTitle(): Component {
         return HorizontalLayout(H1("메일 관리")).apply {
-            setSizeFull()
+            setWidthFull()
             justifyContentMode = FlexComponent.JustifyContentMode.CENTER
         }
     }
@@ -41,7 +42,7 @@ class MailsView(
                 UI.getCurrent().navigate(MailsFormView::class.java, NEW_VALUE)
             }
         ).apply {
-            setSizeFull()
+            setWidthFull()
             justifyContentMode = FlexComponent.JustifyContentMode.END
         }
     }

@@ -27,11 +27,12 @@ import support.views.createPrimarySmallButton
 class RecruitmentsView(private val recruitmentService: RecruitmentService) : VerticalLayout() {
     init {
         add(createTitle(), createButton(), createGrid())
+        setSizeFull()
     }
 
     private fun createTitle(): Component {
         return HorizontalLayout(H1("모집 관리")).apply {
-            setSizeFull()
+            setWidthFull()
             justifyContentMode = FlexComponent.JustifyContentMode.CENTER
         }
     }
@@ -42,7 +43,7 @@ class RecruitmentsView(private val recruitmentService: RecruitmentService) : Ver
                 UI.getCurrent().navigate(RecruitmentsFormView::class.java, NEW_VALUE)
             }
         ).apply {
-            setSizeFull()
+            setWidthFull()
             justifyContentMode = FlexComponent.JustifyContentMode.END
         }
     }

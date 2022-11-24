@@ -26,11 +26,12 @@ import support.views.toDisplayName
 class AdministratorsView(private val administratorService: AdministratorService) : VerticalLayout() {
     init {
         add(createTitle(), createButton(), createGrid())
+        setSizeFull()
     }
 
     private fun createTitle(): Component {
         return HorizontalLayout(H1("관리자")).apply {
-            setSizeFull()
+            setWidthFull()
             justifyContentMode = FlexComponent.JustifyContentMode.CENTER
         }
     }
@@ -43,7 +44,7 @@ class AdministratorsView(private val administratorService: AdministratorService)
                 }
             }
         ).apply {
-            setSizeFull()
+            setWidthFull()
             justifyContentMode = FlexComponent.JustifyContentMode.END
         }
     }
