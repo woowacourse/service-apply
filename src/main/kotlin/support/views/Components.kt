@@ -11,12 +11,14 @@ import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.notification.Notification
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
+import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup
 import com.vaadin.flow.component.select.Select
 import com.vaadin.flow.component.tabs.Tabs
 import com.vaadin.flow.component.tabs.TabsVariant
 import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.data.renderer.ComponentRenderer
+import com.vaadin.flow.router.HasUrlParameter
 
 fun createIntSelect(min: Int = 0, max: Int): Select<Int> {
     return Select(*(min..max).toList().toTypedArray())
@@ -121,3 +123,5 @@ class Title(val value: H1) : HorizontalLayout(), HasText {
         return value.text
     }
 }
+
+abstract class HasUrlParameterLayout<T> : VerticalLayout(), HasUrlParameter<T>
