@@ -7,6 +7,7 @@ import com.vaadin.flow.component.details.DetailsVariant
 import com.vaadin.flow.component.html.Anchor
 import com.vaadin.flow.component.tabs.Tab
 import com.vaadin.flow.router.RouterLink
+import support.views.HasUrlParameterLayout
 import support.views.createTabs
 
 infix fun String.of(navigationTarget: Class<out Component>): MenuItem {
@@ -15,6 +16,10 @@ infix fun String.of(navigationTarget: Class<out Component>): MenuItem {
 
 fun String.accordionOf(path: String, recruitments: List<RecruitmentResponse>): MenuItem {
     return AccordionMenuItem(this, path, recruitments.map { it.toContent() })
+}
+
+fun String.selectedOf(navigationTarget: Class<out HasUrlParameterLayout<Long>>, parameter: Long): SelectedSingleMenuItem {
+    return SelectedSingleMenuItem(this, navigationTarget, parameter)
 }
 
 private fun RecruitmentResponse.toContent(): AccordionContent = AccordionContent(id, title)
@@ -29,6 +34,16 @@ class SingleMenuItem(
 ) : MenuItem(title) {
     override fun toComponent(): Component {
         return Tab(RouterLink(title, navigationTarget))
+    }
+}
+
+class SelectedSingleMenuItem(
+    title: String,
+    private val navigationTarget: Class<out HasUrlParameterLayout<Long>>,
+    private val parameter: Long
+) : MenuItem(title) {
+    override fun toComponent(): Component {
+        return Tab(RouterLink(title, navigationTarget, parameter))
     }
 }
 

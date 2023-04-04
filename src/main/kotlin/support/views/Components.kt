@@ -97,7 +97,7 @@ fun createNotification(text: String, durationValue: Int = 1000): Notification {
     }
 }
 
-fun createTabs(components: List<Component>): Component {
+fun createTabs(components: List<Component>): Tabs {
     return Tabs().apply {
         orientation = Tabs.Orientation.VERTICAL
         isAutoselect = false
