@@ -95,28 +95,42 @@ fun createContrastSmallButton(text: String, clickListener: ClickListener): Butto
     }
 }
 
-fun createSuccessButtonWithDialog(text: String, message: String, clickListener: ClickListener): Button {
-    return createSuccessSmallButton(text) { createConfirmDialog(message, clickListener) }
+fun createSuccessButtonWithDialog(
+    text: String,
+    message: String,
+    clickListener: ClickListener,
+    successListener: Dialog.() -> Unit = { close() }
+): Button {
+    return createSuccessSmallButton(text) { createConfirmDialog(message, clickListener, successListener) }
 }
 
-fun createContrastButtonWithDialog(text: String, message: String, clickListener: ClickListener): Button {
-    return createContrastButton(text) { createConfirmDialog(message, clickListener) }
+fun createContrastButtonWithDialog(
+    text: String,
+    message: String,
+    successListener: Dialog.() -> Unit = { close() },
+    clickListener: ClickListener
+): Button {
+    return createContrastButton(text) { createConfirmDialog(message, clickListener, successListener) }
 }
 
-fun createDeleteButtonWithDialog(message: String, clickListener: ClickListener): Button {
-    return createErrorSmallButton("삭제") { createConfirmDialog(message, clickListener) }
+fun createDeleteButtonWithDialog(
+    message: String,
+    successListener: Dialog.() -> Unit = { UI.getCurrent().page.reload() },
+    clickListener: ClickListener
+): Button {
+    return createErrorSmallButton("삭제") { createConfirmDialog(message, clickListener, successListener) }
 }
 
 private fun createConfirmDialog(
     text: String,
     confirmListener: ClickListener,
-    cancelListener: ClickListener = {}
+    successListener: Dialog.() -> Unit
 ): Dialog {
     return Dialog(Text(text)).apply {
         add(
             HorizontalLayout(
-                createCancelButton(cancelListener),
-                createConfirmButton(confirmListener)
+                createCancelButton(),
+                createConfirmButton(confirmListener, successListener)
             ).apply {
                 justifyContentMode = FlexComponent.JustifyContentMode.CENTER
             }
@@ -125,17 +139,16 @@ private fun createConfirmDialog(
     }
 }
 
-private fun Dialog.createCancelButton(clickListener: ClickListener): Button {
+private fun Dialog.createCancelButton(): Button {
     return Button("취소") {
-        clickListener(it)
         this.close()
     }
 }
 
-private fun Dialog.createConfirmButton(clickListener: ClickListener): Button {
+private fun Dialog.createConfirmButton(clickListener: ClickListener, successListener: Dialog.() -> Unit): Button {
     return createPrimaryButton("확인") {
         runCatching { clickListener(it) }
-            .onSuccess { UI.getCurrent().page.reload() }
+            .onSuccess { successListener() }
             .onFailure { e -> createNotification(e.localizedMessage) }
     }
 }
