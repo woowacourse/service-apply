@@ -8,8 +8,6 @@ import apply.application.EvaluationService
 import apply.application.EvaluationTargetCsvService
 import apply.application.EvaluationTargetResponse
 import apply.application.EvaluationTargetService
-import apply.application.ExcelService
-import apply.application.JudgmentAllService
 import apply.application.JudgmentService
 import apply.application.MyMissionService
 import apply.application.RecruitmentItemService
@@ -42,10 +40,9 @@ import com.vaadin.flow.router.WildcardParameter
 import support.views.addSortableColumn
 import support.views.addSortableDateColumn
 import support.views.addSortableDateTimeColumn
-import support.views.createContrastButtonWithDialog
 import support.views.createCsvUpload
+import support.views.createErrorButton
 import support.views.createNormalButton
-import support.views.createPrimaryButton
 import support.views.createPrimarySmallButton
 import support.views.createSearchBox
 import support.views.createSuccessButton
@@ -60,9 +57,7 @@ class SelectionView(
     private val evaluationTargetService: EvaluationTargetService,
     private val assignmentService: AssignmentService,
     private val judgmentService: JudgmentService,
-    private val judgmentAllService: JudgmentAllService,
     private val myMissionService: MyMissionService,
-    private val excelService: ExcelService,
     private val evaluationTargetCsvService: EvaluationTargetCsvService
 ) : VerticalLayout(), HasUrlParameter<Long> {
     private var recruitmentId: Long = 0L
@@ -98,8 +93,7 @@ class SelectionView(
             },
             tabs,
             HorizontalLayout(
-                createLoadButton(tabs),
-                createResultDownloadButton(),
+                // 평가 대상자 자동 배정 버튼 추가
                 createJudgeAllButton(tabs)
             )
         ).apply {
@@ -165,10 +159,13 @@ class SelectionView(
         return Grid<EvaluationTargetResponse>(10).apply {
             addSortableColumn("이름", EvaluationTargetResponse::name)
             addSortableColumn("이메일", EvaluationTargetResponse::email)
-            addSortableColumn("합계", EvaluationTargetResponse::totalScore)
-            addSortableColumn("평가 상태", EvaluationTargetResponse::evaluationStatus)
-            addSortableColumn("평가자", EvaluationTargetResponse::administratorId)
-            addColumn(createEvaluationButtonRenderer()).apply { isAutoWidth = true }
+            addSortableColumn("종합 점수", EvaluationTargetResponse::totalScore)
+            addSortableColumn("종합 평가 상태", EvaluationTargetResponse::evaluationStatus)
+            addSortableColumn("나의 평가 상태", EvaluationTargetResponse::evaluationStatus)
+            addColumn(createEvaluationButtonRenderer()).apply {
+                isAutoWidth = true
+                setHeader("평가")
+            }
             setItems(evaluationTargets)
         }
     }
@@ -211,19 +208,6 @@ class SelectionView(
         return tabs to grids
     }
 
-    private fun createLoadButton(tabs: Tabs): Button {
-        return createPrimaryButton("평가 대상자 불러오기") {
-            val evaluation = tabs.findEvaluation() ?: return@createPrimaryButton
-            evaluationTargetService.load(evaluation.id)
-            selectedTabIndex = tabs.selectedIndex
-            removeAll()
-            add(
-                createTitle(),
-                createContent()
-            )
-        }
-    }
-
     private fun createEvaluationFileDownloadButton(): Button {
         return createSuccessButton("평가지 다운로드") {
             val evaluation = evaluations[tabs.selectedIndex - 1]
@@ -232,14 +216,8 @@ class SelectionView(
     }
 
     private fun createJudgeAllButton(tabs: Tabs): Button {
-        return createContrastButtonWithDialog("전체 자동 채점하기", "자동 채점을 실행하시겠습니까?") {
-            val evaluation = tabs.findEvaluation() ?: return@createContrastButtonWithDialog
-            judgmentAllService.judgeAll(evaluation.id)
+        return createErrorButton("평가 대상자 자동 배정") {
         }
-    }
-
-    private fun Tabs.findEvaluation(): EvaluationSelectData? {
-        return evaluations.find { it.title == selectedTab.label }
     }
 
     private fun createEvaluationFileUpload(): Upload {
@@ -251,18 +229,6 @@ class SelectionView(
             val reloadButton = Button("확인") { UI.getCurrent().page.reload() }
             alertDialog.add(VerticalLayout(text, reloadButton).apply { alignItems = FlexComponent.Alignment.CENTER })
             alertDialog.open()
-        }
-    }
-
-    private fun createResultDownloadButton(): Button {
-        return createSuccessButton("평가결과 다운로드") {
-            if (isTotalUserTab(tabs.selectedTab)) {
-                val excel = excelService.createApplicantExcel(recruitmentId)
-                downloadFile("${recruitmentService.getById(recruitmentId).title}.xlsx", excel)
-            } else {
-                val evaluation = evaluations[tabs.selectedIndex - 1]
-                downloadFile("${evaluation.title}.xlsx", excelService.createTargetExcel(evaluation.id))
-            }
         }
     }
 
