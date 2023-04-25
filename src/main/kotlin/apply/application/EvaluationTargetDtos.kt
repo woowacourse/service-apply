@@ -15,6 +15,9 @@ data class EvaluationTargetResponse(
     val note: String,
     val answers: List<EvaluationAnswerResponse>
 ) {
+    val evaluationStatusTitle: String
+        get() = evaluationStatus.title
+
     constructor(
         id: Long,
         name: String,

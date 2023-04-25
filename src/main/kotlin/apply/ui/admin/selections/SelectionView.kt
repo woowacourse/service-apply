@@ -160,8 +160,8 @@ class SelectionView(
             addSortableColumn("이름", EvaluationTargetResponse::name)
             addSortableColumn("이메일", EvaluationTargetResponse::email)
             addSortableColumn("종합 점수", EvaluationTargetResponse::totalScore)
-            addSortableColumn("종합 평가 상태", EvaluationTargetResponse::evaluationStatus)
-            addSortableColumn("나의 평가 상태", EvaluationTargetResponse::evaluationStatus)
+            addSortableColumn("종합 평가 상태", EvaluationTargetResponse::evaluationStatusTitle)
+            addSortableColumn("나의 평가 상태", EvaluationTargetResponse::evaluationStatusTitle) // TODO 나의 상태와 종합 평가 상태 나누기
             addColumn(createEvaluationButtonRenderer()).apply {
                 isAutoWidth = true
                 setHeader("평가")
