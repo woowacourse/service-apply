@@ -92,15 +92,16 @@ class SelectionView(
                 selectedTabIndex = tabs.selectedIndex
             },
             tabs,
-            HorizontalLayout(
-                // 평가 대상자 자동 배정 버튼 추가
-                createJudgeAllButton(tabs)
-            )
+            HorizontalLayout(createEvaluationTargetAutoAssignmentButton(tabs))
         ).apply {
             setWidthFull()
             justifyContentMode = FlexComponent.JustifyContentMode.BETWEEN
         }
-        return VerticalLayout(menu, grids, evaluationFileButtons).apply { setWidthFull() }
+        return VerticalLayout(
+            menu,
+            grids,
+            evaluationFileButtons
+        ).apply { setWidthFull() }
     }
 
     private fun createEvaluationFileButtons(): HorizontalLayout {
@@ -215,7 +216,7 @@ class SelectionView(
         }
     }
 
-    private fun createJudgeAllButton(tabs: Tabs): Button {
+    private fun createEvaluationTargetAutoAssignmentButton(tabs: Tabs): Button {
         return createErrorButton("평가 대상자 자동 배정") {
         }
     }
