@@ -33,11 +33,6 @@ export const PROGRAM_TAB = {
     label: "우아한테크캠프 Pro",
     description: `경력이 있는 재직자를 대상으로 유지보수하기 좋은 코드를 학습하는 교육 프로그램입니다.\n일반 사용자용 서비스 회사가 필요로 하는 역량을 더 쌓고 싶은 분들을 찾고 있어요.`,
   },
-  EMPTY_PROGRAM: {
-    name: "emptyprogram",
-    label: "Empty State UI 확인용",
-    description: "...",
-  },
 } as const;
 
 export const RECRUITS_TAB_LIST = [
@@ -51,5 +46,4 @@ export const PROGRAM_TAB_LIST = [
   PROGRAM_TAB.ALL,
   PROGRAM_TAB.WOOWA_TECH_COURSE,
   PROGRAM_TAB.WOOWA_TECH_CAMP_PRO,
-  PROGRAM_TAB.EMPTY_PROGRAM,
 ] as const;
