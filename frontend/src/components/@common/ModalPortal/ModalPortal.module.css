@@ -20,6 +20,6 @@
 .dimmer-box {
   position: fixed;
   inset: 0;
-  background-color: var(--dim);
+  background-color: var(--tint);
   animation: dissolve 0.3s forwards;
 }

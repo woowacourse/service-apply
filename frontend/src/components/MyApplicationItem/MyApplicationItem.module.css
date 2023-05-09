@@ -8,7 +8,7 @@
   padding: 1.25rem 1.5rem 1rem;
   margin-bottom: 1.25rem;
   background-color: var(--white);
-  border: 1px solid var(--gray-003);
+  border: 1px solid var(--gray-300);
 }
 
 .text-container {
@@ -19,7 +19,7 @@
 }
 
 .auto-judgment-detail-contour {
-  border: 0.5px solid var(--gray-003);
+  border: 0.5px solid var(--gray-300);
 }
 
 .button-container {

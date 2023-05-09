@@ -8,30 +8,30 @@
 }
 
 .contained {
-  background-color: var(--black-004);
+  background-color: var(--gray-900);
   color: var(--white);
 }
 
 .outlined {
-  color: var(--black-004);
+  color: var(--gray-900);
   background-color: var(--white);
-  border: 1px solid var(--black-004);
+  border: 1px solid var(--gray-900);
 }
 
 .outlined:enabled:hover {
-  background-color: var(--gray-001);
+  background-color: var(--gray-100);
 }
 
 .contained {
-  background-color: var(--black-004);
+  background-color: var(--gray-900);
   color: var(--white);
 }
 
 .cancel {
-  background: var(--gray-008);
+  background: var(--gray-700);
 }
 button:disabled {
   cursor: default;
-  background: var(--gray-004);
+  background: var(--gray-400);
   cursor: not-allowed;
 }
