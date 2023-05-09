@@ -4,8 +4,7 @@ import { generatePath } from "react-router";
 import { useNavigate } from "react-router-dom";
 import { Mission } from "../../../../types/domains/recruitments";
 import { PARAM } from "../../../constants/path";
-import { MISSION_STATUS } from "../../../constants/recruitment";
-import { BUTTON_LABEL } from "../../../pages/MyApplication/MyApplication";
+import { BUTTON_LABEL, MISSION_STATUS } from "../../../constants/recruitment";
 import { formatDateTime } from "../../../utils/format/date";
 import MissionDetail from "../MissionDetail/MissionDetail";
 import ApplyButton from "../MyApplicationButtons/ApplyButton";
@@ -22,7 +21,7 @@ type MyMissionItemProps = {
 
 const missionLabel = (submitted: boolean, missionStatus: Mission["status"]) => {
   const labelMap = {
-    SUBMITTABLE: BUTTON_LABEL.BEFORE_SUBMISSION,
+    SUBMITTABLE: BUTTON_LABEL.BEFORE_SUBMIT,
     SUBMITTING: submitted ? BUTTON_LABEL.EDIT : BUTTON_LABEL.SUBMIT,
     UNSUBMITTABLE: BUTTON_LABEL.UNSUBMITTABLE,
     ENDED: submitted ? BUTTON_LABEL.COMPLETE : BUTTON_LABEL.UNSUBMITTED,
@@ -99,9 +98,8 @@ const MyMissionItem = ({ mission, recruitmentId }: MyMissionItemProps) => {
               recruitmentId: String(recruitmentId),
               mission,
             })}
-          >
-            {applyButtonLabel}
-          </ApplyButton>
+            label={applyButtonLabel}
+          />
         </div>
       </div>
     </div>
