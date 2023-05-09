@@ -72,7 +72,7 @@ const ApplicationRegister = () => {
   };
 
   const handleSaveError = () => {
-    alert(ERROR_MESSAGE.API.LOAD_APPLICATION_FORM);
+    alert(ERROR_MESSAGE.API.SAVE_APPLICATION_FORM);
   };
 
   const save = async ({ referenceUrl, answers }) => {
