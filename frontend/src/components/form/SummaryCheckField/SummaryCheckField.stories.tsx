@@ -1,16 +1,19 @@
-import React from "react";
+import { ComponentMeta, ComponentStory } from "@storybook/react";
 import SummaryCheckField from "./SummaryCheckField";
 
 export default {
   title: "form/SummaryCheckField",
   component: SummaryCheckField,
-};
+} as ComponentMeta<typeof SummaryCheckField>;
 
-const Template = (args) => <SummaryCheckField {...args} />;
+const Template: ComponentStory<typeof SummaryCheckField> = (args) => (
+  <SummaryCheckField {...args} />
+);
 
 export const Default = Template.bind({});
 Default.args = {
   label: "약관 동의",
+  checked: false,
   children: (
     <p>
       Ullamco duis cillum adipisicing elit Lorem. Culpa veniam aliqua commodo esse culpa officia qui

@@ -1,10 +1,12 @@
-import classNames from "classnames";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import MemberIcon from "../../assets/icon/member-icon.svg";
-import { PATH } from "../../constants/path";
+import classNames from "classnames";
+
 import useTokenContext from "../../hooks/useTokenContext";
 import styles from "./Header.module.css";
+import { PATH } from "../../constants/path";
+import { ValueOf } from "../../../types/utility";
+import MemberIcon from "../../assets/icon/member-icon.svg";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -13,11 +15,11 @@ const Header = () => {
 
   const [isShowMemberMenu, setIsShowMemberMenu] = useState(false);
 
-  const onChange = ({ target }) => {
+  const onChange: React.ChangeEventHandler<HTMLInputElement> = ({ target }) => {
     setIsShowMemberMenu(target.checked);
   };
 
-  const routeTo = ({ pathname }) => {
+  const routeTo = ({ pathname }: { pathname: ValueOf<typeof PATH> }) => {
     navigate(pathname);
     setIsShowMemberMenu(false);
   };
