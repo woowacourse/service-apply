@@ -83,14 +83,11 @@ class SelectionMeView(
             createSearchBox {
                 // TODO
             }
-        ).apply {
-            justifyContentMode = FlexComponent.JustifyContentMode.START
-        }
+        )
         val tabs = createTabs()
-        val evaluationTargetAutoAssignmentButton = createErrorButton("평가 대상자 자동 배정") {
-        }
+        val evaluationTargetAutoAssignmentButton = HorizontalLayout(createErrorButton("평가 대상자 자동 배정") { })
 
-        // TODO UI 정렬 맞추기
+        // TODO
         return HorizontalLayout(
             searchBox,
             tabs,
@@ -103,7 +100,9 @@ class SelectionMeView(
 
     private fun createTabs(): Component {
         val evaluations: List<EvaluationSelectData> = modelView["evaluations"] as List<EvaluationSelectData>
-        return Tabs(*evaluations.map { Tab(it.title) }.toTypedArray())
+        return Tabs(*evaluations.map { Tab(it.title) }.toTypedArray()).apply {
+            setWidthFull()
+        }
     }
 
     private fun createContent(): Component {
