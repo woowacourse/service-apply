@@ -1,7 +1,11 @@
 package apply.ui.admin.selections
 
+import apply.application.AssignmentService
 import apply.application.EvaluationSelectData
 import apply.application.EvaluationService
+import apply.application.EvaluationTargetService
+import apply.application.JudgmentService
+import apply.application.MyMissionService
 import apply.application.RecruitmentService
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
@@ -31,6 +35,7 @@ import support.views.createSearchBox
 import support.views.createSuccessButton
 
 data class MyEvaluationTargetResponse(
+    val id: Long,
     val name: String,
     val email: String,
     val totalScore: Double,
@@ -47,9 +52,15 @@ data class SelectionMeViewModel(
 @Route(value = "admin/selections/me", layout = BaseLayout::class)
 class SelectionMeView(
     private val recruitmentService: RecruitmentService,
-    private val evaluationService: EvaluationService
+    private val evaluationService: EvaluationService,
+    private val evaluationTargetService: EvaluationTargetService,
+    private val assignmentService: AssignmentService,
+    private val myMissionService: MyMissionService,
+    private val judgmentService: JudgmentService
 ) : VerticalLayout(), HasUrlParameter<Long> {
     private var recruitmentId: Long = 0L
+    private lateinit var tabs: Tabs
+    private var selectedTabIndex: Int = 0
     private lateinit var viewModel: SelectionMeViewModel
 
     override fun setParameter(event: BeforeEvent, @WildcardParameter parameter: Long) {
@@ -58,9 +69,9 @@ class SelectionMeView(
             title = recruitmentService.getById(recruitmentId).title,
             evaluations = evaluationService.getAllSelectDataByRecruitmentId(recruitmentId),
             contents = listOf(
-                MyEvaluationTargetResponse("홍길동1", "test1@test.com", 7.0, "평가 전", "평가 전"),
-                MyEvaluationTargetResponse("홍길동2", "test2@test.com", 7.8, "합격", "합격"),
-                MyEvaluationTargetResponse("홍길동3", "test3@test.com", 9.1, "합격", "탈락")
+                MyEvaluationTargetResponse(1, "홍길동1", "test1@test.com", 7.0, "평가 전", "평가 전"),
+                MyEvaluationTargetResponse(2, "홍길동2", "test2@test.com", 7.8, "합격", "합격"),
+                MyEvaluationTargetResponse(3, "홍길동3", "test3@test.com", 9.1, "합격", "탈락")
             )
         )
 
@@ -88,7 +99,7 @@ class SelectionMeView(
 
     private fun createMenu(): Component {
         val searchBox = createSearchBox()
-        val tabs = createTabs()
+        createTabs()
         val evaluationTargetAutoAssignmentButton = createEvaluationTargetAutoAssignmentButton()
 
         return HorizontalLayout(
@@ -110,16 +121,22 @@ class SelectionMeView(
     }
 
     private fun createEvaluationTargetAutoAssignmentButton(): Component {
-        return HorizontalLayout(createErrorButton("평가 대상자 자동 배정") {
-            // TODO 평가 대상자 자동 배정
-        })
+        return HorizontalLayout(
+            createErrorButton("평가 대상자 자동 배정") {
+                // TODO 평가 대상자 자동 배정
+            }
+        )
     }
 
     private fun createTabs(): Component {
-        return Tabs(*viewModel.evaluations.map { Tab(it.title) }.toTypedArray()).apply {
+        tabs = Tabs(*viewModel.evaluations.map { Tab(it.title) }.toTypedArray()).apply {
             setWidthFull()
+            addSelectedChangeListener {
+                selectedTabIndex = selectedIndex
+            }
             // TODO 탭 이동 (addSelectedChangeListener)
         }
+        return tabs
     }
 
     private fun createContent(): Component {
@@ -140,7 +157,16 @@ class SelectionMeView(
     private fun createEvaluationButtonRenderer(): Renderer<MyEvaluationTargetResponse> {
         return ComponentRenderer { response ->
             createPrimarySmallButton("평가하기") {
-                // TODO 평가하기
+                EvaluationTargetFormDialog2(
+                    evaluationTargetService,
+                    assignmentService,
+                    myMissionService,
+                    judgmentService,
+                    response.id
+                ) {
+                    removeAll()
+                    add(createTitle(), createEvaluationTargetTabs(), createMenu(), createContent(), createEvaluationTargetFileButtons())
+                }
             }
         }
     }
