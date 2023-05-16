@@ -38,29 +38,37 @@ data class MyEvaluationTargetResponse(
     val myStatus: String
 )
 
+data class SelectionMeViewModel(
+    val title: String,
+    val evaluations: List<EvaluationSelectData>,
+    val contents: List<MyEvaluationTargetResponse>
+)
+
 @Route(value = "admin/selections/me", layout = BaseLayout::class)
 class SelectionMeView(
     private val recruitmentService: RecruitmentService,
     private val evaluationService: EvaluationService
 ) : VerticalLayout(), HasUrlParameter<Long> {
     private var recruitmentId: Long = 0L
-    private val modelView: MutableMap<String, Any> = mutableMapOf()
+    private lateinit var viewModel: SelectionMeViewModel
 
     override fun setParameter(event: BeforeEvent, @WildcardParameter parameter: Long) {
         recruitmentId = parameter
-        modelView["title"] = recruitmentService.getById(recruitmentId).title
-        modelView["evaluations"] = evaluationService.getAllSelectDataByRecruitmentId(recruitmentId)
-        modelView["contents"] = listOf(
-            MyEvaluationTargetResponse("홍길동1", "test1@test.com", 7.0, "평가 전", "평가 전"),
-            MyEvaluationTargetResponse("홍길동2", "test2@test.com", 7.8, "합격", "합격"),
-            MyEvaluationTargetResponse("홍길동3", "test3@test.com", 9.1, "합격", "탈락")
+        viewModel = SelectionMeViewModel(
+            title = recruitmentService.getById(recruitmentId).title,
+            evaluations = evaluationService.getAllSelectDataByRecruitmentId(recruitmentId),
+            contents = listOf(
+                MyEvaluationTargetResponse("홍길동1", "test1@test.com", 7.0, "평가 전", "평가 전"),
+                MyEvaluationTargetResponse("홍길동2", "test2@test.com", 7.8, "합격", "합격"),
+                MyEvaluationTargetResponse("홍길동3", "test3@test.com", 9.1, "합격", "탈락")
+            )
         )
 
         add(createTitle(), createEvaluationTargetTabs(), createMenu(), createContent(), createEvaluationTargetFileButtons())
     }
 
     private fun createTitle(): Component {
-        return HorizontalLayout(H1(modelView["title"] as String)).apply {
+        return HorizontalLayout(H1(viewModel.title)).apply {
             setWidthFull()
             justifyContentMode = FlexComponent.JustifyContentMode.CENTER
         }
@@ -79,15 +87,10 @@ class SelectionMeView(
     }
 
     private fun createMenu(): Component {
-        val searchBox = HorizontalLayout(
-            createSearchBox {
-                // TODO
-            }
-        )
+        val searchBox = createSearchBox()
         val tabs = createTabs()
-        val evaluationTargetAutoAssignmentButton = HorizontalLayout(createErrorButton("평가 대상자 자동 배정") { })
+        val evaluationTargetAutoAssignmentButton = createEvaluationTargetAutoAssignmentButton()
 
-        // TODO
         return HorizontalLayout(
             searchBox,
             tabs,
@@ -98,15 +101,28 @@ class SelectionMeView(
         }
     }
 
+    private fun createSearchBox(): Component {
+        return HorizontalLayout(
+            createSearchBox {
+                // TODO 검색
+            }
+        )
+    }
+
+    private fun createEvaluationTargetAutoAssignmentButton(): Component {
+        return HorizontalLayout(createErrorButton("평가 대상자 자동 배정") {
+            // TODO 평가 대상자 자동 배정
+        })
+    }
+
     private fun createTabs(): Component {
-        val evaluations: List<EvaluationSelectData> = modelView["evaluations"] as List<EvaluationSelectData>
-        return Tabs(*evaluations.map { Tab(it.title) }.toTypedArray()).apply {
+        return Tabs(*viewModel.evaluations.map { Tab(it.title) }.toTypedArray()).apply {
             setWidthFull()
+            // TODO 탭 이동 (addSelectedChangeListener)
         }
     }
 
     private fun createContent(): Component {
-        val contents = modelView["contents"] as List<MyEvaluationTargetResponse>
         return Grid<MyEvaluationTargetResponse>(10).apply {
             addSortableColumn("이름", MyEvaluationTargetResponse::name)
             addSortableColumn("이메일", MyEvaluationTargetResponse::email)
@@ -117,7 +133,7 @@ class SelectionMeView(
                 isAutoWidth = true
                 setHeader("평가")
             }
-            setItems(contents)
+            setItems(viewModel.contents)
         }
     }
 
@@ -142,11 +158,13 @@ class SelectionMeView(
 
     private fun createEvaluationFileDownloadButton(): Button {
         return createSuccessButton("평가지 다운로드") {
+            // TODO 평가지 다운로드
         }
     }
 
     private fun createEvaluationFileUpload(): Upload {
         return createCsvUpload("평가지 업로드", MemoryBuffer()) {
+            // TODO 평가지 업로드
         }
     }
 }
