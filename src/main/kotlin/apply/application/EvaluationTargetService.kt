@@ -164,4 +164,27 @@ class EvaluationTargetService(
         evaluationTargetsData
             .forEach { (evaluationTargetId, evaluationTargetData) -> grade(evaluationTargetId, evaluationTargetData) }
     }
+
+    // TODO: 실제 데이터 연동 / 메서드 네이밍 변경
+    fun findMyEvaluationTarget(evaluationId: Long): List<MyEvaluationTargetResponse> {
+        return when (evaluationId) {
+            1L -> listOf(
+                MyEvaluationTargetResponse(1, "네오", "test1@test.com", 5.0, "평가 중", "평가 완료"),
+                MyEvaluationTargetResponse(2, "브리", "test1@3est.com", 9.0, "????", "11111")
+            )
+            2L -> listOf(
+                MyEvaluationTargetResponse(1, "공원", "test1@test.com", 5.0, "평가 중", "평가 완료")
+            )
+            else -> listOf(MyEvaluationTargetResponse(3, "구구", "test1@test.com", 7.0, "평가 전", "평가 전"))
+        }
+    }
 }
+
+data class MyEvaluationTargetResponse(
+    val id: Long,
+    val name: String,
+    val email: String,
+    val totalScore: Double,
+    val totalStatus: String,
+    val myStatus: String
+)

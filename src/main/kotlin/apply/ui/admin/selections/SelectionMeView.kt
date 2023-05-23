@@ -5,6 +5,7 @@ import apply.application.EvaluationSelectData
 import apply.application.EvaluationService
 import apply.application.EvaluationTargetService
 import apply.application.JudgmentService
+import apply.application.MyEvaluationTargetResponse
 import apply.application.MyMissionService
 import apply.application.RecruitmentService
 import apply.ui.admin.BaseLayout
@@ -34,15 +35,6 @@ import support.views.createPrimarySmallButton
 import support.views.createSearchBox
 import support.views.createSuccessButton
 
-data class MyEvaluationTargetResponse(
-    val id: Long,
-    val name: String,
-    val email: String,
-    val totalScore: Double,
-    val totalStatus: String,
-    val myStatus: String
-)
-
 data class SelectionMeViewModel(
     val title: String,
     val evaluations: List<EvaluationSelectData>,
@@ -60,19 +52,16 @@ class SelectionMeView(
 ) : VerticalLayout(), HasUrlParameter<Long> {
     private var recruitmentId: Long = 0L
     private lateinit var tabs: Tabs
-    private var selectedTabIndex: Int = 0
+    private lateinit var grid: Grid<MyEvaluationTargetResponse>
     private lateinit var viewModel: SelectionMeViewModel
 
     override fun setParameter(event: BeforeEvent, @WildcardParameter parameter: Long) {
         recruitmentId = parameter
+        val evaluations = evaluationService.getAllSelectDataByRecruitmentId(recruitmentId)
         viewModel = SelectionMeViewModel(
             title = recruitmentService.getById(recruitmentId).title,
-            evaluations = evaluationService.getAllSelectDataByRecruitmentId(recruitmentId),
-            contents = listOf(
-                MyEvaluationTargetResponse(1, "홍길동1", "test1@test.com", 7.0, "평가 전", "평가 전"),
-                MyEvaluationTargetResponse(2, "홍길동2", "test2@test.com", 7.8, "합격", "합격"),
-                MyEvaluationTargetResponse(3, "홍길동3", "test3@test.com", 9.1, "합격", "탈락")
-            )
+            evaluations = evaluations,
+            contents = evaluationTargetService.findMyEvaluationTarget(evaluations.first().id)
         )
 
         add(createTitle(), createEvaluationTargetTabs(), createMenu(), createContent(), createEvaluationTargetFileButtons())
@@ -129,18 +118,19 @@ class SelectionMeView(
     }
 
     private fun createTabs(): Component {
-        tabs = Tabs(*viewModel.evaluations.map { Tab(it.title) }.toTypedArray()).apply {
-            setWidthFull()
-            addSelectedChangeListener {
-                selectedTabIndex = selectedIndex
+        tabs = Tabs(*viewModel.evaluations.map { Tab(it.title) }.toTypedArray())
+            .apply {
+                setWidthFull()
+                addSelectedChangeListener {
+                    viewModel = viewModel.copy(contents = evaluationTargetService.findMyEvaluationTarget(viewModel.evaluations[selectedIndex].id))
+                    grid.setItems(viewModel.contents)
+                }
             }
-            // TODO 탭 이동 (addSelectedChangeListener)
-        }
         return tabs
     }
 
     private fun createContent(): Component {
-        return Grid<MyEvaluationTargetResponse>(10).apply {
+        grid = Grid<MyEvaluationTargetResponse>(10).apply {
             addSortableColumn("이름", MyEvaluationTargetResponse::name)
             addSortableColumn("이메일", MyEvaluationTargetResponse::email)
             addSortableColumn("종합 점수", MyEvaluationTargetResponse::totalScore)
@@ -152,6 +142,7 @@ class SelectionMeView(
             }
             setItems(viewModel.contents)
         }
+        return grid
     }
 
     private fun createEvaluationButtonRenderer(): Renderer<MyEvaluationTargetResponse> {
