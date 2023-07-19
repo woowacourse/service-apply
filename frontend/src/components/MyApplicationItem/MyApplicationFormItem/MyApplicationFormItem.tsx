@@ -17,11 +17,11 @@ type MyApplicationFormItemProps = {
 };
 
 const applicationLabel = (submitted: boolean, recruitable: boolean) => {
-  if (!recruitable) {
-    return BUTTON_LABEL.UNSUBMITTABLE;
+  if (submitted) {
+    return BUTTON_LABEL.COMPLETE;
   }
 
-  return submitted ? BUTTON_LABEL.COMPLETE : BUTTON_LABEL.EDIT;
+  return recruitable ? BUTTON_LABEL.EDIT : BUTTON_LABEL.UNSUBMITTABLE;
 };
 
 const isApplicationDisabled = (submitted: boolean, recruitable: boolean) => {
