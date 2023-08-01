@@ -93,6 +93,22 @@ class ApplicationFormRestControllerTest : RestControllerTest() {
     }
 
     @Test
+    fun `특정 모집에 대한 특정 회원의 지원서가 없는 경우 404로 응답한다`() {
+        every {
+            applicationFormService.getApplicationForm(any(), any())
+        } throws NoSuchElementException("해당하는 지원서가 없습니다.")
+
+        mockMvc.get("/api/application-forms") {
+            bearer("valid_token")
+            param("recruitmentId", "1")
+        }.andExpect {
+            status { isNotFound }
+        }.andDo {
+            handle(document("application-form-get-not-found"))
+        }
+    }
+
+    @Test
     fun `특정 모집 id와 지원자에 대한 키워드(이름 or 이메일)로 지원서 정보들을 조회한다`() {
         val keyword = "아마찌"
         val responses = listOf(ApplicantAndFormResponse(createUser(name = keyword), false, createApplicationForm()))

@@ -66,7 +66,7 @@ class ApplicationFormServiceTest : BehaviorSpec({
 
         When("특정 회원이 해당 모집에 대한 지원서를 수정하면") {
             Then("예외가 발생한다") {
-                shouldThrow<IllegalArgumentException> {
+                shouldThrow<NoSuchElementException> {
                     applicationFormService.update(userId, UpdateApplicationFormRequest(recruitment.id))
                 }
             }
@@ -169,7 +169,7 @@ class ApplicationFormServiceTest : BehaviorSpec({
 
         When("지원서를 조회하면") {
             Then("예외가 발생한다") {
-                shouldThrow<IllegalArgumentException> {
+                shouldThrow<NoSuchElementException> {
                     applicationFormService.getApplicationForm(1L, 1L)
                 }
             }

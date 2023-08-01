@@ -71,8 +71,8 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
             .body(ApiResponse.error(exception.message))
     }
 
-    @ExceptionHandler(EntityNotFoundException::class)
-    fun handleNotFoundException(exception: EntityNotFoundException): ResponseEntity<ApiResponse<Unit>> {
+    @ExceptionHandler(NoSuchElementException::class, EntityNotFoundException::class)
+    fun handleNotFoundException(exception: RuntimeException): ResponseEntity<ApiResponse<Unit>> {
         logger.error("message", exception)
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
             .body(ApiResponse.error(exception.message))

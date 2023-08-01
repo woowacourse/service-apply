@@ -15,3 +15,9 @@ operation::application-form-me-get[snippets='http-request,http-response']
 == 지원서 조회
 
 operation::application-form-get[snippets='http-request,http-response']
+
+=== 지원서 조회 실패
+
+해당 모집에 대한 지원서가 존재하지 않는 경우
+
+operation::application-form-get-not-found[snippets='http-response']
