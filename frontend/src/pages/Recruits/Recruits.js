@@ -5,40 +5,57 @@ import TabItem from "../../components/@common/TabItem/TabItem";
 import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
 import { generateQuery } from "../../utils/route/query";
 import { PATH, PARAM } from "../../constants/path";
+import { ERROR_MESSAGE } from "../../constants/messages";
+import { ERROR_CODE } from "../../constants/errorCodes";
 import { PROGRAM_TAB, PROGRAM_TAB_LIST } from "../../constants/tab";
 import styles from "./Recruits.module.css";
+import * as Api from "../../api";
 
 const Recruits = () => {
   const { token } = useTokenContext();
   const navigate = useNavigate();
 
-  const { programTabStatus, setProgramTabStatus, filteredRecruitments } = useRecruitList();
+  const { programTabStatus, setProgramTabStatus, filteredRecruitments, isRecruitable } =
+    useRecruitList();
 
-  const goToNewApplicationFormPage = (recruitment) => {
-    if (!token) {
-      navigate(
-        { pathname: PATH.LOGIN },
-        {
-          state: {
-            currentRecruitment: recruitment,
-          },
-        }
-      );
-      return;
-    }
+  const navigateToApplication = ({ recruitment, status, state }) => {
     navigate(
       {
         pathname: generatePath(PATH.APPLICATION_FORM, {
-          status: PARAM.APPLICATION_FORM_STATUS.NEW,
+          status,
         }),
         search: generateQuery({ recruitmentId: recruitment.id }),
       },
-      {
-        state: {
-          currentRecruitment: recruitment,
-        },
-      }
+      { state: { currentRecruitment: recruitment, ...state } }
     );
+  };
+
+  const handleFetchingError = ({ error: { status }, recruitment }) => {
+    if (status === ERROR_CODE.LOAD_APPLICATION_FORM.NOT_FOUND) {
+      navigateToApplication({ recruitment, status: PARAM.APPLICATION_FORM_STATUS.NEW });
+      return;
+    }
+
+    alert(ERROR_MESSAGE.API.LOAD_APPLICATION_FORM);
+    navigate(PATH.HOME, { replace: true });
+  };
+
+  const fetchMyApplication = async (recruitment) => {
+    try {
+      if (!isRecruitable(recruitment)) {
+        alert("지원 불가능한 모집입니다.");
+        return;
+      }
+      const { data } = await Api.fetchForm({ token, recruitmentId: recruitment.id });
+
+      navigateToApplication({
+        recruitment,
+        status: PARAM.APPLICATION_FORM_STATUS.EDIT,
+        state: { application: data },
+      });
+    } catch (error) {
+      handleFetchingError({ error, recruitment });
+    }
   };
 
   return (
@@ -76,7 +93,7 @@ const Recruits = () => {
                 <RecruitmentItem
                   key={recruitment.id}
                   recruitment={recruitment}
-                  onClickButton={() => goToNewApplicationFormPage(recruitment)}
+                  onClickButton={() => fetchMyApplication(recruitment)}
                   role="listitem"
                 />
               ))
