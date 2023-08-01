@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { generatePath, useNavigate } from "react-router";
+import { generatePath, useNavigate, useLocation } from "react-router";
 import * as Api from "../api";
 import { FORM } from "../constants/form";
 import { ERROR_MESSAGE } from "../constants/messages";
@@ -8,6 +8,7 @@ import { formatDateTime } from "../utils/format/date";
 import { generateQuery } from "../utils/route/query";
 import { isValidURL } from "../utils/validation/url";
 import useTokenContext from "./useTokenContext";
+import { ERROR_CODE } from "../constants/errorCodes";
 
 export const APPLICATION_REGISTER_FORM_NAME = {
   ANSWERS: "answers",
@@ -42,6 +43,7 @@ const useApplicationRegisterForm = ({
 
   const [modifiedDateTime, setModifiedDateTime] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
   const { token } = useTokenContext();
 
   const isAnswersEmpty =
@@ -91,28 +93,6 @@ const useApplicationRegisterForm = ({
     }));
   };
 
-  const handleInitError = (error) => {
-    if (!error) return;
-
-    if (error.response?.status === 409) {
-      alert(error.response?.data.message);
-      navigate(PATH.HOME);
-      return;
-    }
-    navigate(
-      {
-        pathname: generatePath(PATH.APPLICATION_FORM, {
-          status: PARAM.APPLICATION_FORM_STATUS.EDIT,
-        }),
-        search: generateQuery({ recruitmentId }),
-      },
-      {
-        state: { currentRecruitment },
-        replace: true,
-      }
-    );
-  };
-
   const handleLoadFormError = () => {
     alert(ERROR_MESSAGE.API.LOAD_APPLICATION_FORM);
     navigate(PATH.RECRUITS);
@@ -120,28 +100,21 @@ const useApplicationRegisterForm = ({
 
   const loadForm = async () => {
     try {
-      const { data } = await Api.fetchForm({ token, recruitmentId });
-      const { answers, referenceUrl, modifiedDateTime } = data;
+      const application = await Api.fetchForm({ token, recruitmentId });
+      const {
+        data: { answers, referenceUrl, modifiedDateTime },
+      } = application;
 
-      setRequiredForm({ answers: answers.map((answer) => answer.contents) });
+      setRequiredForm({ answers: answers?.map((answer) => answer.contents) });
       setForm({ referenceUrl });
       setModifiedDateTime(formatDateTime(new Date(modifiedDateTime)));
     } catch (error) {
+      if (error?.response?.status === ERROR_CODE.LOAD_APPLICATION_FORM.NOT_FOUND) {
+        return;
+      }
+
       handleLoadFormError();
     }
-  };
-
-  const createForm = async () => {
-    try {
-      await Api.createForm({ token, recruitmentId });
-    } catch (error) {
-      handleInitError(error);
-    }
-  };
-
-  const init = async () => {
-    if (status === PARAM.APPLICATION_FORM_STATUS.EDIT) loadForm();
-    else createForm();
   };
 
   useEffect(() => {
@@ -150,7 +123,9 @@ const useApplicationRegisterForm = ({
       return;
     }
 
-    init();
+    if (status === PARAM.APPLICATION_FORM_STATUS.EDIT) {
+      loadForm();
+    }
   }, [status]);
 
   const reset = () => {
