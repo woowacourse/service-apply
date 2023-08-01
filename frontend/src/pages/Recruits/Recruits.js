@@ -1,62 +1,14 @@
-import { generatePath, useNavigate } from "react-router-dom";
-import useTokenContext from "../../hooks/useTokenContext";
-import useRecruitList from "./../../hooks/useRecruitList";
 import TabItem from "../../components/@common/TabItem/TabItem";
 import RecruitmentItem from "../../components/RecruitmentItem/RecruitmentItem";
-import { generateQuery } from "../../utils/route/query";
-import { PATH, PARAM } from "../../constants/path";
-import { ERROR_MESSAGE } from "../../constants/messages";
-import { ERROR_CODE } from "../../constants/errorCodes";
 import { PROGRAM_TAB, PROGRAM_TAB_LIST } from "../../constants/tab";
+import useRecruits from "../../hooks/useRecruits";
 import styles from "./Recruits.module.css";
-import * as Api from "../../api";
 
 const Recruits = () => {
-  const { token } = useTokenContext();
-  const navigate = useNavigate();
-
-  const { programTabStatus, setProgramTabStatus, filteredRecruitments, isRecruitable } =
-    useRecruitList();
-
-  const navigateToApplication = ({ recruitment, status, state }) => {
-    navigate(
-      {
-        pathname: generatePath(PATH.APPLICATION_FORM, {
-          status,
-        }),
-        search: generateQuery({ recruitmentId: recruitment.id }),
-      },
-      { state: { currentRecruitment: recruitment, ...state } }
-    );
-  };
-
-  const handleFetchingError = ({ error: { status }, recruitment }) => {
-    if (status === ERROR_CODE.LOAD_APPLICATION_FORM.NOT_FOUND) {
-      navigateToApplication({ recruitment, status: PARAM.APPLICATION_FORM_STATUS.NEW });
-      return;
-    }
-
-    alert(ERROR_MESSAGE.API.LOAD_APPLICATION_FORM);
-    navigate(PATH.HOME, { replace: true });
-  };
-
-  const fetchMyApplication = async (recruitment) => {
-    try {
-      if (!isRecruitable(recruitment)) {
-        alert("지원 불가능한 모집입니다.");
-        return;
-      }
-      const { data } = await Api.fetchForm({ token, recruitmentId: recruitment.id });
-
-      navigateToApplication({
-        recruitment,
-        status: PARAM.APPLICATION_FORM_STATUS.EDIT,
-        state: { application: data },
-      });
-    } catch (error) {
-      handleFetchingError({ error, recruitment });
-    }
-  };
+  const {
+    tabs: { programTabStatus, setProgramTabStatus, filteredRecruitments },
+    fetchMyApplication,
+  } = useRecruits();
 
   return (
     <>
