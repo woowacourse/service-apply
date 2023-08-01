@@ -33,14 +33,17 @@ const filterRecruitmentsByProgramLabel: (
   recruitments.filter((recruitmentItem) => matchProgram(recruitmentItem.title, programLabel));
 
 const isRecruitable = (recruitment: Recruitment) =>
-  recruitment?.recruitable &&
-  recruitment?.status !== RECRUITMENT_STATUS.ENDED &&
-  Date.now() <= new Date(recruitment.endDateTime).getTime();
+  !!(
+    recruitment?.recruitable &&
+    recruitment?.status !== RECRUITMENT_STATUS.ENDED &&
+    Date.now() <= new Date(recruitment.endDateTime).getTime()
+  );
 
 const useRecruitList: () => {
   programTabStatus: ProgramTabStatus;
   setProgramTabStatus: React.Dispatch<React.SetStateAction<ProgramTabStatus>>;
   filteredRecruitments: Recruitment[];
+  isRecruitable: (recruitment: Recruitment) => boolean;
 } = () => {
   const { recruitment } = useRecruitmentContext();
   const [programTabStatus, setProgramTabStatus] = useState<
