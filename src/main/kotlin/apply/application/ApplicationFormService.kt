@@ -59,7 +59,7 @@ class ApplicationFormService(
 
     private fun findByRecruitmentIdAndUserId(recruitmentId: Long, userId: Long): ApplicationForm =
         applicationFormRepository.findByRecruitmentIdAndUserId(recruitmentId, userId)
-            ?: throw IllegalArgumentException("해당하는 지원서가 없습니다.")
+            ?: throw NoSuchElementException("해당하는 지원서가 없습니다.")
 
     private fun findApplicableRecruitment(recruitmentId: Long): Recruitment {
         val recruitment = recruitmentRepository.getOrThrow(recruitmentId)
