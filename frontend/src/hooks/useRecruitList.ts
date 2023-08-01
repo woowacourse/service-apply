@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import useRecruitmentContext from "./useRecruitmentContext";
 import { RECRUITS_TAB, PROGRAM_TAB } from "../constants/tab";
 import { Recruitment } from "../../types/domains/recruitments";
+import { RECRUITMENT_STATUS } from "../constants/recruitment";
 
 type ProgramTabStatus = typeof PROGRAM_TAB[keyof typeof PROGRAM_TAB];
 
@@ -31,6 +32,11 @@ const filterRecruitmentsByProgramLabel: (
 ) => Recruitment[] = (recruitments, programLabel) =>
   recruitments.filter((recruitmentItem) => matchProgram(recruitmentItem.title, programLabel));
 
+const isRecruitable = (recruitment: Recruitment) =>
+  recruitment?.recruitable &&
+  recruitment?.status !== RECRUITMENT_STATUS.ENDED &&
+  Date.now() <= new Date(recruitment.endDateTime).getTime();
+
 const useRecruitList: () => {
   programTabStatus: ProgramTabStatus;
   setProgramTabStatus: React.Dispatch<React.SetStateAction<ProgramTabStatus>>;
@@ -52,7 +58,7 @@ const useRecruitList: () => {
     return filterRecruitmentsByProgramLabel(sortedRecruitments, programTabStatus.label);
   }, [recruitment, programTabStatus]);
 
-  return { programTabStatus, setProgramTabStatus, filteredRecruitments };
+  return { programTabStatus, setProgramTabStatus, filteredRecruitments, isRecruitable };
 };
 
 export default useRecruitList;

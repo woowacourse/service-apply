@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { generatePath, useNavigate } from "react-router";
+import { generatePath, useNavigate, useLocation } from "react-router";
 import * as Api from "../api";
 import { FORM } from "../constants/form";
 import { ERROR_MESSAGE } from "../constants/messages";
@@ -42,6 +42,7 @@ const useApplicationRegisterForm = ({
 
   const [modifiedDateTime, setModifiedDateTime] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
   const { token } = useTokenContext();
 
   const isAnswersEmpty =
@@ -120,8 +121,9 @@ const useApplicationRegisterForm = ({
 
   const loadForm = async () => {
     try {
-      const { data } = await Api.fetchForm({ token, recruitmentId });
-      const { answers, referenceUrl, modifiedDateTime } = data;
+      const application =
+        location?.state?.application ?? (await Api.fetchForm({ token, recruitmentId }));
+      const { answers, referenceUrl, modifiedDateTime } = application;
 
       setRequiredForm({ answers: answers.map((answer) => answer.contents) });
       setForm({ referenceUrl });
