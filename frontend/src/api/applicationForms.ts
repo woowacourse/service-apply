@@ -12,6 +12,8 @@ export type FetchFormRequest = RequestWithToken<{ recruitmentId: string | null }
 
 export type FetchFormResponseData = ApplicationForm;
 
+export type FetchFormErrorResponseData = { body: unknown | null; message: string };
+
 export type CreateFormRequest = RequestWithToken<{ recruitmentId: string | null }>;
 
 export type CreateFormResponseData = ApplicationForm;

@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import { generatePath, useNavigate, useLocation } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import * as Api from "../api";
 import { FORM } from "../constants/form";
 import { ERROR_MESSAGE } from "../constants/messages";
-import { PATH, PARAM } from "../constants/path";
+import { PATH } from "../constants/path";
 import { formatDateTime } from "../utils/format/date";
-import { generateQuery } from "../utils/route/query";
 import { isValidURL } from "../utils/validation/url";
 import useTokenContext from "./useTokenContext";
+import { ERROR_CODE } from "../constants/errorCodes";
 
 export const APPLICATION_REGISTER_FORM_NAME = {
   ANSWERS: "answers",
@@ -34,16 +34,23 @@ const useApplicationRegisterForm = ({
   recruitmentItems = [],
   status,
 }) => {
+  /*
+    TODO: requiredForm, form 상태를 통합해도 괜찮지 않을까?
+    return { form: { ...form, ...requiredForm }, ... } 을 하고 있으니...
+  */
   const [requiredForm, setRequiredForm] = useState(
     requiredFormInitialValue(recruitmentItems.length)
   );
   const [form, setForm] = useState(formInitialValue);
+
   const [errorMessage, setErrorMessage] = useState(errorMessageInitialValue);
 
   const [modifiedDateTime, setModifiedDateTime] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
   const { token } = useTokenContext();
+
+  const [isNewApplication, setIsNewApplication] = useState(false);
 
   const isAnswersEmpty =
     requiredForm[APPLICATION_REGISTER_FORM_NAME.ANSWERS]
@@ -92,29 +99,23 @@ const useApplicationRegisterForm = ({
     }));
   };
 
-  const handleInitError = (error) => {
+  const handleFetchingError = (error) => {
     if (!error) return;
 
-    if (error.response?.status === 409) {
-      alert(error.response?.data.message);
-      navigate(PATH.HOME);
+    const status = error?.response?.status;
+    const message = error?.response?.data?.message;
+
+    if (status === ERROR_CODE.LOAD_APPLICATION_FORM.NOT_FOUND) {
+      setIsNewApplication(true);
       return;
     }
-    navigate(
-      {
-        pathname: generatePath(PATH.APPLICATION_FORM, {
-          status: PARAM.APPLICATION_FORM_STATUS.EDIT,
-        }),
-        search: generateQuery({ recruitmentId }),
-      },
-      {
-        state: { currentRecruitment },
-        replace: true,
-      }
-    );
-  };
 
-  const handleLoadFormError = () => {
+    if (status === ERROR_CODE.LOAD_APPLICATION_FORM.ALREADY_APPLIED && message) {
+      alert(message);
+      navigate(PATH.RECRUITS);
+      return;
+    }
+
     alert(ERROR_MESSAGE.API.LOAD_APPLICATION_FORM);
     navigate(PATH.RECRUITS);
   };
@@ -123,27 +124,17 @@ const useApplicationRegisterForm = ({
     try {
       const application =
         location?.state?.application ?? (await Api.fetchForm({ token, recruitmentId }));
-      const { answers, referenceUrl, modifiedDateTime } = application;
+      const {
+        data: { answers, referenceUrl, modifiedDateTime },
+      } = application;
 
-      setRequiredForm({ answers: answers.map((answer) => answer.contents) });
+      const requiredAnswers = answers?.map(({ contents }) => contents) ?? [];
+      setRequiredForm({ answers: requiredAnswers });
       setForm({ referenceUrl });
       setModifiedDateTime(formatDateTime(new Date(modifiedDateTime)));
     } catch (error) {
-      handleLoadFormError();
+      handleFetchingError(error);
     }
-  };
-
-  const createForm = async () => {
-    try {
-      await Api.createForm({ token, recruitmentId });
-    } catch (error) {
-      handleInitError(error);
-    }
-  };
-
-  const init = async () => {
-    if (status === PARAM.APPLICATION_FORM_STATUS.EDIT) loadForm();
-    else createForm();
   };
 
   useEffect(() => {
@@ -152,7 +143,7 @@ const useApplicationRegisterForm = ({
       return;
     }
 
-    init();
+    loadForm();
   }, [status]);
 
   const reset = () => {
@@ -171,6 +162,7 @@ const useApplicationRegisterForm = ({
     },
     modifiedDateTime,
     setModifiedDateTime,
+    isNewApplication,
     isEmpty,
     isValid,
     reset,
