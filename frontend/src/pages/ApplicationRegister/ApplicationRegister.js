@@ -1,4 +1,3 @@
-import { generatePath } from "react-router";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import * as Api from "../../api";
 import Button, { BUTTON_VARIANT } from "../../components/@common/Button/Button";
@@ -20,8 +19,34 @@ import useModalContext from "../../hooks/useModalContext";
 import useRecruitmentItem from "../../hooks/useRecruitmentItem";
 import useTokenContext from "../../hooks/useTokenContext";
 import { formatDateTime } from "../../utils/format/date";
-import { generateQuery, parseQuery } from "../../utils/route/query";
+import { parseQuery } from "../../utils/route/query";
 import styles from "./ApplicationRegister.module.css";
+import { useCallback } from "react";
+
+const createForm = async ({ token, recruitmentId }) => {
+  await Api.createForm({ token, recruitmentId });
+};
+
+// TODO: 타스, 커스텀 훅으로 뺄 때 인자 받는 부분 정리하자
+const upsertAnswers = async ({
+  isNewApplication = false,
+  token,
+  data: { recruitmentId, referenceUrl, answers, submitted = false },
+}) => {
+  if (isNewApplication) {
+    await createForm({ token, recruitmentId });
+  }
+
+  await Api.updateForm({
+    token,
+    data: {
+      recruitmentId,
+      referenceUrl,
+      answers,
+      submitted,
+    },
+  });
+};
 
 const ApplicationRegister = () => {
   const location = useLocation();
@@ -29,7 +54,10 @@ const ApplicationRegister = () => {
   const { status } = useParams();
   const { token } = useTokenContext();
   const { recruitmentId = null } = parseQuery(location.search);
-  const currentRecruitment = location.state?.currentRecruitment ?? null;
+  const currentRecruitment =
+    location.state?.currentRecruitment ??
+    new URLSearchParams(location.search).get("recruitmentId") ??
+    null;
   const { recruitmentItems = [] } = useRecruitmentItem(recruitmentId);
   const { Modal, openModal } = useModalContext();
 
@@ -40,6 +68,7 @@ const ApplicationRegister = () => {
     modifiedDateTime,
     setModifiedDateTime,
     isEmpty,
+    isNewApplication,
     isValid,
     reset,
   } = useApplicationRegisterForm({
@@ -49,81 +78,72 @@ const ApplicationRegister = () => {
     status,
   });
 
-  const combineAnswers = (answers) =>
-    recruitmentItems.map((item, index) => ({
-      contents: answers[index] ?? "",
-      recruitmentItemId: item.id,
-    }));
+  const handleRequestError = useCallback((error) => {
+    if (!error) return;
 
-  const reloadToEdit = () => {
-    if (status === PARAM.APPLICATION_FORM_STATUS.EDIT) {
+    if (error.response?.status === 409) {
+      alert(error.response?.data.message);
+      navigate(PATH.HOME);
       return;
     }
 
-    navigate(
-      {
-        pathname: generatePath(PATH.APPLICATION_FORM, {
-          status: PARAM.APPLICATION_FORM_STATUS.EDIT,
-        }),
-        search: generateQuery({ recruitmentId }),
-      },
-      { state: { currentRecruitment }, replace: true }
-    );
-  };
-
-  const handleSaveError = () => {
     alert(ERROR_MESSAGE.API.SAVE_APPLICATION_FORM);
-  };
+  }, []);
 
-  const save = async ({ referenceUrl, answers }) => {
-    try {
-      await Api.updateForm({
-        token,
-        data: {
-          recruitmentId,
-          referenceUrl,
-          answers: combineAnswers(answers),
-          submitted: true,
-        },
-      });
+  ////////////////////////
 
-      setModifiedDateTime(formatDateTime(new Date()));
-      alert(SUCCESS_MESSAGE.API.SUBMIT_APPLICATION);
-      navigate(PATH.HOME, { replace: true });
-    } catch (error) {
-      handleSaveError();
-    }
-  };
+  const combineAnswers = useCallback(
+    (answers) =>
+      recruitmentItems.map((item, index) => ({
+        contents: answers[index] ?? "",
+        recruitmentItemId: item.id,
+      })),
+    [recruitmentItems]
+  );
 
-  const tempSave = async ({ referenceUrl, answers }) => {
-    try {
-      await Api.updateForm({
-        token,
-        data: {
-          recruitmentId,
-          referenceUrl,
-          answers: combineAnswers(answers),
-          submitted: false,
-        },
-      });
+  const updateFormAnswers = useCallback(
+    async (submitted = false) => {
+      try {
+        const { referenceUrl, answers } = form;
 
-      setModifiedDateTime(formatDateTime(new Date()));
-      alert(SUCCESS_MESSAGE.API.SAVE_APPLICATION);
-      reloadToEdit();
-    } catch (error) {
-      handleSaveError();
-    }
-  };
+        await upsertAnswers({
+          isNewApplication,
+          token,
+          data: {
+            recruitmentId,
+            referenceUrl,
+            answers: combineAnswers(answers),
+            submitted,
+          },
+        });
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+        setModifiedDateTime(formatDateTime(new Date()));
 
-    openModal();
-  };
+        const messages = {
+          true: SUCCESS_MESSAGE.API.SUBMIT_ASSIGNMENT,
+          false: SUCCESS_MESSAGE.API.SAVE_APPLICATION,
+        };
 
-  const handleClickConfirmButton = () => {
-    save(form);
-  };
+        alert(messages[submitted]);
+        if (submitted) {
+          navigate(PATH.HOME, { replace: true });
+        }
+      } catch (error) {
+        console.warn(error);
+        handleRequestError();
+      }
+    },
+    [form, token, isNewApplication, setModifiedDateTime, handleRequestError]
+  );
+
+  const handleSubmit = useCallback(
+    (event) => {
+      event.preventDefault();
+
+      openModal();
+    },
+    [openModal]
+  );
 
   return (
     <div className={styles.box}>
@@ -194,7 +214,7 @@ const ApplicationRegister = () => {
             <Button type="reset" variant={BUTTON_VARIANT.OUTLINED} onClick={reset}>
               초기화
             </Button>
-            <Button type="button" onClick={() => tempSave(form)} disabled={!isValid}>
+            <Button type="button" onClick={() => updateFormAnswers(false)} disabled={!isValid}>
               임시 저장
             </Button>
             <Button disabled={!isValid || isEmpty}>제출</Button>
@@ -206,7 +226,7 @@ const ApplicationRegister = () => {
           recruitmentItems={recruitmentItems}
           answers={form[APPLICATION_REGISTER_FORM_NAME.ANSWERS]}
           referenceUrl={form[APPLICATION_REGISTER_FORM_NAME.REFERENCE_URL]}
-          onClickConfirmButton={handleClickConfirmButton}
+          onClickConfirmButton={() => updateFormAnswers(true)}
         />
       </Modal>
     </div>

@@ -10,7 +10,7 @@ import { ApplicationForm, ApplicationStatus } from "../../types/domains/applicat
 import { generateQuery } from "../utils/route/query";
 import * as Api from "../api";
 
-type ApiError = AxiosError<Api.FetchFormResponseData>;
+type ApiError = AxiosError<Api.FetchFormErrorResponseData>;
 type NavigateState = { application?: ApplicationForm };
 
 type NavigateToApplicationArguments = {
@@ -44,8 +44,19 @@ const useRecruits = () => {
   };
 
   const handleFetchingError = ({ error, recruitment }: HandleFetchingErrorArguments) => {
-    if (error?.response?.status === ERROR_CODE.LOAD_APPLICATION_FORM.NOT_FOUND) {
+    // TODO: useApplicationRegisterForm 오류 핸들링과 공용화 시도하기
+    if (!error) return;
+
+    const status = error?.response?.status;
+    const message = error?.response?.data?.message;
+
+    if (status === ERROR_CODE.LOAD_APPLICATION_FORM.NOT_FOUND) {
       navigateToApplication({ recruitment, status: PARAM.APPLICATION_FORM_STATUS.NEW });
+      return;
+    }
+
+    if (status === ERROR_CODE.LOAD_APPLICATION_FORM.ALREADY_APPLIED && message) {
+      alert(message);
       return;
     }
 
@@ -59,6 +70,7 @@ const useRecruits = () => {
         alert("지원 불가능한 모집입니다.");
         return;
       }
+
       const { data } = await Api.fetchForm({ token, recruitmentId: recruitment.id.toString() });
 
       navigateToApplication({
