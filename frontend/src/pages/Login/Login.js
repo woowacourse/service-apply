@@ -5,7 +5,7 @@ import Container, { CONTAINER_SIZE } from "../../components/@common/Container/Co
 import MessageTextInput from "../../components/@common/MessageTextInput/MessageTextInput";
 import Form from "../../components/form/Form/Form";
 import { ERROR_MESSAGE } from "../../constants/messages";
-import { PATH, PARAM } from "../../constants/path";
+import { PATH } from "../../constants/path";
 import useAuth from "../../hooks/useAuth";
 import useLoginForm, { LOGIN_FORM_NAME } from "../../hooks/useLoginForm";
 import useTokenContext from "../../hooks/useTokenContext";
@@ -24,9 +24,7 @@ const Login = () => {
   const routeToApplicationRegister = (currentRecruitment) => {
     navigate(
       {
-        pathname: generatePath(PATH.APPLICATION_FORM, {
-          status: PARAM.APPLICATION_FORM_STATUS.NEW,
-        }),
+        pathname: generatePath(PATH.APPLICATION_FORM),
         search: generateQuery({ recruitmentId: currentRecruitment.id }),
       },
       {

@@ -11,7 +11,7 @@ import Form from "../../components/form/Form/Form";
 import ApplicationPreviewModal from "../../components/ApplicationPreviewModal/ApplicationPreviewModal";
 import { FORM } from "../../constants/form";
 import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
-import { PATH, PARAM } from "../../constants/path";
+import { PATH } from "../../constants/path";
 import useApplicationRegisterForm, {
   APPLICATION_REGISTER_FORM_NAME,
 } from "../../hooks/useApplicationRegisterForm";
@@ -65,7 +65,6 @@ const ApplicationRegister = () => {
     form,
     handleChanges,
     errorMessage,
-    modifiedDateTime,
     setModifiedDateTime,
     isEmpty,
     isNewApplication,
@@ -89,8 +88,6 @@ const ApplicationRegister = () => {
 
     alert(ERROR_MESSAGE.API.SAVE_APPLICATION_FORM);
   }, []);
-
-  ////////////////////////
 
   const combineAnswers = useCallback(
     (answers) =>
@@ -129,7 +126,6 @@ const ApplicationRegister = () => {
           navigate(PATH.HOME, { replace: true });
         }
       } catch (error) {
-        console.warn(error);
         handleRequestError();
       }
     },
@@ -150,11 +146,11 @@ const ApplicationRegister = () => {
       <Container title="지원서 작성" titleAlign={TITLE_ALIGN.LEFT}>
         <h3 className={styles["recruitment-title"]}>{currentRecruitment.title}</h3>
         <Form onSubmit={handleSubmit}>
-          {status === PARAM.APPLICATION_FORM_STATUS.EDIT && (
+          {/*TODO: {status === PARAM.APPLICATION_FORM_STATUS.EDIT && (
             <p className={styles["autosave-indicator"]}>
               {`임시 저장되었습니다. (${modifiedDateTime})`}
             </p>
-          )}
+          )} */}
           {recruitmentItems.map((item, index) => (
             <MessageTextarea
               key={index}

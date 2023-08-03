@@ -12,7 +12,7 @@ export default {
       <MemoryRouter
         initialEntries={[
           {
-            pathname: "/application-forms/new",
+            pathname: "/application-forms",
             search: "?recruitmentId=3",
             state: {
               currentRecruitment: {

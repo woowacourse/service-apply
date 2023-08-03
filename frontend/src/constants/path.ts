@@ -4,7 +4,7 @@ export const PATH = {
   SIGN_UP: "/sign-up",
   MY_APPLICATION: "/applications/me",
   ASSIGNMENT: "/assignment/:status",
-  APPLICATION_FORM: "/application-forms/:status",
+  APPLICATION_FORM: "/application-forms",
   LOGIN: "/login",
   FIND_PASSWORD: "/find",
   FIND_PASSWORD_RESULT: "/find/result",
@@ -14,10 +14,6 @@ export const PATH = {
 } as const;
 
 export const PARAM = {
-  APPLICATION_FORM_STATUS: {
-    EDIT: "edit",
-    NEW: "new",
-  },
   ASSIGNMENT_STATUS: {
     EDIT: "edit",
     NEW: "new",
