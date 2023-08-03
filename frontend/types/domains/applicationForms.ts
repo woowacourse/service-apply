@@ -16,5 +16,3 @@ export type ApplicationForm = {
   modifiedDateTime: ISO8601DateString;
   submittedDateTime: ISO8601DateString | null;
 };
-
-export type ApplicationStatus = "new" | "edit";

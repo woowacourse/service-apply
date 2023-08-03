@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { generatePath } from "react-router";
 import { useNavigate } from "react-router-dom";
 import { Recruitment, RecruitmentStatus } from "../../../../types/domains/recruitments";
-import { PARAM, PATH } from "../../../constants/path";
+import { PATH } from "../../../constants/path";
 import { formatDateTime } from "../../../utils/format/date";
 import { generateQuery } from "../../../utils/route/query";
 import ApplyButton from "../MyApplicationButtons/ApplyButton";
@@ -53,14 +53,12 @@ const MyApplicationFormItem = ({ recruitment, submitted }: MyApplicationFormItem
   const routeToApplicationForm = (recruitment: Recruitment) => {
     navigate(
       {
-        pathname: generatePath(PATH.APPLICATION_FORM, {
-          status: PARAM.APPLICATION_FORM_STATUS.EDIT,
-        }),
+        pathname: generatePath(PATH.APPLICATION_FORM),
         search: generateQuery({ recruitmentId: String(recruitment.id) }),
       },
       {
         state: {
-          currentRecruitment: recruitment,
+          currentRecruitment: recruitment, /// TODO: 여기도 수정
         },
       }
     );

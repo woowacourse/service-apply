@@ -53,7 +53,7 @@ const AssignmentSubmit = () => {
         await postAssignment(payload);
       }
 
-      if (status === PARAM.APPLICATION_FORM_STATUS.EDIT) {
+      if (status === PARAM.ASSIGNMENT_STATUS.EDIT) {
         await patchAssignment(payload);
       }
 

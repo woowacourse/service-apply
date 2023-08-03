@@ -123,12 +123,10 @@ const useApplicationRegisterForm = ({
   const loadForm = async () => {
     try {
       const application =
-        location?.state?.application ?? (await Api.fetchForm({ token, recruitmentId }));
-      const {
-        data: { answers, referenceUrl, modifiedDateTime },
-      } = application;
+        location?.state?.application ?? (await Api.fetchForm({ token, recruitmentId }))?.data;
+      const { answers = [], referenceUrl, modifiedDateTime } = application;
 
-      const requiredAnswers = answers?.map(({ contents }) => contents) ?? [];
+      const requiredAnswers = answers?.map(({ contents }) => contents);
       setRequiredForm({ answers: requiredAnswers });
       setForm({ referenceUrl });
       setModifiedDateTime(formatDateTime(new Date(modifiedDateTime)));
