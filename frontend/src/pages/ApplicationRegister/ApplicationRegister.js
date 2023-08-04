@@ -1,5 +1,4 @@
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import * as Api from "../../api";
+import { useLocation } from "react-router-dom";
 import Button, { BUTTON_VARIANT } from "../../components/@common/Button/Button";
 import Container, { TITLE_ALIGN } from "../../components/@common/Container/Container";
 import Description from "../../components/@common/Description/Description";
@@ -10,147 +9,58 @@ import CheckBox from "../../components/form/CheckBox/CheckBox";
 import Form from "../../components/form/Form/Form";
 import ApplicationPreviewModal from "../../components/ApplicationPreviewModal/ApplicationPreviewModal";
 import { FORM } from "../../constants/form";
-import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
-import { PATH } from "../../constants/path";
 import useApplicationRegisterForm, {
   APPLICATION_REGISTER_FORM_NAME,
-} from "../../hooks/useApplicationRegisterForm";
+} from "../../hooks/useApplicationRegisterFormFetching";
 import useModalContext from "../../hooks/useModalContext";
 import useRecruitmentItem from "../../hooks/useRecruitmentItem";
-import useTokenContext from "../../hooks/useTokenContext";
-import { formatDateTime } from "../../utils/format/date";
 import { parseQuery } from "../../utils/route/query";
 import styles from "./ApplicationRegister.module.css";
-import { useCallback } from "react";
-
-const createForm = async ({ token, recruitmentId }) => {
-  await Api.createForm({ token, recruitmentId });
-};
-
-// TODO: 타스, 커스텀 훅으로 뺄 때 인자 받는 부분 정리하자
-const upsertAnswers = async ({
-  isNewApplication = false,
-  token,
-  data: { recruitmentId, referenceUrl, answers, submitted = false },
-}) => {
-  if (isNewApplication) {
-    await createForm({ token, recruitmentId });
-  }
-
-  await Api.updateForm({
-    token,
-    data: {
-      recruitmentId,
-      referenceUrl,
-      answers,
-      submitted,
-    },
-  });
-};
+import useApplicationRegisterFormWriting from "../../hooks/useApplicationRegisterFormWriting";
 
 const ApplicationRegister = () => {
   const location = useLocation();
-  const navigate = useNavigate();
-  const { status } = useParams();
-  const { token } = useTokenContext();
   const { recruitmentId = null } = parseQuery(location.search);
   const currentRecruitment =
     location.state?.currentRecruitment ??
     new URLSearchParams(location.search).get("recruitmentId") ??
     null;
   const { recruitmentItems = [] } = useRecruitmentItem(recruitmentId);
-  const { Modal, openModal } = useModalContext();
+  const { Modal } = useModalContext();
 
   const {
     form,
     handleChanges,
     errorMessage,
+    modifiedDateTime,
     setModifiedDateTime,
     isEmpty,
-    isNewApplication,
     isValid,
     reset,
   } = useApplicationRegisterForm({
     recruitmentId,
     recruitmentItems,
     currentRecruitment,
-    status,
   });
 
-  const handleRequestError = useCallback((error) => {
-    if (!error) return;
-
-    if (error.response?.status === 409) {
-      alert(error.response?.data.message);
-      navigate(PATH.HOME);
-      return;
-    }
-
-    alert(ERROR_MESSAGE.API.SAVE_APPLICATION_FORM);
-  }, []);
-
-  const combineAnswers = useCallback(
-    (answers) =>
-      recruitmentItems.map((item, index) => ({
-        contents: answers[index] ?? "",
-        recruitmentItemId: item.id,
-      })),
-    [recruitmentItems]
-  );
-
-  const updateFormAnswers = useCallback(
-    async (submitted = false) => {
-      try {
-        const { referenceUrl, answers } = form;
-
-        await upsertAnswers({
-          isNewApplication,
-          token,
-          data: {
-            recruitmentId,
-            referenceUrl,
-            answers: combineAnswers(answers),
-            submitted,
-          },
-        });
-
-        setModifiedDateTime(formatDateTime(new Date()));
-
-        const messages = {
-          true: SUCCESS_MESSAGE.API.SUBMIT_ASSIGNMENT,
-          false: SUCCESS_MESSAGE.API.SAVE_APPLICATION,
-        };
-
-        alert(messages[submitted]);
-        if (submitted) {
-          navigate(PATH.HOME, { replace: true });
-        }
-      } catch (error) {
-        handleRequestError();
-      }
-    },
-    [form, token, isNewApplication, setModifiedDateTime, handleRequestError]
-  );
-
-  const handleSubmit = useCallback(
-    (event) => {
-      event.preventDefault();
-
-      openModal();
-    },
-    [openModal]
-  );
+  const { updateFormAnswers, handleSubmit } = useApplicationRegisterFormWriting({
+    form,
+    recruitmentId,
+    recruitmentItems,
+    modifiedDateTime,
+    setModifiedDateTime,
+  });
 
   return (
     <div className={styles.box}>
       <Container title="지원서 작성" titleAlign={TITLE_ALIGN.LEFT}>
         <h3 className={styles["recruitment-title"]}>{currentRecruitment.title}</h3>
         <Form onSubmit={handleSubmit}>
-          {/*TODO: {status === PARAM.APPLICATION_FORM_STATUS.EDIT && (
+          {modifiedDateTime && (
             <p className={styles["autosave-indicator"]}>
               {`임시 저장되었습니다. (${modifiedDateTime})`}
             </p>
-          )} */}
+          )}
           {recruitmentItems.map((item, index) => (
             <MessageTextarea
               key={index}

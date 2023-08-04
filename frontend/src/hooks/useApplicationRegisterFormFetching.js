@@ -32,7 +32,6 @@ const useApplicationRegisterForm = ({
   recruitmentId,
   currentRecruitment,
   recruitmentItems = [],
-  status,
 }) => {
   /*
     TODO: requiredForm, form 상태를 통합해도 괜찮지 않을까?
@@ -49,8 +48,6 @@ const useApplicationRegisterForm = ({
   const navigate = useNavigate();
   const location = useLocation();
   const { token } = useTokenContext();
-
-  const [isNewApplication, setIsNewApplication] = useState(false);
 
   const isAnswersEmpty =
     requiredForm[APPLICATION_REGISTER_FORM_NAME.ANSWERS]
@@ -106,7 +103,6 @@ const useApplicationRegisterForm = ({
     const message = error?.response?.data?.message;
 
     if (status === ERROR_CODE.LOAD_APPLICATION_FORM.NOT_FOUND) {
-      setIsNewApplication(true);
       return;
     }
 
@@ -142,7 +138,7 @@ const useApplicationRegisterForm = ({
     }
 
     loadForm();
-  }, [status]);
+  }, []);
 
   const reset = () => {
     setRequiredForm(requiredFormInitialValue);
@@ -160,7 +156,6 @@ const useApplicationRegisterForm = ({
     },
     modifiedDateTime,
     setModifiedDateTime,
-    isNewApplication,
     isEmpty,
     isValid,
     reset,
