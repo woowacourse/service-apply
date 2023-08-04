@@ -81,10 +81,9 @@ const useRecruits = () => {
           recruitment,
           state: { application },
         });
-      } catch (e) {
-        const error = e as ApiError;
+      } catch (error) {
         handleFetchingError({
-          error,
+          error: error as AxiosError,
           recruitment,
         });
       }
