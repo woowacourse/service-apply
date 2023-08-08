@@ -8,19 +8,19 @@ export type FetchMyApplicationFormsRequest = string;
 
 export type FetchMyApplicationFormsResponseData = MyApplicationType[];
 
-export type FetchFormRequest = RequestWithToken<{ recruitmentId: string | null }>;
+export type FetchFormRequest = RequestWithToken<{ recruitmentId: number | null }>;
 
 export type FetchFormResponseData = ApplicationForm;
 
 export type FetchFormErrorResponseData = { body: unknown | null; message: string };
 
-export type CreateFormRequest = RequestWithToken<{ recruitmentId: string | null }>;
+export type CreateFormRequest = RequestWithToken<{ recruitmentId: number | null }>;
 
 export type CreateFormResponseData = ApplicationForm;
 
 export type UpdateFormRequest = RequestWithToken<{
   data: {
-    recruitmentId: string | null;
+    recruitmentId: number | null;
     referenceUrl: string;
     answers: Answer[];
     submitted: boolean;
