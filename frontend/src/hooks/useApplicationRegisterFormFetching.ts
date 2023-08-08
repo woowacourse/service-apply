@@ -8,23 +8,35 @@ import { formatDateTime } from "../utils/format/date";
 import { isValidURL } from "../utils/validation/url";
 import useTokenContext from "./useTokenContext";
 import { ERROR_CODE } from "../constants/errorCodes";
+import { Recruitment, RecruitmentItem } from "../../types/domains/recruitments";
+import { AxiosError } from "axios";
+import { ApplicationForm } from "../../types/domains/applicationForms";
 
 export const APPLICATION_REGISTER_FORM_NAME = {
-  ANSWERS: "answers",
-  REFERENCE_URL: "referenceUrl",
-  IS_TERM_AGREED: "isTermAgreed",
+  ANSWERS: "answers" as const,
+  REFERENCE_URL: "referenceUrl" as const,
+  IS_TERM_AGREED: "isTermAgreed" as const,
 };
 
-const requiredFormInitialValue = (answerCount) => ({
-  [APPLICATION_REGISTER_FORM_NAME.ANSWERS]: Array(answerCount).fill(""),
+type ApplicationRegisterFormArgument = {
+  recruitmentId: number;
+  currentRecruitment: Recruitment;
+  recruitmentItems: RecruitmentItem[];
+};
+
+type UnprocessedApplicationForm = {
+  [APPLICATION_REGISTER_FORM_NAME.ANSWERS]?: string[];
+  [APPLICATION_REGISTER_FORM_NAME.IS_TERM_AGREED]?: boolean;
+  [APPLICATION_REGISTER_FORM_NAME.REFERENCE_URL]: string;
+};
+
+const generateFormAnswerInitialValue = (answerCount: number): UnprocessedApplicationForm => ({
+  [APPLICATION_REGISTER_FORM_NAME.ANSWERS]: Array.from({ length: answerCount }, () => ""),
   [APPLICATION_REGISTER_FORM_NAME.IS_TERM_AGREED]: false,
+  [APPLICATION_REGISTER_FORM_NAME.REFERENCE_URL]: "",
 });
 
-const formInitialValue = {
-  [APPLICATION_REGISTER_FORM_NAME.REFERENCE_URL]: "",
-};
-
-const errorMessageInitialValue = {
+const errorMessageInitialValue: UnprocessedApplicationForm = {
   [APPLICATION_REGISTER_FORM_NAME.REFERENCE_URL]: "",
 };
 
@@ -32,15 +44,14 @@ const useApplicationRegisterForm = ({
   recruitmentId,
   currentRecruitment,
   recruitmentItems = [],
-}) => {
+}: ApplicationRegisterFormArgument) => {
   /*
     TODO: requiredForm, form 상태를 통합해도 괜찮지 않을까?
     return { form: { ...form, ...requiredForm }, ... } 을 하고 있으니...
   */
-  const [requiredForm, setRequiredForm] = useState(
-    requiredFormInitialValue(recruitmentItems.length)
-  );
-  const [form, setForm] = useState(formInitialValue);
+  const [form, setForm] = useState<UnprocessedApplicationForm>({
+    ...generateFormAnswerInitialValue(recruitmentItems.length),
+  });
 
   const [errorMessage, setErrorMessage] = useState(errorMessageInitialValue);
 
@@ -50,35 +61,35 @@ const useApplicationRegisterForm = ({
   const { token } = useTokenContext();
 
   const isAnswersEmpty =
-    requiredForm[APPLICATION_REGISTER_FORM_NAME.ANSWERS]
-      .map((value = "") => value.trimEnd())
-      .filter(Boolean).length < recruitmentItems.length;
+    form?.answers &&
+    form.answers.map((value = "") => value.trimEnd()).filter(Boolean).length <
+      recruitmentItems.length;
 
-  const isEmpty = isAnswersEmpty || !requiredForm[APPLICATION_REGISTER_FORM_NAME.IS_TERM_AGREED];
+  const isEmpty = isAnswersEmpty || !form?.isTermAgreed;
 
   const isValid = Object.values(errorMessage).filter(Boolean).length === 0;
 
   const handleChangeAnswer =
-    (index) =>
-    ({ target }) => {
+    (index: number) =>
+    ({ target }: React.ChangeEvent<HTMLTextAreaElement>) => {
       if (recruitmentItems[index].maximumLength < target.value.length) return;
 
-      const newAnswers = requiredForm[APPLICATION_REGISTER_FORM_NAME.ANSWERS].slice();
+      const newAnswers = form.answers?.slice() || [];
 
       newAnswers[index] = target.value;
 
-      setRequiredForm((prev) => ({
+      setForm((prev) => ({
         ...prev,
         [APPLICATION_REGISTER_FORM_NAME.ANSWERS]: newAnswers,
       }));
     };
 
-  const updateErrorMessage = (name, errorMessage) => {
+  const updateErrorMessage = (name: string, errorMessage: string) => {
     setErrorMessage((prev) => ({ ...prev, [name]: errorMessage }));
   };
 
-  const handleChangeReferenceUrl = ({ target }) => {
-    if (target.value.length > FORM.REFERENCE_URL) return;
+  const handleChangeReferenceUrl = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+    if (target.value.length > FORM.REFERENCE_URL_MAX_LENGTH) return;
 
     const errorMessage = isValidURL(target.value) ? "" : ERROR_MESSAGE.VALIDATION.URL;
 
@@ -89,14 +100,14 @@ const useApplicationRegisterForm = ({
     }));
   };
 
-  const handleChangeIsTermAgreed = ({ target }) => {
-    setRequiredForm((prev) => ({
+  const handleChangeIsTermAgreed = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+    setForm((prev) => ({
       ...prev,
       [APPLICATION_REGISTER_FORM_NAME.IS_TERM_AGREED]: target.checked,
     }));
   };
 
-  const handleFetchingError = (error) => {
+  const handleFetchingError = (error: AxiosError<Api.FetchFormErrorResponseData>) => {
     if (!error) return;
 
     const status = error?.response?.status;
@@ -118,16 +129,15 @@ const useApplicationRegisterForm = ({
 
   const loadForm = async () => {
     try {
-      const application =
-        location?.state?.application ?? (await Api.fetchForm({ token, recruitmentId }))?.data;
+      const { application: stateApplication } = location.state as { application: ApplicationForm };
+      const application = stateApplication ?? (await Api.fetchForm({ token, recruitmentId }))?.data;
       const { answers = [], referenceUrl, modifiedDateTime } = application;
 
       const requiredAnswers = answers?.map(({ contents }) => contents);
-      setRequiredForm({ answers: requiredAnswers });
-      setForm({ referenceUrl });
+      setForm({ referenceUrl, answers: requiredAnswers });
       setModifiedDateTime(formatDateTime(new Date(modifiedDateTime)));
     } catch (error) {
-      handleFetchingError(error);
+      handleFetchingError(error as AxiosError<Api.FetchFormErrorResponseData>);
     }
   };
 
@@ -141,13 +151,12 @@ const useApplicationRegisterForm = ({
   }, []);
 
   const reset = () => {
-    setRequiredForm(requiredFormInitialValue);
-    setForm(formInitialValue);
+    setForm({ ...generateFormAnswerInitialValue(recruitmentItems.length) });
     setErrorMessage(errorMessageInitialValue);
   };
 
   return {
-    form: { ...form, ...requiredForm },
+    form: { ...form },
     errorMessage,
     handleChanges: {
       [APPLICATION_REGISTER_FORM_NAME.ANSWERS]: handleChangeAnswer,

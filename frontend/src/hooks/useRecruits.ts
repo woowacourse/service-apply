@@ -74,7 +74,7 @@ const useRecruits = () => {
 
         const { data: application } = await Api.fetchForm({
           token,
-          recruitmentId: recruitment.id.toString(),
+          recruitmentId: recruitment.id,
         });
 
         navigateToApplication({

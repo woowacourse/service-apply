@@ -14,15 +14,15 @@ type UpdateFormAnswersArgument = {
   modifiedDateTime: string;
   setModifiedDateTime: React.Dispatch<React.SetStateAction<string>>;
   recruitmentItems: RecruitmentItem[];
-  recruitmentId: string;
+  recruitmentId: number;
   form: { [key: string]: string | boolean | string[] };
 };
 
-type CreateFormArgument = { token: string; recruitmentId: string };
+type CreateFormArgument = { token: string; recruitmentId: number };
 type UpsertAnswersArgument = {
   isNewApplication: boolean;
   token: string;
-  data: { recruitmentId: string; referenceUrl: string; answers: Answer[]; submitted: boolean };
+  data: { recruitmentId: number; referenceUrl: string; answers: Answer[]; submitted: boolean };
 };
 
 const createForm = async ({ token, recruitmentId }: CreateFormArgument) => {

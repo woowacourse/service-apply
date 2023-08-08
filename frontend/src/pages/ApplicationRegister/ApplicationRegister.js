@@ -9,9 +9,7 @@ import CheckBox from "../../components/form/CheckBox/CheckBox";
 import Form from "../../components/form/Form/Form";
 import ApplicationPreviewModal from "../../components/ApplicationPreviewModal/ApplicationPreviewModal";
 import { FORM } from "../../constants/form";
-import useApplicationRegisterForm, {
-  APPLICATION_REGISTER_FORM_NAME,
-} from "../../hooks/useApplicationRegisterFormFetching";
+import useApplicationRegisterForm from "../../hooks/useApplicationRegisterFormFetching";
 import useModalContext from "../../hooks/useModalContext";
 import useRecruitmentItem from "../../hooks/useRecruitmentItem";
 import { parseQuery } from "../../utils/route/query";
@@ -64,8 +62,8 @@ const ApplicationRegister = () => {
           {recruitmentItems.map((item, index) => (
             <MessageTextarea
               key={index}
-              value={form[APPLICATION_REGISTER_FORM_NAME.ANSWERS][index]}
-              onChange={handleChanges[APPLICATION_REGISTER_FORM_NAME.ANSWERS](index)}
+              value={form.answers[index]}
+              onChange={handleChanges.answers(index)}
               name={`recruitment-item-${index}`}
               label={`${index + 1}. ${item.title}`}
               description={item.description}
@@ -90,9 +88,9 @@ const ApplicationRegister = () => {
                 </div>
               </div>
             }
-            value={form[APPLICATION_REGISTER_FORM_NAME.REFERENCE_URL]}
-            onChange={handleChanges[APPLICATION_REGISTER_FORM_NAME.REFERENCE_URL]}
-            errorMessage={errorMessage[APPLICATION_REGISTER_FORM_NAME.REFERENCE_URL]}
+            value={form.referenceUrl}
+            onChange={handleChanges.referenceUrl}
+            errorMessage={errorMessage.referenceUrl}
             label="URL"
             className={styles["label-bold"]}
             maxLength={FORM.REFERENCE_URL_MAX_LENGTH}
@@ -110,8 +108,8 @@ const ApplicationRegister = () => {
             <CheckBox
               name="agree"
               label="동의합니다."
-              checked={form[APPLICATION_REGISTER_FORM_NAME.IS_TERM_AGREED]}
-              onChange={handleChanges[APPLICATION_REGISTER_FORM_NAME.IS_TERM_AGREED]}
+              checked={form.isTermAgreed}
+              onChange={handleChanges.isTermAgreed}
               required
             />
           </div>
@@ -130,8 +128,8 @@ const ApplicationRegister = () => {
       <Modal>
         <ApplicationPreviewModal
           recruitmentItems={recruitmentItems}
-          answers={form[APPLICATION_REGISTER_FORM_NAME.ANSWERS]}
-          referenceUrl={form[APPLICATION_REGISTER_FORM_NAME.REFERENCE_URL]}
+          answers={form.answers}
+          referenceUrl={form.referenceUrl}
           onClickConfirmButton={() => updateFormAnswers(true)}
         />
       </Modal>
