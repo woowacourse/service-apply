@@ -6,16 +6,17 @@ import * as Api from "../api";
 import { formatDateTime } from "../utils/format/date";
 import useTokenContext from "./useTokenContext";
 import useModalContext from "./useModalContext";
-import { Answer } from "../../types/domains/applicationForms";
-import { AxiosError } from "axios";
+import { Answer, UnprocessedApplicationForm } from "../../types/domains/applicationForms";
 import { RecruitmentItem } from "../../types/domains/recruitments";
+import { AxiosError } from "axios";
 
+type ApiError = AxiosError<Api.FetchFormErrorResponseData>;
 type UpdateFormAnswersArgument = {
   modifiedDateTime: string;
   setModifiedDateTime: React.Dispatch<React.SetStateAction<string>>;
   recruitmentItems: RecruitmentItem[];
   recruitmentId: number;
-  form: { [key: string]: string | boolean | string[] };
+  form: UnprocessedApplicationForm; //{ [key: string]: string | boolean | string[] };
 };
 
 type CreateFormArgument = { token: string; recruitmentId: number };
@@ -60,7 +61,7 @@ const useApplicationRegisterFormWriting = ({
   const { token } = useTokenContext();
   const { openModal } = useModalContext();
 
-  const handleRequestError = useCallback((error: AxiosError) => {
+  const handleRequestError = useCallback((error: ApiError) => {
     if (!error) return;
 
     if (error.response?.status === 409) {
@@ -106,7 +107,7 @@ const useApplicationRegisterFormWriting = ({
         alert(SUCCESS_MESSAGE.API.SAVE_APPLICATION);
         setModifiedDateTime(formatDateTime(new Date()));
       } catch (error) {
-        handleRequestError(error as AxiosError);
+        handleRequestError(error as ApiError);
       }
     },
     [form, token, modifiedDateTime, setModifiedDateTime, handleRequestError]

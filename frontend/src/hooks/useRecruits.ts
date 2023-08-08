@@ -83,7 +83,7 @@ const useRecruits = () => {
         });
       } catch (error) {
         handleFetchingError({
-          error: error as AxiosError,
+          error: error as ApiError,
           recruitment,
         });
       }

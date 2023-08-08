@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as Api from "../api";
 import { PATH } from "../constants/path";
+import { RecruitmentItem } from "../../types/domains/recruitments";
 
-const useRecruitmentItem = (recruitmentId) => {
-  const [recruitmentItems, setRecruitmentItems] = useState([]);
+const useRecruitmentItem = (recruitmentId: number) => {
+  const [recruitmentItems, setRecruitmentItems] = useState<RecruitmentItem[]>([]);
   const navigate = useNavigate();
 
   const init = async () => {
