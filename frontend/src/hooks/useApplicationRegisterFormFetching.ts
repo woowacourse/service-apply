@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router";
 import * as Api from "../api";
 import { FORM } from "../constants/form";
 import { ERROR_MESSAGE } from "../constants/messages";
@@ -8,14 +8,13 @@ import { formatDateTime } from "../utils/format/date";
 import { isValidURL } from "../utils/validation/url";
 import useTokenContext from "./useTokenContext";
 import { ERROR_CODE } from "../constants/errorCodes";
-import { Recruitment, RecruitmentItem } from "../../types/domains/recruitments";
+import { RecruitmentItem } from "../../types/domains/recruitments";
 import { AxiosError } from "axios";
-import { ApplicationForm, UnprocessedApplicationForm } from "../../types/domains/applicationForms";
+import { UnprocessedApplicationForm } from "../../types/domains/applicationForms";
 import { APPLICATION_REGISTER_FORM_NAME } from "../constants/application";
 
 type ApplicationRegisterFormArgument = {
   recruitmentId: number;
-  currentRecruitment?: Recruitment;
   recruitmentItems: RecruitmentItem[];
 };
 
@@ -29,9 +28,13 @@ const errorMessageInitialValue: UnprocessedApplicationForm = {
   [APPLICATION_REGISTER_FORM_NAME.REFERENCE_URL]: "",
 };
 
+function isInputRequirementSatisfied(array: string[], requiredCount: number): boolean {
+  const nonEmptyItems = array.filter((item = "") => item.trim() !== "");
+  return nonEmptyItems.length >= requiredCount;
+}
+
 const useApplicationRegisterForm = ({
   recruitmentId,
-  currentRecruitment,
   recruitmentItems = [],
 }: ApplicationRegisterFormArgument) => {
   const [form, setForm] = useState<UnprocessedApplicationForm>({
@@ -42,57 +45,69 @@ const useApplicationRegisterForm = ({
 
   const [modifiedDateTime, setModifiedDateTime] = useState("");
   const navigate = useNavigate();
-  const location = useLocation();
   const { token } = useTokenContext();
 
-  const isAnswersEmpty =
-    form?.answers &&
-    form.answers.map((value = "") => value.trimEnd()).filter(Boolean).length <
-      recruitmentItems.length;
+  const isAnswersEmpty = useMemo(
+    () => form?.answers && !isInputRequirementSatisfied(form.answers, recruitmentItems.length),
+    [form, recruitmentItems]
+  );
 
-  const isEmpty = isAnswersEmpty || !form?.isTermAgreed;
+  const isEmpty = useMemo(() => isAnswersEmpty || !form?.isTermAgreed, [isAnswersEmpty, form]);
 
-  const isValid = Object.values(errorMessage).filter(Boolean).length === 0;
+  const isValid = useMemo(
+    () => Object.values(errorMessage).filter(Boolean).length === 0,
+    [errorMessage]
+  );
 
-  const handleChangeAnswer =
+  const handleChangeAnswer = useCallback(
     (index: number) =>
-    ({ target }: React.ChangeEvent<HTMLTextAreaElement>) => {
-      if (recruitmentItems[index].maximumLength < target.value.length) return;
+      ({ target }: React.ChangeEvent<HTMLTextAreaElement>) => {
+        if (recruitmentItems[index].maximumLength < target.value.length) return;
 
-      const newAnswers = form.answers?.slice() || [];
+        const newAnswers = form.answers?.slice() || [];
+        newAnswers[index] = target.value;
 
-      newAnswers[index] = target.value;
+        setForm((prev) => ({
+          ...prev,
+          [APPLICATION_REGISTER_FORM_NAME.ANSWERS]: newAnswers,
+        }));
+      },
+    [recruitmentItems, form]
+  );
 
+  const updateErrorMessage = useCallback(
+    (name: string, errorMessage: string) => {
+      setErrorMessage((prev) => ({ ...prev, [name]: errorMessage }));
+    },
+    [errorMessage]
+  );
+
+  const handleChangeReferenceUrl = useCallback(
+    ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+      if (target.value.length > FORM.REFERENCE_URL_MAX_LENGTH) return;
+
+      const errorMessage = isValidURL(target.value) ? "" : ERROR_MESSAGE.VALIDATION.URL;
+
+      updateErrorMessage(APPLICATION_REGISTER_FORM_NAME.REFERENCE_URL, errorMessage);
       setForm((prev) => ({
         ...prev,
-        [APPLICATION_REGISTER_FORM_NAME.ANSWERS]: newAnswers,
+        [APPLICATION_REGISTER_FORM_NAME.REFERENCE_URL]: target.value,
       }));
-    };
+    },
+    [errorMessage, form]
+  );
 
-  const updateErrorMessage = (name: string, errorMessage: string) => {
-    setErrorMessage((prev) => ({ ...prev, [name]: errorMessage }));
-  };
+  const handleChangeIsTermAgreed = useCallback(
+    ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+      setForm((prev) => ({
+        ...prev,
+        [APPLICATION_REGISTER_FORM_NAME.IS_TERM_AGREED]: target.checked,
+      }));
+    },
+    [form]
+  );
 
-  const handleChangeReferenceUrl = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
-    if (target.value.length > FORM.REFERENCE_URL_MAX_LENGTH) return;
-
-    const errorMessage = isValidURL(target.value) ? "" : ERROR_MESSAGE.VALIDATION.URL;
-
-    updateErrorMessage(APPLICATION_REGISTER_FORM_NAME.REFERENCE_URL, errorMessage);
-    setForm((prev) => ({
-      ...prev,
-      [APPLICATION_REGISTER_FORM_NAME.REFERENCE_URL]: target.value,
-    }));
-  };
-
-  const handleChangeIsTermAgreed = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
-    setForm((prev) => ({
-      ...prev,
-      [APPLICATION_REGISTER_FORM_NAME.IS_TERM_AGREED]: target.checked,
-    }));
-  };
-
-  const handleFetchingError = (error: AxiosError<Api.FetchFormErrorResponseData>) => {
+  const handleFetchingError = useCallback((error: AxiosError<Api.FetchFormErrorResponseData>) => {
     if (!error) return;
 
     const status = error?.response?.status;
@@ -110,12 +125,11 @@ const useApplicationRegisterForm = ({
 
     alert(ERROR_MESSAGE.API.LOAD_APPLICATION_FORM);
     navigate(PATH.RECRUITS);
-  };
+  }, []);
 
-  const loadForm = async () => {
+  const loadForm = useCallback(async () => {
     try {
-      const { application: stateApplication } = location.state as { application: ApplicationForm };
-      const application = stateApplication ?? (await Api.fetchForm({ token, recruitmentId }))?.data;
+      const application = (await Api.fetchForm({ token, recruitmentId }))?.data;
       const { answers = [], referenceUrl, modifiedDateTime } = application;
 
       const requiredAnswers = answers?.map(({ contents }) => contents);
@@ -124,10 +138,10 @@ const useApplicationRegisterForm = ({
     } catch (error) {
       handleFetchingError(error as AxiosError<Api.FetchFormErrorResponseData>);
     }
-  };
+  }, [form, modifiedDateTime]);
 
   useEffect(() => {
-    if (!recruitmentId || !currentRecruitment) {
+    if (!recruitmentId) {
       navigate(PATH.RECRUITS, { replace: true });
       return;
     }
@@ -135,10 +149,10 @@ const useApplicationRegisterForm = ({
     loadForm();
   }, []);
 
-  const reset = () => {
+  const reset = useCallback(() => {
     setForm({ ...generateFormAnswerInitialValue(recruitmentItems.length) });
     setErrorMessage(errorMessageInitialValue);
-  };
+  }, [recruitmentItems]);
 
   return {
     isEmpty,

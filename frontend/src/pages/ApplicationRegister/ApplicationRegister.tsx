@@ -1,5 +1,4 @@
 import { useLocation } from "react-router-dom";
-import { Recruitment } from "../../../types/domains/recruitments";
 import styles from "./ApplicationRegister.module.css";
 import Button, { BUTTON_VARIANT } from "../../components/@common/Button/Button";
 import Container, { TITLE_ALIGN } from "../../components/@common/Container/Container";
@@ -16,14 +15,21 @@ import useModalContext from "../../hooks/useModalContext";
 import useRecruitmentItem from "../../hooks/useRecruitmentItem";
 import useApplicationRegisterFormWriting from "../../hooks/useApplicationRegisterFormWriting";
 import { parseQuery } from "../../utils/route/query";
+import useRecruits from "../../hooks/useRecruits";
+import { useMemo } from "react";
 
 const ApplicationRegister = () => {
   const location = useLocation();
-  const state = location.state as { currentRecruitment?: Recruitment };
-  const searchQueries = parseQuery(location.search);
+  const searchQueries = useMemo(() => parseQuery(location.search), [location]);
+  const recruitmentId = useMemo(() => parseInt(searchQueries?.recruitmentId, 10), [searchQueries]);
 
-  const recruitmentId = parseInt(searchQueries?.recruitmentId, 10);
-  const currentRecruitment = state.currentRecruitment;
+  const {
+    tabs: { filteredRecruitments },
+  } = useRecruits();
+  const currentRecruitment = useMemo(
+    () => filteredRecruitments.find(({ id }) => id === recruitmentId),
+    [filteredRecruitments]
+  );
   const { recruitmentItems = [] } = useRecruitmentItem(recruitmentId);
 
   const { Modal } = useModalContext();
@@ -41,7 +47,6 @@ const ApplicationRegister = () => {
     handleChanges,
   } = useApplicationRegisterForm({
     recruitmentId,
-    currentRecruitment,
     recruitmentItems,
   });
 

@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { generatePath, useNavigate } from "react-router-dom";
+import { generatePath, useLocation, useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
 import useTokenContext from "./useTokenContext";
 import useRecruitList from "./useRecruitList";
@@ -22,22 +22,23 @@ type HandleFetchingErrorArguments = { error: ApiError; recruitment: Recruitment 
 
 const useRecruits = () => {
   const { token } = useTokenContext();
+  const location = useLocation();
   const navigate = useNavigate();
 
   const { programTabStatus, setProgramTabStatus, filteredRecruitments, isRecruitable } =
     useRecruitList();
 
   const navigateToApplication = useCallback(
-    ({ recruitment, state }: NavigateToApplicationArguments) => {
+    ({ recruitment }: NavigateToApplicationArguments) => {
       navigate(
         {
           pathname: generatePath(PATH.APPLICATION_FORM),
           search: generateQuery({ recruitmentId: recruitment.id.toString() }),
         },
-        { state: { currentRecruitment: recruitment, ...state } }
+        { state: { currentRecruitment: recruitment } }
       );
     },
-    []
+    [location]
   );
 
   const handleFetchingError = useCallback(
@@ -61,7 +62,7 @@ const useRecruits = () => {
       alert(ERROR_MESSAGE.API.LOAD_APPLICATION_FORM);
       navigate(PATH.HOME, { replace: true });
     },
-    []
+    [navigateToApplication]
   );
 
   const fetchMyApplication = useCallback(
@@ -72,15 +73,8 @@ const useRecruits = () => {
           return;
         }
 
-        const { data: application } = await Api.fetchForm({
-          token,
-          recruitmentId: recruitment.id,
-        });
-
-        navigateToApplication({
-          recruitment,
-          state: { application },
-        });
+        await Api.fetchForm({ token, recruitmentId: recruitment.id });
+        navigateToApplication({ recruitment });
       } catch (error) {
         handleFetchingError({
           error: error as ApiError,
