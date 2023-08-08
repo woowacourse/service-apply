@@ -10,24 +10,13 @@ import useTokenContext from "./useTokenContext";
 import { ERROR_CODE } from "../constants/errorCodes";
 import { Recruitment, RecruitmentItem } from "../../types/domains/recruitments";
 import { AxiosError } from "axios";
-import { ApplicationForm } from "../../types/domains/applicationForms";
-
-export const APPLICATION_REGISTER_FORM_NAME = {
-  ANSWERS: "answers" as const,
-  REFERENCE_URL: "referenceUrl" as const,
-  IS_TERM_AGREED: "isTermAgreed" as const,
-};
+import { ApplicationForm, UnprocessedApplicationForm } from "../../types/domains/applicationForms";
+import { APPLICATION_REGISTER_FORM_NAME } from "../constants/application";
 
 type ApplicationRegisterFormArgument = {
   recruitmentId: number;
-  currentRecruitment: Recruitment;
+  currentRecruitment?: Recruitment;
   recruitmentItems: RecruitmentItem[];
-};
-
-type UnprocessedApplicationForm = {
-  [APPLICATION_REGISTER_FORM_NAME.ANSWERS]?: string[];
-  [APPLICATION_REGISTER_FORM_NAME.IS_TERM_AGREED]?: boolean;
-  [APPLICATION_REGISTER_FORM_NAME.REFERENCE_URL]: string;
 };
 
 const generateFormAnswerInitialValue = (answerCount: number): UnprocessedApplicationForm => ({
@@ -45,10 +34,6 @@ const useApplicationRegisterForm = ({
   currentRecruitment,
   recruitmentItems = [],
 }: ApplicationRegisterFormArgument) => {
-  /*
-    TODO: requiredForm, form 상태를 통합해도 괜찮지 않을까?
-    return { form: { ...form, ...requiredForm }, ... } 을 하고 있으니...
-  */
   const [form, setForm] = useState<UnprocessedApplicationForm>({
     ...generateFormAnswerInitialValue(recruitmentItems.length),
   });
@@ -156,18 +141,20 @@ const useApplicationRegisterForm = ({
   };
 
   return {
+    isEmpty,
+    isValid,
     form: { ...form },
     errorMessage,
+
+    modifiedDateTime,
+    setModifiedDateTime,
+
+    reset,
     handleChanges: {
       [APPLICATION_REGISTER_FORM_NAME.ANSWERS]: handleChangeAnswer,
       [APPLICATION_REGISTER_FORM_NAME.REFERENCE_URL]: handleChangeReferenceUrl,
       [APPLICATION_REGISTER_FORM_NAME.IS_TERM_AGREED]: handleChangeIsTermAgreed,
     },
-    modifiedDateTime,
-    setModifiedDateTime,
-    isEmpty,
-    isValid,
-    reset,
   };
 };
 
