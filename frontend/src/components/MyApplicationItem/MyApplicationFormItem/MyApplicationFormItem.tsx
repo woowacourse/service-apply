@@ -58,7 +58,7 @@ const MyApplicationFormItem = ({ recruitment, submitted }: MyApplicationFormItem
       },
       {
         state: {
-          currentRecruitment: recruitment, /// TODO: 여기도 수정
+          currentRecruitment: recruitment,
         },
       }
     );

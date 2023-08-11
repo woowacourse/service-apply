@@ -50,7 +50,7 @@ const upsertAnswers = async ({
   });
 };
 
-const useApplicationRegisterFormWriting = ({
+const useApplicationRegisterFormUpserting = ({
   modifiedDateTime,
   setModifiedDateTime,
   recruitmentItems,
@@ -128,4 +128,4 @@ const useApplicationRegisterFormWriting = ({
   };
 };
 
-export default useApplicationRegisterFormWriting;
+export default useApplicationRegisterFormUpserting;

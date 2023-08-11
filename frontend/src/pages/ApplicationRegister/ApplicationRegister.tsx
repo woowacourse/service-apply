@@ -13,7 +13,7 @@ import { FORM } from "../../constants/form";
 import useApplicationRegisterForm from "../../hooks/useApplicationRegisterFormFetching";
 import useModalContext from "../../hooks/useModalContext";
 import useRecruitmentItem from "../../hooks/useRecruitmentItem";
-import useApplicationRegisterFormWriting from "../../hooks/useApplicationRegisterFormWriting";
+import useApplicationRegisterFormUpserting from "../../hooks/useApplicationRegisterFormUpserting";
 import { parseQuery } from "../../utils/route/query";
 import useRecruits from "../../hooks/useRecruits";
 import { useMemo } from "react";
@@ -50,7 +50,7 @@ const ApplicationRegister = () => {
     recruitmentItems,
   });
 
-  const { updateFormAnswers, handleSubmit } = useApplicationRegisterFormWriting({
+  const { updateFormAnswers, handleSubmit } = useApplicationRegisterFormUpserting({
     form,
     recruitmentId,
     recruitmentItems,
