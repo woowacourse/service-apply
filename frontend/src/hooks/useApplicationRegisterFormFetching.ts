@@ -157,7 +157,7 @@ const useApplicationRegisterForm = ({
   return {
     isEmpty,
     isValid,
-    form: { ...form },
+    form,
     errorMessage,
 
     modifiedDateTime,

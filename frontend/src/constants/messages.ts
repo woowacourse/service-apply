@@ -42,7 +42,6 @@ export const ERROR_MESSAGE = {
     CANNOT_FIND_RECRUITMENT_CONTEXT: "recruitmentContext가 존재하지 않습니다",
     CANNOT_FIND_TOKEN_CONTEXT: "TokenContext가 존재하지 않습니다",
     CANNOT_FIND_USER_INFO_CONTEXT: "UserInfoContext가 존재하지 않습니다",
-    CANNOT_FIND_APPLICATION_CONTEXT: "ApplicationContext가 존재하지 않습니다",
     CANNOT_FIND_MODAL_CONTEXT: "ModalContext가 존재하지 않습니다",
   },
 } as const;
