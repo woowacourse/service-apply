@@ -21,6 +21,7 @@ repositories {
     mavenCentral()
     maven {
         url = uri("http://maven.vaadin.com/vaadin-addons")
+        isAllowInsecureProtocol = true
     }
 }
 
