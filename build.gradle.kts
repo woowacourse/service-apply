@@ -57,9 +57,9 @@ dependencies {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
         exclude(group = "org.mockito")
     }
-    testImplementation("com.ninja-squad:springmockk:2.0.3")
-    asciidoctorExt("org.springframework.restdocs:spring-restdocs-asciidoctor")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
+    asciidoctorExt("org.springframework.restdocs:spring-restdocs-asciidoctor")
+    testImplementation("com.ninja-squad:springmockk:3.1.2")
     testImplementation("io.kotest:kotest-runner-junit5:5.4.2")
     testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.2")
 }
