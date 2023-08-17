@@ -35,7 +35,7 @@ class RecruitmentRestControllerTest : RestControllerTest() {
 
         mockMvc.get("/api/recruitments")
             .andExpect {
-                status { isOk }
+                status { isOk() }
                 content { success(responses) }
             }.andDo {
                 handle(document("recruitment-get"))
@@ -49,7 +49,7 @@ class RecruitmentRestControllerTest : RestControllerTest() {
 
         mockMvc.get("/api/recruitments/{id}/items", 1L)
             .andExpect {
-                status { isOk }
+                status { isOk() }
                 content { success(responses) }
             }.andDo {
                 handle(document("recruitment-item-list-get"))
@@ -65,7 +65,7 @@ class RecruitmentRestControllerTest : RestControllerTest() {
             jsonContent(createRecruitmentData(recruitmentItems = listOf(createRecruitmentItemData())))
             bearer("valid_token")
         }.andExpect {
-            status { isCreated }
+            status { isCreated() }
             content { success(response) }
         }
     }
@@ -77,7 +77,7 @@ class RecruitmentRestControllerTest : RestControllerTest() {
         mockMvc.delete("/api/recruitments/{id}", 1L) {
             bearer("valid_token")
         }.andExpect {
-            status { isOk }
+            status { isOk() }
         }
     }
 
@@ -89,7 +89,7 @@ class RecruitmentRestControllerTest : RestControllerTest() {
         mockMvc.get("/api/recruitments/{id}", 1L) {
             bearer("valid_token")
         }.andExpect {
-            status { isOk }
+            status { isOk() }
             content { success(response) }
         }
     }
@@ -102,7 +102,7 @@ class RecruitmentRestControllerTest : RestControllerTest() {
         mockMvc.get("/api/recruitments/{recruitmentId}/detail", 1L) {
             bearer("valid_token")
         }.andExpect {
-            status { isOk }
+            status { isOk() }
             content { success(response) }
         }
     }
@@ -115,7 +115,7 @@ class RecruitmentRestControllerTest : RestControllerTest() {
         mockMvc.get("/api/recruitments/all") {
             bearer("valid_token")
         }.andExpect {
-            status { isOk }
+            status { isOk() }
             content { success(responses) }
         }
     }

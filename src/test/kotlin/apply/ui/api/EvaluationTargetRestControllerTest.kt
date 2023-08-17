@@ -66,7 +66,7 @@ class EvaluationTargetRestControllerTest : RestControllerTest() {
             bearer("valid_token")
             param("keyword", "아마찌")
         }.andExpect {
-            status { isOk }
+            status { isOk() }
             content { success(responses) }
         }
     }
@@ -78,7 +78,7 @@ class EvaluationTargetRestControllerTest : RestControllerTest() {
         mockMvc.put("/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/renew", 1L, 1L) {
             bearer("valid_token")
         }.andExpect {
-            status { isOk }
+            status { isOk() }
         }
     }
 
@@ -97,7 +97,7 @@ class EvaluationTargetRestControllerTest : RestControllerTest() {
         ) {
             bearer("valid_token")
         }.andExpect {
-            status { isOk }
+            status { isOk() }
             content { success(response) }
         }.andDo {
             handle(document("patch/recruitments/evaluations/targets/grade"))
@@ -114,7 +114,7 @@ class EvaluationTargetRestControllerTest : RestControllerTest() {
             jsonContent(EvaluationTargetData(listOf(EvaluationItemScoreData(score = 5, id = 3L)), "특이 사항(수정)", PASS))
             bearer("valid_token")
         }.andExpect {
-            status { isOk }
+            status { isOk() }
         }
     }
 
@@ -128,7 +128,7 @@ class EvaluationTargetRestControllerTest : RestControllerTest() {
             bearer("valid_token")
             param("status", enumStatus.name)
         }.andExpect {
-            status { isOk }
+            status { isOk() }
             content { success(responses) }
         }
     }

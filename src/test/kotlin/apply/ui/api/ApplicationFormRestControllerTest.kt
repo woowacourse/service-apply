@@ -40,7 +40,7 @@ class ApplicationFormRestControllerTest : RestControllerTest() {
             jsonContent(CreateApplicationFormRequest(1L))
             bearer("valid_token")
         }.andExpect {
-            status { isCreated }
+            status { isCreated() }
             content { success(response) }
         }.andDo {
             handle(document("application-form-post"))
@@ -55,7 +55,7 @@ class ApplicationFormRestControllerTest : RestControllerTest() {
             jsonContent(UpdateApplicationFormRequest(recruitmentId = 1L, answers = listOf(createAnswerRequest())))
             bearer("valid_token")
         }.andExpect {
-            status { isOk }
+            status { isOk() }
         }.andDo {
             handle(document("application-form-patch"))
         }
@@ -69,7 +69,7 @@ class ApplicationFormRestControllerTest : RestControllerTest() {
         mockMvc.get("/api/application-forms/me") {
             bearer("valid_token")
         }.andExpect {
-            status { isOk }
+            status { isOk() }
             content { success(responses) }
         }.andDo {
             handle(document("application-form-me-get"))
@@ -85,7 +85,7 @@ class ApplicationFormRestControllerTest : RestControllerTest() {
             bearer("valid_token")
             param("recruitmentId", "1")
         }.andExpect {
-            status { isOk }
+            status { isOk() }
             content { success(response) }
         }.andDo {
             handle(document("application-form-get"))
@@ -102,7 +102,7 @@ class ApplicationFormRestControllerTest : RestControllerTest() {
             bearer("valid_token")
             param("keyword", keyword)
         }.andExpect {
-            status { isOk }
+            status { isOk() }
             content { success(responses) }
         }
     }
@@ -118,7 +118,7 @@ class ApplicationFormRestControllerTest : RestControllerTest() {
         mockMvc.get("/api/recruitments/{recruitmentId}/application-forms", 1L) {
             bearer("valid_token")
         }.andExpect {
-            status { isOk }
+            status { isOk() }
             content { success(responses) }
         }
     }
