@@ -5,8 +5,8 @@ import apply.ADMINISTRATOR_USERNAME
 import apply.createAdministrator
 import apply.createAdministratorData
 import apply.domain.administrator.AdministratorRepository
-import apply.domain.administrator.getById
 import apply.domain.administrator.getByUsername
+import apply.domain.administrator.getOrThrow
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.collections.shouldHaveSize
@@ -84,7 +84,7 @@ class AdministratorServiceTest : BehaviorSpec({
         val name = "케이"
         val password = "5678"
 
-        every { administratorRepository.getById(any()) } returns administrator
+        every { administratorRepository.getOrThrow(any()) } returns administrator
         every { passwordEncoder.encode(any()) } returns password
 
         When("해당 관리자의 정보를 수정하면") {
@@ -108,7 +108,7 @@ class AdministratorServiceTest : BehaviorSpec({
         val administrator = createAdministrator(id = 1L)
 
         every { administratorRepository.existsById(any()) } returns true
-        every { administratorRepository.getById(any()) } returns administrator
+        every { administratorRepository.getOrThrow(any()) } returns administrator
 
         When("해당 관리자를 조회하면") {
             val actual = administratorService.findById(administrator.id)

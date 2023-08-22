@@ -4,7 +4,7 @@ import apply.createAssignment
 import apply.createCommit
 import apply.createJudgmentItem
 import apply.domain.assignment.AssignmentRepository
-import apply.domain.assignment.getById
+import apply.domain.assignment.getOrThrow
 import apply.domain.judgment.JudgmentStartedEvent
 import apply.domain.judgment.JudgmentType.EXAMPLE
 import apply.domain.judgmentitem.JudgmentItemRepository
@@ -28,7 +28,7 @@ class JudgmentRequestServiceTest : BehaviorSpec({
         val assignment = createAssignment(missionId = missionId, id = 1L)
         val judgmentItem = createJudgmentItem(missionId = missionId)
 
-        every { assignmentRepository.getById(any()) } returns assignment
+        every { assignmentRepository.getOrThrow(any()) } returns assignment
         every { judgmentItemRepository.getByMissionId(any()) } returns judgmentItem
         every { judgmentAgency.requestJudge(any()) } just Runs
 

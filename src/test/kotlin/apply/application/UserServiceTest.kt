@@ -9,7 +9,7 @@ import apply.domain.user.Password
 import apply.domain.user.UnidentifiedUserException
 import apply.domain.user.UserRepository
 import apply.domain.user.findByEmail
-import apply.domain.user.getById
+import apply.domain.user.getOrThrow
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
@@ -52,7 +52,7 @@ class UserServiceTest : BehaviorSpec({
         val user = createUser(id = 1L, password = PASSWORD)
         val password = NEW_PASSWORD
 
-        every { userRepository.getById(any()) } returns user
+        every { userRepository.getOrThrow(any()) } returns user
 
         When("기존 비밀번호와 함께 새 비밀번호를 변경하면") {
             userService.editPassword(user.id, EditPasswordRequest(user.password, password, password))
@@ -82,7 +82,7 @@ class UserServiceTest : BehaviorSpec({
     Given("특정 회원이 있는 경우") {
         val user = createUser(id = 1L)
 
-        every { userRepository.getById(any()) } returns user
+        every { userRepository.getOrThrow(any()) } returns user
 
         When("해당 회원의 정보를 조회하면") {
             val actual = userService.getInformation(user.id)
@@ -97,7 +97,7 @@ class UserServiceTest : BehaviorSpec({
         val user = createUser(phoneNumber = "010-0000-0000")
         val phoneNumber = "010-9999-9999"
 
-        every { userRepository.getById(any()) } returns user
+        every { userRepository.getOrThrow(any()) } returns user
 
         When("특정 회원의 정보(전화번호)를 변경하면") {
             userService.editInformation(user.id, EditInformationRequest(phoneNumber))

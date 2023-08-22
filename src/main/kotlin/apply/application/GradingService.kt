@@ -1,7 +1,7 @@
 package apply.application
 
 import apply.domain.assignment.AssignmentRepository
-import apply.domain.assignment.getById
+import apply.domain.assignment.getOrThrow
 import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.evaluationtarget.getByEvaluationIdAndUserId
 import apply.domain.judgment.JudgmentStartedEvent
@@ -10,7 +10,7 @@ import apply.domain.judgment.JudgmentTouchedEvent
 import apply.domain.judgmentitem.JudgmentItemRepository
 import apply.domain.judgmentitem.getByMissionId
 import apply.domain.mission.MissionRepository
-import apply.domain.mission.getById
+import apply.domain.mission.getOrThrow
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
@@ -43,8 +43,8 @@ class GradingService(
     }
 
     private fun grade(assignmentId: Long, score: Int) {
-        val assignment = assignmentRepository.getById(assignmentId)
-        val mission = missionRepository.getById(assignment.missionId)
+        val assignment = assignmentRepository.getOrThrow(assignmentId)
+        val mission = missionRepository.getOrThrow(assignment.missionId)
         val judgmentItem = judgmentItemRepository.getByMissionId(mission.id)
         val target = evaluationTargetRepository.getByEvaluationIdAndUserId(mission.evaluationId, assignment.userId)
         target.updateScore(judgmentItem.evaluationItemId, score)

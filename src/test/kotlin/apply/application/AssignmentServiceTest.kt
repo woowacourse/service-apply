@@ -7,7 +7,7 @@ import apply.createMission
 import apply.domain.assignment.AssignmentRepository
 import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.mission.MissionRepository
-import apply.domain.mission.getById
+import apply.domain.mission.getOrThrow
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
@@ -28,7 +28,7 @@ class AssignmentServiceTest : BehaviorSpec({
         val evaluationTarget = createEvaluationTarget(userId = 1L)
 
         every { assignmentRepository.existsByUserIdAndMissionId(any(), any()) } returns false
-        every { missionRepository.getById(any()) } returns mission
+        every { missionRepository.getOrThrow(any()) } returns mission
         every { evaluationTargetRepository.findByEvaluationIdAndUserId(any(), any()) } returns evaluationTarget
         every { assignmentRepository.save(any()) } returns createAssignment()
 
@@ -46,7 +46,7 @@ class AssignmentServiceTest : BehaviorSpec({
         val evaluationTarget = createEvaluationTarget(userId = 1L)
 
         every { assignmentRepository.existsByUserIdAndMissionId(any(), any()) } returns false
-        every { missionRepository.getById(any()) } returns mission
+        every { missionRepository.getOrThrow(any()) } returns mission
 
         When("특정 평가 대상자가 과제 제출물을 생성하면") {
             Then("예외가 발생한다") {

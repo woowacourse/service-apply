@@ -8,7 +8,7 @@ import apply.createRecruitmentItem
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.applicationform.ApplicationValidator
 import apply.domain.recruitment.RecruitmentRepository
-import apply.domain.recruitment.getById
+import apply.domain.recruitment.getOrThrow
 import apply.domain.recruitmentitem.RecruitmentItemRepository
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
@@ -93,7 +93,7 @@ class ApplicationFormServiceTest : BehaviorSpec({
         val recruitmentItemId = 1L
         val userId = 1L
 
-        every { recruitmentRepository.getById(any()) } returns createRecruitment(id = recruitmentId)
+        every { recruitmentRepository.getOrThrow(any()) } returns createRecruitment(id = recruitmentId)
         every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns listOf(
             createRecruitmentItem(recruitmentId = recruitmentId, id = recruitmentItemId)
         )
@@ -128,7 +128,7 @@ class ApplicationFormServiceTest : BehaviorSpec({
         val maximumLength = 1
         val userId = 1L
 
-        every { recruitmentRepository.getById(any()) } returns createRecruitment(id = recruitmentId)
+        every { recruitmentRepository.getOrThrow(any()) } returns createRecruitment(id = recruitmentId)
         every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns listOf(
             createRecruitmentItem(recruitmentId = recruitmentId, maximumLength = maximumLength, id = recruitmentItemId)
         )

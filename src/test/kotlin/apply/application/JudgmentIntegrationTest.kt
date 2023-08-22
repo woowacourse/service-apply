@@ -24,7 +24,7 @@ import apply.domain.judgment.JudgmentSucceededEvent
 import apply.domain.judgment.JudgmentTouchedEvent
 import apply.domain.judgment.JudgmentType.EXAMPLE
 import apply.domain.judgment.JudgmentType.REAL
-import apply.domain.judgment.getById
+import apply.domain.judgment.getOrThrow
 import apply.domain.judgmentitem.JudgmentItemRepository
 import apply.domain.mission.MissionRepository
 import com.ninjasquad.springmockk.MockkBean
@@ -202,7 +202,7 @@ class JudgmentIntegrationTest(
             )
 
             Then("자동 채점 기록의 상태가 성공이 된다") {
-                val actual = judgmentRepository.getById(judgment.id)
+                val actual = judgmentRepository.getOrThrow(judgment.id)
                 actual.lastRecord.result shouldBe JudgmentResult(passCount = 9, totalCount = 10, status = SUCCEEDED)
                 events.count<JudgmentSucceededEvent>() shouldBe 1
             }
@@ -223,7 +223,7 @@ class JudgmentIntegrationTest(
             )
 
             Then("자동 채점 기록의 상태가 성공이 된다") {
-                val actual = judgmentRepository.getById(judgment.id)
+                val actual = judgmentRepository.getOrThrow(judgment.id)
                 actual.lastRecord.result shouldBe JudgmentResult(passCount = 9, totalCount = 10, status = SUCCEEDED)
                 events.count<JudgmentSucceededEvent>() shouldBe 1
             }
@@ -233,7 +233,7 @@ class JudgmentIntegrationTest(
             judgmentService.fail(judgment.id, createFailJudgmentRequest(commit.hash))
 
             Then("자동 채점 기록의 상태가 실패가 된다") {
-                val actual = judgmentRepository.getById(judgment.id)
+                val actual = judgmentRepository.getOrThrow(judgment.id)
                 actual.lastRecord.result.status shouldBe FAILED
                 events.count<JudgmentFailedEvent>() shouldBe 1
             }
@@ -243,7 +243,7 @@ class JudgmentIntegrationTest(
             judgmentService.cancel(judgment.id, createCancelJudgmentRequest(commit.hash))
 
             Then("자동 채점 기록의 상태가 취소가 된다") {
-                val actual = judgmentRepository.getById(judgment.id)
+                val actual = judgmentRepository.getOrThrow(judgment.id)
                 actual.lastRecord.result.status shouldBe CANCELLED
                 events.count<JudgmentCancelledEvent>() shouldBe 1
             }

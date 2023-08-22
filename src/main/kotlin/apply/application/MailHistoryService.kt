@@ -2,7 +2,7 @@ package apply.application
 
 import apply.application.mail.MailData
 import apply.domain.mail.MailHistoryRepository
-import apply.domain.mail.getById
+import apply.domain.mail.getOrThrow
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -16,7 +16,7 @@ class MailHistoryService(
     }
 
     fun getById(mailHistoryId: Long): MailData {
-        val mailHistory = mailHistoryRepository.getById(mailHistoryId)
+        val mailHistory = mailHistoryRepository.getOrThrow(mailHistoryId)
         return MailData(mailHistory)
     }
 }

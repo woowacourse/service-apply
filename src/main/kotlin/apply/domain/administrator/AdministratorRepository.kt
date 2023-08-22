@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException
 fun AdministratorRepository.getByUsername(username: String) = findByUsername(username)
     ?: throw UsernameNotFoundException("관리자가 존재하지 않습니다. username: $username")
 
-fun AdministratorRepository.getById(id: Long) = findByIdOrNull(id)
+fun AdministratorRepository.getOrThrow(id: Long) = findByIdOrNull(id)
     ?: throw NoSuchElementException("관리자가 존재하지 않습니다. id: $id")
 
 interface AdministratorRepository : JpaRepository<Administrator, Long> {

@@ -7,7 +7,7 @@ fun EvaluationTargetRepository.getByEvaluationIdAndUserId(evaluationId: Long, us
     findByEvaluationIdAndUserId(evaluationId, userId)
         ?: throw NoSuchElementException("평가 대상자가 존재하지 않습니다. evaluationId: $evaluationId, userId: $userId")
 
-fun EvaluationTargetRepository.getById(id: Long): EvaluationTarget = findByIdOrNull(id)
+fun EvaluationTargetRepository.getOrThrow(id: Long): EvaluationTarget = findByIdOrNull(id)
     ?: throw NoSuchElementException("평가 대상자가 존재하지 않습니다. id: $id")
 
 interface EvaluationTargetRepository : JpaRepository<EvaluationTarget, Long> {
