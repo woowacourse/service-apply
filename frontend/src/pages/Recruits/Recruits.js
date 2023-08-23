@@ -15,15 +15,10 @@ const Recruits = () => {
   const { token } = useTokenContext();
   const navigate = useNavigate();
 
-  const { programTabStatus, setProgramTabStatus, filteredRecruitments, isRecruitable } =
-    useRecruitList();
+  const { programTabStatus, setProgramTabStatus, filteredRecruitments } = useRecruitList();
 
-  const goToNewApplicationFormPage = async (recruitment) => {
+  const goToApplicationFormPage = async (recruitment) => {
     try {
-      if (!isRecruitable(recruitment)) {
-        alert("지원 불가능한 모집입니다.");
-        return;
-      }
       const { data } = await Api.fetchForm({ token, recruitmentId: recruitment.id });
 
       navigateToApplication({
@@ -52,7 +47,7 @@ const Recruits = () => {
     const {
       response: {
         status,
-        data: { message = null },
+        data: { message },
       },
     } = error;
 
@@ -61,13 +56,12 @@ const Recruits = () => {
       return;
     }
 
-    if (status === ERROR_CODE.LOAD_APPLICATION_FORM.ALREADY_APPLIED && message) {
+    if (status === ERROR_CODE.LOAD_APPLICATION_FORM.ALREADY_APPLIED) {
       alert(message);
       return;
     }
 
     alert(ERROR_MESSAGE.API.LOAD_APPLICATION_FORM);
-    navigate(PATH.HOME, { replace: true });
   };
 
   return (
@@ -105,7 +99,7 @@ const Recruits = () => {
                 <RecruitmentItem
                   key={recruitment.id}
                   recruitment={recruitment}
-                  onClickButton={() => goToNewApplicationFormPage(recruitment)}
+                  onClickButton={() => goToApplicationFormPage(recruitment)}
                   role="listitem"
                 />
               ))

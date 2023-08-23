@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
-import { generatePath, useNavigate, useLocation } from "react-router";
+import { useNavigate } from "react-router";
 import * as Api from "../api";
 import { FORM } from "../constants/form";
 import { ERROR_MESSAGE } from "../constants/messages";
 import { PATH, PARAM } from "../constants/path";
 import { formatDateTime } from "../utils/format/date";
-import { generateQuery } from "../utils/route/query";
 import { isValidURL } from "../utils/validation/url";
 import useTokenContext from "./useTokenContext";
-import { ERROR_CODE } from "../constants/errorCodes";
 
 export const APPLICATION_REGISTER_FORM_NAME = {
   ANSWERS: "answers",
@@ -43,7 +41,6 @@ const useApplicationRegisterForm = ({
 
   const [modifiedDateTime, setModifiedDateTime] = useState("");
   const navigate = useNavigate();
-  const location = useLocation();
   const { token } = useTokenContext();
 
   const isAnswersEmpty =
@@ -105,14 +102,10 @@ const useApplicationRegisterForm = ({
         data: { answers, referenceUrl, modifiedDateTime },
       } = application;
 
-      setRequiredForm({ answers: answers?.map((answer) => answer.contents) });
+      setRequiredForm({ answers: answers.map((answer) => answer.contents) });
       setForm({ referenceUrl });
       setModifiedDateTime(formatDateTime(new Date(modifiedDateTime)));
     } catch (error) {
-      if (error?.response?.status === ERROR_CODE.LOAD_APPLICATION_FORM.NOT_FOUND) {
-        return;
-      }
-
       handleLoadFormError();
     }
   };
