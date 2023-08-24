@@ -25,7 +25,7 @@ repositories {
     }
 }
 
-extra["vaadinVersion"] = "14.3.3"
+extra["vaadinVersion"] = "14.8.20"
 extra["kotlin-coroutines.version"] = "1.6.0"
 extra["flyway.version"] = "7.15.0"
 
