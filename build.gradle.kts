@@ -10,7 +10,7 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
     id("com.vaadin") version "0.8.0"
     id("org.asciidoctor.jvm.convert") version "3.3.2"
-    id("org.flywaydb.flyway") version "7.12.0"
+    id("org.flywaydb.flyway") version "7.15.0"
 }
 
 group = "io.github.woowacourse"
@@ -27,6 +27,7 @@ repositories {
 
 extra["vaadinVersion"] = "14.3.3"
 extra["kotlin-coroutines.version"] = "1.6.0"
+extra["flyway.version"] = "7.15.0"
 
 val asciidoctorExt: Configuration by configurations.creating
 val snippetsDir by extra { "build/generated-snippets" }
