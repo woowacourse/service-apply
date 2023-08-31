@@ -76,7 +76,7 @@ class EvaluationService(
     fun getDataById(id: Long): EvaluationData {
         val evaluation = evaluationRepository.getOrThrow(id)
         val evaluationItems = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluation.id)
-        val recruitment = recruitmentRepository.getById(evaluation.recruitmentId)
+        val recruitment = recruitmentRepository.getReferenceById(evaluation.recruitmentId)
         val beforeEvaluation = findById(evaluation.beforeEvaluationId)
         return EvaluationData(evaluation, recruitment, beforeEvaluation, evaluationItems)
     }
