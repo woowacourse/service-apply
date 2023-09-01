@@ -116,7 +116,7 @@ class MailService(
         val context = Context().apply {
             setVariables(
                 mapOf(
-                    "content" to mailData.body,
+                    "content" to mailData.getHtmlBody(),
                     "url" to applicationProperties.url
                 )
             )

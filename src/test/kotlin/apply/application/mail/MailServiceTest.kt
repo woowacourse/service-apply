@@ -23,7 +23,7 @@ class MailServiceTest(
 
             Then("본문이 포함된 HTML로 작성된다.") {
                 println(commonMailBody)
-                commonMailBody shouldContain "<span>안녕하세요. 우아한테크코스입니다."
+                commonMailBody shouldContain "<body><p>안녕하세요. 우아한테크코스입니다."
             }
         }
     }
