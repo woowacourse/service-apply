@@ -130,7 +130,7 @@ const ApplicationRegister = () => {
       <Container title="지원서 작성" titleAlign={TITLE_ALIGN.LEFT}>
         <h3 className={styles["recruitment-title"]}>{currentRecruitment.title}</h3>
         <Form onSubmit={handleSubmit}>
-          {status === PARAM.APPLICATION_FORM_STATUS.EDIT && (
+          {modifiedDateTime && (
             <p className={styles["autosave-indicator"]}>
               {`임시 저장되었습니다. (${modifiedDateTime})`}
             </p>
