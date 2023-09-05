@@ -2,7 +2,7 @@ package apply.application
 
 import apply.domain.evaluation.Evaluation
 import apply.domain.evaluation.EvaluationRepository
-import apply.domain.evaluation.getById
+import apply.domain.evaluation.getOrThrow
 import apply.domain.evaluationitem.EvaluationItem
 import apply.domain.evaluationitem.EvaluationItemRepository
 import apply.domain.recruitment.RecruitmentRepository
@@ -44,7 +44,7 @@ class EvaluationService(
     }
 
     fun getById(id: Long): EvaluationResponse {
-        return evaluationRepository.getById(id).let(::EvaluationResponse)
+        return evaluationRepository.getOrThrow(id).let(::EvaluationResponse)
     }
 
     fun findAllWithRecruitment(): List<EvaluationGridResponse> {
@@ -74,16 +74,16 @@ class EvaluationService(
     }
 
     fun getDataById(id: Long): EvaluationData {
-        val evaluation = evaluationRepository.getById(id)
+        val evaluation = evaluationRepository.getOrThrow(id)
         val evaluationItems = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluation.id)
-        val recruitment = recruitmentRepository.getOne(evaluation.recruitmentId)
+        val recruitment = recruitmentRepository.getReferenceById(evaluation.recruitmentId)
         val beforeEvaluation = findById(evaluation.beforeEvaluationId)
         return EvaluationData(evaluation, recruitment, beforeEvaluation, evaluationItems)
     }
 
     private fun findById(id: Long): Evaluation? {
         if (id == 0L) return null
-        return evaluationRepository.getById(id)
+        return evaluationRepository.getOrThrow(id)
     }
 
     fun findAllRecruitmentSelectData(): List<RecruitmentSelectData> {

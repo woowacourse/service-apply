@@ -28,7 +28,7 @@ class TermRestControllerTest : RestControllerTest() {
             jsonContent(TermData("4기"))
             bearer("valid_token")
         }.andExpect {
-            status { isCreated }
+            status { isCreated() }
             content { success(response) }
         }
     }
@@ -41,7 +41,7 @@ class TermRestControllerTest : RestControllerTest() {
         mockMvc.get("/api/terms/{termId}", 1L) {
             bearer("valid_token")
         }.andExpect {
-            status { isOk }
+            status { isOk() }
             content { success(response) }
         }
     }
@@ -54,7 +54,7 @@ class TermRestControllerTest : RestControllerTest() {
         mockMvc.get("/api/terms") {
             bearer("valid_token")
         }.andExpect {
-            status { isOk }
+            status { isOk() }
             content { success(responses) }
         }
     }
@@ -66,7 +66,7 @@ class TermRestControllerTest : RestControllerTest() {
         mockMvc.delete("/api/terms/{termId}", 1L) {
             bearer("valid_token")
         }.andExpect {
-            status { isOk }
+            status { isOk() }
         }
     }
 }

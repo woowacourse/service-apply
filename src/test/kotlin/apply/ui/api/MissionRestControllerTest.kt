@@ -39,7 +39,7 @@ class MissionRestControllerTest : RestControllerTest() {
             jsonContent(createMissionData())
             bearer("valid_token")
         }.andExpect {
-            status { isCreated }
+            status { isCreated() }
             content { success(response) }
         }
     }
@@ -52,7 +52,7 @@ class MissionRestControllerTest : RestControllerTest() {
         mockMvc.get("/api/recruitments/{recruitmentId}/missions/{missionId}", 1L, 1L) {
             bearer("valid_token")
         }.andExpect {
-            status { isOk }
+            status { isOk() }
             content { success(response) }
         }
     }
@@ -68,7 +68,7 @@ class MissionRestControllerTest : RestControllerTest() {
         mockMvc.get("/api/recruitments/{recruitmentId}/missions", 1L) {
             bearer("valid_token")
         }.andExpect {
-            status { isOk }
+            status { isOk() }
             content { success(responses) }
         }
     }
@@ -90,7 +90,7 @@ class MissionRestControllerTest : RestControllerTest() {
         mockMvc.get("/api/recruitments/{recruitmentId}/missions/me", 1L) {
             bearer("valid_token")
         }.andExpect {
-            status { isOk }
+            status { isOk() }
             content { success(responses) }
         }.andDo {
             handle(document("mission-me-get"))
@@ -104,7 +104,7 @@ class MissionRestControllerTest : RestControllerTest() {
         mockMvc.delete("/api/recruitments/{recruitmentId}/missions/{missionId}", 1L, 1L) {
             bearer("valid_token")
         }.andExpect {
-            status { isOk }
+            status { isOk() }
         }
     }
 }

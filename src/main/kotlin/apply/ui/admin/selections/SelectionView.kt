@@ -285,6 +285,7 @@ class SelectionView(
                 )
                 items.plusElement(referenceItem)
             }
+
             else -> items
         }
     }

@@ -2,7 +2,7 @@ package apply.application
 
 import apply.domain.cheater.Cheater
 import apply.domain.cheater.CheaterRepository
-import apply.domain.cheater.getById
+import apply.domain.cheater.getOrThrow
 import apply.domain.user.UserRepository
 import apply.domain.user.findAllByEmailIn
 import apply.domain.user.findByEmail
@@ -26,7 +26,7 @@ class CheaterService(
     }
 
     fun getById(id: Long): CheaterResponse {
-        val cheater = cheaterRepository.getById(id)
+        val cheater = cheaterRepository.getOrThrow(id)
         val user = userRepository.findByEmail(cheater.email)
         return CheaterResponse(cheater, user)
     }

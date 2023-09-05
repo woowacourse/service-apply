@@ -4,7 +4,7 @@ import apply.domain.assignment.Assignment
 import apply.domain.assignment.AssignmentRepository
 import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluationtarget.EvaluationTargetRepository
-import apply.domain.evaluationtarget.getById
+import apply.domain.evaluationtarget.getOrThrow
 import apply.domain.judgment.Judgment
 import apply.domain.judgment.JudgmentRepository
 import apply.domain.judgment.JudgmentType
@@ -81,7 +81,7 @@ class MyMissionService(
     }
 
     fun findLastRealJudgmentByEvaluationTargetId(evaluationTargetId: Long): JudgmentData? {
-        val evaluationTarget = evaluationTargetRepository.getById(evaluationTargetId)
+        val evaluationTarget = evaluationTargetRepository.getOrThrow(evaluationTargetId)
         val mission = missionRepository.findByEvaluationId(evaluationTarget.evaluationId) ?: return null
         val judgmentItem = judgmentItemRepository.findByMissionId(mission.id) ?: return null
         val assignment = assignmentRepository.findByUserIdAndMissionId(evaluationTarget.userId, mission.id)

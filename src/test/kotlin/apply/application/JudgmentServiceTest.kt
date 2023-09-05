@@ -8,8 +8,8 @@ import apply.createJudgment
 import apply.createJudgmentRecord
 import apply.createMission
 import apply.domain.assignment.AssignmentRepository
-import apply.domain.assignment.getById
 import apply.domain.assignment.getByUserIdAndMissionId
+import apply.domain.assignment.getOrThrow
 import apply.domain.judgment.AssignmentArchive
 import apply.domain.judgment.JudgmentRepository
 import apply.domain.judgment.JudgmentResult
@@ -19,7 +19,7 @@ import apply.domain.judgment.JudgmentType.EXAMPLE
 import apply.domain.judgment.JudgmentType.REAL
 import apply.domain.judgmentitem.JudgmentItemRepository
 import apply.domain.mission.MissionRepository
-import apply.domain.mission.getById
+import apply.domain.mission.getOrThrow
 import io.kotest.assertions.assertSoftly
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
@@ -50,7 +50,7 @@ class JudgmentServiceTest : BehaviorSpec({
     Given("과제 제출물을 제출할 수 없는 과제가 있는 경우") {
         val mission = createMission(submittable = false, id = 1L)
 
-        every { missionRepository.getById(any()) } returns mission
+        every { missionRepository.getOrThrow(any()) } returns mission
 
         When("해당 과제 제출물의 예제 테스트를 실행하면") {
             Then("예외가 발생한다") {
@@ -65,8 +65,8 @@ class JudgmentServiceTest : BehaviorSpec({
         val mission = createMission(submittable = false, id = 1L)
         val assignment = createAssignment(missionId = mission.id, pullRequestUrl = PULL_REQUEST_URL, id = 1L)
 
-        every { assignmentRepository.getById(any()) } returns assignment
-        every { missionRepository.getById(any()) } returns mission
+        every { assignmentRepository.getOrThrow(any()) } returns assignment
+        every { missionRepository.getOrThrow(any()) } returns mission
         every { judgmentItemRepository.existsByMissionId(any()) } returns true
         every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns null
         every { judgmentRepository.save(any()) } answers { firstArg() }
@@ -89,8 +89,8 @@ class JudgmentServiceTest : BehaviorSpec({
         val mission = createMission(submittable = true, id = 1L)
         val assignment = createAssignment(missionId = mission.id, pullRequestUrl = PULL_REQUEST_URL, id = 1L)
 
-        every { assignmentRepository.getById(any()) } returns assignment
-        every { missionRepository.getById(any()) } returns mission
+        every { assignmentRepository.getOrThrow(any()) } returns assignment
+        every { missionRepository.getOrThrow(any()) } returns mission
         every { judgmentItemRepository.existsByMissionId(any()) } returns false
 
         When("해당 과제 제출물의 예제 테스트를 실행하면") {
@@ -126,7 +126,7 @@ class JudgmentServiceTest : BehaviorSpec({
             )
         )
 
-        every { missionRepository.getById(any()) } returns mission
+        every { missionRepository.getOrThrow(any()) } returns mission
         every { judgmentItemRepository.existsByMissionId(any()) } returns true
         every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns assignment
         every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns judgment
@@ -163,8 +163,8 @@ class JudgmentServiceTest : BehaviorSpec({
             )
         )
 
-        every { assignmentRepository.getById(any()) } returns assignment
-        every { missionRepository.getById(any()) } returns mission
+        every { assignmentRepository.getOrThrow(any()) } returns assignment
+        every { missionRepository.getOrThrow(any()) } returns mission
         every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns assignment
         every { judgmentItemRepository.existsByMissionId(any()) } returns true
         every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns judgment
@@ -200,7 +200,7 @@ class JudgmentServiceTest : BehaviorSpec({
         )
         val commit = createCommit("commit2")
 
-        every { missionRepository.getById(any()) } returns mission
+        every { missionRepository.getOrThrow(any()) } returns mission
         every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns assignment
         every { judgmentItemRepository.existsByMissionId(any()) } returns true
         every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns judgment
@@ -236,8 +236,8 @@ class JudgmentServiceTest : BehaviorSpec({
         )
         val commit = createCommit("commit2")
 
-        every { assignmentRepository.getById(any()) } returns assignment
-        every { missionRepository.getById(any()) } returns mission
+        every { assignmentRepository.getOrThrow(any()) } returns assignment
+        every { missionRepository.getOrThrow(any()) } returns mission
         every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns assignment
         every { judgmentItemRepository.existsByMissionId(any()) } returns true
         every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns judgment

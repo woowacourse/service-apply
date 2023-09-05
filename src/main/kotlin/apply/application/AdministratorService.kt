@@ -2,8 +2,8 @@ package apply.application
 
 import apply.domain.administrator.Administrator
 import apply.domain.administrator.AdministratorRepository
-import apply.domain.administrator.getById
 import apply.domain.administrator.getByUsername
+import apply.domain.administrator.getOrThrow
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -38,7 +38,7 @@ class AdministratorService(
     }
 
     private fun update(request: AdministratorData): Administrator {
-        return administratorRepository.getById(request.id).apply {
+        return administratorRepository.getOrThrow(request.id).apply {
             update(request.name, passwordEncoder.encode(request.password))
         }
     }
@@ -48,7 +48,7 @@ class AdministratorService(
     }
 
     fun findById(id: Long): AdministratorResponse {
-        return administratorRepository.getById(id).let(::AdministratorResponse)
+        return administratorRepository.getOrThrow(id).let(::AdministratorResponse)
     }
 
     fun deleteById(administratorId: Long) {

@@ -30,7 +30,7 @@ class AssignmentRestControllerTest : RestControllerTest() {
             jsonContent(createAssignmentRequest())
             bearer("valid_token")
         }.andExpect {
-            status { isCreated }
+            status { isCreated() }
             content { success(response) }
         }.andDo {
             handle(document("assignment-post"))
@@ -45,7 +45,7 @@ class AssignmentRestControllerTest : RestControllerTest() {
             jsonContent(createAssignmentRequest())
             bearer("valid_token")
         }.andExpect {
-            status { isOk }
+            status { isOk() }
         }.andDo {
             handle(document("assignment-patch"))
         }
@@ -59,7 +59,7 @@ class AssignmentRestControllerTest : RestControllerTest() {
         mockMvc.get("/api/recruitments/{recruitmentId}/missions/{missionId}/assignments/me", 1L, 1L) {
             bearer("valid_token")
         }.andExpect {
-            status { isOk }
+            status { isOk() }
             content { success(response) }
         }.andDo {
             handle(document("assignment-me-get"))
@@ -74,7 +74,7 @@ class AssignmentRestControllerTest : RestControllerTest() {
         mockMvc.get("/api/recruitments/{recruitmentId}/targets/{targetId}/assignments", 1L, 1L) {
             bearer("valid_token")
         }.andExpect {
-            status { isOk }
+            status { isOk() }
             content { success(response) }
         }
     }

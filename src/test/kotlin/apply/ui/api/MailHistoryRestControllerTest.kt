@@ -22,7 +22,7 @@ class MailHistoryRestControllerTest : RestControllerTest() {
         mockMvc.get("/api/mail-history/{mailHistoryId}", 1L) {
             bearer("valid_token")
         }.andExpect {
-            status { isOk }
+            status { isOk() }
             content { success(response) }
         }
     }
@@ -35,7 +35,7 @@ class MailHistoryRestControllerTest : RestControllerTest() {
         mockMvc.get("/api/mail-history") {
             bearer("valid_token")
         }.andExpect {
-            status { isOk }
+            status { isOk() }
             content { success(responses) }
         }
     }

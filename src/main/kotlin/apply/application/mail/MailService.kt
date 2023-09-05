@@ -5,10 +5,10 @@ import apply.domain.applicationform.ApplicationFormSubmittedEvent
 import apply.domain.mail.MailHistory
 import apply.domain.mail.MailHistoryRepository
 import apply.domain.recruitment.RecruitmentRepository
-import apply.domain.recruitment.getById
+import apply.domain.recruitment.getOrThrow
 import apply.domain.user.PasswordResetEvent
 import apply.domain.user.UserRepository
-import apply.domain.user.getById
+import apply.domain.user.getOrThrow
 import org.springframework.boot.autoconfigure.mail.MailProperties
 import org.springframework.core.io.ByteArrayResource
 import org.springframework.scheduling.annotation.Async
@@ -52,8 +52,8 @@ class MailService(
     @Async
     @TransactionalEventListener
     fun sendFormSubmittedMail(event: ApplicationFormSubmittedEvent) {
-        val user = userRepository.getById(event.userId)
-        val recruitment = recruitmentRepository.getById(event.recruitmentId)
+        val user = userRepository.getOrThrow(event.userId)
+        val recruitment = recruitmentRepository.getOrThrow(event.recruitmentId)
         val context = Context().apply {
             setVariables(
                 mapOf(

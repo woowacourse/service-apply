@@ -3,7 +3,7 @@ package apply.application
 import apply.domain.user.User
 import apply.domain.user.UserRepository
 import apply.domain.user.findByEmail
-import apply.domain.user.getById
+import apply.domain.user.getOrThrow
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -29,15 +29,15 @@ class UserService(
 
     fun editPassword(id: Long, request: EditPasswordRequest) {
         require(request.password == request.confirmPassword) { "새 비밀번호가 일치하지 않습니다." }
-        userRepository.getById(id).changePassword(request.oldPassword, request.password)
+        userRepository.getOrThrow(id).changePassword(request.oldPassword, request.password)
     }
 
     fun getInformation(id: Long): UserResponse {
-        val user = userRepository.getById(id)
+        val user = userRepository.getOrThrow(id)
         return UserResponse(user)
     }
 
     fun editInformation(id: Long, request: EditInformationRequest) {
-        userRepository.getById(id).changePhoneNumber(request.phoneNumber)
+        userRepository.getOrThrow(id).changePhoneNumber(request.phoneNumber)
     }
 }

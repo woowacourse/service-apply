@@ -29,7 +29,7 @@ class CheaterRestControllerTest : RestControllerTest() {
         mockMvc.get("/api/cheaters/{cheaterId}", 1L) {
             bearer("valid_token")
         }.andExpect {
-            status { isOk }
+            status { isOk() }
             content { success(response) }
         }
     }
@@ -45,7 +45,7 @@ class CheaterRestControllerTest : RestControllerTest() {
         mockMvc.get("/api/cheaters") {
             bearer("valid_token")
         }.andExpect {
-            status { isOk }
+            status { isOk() }
             content { success(responses) }
         }
     }
@@ -59,7 +59,7 @@ class CheaterRestControllerTest : RestControllerTest() {
             jsonContent(createCheaterData())
             bearer("valid_token")
         }.andExpect {
-            status { isCreated }
+            status { isCreated() }
             content { success(response) }
         }
     }
@@ -71,7 +71,7 @@ class CheaterRestControllerTest : RestControllerTest() {
         mockMvc.delete("/api/cheaters/{cheaterId}", 1L) {
             bearer("valid_token")
         }.andExpect {
-            status { isOk }
+            status { isOk() }
         }
     }
 }

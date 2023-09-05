@@ -3,7 +3,7 @@ package apply.domain.term
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.repository.findByIdOrNull
 
-fun TermRepository.getById(id: Long): Term {
+fun TermRepository.getOrThrow(id: Long): Term {
     if (id == 0L) {
         return Term.SINGLE
     }

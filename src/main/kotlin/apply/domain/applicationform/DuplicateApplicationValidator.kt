@@ -1,7 +1,7 @@
 package apply.domain.applicationform
 
 import apply.domain.recruitment.RecruitmentRepository
-import apply.domain.recruitment.getById
+import apply.domain.recruitment.getOrThrow
 import org.springframework.stereotype.Component
 
 @Component
@@ -18,7 +18,7 @@ class DuplicateApplicationValidator(
     }
 
     private fun List<Long>.hasSameTerm(recruitmentId: Long): Boolean {
-        val recruitment = recruitmentRepository.getById(recruitmentId)
+        val recruitment = recruitmentRepository.getOrThrow(recruitmentId)
         if (recruitment.single) {
             return false
         }

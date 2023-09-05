@@ -2,11 +2,11 @@ package apply.application
 
 import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentRepository
-import apply.domain.recruitment.getById
+import apply.domain.recruitment.getOrThrow
 import apply.domain.recruitmentitem.RecruitmentItem
 import apply.domain.recruitmentitem.RecruitmentItemRepository
 import apply.domain.term.TermRepository
-import apply.domain.term.getById
+import apply.domain.term.getOrThrow
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -18,7 +18,7 @@ class RecruitmentService(
     private val termRepository: TermRepository
 ) {
     fun save(request: RecruitmentData): RecruitmentResponse {
-        val term = termRepository.getById(request.term.id)
+        val term = termRepository.getOrThrow(request.term.id)
         val recruitment = recruitmentRepository.save(
             Recruitment(
                 request.title,
@@ -49,29 +49,29 @@ class RecruitmentService(
 
     fun findAllNotHidden(): List<RecruitmentResponse> {
         return recruitmentRepository.findAllByHiddenFalse()
-            .map { RecruitmentResponse(it, termRepository.getById(it.termId)) }
+            .map { RecruitmentResponse(it, termRepository.getOrThrow(it.termId)) }
     }
 
     fun findAll(): List<RecruitmentResponse> {
         return recruitmentRepository.findAll()
-            .map { RecruitmentResponse(it, termRepository.getById(it.termId)) }
+            .map { RecruitmentResponse(it, termRepository.getOrThrow(it.termId)) }
     }
 
     fun deleteById(id: Long) {
-        val recruitment = recruitmentRepository.getById(id)
+        val recruitment = recruitmentRepository.getOrThrow(id)
         check(!recruitment.recruitable) { "모집 중인 모집은 삭제할 수 없습니다." }
         recruitmentRepository.delete(recruitment)
     }
 
     fun getById(id: Long): RecruitmentResponse {
-        val recruitment = recruitmentRepository.getById(id)
-        val term = termRepository.getById(recruitment.termId)
+        val recruitment = recruitmentRepository.getOrThrow(id)
+        val term = termRepository.getOrThrow(recruitment.termId)
         return RecruitmentResponse(recruitment, term)
     }
 
     fun getNotEndedDataById(id: Long): RecruitmentData {
-        val recruitment = recruitmentRepository.getById(id)
-        val term = termRepository.getById(recruitment.termId)
+        val recruitment = recruitmentRepository.getOrThrow(id)
+        val term = termRepository.getOrThrow(recruitment.termId)
         val recruitmentItems = recruitmentItemRepository.findByRecruitmentIdOrderByPosition(recruitment.id)
         return RecruitmentData(recruitment, term, recruitmentItems)
     }

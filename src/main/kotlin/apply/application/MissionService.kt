@@ -1,13 +1,13 @@
 package apply.application
 
 import apply.domain.evaluation.EvaluationRepository
-import apply.domain.evaluation.getById
+import apply.domain.evaluation.getOrThrow
 import apply.domain.evaluationitem.EvaluationItemRepository
 import apply.domain.judgmentitem.JudgmentItem
 import apply.domain.judgmentitem.JudgmentItemRepository
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionRepository
-import apply.domain.mission.getById
+import apply.domain.mission.getOrThrow
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -48,7 +48,7 @@ class MissionService(
                 "이미 과제가 등록된 평가입니다. evaluationId: $evaluationId"
             }
         } else {
-            val mission = missionRepository.getById(request.id)
+            val mission = missionRepository.getOrThrow(request.id)
             check(mission.evaluationId == evaluationId) {
                 "과제의 평가는 수정할 수 없습니다."
             }
@@ -85,7 +85,7 @@ class MissionService(
     }
 
     fun getById(id: Long): MissionResponse {
-        return missionRepository.getById(id).let(::MissionResponse)
+        return missionRepository.getOrThrow(id).let(::MissionResponse)
     }
 
     fun findAllByRecruitmentId(recruitmentId: Long): List<MissionAndEvaluationResponse> {
@@ -95,17 +95,17 @@ class MissionService(
     }
 
     fun deleteById(id: Long) {
-        val mission = missionRepository.getById(id)
+        val mission = missionRepository.getOrThrow(id)
         check(!mission.submittable) { "제출 가능한 과제는 삭제할 수 없습니다." }
         missionRepository.deleteById(id)
     }
 
     fun getDataById(id: Long): MissionData {
-        val mission = missionRepository.getById(id)
+        val mission = missionRepository.getOrThrow(id)
         val judgmentItemData = judgmentItemRepository.findByMissionId(mission.id)
             ?.let { JudgmentItemData(it, findEvaluationItemData(it.evaluationItemId)) }
             ?: JudgmentItemData()
-        val evaluation = evaluationRepository.getById(mission.evaluationId)
+        val evaluation = evaluationRepository.getOrThrow(mission.evaluationId)
         return MissionData(mission, evaluation, judgmentItemData)
     }
 

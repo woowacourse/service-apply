@@ -93,7 +93,7 @@ class UserRestControllerTest : RestControllerTest() {
         mockMvc.post("/api/users/register") {
             jsonContent(createRegisterUserRequest())
         }.andExpect {
-            status { isOk }
+            status { isOk() }
             content { success(response) }
         }.andDo {
             handle(document("user-register-post"))
@@ -108,7 +108,7 @@ class UserRestControllerTest : RestControllerTest() {
         mockMvc.post("/api/users/login") {
             jsonContent(createAuthenticateUserRequest())
         }.andExpect {
-            status { isOk }
+            status { isOk() }
             content { success(response) }
         }.andDo {
             handle(document("user-login-post"))
@@ -122,7 +122,7 @@ class UserRestControllerTest : RestControllerTest() {
         mockMvc.post("/api/users/login") {
             jsonContent(createAuthenticateUserRequest(password = INVALID_PASSWORD))
         }.andExpect {
-            status { isForbidden }
+            status { isForbidden() }
         }.andDo {
             handle(document("user-login-post-forbidden"))
         }
@@ -135,7 +135,7 @@ class UserRestControllerTest : RestControllerTest() {
         mockMvc.post("/api/users/reset-password") {
             jsonContent(ResetPasswordRequest("회원", "test@email.com", createLocalDate(1995, 2, 2)))
         }.andExpect {
-            status { isNoContent }
+            status { isNoContent() }
         }.andDo {
             handle(document("user-reset-password-post"))
         }
@@ -148,7 +148,7 @@ class UserRestControllerTest : RestControllerTest() {
         mockMvc.post("/api/users/reset-password") {
             jsonContent(ResetPasswordRequest("회원", "test@email.com", createLocalDate(1995, 4, 4)))
         }.andExpect {
-            status { isForbidden }
+            status { isForbidden() }
         }.andDo {
             handle(document("user-reset-password-post-forbidden"))
         }
@@ -162,7 +162,7 @@ class UserRestControllerTest : RestControllerTest() {
             jsonContent(createEditPasswordRequest())
             bearer("valid_token")
         }.andExpect {
-            status { isNoContent }
+            status { isNoContent() }
         }.andDo {
             handle(document("user-edit-password-post"))
         }
@@ -176,7 +176,7 @@ class UserRestControllerTest : RestControllerTest() {
             jsonContent(createEditPasswordRequest(oldPassword = WRONG_PASSWORD))
             bearer("valid_token")
         }.andExpect {
-            status { isForbidden }
+            status { isForbidden() }
         }.andDo {
             handle(document("user-edit-password-post-forbidden"))
         }
@@ -191,7 +191,7 @@ class UserRestControllerTest : RestControllerTest() {
         mockMvc.post("/api/users/authentication-code") {
             param("email", authenticationCode.email)
         }.andExpect {
-            status { isNoContent }
+            status { isNoContent() }
         }.andDo {
             handle(document("user-authentication-code-post"))
         }
@@ -205,7 +205,7 @@ class UserRestControllerTest : RestControllerTest() {
             param("email", "test@email.com")
             param("authenticationCode", "code")
         }.andExpect {
-            status { isNoContent }
+            status { isNoContent() }
         }.andDo {
             handle(document("user-authenticate-email-post"))
         }
@@ -220,7 +220,7 @@ class UserRestControllerTest : RestControllerTest() {
             bearer("valid_token")
             param("keyword", "아마찌")
         }.andExpect {
-            status { isOk }
+            status { isOk() }
             content { success(responses) }
         }
     }
@@ -233,7 +233,7 @@ class UserRestControllerTest : RestControllerTest() {
         mockMvc.get("/api/users/me") {
             bearer("valid_token")
         }.andExpect {
-            status { isOk }
+            status { isOk() }
             content { success(response) }
         }.andDo {
             handle(document("user-me-get"))
@@ -248,7 +248,7 @@ class UserRestControllerTest : RestControllerTest() {
             jsonContent(EditInformationRequest("010-9999-9999"))
             bearer("valid_token")
         }.andExpect {
-            status { isNoContent }
+            status { isNoContent() }
         }.andDo {
             handle(document("user-information-patch"))
         }

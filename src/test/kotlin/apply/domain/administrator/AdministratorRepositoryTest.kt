@@ -33,13 +33,13 @@ class AdministratorRepositoryTest(
         }
 
         expect("식별자로 관리자를 조회한다") {
-            val actual = administratorRepository.getById(administrator.id)
+            val actual = administratorRepository.getOrThrow(administrator.id)
             actual shouldBe administrator
         }
 
         expect("일치하는 식별자를 가진 관리자가 없으면 예외가 발생한다") {
             shouldThrow<NoSuchElementException> {
-                administratorRepository.getById(-1L)
+                administratorRepository.getOrThrow(-1L)
             }
         }
 
