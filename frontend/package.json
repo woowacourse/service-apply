@@ -10,12 +10,13 @@
     "react-dom": "^18.2.0",
     "react-icons": "^4.4.0",
     "react-router-dom": "^6.3.0",
-    "react-scripts": "4.0.3"
+    "react-scripts": "5.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "eject": "react-scripts eject",
+    "test": "react-scripts test",
     "lint": "eslint ./src",
     "lint:fix": "eslint --fix ./src",
     "storybook": "start-storybook -p 6006 -s ./public",
@@ -56,6 +57,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/preset-typescript": "^7.22.15",
     "@storybook/addon-actions": "^6.3.4",
     "@storybook/addon-essentials": "^6.3.4",
     "@storybook/addon-links": "^6.3.4",
@@ -76,5 +78,27 @@
   },
   "msw": {
     "workerDirectory": "public"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.[jt]sx?$": "babel-jest"
+    }
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ],
+      "@babel/preset-typescript"
+    ]
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
   }
 }
