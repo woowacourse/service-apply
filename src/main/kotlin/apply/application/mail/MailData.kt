@@ -1,7 +1,7 @@
 package apply.application.mail
 
 import apply.domain.mail.MailHistory
-import apply.utils.MarkdownProcessor
+import support.MarkdownProcessor
 import org.springframework.core.io.ByteArrayResource
 import java.time.LocalDateTime
 import javax.validation.constraints.NotEmpty

@@ -1,4 +1,4 @@
-package apply.utils
+package support
 
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.string.shouldContain

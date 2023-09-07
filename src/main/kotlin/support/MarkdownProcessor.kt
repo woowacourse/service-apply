@@ -1,4 +1,4 @@
-package apply.utils
+package support
 
 import org.intellij.markdown.flavours.commonmark.CommonMarkFlavourDescriptor
 import org.intellij.markdown.html.HtmlGenerator
