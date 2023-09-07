@@ -7,8 +7,8 @@ import io.kotest.matchers.string.shouldContain
 import org.springframework.test.context.ContextConfiguration
 import support.test.IntegrationTest
 
-@IntegrationTest
 @ContextConfiguration(classes = [TestMailConfig::class])
+@IntegrationTest
 class MailServiceTest(
     private val mailService: MailService
 ) : BehaviorSpec({
