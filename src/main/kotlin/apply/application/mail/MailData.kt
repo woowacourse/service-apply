@@ -2,7 +2,6 @@ package apply.application.mail
 
 import apply.domain.mail.MailHistory
 import org.springframework.core.io.ByteArrayResource
-import support.markdownToHtml
 import java.time.LocalDateTime
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
@@ -39,8 +38,4 @@ data class MailData(
         mailHistory.sentTime,
         id = mailHistory.id
     )
-
-    fun getHtmlBody(): String {
-        return markdownToHtml(body)
-    }
 }

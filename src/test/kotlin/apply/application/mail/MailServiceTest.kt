@@ -19,7 +19,7 @@ class MailServiceTest(
         val mailData = createMailData(body = body)
 
         When("common 메일 본문에 적용하면") {
-            val commonMailBody = mailService.createCommonMailBodyFrom(mailData)
+            val commonMailBody = mailService.toHtmlBody(mailData)
 
             Then("본문이 포함된 HTML로 작성된다.") {
                 println(commonMailBody)
