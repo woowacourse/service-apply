@@ -8,8 +8,8 @@ private val logger = KotlinLogging.logger { }
 
 class FakeMailSender : MailSender {
     override fun send(toAddress: String, subject: String, body: String) {
-        logger.info("send mail: to - {}, subject - {}", toAddress, subject)
-        logger.info("body: {}", body)
+        logger.debug { "send mail: to - $toAddress, subject - $subject" }
+        logger.debug { "body: $body" }
     }
 
     override fun sendBcc(
@@ -18,7 +18,7 @@ class FakeMailSender : MailSender {
         body: String,
         attachments: Map<String, ByteArrayResource>
     ) {
-        logger.info("send mail: to - {}, subject - {}", toAddresses, subject)
-        logger.info("body: {}", body)
+        logger.debug { "send mail: to - $toAddresses, subject - $subject" }
+        logger.debug { "body: $body" }
     }
 }
