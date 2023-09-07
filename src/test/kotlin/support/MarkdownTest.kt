@@ -3,7 +3,7 @@ package support
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.string.shouldContain
 
-class MarkdownProcessorTest : StringSpec({
+class MarkdownTest : StringSpec({
     "마크다운 문법으로 작성된 내용을 HTML로 변환할 수 있다" {
         val src = "안녕하세요. 우아한테크코스입니다.\n" +
             "3주 차 미션에서는 2주 차에서 학습한 것에 2가지 목표를 추가했어요.\n" +
@@ -18,7 +18,7 @@ class MarkdownProcessorTest : StringSpec({
             "[우아한테크코스 지원 플랫폼](https://apply.techcourse.co.kr/)에서 프리코스 과제를 제출한다.\n" +
             "- 지원 플랫폼에서 과제를 제출할 때 미션을 진행하며 경험한 내용에 대한 소감문을 작성한다."
 
-        val html = MarkdownProcessor.generateToHtml(src)
+        val html = markdownToHtml(src)
 
         println(html)
         html shouldContain "<ul>"
