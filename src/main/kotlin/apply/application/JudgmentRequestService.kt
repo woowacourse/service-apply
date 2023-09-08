@@ -1,7 +1,7 @@
 package apply.application
 
 import apply.domain.assignment.AssignmentRepository
-import apply.domain.assignment.getById
+import apply.domain.assignment.getOrThrow
 import apply.domain.judgment.JudgmentStartedEvent
 import apply.domain.judgmentitem.JudgmentItemRepository
 import apply.domain.judgmentitem.getByMissionId
@@ -18,7 +18,7 @@ class JudgmentRequestService(
     @Async
     @TransactionalEventListener
     fun request(event: JudgmentStartedEvent) {
-        val assignment = assignmentRepository.getById(event.assignmentId)
+        val assignment = assignmentRepository.getOrThrow(event.assignmentId)
         val judgmentItem = judgmentItemRepository.getByMissionId(assignment.missionId)
         judgmentAgency.requestJudge(
             JudgmentRequest(

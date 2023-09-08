@@ -8,7 +8,7 @@ fun AssignmentRepository.getByUserIdAndMissionId(userId: Long, missionId: Long):
         ?: throw NoSuchElementException("과제 제출물이 존재하지 않습니다. userId: $userId, missionId: $missionId")
 }
 
-fun AssignmentRepository.getById(id: Long): Assignment = findByIdOrNull(id)
+fun AssignmentRepository.getOrThrow(id: Long): Assignment = findByIdOrNull(id)
     ?: throw NoSuchElementException("과제 제출물이 존재하지 않습니다. id: $id")
 
 interface AssignmentRepository : JpaRepository<Assignment, Long> {

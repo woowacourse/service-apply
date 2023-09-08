@@ -1,4 +1,5 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
+import { MemoryRouter } from "react-router-dom";
 import { missionsDummy } from "./../../../mock/dummy";
 import MyMissionItem from "./MyMissionItem";
 
@@ -7,17 +8,25 @@ export default {
   component: MyMissionItem,
   decorators: [
     (Story) => (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-          width: "100%",
-        }}
+      <MemoryRouter
+        initialEntries={[
+          {
+            pathname: "/",
+          },
+        ]}
       >
-        <Story />
-      </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+            width: "100%",
+          }}
+        >
+          <Story />
+        </div>
+      </MemoryRouter>
     ),
   ],
 } as ComponentMeta<typeof MyMissionItem>;

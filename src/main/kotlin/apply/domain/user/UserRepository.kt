@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param
 fun UserRepository.findByEmail(email: String): User? = findByInformationEmail(email)
 fun UserRepository.findAllByEmailIn(emails: List<String>): List<User> = findAllByInformationEmailIn(emails)
 fun UserRepository.existsByEmail(email: String): Boolean = existsByInformationEmail(email)
-fun UserRepository.getById(id: Long): User = findByIdOrNull(id)
+fun UserRepository.getOrThrow(id: Long): User = findByIdOrNull(id)
     ?: throw NoSuchElementException("회원이 존재하지 않습니다. id: $id")
 
 interface UserRepository : JpaRepository<User, Long> {

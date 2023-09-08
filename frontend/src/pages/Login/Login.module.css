@@ -1,7 +1,7 @@
 .find-password {
   text-decoration: none;
   font-size: 0.875rem;
-  color: #2c3e50;
+  color: var(--cyan);
   margin-left: auto;
 }
 

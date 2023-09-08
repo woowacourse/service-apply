@@ -9,7 +9,7 @@ import apply.domain.recruitmentitem.RecruitmentItem
 import apply.domain.recruitmentitem.RecruitmentItemRepository
 import apply.domain.term.Term
 import apply.domain.term.TermRepository
-import apply.domain.term.getById
+import apply.domain.term.getOrThrow
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.mockk.Runs
@@ -28,7 +28,7 @@ class RecruitmentServiceTest : BehaviorSpec({
     val recruitmentService = RecruitmentService(recruitmentRepository, recruitmentItemRepository, termRepository)
 
     Given("특정 기수가 있는 경우") {
-        every { termRepository.getById(any()) } returns Term.SINGLE
+        every { termRepository.getOrThrow(any()) } returns Term.SINGLE
         every { recruitmentRepository.save(any()) } returns createRecruitment(id = 1L)
         every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns emptyList()
         every { recruitmentItemRepository.deleteAll(any()) } just Runs
@@ -58,7 +58,7 @@ class RecruitmentServiceTest : BehaviorSpec({
     Given("모집 항목이 없는 특정 모집이 있는 경우") {
         val recruitment = createRecruitment(id = 1L)
 
-        every { termRepository.getById(any()) } returns Term.SINGLE
+        every { termRepository.getOrThrow(any()) } returns Term.SINGLE
         every { recruitmentRepository.save(any()) } returns recruitment
         every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns emptyList()
         every { recruitmentItemRepository.deleteAll(any()) } just Runs
@@ -81,7 +81,7 @@ class RecruitmentServiceTest : BehaviorSpec({
         val recruitmentItem2 = createRecruitmentItem(id = 2L)
         val recruitmentItems = listOf(recruitmentItem1, recruitmentItem2)
 
-        every { termRepository.getById(any()) } returns Term.SINGLE
+        every { termRepository.getOrThrow(any()) } returns Term.SINGLE
         every { recruitmentRepository.save(any()) } returns recruitment
         every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns recruitmentItems
         every { recruitmentItemRepository.deleteAll(any()) } just Runs

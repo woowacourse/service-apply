@@ -10,7 +10,7 @@
 
   font-size: 1.125rem;
   font-weight: normal;
-  color: var(--gray-007);
+  color: var(--gray-600);
 }
 
 .label-bold label {
@@ -32,13 +32,13 @@
 
 .description-url {
   font-size: 1rem;
-  color: var(--gray-009);
+  color: var(--gray-800);
 }
 
 .description-url-small {
   margin-top: 0.25rem;
   font-size: 0.875rem;
-  color: var(--gray-008);
+  color: var(--gray-700);
 }
 
 .box-agree {

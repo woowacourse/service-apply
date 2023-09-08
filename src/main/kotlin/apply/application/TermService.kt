@@ -3,7 +3,7 @@ package apply.application
 import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.term.Term
 import apply.domain.term.TermRepository
-import apply.domain.term.getById
+import apply.domain.term.getOrThrow
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -20,7 +20,7 @@ class TermService(
     }
 
     fun getById(termId: Long): TermResponse {
-        return termRepository.getById(termId).let(::TermResponse)
+        return termRepository.getOrThrow(termId).let(::TermResponse)
     }
 
     fun findAll(): List<TermResponse> {

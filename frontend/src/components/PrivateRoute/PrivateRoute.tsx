@@ -1,11 +1,12 @@
 import { Outlet, Navigate } from "react-router-dom";
-import { PATH } from "../../constants/path";
-import useTokenContext from "../../hooks/useTokenContext";
 
-const PrivateRoute = ({ ...props }) => {
+import useTokenContext from "../../hooks/useTokenContext";
+import { PATH } from "../../constants/path";
+
+const PrivateRoute = () => {
   const { token } = useTokenContext();
 
-  return token ? <Outlet {...props} /> : <Navigate to={PATH.LOGIN} />;
+  return token ? <Outlet /> : <Navigate to={PATH.LOGIN} />;
 };
 
 export default PrivateRoute;

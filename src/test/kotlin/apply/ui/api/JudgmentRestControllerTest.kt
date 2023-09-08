@@ -33,7 +33,7 @@ class JudgmentRestControllerTest : RestControllerTest() {
         mockMvc.post("/api/recruitments/{recruitmentId}/missions/{missionId}/judgments/judge-example", 1L, 1L) {
             bearer("valid_token")
         }.andExpect {
-            status { isOk }
+            status { isOk() }
             content { success(response) }
         }.andDo {
             handle(document("judgment-judge-example-post"))
@@ -48,7 +48,7 @@ class JudgmentRestControllerTest : RestControllerTest() {
         mockMvc.get("/api/recruitments/{recruitmentId}/missions/{missionId}/judgments/judge-example", 1L, 1L) {
             bearer("valid_token")
         }.andExpect {
-            status { isOk }
+            status { isOk() }
             content { success(response) }
         }.andDo {
             handle(document("judgment-judge-example-get"))
@@ -62,7 +62,7 @@ class JudgmentRestControllerTest : RestControllerTest() {
         mockMvc.post("/api/judgments/{judgmentId}/success", 1L) {
             jsonContent(createSuccessJudgmentRequest())
         }.andExpect {
-            status { isOk }
+            status { isOk() }
         }.andDo {
             handle(document("judgment-success-post"))
         }
@@ -75,7 +75,7 @@ class JudgmentRestControllerTest : RestControllerTest() {
         mockMvc.post("/api/judgments/{judgmentId}/fail", 1L) {
             jsonContent(createFailJudgmentRequest())
         }.andExpect {
-            status { isOk }
+            status { isOk() }
         }.andDo {
             handle(document("judgment-fail-post"))
         }
@@ -88,7 +88,7 @@ class JudgmentRestControllerTest : RestControllerTest() {
         mockMvc.post("/api/judgments/{judgmentId}/cancel", 1L) {
             jsonContent(createCancelJudgmentRequest())
         }.andExpect {
-            status { isOk }
+            status { isOk() }
         }.andDo {
             handle(document("judgment-cancel-post"))
         }
@@ -102,7 +102,7 @@ class JudgmentRestControllerTest : RestControllerTest() {
         mockMvc.post("/api/evaluations/{evaluationId}/assignments/{assignmentId}/judgments/judge-real", 1L, 1L) {
             bearer("valid_token")
         }.andExpect {
-            status { isOk }
+            status { isOk() }
             content { success(response) }
         }
     }
@@ -114,7 +114,7 @@ class JudgmentRestControllerTest : RestControllerTest() {
         mockMvc.post("/api/evaluations/{evaluationId}/judgments/judge-all", 1L) {
             bearer("valid_token")
         }.andExpect {
-            status { isOk }
+            status { isOk() }
         }
     }
 }

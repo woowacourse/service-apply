@@ -26,7 +26,7 @@ import apply.domain.evaluationtarget.EvaluationStatus.PASS
 import apply.domain.evaluationtarget.EvaluationStatus.WAITING
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
-import apply.domain.evaluationtarget.getById
+import apply.domain.evaluationtarget.getOrThrow
 import apply.domain.user.User
 import apply.domain.user.UserRepository
 import io.kotest.core.spec.style.BehaviorSpec
@@ -285,7 +285,7 @@ class EvaluationTargetIntegrationTest(
             )
 
             Then("평가 결과가 변경된다") {
-                val actual = evaluationTargetRepository.getById(evaluationTarget.id)
+                val actual = evaluationTargetRepository.getOrThrow(evaluationTarget.id)
                 actual.evaluationStatus shouldBe PASS
                 actual.evaluationAnswers.first(1L).score shouldBe 5
                 actual.note shouldBe "특이 사항(수정)"

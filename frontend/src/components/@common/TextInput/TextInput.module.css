@@ -1,6 +1,6 @@
 .text-input {
   padding: 0.625rem 0.875rem;
-  border: 1px solid var(--gray-005);
+  border: 1px solid var(--gray-400);
   border-radius: 0.25rem;
   transition-duration: 0.5s;
   font-size: 1rem;
@@ -13,5 +13,5 @@
 .text-input:read-only,
 .text-input:disabled {
   cursor: default;
-  background: var(--gray-003);
+  background: var(--gray-300);
 }

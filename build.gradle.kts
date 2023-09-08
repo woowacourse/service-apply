@@ -2,15 +2,15 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     val kotlinVersion = "1.6.21"
-    id("org.springframework.boot") version "2.3.3.RELEASE"
-    id("io.spring.dependency-management") version "1.0.10.RELEASE"
+    id("org.springframework.boot") version "2.7.15"
+    id("io.spring.dependency-management") version "1.1.3"
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.spring") version kotlinVersion
     kotlin("plugin.jpa") version kotlinVersion
     id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
     id("com.vaadin") version "0.8.0"
     id("org.asciidoctor.jvm.convert") version "3.3.2"
-    id("org.flywaydb.flyway") version "7.12.0"
+    id("org.flywaydb.flyway") version "7.15.0"
 }
 
 group = "io.github.woowacourse"
@@ -21,11 +21,13 @@ repositories {
     mavenCentral()
     maven {
         url = uri("http://maven.vaadin.com/vaadin-addons")
+        isAllowInsecureProtocol = true
     }
 }
 
-extra["vaadinVersion"] = "14.3.3"
+extra["vaadinVersion"] = "14.8.20"
 extra["kotlin-coroutines.version"] = "1.6.0"
+extra["flyway.version"] = "7.15.0"
 
 val asciidoctorExt: Configuration by configurations.creating
 val snippetsDir by extra { "build/generated-snippets" }
@@ -51,15 +53,14 @@ dependencies {
     compileOnly("io.jsonwebtoken:jjwt-api:0.11.2")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.2")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.2")
-    runtimeOnly("mysql:mysql-connector-java")
+    runtimeOnly("com.mysql:mysql-connector-j")
     runtimeOnly("com.h2database:h2")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
-        exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
         exclude(group = "org.mockito")
     }
-    testImplementation("com.ninja-squad:springmockk:2.0.3")
-    asciidoctorExt("org.springframework.restdocs:spring-restdocs-asciidoctor")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
+    asciidoctorExt("org.springframework.restdocs:spring-restdocs-asciidoctor")
+    testImplementation("com.ninja-squad:springmockk:3.1.2")
     testImplementation("io.kotest:kotest-runner-junit5:5.4.2")
     testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.2")
 }

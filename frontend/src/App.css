@@ -25,8 +25,8 @@
 html,
 body {
   height: 100%;
-  background: var(--light-blue-gray);
-  color: var(--black-004);
+  background: var(--gray-150);
+  color: var(--gray-900);
 }
 
 ul,

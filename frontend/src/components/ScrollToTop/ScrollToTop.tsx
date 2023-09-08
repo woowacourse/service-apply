@@ -1,8 +1,11 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import PropTypes from "prop-types";
 
-const ScrollToTop = ({ children }) => {
+type ScrollToTopProps = {
+  children: JSX.Element;
+};
+
+const ScrollToTop = ({ children }: ScrollToTopProps) => {
   const { pathname } = useLocation();
 
   useEffect(() => {
@@ -13,7 +16,3 @@ const ScrollToTop = ({ children }) => {
 };
 
 export default ScrollToTop;
-
-ScrollToTop.propTypes = {
-  children: PropTypes.node,
-};

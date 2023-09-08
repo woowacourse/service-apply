@@ -1,21 +1,20 @@
 import axios from "axios";
 import { Answer, ApplicationForm } from "../../types/domains/applicationForms";
-import { ResponseDataWithMessage, RequestWithToken } from "../../types/utility";
+import { MyApplicationType } from "../../types/domains/recruitments";
+import { RequestWithToken } from "../../types/utility";
 import { headers } from "./api";
 
 export type FetchMyApplicationFormsRequest = string;
 
-export type FetchMyApplicationFormsResponseData = ResponseDataWithMessage<
-  { recruitmentId: number; submitted: boolean }[]
->;
+export type FetchMyApplicationFormsResponseData = MyApplicationType[];
 
 export type FetchFormRequest = RequestWithToken<{ recruitmentId: string | null }>;
 
-export type FetchFormResponseData = ResponseDataWithMessage<ApplicationForm>;
+export type FetchFormResponseData = ApplicationForm;
 
 export type CreateFormRequest = RequestWithToken<{ recruitmentId: string | null }>;
 
-export type CreateFormResponseData = ResponseDataWithMessage<ApplicationForm>;
+export type CreateFormResponseData = ApplicationForm;
 
 export type UpdateFormRequest = RequestWithToken<{
   data: {

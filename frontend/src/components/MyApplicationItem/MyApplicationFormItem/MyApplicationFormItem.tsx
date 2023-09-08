@@ -2,30 +2,36 @@ import classNames from "classnames";
 import { useMemo } from "react";
 import { generatePath } from "react-router";
 import { useNavigate } from "react-router-dom";
-import { Recruitment } from "../../../../types/domains/recruitments";
+import { Recruitment, RecruitmentStatus } from "../../../../types/domains/recruitments";
 import { PARAM, PATH } from "../../../constants/path";
-import { BUTTON_LABEL } from "../../../pages/MyApplication/MyApplication";
 import { formatDateTime } from "../../../utils/format/date";
 import { generateQuery } from "../../../utils/route/query";
 import ApplyButton from "../MyApplicationButtons/ApplyButton";
 import styles from "../MyApplicationItem.module.css";
 import RecruitmentDetail from "../RecruitmentDetail/RecruitmentDetail";
+import { BUTTON_LABEL, RECRUITMENT_STATUS } from "./../../../constants/recruitment";
 
 type MyApplicationFormItemProps = {
   recruitment: Recruitment;
   submitted: boolean;
 };
 
-const applicationLabel = (submitted: boolean, recruitable: boolean) => {
-  if (!recruitable) {
-    return BUTTON_LABEL.UNSUBMITTABLE;
-  }
+const APPLICATION_STATUS = {
+  [RECRUITMENT_STATUS.RECRUITABLE]: BUTTON_LABEL.BEFORE_SUBMIT,
+  [RECRUITMENT_STATUS.RECRUITING]: BUTTON_LABEL.EDIT,
+  [RECRUITMENT_STATUS.UNRECRUITABLE]: BUTTON_LABEL.UNSUBMITTABLE,
+  [RECRUITMENT_STATUS.ENDED]: BUTTON_LABEL.UNSUBMITTED,
+} as const;
 
-  return submitted ? BUTTON_LABEL.COMPLETE : BUTTON_LABEL.EDIT;
+const applicationLabel = (submitted: boolean, status: RecruitmentStatus) => {
+  if (submitted) {
+    return BUTTON_LABEL.COMPLETE;
+  }
+  return APPLICATION_STATUS[status];
 };
 
-const isApplicationDisabled = (submitted: boolean, recruitable: boolean) => {
-  return submitted || !recruitable;
+const isApplicationDisabled = (submitted: boolean, status: RecruitmentStatus) => {
+  return submitted || status !== RECRUITMENT_STATUS.RECRUITING;
 };
 
 const MyApplicationFormItem = ({ recruitment, submitted }: MyApplicationFormItemProps) => {
@@ -41,8 +47,8 @@ const MyApplicationFormItem = ({ recruitment, submitted }: MyApplicationFormItem
     [recruitment.endDateTime]
   );
 
-  const isButtonDisabled = isApplicationDisabled(submitted, recruitment.recruitable);
-  const buttonLabel = applicationLabel(submitted, recruitment.recruitable);
+  const isButtonDisabled = isApplicationDisabled(submitted, recruitment.status);
+  const applyButtonLabel = applicationLabel(submitted, recruitment.status);
 
   const routeToApplicationForm = (recruitment: Recruitment) => {
     navigate(
@@ -73,9 +79,8 @@ const MyApplicationFormItem = ({ recruitment, submitted }: MyApplicationFormItem
             onClick={() => {
               routeToApplicationForm(recruitment);
             }}
-          >
-            {buttonLabel}
-          </ApplyButton>
+            label={applyButtonLabel}
+          />
         </div>
       </div>
     </div>

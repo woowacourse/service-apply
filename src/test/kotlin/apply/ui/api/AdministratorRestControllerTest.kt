@@ -28,7 +28,7 @@ class AdministratorRestControllerTest : RestControllerTest() {
             jsonContent(createAdministratorData())
             bearer("valid_token")
         }.andExpect {
-            status { isCreated }
+            status { isCreated() }
             content { success(response) }
         }
     }
@@ -45,7 +45,7 @@ class AdministratorRestControllerTest : RestControllerTest() {
         mockMvc.get("/api/administrators") {
             bearer("valid_token")
         }.andExpect {
-            status { isOk }
+            status { isOk() }
             content { success(responses) }
         }
     }
@@ -58,7 +58,7 @@ class AdministratorRestControllerTest : RestControllerTest() {
         mockMvc.get("/api/administrators/{administratorId}", 1L) {
             bearer("valid_token")
         }.andExpect {
-            status { isOk }
+            status { isOk() }
             content { success(response) }
         }
     }
@@ -71,7 +71,7 @@ class AdministratorRestControllerTest : RestControllerTest() {
             jsonContent(createAdministratorData())
             bearer("valid_token")
         }.andExpect {
-            status { isNoContent }
+            status { isNoContent() }
         }
     }
 }

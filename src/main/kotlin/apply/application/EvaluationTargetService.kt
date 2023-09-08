@@ -4,14 +4,14 @@ import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.CheaterRepository
 import apply.domain.evaluation.Evaluation
 import apply.domain.evaluation.EvaluationRepository
-import apply.domain.evaluation.getById
+import apply.domain.evaluation.getOrThrow
 import apply.domain.evaluationitem.EvaluationItemRepository
 import apply.domain.evaluationtarget.EvaluationAnswer
 import apply.domain.evaluationtarget.EvaluationAnswers
 import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
-import apply.domain.evaluationtarget.getById
+import apply.domain.evaluationtarget.getOrThrow
 import apply.domain.user.UserRepository
 import apply.domain.user.findAllByEmailIn
 import org.springframework.stereotype.Service
@@ -59,7 +59,7 @@ class EvaluationTargetService(
      * @see [평가_대상자_불러오기](https://github.com/woowacourse/service-apply/issues/301)
      */
     fun load(evaluationId: Long) {
-        val evaluation = evaluationRepository.getById(evaluationId)
+        val evaluation = evaluationRepository.getOrThrow(evaluationId)
         val latestApplicants = findLatestApplicants(evaluation)
         val loadedApplicants = findLoadedApplicants(evaluationId)
         val cheaters = findCheatersIn(latestApplicants)
@@ -124,8 +124,8 @@ class EvaluationTargetService(
     }
 
     fun getGradeEvaluation(targetId: Long): GradeEvaluationResponse {
-        val evaluationTarget = evaluationTargetRepository.getById(targetId)
-        val evaluation = evaluationRepository.getById(evaluationTarget.evaluationId)
+        val evaluationTarget = evaluationTargetRepository.getOrThrow(targetId)
+        val evaluation = evaluationRepository.getOrThrow(evaluationTarget.evaluationId)
         val evaluationItems = evaluationItemRepository.findByEvaluationIdOrderByPosition(evaluation.id)
 
         val evaluationItemScores = evaluationItems.map {
@@ -148,7 +148,7 @@ class EvaluationTargetService(
     }
 
     fun grade(evaluationTargetId: Long, request: EvaluationTargetData) {
-        val evaluationTarget = evaluationTargetRepository.getById(evaluationTargetId)
+        val evaluationTarget = evaluationTargetRepository.getOrThrow(evaluationTargetId)
         val evaluationAnswers = request.evaluationItemScores
             .map { EvaluationAnswer(it.score, it.id) }
             .toMutableList()
