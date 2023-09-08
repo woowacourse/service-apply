@@ -90,7 +90,7 @@ class MailService(
 
     @Async
     fun sendMailsByBcc(request: MailData, files: Map<String, ByteArrayResource>) {
-        val body = toHtmlBody(request)
+        val body = generateMailBody(request)
         val recipients = request.recipients + mailProperties.username
 
         // TODO: 성공과 실패를 분리하여 히스토리 관리
@@ -113,7 +113,7 @@ class MailService(
         )
     }
 
-    fun toHtmlBody(mailData: MailData): String {
+    fun generateMailBody(mailData: MailData): String {
         val context = Context().apply {
             setVariables(
                 mapOf(
