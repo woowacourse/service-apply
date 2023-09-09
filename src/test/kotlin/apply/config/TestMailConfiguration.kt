@@ -1,16 +1,16 @@
 package apply.config
 
+import apply.application.mail.FakeMailSender
 import apply.application.mail.MailSender
-import apply.infra.mail.FakeMailSender
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Primary
 
 @TestConfiguration
-class TestMailConfig {
+class TestMailConfiguration {
     @Primary
     @Bean
-    fun testMailSender(): MailSender {
+    fun fakeMailSender(): MailSender {
         return FakeMailSender()
     }
 }
