@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.event.TransactionalEventListener
 import org.thymeleaf.context.Context
 import org.thymeleaf.spring5.ISpringTemplateEngine
-import support.markdownToHtml
+import support.markdownToEmbeddedHtml
 
 private const val MAIL_SENDING_UNIT: Int = 50
 
@@ -117,7 +117,7 @@ class MailService(
         val context = Context().apply {
             setVariables(
                 mapOf(
-                    "content" to markdownToHtml(mailData.body),
+                    "content" to markdownToEmbeddedHtml(mailData.body),
                     "url" to applicationProperties.url
                 )
             )
