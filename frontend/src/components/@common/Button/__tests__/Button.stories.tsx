@@ -1,5 +1,5 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import Button, { BUTTON_VARIANT } from "./Button";
+import Button, { BUTTON_VARIANT } from "../Button";
 
 export default {
   title: "form/Button",
