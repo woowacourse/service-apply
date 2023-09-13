@@ -49,6 +49,7 @@ dependencies {
     implementation("com.amazonaws:aws-java-sdk-ses:1.11.880")
     implementation("com.amazonaws:aws-java-sdk-sqs:1.12.+")
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.0")
+    implementation("org.jetbrains:markdown:0.5.0")
     compileOnly("io.jsonwebtoken:jjwt-api:0.11.2")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.2")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.2")

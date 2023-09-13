@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.event.TransactionalEventListener
 import org.thymeleaf.context.Context
 import org.thymeleaf.spring5.ISpringTemplateEngine
+import support.markdownToEmbeddedHtml
 
 private const val MAIL_SENDING_UNIT: Int = 50
 
@@ -89,15 +90,7 @@ class MailService(
 
     @Async
     fun sendMailsByBcc(request: MailData, files: Map<String, ByteArrayResource>) {
-        val context = Context().apply {
-            setVariables(
-                mapOf(
-                    "content" to request.body,
-                    "url" to applicationProperties.url
-                )
-            )
-        }
-        val body = templateEngine.process("mail/common", context)
+        val body = generateMailBody(request)
         val recipients = request.recipients + mailProperties.username
 
         // TODO: 성공과 실패를 분리하여 히스토리 관리
@@ -118,5 +111,17 @@ class MailService(
                 request.sentTime
             )
         )
+    }
+
+    fun generateMailBody(mailData: MailData): String {
+        val context = Context().apply {
+            setVariables(
+                mapOf(
+                    "content" to markdownToEmbeddedHtml(mailData.body),
+                    "url" to applicationProperties.url
+                )
+            )
+        }
+        return templateEngine.process("mail/common", context)
     }
 }
