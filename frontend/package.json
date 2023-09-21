@@ -10,22 +10,24 @@
     "react-dom": "^18.2.0",
     "react-icons": "^4.4.0",
     "react-router-dom": "^6.3.0",
-    "react-scripts": "4.0.3"
+    "react-scripts": "5.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "eject": "react-scripts eject",
+    "test": "react-scripts test",
     "lint": "eslint ./src",
     "lint:fix": "eslint --fix ./src",
-    "storybook": "start-storybook -p 6006 -s ./public",
-    "build-storybook": "build-storybook -s ./public"
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "eslintConfig": {
     "extends": [
       "react-app",
       "react-app/jest",
-      "plugin:prettier/recommended"
+      "plugin:prettier/recommended",
+      "plugin:storybook/recommended"
     ],
     "rules": {
       "no-control-regex": "off",
@@ -56,25 +58,63 @@
     ]
   },
   "devDependencies": {
-    "@storybook/addon-actions": "^6.3.4",
-    "@storybook/addon-essentials": "^6.3.4",
-    "@storybook/addon-links": "^6.3.4",
-    "@storybook/node-logger": "^6.3.4",
-    "@storybook/preset-create-react-app": "^3.2.0",
-    "@storybook/react": "^6.3.4",
+    "@babel/preset-typescript": "^7.22.15",
+    "@storybook/addon-actions": "^7.4.1",
+    "@storybook/addon-essentials": "^7.4.1",
+    "@storybook/addon-interactions": "^7.4.1",
+    "@storybook/addon-links": "^7.4.1",
+    "@storybook/addon-onboarding": "^1.0.8",
+    "@storybook/blocks": "^7.4.1",
+    "@storybook/node-logger": "^7.4.1",
+    "@storybook/preset-create-react-app": "^7.4.1",
+    "@storybook/react": "^7.4.1",
+    "@storybook/react-webpack5": "^7.4.1",
+    "@storybook/testing-library": "^0.2.0",
+    "@testing-library/jest-dom": "^6.1.3",
+    "@testing-library/react": "^14.0.0",
+    "@types/jest": "^29.5.4",
     "@types/node": "^18.6.4",
     "@types/react": "^18.0.16",
     "@types/react-datepicker": "^4.4.2",
     "@types/react-dom": "^18.0.6",
     "babel-loader": "8.1.0",
+    "babel-plugin-named-exports-order": "^0.0.2",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-storybook": "^0.6.13",
     "msw": "^0.47.4",
     "msw-storybook-addon": "^1.2.0",
     "prettier": "^2.3.2",
-    "typescript": "^4.7.4"
+    "prop-types": "^15.8.1",
+    "storybook": "^7.4.1",
+    "typescript": "^4.7.4",
+    "webpack": "^5.88.2"
   },
   "msw": {
     "workerDirectory": "public"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.[jt]sx?$": "babel-jest"
+    },
+    "testMatch": [
+      "**/__tests__/**/*.test.[jt]s?(x)"
+    ]
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ],
+      "@babel/preset-typescript"
+    ]
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
