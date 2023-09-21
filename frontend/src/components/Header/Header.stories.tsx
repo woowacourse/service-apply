@@ -1,20 +1,12 @@
-import { addDecorator } from "@storybook/react";
+import { StoryFn } from "@storybook/react";
 import { MemoryRouter } from "react-router-dom";
 import Header from "./Header";
 
-type DecoratorFunction = Parameters<typeof addDecorator>[0];
-
-type HeaderMetaData = {
-  title: string;
-  component: () => JSX.Element;
-  decorators?: DecoratorFunction[];
-};
-
-const HeaderMeta: HeaderMetaData = {
+export default {
   title: "components/Header",
   component: Header,
   decorators: [
-    (Story) => (
+    (Story: StoryFn) => (
       <MemoryRouter
         initialEntries={[
           {
@@ -27,8 +19,6 @@ const HeaderMeta: HeaderMetaData = {
     ),
   ],
 };
-
-export default HeaderMeta;
 
 const Template = () => <Header />;
 

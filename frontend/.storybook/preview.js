@@ -1,4 +1,3 @@
-import { addDecorator } from "@storybook/react";
 import axios from "axios";
 import { initializeWorker, mswDecorator } from "msw-storybook-addon";
 import "../src/api/api";
@@ -14,7 +13,6 @@ export const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 axios.defaults.baseURL = API_BASE_URL;
 
 initializeWorker();
-addDecorator(mswDecorator);
 
 export const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
@@ -42,4 +40,5 @@ export const decorators = [
       </TokenProvider>
     </RecruitmentContext.Provider>
   ),
+  mswDecorator,
 ];
