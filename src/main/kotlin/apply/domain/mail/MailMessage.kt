@@ -49,7 +49,11 @@ class MailMessage private constructor(
                 recipients = recipients,
                 creatorId = creatorId
             ).apply {
-                this.reservation = MailReservation()
+                this.reservation = MailReservation(
+                    this,
+                    creatorId = creatorId,
+                    reservationTime = reservationTime
+                )
             }
         }
     }
