@@ -52,6 +52,12 @@ class MailReservation(
     fun complete() {
         status = MailReservationStatus.FINISHED
     }
+
+    fun validateStatus() {
+        check(status == MailReservationStatus.WAITING) {
+            "메일 예약은 WAITING 상태에서만 가능합니다."
+        }
+    }
 }
 
 enum class MailReservationStatus {

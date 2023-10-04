@@ -14,19 +14,19 @@ import javax.persistence.OneToMany
 @Entity
 class MailMessage private constructor(
     @Column(nullable = false)
-    val subject: String,
+    var subject: String,
 
     @Column(nullable = false)
     @Lob
-    val body: String,
+    var body: String,
 
     @Column(nullable = false)
-    val sender: String,
+    var sender: String,
 
     @Column(nullable = false)
     @Convert(converter = StringToListConverter::class)
     @Lob
-    val recipients: List<String>,
+    var recipients: List<String>,
 
     @Column(nullable = false)
     val creatorId: Long,
@@ -45,11 +45,25 @@ class MailMessage private constructor(
         private set
 
     fun reservation(): MailReservation? {
-        if (reservations.isEmpty()) {
+        if (!hasReservation()) {
             return null
         }
 
         return reservations.first()
+    }
+
+    fun update(subject: String, body: String, recipients: List<String>) {
+        check(hasReservation())
+        reservation()?.validateStatus()
+
+        this.subject = subject
+        this.body = body
+        this.recipients = recipients
+        this.modifiedDateTime = LocalDateTime.now()
+    }
+
+    private fun hasReservation(): Boolean {
+        return reservations.isNotEmpty()
     }
 
     companion object {
