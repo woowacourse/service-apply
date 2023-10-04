@@ -18,4 +18,10 @@ class MailReservationService(
 
         return MailReservationResponse(mailReservationRepository.save(mailReservation))
     }
+
+    fun deleteReservation(mailReservationId: Long) {
+        val mailReservation = mailReservationRepository.getOrThrow(mailReservationId)
+        mailReservation.validateStatus()
+        mailReservationRepository.deleteById(mailReservation.id)
+    }
 }

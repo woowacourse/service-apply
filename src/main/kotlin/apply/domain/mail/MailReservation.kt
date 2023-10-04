@@ -55,7 +55,7 @@ class MailReservation(
 
     fun validateStatus() {
         check(status == MailReservationStatus.WAITING) {
-            "메일 예약은 WAITING 상태에서만 가능합니다."
+            "메일 예약 변경/삭제는 WAITING 상태에서만 가능합니다."
         }
     }
 
