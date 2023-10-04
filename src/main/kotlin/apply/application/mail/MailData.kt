@@ -1,7 +1,6 @@
 package apply.application.mail
 
 import apply.domain.mail.MailHistory
-import apply.domain.mail.MailHistory2
 import apply.domain.mail.MailMessage
 import org.springframework.core.io.ByteArrayResource
 import java.time.LocalDateTime
@@ -33,15 +32,6 @@ data class MailData(
     var id: Long = 0L
 ) {
     constructor(mailHistory: MailHistory) : this(
-        mailHistory.subject,
-        mailHistory.body,
-        mailHistory.sender,
-        mailHistory.recipients,
-        mailHistory.sentTime,
-        id = mailHistory.id
-    )
-
-    constructor(mailHistory: MailHistory2) : this(
         mailHistory.mailMessage.subject,
         mailHistory.mailMessage.body,
         mailHistory.mailMessage.sender,

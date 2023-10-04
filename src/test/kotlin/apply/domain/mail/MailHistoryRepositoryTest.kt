@@ -10,9 +10,9 @@ import support.test.RepositoryTest
 import support.test.spec.afterRootTest
 
 @RepositoryTest
-class MailHistory2RepositoryTest(
+class MailHistoryRepositoryTest(
     private val mailMessageRepository: MailMessageRepository,
-    private val mailHistory2Repository: MailHistory2Repository,
+    private val mailHistoryRepository: MailHistoryRepository,
     private val entityManager: TestEntityManager
 ) : ExpectSpec({
     extensions(SpringExtension)
@@ -21,17 +21,17 @@ class MailHistory2RepositoryTest(
         val mailMessage = mailMessageRepository.save(createMailMessage())
 
         expect("메일 발송 성공에 대한 히스토리를 저장한다") {
-            val actual = mailHistory2Repository.save(MailHistory2.ofSuccess(mailMessage, mailMessage.recipients))
+            val actual = mailHistoryRepository.save(MailHistory.ofSuccess(mailMessage, mailMessage.recipients))
             actual.id.shouldNotBeZero()
         }
     }
 
     context("메일 히스토리 조회") {
         val mailMessage = mailMessageRepository.save(createMailMessage())
-        mailHistory2Repository.save(MailHistory2.ofSuccess(mailMessage, mailMessage.recipients))
+        mailHistoryRepository.save(MailHistory.ofSuccess(mailMessage, mailMessage.recipients))
 
         expect("메일 발송 성공에 대한 히스토리를 저장한다") {
-            val actual = mailHistory2Repository.findAll()
+            val actual = mailHistoryRepository.findAll()
             actual.shouldNotBeEmpty()
             actual[0].mailMessage.id.shouldNotBeZero()
         }
@@ -43,6 +43,6 @@ class MailHistory2RepositoryTest(
     }
 
     afterRootTest {
-        mailHistory2Repository.deleteAll()
+        mailHistoryRepository.deleteAll()
     }
 })

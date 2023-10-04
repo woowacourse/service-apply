@@ -1,7 +1,6 @@
 package apply.application
 
 import apply.createSuccessMailHistory2
-import apply.domain.mail.MailHistory2Repository
 import apply.domain.mail.MailHistoryRepository
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
@@ -12,12 +11,11 @@ import support.test.spec.afterRootTest
 
 class MailHistoryServiceTest : BehaviorSpec({
     val mailHistoryRepository = mockk<MailHistoryRepository>()
-    val mailHistory2Repository = mockk<MailHistory2Repository>()
 
-    val mailHistoryService = MailHistoryService(mailHistoryRepository, mailHistory2Repository)
+    val mailHistoryService = MailHistoryService(mailHistoryRepository)
 
     Given("메일 이력이 있는 경우") {
-        every { mailHistory2Repository.findAll() } returns listOf(
+        every { mailHistoryRepository.findAll() } returns listOf(
             createSuccessMailHistory2(subject = "제목1"),
             createSuccessMailHistory2(subject = "제목2")
         )

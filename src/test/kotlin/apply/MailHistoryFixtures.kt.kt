@@ -2,7 +2,6 @@ package apply
 
 import apply.application.mail.MailData
 import apply.domain.mail.MailHistory
-import apply.domain.mail.MailHistory2
 import apply.domain.mail.MailMessage
 import apply.domain.mail.MailReservation
 import java.time.LocalDateTime
@@ -13,17 +12,6 @@ private const val SENDER: String = "woowacourse@email.com"
 private val RECIPIENTS: List<String> = listOf("test1@email.com", "test2@email.com")
 private val SENT_TIME: LocalDateTime = LocalDateTime.now()
 private val RESERVATION_TIME: LocalDateTime = LocalDateTime.now().plusHours(3).withMinute(0)
-
-fun createMailHistory(
-    subject: String = SUBJECT,
-    body: String = BODY,
-    sender: String = SENDER,
-    recipients: List<String> = RECIPIENTS,
-    sentTime: LocalDateTime = SENT_TIME,
-    id: Long = 0L
-): MailHistory {
-    return MailHistory(subject, body, sender, recipients, sentTime, id)
-}
 
 fun createMailData(
     subject: String = SUBJECT,
@@ -80,6 +68,6 @@ fun createSuccessMailHistory2(
     body: String = BODY,
     sender: String = SENDER,
     recipients: List<String> = RECIPIENTS
-): MailHistory2 {
-    return MailHistory2.ofSuccess(createMailMessage(subject, body, sender, recipients), recipients)
+): MailHistory {
+    return MailHistory.ofSuccess(createMailMessage(subject, body, sender, recipients), recipients)
 }

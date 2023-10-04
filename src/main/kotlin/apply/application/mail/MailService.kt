@@ -2,8 +2,7 @@ package apply.application.mail
 
 import apply.application.ApplicationProperties
 import apply.domain.applicationform.ApplicationFormSubmittedEvent
-import apply.domain.mail.MailHistory2
-import apply.domain.mail.MailHistory2Repository
+import apply.domain.mail.MailHistory
 import apply.domain.mail.MailHistoryRepository
 import apply.domain.mail.MailMessageRepository
 import apply.domain.recruitment.RecruitmentRepository
@@ -26,9 +25,8 @@ private const val MAIL_SENDING_UNIT: Int = 50
 class MailService(
     private val userRepository: UserRepository,
     private val recruitmentRepository: RecruitmentRepository,
-    private val mailHistoryRepository: MailHistoryRepository,
     private val mailMessageRepository: MailMessageRepository,
-    private val mailHistory2Repository: MailHistory2Repository,
+    private val mailHistoryRepository: MailHistoryRepository,
     private val applicationProperties: ApplicationProperties,
     private val templateEngine: ISpringTemplateEngine,
     private val mailSender: MailSender,
@@ -106,17 +104,17 @@ class MailService(
                 .onFailure { failed.addAll(addresses) }
         }
 
-        val mailHistories = mutableListOf<MailHistory2>()
+        val mailHistories = mutableListOf<MailHistory>()
 
         if (succeeded.isNotEmpty()) {
-            mailHistories.add(MailHistory2.ofSuccess(mailMessage, succeeded))
+            mailHistories.add(MailHistory.ofSuccess(mailMessage, succeeded))
         }
 
         if (failed.isNotEmpty()) {
-            mailHistories.add(MailHistory2.ofFailure(mailMessage, failed))
+            mailHistories.add(MailHistory.ofFailure(mailMessage, failed))
         }
 
-        mailHistory2Repository.saveAll(mailHistories)
+        mailHistoryRepository.saveAll(mailHistories)
     }
 
     fun generateMailBody(mailData: MailData): String {

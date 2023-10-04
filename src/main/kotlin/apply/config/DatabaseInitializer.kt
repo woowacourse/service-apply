@@ -20,8 +20,7 @@ import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.judgmentitem.JudgmentItem
 import apply.domain.judgmentitem.JudgmentItemRepository
 import apply.domain.judgmentitem.ProgrammingLanguage
-import apply.domain.mail.MailHistory2
-import apply.domain.mail.MailHistory2Repository
+import apply.domain.mail.MailHistory
 import apply.domain.mail.MailHistoryRepository
 import apply.domain.mail.MailMessage
 import apply.domain.mail.MailMessageRepository
@@ -60,9 +59,8 @@ class DatabaseInitializer(
     private val missionRepository: MissionRepository,
     private val judgmentItemRepository: JudgmentItemRepository,
     private val assignmentRepository: AssignmentRepository,
-    private val mailHistoryRepository: MailHistoryRepository,
     private val mailMessageRepository: MailMessageRepository,
-    private val mailHistory2Repository: MailHistory2Repository,
+    private val mailHistoryRepository: MailHistoryRepository,
     private val database: Database
 ) : CommandLineRunner {
     override fun run(vararg args: String) {
@@ -444,15 +442,15 @@ class DatabaseInitializer(
         mailMessageRepository.save(mailMessage)
 
         val mailHistories = listOf(
-            MailHistory2.ofSuccess(
+            MailHistory.ofSuccess(
                 mailMessage = mailMessage,
                 recipients = mailMessage.recipients.subList(0, 2)
             ),
-            MailHistory2.ofSuccess(
+            MailHistory.ofSuccess(
                 mailMessage = mailMessage,
                 recipients = mailMessage.recipients.subList(3, 4)
             )
         )
-        mailHistory2Repository.saveAll(mailHistories)
+        mailHistoryRepository.saveAll(mailHistories)
     }
 }

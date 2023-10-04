@@ -6,19 +6,16 @@ import java.time.LocalDateTime
 import javax.persistence.Column
 import javax.persistence.Convert
 import javax.persistence.Entity
+import javax.persistence.ForeignKey
+import javax.persistence.JoinColumn
 import javax.persistence.Lob
+import javax.persistence.ManyToOne
 
 @Entity
-class MailHistory(
-    @Column(nullable = false)
-    val subject: String,
-
-    @Column(nullable = false)
-    @Lob
-    val body: String,
-
-    @Column(nullable = false)
-    val sender: String,
+class MailHistory private constructor(
+    @ManyToOne
+    @JoinColumn(nullable = false, foreignKey = ForeignKey(name = "fk_mail_history_to_mail_message"))
+    val mailMessage: MailMessage,
 
     @Column(nullable = false)
     @Convert(converter = StringToListConverter::class)
@@ -26,6 +23,19 @@ class MailHistory(
     val recipients: List<String>,
 
     @Column(nullable = false)
+    val success: Boolean,
+
+    @Column(nullable = false)
     val sentTime: LocalDateTime = LocalDateTime.now(),
     id: Long = 0L
-) : BaseEntity(id)
+) : BaseEntity(id) {
+    companion object {
+        fun ofSuccess(mailMessage: MailMessage, recipients: List<String>): MailHistory {
+            return MailHistory(mailMessage, recipients, true)
+        }
+
+        fun ofFailure(mailMessage: MailMessage, recipients: List<String>): MailHistory {
+            return MailHistory(mailMessage, recipients, false)
+        }
+    }
+}
