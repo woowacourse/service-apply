@@ -12,7 +12,7 @@ class MailMessageTest : StringSpec({
 
         mailMessage.subject shouldBe "제목"
         mailMessage.body shouldBe "내용"
-        mailMessage.reservation shouldBe null
+        mailMessage.reservation() shouldBe null
     }
 
     "예약 메일 메시지를 생성한다" {
@@ -20,6 +20,6 @@ class MailMessageTest : StringSpec({
 
         mailMessage.subject shouldBe "제목"
         mailMessage.body shouldBe "내용"
-        mailMessage.reservation shouldNotBe null
+        mailMessage.reservation() shouldNotBe null
     }
 })
