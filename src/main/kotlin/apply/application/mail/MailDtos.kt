@@ -38,3 +38,17 @@ data class MailReservationSimpleResponse(
         mailReservation.id
     )
 }
+
+data class MailReservationResponse(
+    val mailMessage: MailMessageResponse,
+    val status: MailReservationStatus,
+    val reservationTime: LocalDateTime,
+    val id: Long,
+) {
+    constructor(mailReservation: MailReservation) : this(
+        MailMessageResponse(mailReservation.mailMessage),
+        mailReservation.status,
+        mailReservation.reservationTime,
+        mailReservation.id
+    )
+}

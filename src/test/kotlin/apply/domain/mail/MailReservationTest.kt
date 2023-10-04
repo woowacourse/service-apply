@@ -53,4 +53,24 @@ class MailReservationTest : StringSpec({
         mailReservation.complete()
         mailReservation.status shouldBe MailReservationStatus.FINISHED
     }
+
+    "예약 메일의 예약 시간을 변경한다" {
+        val mailReservation = createMailReservation()
+
+        val updatedReservationTime = now().plusHours(1).withMinute(0)
+        mailReservation.update(updatedReservationTime)
+
+        mailReservation.reservationTime shouldBe updatedReservationTime
+    }
+
+    "예약 메일 전송이 시작거나 완료 되었다면 예약 시간을 변경할 수 없다" {
+        listOf(
+            createMailReservation().apply { process() },
+            createMailReservation().apply { complete() }
+        ).forAll { mailReservation ->
+            shouldThrow<IllegalStateException> {
+                mailReservation.update(now().plusHours(1).withMinute(0))
+            }
+        }
+    }
 })
