@@ -2,8 +2,10 @@ package apply.application.mail
 
 import apply.application.ApplicationProperties
 import apply.domain.applicationform.ApplicationFormSubmittedEvent
-import apply.domain.mail.MailHistory
+import apply.domain.mail.MailHistory2
+import apply.domain.mail.MailHistory2Repository
 import apply.domain.mail.MailHistoryRepository
+import apply.domain.mail.MailMessageRepository
 import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitment.getOrThrow
 import apply.domain.user.PasswordResetEvent
@@ -25,6 +27,8 @@ class MailService(
     private val userRepository: UserRepository,
     private val recruitmentRepository: RecruitmentRepository,
     private val mailHistoryRepository: MailHistoryRepository,
+    private val mailMessageRepository: MailMessageRepository,
+    private val mailHistory2Repository: MailHistory2Repository,
     private val applicationProperties: ApplicationProperties,
     private val templateEngine: ISpringTemplateEngine,
     private val mailSender: MailSender,
@@ -90,10 +94,10 @@ class MailService(
 
     @Async
     fun sendMailsByBcc(request: MailData, files: Map<String, ByteArrayResource>) {
+        val mailMessage = mailMessageRepository.save(request.toMailMessage())
         val body = generateMailBody(request)
         val recipients = request.recipients + mailProperties.username
 
-        // TODO: 성공과 실패를 분리하여 히스토리 관리
         val succeeded = mutableListOf<String>()
         val failed = mutableListOf<String>()
         for (addresses in recipients.chunked(MAIL_SENDING_UNIT)) {
@@ -102,15 +106,17 @@ class MailService(
                 .onFailure { failed.addAll(addresses) }
         }
 
-        mailHistoryRepository.save(
-            MailHistory(
-                request.subject,
-                request.body,
-                request.sender,
-                request.recipients,
-                request.sentTime
-            )
-        )
+        val mailHistories = mutableListOf<MailHistory2>()
+
+        if (succeeded.isNotEmpty()) {
+            mailHistories.add(MailHistory2.ofSuccess(mailMessage, succeeded))
+        }
+
+        if (failed.isNotEmpty()) {
+            mailHistories.add(MailHistory2.ofFailure(mailMessage, failed))
+        }
+
+        mailHistory2Repository.saveAll(mailHistories)
     }
 
     fun generateMailBody(mailData: MailData): String {

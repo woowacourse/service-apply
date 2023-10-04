@@ -20,8 +20,11 @@ import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.judgmentitem.JudgmentItem
 import apply.domain.judgmentitem.JudgmentItemRepository
 import apply.domain.judgmentitem.ProgrammingLanguage
-import apply.domain.mail.MailHistory
+import apply.domain.mail.MailHistory2
+import apply.domain.mail.MailHistory2Repository
 import apply.domain.mail.MailHistoryRepository
+import apply.domain.mail.MailMessage
+import apply.domain.mail.MailMessageRepository
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionRepository
 import apply.domain.recruitment.Recruitment
@@ -58,6 +61,8 @@ class DatabaseInitializer(
     private val judgmentItemRepository: JudgmentItemRepository,
     private val assignmentRepository: AssignmentRepository,
     private val mailHistoryRepository: MailHistoryRepository,
+    private val mailMessageRepository: MailMessageRepository,
+    private val mailHistory2Repository: MailHistory2Repository,
     private val database: Database
 ) : CommandLineRunner {
     override fun run(vararg args: String) {
@@ -429,15 +434,25 @@ class DatabaseInitializer(
     }
 
     private fun populateMailHistories() {
+        val mailMessage = MailMessage.of(
+            subject = "[우아한테크코스] 프리코스를 진행하는 목적과 사전 준비",
+            body = "안녕하세요.",
+            sender = "woowa_course@woowahan.com",
+            recipients = listOf("a@email.com", "b@email.com", "c@email.com", "d@email.com"),
+            creatorId = 1L,
+        )
+        mailMessageRepository.save(mailMessage)
+
         val mailHistories = listOf(
-            MailHistory(
-                subject = "[우아한테크코스] 프리코스를 진행하는 목적과 사전 준비",
-                body = "안녕하세요.",
-                sender = "woowa_course@woowahan.com",
-                recipients = listOf("a@email.com", "b@email.com", "c@email.com", "d@email.com"),
-                sentTime = createLocalDateTime(2020, 11, 5, 10)
+            MailHistory2.ofSuccess(
+                mailMessage = mailMessage,
+                recipients = mailMessage.recipients.subList(0, 2)
+            ),
+            MailHistory2.ofSuccess(
+                mailMessage = mailMessage,
+                recipients = mailMessage.recipients.subList(3, 4)
             )
         )
-        mailHistoryRepository.saveAll(mailHistories)
+        mailHistory2Repository.saveAll(mailHistories)
     }
 }

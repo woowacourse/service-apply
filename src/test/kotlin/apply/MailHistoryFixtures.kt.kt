@@ -2,6 +2,7 @@ package apply
 
 import apply.application.mail.MailData
 import apply.domain.mail.MailHistory
+import apply.domain.mail.MailHistory2
 import apply.domain.mail.MailMessage
 import apply.domain.mail.MailReservation
 import java.time.LocalDateTime
@@ -72,4 +73,13 @@ fun createMailReservation(
         reservationTime = reservationTime,
         creatorId = createId
     )
+}
+
+fun createSuccessMailHistory2(
+    subject: String = SUBJECT,
+    body: String = BODY,
+    sender: String = SENDER,
+    recipients: List<String> = RECIPIENTS
+): MailHistory2 {
+    return MailHistory2.ofSuccess(createMailMessage(subject, body, sender, recipients), recipients)
 }

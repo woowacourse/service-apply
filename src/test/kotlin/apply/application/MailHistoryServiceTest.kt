@@ -1,7 +1,7 @@
 package apply.application
 
-import apply.createMailData
-import apply.createMailHistory
+import apply.createSuccessMailHistory2
+import apply.domain.mail.MailHistory2Repository
 import apply.domain.mail.MailHistoryRepository
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
@@ -9,27 +9,25 @@ import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
 import support.test.spec.afterRootTest
-import java.time.LocalDateTime.now
 
 class MailHistoryServiceTest : BehaviorSpec({
     val mailHistoryRepository = mockk<MailHistoryRepository>()
+    val mailHistory2Repository = mockk<MailHistory2Repository>()
 
-    val mailHistoryService = MailHistoryService(mailHistoryRepository)
+    val mailHistoryService = MailHistoryService(mailHistoryRepository, mailHistory2Repository)
 
     Given("메일 이력이 있는 경우") {
-        val now = now()
-
-        every { mailHistoryRepository.findAll() } returns listOf(
-            createMailHistory(subject = "제목1", sentTime = now),
-            createMailHistory(subject = "제목2", sentTime = now.plusSeconds(1))
+        every { mailHistory2Repository.findAll() } returns listOf(
+            createSuccessMailHistory2(subject = "제목1"),
+            createSuccessMailHistory2(subject = "제목2")
         )
 
         When("모든 메일 이력을 조회하면") {
             val actual = mailHistoryService.findAll()
 
             Then("모든 메일 이력을 확인할 수 있다") {
-                actual[0] shouldBe createMailData(subject = "제목1", sentTime = now)
-                actual[1] shouldBe createMailData(subject = "제목2", sentTime = now.plusSeconds(1))
+                actual[0].subject shouldBe "제목1"
+                actual[1].subject shouldBe "제목2"
             }
         }
     }
