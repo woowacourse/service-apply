@@ -1,7 +1,7 @@
 package apply.ui.admin.mail
 
 import apply.application.EvaluationService
-import apply.application.MailHistoryService
+import apply.application.mail.MailHistoryService
 import apply.application.MailTargetService
 import apply.application.RecruitmentService
 import apply.application.UserService

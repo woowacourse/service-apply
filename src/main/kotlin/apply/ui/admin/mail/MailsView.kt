@@ -1,6 +1,6 @@
 package apply.ui.admin.mail
 
-import apply.application.MailHistoryService
+import apply.application.mail.MailHistoryService
 import apply.application.mail.MailData
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component

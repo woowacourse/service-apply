@@ -1,6 +1,6 @@
 package apply.ui.api
 
-import apply.application.MailHistoryService
+import apply.application.mail.MailHistoryService
 import apply.application.mail.MailData
 import apply.domain.user.User
 import apply.security.LoginUser

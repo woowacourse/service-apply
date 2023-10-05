@@ -1,7 +1,9 @@
 package apply.application
 
+import apply.application.mail.MailHistoryService
 import apply.createSuccessMailHistory2
 import apply.domain.mail.MailHistoryRepository
+import apply.domain.mail.MailMessageRepository
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
@@ -11,8 +13,9 @@ import support.test.spec.afterRootTest
 
 class MailHistoryServiceTest : BehaviorSpec({
     val mailHistoryRepository = mockk<MailHistoryRepository>()
+    val mailMessageRepository = mockk<MailMessageRepository>()
 
-    val mailHistoryService = MailHistoryService(mailHistoryRepository)
+    val mailHistoryService = MailHistoryService(mailHistoryRepository, mailMessageRepository)
 
     Given("메일 이력이 있는 경우") {
         every { mailHistoryRepository.findAll() } returns listOf(
