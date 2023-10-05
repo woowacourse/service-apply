@@ -89,7 +89,7 @@ class MailService(
     }
 
     @Async
-    fun sendMailsByBcc(request: MailData, files: Map<String, ByteArrayResource>) {
+    fun sendMailsByBcc(request: MailData, files: Map<String, ByteArrayResource>, afterAction: () -> Unit = {}) {
         val body = generateMailBody(request)
         val recipients = request.recipients + mailProperties.username
 
@@ -102,6 +102,7 @@ class MailService(
         }
 
         eventPublisher.publishEvent(MailSentEvent(request, succeeded, failed))
+        afterAction()
     }
 
     fun generateMailBody(mailData: MailData): String {

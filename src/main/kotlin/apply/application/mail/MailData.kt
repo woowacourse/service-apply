@@ -40,6 +40,14 @@ data class MailData(
         id = mailHistory.id
     )
 
+    constructor(mailMessage: MailMessage) : this(
+        mailMessage.subject,
+        mailMessage.body,
+        mailMessage.sender,
+        mailMessage.recipients,
+        id = mailMessage.id
+    )
+
     fun toMailMessage(): MailMessage {
         // TODO: 작성자 ID 바인딩
         return MailMessage.of(subject, body, sender, recipients, 1L)

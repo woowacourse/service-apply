@@ -10,6 +10,7 @@ import java.time.LocalDateTime
 @Transactional
 @Service
 class MailReservationService(
+    private val mailService: MailService,
     private val mailReservationRepository: MailReservationRepository,
 ) {
     fun findByWaitingStatus(): List<MailReservationResponse> {
@@ -29,5 +30,20 @@ class MailReservationService(
         val mailReservation = mailReservationRepository.getOrThrow(mailReservationId)
         mailReservation.validateStatus()
         mailReservationRepository.deleteById(mailReservation.id)
+    }
+
+    fun sendMail(standardTime: LocalDateTime = LocalDateTime.now()) {
+        val reservations = mailReservationRepository.findByReservationTimeBetweenAndStatus(
+            standardTime.withMinute(1),
+            standardTime.plusMinutes(1),
+            MailReservationStatus.WAITING
+        )
+
+        reservations.forEach { mailReservation ->
+            mailReservation.process()
+            mailService.sendMailsByBcc(MailData(mailReservation.mailMessage), emptyMap()) {
+                mailReservation.complete()
+            }
+        }
     }
 }

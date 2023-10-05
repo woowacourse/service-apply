@@ -12,8 +12,9 @@ import io.mockk.just
 import io.mockk.mockk
 
 class MailReservationServiceTest : BehaviorSpec({
+    val mailService = mockk<MailService>()
     val mailReservationRepository = mockk<MailReservationRepository>()
-    val mailReservationService = MailReservationService(mailReservationRepository)
+    val mailReservationService = MailReservationService(mailService, mailReservationRepository)
 
     Given("발송 전 상태의 에약 메일이 있는 경우") {
         val mailReservation = createMailReservation()
