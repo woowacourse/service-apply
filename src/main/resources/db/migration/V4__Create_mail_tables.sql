@@ -16,7 +16,6 @@ create table mail_reservation
     id              bigint       not null auto_increment,
     status          varchar(8)   not null,
     mail_message_id bigint  not null,
-    creator_id      bigint  not null,
     reservation_time  datetime(6)  not null,
     primary key (id)
 ) engine = InnoDB

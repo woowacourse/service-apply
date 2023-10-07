@@ -27,10 +27,7 @@ class MailReservation(
     var status: MailReservationStatus = MailReservationStatus.WAITING,
 
     @Column(nullable = false)
-    val creatorId: Long,
-
-    @Column(nullable = false)
-    var reservationTime: LocalDateTime,
+    val reservationTime: LocalDateTime,
     id: Long = 0L
 ) : BaseEntity(id) {
 
@@ -46,17 +43,8 @@ class MailReservation(
         status = MailReservationStatus.FINISHED
     }
 
-    fun update(reservationTime: LocalDateTime) {
-        validateTime(reservationTime)
-        validateStatus()
-
-        this.reservationTime = reservationTime
-    }
-
-    fun validateStatus() {
-        check(status == MailReservationStatus.WAITING) {
-            "메일 예약 변경/삭제는 WAITING 상태에서만 가능합니다."
-        }
+    fun canCancel(): Boolean {
+        return status == MailReservationStatus.WAITING
     }
 
     private fun validateTime(reservationTime: LocalDateTime) {

@@ -58,8 +58,7 @@ fun createMailReservation(
 ): MailReservation {
     return MailReservation(
         createMailMessage(subject, body, sender, recipients, id, createId),
-        reservationTime = reservationTime,
-        creatorId = createId
+        reservationTime = reservationTime
     )
 }
 

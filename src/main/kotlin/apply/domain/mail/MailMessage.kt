@@ -47,6 +47,10 @@ class MailMessage private constructor(
         return reservations.first()
     }
 
+    fun canDelete(): Boolean {
+        return this.reservation()?.canCancel() ?: true
+    }
+
     private fun hasReservation(): Boolean {
         return reservations.isNotEmpty()
     }
@@ -84,7 +88,7 @@ class MailMessage private constructor(
                 creatorId = creatorId
             ).apply {
                 reservations.add(
-                    MailReservation(this, creatorId = creatorId, reservationTime = reservationTime)
+                    MailReservation(this, reservationTime = reservationTime)
                 )
             }
         }
