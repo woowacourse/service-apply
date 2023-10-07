@@ -30,9 +30,9 @@ fun createMailMessage(
     sender: String = SENDER,
     recipients: List<String> = RECIPIENTS,
     id: Long = 0L,
-    createId: Long = 0L
+    creatorId: Long = 0L
 ): MailMessage {
-    return MailMessage.of(subject, body, sender, recipients, createId)
+    return MailMessage.of(subject, body, sender, recipients, creatorId)
 }
 
 fun createReservationMailMessage(
@@ -42,9 +42,9 @@ fun createReservationMailMessage(
     recipients: List<String> = RECIPIENTS,
     reservationTime: LocalDateTime = RESERVATION_TIME,
     id: Long = 0L,
-    createId: Long = 0L
+    creatorId: Long = 0L
 ): MailMessage {
-    return MailMessage.withReservation(subject, body, sender, recipients, reservationTime, createId)
+    return MailMessage.withReservation(subject, body, sender, recipients, reservationTime, creatorId)
 }
 
 fun createMailReservation(
@@ -54,10 +54,10 @@ fun createMailReservation(
     recipients: List<String> = RECIPIENTS,
     reservationTime: LocalDateTime = RESERVATION_TIME,
     id: Long = 0L,
-    createId: Long = 0L
+    creatorId: Long = 0L
 ): MailReservation {
     return MailReservation(
-        createMailMessage(subject, body, sender, recipients, id, createId),
+        createMailMessage(subject, body, sender, recipients, id, creatorId),
         reservationTime = reservationTime
     )
 }
