@@ -34,7 +34,7 @@ class MailReservationService(
 
     fun sendMail(standardTime: LocalDateTime = LocalDateTime.now()) {
         val reservations = mailReservationRepository.findByReservationTimeBetweenAndStatus(
-            standardTime.withMinute(1),
+            standardTime.minusMinutes(1),
             standardTime.plusMinutes(1),
             MailReservationStatus.WAITING
         )
