@@ -7,7 +7,6 @@ create table mail_message
     recipients longtext     not null,
     creator_id bigint       not null,
     created_date_time  datetime(6)  not null,
-    modified_date_time datetime(6)  not null,
     primary key (id)
 ) engine = InnoDB
   default charset = utf8mb4;

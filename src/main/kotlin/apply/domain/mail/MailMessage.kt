@@ -14,35 +14,30 @@ import javax.persistence.OneToMany
 @Entity
 class MailMessage private constructor(
     @Column(nullable = false)
-    var subject: String,
+    val subject: String,
 
     @Column(nullable = false)
     @Lob
-    var body: String,
+    val body: String,
 
     @Column(nullable = false)
-    var sender: String,
+    val sender: String,
 
     @Column(nullable = false)
     @Convert(converter = StringToListConverter::class)
     @Lob
-    var recipients: List<String>,
+    val recipients: List<String>,
 
     @Column(nullable = false)
     val creatorId: Long,
 
     @Column(nullable = false)
     val createdDateTime: LocalDateTime = LocalDateTime.now(),
-    modifiedDateTime: LocalDateTime = LocalDateTime.now(),
     id: Long = 0L
 ) : BaseEntity(id) {
 
     @OneToMany(mappedBy = "mailMessage", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     var reservations: MutableList<MailReservation> = mutableListOf()
-
-    @Column(nullable = false)
-    var modifiedDateTime: LocalDateTime = modifiedDateTime
-        private set
 
     fun reservation(): MailReservation? {
         if (!hasReservation()) {
@@ -50,16 +45,6 @@ class MailMessage private constructor(
         }
 
         return reservations.first()
-    }
-
-    fun update(subject: String, body: String, recipients: List<String>) {
-        check(hasReservation())
-        reservation()?.validateStatus()
-
-        this.subject = subject
-        this.body = body
-        this.recipients = recipients
-        this.modifiedDateTime = LocalDateTime.now()
     }
 
     private fun hasReservation(): Boolean {

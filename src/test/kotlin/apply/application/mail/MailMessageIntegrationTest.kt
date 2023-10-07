@@ -36,29 +36,4 @@ class MailMessageIntegrationTest(
             }
         }
     }
-
-    Given("메일 예약 후 발송 작업이 아직 시작되지 않았을 경우") {
-        val reservationTime = now().plusHours(3).withMinute(10)
-        val mailData = createMailData(sentTime = reservationTime)
-        val mailMessage = mailMessageService.reserve(mailData)
-
-        When("메일 내용을 변경하면") {
-            val updatedMailData = createMailData(
-                subject = "변경된 제목",
-                body = "변경된 본문",
-                recipients = listOf("변경된 수신자")
-            )
-            mailMessageService.updateReservedMessage(mailMessage.id, updatedMailData)
-
-            Then("변경된 내용이 반영된다") {
-                val actual = mailMessageRepository.getOrThrow(mailMessage.id)
-
-                actual.subject shouldBe updatedMailData.subject
-                actual.body shouldBe updatedMailData.body
-                actual.recipients shouldBe updatedMailData.recipients
-                actual.reservation().shouldNotBeNull()
-                actual.reservation()!!.reservationTime shouldBe reservationTime
-            }
-        }
-    }
 })

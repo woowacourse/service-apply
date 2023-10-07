@@ -11,7 +11,6 @@ data class MailMessageResponse(
     val sender: String,
     val recipients: List<String>,
     val createdDateTime: LocalDateTime,
-    val modifiedDateTime: LocalDateTime,
     val reservation: MailReservationSimpleResponse?,
     val id: Long
 ) {
@@ -21,7 +20,6 @@ data class MailMessageResponse(
         mailMessage.sender,
         mailMessage.recipients,
         mailMessage.createdDateTime,
-        mailMessage.modifiedDateTime,
         mailMessage.reservation()?.let { MailReservationSimpleResponse(it) },
         mailMessage.id
     )
