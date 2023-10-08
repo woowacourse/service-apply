@@ -7,49 +7,23 @@ import { MISSION_SUBMISSION_METHOD } from "../constants/recruitment";
 
 export const ASSIGNMENT_FORM_NAME = {
   GITHUB_USERNAME: "githubUsername",
-  PULL_REQUEST_URL: "pullRequestUrl",
-  REPOSITORY_URL: "repositoryUrl",
+  URL: "pullRequestUrl", // TODO: pullRequestUrl -> url로 변경
   NOTE: "note",
 };
 
-export const LABELS = {
-  [ASSIGNMENT_FORM_NAME.GITHUB_USERNAME]: "GitHub ID",
-  [ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL]: "Pull Request 주소",
-  [ASSIGNMENT_FORM_NAME.REPOSITORY_URL]: "GitHub Repository 주소",
-  [ASSIGNMENT_FORM_NAME.NOTE]: "과제 진행 소감",
+const initialRequiredForm = {
+  [ASSIGNMENT_FORM_NAME.GITHUB_USERNAME]: "",
+  [ASSIGNMENT_FORM_NAME.URL]: "",
+  [ASSIGNMENT_FORM_NAME.NOTE]: "",
 };
 
-const getInitialRequiredForm = (submissionMethod) => {
-  if (submissionMethod === MISSION_SUBMISSION_METHOD.PRIVATE_REPOSITORY) {
-    return {
-      [ASSIGNMENT_FORM_NAME.GITHUB_USERNAME]: "",
-      [ASSIGNMENT_FORM_NAME.REPOSITORY_URL]: "",
-      [ASSIGNMENT_FORM_NAME.NOTE]: "",
-    };
-  }
-
-  return {
-    [ASSIGNMENT_FORM_NAME.GITHUB_USERNAME]: "",
-    [ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL]: "",
-    [ASSIGNMENT_FORM_NAME.NOTE]: "",
-  };
-};
-
-const getInitialErrorMessage = (submissionMethod) => {
-  if (submissionMethod === MISSION_SUBMISSION_METHOD.PRIVATE_REPOSITORY) {
-    return {
-      [ASSIGNMENT_FORM_NAME.REPOSITORY_URL]: "",
-    };
-  }
-
-  return {
-    [ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL]: "",
-  };
+const initialErrorMessage = {
+  [ASSIGNMENT_FORM_NAME.URL]: "",
 };
 
 const useAssignmentForm = (submissionMethod) => {
-  const [requiredForm, setRequiredForm] = useState(getInitialRequiredForm(submissionMethod));
-  const [errorMessage, setErrorMessage] = useState(getInitialErrorMessage(submissionMethod));
+  const [requiredForm, setRequiredForm] = useState(initialRequiredForm);
+  const [errorMessage, setErrorMessage] = useState(initialErrorMessage);
 
   const isValid = Object.values(errorMessage).filter(Boolean).length === 0;
   const isEmpty =
@@ -84,22 +58,31 @@ const useAssignmentForm = (submissionMethod) => {
     updateRequiredForm(ASSIGNMENT_FORM_NAME.GITHUB_USERNAME, target.value);
   };
 
-  const handleChangePullRequestUrl = ({ target }) => {
-    const errorMessage = isValidPullRequestUrl(target.value)
-      ? ""
-      : ERROR_MESSAGE.VALIDATION.PULL_REQUEST_URL;
+  const validateUrl = (url, submissionMethod) => {
+    if (submissionMethod === MISSION_SUBMISSION_METHOD.PRIVATE_REPOSITORY) {
+      return isValidRepositoryUrl(url);
+    }
 
-    updateErrorMessage(ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL, errorMessage);
-    updateRequiredForm(ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL, target.value);
+    return isValidPullRequestUrl(url);
   };
 
-  const handleChangeRepositoryUrl = ({ target }) => {
-    const errorMessage = isValidRepositoryUrl(target.value)
-      ? ""
-      : ERROR_MESSAGE.VALIDATION.REPOSITORY_URL;
+  const generateErrorMessage = (url, submissionMethod) => {
+    if (validateUrl(url, submissionMethod)) {
+      return "";
+    }
 
-    updateErrorMessage(ASSIGNMENT_FORM_NAME.REPOSITORY_URL, errorMessage);
-    updateRequiredForm(ASSIGNMENT_FORM_NAME.REPOSITORY_URL, target.value);
+    if (submissionMethod === MISSION_SUBMISSION_METHOD.PRIVATE_REPOSITORY) {
+      return ERROR_MESSAGE.VALIDATION.REPOSITORY_URL;
+    }
+
+    return ERROR_MESSAGE.VALIDATION.PULL_REQUEST_URL;
+  };
+
+  const handleChangeUrl = ({ target }) => {
+    const errorMessage = generateErrorMessage(target.value, submissionMethod);
+
+    updateErrorMessage(ASSIGNMENT_FORM_NAME.URL, errorMessage);
+    updateRequiredForm(ASSIGNMENT_FORM_NAME.URL, target.value);
   };
 
   const handleChangeNote = ({ target }) => {
@@ -112,8 +95,7 @@ const useAssignmentForm = (submissionMethod) => {
     init,
     handleChanges: {
       [ASSIGNMENT_FORM_NAME.GITHUB_USERNAME]: handleChangeGithubUsername,
-      [ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL]: handleChangePullRequestUrl,
-      [ASSIGNMENT_FORM_NAME.REPOSITORY_URL]: handleChangeRepositoryUrl,
+      [ASSIGNMENT_FORM_NAME.URL]: handleChangeUrl,
       [ASSIGNMENT_FORM_NAME.NOTE]: handleChangeNote,
     },
     isValid,

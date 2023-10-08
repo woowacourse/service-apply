@@ -11,7 +11,7 @@ import Form from "../../components/form/Form/Form";
 import { FORM } from "../../constants/form";
 import { CONFIRM_MESSAGE, ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
 import { PATH, PARAM } from "../../constants/path";
-import useAssignmentForm, { ASSIGNMENT_FORM_NAME, LABELS } from "../../hooks/useAssignmentForm";
+import useAssignmentForm, { ASSIGNMENT_FORM_NAME } from "../../hooks/useAssignmentForm";
 import useTokenContext from "../../hooks/useTokenContext";
 import styles from "./AssignmentSubmit.module.css";
 import { MISSION_SUBMISSION_METHOD } from "../../constants/recruitment";
@@ -94,7 +94,7 @@ const AssignmentSubmit = () => {
     <Container title={currentMission?.title ?? ""} titleAlign={TITLE_ALIGN.LEFT}>
       <Form onSubmit={handleSubmit} className={styles.form}>
         <MessageTextInput
-          label={LABELS[ASSIGNMENT_FORM_NAME.GITHUB_USERNAME]}
+          label="GitHub ID"
           name={ASSIGNMENT_FORM_NAME.GITHUB_USERNAME}
           value={form[ASSIGNMENT_FORM_NAME.GITHUB_USERNAME]}
           onChange={handleChanges[ASSIGNMENT_FORM_NAME.GITHUB_USERNAME]}
@@ -102,33 +102,21 @@ const AssignmentSubmit = () => {
           errorMessage={errorMessage[ASSIGNMENT_FORM_NAME.GITHUB_USERNAME]}
           required
         />
-
-        {submissionMethod === MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST && (
-          <MessageTextInput
-            label={LABELS[ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL]}
-            type="url"
-            name={ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL}
-            value={form[ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL]}
-            onChange={handleChanges[ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL]}
-            errorMessage={errorMessage[ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL]}
-            required
-          />
-        )}
-
-        {submissionMethod === MISSION_SUBMISSION_METHOD.PRIVATE_REPOSITORY && (
-          <MessageTextInput
-            label={LABELS[ASSIGNMENT_FORM_NAME.REPOSITORY_URL]}
-            type="url"
-            name={ASSIGNMENT_FORM_NAME.REPOSITORY_URL}
-            value={form[ASSIGNMENT_FORM_NAME.REPOSITORY_URL]}
-            onChange={handleChanges[ASSIGNMENT_FORM_NAME.REPOSITORY_URL]}
-            errorMessage={errorMessage[ASSIGNMENT_FORM_NAME.REPOSITORY_URL]}
-            required
-          />
-        )}
-
+        <MessageTextInput
+          label={
+            submissionMethod === MISSION_SUBMISSION_METHOD.PRIVATE_REPOSITORY
+              ? "GitHub Repository 주소"
+              : "Pull Request 주소"
+          }
+          type="url"
+          name={ASSIGNMENT_FORM_NAME.URL}
+          value={form[ASSIGNMENT_FORM_NAME.URL]}
+          onChange={handleChanges[ASSIGNMENT_FORM_NAME.URL]}
+          errorMessage={errorMessage[ASSIGNMENT_FORM_NAME.URL]}
+          required
+        />
         <MessageTextarea
-          label={LABELS[ASSIGNMENT_FORM_NAME.NOTE]}
+          label="과제 진행 소감"
           name={ASSIGNMENT_FORM_NAME.NOTE}
           value={form[ASSIGNMENT_FORM_NAME.NOTE]}
           onChange={handleChanges[ASSIGNMENT_FORM_NAME.NOTE]}

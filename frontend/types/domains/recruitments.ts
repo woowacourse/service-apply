@@ -51,7 +51,7 @@ export type Mission = {
 export type Assignment = {
   id: number;
   githubUsername: string;
-  pullRequestUrl: string;
+  pullRequestUrl: string; // TODO: pullRequest -> url로 변경
   note: string;
 };
 
