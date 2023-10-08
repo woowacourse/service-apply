@@ -21,7 +21,7 @@ const initialErrorMessage = {
   [ASSIGNMENT_FORM_NAME.URL]: "",
 };
 
-const useAssignmentForm = (submissionMethod) => {
+const useAssignmentForm = (submissionMethod = MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST) => {
   const [requiredForm, setRequiredForm] = useState(initialRequiredForm);
   const [errorMessage, setErrorMessage] = useState(initialErrorMessage);
 
