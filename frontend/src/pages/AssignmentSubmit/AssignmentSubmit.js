@@ -11,9 +11,10 @@ import Form from "../../components/form/Form/Form";
 import { FORM } from "../../constants/form";
 import { CONFIRM_MESSAGE, ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
 import { PATH, PARAM } from "../../constants/path";
-import useAssignmentForm, { ASSIGNMENT_FORM_NAME } from "../../hooks/useAssignmentForm";
+import useAssignmentForm, { ASSIGNMENT_FORM_NAME, LABELS } from "../../hooks/useAssignmentForm";
 import useTokenContext from "../../hooks/useTokenContext";
 import styles from "./AssignmentSubmit.module.css";
+import { MISSION_SUBMISSION_METHOD } from "../../constants/recruitment";
 
 const AssignmentSubmit = () => {
   const navigate = useNavigate();
@@ -24,6 +25,9 @@ const AssignmentSubmit = () => {
   const recruitmentId = location.state?.recruitmentId ?? null;
   const currentMission = location.state?.currentMission ?? null;
 
+  const submissionMethod =
+    currentMission?.submissionMethod ?? MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST;
+
   const {
     form,
     errorMessage,
@@ -31,7 +35,7 @@ const AssignmentSubmit = () => {
     handleChanges,
     isValid,
     isEmpty,
-  } = useAssignmentForm();
+  } = useAssignmentForm(submissionMethod);
 
   const handleSubmitError = (error) => {
     if (!error) return;
@@ -90,7 +94,7 @@ const AssignmentSubmit = () => {
     <Container title={currentMission?.title ?? ""} titleAlign={TITLE_ALIGN.LEFT}>
       <Form onSubmit={handleSubmit} className={styles.form}>
         <MessageTextInput
-          label="GitHub ID"
+          label={LABELS[ASSIGNMENT_FORM_NAME.GITHUB_USERNAME]}
           name={ASSIGNMENT_FORM_NAME.GITHUB_USERNAME}
           value={form[ASSIGNMENT_FORM_NAME.GITHUB_USERNAME]}
           onChange={handleChanges[ASSIGNMENT_FORM_NAME.GITHUB_USERNAME]}
@@ -98,17 +102,33 @@ const AssignmentSubmit = () => {
           errorMessage={errorMessage[ASSIGNMENT_FORM_NAME.GITHUB_USERNAME]}
           required
         />
-        <MessageTextInput
-          label="Pull Request 주소"
-          type="url"
-          name={ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL}
-          value={form[ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL]}
-          onChange={handleChanges[ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL]}
-          errorMessage={errorMessage[ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL]}
-          required
-        />
+
+        {submissionMethod === MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST && (
+          <MessageTextInput
+            label={LABELS[ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL]}
+            type="url"
+            name={ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL}
+            value={form[ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL]}
+            onChange={handleChanges[ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL]}
+            errorMessage={errorMessage[ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL]}
+            required
+          />
+        )}
+
+        {submissionMethod === MISSION_SUBMISSION_METHOD.PRIVATE_REPOSITORY && (
+          <MessageTextInput
+            label={LABELS[ASSIGNMENT_FORM_NAME.REPOSITORY_URL]}
+            type="url"
+            name={ASSIGNMENT_FORM_NAME.REPOSITORY_URL}
+            value={form[ASSIGNMENT_FORM_NAME.REPOSITORY_URL]}
+            onChange={handleChanges[ASSIGNMENT_FORM_NAME.REPOSITORY_URL]}
+            errorMessage={errorMessage[ASSIGNMENT_FORM_NAME.REPOSITORY_URL]}
+            required
+          />
+        )}
+
         <MessageTextarea
-          label="과제 진행 소감"
+          label={LABELS[ASSIGNMENT_FORM_NAME.NOTE]}
           name={ASSIGNMENT_FORM_NAME.NOTE}
           value={form[ASSIGNMENT_FORM_NAME.NOTE]}
           onChange={handleChanges[ASSIGNMENT_FORM_NAME.NOTE]}
