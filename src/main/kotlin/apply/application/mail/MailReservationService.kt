@@ -25,9 +25,9 @@ class MailReservationService(
         )
 
         reservations.forEach { mailReservation ->
-            mailReservation.process()
+            mailReservation.send()
             mailService.sendMailsByBcc(MailData(mailReservation.mailMessage), emptyMap()) {
-                mailReservation.complete()
+                mailReservation.finish()
             }
         }
     }

@@ -35,11 +35,11 @@ class MailReservation(
         validateTime(reservationTime)
     }
 
-    fun process() {
+    fun send() {
         status = MailReservationStatus.SENDING
     }
 
-    fun complete() {
+    fun finish() {
         status = MailReservationStatus.FINISHED
     }
 

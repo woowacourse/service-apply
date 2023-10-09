@@ -56,7 +56,7 @@ class MailMessageIntegrationTest(
 
     Given("취소하고 싶은 예약 메일이 처리중인 경우") {
         val mailMessage = mailMessageRepository.save(createReservationMailMessage())
-        mailMessage.reservation()?.process()
+        mailMessage.reservation()?.send()
 
         When("메일 예약을 취소하면") {
             Then("에러가 발생하고 메일 메시지와 예약은 남아있다") {
@@ -73,7 +73,7 @@ class MailMessageIntegrationTest(
 
     Given("취소하고 싶은 예약 메일이 발송 완료된 경우") {
         val mailMessage = mailMessageRepository.save(createReservationMailMessage())
-        mailMessage.reservation()?.complete()
+        mailMessage.reservation()?.finish()
 
         When("메일 예약을 취소하면") {
             Then("에러가 발생하고 메일 메시지와 예약은 남아있다") {

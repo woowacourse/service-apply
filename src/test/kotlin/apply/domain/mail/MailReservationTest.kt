@@ -43,14 +43,14 @@ class MailReservationTest : StringSpec({
     "예약 메일 전송을 시작한다" {
         val mailReservation = createMailReservation()
 
-        mailReservation.process()
+        mailReservation.send()
         mailReservation.status shouldBe MailReservationStatus.SENDING
     }
 
     "예약 메일 전송을 완료한다" {
         val mailReservation = createMailReservation()
 
-        mailReservation.complete()
+        mailReservation.finish()
         mailReservation.status shouldBe MailReservationStatus.FINISHED
     }
 })
