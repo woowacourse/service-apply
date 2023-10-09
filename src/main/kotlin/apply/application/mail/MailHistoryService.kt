@@ -23,10 +23,10 @@ class MailHistoryService(
 
         val mailHistories = mutableListOf<MailHistory>()
         if (event.succeedRecipients.isNotEmpty()) {
-            mailHistories.add(MailHistory.ofSuccess(mailMessage, event.succeedRecipients))
+            mailHistories.add(MailHistory(mailMessage, event.succeedRecipients, true))
         }
         if (event.failedRecipients.isNotEmpty()) {
-            mailHistories.add(MailHistory.ofFailure(mailMessage, event.failedRecipients))
+            mailHistories.add(MailHistory(mailMessage, event.failedRecipients, false))
         }
 
         mailHistoryRepository.saveAll(mailHistories)

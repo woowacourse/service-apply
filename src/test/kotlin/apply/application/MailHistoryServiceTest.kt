@@ -1,7 +1,7 @@
 package apply.application
 
 import apply.application.mail.MailHistoryService
-import apply.createSuccessMailHistory2
+import apply.createSuccessMailHistory
 import apply.domain.mail.MailHistoryRepository
 import apply.domain.mail.MailMessageRepository
 import io.kotest.core.spec.style.BehaviorSpec
@@ -19,8 +19,8 @@ class MailHistoryServiceTest : BehaviorSpec({
 
     Given("메일 이력이 있는 경우") {
         every { mailHistoryRepository.findAll() } returns listOf(
-            createSuccessMailHistory2(subject = "제목1"),
-            createSuccessMailHistory2(subject = "제목2")
+            createSuccessMailHistory(subject = "제목1"),
+            createSuccessMailHistory(subject = "제목2")
         )
 
         When("모든 메일 이력을 조회하면") {

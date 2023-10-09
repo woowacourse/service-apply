@@ -12,7 +12,7 @@ import javax.persistence.Lob
 import javax.persistence.ManyToOne
 
 @Entity
-class MailHistory private constructor(
+class MailHistory(
     @ManyToOne
     @JoinColumn(nullable = false, foreignKey = ForeignKey(name = "fk_mail_history_to_mail_message"))
     val mailMessage: MailMessage,
@@ -28,14 +28,4 @@ class MailHistory private constructor(
     @Column(nullable = false)
     val sentTime: LocalDateTime = LocalDateTime.now(),
     id: Long = 0L
-) : BaseEntity(id) {
-    companion object {
-        fun ofSuccess(mailMessage: MailMessage, recipients: List<String>): MailHistory {
-            return MailHistory(mailMessage, recipients, true)
-        }
-
-        fun ofFailure(mailMessage: MailMessage, recipients: List<String>): MailHistory {
-            return MailHistory(mailMessage, recipients, false)
-        }
-    }
-}
+) : BaseEntity(id)

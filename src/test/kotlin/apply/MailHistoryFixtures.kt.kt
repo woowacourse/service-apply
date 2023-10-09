@@ -62,11 +62,11 @@ fun createMailReservation(
     )
 }
 
-fun createSuccessMailHistory2(
+fun createSuccessMailHistory(
     subject: String = SUBJECT,
     body: String = BODY,
     sender: String = SENDER,
     recipients: List<String> = RECIPIENTS
 ): MailHistory {
-    return MailHistory.ofSuccess(createMailMessage(subject, body, sender, recipients), recipients)
+    return MailHistory(createMailMessage(subject, body, sender, recipients), recipients, true)
 }
