@@ -6,16 +6,12 @@ import java.time.LocalDateTime
 import javax.persistence.Column
 import javax.persistence.Convert
 import javax.persistence.Entity
-import javax.persistence.ForeignKey
-import javax.persistence.JoinColumn
 import javax.persistence.Lob
-import javax.persistence.ManyToOne
 
 @Entity
 class MailHistory(
-    @ManyToOne
-    @JoinColumn(nullable = false, foreignKey = ForeignKey(name = "fk_mail_history_to_mail_message"))
-    val mailMessage: MailMessage,
+    @Column(nullable = false)
+    val mailMessageId: Long = 0L,
 
     @Column(nullable = false)
     @Convert(converter = StringToListConverter::class)

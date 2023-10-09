@@ -23,21 +23,24 @@ class MailHistoryService(
 
         val mailHistories = mutableListOf<MailHistory>()
         if (event.succeedRecipients.isNotEmpty()) {
-            mailHistories.add(MailHistory(mailMessage, event.succeedRecipients, true))
+            mailHistories.add(MailHistory(mailMessage.id, event.succeedRecipients, true))
         }
         if (event.failedRecipients.isNotEmpty()) {
-            mailHistories.add(MailHistory(mailMessage, event.failedRecipients, false))
+            mailHistories.add(MailHistory(mailMessage.id, event.failedRecipients, false))
         }
 
         mailHistoryRepository.saveAll(mailHistories)
     }
 
     fun findAll(): List<MailData> {
-        return mailHistoryRepository.findAll().map { MailData(it) }
+        val histories = mailHistoryRepository.findAll()
+        val messagesById = mailMessageRepository.findAllById(histories.map { it.mailMessageId }).associateBy { it.id }
+        return histories.map { MailData(messagesById.getValue(it.mailMessageId), it) }
     }
 
     fun getById(mailHistoryId: Long): MailData {
         val mailHistory = mailHistoryRepository.getOrThrow(mailHistoryId)
-        return MailData(mailHistory)
+        val mailMessage = mailMessageRepository.getOrThrow(mailHistory.mailMessageId)
+        return MailData(mailMessage, mailHistory)
     }
 }

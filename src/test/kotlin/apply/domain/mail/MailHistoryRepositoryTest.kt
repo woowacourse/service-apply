@@ -21,19 +21,19 @@ class MailHistoryRepositoryTest(
         val mailMessage = mailMessageRepository.save(createMailMessage())
 
         expect("메일 발송 성공에 대한 히스토리를 저장한다") {
-            val actual = mailHistoryRepository.save(MailHistory(mailMessage, mailMessage.recipients, true))
+            val actual = mailHistoryRepository.save(MailHistory(mailMessage.id, mailMessage.recipients, true))
             actual.id.shouldNotBeZero()
         }
     }
 
     context("메일 히스토리 조회") {
         val mailMessage = mailMessageRepository.save(createMailMessage())
-        mailHistoryRepository.save(MailHistory(mailMessage, mailMessage.recipients, true))
+        mailHistoryRepository.save(MailHistory(mailMessage.id, mailMessage.recipients, true))
 
         expect("메일 발송 성공에 대한 히스토리를 저장한다") {
             val actual = mailHistoryRepository.findAll()
             actual.shouldNotBeEmpty()
-            actual[0].mailMessage.id.shouldNotBeZero()
+            actual[0].mailMessageId.shouldNotBeZero()
         }
     }
 

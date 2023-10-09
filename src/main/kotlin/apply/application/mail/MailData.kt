@@ -31,21 +31,21 @@ data class MailData(
     @field:NotNull
     var id: Long = 0L
 ) {
-    constructor(mailHistory: MailHistory) : this(
-        mailHistory.mailMessage.subject,
-        mailHistory.mailMessage.body,
-        mailHistory.mailMessage.sender,
-        mailHistory.recipients,
-        mailHistory.sentTime,
-        id = mailHistory.id
-    )
-
     constructor(mailMessage: MailMessage) : this(
         mailMessage.subject,
         mailMessage.body,
         mailMessage.sender,
         mailMessage.recipients,
         id = mailMessage.id
+    )
+
+    constructor(mailMessage: MailMessage, mailHistory: MailHistory) : this(
+        mailMessage.subject,
+        mailMessage.body,
+        mailMessage.sender,
+        mailHistory.recipients,
+        mailHistory.sentTime,
+        id = mailHistory.id
     )
 
     fun toMailMessage(): MailMessage {

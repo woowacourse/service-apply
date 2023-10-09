@@ -443,14 +443,14 @@ class DatabaseInitializer(
 
         val mailHistories = listOf(
             MailHistory(
-                mailMessage = mailMessage,
+                mailMessageId = mailMessage.id,
                 recipients = mailMessage.recipients.subList(0, 2),
-                true
+                success = true
             ),
             MailHistory(
-                mailMessage = mailMessage,
+                mailMessageId = mailMessage.id,
                 recipients = mailMessage.recipients.subList(3, 4),
-                true
+                success = true
             )
         )
         mailHistoryRepository.saveAll(mailHistories)
