@@ -32,34 +32,15 @@ fun createMailMessage(
     id: Long = 0L,
     creatorId: Long = 0L
 ): MailMessage {
-    return MailMessage.of(subject, body, sender, recipients, creatorId)
-}
-
-fun createReservationMailMessage(
-    subject: String = SUBJECT,
-    body: String = BODY,
-    sender: String = SENDER,
-    recipients: List<String> = RECIPIENTS,
-    reservationTime: LocalDateTime = RESERVATION_TIME,
-    id: Long = 0L,
-    creatorId: Long = 0L
-): MailMessage {
-    return MailMessage.withReservation(subject, body, sender, recipients, reservationTime, creatorId)
+    return MailMessage(subject, body, sender, recipients, creatorId, id = id)
 }
 
 fun createMailReservation(
-    subject: String = SUBJECT,
-    body: String = BODY,
-    sender: String = SENDER,
-    recipients: List<String> = RECIPIENTS,
+    mailMessage: MailMessage = createMailMessage(),
     reservationTime: LocalDateTime = RESERVATION_TIME,
     id: Long = 0L,
-    creatorId: Long = 0L
 ): MailReservation {
-    return MailReservation(
-        createMailMessage(subject, body, sender, recipients, id, creatorId),
-        reservationTime = reservationTime
-    )
+    return MailReservation(mailMessage, reservationTime = reservationTime, id = id)
 }
 
 fun createSuccessMailHistory(

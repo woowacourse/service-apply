@@ -50,11 +50,6 @@ data class MailData(
 
     fun toMailMessage(): MailMessage {
         // TODO: 작성자 ID 바인딩
-        return MailMessage.of(subject, body, sender, recipients, 1L)
-    }
-
-    fun toReservationMailMessage(): MailMessage {
-        // TODO: 작성자 ID 바인딩
-        return MailMessage.withReservation(subject, body, sender, recipients, sentTime, 1L)
+        return MailMessage(subject, body, sender, recipients, 1L)
     }
 }

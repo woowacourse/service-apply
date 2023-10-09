@@ -12,7 +12,7 @@ import javax.persistence.Lob
 import javax.persistence.OneToMany
 
 @Entity
-class MailMessage private constructor(
+class MailMessage(
     @Column(nullable = false)
     val subject: String,
 
@@ -53,44 +53,5 @@ class MailMessage private constructor(
 
     private fun hasReservation(): Boolean {
         return reservations.isNotEmpty()
-    }
-
-    companion object {
-        fun of(
-            subject: String,
-            body: String,
-            sender: String,
-            recipients: List<String>,
-            creatorId: Long
-        ): MailMessage {
-            return MailMessage(
-                subject = subject,
-                body = body,
-                sender = sender,
-                recipients = recipients,
-                creatorId = creatorId
-            )
-        }
-
-        fun withReservation(
-            subject: String,
-            body: String,
-            sender: String,
-            recipients: List<String>,
-            reservationTime: LocalDateTime,
-            creatorId: Long
-        ): MailMessage {
-            return MailMessage(
-                subject = subject,
-                body = body,
-                sender = sender,
-                recipients = recipients,
-                creatorId = creatorId
-            ).apply {
-                reservations.add(
-                    MailReservation(this, reservationTime = reservationTime)
-                )
-            }
-        }
     }
 }
