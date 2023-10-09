@@ -5,7 +5,6 @@ import apply.domain.applicationform.ApplicationFormSubmittedEvent
 import apply.domain.mail.MailHistory
 import apply.domain.mail.MailHistoryRepository
 import apply.domain.mail.MailMessageRepository
-import apply.domain.mail.MailSentEvent
 import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitment.getOrThrow
 import apply.domain.user.PasswordResetEvent
@@ -95,6 +94,7 @@ class MailService(
 
     @Async
     fun sendMailsByBcc(request: MailData, files: Map<String, ByteArrayResource>) {
+        val mailMessage = mailMessageRepository.save(request.toMailMessage())
         val body = generateMailBody(request)
         val recipients = request.recipients + mailProperties.username
 
@@ -106,7 +106,7 @@ class MailService(
                 .onFailure { failed.addAll(addresses) }
         }
 
-        eventPublisher.publishEvent(MailSentEvent(request, succeeded, failed))
+        saveMailHistories(mailMessage.id, succeeded, failed)
     }
 
     fun sendMailsByBccSynchronous(request: MailData, files: Map<String, ByteArrayResource>) {
