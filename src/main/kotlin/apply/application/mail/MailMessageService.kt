@@ -3,7 +3,6 @@ package apply.application.mail
 import apply.domain.mail.MailMessageRepository
 import apply.domain.mail.MailReservation
 import apply.domain.mail.MailReservationRepository
-import apply.domain.mail.getOrThrow
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -16,14 +15,16 @@ class MailMessageService(
     fun reserve(request: MailData): MailMessageResponse {
         val mailMessage = mailMessageRepository.save(request.toMailMessage())
         val mailReservation = mailReservationRepository.save(
-            MailReservation(mailMessage, reservationTime = request.sentTime)
+            MailReservation(mailMessageId = mailMessage.id, reservationTime = request.sentTime)
         )
-        return MailMessageResponse(mailMessage)
+        return MailMessageResponse(mailMessage, mailReservation)
     }
 
     fun cancelReservation(mailMessageId: Long) {
-        val mailMessage = mailMessageRepository.getOrThrow(mailMessageId)
-        check(mailMessage.canDelete()) { "예약 취소할 수 없는 메일입니다." }
-        mailMessageRepository.deleteById(mailMessageId)
+        val mailReservation = mailReservationRepository.findByMailMessageId(mailMessageId)
+            ?: throw IllegalArgumentException("메일 예약이 존재하지 않습니다. email: $mailMessageId")
+        check(mailReservation.canCancel()) { "예약 취소할 수 없는 메일입니다." }
+        mailReservationRepository.deleteById(mailReservation.id)
+        mailMessageRepository.deleteById(mailReservation.mailMessageId)
     }
 }

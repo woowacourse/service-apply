@@ -1,5 +1,6 @@
 package apply.application.mail
 
+import apply.domain.mail.MailMessageRepository
 import apply.domain.mail.MailReservationRepository
 import apply.domain.mail.MailReservationStatus
 import org.springframework.stereotype.Service
@@ -11,6 +12,7 @@ import java.time.LocalDateTime
 class MailReservationService(
     private val mailService: MailService,
     private val mailReservationRepository: MailReservationRepository,
+    private val mailMessageRepository: MailMessageRepository
 ) {
     fun findByWaitingStatus(): List<MailReservationResponse> {
         return mailReservationRepository.findByStatus(MailReservationStatus.WAITING)
@@ -23,10 +25,13 @@ class MailReservationService(
             standardTime.plusMinutes(1),
             MailReservationStatus.WAITING
         )
+        val messagesById = mailMessageRepository
+            .findAllById(reservations.map { it.mailMessageId })
+            .associateBy { it.id }
 
         reservations.forEach { mailReservation ->
             mailReservation.send()
-            mailService.sendMailsByBcc(MailData(mailReservation.mailMessage), emptyMap()) {
+            mailService.sendMailsByBcc(MailData(messagesById.getValue(mailReservation.id)), emptyMap()) {
                 mailReservation.finish()
             }
         }

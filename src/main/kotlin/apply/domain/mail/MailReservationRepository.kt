@@ -14,4 +14,6 @@ interface MailReservationRepository : JpaRepository<MailReservation, Long> {
         to: LocalDateTime,
         status: MailReservationStatus
     ): List<MailReservation>
+
+    fun findByMailMessageId(mailMessageId: Long): MailReservation?
 }

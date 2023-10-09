@@ -6,47 +6,35 @@ import apply.domain.mail.MailReservationStatus
 import java.time.LocalDateTime
 
 data class MailMessageResponse(
+    val id: Long,
     val subject: String,
     val body: String,
     val sender: String,
     val recipients: List<String>,
     val createdDateTime: LocalDateTime,
-    val reservation: MailReservationSimpleResponse?,
-    val id: Long
+    val reservation: MailReservationResponse?
 ) {
-    constructor(mailMessage: MailMessage) : this(
+    constructor(mailMessage: MailMessage, mailReservation: MailReservation? = null) : this(
+        mailMessage.id,
         mailMessage.subject,
         mailMessage.body,
         mailMessage.sender,
         mailMessage.recipients,
         mailMessage.createdDateTime,
-        mailMessage.reservation()?.let { MailReservationSimpleResponse(it) },
-        mailMessage.id
-    )
-}
-
-data class MailReservationSimpleResponse(
-    val status: MailReservationStatus,
-    val reservationTime: LocalDateTime,
-    val id: Long,
-) {
-    constructor(mailReservation: MailReservation) : this(
-        mailReservation.status,
-        mailReservation.reservationTime,
-        mailReservation.id
+        mailReservation?.let { MailReservationResponse(it) }
     )
 }
 
 data class MailReservationResponse(
-    val mailMessage: MailMessageResponse,
-    val status: MailReservationStatus,
-    val reservationTime: LocalDateTime,
     val id: Long,
+    val mailMessageId: Long,
+    val status: MailReservationStatus,
+    val reservationTime: LocalDateTime
 ) {
     constructor(mailReservation: MailReservation) : this(
-        MailMessageResponse(mailReservation.mailMessage),
+        mailReservation.id,
+        mailReservation.mailMessageId,
         mailReservation.status,
-        mailReservation.reservationTime,
-        mailReservation.id
+        mailReservation.reservationTime
     )
 }

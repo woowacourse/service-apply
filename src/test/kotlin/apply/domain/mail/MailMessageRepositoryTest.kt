@@ -4,7 +4,6 @@ import apply.createMailMessage
 import io.kotest.core.spec.style.ExpectSpec
 import io.kotest.extensions.spring.SpringExtension
 import io.kotest.matchers.longs.shouldNotBeZero
-import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import support.test.RepositoryTest
@@ -30,7 +29,6 @@ class MailMessageRepositoryTest(
         expect("메일 메시지만 조회한다") {
             val actual = mailMessageRepository.findById(mailMessage.id).get()
             actual.shouldNotBeNull()
-            actual.reservation().shouldBeNull()
         }
     }
 

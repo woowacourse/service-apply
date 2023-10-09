@@ -10,6 +10,5 @@ class MailMessageTest : StringSpec({
 
         mailMessage.subject shouldBe "제목"
         mailMessage.body shouldBe "내용"
-        mailMessage.reservation() shouldBe null
     }
 })

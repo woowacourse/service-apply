@@ -6,21 +6,12 @@ import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
-import javax.persistence.ForeignKey
-import javax.persistence.JoinColumn
-import javax.persistence.ManyToOne
 
 private const val PERIOD_MINUTES: Long = 10L
 
 @Entity
 class MailReservation(
-
-    @ManyToOne
-    @JoinColumn(
-        name = "mail_message_id", nullable = false,
-        foreignKey = ForeignKey(name = "fk_mail_reservation_to_mail_message")
-    )
-    val mailMessage: MailMessage,
+    val mailMessageId: Long = 0L,
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

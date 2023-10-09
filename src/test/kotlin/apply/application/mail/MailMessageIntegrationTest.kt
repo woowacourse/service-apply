@@ -10,9 +10,9 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.extensions.spring.SpringTestExtension
 import io.kotest.extensions.spring.SpringTestLifecycleMode
-import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.transaction.annotation.Transactional
 import support.test.IntegrationTest
 import java.time.LocalDateTime.now
@@ -34,32 +34,32 @@ class MailMessageIntegrationTest(
             val mailMessage = mailMessageService.reserve(mailData)
 
             Then("메일 메시지와 예약이 생성된다") {
-                val actual = mailMessageRepository.getOrThrow(mailMessage.id)
+                mailMessageRepository.getOrThrow(mailMessage.id).subject shouldBe mailData.subject
 
-                actual.subject shouldBe mailData.subject
-                actual.reservation().shouldNotBeNull()
-                actual.reservation()!!.reservationTime shouldBe reservationTime
+                val reservation = mailReservationRepository.findByMailMessageId(mailMessage.id)
+                reservation shouldNotBe null
+                reservation?.reservationTime shouldBe reservationTime
             }
         }
     }
 
     Given("취소하고 싶은 예약 메일이 있는 경우") {
         val mailMessage = mailMessageRepository.save(createMailMessage())
-        val mailReservation = mailReservationRepository.save(createMailReservation(mailMessage))
+        val mailReservation = mailReservationRepository.save(createMailReservation(mailMessage.id))
 
         When("메일 예약을 취소하면") {
             mailMessageService.cancelReservation(mailMessage.id)
 
             Then("메일 메시지와 예약이 삭제된다") {
-                mailMessageRepository.findById(mailMessage.id).isEmpty shouldBe true
-                mailReservationRepository.findById(mailReservation.id).isEmpty shouldNotBe true
+                mailMessageRepository.findByIdOrNull(mailMessage.id) shouldBe null
+                mailReservationRepository.findByIdOrNull(mailReservation.id) shouldBe null
             }
         }
     }
 
     Given("취소하고 싶은 예약 메일이 처리중인 경우") {
         val mailMessage = mailMessageRepository.save(createMailMessage())
-        val mailReservation = mailReservationRepository.save(createMailReservation(mailMessage))
+        val mailReservation = mailReservationRepository.save(createMailReservation(mailMessage.id))
         mailReservation.send()
 
         When("메일 예약을 취소하면") {
@@ -68,15 +68,15 @@ class MailMessageIntegrationTest(
                     mailMessageService.cancelReservation(mailMessage.id)
                 }
 
-                mailMessageRepository.findById(mailMessage.id).isPresent shouldNotBe true
-                mailReservationRepository.findById(mailReservation.id).isPresent shouldNotBe true
+                mailMessageRepository.findByIdOrNull(mailMessage.id) shouldNotBe null
+                mailReservationRepository.findByIdOrNull(mailReservation.id) shouldNotBe null
             }
         }
     }
 
     Given("취소하고 싶은 예약 메일이 발송 완료된 경우") {
         val mailMessage = mailMessageRepository.save(createMailMessage())
-        val mailReservation = mailReservationRepository.save(createMailReservation(mailMessage))
+        val mailReservation = mailReservationRepository.save(createMailReservation(mailMessage.id))
         mailReservation.finish()
 
         When("메일 예약을 취소하면") {
@@ -85,8 +85,8 @@ class MailMessageIntegrationTest(
                     mailMessageService.cancelReservation(mailMessage.id)
                 }
 
-                mailMessageRepository.findById(mailMessage.id).isPresent shouldNotBe true
-                mailReservationRepository.findById(mailReservation.id).isPresent shouldNotBe true
+                mailMessageRepository.findByIdOrNull(mailMessage.id) shouldNotBe null
+                mailReservationRepository.findByIdOrNull(mailReservation.id) shouldNotBe null
             }
         }
     }

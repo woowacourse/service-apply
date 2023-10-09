@@ -37,11 +37,11 @@ fun createMailMessage(
 }
 
 fun createMailReservation(
-    mailMessage: MailMessage = createMailMessage(),
+    mailMessageId: Long = MAIL_MESSAGE_ID,
     reservationTime: LocalDateTime = RESERVATION_TIME,
     id: Long = 0L,
 ): MailReservation {
-    return MailReservation(mailMessage, reservationTime = reservationTime, id = id)
+    return MailReservation(mailMessageId, reservationTime = reservationTime, id = id)
 }
 
 fun createSuccessMailHistory(
