@@ -31,9 +31,9 @@ class MailReservationService(
 
         reservations.forEach { mailReservation ->
             mailReservation.send()
-            mailService.sendMailsByBcc(MailData(messagesById.getValue(mailReservation.id)), emptyMap()) {
-                mailReservation.finish()
-            }
+            mailReservationRepository.save(mailReservation)
+            mailService.sendMailsByBccSynchronous(MailData(messagesById.getValue(mailReservation.id)), emptyMap())
+            mailReservation.finish()
         }
     }
 }
