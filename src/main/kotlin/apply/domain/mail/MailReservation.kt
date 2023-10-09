@@ -58,7 +58,3 @@ class MailReservation(
         }
     }
 }
-
-enum class MailReservationStatus {
-    WAITING, SENDING, FINISHED
-}
