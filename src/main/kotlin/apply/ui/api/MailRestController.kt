@@ -4,6 +4,7 @@ import apply.application.mail.MailData
 import apply.application.mail.MailMessageService
 import apply.application.mail.MailService
 import apply.domain.user.User
+import apply.security.Accessor
 import apply.security.LoginUser
 import org.springframework.core.io.ByteArrayResource
 import org.springframework.http.ResponseEntity
@@ -32,7 +33,7 @@ class MailRestController(
 
     @PostMapping("/reserved")
     fun sendMail(
-        @LoginUser(administrator = true) user: User
+        @Accessor("lambda") ignored: Unit
     ): ResponseEntity<Unit> {
         mailMessageService.sendReservedMail()
         return ResponseEntity.noContent().build()
