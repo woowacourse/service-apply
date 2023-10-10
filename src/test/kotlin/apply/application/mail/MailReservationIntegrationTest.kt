@@ -1,6 +1,7 @@
 package apply.application.mail
 
 import apply.config.TestMailConfiguration
+import apply.createAvailableReservationTime
 import apply.createMailMessage
 import apply.createMailReservation
 import apply.domain.mail.MailMessageRepository
@@ -13,7 +14,6 @@ import io.kotest.matchers.shouldBe
 import org.springframework.context.annotation.Import
 import org.springframework.transaction.annotation.Transactional
 import support.test.IntegrationTest
-import java.time.LocalDateTime.now
 
 @Import(TestMailConfiguration::class)
 @Transactional
@@ -26,7 +26,7 @@ class MailReservationIntegrationTest(
     extensions(SpringTestExtension(SpringTestLifecycleMode.Root))
 
     Given("특정 시간에 발송할 예약 메일이 있는 경우") {
-        val reservationTime = now().plusHours(3).withMinute(10)
+        val reservationTime = createAvailableReservationTime()
         val mailMessage1 = mailMessageRepository.save(createMailMessage())
         val mailMessage2 = mailMessageRepository.save(createMailMessage())
 

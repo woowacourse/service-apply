@@ -7,7 +7,7 @@ import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
 
-private const val PERIOD_MINUTES: Long = 10L
+const val MAIL_RESERVATION_PERIOD_MINUTES: Long = 15
 
 @Entity
 class MailReservation(
@@ -44,8 +44,8 @@ class MailReservation(
         }
 
         // TODO: validator 추출
-        require(reservationTime.minute % PERIOD_MINUTES == 0L) {
-            "예약 메일의 예약시간은 10분 단위로 설정해야 합니다."
+        require(reservationTime.minute % MAIL_RESERVATION_PERIOD_MINUTES == 0L) {
+            "예약 메일의 예약시간은 ${MAIL_RESERVATION_PERIOD_MINUTES}분 단위로 설정해야 합니다."
         }
     }
 }

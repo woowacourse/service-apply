@@ -1,9 +1,11 @@
 package apply
 
 import apply.application.mail.MailData
+import apply.domain.mail.MAIL_RESERVATION_PERIOD_MINUTES
 import apply.domain.mail.MailHistory
 import apply.domain.mail.MailMessage
 import apply.domain.mail.MailReservation
+import support.nextMinutes
 import java.time.LocalDateTime
 
 private const val SUBJECT: String = "메일제목"
@@ -12,7 +14,7 @@ private const val SENDER: String = "woowacourse@email.com"
 private const val MAIL_MESSAGE_ID: Long = 1L
 private val RECIPIENTS: List<String> = listOf("test1@email.com", "test2@email.com")
 private val SENT_TIME: LocalDateTime = LocalDateTime.now()
-private val RESERVATION_TIME: LocalDateTime = LocalDateTime.now().plusHours(3).withMinute(0)
+private val RESERVATION_TIME: LocalDateTime = createAvailableReservationTime()
 
 fun createMailData(
     subject: String = SUBJECT,
@@ -49,4 +51,8 @@ fun createSuccessMailHistory(
     recipients: List<String> = RECIPIENTS
 ): MailHistory {
     return MailHistory(mailMessageId, recipients, true)
+}
+
+fun createAvailableReservationTime(): LocalDateTime {
+    return LocalDateTime.now().nextMinutes(MAIL_RESERVATION_PERIOD_MINUTES).plusHours(3)
 }
