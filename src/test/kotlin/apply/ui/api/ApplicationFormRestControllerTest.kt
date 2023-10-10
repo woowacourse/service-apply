@@ -102,7 +102,7 @@ class ApplicationFormRestControllerTest : RestControllerTest() {
             bearer("valid_token")
             param("recruitmentId", "1")
         }.andExpect {
-            status { isBadRequest }
+            status { isBadRequest() }
         }.andDo {
             handle(document("application-form-get-bad-request"))
         }
@@ -118,7 +118,7 @@ class ApplicationFormRestControllerTest : RestControllerTest() {
             bearer("valid_token")
             param("recruitmentId", "1")
         }.andExpect {
-            status { isNotFound }
+            status { isNotFound() }
         }.andDo {
             handle(document("application-form-get-not-found"))
         }
