@@ -1,6 +1,7 @@
 package apply.ui.api
 
 import apply.application.mail.MailData
+import apply.application.mail.MailMessageService
 import apply.application.mail.MailService
 import apply.domain.user.User
 import apply.security.LoginUser
@@ -15,7 +16,8 @@ import org.springframework.web.multipart.MultipartFile
 @RestController
 @RequestMapping("/api/mail")
 class MailRestController(
-    private val mailService: MailService
+    private val mailService: MailService,
+    private val mailMessageService: MailMessageService
 ) {
     @PostMapping
     fun sendMail(
@@ -25,6 +27,14 @@ class MailRestController(
     ): ResponseEntity<Unit> {
         val inputStreamFiles = files.associate { (it.originalFilename!! to ByteArrayResource(it.bytes)) }
         mailService.sendMailsByBcc(request, inputStreamFiles)
+        return ResponseEntity.noContent().build()
+    }
+
+    @PostMapping("/reserved")
+    fun sendMail(
+        @LoginUser(administrator = true) user: User
+    ): ResponseEntity<Unit> {
+        mailMessageService.sendReservedMail()
         return ResponseEntity.noContent().build()
     }
 }

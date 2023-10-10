@@ -1,17 +1,48 @@
 package apply.application.mail
 
+import apply.domain.mail.MailHistoryRepository
+import apply.domain.mail.MailMessage
 import apply.domain.mail.MailMessageRepository
 import apply.domain.mail.MailReservation
 import apply.domain.mail.MailReservationRepository
+import apply.domain.mail.MailReservationStatus
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDateTime
 
 @Transactional
 @Service
 class MailMessageService(
+    private val mailService: MailService,
     private val mailMessageRepository: MailMessageRepository,
     private val mailReservationRepository: MailReservationRepository,
+    private val mailHistoryRepository: MailHistoryRepository
 ) {
+    fun findSentMails(): List<MailMessageResponse> {
+        val histories = mailHistoryRepository.findAll()
+        val messagesById = findMessageMapById(histories.map { it.mailMessageId })
+        return messagesById.map { (id, message) ->
+            MailMessageResponse(
+                mailMessage = message,
+                mailHistories = histories.filter { it.mailMessageId == id }
+            )
+        }
+    }
+
+    fun findReservedMails(): List<MailMessageResponse> {
+        val reservations = mailReservationRepository.findByStatus(MailReservationStatus.WAITING)
+        val messagesById = findMessageMapById(reservations.map { it.mailMessageId })
+
+        return reservations
+            .filter { messagesById.contains(it.mailMessageId) }
+            .map {
+                MailMessageResponse(
+                    mailMessage = messagesById.getValue(it.mailMessageId),
+                    mailReservation = it
+                )
+            }
+    }
+
     fun reserve(request: MailData): MailMessageResponse {
         val mailMessage = mailMessageRepository.save(request.toMailMessage())
         val mailReservation = mailReservationRepository.save(
@@ -26,5 +57,27 @@ class MailMessageService(
         check(mailReservation.canCancel()) { "예약 취소할 수 없는 메일입니다." }
         mailReservationRepository.deleteById(mailReservation.id)
         mailMessageRepository.deleteById(mailReservation.mailMessageId)
+    }
+
+    fun sendReservedMail(standardTime: LocalDateTime = LocalDateTime.now()) {
+        val reservations = mailReservationRepository.findByReservationTimeBetweenAndStatus(
+            standardTime.minusMinutes(1),
+            standardTime.plusMinutes(1),
+            MailReservationStatus.WAITING
+        )
+        val messagesById = findMessageMapById(reservations.map { it.mailMessageId })
+
+        reservations.forEach { mailReservation ->
+            mailReservation.send()
+            mailReservationRepository.save(mailReservation)
+            mailService.sendMailsByBccSynchronous(MailData(messagesById.getValue(mailReservation.id)), emptyMap())
+            mailReservation.finish()
+        }
+    }
+
+    private fun findMessageMapById(mailMessageIds: List<Long>): Map<Long, MailMessage> {
+        return mailMessageRepository
+            .findAllById(mailMessageIds)
+            .associateBy { it.id }
     }
 }
