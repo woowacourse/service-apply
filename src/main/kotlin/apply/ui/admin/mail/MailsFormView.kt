@@ -58,7 +58,7 @@ class MailsFormView(
     }
 
     private fun createButtons(): Component {
-        return HorizontalLayout(submitButton, createCancelButton()).apply {
+        return HorizontalLayout(submitButton, createCancelButton(), createPreviewButton()).apply {
             setSizeFull()
             justifyContentMode = FlexComponent.JustifyContentMode.CENTER
         }
@@ -79,6 +79,16 @@ class MailsFormView(
     private fun createCancelButton(): Button {
         return createContrastButton("취소") {
             UI.getCurrent().navigate(MailsView::class.java)
+        }
+    }
+
+    private fun createPreviewButton(): Button {
+        return createContrastButton("미리보기") {
+            val result = mailForm.bindOrNull()
+            if (result != null) {
+                val body = mailService.generateMailBody(result)
+                MailPreviewDialog(body)
+            }
         }
     }
 }
