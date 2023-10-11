@@ -16,13 +16,15 @@ operation::application-form-me-get[snippets='http-request,http-response']
 
 operation::application-form-get[snippets='http-request,http-response']
 
-=== 최종 지원서 조회
+=== 지원서 조회 실패
+
+==== 최종 지원서 조회
 
 이미 제출한 지원서를 조회하는 경우
 
 operation::application-form-get-bad-request[snippets='http-response']
 
-=== 존재하지 않는 지원서 조회
+==== 존재하지 않는 지원서 조회
 
 해당 모집에 대한 지원서가 존재하지 않는 경우
 
