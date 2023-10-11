@@ -10,6 +10,7 @@ import apply.createMissionData
 import apply.createMissionResponse
 import apply.createMyMissionResponse
 import apply.domain.judgment.JudgmentStatus
+import apply.domain.mission.SubmissionMethod
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
 import io.mockk.every
@@ -76,10 +77,21 @@ class MissionRestControllerTest : RestControllerTest() {
     @Test
     fun `나의 과제들을 조회한다`() {
         val responses = listOf(
-            createMyMissionResponse(id = 1L, runnable = false, judgment = null),
-            createMyMissionResponse(id = 2L, runnable = true, judgment = createLastJudgmentResponse()),
             createMyMissionResponse(
-                id = 3L,
+                id = 1L,
+                submissionMethod = SubmissionMethod.PUBLIC_PULL_REQUEST,
+                runnable = false,
+                judgment = null
+            ),
+            createMyMissionResponse(
+                id = 2L,
+                submissionMethod = SubmissionMethod.PRIVATE_REPOSITORY,
+                runnable = false,
+                judgment = null
+            ),
+            createMyMissionResponse(id = 3L, runnable = true, judgment = createLastJudgmentResponse()),
+            createMyMissionResponse(
+                id = 4L,
                 runnable = true,
                 judgment = createLastJudgmentResponse(passCount = 9, totalCount = 10, status = JudgmentStatus.SUCCEEDED)
             )

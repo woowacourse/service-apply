@@ -140,7 +140,7 @@ class SelectionView(
             addSortableColumn("이름", ApplicantAndFormResponse::name)
             addSortableColumn("이메일", ApplicantAndFormResponse::email)
             addSortableColumn("전화번호", ApplicantAndFormResponse::phoneNumber)
-            addSortableColumn("성별") { it.gender.title }
+            addSortableColumn("성별") { it.gender.label }
             addSortableDateColumn("생년월일", ApplicantAndFormResponse::birthday)
             addSortableDateTimeColumn("지원 일시") { it.applicationForm.submittedDateTime }
             addSortableColumn("부정행위자") { if (it.isCheater) "O" else "X" }

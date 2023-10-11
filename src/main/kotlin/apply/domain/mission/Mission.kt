@@ -7,6 +7,8 @@ import java.time.LocalDateTime
 import javax.persistence.Column
 import javax.persistence.Embedded
 import javax.persistence.Entity
+import javax.persistence.EnumType
+import javax.persistence.Enumerated
 
 @SQLDelete(sql = "update mission set deleted = true where id = ?")
 @Where(clause = "deleted = false")
@@ -16,19 +18,23 @@ class Mission(
     val title: String,
 
     @Column(nullable = false)
-    val description: String,
-
-    @Column(nullable = false)
     val evaluationId: Long,
 
     @Embedded
     var period: MissionPeriod,
+
+    @Column(nullable = false, length = 255)
+    val description: String,
 
     @Column(nullable = false)
     var submittable: Boolean = false,
 
     @Column(nullable = false)
     var hidden: Boolean = true,
+
+    @Column(nullable = false, columnDefinition = "varchar(255) default 'PUBLIC_PULL_REQUEST'")
+    @Enumerated(EnumType.STRING)
+    val submissionMethod: SubmissionMethod,
     id: Long = 0L
 ) : BaseEntity(id) {
     @Column(nullable = false)
@@ -42,12 +48,26 @@ class Mission(
 
     constructor(
         title: String,
-        description: String,
         evaluationId: Long,
         startDateTime: LocalDateTime,
         endDateTime: LocalDateTime,
+        description: String,
         submittable: Boolean = false,
         hidden: Boolean = true,
+        submissionMethod: SubmissionMethod,
         id: Long = 0L
-    ) : this(title, description, evaluationId, MissionPeriod(startDateTime, endDateTime), submittable, hidden, id)
+    ) : this(
+        title,
+        evaluationId,
+        MissionPeriod(startDateTime, endDateTime),
+        description,
+        submittable,
+        hidden,
+        submissionMethod,
+        id
+    )
+
+    fun validateSameEvaluation(evaluationId: Long) {
+        require(this.evaluationId == evaluationId) { "과제의 평가는 수정할 수 없습니다." }
+    }
 }

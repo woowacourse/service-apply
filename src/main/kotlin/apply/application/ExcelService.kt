@@ -34,7 +34,7 @@ class ExcelService(
                 it.name,
                 it.email,
                 it.phoneNumber,
-                it.gender.title,
+                it.gender.label,
                 it.birthday.toString(),
                 it.applicationForm.submittedDateTime.toString(),
                 it.isCheater.toText(),

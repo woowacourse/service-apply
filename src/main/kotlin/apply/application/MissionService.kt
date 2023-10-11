@@ -1,5 +1,6 @@
 package apply.application
 
+import apply.domain.evaluation.Evaluation
 import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluation.getOrThrow
 import apply.domain.evaluationitem.EvaluationItemRepository
@@ -25,12 +26,13 @@ class MissionService(
         val mission = missionRepository.save(
             Mission(
                 request.title,
-                request.description,
                 request.evaluation.id,
                 request.startDateTime,
                 request.endDateTime,
+                request.description,
                 request.submittable,
                 request.hidden,
+                request.submissionMethod,
                 request.id
             )
         )
@@ -41,22 +43,13 @@ class MissionService(
     }
 
     private fun validate(request: MissionData) {
-        val evaluationId = request.evaluation.id
-        require(evaluationRepository.existsById(evaluationId)) { "평가가 존재하지 않습니다. id: $evaluationId" }
-        if (isNew(request)) {
-            check(!missionRepository.existsByEvaluationId(evaluationId)) {
-                "이미 과제가 등록된 평가입니다. evaluationId: $evaluationId"
-            }
-        } else {
-            val mission = missionRepository.getOrThrow(request.id)
-            check(mission.evaluationId == evaluationId) {
-                "과제의 평가는 수정할 수 없습니다."
-            }
-        }
+        val evaluation = evaluationRepository.getOrThrow(request.evaluation.id)
+        val mission = missionRepository.findByIdOrNull(request.id)
+        mission?.validateSameEvaluation(evaluation.id) ?: evaluation.validateNoMission()
     }
 
-    private fun isNew(request: MissionData): Boolean {
-        return request.id == 0L || !missionRepository.existsById(request.id)
+    private fun Evaluation.validateNoMission() {
+        require(!missionRepository.existsByEvaluationId(id)) { "이미 과제가 등록된 평가입니다. evaluationId: $id" }
     }
 
     private fun JudgmentItem.update(request: MissionData) {

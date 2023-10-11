@@ -58,10 +58,11 @@ class MissionsView(
         return Grid<MissionAndEvaluationResponse>(10).apply {
             addSortableColumn("과제명", MissionAndEvaluationResponse::title)
             addSortableColumn("평가명", MissionAndEvaluationResponse::evaluationTitle)
-            addSortableColumn("상태") { it.status.toText() }
-            addSortableColumn("공개 여부") { it.hidden.toText() }
             addSortableDateTimeColumn("시작일시", MissionAndEvaluationResponse::startDateTime)
             addSortableDateTimeColumn("종료일시", MissionAndEvaluationResponse::endDateTime)
+            addSortableColumn("상태") { it.status.toText() }
+            addSortableColumn("공개 여부") { it.hidden.toText() }
+            addSortableColumn("제출 방식") { it.submissionMethod.label }
             addColumn(createButtonRenderer()).apply { isAutoWidth = true }
             setItems(missionService.findAllByRecruitmentId(recruitmentId))
         }
@@ -100,10 +101,6 @@ class MissionsView(
     }
 
     private fun Boolean.toText(): String {
-        return if (this) {
-            "비공개"
-        } else {
-            "공개"
-        }
+        return if (this) "비공개" else "공개"
     }
 }

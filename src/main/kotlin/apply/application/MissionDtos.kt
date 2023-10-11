@@ -6,6 +6,7 @@ import apply.domain.judgmentitem.JudgmentItem
 import apply.domain.judgmentitem.ProgrammingLanguage
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionStatus
+import apply.domain.mission.SubmissionMethod
 import java.time.LocalDateTime
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
@@ -26,14 +27,18 @@ data class MissionData(
     var endDateTime: LocalDateTime = LocalDateTime.MIN,
 
     @field:NotBlank
+    @field:Size(min = 1, max = 255)
     var description: String = "",
-    var judgmentItemData: JudgmentItemData = JudgmentItemData(),
 
     @field:NotNull
     var submittable: Boolean = false,
 
     @field:NotNull
     var hidden: Boolean = true,
+
+    @field:NotNull
+    var submissionMethod: SubmissionMethod = SubmissionMethod.PUBLIC_PULL_REQUEST,
+    var judgmentItemData: JudgmentItemData = JudgmentItemData(),
     var id: Long = 0L
 ) {
     constructor(mission: Mission, evaluation: Evaluation, judgmentItemData: JudgmentItemData) : this(
@@ -42,9 +47,10 @@ data class MissionData(
         mission.period.startDateTime,
         mission.period.endDateTime,
         mission.description,
-        judgmentItemData,
         mission.submittable,
         mission.hidden,
+        mission.submissionMethod,
+        judgmentItemData,
         mission.id
     )
 }
@@ -52,45 +58,49 @@ data class MissionData(
 data class MissionAndEvaluationResponse(
     val id: Long,
     val title: String,
-    val description: String,
-    val evaluationTitle: String,
     val evaluationId: Long,
-    val submittable: Boolean,
-    val status: MissionStatus,
-    val hidden: Boolean,
+    val evaluationTitle: String,
     val startDateTime: LocalDateTime,
-    val endDateTime: LocalDateTime
+    val endDateTime: LocalDateTime,
+    val description: String,
+    val submittable: Boolean,
+    val hidden: Boolean,
+    val submissionMethod: SubmissionMethod,
+    val status: MissionStatus
 ) {
     constructor(mission: Mission, evaluation: Evaluation) : this(
         mission.id,
         mission.title,
-        mission.description,
-        evaluation.title,
         evaluation.id,
-        mission.submittable,
-        mission.status,
-        mission.hidden,
+        evaluation.title,
         mission.period.startDateTime,
-        mission.period.endDateTime
+        mission.period.endDateTime,
+        mission.description,
+        mission.submittable,
+        mission.hidden,
+        mission.submissionMethod,
+        mission.status
     )
 }
 
 data class MissionResponse(
     val id: Long,
     val title: String,
-    val description: String,
-    val submittable: Boolean,
     val startDateTime: LocalDateTime,
     val endDateTime: LocalDateTime,
+    val description: String,
+    val submittable: Boolean,
+    val submissionMethod: SubmissionMethod,
     val status: MissionStatus
 ) {
     constructor(mission: Mission) : this(
         mission.id,
         mission.title,
-        mission.description,
-        mission.submittable,
         mission.period.startDateTime,
         mission.period.endDateTime,
+        mission.description,
+        mission.submittable,
+        mission.submissionMethod,
         mission.status
     )
 }
@@ -98,12 +108,13 @@ data class MissionResponse(
 data class MyMissionResponse(
     val id: Long,
     val title: String,
-    val description: String,
-    val submittable: Boolean,
-    val submitted: Boolean,
     val startDateTime: LocalDateTime,
     val endDateTime: LocalDateTime,
+    val description: String,
+    val submittable: Boolean,
+    val submissionMethod: SubmissionMethod,
     val status: MissionStatus,
+    val submitted: Boolean,
     val runnable: Boolean,
     val judgment: LastJudgmentResponse?
 ) {
@@ -115,12 +126,13 @@ data class MyMissionResponse(
     ) : this(
         mission.id,
         mission.title,
-        mission.description,
-        mission.submittable,
-        submitted,
         mission.period.startDateTime,
         mission.period.endDateTime,
+        mission.description,
+        mission.submittable,
+        mission.submissionMethod,
         mission.status,
+        submitted,
         runnable,
         judgment
     )
