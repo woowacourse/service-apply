@@ -13,7 +13,7 @@ import java.time.LocalDateTime
 @Transactional
 @Service
 class MailMessageService(
-    private val mailService: MailService,
+    private val sendingMailService: SendingMailService,
     private val mailMessageRepository: MailMessageRepository,
     private val mailReservationRepository: MailReservationRepository,
     private val mailHistoryRepository: MailHistoryRepository
@@ -70,7 +70,7 @@ class MailMessageService(
         reservations.forEach { mailReservation ->
             mailReservation.send()
             mailReservationRepository.save(mailReservation)
-            mailService.sendMailsByBccSynchronous(
+            sendingMailService.sendMailsByBccSynchronous(
                 MailData(messagesById.getValue(mailReservation.mailMessageId)),
                 emptyMap()
             )

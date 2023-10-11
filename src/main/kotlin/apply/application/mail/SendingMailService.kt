@@ -11,7 +11,6 @@ import apply.domain.user.PasswordResetEvent
 import apply.domain.user.UserRepository
 import apply.domain.user.getOrThrow
 import org.springframework.boot.autoconfigure.mail.MailProperties
-import org.springframework.context.ApplicationEventPublisher
 import org.springframework.core.io.ByteArrayResource
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
@@ -23,7 +22,7 @@ import support.markdownToEmbeddedHtml
 private const val MAIL_SENDING_UNIT: Int = 50
 
 @Service
-class MailService(
+class SendingMailService(
     private val userRepository: UserRepository,
     private val recruitmentRepository: RecruitmentRepository,
     private val mailMessageRepository: MailMessageRepository,
@@ -31,8 +30,7 @@ class MailService(
     private val applicationProperties: ApplicationProperties,
     private val templateEngine: ISpringTemplateEngine,
     private val mailSender: MailSender,
-    private val mailProperties: MailProperties,
-    private val eventPublisher: ApplicationEventPublisher,
+    private val mailProperties: MailProperties
 ) {
     @Async
     @TransactionalEventListener

@@ -5,7 +5,7 @@ import apply.application.ResetPasswordRequest
 import apply.application.UserAuthenticationService
 import apply.application.UserResponse
 import apply.application.UserService
-import apply.application.mail.MailService
+import apply.application.mail.SendingMailService
 import apply.createUser
 import apply.domain.authenticationcode.AuthenticationCode
 import apply.domain.user.Gender
@@ -82,13 +82,13 @@ class UserRestControllerTest : RestControllerTest() {
     private lateinit var userAuthenticationService: UserAuthenticationService
 
     @MockkBean
-    private lateinit var mailService: MailService
+    private lateinit var sendingMailService: SendingMailService
 
     @Test
     fun `유효한 회원 생성 및 검증 요청에 대하여 응답으로 토큰이 반환된다`() {
         val response = "valid_token"
         every { userAuthenticationService.generateTokenByRegister(any()) } returns response
-        every { mailService.sendAuthenticationCodeMail(any(), any()) } just Runs
+        every { sendingMailService.sendAuthenticationCodeMail(any(), any()) } just Runs
 
         mockMvc.post("/api/users/register") {
             jsonContent(createRegisterUserRequest())
@@ -186,7 +186,7 @@ class UserRestControllerTest : RestControllerTest() {
     fun `이메일 인증 코드 요청에 응답으로 NoContent를 반환한다`() {
         val authenticationCode = AuthenticationCode("authentication-code@email.com")
         every { userAuthenticationService.generateAuthenticationCode(any()) } returns authenticationCode.code
-        every { mailService.sendAuthenticationCodeMail(any(), any()) } just Runs
+        every { sendingMailService.sendAuthenticationCodeMail(any(), any()) } just Runs
 
         mockMvc.post("/api/users/authentication-code") {
             param("email", authenticationCode.email)
