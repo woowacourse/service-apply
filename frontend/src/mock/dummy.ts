@@ -48,11 +48,11 @@ export const recruitmentDummy = [
   },
   {
     id: 5,
-    title: "우아한테크캠프 Pro 5기",
+    title: "우아한테크캠프 Pro 6기",
     recruitable: true,
     hidden: false,
     startDateTime: "2020-10-25T15:00:00" as ISO8601DateString,
-    endDateTime: "2021-11-30T10:00:00" as ISO8601DateString,
+    endDateTime: "2025-11-30T10:00:00" as ISO8601DateString,
     status: RECRUITMENT_STATUS.RECRUITING,
   },
 ];
