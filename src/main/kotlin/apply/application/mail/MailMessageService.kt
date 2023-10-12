@@ -59,7 +59,7 @@ class MailMessageService(
         mailMessageRepository.deleteById(mailReservation.mailMessageId)
     }
 
-    fun sendReservedMail(standardTime: LocalDateTime = LocalDateTime.now()) {
+    fun sendReservedMails(standardTime: LocalDateTime = LocalDateTime.now()) {
         val reservations = mailReservationRepository.findByReservationTimeBeforeAndStatus(
             standardTime,
             MailReservationStatus.WAITING

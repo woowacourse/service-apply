@@ -103,7 +103,7 @@ class MailMessageIntegrationTest(
         mailReservationRepository.save(createMailReservation(mailMessage3.id, reservationTime.plusHours(3)))
 
         When("해당 시간에 메일 발송 요청을 하면") {
-            mailMessageService.sendReservedMail(reservationTime)
+            mailMessageService.sendReservedMails(reservationTime)
 
             Then("메일 전송이 완료된다") {
                 val actual = mailReservationRepository.findByStatus(MailReservationStatus.FINISHED)

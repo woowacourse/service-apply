@@ -35,7 +35,7 @@ class MailRestController(
     fun sendMail(
         @Accessor("mail-scheduler") ignored: Unit
     ): ResponseEntity<Unit> {
-        mailMessageService.sendReservedMail()
+        mailMessageService.sendReservedMails()
         return ResponseEntity.noContent().build()
     }
 }
