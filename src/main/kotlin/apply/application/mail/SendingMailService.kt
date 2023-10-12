@@ -91,7 +91,7 @@ class SendingMailService(
     }
 
     @Async
-    fun sendMailsByBcc(request: MailData, files: Map<String, ByteArrayResource>) {
+    fun sendByBcc(request: MailData, files: Map<String, ByteArrayResource>) {
         val mailMessage = mailMessageRepository.save(request.toMailMessage())
         val body = generateMailBody(request)
         val recipients = request.recipients + mailProperties.username
@@ -107,7 +107,7 @@ class SendingMailService(
         saveMailHistories(mailMessage.id, succeeded, failed)
     }
 
-    fun sendMailsByBccSynchronous(request: MailData, files: Map<String, ByteArrayResource>) {
+    fun sendByBccSynchronous(request: MailData, files: Map<String, ByteArrayResource> = emptyMap()) {
         val mailMessage = mailMessageRepository.save(request.toMailMessage())
         val body = generateMailBody(request)
         val recipients = mailMessage.recipients + mailProperties.username
