@@ -5,6 +5,7 @@ import apply.application.MailHistoryService
 import apply.application.MailTargetService
 import apply.application.RecruitmentService
 import apply.application.UserService
+import apply.application.mail.MailData
 import apply.application.mail.MailService
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
@@ -66,13 +67,9 @@ class MailsFormView(
 
     private fun createSubmitButton(): Button {
         return createPrimaryButton("보내기") {
-            val result = mailForm.bindOrNull()
-            if (result == null) {
-                createNotification("받는사람을 한 명 이상 지정해야 합니다.")
-            } else {
-                mailService.sendMailsByBcc(result, result.attachments)
-                UI.getCurrent().navigate(MailsView::class.java)
-            }
+            val result = getDataFromMailForm()
+            mailService.sendMailsByBcc(result, result.attachments)
+            UI.getCurrent().navigate(MailsView::class.java)
         }
     }
 
@@ -84,11 +81,16 @@ class MailsFormView(
 
     private fun createPreviewButton(): Button {
         return createContrastButton("미리보기") {
-            val result = mailForm.bindOrNull()
-            if (result != null) {
-                val body = mailService.generateMailBody(result)
-                MailPreviewDialog(body)
-            }
+            val result = getDataFromMailForm()
+            val body = mailService.generateMailBody(result)
+            MailPreviewDialog(body)
+        }
+    }
+
+    private fun getDataFromMailForm(): MailData {
+        return mailForm.bindOrNull() ?: run {
+            createNotification("받는사람을 한 명 이상 지정해야 합니다.")
+            throw IllegalArgumentException()
         }
     }
 }
