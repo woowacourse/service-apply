@@ -24,16 +24,19 @@ class MailPreviewDialog(
     private fun createHeader(): VerticalLayout {
         return VerticalLayout(H2("메일 미리보기")).apply {
             isPadding = false
-            element.style.set("margin-bottom", "10px")
+            val style = element.style
+            style.set("margin-bottom", "10px")
+            style["margin-bottom"] = "10px"
+            element.style["margin-bottom"] = "10px"
         }
     }
 
     private fun createHtmlComponentFrom(htmlString: String): Component {
         val body = Jsoup.parse(htmlString).body()
         return Html(body.html()).apply {
-            element.style.set("display", "block")
-            element.style.set("height", "600px")
-            element.style.set("overflow", "auto")
+            element.style["display"] = "block"
+            element.style["height"] = "600px"
+            element.style["overflow"] = "auto"
         }
     }
 
@@ -41,7 +44,7 @@ class MailPreviewDialog(
         return HorizontalLayout(createCloseButton()).apply {
             setWidthFull()
             justifyContentMode = FlexComponent.JustifyContentMode.CENTER
-            element.style.set("margin-top", "20px")
+            element.style["margin-top"] = "20px"
         }
     }
 
