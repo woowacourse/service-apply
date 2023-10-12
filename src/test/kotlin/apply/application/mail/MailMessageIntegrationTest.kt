@@ -96,9 +96,11 @@ class MailMessageIntegrationTest(
         val reservationTime = createAvailableReservationTime()
         val mailMessage1 = mailMessageRepository.save(createMailMessage())
         val mailMessage2 = mailMessageRepository.save(createMailMessage())
+        val mailMessage3 = mailMessageRepository.save(createMailMessage())
 
-        mailReservationRepository.save(createMailReservation(mailMessage1.id, reservationTime))
-        mailReservationRepository.save(createMailReservation(mailMessage2.id, reservationTime.plusHours(3)))
+        mailReservationRepository.save(createMailReservation(mailMessage1.id, reservationTime.minusHours(3)))
+        mailReservationRepository.save(createMailReservation(mailMessage2.id, reservationTime))
+        mailReservationRepository.save(createMailReservation(mailMessage3.id, reservationTime.plusHours(3)))
 
         When("해당 시간에 메일 발송 요청을 하면") {
             mailMessageService.sendReservedMail(reservationTime)

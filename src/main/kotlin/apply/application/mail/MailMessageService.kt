@@ -60,9 +60,8 @@ class MailMessageService(
     }
 
     fun sendReservedMail(standardTime: LocalDateTime = LocalDateTime.now()) {
-        val reservations = mailReservationRepository.findByReservationTimeBetweenAndStatus(
-            standardTime.minusMinutes(1),
-            standardTime.plusMinutes(1),
+        val reservations = mailReservationRepository.findByReservationTimeBeforeAndStatus(
+            standardTime,
             MailReservationStatus.WAITING
         )
         val messagesById = findMessageMapById(reservations.map { it.mailMessageId })

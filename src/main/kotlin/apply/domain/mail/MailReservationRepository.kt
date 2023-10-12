@@ -9,9 +9,8 @@ fun MailReservationRepository.getOrThrow(id: Long) = findByIdOrNull(id)
 
 interface MailReservationRepository : JpaRepository<MailReservation, Long> {
     fun findByStatus(status: MailReservationStatus): List<MailReservation>
-    fun findByReservationTimeBetweenAndStatus(
-        from: LocalDateTime,
-        to: LocalDateTime,
+    fun findByReservationTimeBeforeAndStatus(
+        standard: LocalDateTime,
         status: MailReservationStatus
     ): List<MailReservation>
 
