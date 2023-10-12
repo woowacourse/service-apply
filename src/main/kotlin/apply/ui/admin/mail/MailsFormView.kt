@@ -70,7 +70,7 @@ class MailsFormView(
             if (result == null) {
                 createNotification("받는사람을 한 명 이상 지정해야 합니다.")
             } else {
-                sendingMailService.sendByBcc(result, result.attachments)
+                sendingMailService.sendMailByBcc(result, result.attachments)
                 UI.getCurrent().navigate(MailsView::class.java)
             }
         }

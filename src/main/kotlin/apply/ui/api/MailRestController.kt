@@ -27,7 +27,7 @@ class MailRestController(
         @LoginUser(administrator = true) user: User
     ): ResponseEntity<Unit> {
         val inputStreamFiles = files.associate { (it.originalFilename!! to ByteArrayResource(it.bytes)) }
-        sendingMailService.sendByBcc(request, inputStreamFiles)
+        sendingMailService.sendMailByBcc(request, inputStreamFiles)
         return ResponseEntity.noContent().build()
     }
 
