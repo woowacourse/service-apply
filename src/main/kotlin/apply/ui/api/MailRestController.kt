@@ -33,7 +33,7 @@ class MailRestController(
 
     @PostMapping("/reserved")
     fun sendMail(
-        @Accessor("lambda") ignored: Unit
+        @Accessor("mail-scheduler") ignored: Unit
     ): ResponseEntity<Unit> {
         mailMessageService.sendReservedMail()
         return ResponseEntity.noContent().build()
