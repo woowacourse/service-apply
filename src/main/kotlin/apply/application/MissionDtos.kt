@@ -104,13 +104,13 @@ data class MyMissionResponse(
     val startDateTime: LocalDateTime,
     val endDateTime: LocalDateTime,
     val status: MissionStatus,
-    val runnable: Boolean,
+    val testable: Boolean,
     val judgment: LastJudgmentResponse?
 ) {
     constructor(
         mission: Mission,
         submitted: Boolean = false,
-        runnable: Boolean = false,
+        testable: Boolean = false,
         judgment: LastJudgmentResponse? = null
     ) : this(
         mission.id,
@@ -121,7 +121,7 @@ data class MyMissionResponse(
         mission.period.startDateTime,
         mission.period.endDateTime,
         mission.status,
-        runnable,
+        testable,
         judgment
     )
 }

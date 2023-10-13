@@ -20,6 +20,10 @@ const JudgmentButton = ({ missionItem, recruitmentId, setMission }: JudgmentButt
   const missionStatus = missionItem.status;
   const judgment = missionItem.judgment;
 
+  if (missionItem.testable === false) {
+    return null;
+  }
+
   const handleJudgeError = async (error: AxiosError, missionId: string) => {
     if (!error) return;
 

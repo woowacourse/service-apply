@@ -80,7 +80,7 @@ fun createMyMissionResponse(
     startDateTime: LocalDateTime = START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
     missionStatus: MissionStatus = MissionStatus.SUBMITTING,
-    runnable: Boolean = true,
+    testable: Boolean = true,
     judgment: LastJudgmentResponse? = createLastJudgmentResponse(),
     id: Long = 0L
 ): MyMissionResponse {
@@ -93,7 +93,7 @@ fun createMyMissionResponse(
         startDateTime,
         endDateTime,
         missionStatus,
-        runnable,
+        testable,
         judgment
     )
 }

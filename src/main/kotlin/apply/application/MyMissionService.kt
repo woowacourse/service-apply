@@ -30,8 +30,6 @@ class MyMissionService(
         if (missions.isEmpty()) return emptyList()
 
         val assignments = assignmentRepository.findAllByUserId(userId)
-        if (assignments.isEmpty()) return missions.map(::MyMissionResponse)
-
         val judgmentItems = judgmentItemRepository.findAllByMissionIdIn(missions.map { it.id })
         if (judgmentItems.isEmpty()) return missions.mapBy(assignments)
 
@@ -43,7 +41,7 @@ class MyMissionService(
     private fun findMissions(userId: Long, recruitmentId: Long): List<Mission> {
         val evaluationIds = evaluationRepository.findAllByRecruitmentId(recruitmentId).map { it.id }
         val targets = evaluationTargetRepository.findAllByUserIdAndEvaluationIdIn(userId, evaluationIds)
-        return missionRepository.findAllByEvaluationIdIn(targets.map { it.id }).filterNot { it.hidden }
+        return missionRepository.findAllByEvaluationIdIn(targets.map { it.evaluationId }).filterNot { it.hidden }
     }
 
     private fun List<Mission>.mapBy(assignments: List<Assignment>): List<MyMissionResponse> {
@@ -65,7 +63,7 @@ class MyMissionService(
             MyMissionResponse(
                 mission = mission,
                 submitted = assignment != null,
-                runnable = assignment != null && judgmentItem != null,
+                testable = judgmentItem != null,
                 judgment = judgment
             )
         }

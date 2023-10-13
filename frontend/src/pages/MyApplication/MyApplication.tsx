@@ -79,7 +79,7 @@ const MyApplication = () => {
               {missions?.[recruitment.id]?.length > 0 && (
                 <>
                   <hr className={styles["recruitment-mission-contour"]} />
-                  <div className={styles["application-category"]}>프리코스</div>
+                  <div className={styles["application-category"]}>과제</div>
                 </>
               )}
 
