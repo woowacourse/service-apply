@@ -8,7 +8,7 @@ import apply.application.ResetPasswordRequest
 import apply.application.UserAuthenticationService
 import apply.application.UserResponse
 import apply.application.UserService
-import apply.application.mail.MailService
+import apply.application.mail.SendingMailService
 import apply.domain.user.User
 import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
@@ -26,7 +26,7 @@ import javax.validation.Valid
 class UserRestController(
     private val userService: UserService,
     private val userAuthenticationService: UserAuthenticationService,
-    private val mailService: MailService
+    private val sendingMailService: SendingMailService
 ) {
     @PostMapping("/register")
     fun generateToken(@RequestBody @Valid request: RegisterUserRequest): ResponseEntity<ApiResponse<String>> {
@@ -61,7 +61,7 @@ class UserRestController(
     ): ResponseEntity<Unit> {
         val authenticationCode = userAuthenticationService
             .generateAuthenticationCode(email)
-        mailService.sendAuthenticationCodeMail(email, authenticationCode)
+        sendingMailService.sendAuthenticationCodeMail(email, authenticationCode)
         return ResponseEntity.noContent().build()
     }
 

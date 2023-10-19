@@ -1,6 +1,7 @@
 package apply.application.mail
 
 import apply.domain.mail.MailHistory
+import apply.domain.mail.MailMessage
 import org.springframework.core.io.ByteArrayResource
 import java.time.LocalDateTime
 import javax.validation.constraints.NotEmpty
@@ -30,12 +31,25 @@ data class MailData(
     @field:NotNull
     var id: Long = 0L
 ) {
-    constructor(mailHistory: MailHistory) : this(
-        mailHistory.subject,
-        mailHistory.body,
-        mailHistory.sender,
+    constructor(mailMessage: MailMessage) : this(
+        mailMessage.subject,
+        mailMessage.body,
+        mailMessage.sender,
+        mailMessage.recipients,
+        id = mailMessage.id
+    )
+
+    constructor(mailMessage: MailMessage, mailHistory: MailHistory) : this(
+        mailMessage.subject,
+        mailMessage.body,
+        mailMessage.sender,
         mailHistory.recipients,
         mailHistory.sentTime,
         id = mailHistory.id
     )
+
+    fun toMailMessage(): MailMessage {
+        // TODO: 작성자 ID 바인딩
+        return MailMessage(subject, body, sender, recipients, 1L)
+    }
 }

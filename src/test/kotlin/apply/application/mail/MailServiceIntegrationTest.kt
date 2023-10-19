@@ -10,7 +10,7 @@ import support.test.IntegrationTest
 @Import(TestMailConfiguration::class)
 @IntegrationTest
 class MailServiceIntegrationTest(
-    private val mailService: MailService
+    private val sendingMailService: SendingMailService
 ) : BehaviorSpec({
     Given("마크다운으로 본문을 작성한 이메일이 있는 경우") {
         val body = """
@@ -20,7 +20,7 @@ class MailServiceIntegrationTest(
         val mailData = createMailData(body = body)
 
         When("이메일 본문을 생성하면") {
-            val actual = mailService.generateMailBody(mailData)
+            val actual = sendingMailService.generateMailBody(mailData)
 
             Then("본문이 HTML로 변환된 이메일이 생성된다") {
                 actual shouldContain "<title>email</title>"

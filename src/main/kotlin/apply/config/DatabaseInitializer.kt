@@ -22,6 +22,8 @@ import apply.domain.judgmentitem.JudgmentItemRepository
 import apply.domain.judgmentitem.ProgrammingLanguage
 import apply.domain.mail.MailHistory
 import apply.domain.mail.MailHistoryRepository
+import apply.domain.mail.MailMessage
+import apply.domain.mail.MailMessageRepository
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionRepository
 import apply.domain.recruitment.Recruitment
@@ -57,6 +59,7 @@ class DatabaseInitializer(
     private val missionRepository: MissionRepository,
     private val judgmentItemRepository: JudgmentItemRepository,
     private val assignmentRepository: AssignmentRepository,
+    private val mailMessageRepository: MailMessageRepository,
     private val mailHistoryRepository: MailHistoryRepository,
     private val database: Database
 ) : CommandLineRunner {
@@ -429,13 +432,25 @@ class DatabaseInitializer(
     }
 
     private fun populateMailHistories() {
+        val mailMessage = MailMessage(
+            subject = "[우아한테크코스] 프리코스를 진행하는 목적과 사전 준비",
+            body = "안녕하세요.",
+            sender = "woowa_course@woowahan.com",
+            recipients = listOf("a@email.com", "b@email.com", "c@email.com", "d@email.com"),
+            creatorId = 1L,
+        )
+        mailMessageRepository.save(mailMessage)
+
         val mailHistories = listOf(
             MailHistory(
-                subject = "[우아한테크코스] 프리코스를 진행하는 목적과 사전 준비",
-                body = "안녕하세요.",
-                sender = "woowa_course@woowahan.com",
-                recipients = listOf("a@email.com", "b@email.com", "c@email.com", "d@email.com"),
-                sentTime = createLocalDateTime(2020, 11, 5, 10)
+                mailMessageId = mailMessage.id,
+                recipients = mailMessage.recipients.subList(0, 2),
+                success = true
+            ),
+            MailHistory(
+                mailMessageId = mailMessage.id,
+                recipients = mailMessage.recipients.subList(3, 4),
+                success = true
             )
         )
         mailHistoryRepository.saveAll(mailHistories)

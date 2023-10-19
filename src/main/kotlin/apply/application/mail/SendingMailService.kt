@@ -4,6 +4,7 @@ import apply.application.ApplicationProperties
 import apply.domain.applicationform.ApplicationFormSubmittedEvent
 import apply.domain.mail.MailHistory
 import apply.domain.mail.MailHistoryRepository
+import apply.domain.mail.MailMessageRepository
 import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitment.getOrThrow
 import apply.domain.user.PasswordResetEvent
@@ -21,9 +22,10 @@ import support.markdownToEmbeddedHtml
 private const val MAIL_SENDING_UNIT: Int = 50
 
 @Service
-class MailService(
+class SendingMailService(
     private val userRepository: UserRepository,
     private val recruitmentRepository: RecruitmentRepository,
+    private val mailMessageRepository: MailMessageRepository,
     private val mailHistoryRepository: MailHistoryRepository,
     private val applicationProperties: ApplicationProperties,
     private val templateEngine: ISpringTemplateEngine,
@@ -89,11 +91,11 @@ class MailService(
     }
 
     @Async
-    fun sendMailsByBcc(request: MailData, files: Map<String, ByteArrayResource>) {
+    fun sendMailByBcc(request: MailData, files: Map<String, ByteArrayResource>) {
+        val mailMessage = mailMessageRepository.save(request.toMailMessage())
         val body = generateMailBody(request)
         val recipients = request.recipients + mailProperties.username
 
-        // TODO: 성공과 실패를 분리하여 히스토리 관리
         val succeeded = mutableListOf<String>()
         val failed = mutableListOf<String>()
         for (addresses in recipients.chunked(MAIL_SENDING_UNIT)) {
@@ -102,15 +104,23 @@ class MailService(
                 .onFailure { failed.addAll(addresses) }
         }
 
-        mailHistoryRepository.save(
-            MailHistory(
-                request.subject,
-                request.body,
-                request.sender,
-                request.recipients,
-                request.sentTime
-            )
-        )
+        saveMailHistories(mailMessage.id, succeeded, failed)
+    }
+
+    fun sendMailByBccSynchronous(request: MailData, files: Map<String, ByteArrayResource> = emptyMap()) {
+        val mailMessage = mailMessageRepository.save(request.toMailMessage())
+        val body = generateMailBody(request)
+        val recipients = mailMessage.recipients + mailProperties.username
+
+        val succeeded = mutableListOf<String>()
+        val failed = mutableListOf<String>()
+        for (addresses in recipients.chunked(MAIL_SENDING_UNIT)) {
+            runCatching { mailSender.sendBcc(addresses, mailMessage.subject, body, files) }
+                .onSuccess { succeeded.addAll(addresses) }
+                .onFailure { failed.addAll(addresses) }
+        }
+
+        saveMailHistories(mailMessage.id, succeeded, failed)
     }
 
     fun generateMailBody(mailData: MailData): String {
@@ -123,5 +133,23 @@ class MailService(
             )
         }
         return templateEngine.process("mail/common", context)
+    }
+
+    private fun saveMailHistories(
+        mailMessageId: Long,
+        succeeded: MutableList<String>,
+        failed: MutableList<String>
+    ) {
+        val mailHistories = mutableListOf<MailHistory>()
+
+        if (succeeded.isNotEmpty()) {
+            mailHistories.add(MailHistory(mailMessageId, succeeded, true))
+        }
+
+        if (failed.isNotEmpty()) {
+            mailHistories.add(MailHistory(mailMessageId, failed, false))
+        }
+
+        mailHistoryRepository.saveAll(mailHistories)
     }
 }

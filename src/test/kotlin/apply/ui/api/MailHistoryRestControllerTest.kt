@@ -1,6 +1,6 @@
 package apply.ui.api
 
-import apply.application.MailHistoryService
+import apply.application.mail.MailHistoryService
 import apply.createMailData
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every

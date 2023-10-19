@@ -1,11 +1,11 @@
 package apply.ui.admin.mail
 
 import apply.application.EvaluationService
-import apply.application.MailHistoryService
 import apply.application.MailTargetService
 import apply.application.RecruitmentService
 import apply.application.UserService
-import apply.application.mail.MailService
+import apply.application.mail.MailHistoryService
+import apply.application.mail.SendingMailService
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
@@ -32,7 +32,7 @@ class MailsFormView(
     evaluationService: EvaluationService,
     mailTargetService: MailTargetService,
     private val mailHistoryService: MailHistoryService,
-    private val mailService: MailService,
+    private val sendingMailService: SendingMailService,
     mailProperties: MailProperties
 ) : VerticalLayout(), HasUrlParameter<String> {
     private val mailForm: MailForm = MailForm(
@@ -70,7 +70,7 @@ class MailsFormView(
             if (result == null) {
                 createNotification("받는사람을 한 명 이상 지정해야 합니다.")
             } else {
-                mailService.sendMailsByBcc(result, result.attachments)
+                sendingMailService.sendMailByBcc(result, result.attachments)
                 UI.getCurrent().navigate(MailsView::class.java)
             }
         }

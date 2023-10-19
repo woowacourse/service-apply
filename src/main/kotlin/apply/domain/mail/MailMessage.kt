@@ -9,9 +9,16 @@ import javax.persistence.Entity
 import javax.persistence.Lob
 
 @Entity
-class MailHistory(
+class MailMessage(
     @Column(nullable = false)
-    val mailMessageId: Long = 0L,
+    val subject: String,
+
+    @Column(nullable = false)
+    @Lob
+    val body: String,
+
+    @Column(nullable = false)
+    val sender: String,
 
     @Column(nullable = false)
     @Convert(converter = StringToListConverter::class)
@@ -19,9 +26,9 @@ class MailHistory(
     val recipients: List<String>,
 
     @Column(nullable = false)
-    val success: Boolean,
+    val creatorId: Long,
 
     @Column(nullable = false)
-    val sentTime: LocalDateTime = LocalDateTime.now(),
+    val createdDateTime: LocalDateTime = LocalDateTime.now(),
     id: Long = 0L
 ) : BaseEntity(id)
