@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 
-@Transactional
 @Service
 class MailMessageService(
     private val sendingMailService: SendingMailService,
@@ -43,6 +42,7 @@ class MailMessageService(
             }
     }
 
+    @Transactional
     fun reserve(request: MailData): MailMessageResponse {
         val mailMessage = mailMessageRepository.save(request.toMailMessage())
         val mailReservation = mailReservationRepository.save(
@@ -51,6 +51,7 @@ class MailMessageService(
         return MailMessageResponse(mailMessage, mailReservation)
     }
 
+    @Transactional
     fun cancelReservation(mailMessageId: Long) {
         val mailReservation = mailReservationRepository.findByMailMessageId(mailMessageId)
             ?: throw IllegalArgumentException("메일 예약이 존재하지 않습니다. email: $mailMessageId")
@@ -67,10 +68,9 @@ class MailMessageService(
         val messagesById = findMessageMapById(reservations.map { it.mailMessageId })
 
         reservations.forEach { mailReservation ->
-            mailReservation.send()
-            mailReservationRepository.save(mailReservation)
             sendingMailService.sendMailByBccSynchronous(MailData(messagesById.getValue(mailReservation.mailMessageId)))
             mailReservation.finish()
+            mailReservationRepository.save(mailReservation)
         }
     }
 
