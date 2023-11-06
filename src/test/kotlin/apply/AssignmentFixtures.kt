@@ -13,35 +13,35 @@ fun createAssignment(
     userId: Long = 1L,
     missionId: Long = 1L,
     githubUsername: String = GITHUB_USERNAME,
-    pullRequestUrl: String = PULL_REQUEST_URL,
+    url: String = PULL_REQUEST_URL,
     note: String = NOTE,
     id: Long = 0L
 ): Assignment {
-    return Assignment(userId, missionId, githubUsername, pullRequestUrl, note, id)
+    return Assignment(userId, missionId, githubUsername, url, note, id)
 }
 
 fun createAssignmentRequest(
     githubUsername: String = GITHUB_USERNAME,
-    pullRequestUrl: String = PULL_REQUEST_URL,
+    url: String = PULL_REQUEST_URL,
     note: String = NOTE,
 ): AssignmentRequest {
-    return AssignmentRequest(githubUsername, pullRequestUrl, note)
+    return AssignmentRequest(githubUsername, url, note)
 }
 
 fun createAssignmentResponse(
     githubUsername: String = GITHUB_USERNAME,
-    pullRequestUrl: String = PULL_REQUEST_URL,
+    url: String = PULL_REQUEST_URL,
     note: String = NOTE,
     id: Long = 0L
 ): AssignmentResponse {
-    return AssignmentResponse(id, githubUsername, pullRequestUrl, note)
+    return AssignmentResponse(id, githubUsername, url, note)
 }
 
 fun createAssignmentData(
     githubUsername: String = GITHUB_USERNAME,
-    pullRequestUrl: String = PULL_REQUEST_URL,
+    url: String = PULL_REQUEST_URL,
     note: String = NOTE,
     id: Long = 0L
 ): AssignmentData {
-    return AssignmentData(githubUsername, pullRequestUrl, note, id)
+    return AssignmentData(githubUsername, url, note, id)
 }

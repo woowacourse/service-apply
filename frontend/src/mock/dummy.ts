@@ -1,6 +1,10 @@
 import { ISO8601DateString } from "../../types/domains/common";
 import { JUDGMENT_STATUS } from "./../constants/judgment";
-import { MISSION_STATUS, RECRUITMENT_STATUS } from "./../constants/recruitment";
+import {
+  MISSION_STATUS,
+  MISSION_SUBMISSION_METHOD,
+  RECRUITMENT_STATUS,
+} from "./../constants/recruitment";
 
 const now = new Date();
 const min = 3;
@@ -97,6 +101,7 @@ export const myApplicationDummy = [
   },
 ];
 
+// TODO: 테스트용 mission 더미 데이터들 도메인 객체로 생성해서 사용할 수 있도록 개선
 export const missionsDummy = {
   1: [
     {
@@ -107,6 +112,7 @@ export const missionsDummy = {
       endDateTime: "2020-11-25T15:00:00" as ISO8601DateString,
       submitted: false,
       submittable: true,
+      submissionMethod: MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST,
       status: MISSION_STATUS.SUBMITTABLE,
       runnable: true,
       judgment: null,
@@ -121,6 +127,7 @@ export const missionsDummy = {
       endDateTime: "2020-11-25T15:00:00" as ISO8601DateString,
       submitted: false,
       submittable: true,
+      submissionMethod: MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST,
       status: MISSION_STATUS.SUBMITTING,
       runnable: true,
       judgment: null,
@@ -133,6 +140,7 @@ export const missionsDummy = {
       endDateTime: "2020-11-25T15:00:00" as ISO8601DateString,
       submitted: true,
       submittable: true,
+      submissionMethod: MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST,
       status: MISSION_STATUS.SUBMITTING,
       runnable: true,
       judgment: null,
@@ -145,10 +153,11 @@ export const missionsDummy = {
       endDateTime: "2020-11-25T15:00:00" as ISO8601DateString,
       submitted: true,
       submittable: true,
+      submissionMethod: MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST,
       status: MISSION_STATUS.SUBMITTING,
       runnable: true,
       judgment: {
-        pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
+        url: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
         status: JUDGMENT_STATUS.STARTED,
         passCount: 0,
@@ -167,10 +176,11 @@ export const missionsDummy = {
       endDateTime: "2020-11-25T15:00:00" as ISO8601DateString,
       submitted: true,
       submittable: true,
+      submissionMethod: MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST,
       status: MISSION_STATUS.SUBMITTING,
       runnable: true,
       judgment: {
-        pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
+        url: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
         status: JUDGMENT_STATUS.SUCCEEDED,
         passCount: 5,
@@ -189,10 +199,11 @@ export const missionsDummy = {
       endDateTime: "2020-11-25T15:00:00" as ISO8601DateString,
       submitted: true,
       submittable: true,
+      submissionMethod: MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST,
       status: MISSION_STATUS.SUBMITTING,
       runnable: true,
       judgment: {
-        pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
+        url: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
         status: JUDGMENT_STATUS.SUCCEEDED,
         passCount: 5,
@@ -211,10 +222,11 @@ export const missionsDummy = {
       endDateTime: "2020-11-25T15:00:00" as ISO8601DateString,
       submitted: true,
       submittable: true,
+      submissionMethod: MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST,
       status: MISSION_STATUS.SUBMITTING,
       runnable: true,
       judgment: {
-        pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
+        url: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
         status: JUDGMENT_STATUS.SUCCEEDED,
         passCount: 4,
@@ -233,10 +245,11 @@ export const missionsDummy = {
       endDateTime: "2020-11-25T15:00:00" as ISO8601DateString,
       submitted: true,
       submittable: true,
+      submissionMethod: MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST,
       status: MISSION_STATUS.SUBMITTING,
       runnable: true,
       judgment: {
-        pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
+        url: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
         status: JUDGMENT_STATUS.FAILED,
         passCount: 0,
@@ -255,10 +268,11 @@ export const missionsDummy = {
       endDateTime: "2020-11-25T15:00:00" as ISO8601DateString,
       submitted: true,
       submittable: true,
+      submissionMethod: MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST,
       status: MISSION_STATUS.SUBMITTING,
       runnable: true,
       judgment: {
-        pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
+        url: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
         status: JUDGMENT_STATUS.STARTED,
         passCount: 0,
@@ -279,6 +293,7 @@ export const missionsDummy = {
       endDateTime: "2020-11-25T15:00:00" as ISO8601DateString,
       submitted: false,
       submittable: false,
+      submissionMethod: MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST,
       status: MISSION_STATUS.ENDED,
       runnable: true,
       judgment: null,
@@ -291,6 +306,7 @@ export const missionsDummy = {
       endDateTime: "2020-11-25T15:00:00" as ISO8601DateString,
       submitted: true,
       submittable: false,
+      submissionMethod: MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST,
       status: MISSION_STATUS.ENDED,
       runnable: true,
       judgment: null,
@@ -303,10 +319,11 @@ export const missionsDummy = {
       endDateTime: "2020-11-25T15:00:00" as ISO8601DateString,
       submitted: true,
       submittable: false,
+      submissionMethod: MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST,
       status: MISSION_STATUS.ENDED,
       runnable: true,
       judgment: {
-        pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
+        url: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
         status: JUDGMENT_STATUS.STARTED,
         passCount: 0,
@@ -325,10 +342,11 @@ export const missionsDummy = {
       endDateTime: "2020-11-25T15:00:00" as ISO8601DateString,
       submitted: true,
       submittable: true,
+      submissionMethod: MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST,
       status: MISSION_STATUS.ENDED,
       runnable: true,
       judgment: {
-        pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
+        url: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
         status: JUDGMENT_STATUS.STARTED,
         passCount: 0,
@@ -347,10 +365,11 @@ export const missionsDummy = {
       endDateTime: "2020-11-25T15:00:00" as ISO8601DateString,
       submitted: true,
       submittable: true,
+      submissionMethod: MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST,
       status: MISSION_STATUS.ENDED,
       runnable: true,
       judgment: {
-        pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
+        url: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
         status: JUDGMENT_STATUS.SUCCEEDED,
         passCount: 5,
@@ -369,10 +388,11 @@ export const missionsDummy = {
       endDateTime: "2020-11-25T15:00:00" as ISO8601DateString,
       submitted: true,
       submittable: true,
+      submissionMethod: MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST,
       status: MISSION_STATUS.ENDED,
       runnable: true,
       judgment: {
-        pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
+        url: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
         status: JUDGMENT_STATUS.SUCCEEDED,
         passCount: 4,
@@ -391,10 +411,11 @@ export const missionsDummy = {
       endDateTime: "2020-11-25T15:00:00" as ISO8601DateString,
       submitted: true,
       submittable: true,
+      submissionMethod: MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST,
       status: MISSION_STATUS.ENDED,
       runnable: true,
       judgment: {
-        pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
+        url: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
         status: JUDGMENT_STATUS.FAILED,
         passCount: 0,
@@ -415,6 +436,7 @@ export const missionsDummy = {
       endDateTime: "2020-11-25T15:00:00" as ISO8601DateString,
       submitted: false,
       submittable: false,
+      submissionMethod: MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST,
       status: MISSION_STATUS.UNSUBMITTABLE,
       runnable: true,
       judgment: null,
@@ -427,6 +449,7 @@ export const missionsDummy = {
       endDateTime: "2020-11-25T15:00:00" as ISO8601DateString,
       submitted: true,
       submittable: false,
+      submissionMethod: MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST,
       status: MISSION_STATUS.UNSUBMITTABLE,
       runnable: true,
       judgment: null,
@@ -439,10 +462,11 @@ export const missionsDummy = {
       endDateTime: "2020-11-25T15:00:00" as ISO8601DateString,
       submitted: true,
       submittable: false,
+      submissionMethod: MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST,
       status: MISSION_STATUS.UNSUBMITTABLE,
       runnable: true,
       judgment: {
-        pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
+        url: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
         status: JUDGMENT_STATUS.STARTED,
         passCount: 0,
@@ -461,10 +485,11 @@ export const missionsDummy = {
       endDateTime: "2020-11-25T15:00:00" as ISO8601DateString,
       submitted: true,
       submittable: true,
+      submissionMethod: MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST,
       status: MISSION_STATUS.UNSUBMITTABLE,
       runnable: true,
       judgment: {
-        pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
+        url: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
         status: JUDGMENT_STATUS.STARTED,
         passCount: 0,
@@ -483,10 +508,11 @@ export const missionsDummy = {
       endDateTime: "2020-11-25T15:00:00" as ISO8601DateString,
       submitted: true,
       submittable: true,
+      submissionMethod: MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST,
       status: MISSION_STATUS.UNSUBMITTABLE,
       runnable: true,
       judgment: {
-        pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
+        url: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
         status: JUDGMENT_STATUS.SUCCEEDED,
         passCount: 5,
@@ -505,10 +531,11 @@ export const missionsDummy = {
       endDateTime: "2020-11-25T15:00:00" as ISO8601DateString,
       submitted: true,
       submittable: true,
+      submissionMethod: MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST,
       status: MISSION_STATUS.UNSUBMITTABLE,
       runnable: true,
       judgment: {
-        pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
+        url: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
         status: JUDGMENT_STATUS.SUCCEEDED,
         passCount: 4,
@@ -527,10 +554,11 @@ export const missionsDummy = {
       endDateTime: "2020-11-25T15:00:00" as ISO8601DateString,
       submitted: true,
       submittable: true,
+      submissionMethod: MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST,
       status: MISSION_STATUS.UNSUBMITTABLE,
       runnable: true,
       judgment: {
-        pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
+        url: "https://github.com/woowacourse/service-apply/pull/367",
         commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
         status: JUDGMENT_STATUS.FAILED,
         passCount: 0,
@@ -554,7 +582,7 @@ export const userInfoDummy = {
 };
 
 export const judgmentDummy = {
-  pullRequestUrl: "https://github.com/woowacourse/jwp-dashboard-http/pull/298",
+  url: "https://github.com/woowacourse/jwp-dashboard-http/pull/298",
   commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
   status: JUDGMENT_STATUS.SUCCEEDED,
   passCount: 5,

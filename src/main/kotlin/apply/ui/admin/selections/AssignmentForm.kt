@@ -17,7 +17,7 @@ class AssignmentForm(assignmentData: AssignmentData) : FormLayout() {
                 value = assignmentData.githubUsername
                 isReadOnly = true
             },
-            createUrlField(assignmentData.pullRequestUrl),
+            createUrlField(assignmentData.url),
             TextArea("소감").apply {
                 value = assignmentData.note
                 isReadOnly = true

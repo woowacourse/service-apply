@@ -2,24 +2,26 @@ import { useState } from "react";
 import { ERROR_MESSAGE } from "../constants/messages";
 import { isValidGithubUsername } from "../utils/validation/githubUsername";
 import { isValidPullRequestUrl } from "../utils/validation/pullRequestUrl";
+import { isValidRepositoryUrl } from "../utils/validation/repositoryUrl";
+import { MISSION_SUBMISSION_METHOD } from "../constants/recruitment";
 
 export const ASSIGNMENT_FORM_NAME = {
   GITHUB_USERNAME: "githubUsername",
-  PULL_REQUEST_URL: "pullRequestUrl",
+  URL: "url",
   NOTE: "note",
 };
 
 const initialRequiredForm = {
   [ASSIGNMENT_FORM_NAME.GITHUB_USERNAME]: "",
-  [ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL]: "",
+  [ASSIGNMENT_FORM_NAME.URL]: "",
   [ASSIGNMENT_FORM_NAME.NOTE]: "",
 };
 
 const initialErrorMessage = {
-  [ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL]: "",
+  [ASSIGNMENT_FORM_NAME.URL]: "",
 };
 
-const useAssignmentForm = () => {
+const useAssignmentForm = (submissionMethod = MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST) => {
   const [requiredForm, setRequiredForm] = useState(initialRequiredForm);
   const [errorMessage, setErrorMessage] = useState(initialErrorMessage);
 
@@ -56,13 +58,31 @@ const useAssignmentForm = () => {
     updateRequiredForm(ASSIGNMENT_FORM_NAME.GITHUB_USERNAME, target.value);
   };
 
-  const handleChangePullRequestUrl = ({ target }) => {
-    const errorMessage = isValidPullRequestUrl(target.value)
-      ? ""
-      : ERROR_MESSAGE.VALIDATION.PULL_REQUEST_URL;
+  const validateUrl = (url, submissionMethod) => {
+    if (submissionMethod === MISSION_SUBMISSION_METHOD.PRIVATE_REPOSITORY) {
+      return isValidRepositoryUrl(url);
+    }
 
-    updateErrorMessage(ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL, errorMessage);
-    updateRequiredForm(ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL, target.value);
+    return isValidPullRequestUrl(url);
+  };
+
+  const generateErrorMessage = (url, submissionMethod) => {
+    if (validateUrl(url, submissionMethod)) {
+      return "";
+    }
+
+    if (submissionMethod === MISSION_SUBMISSION_METHOD.PRIVATE_REPOSITORY) {
+      return ERROR_MESSAGE.VALIDATION.REPOSITORY_URL;
+    }
+
+    return ERROR_MESSAGE.VALIDATION.PULL_REQUEST_URL;
+  };
+
+  const handleChangeUrl = ({ target }) => {
+    const errorMessage = generateErrorMessage(target.value, submissionMethod);
+
+    updateErrorMessage(ASSIGNMENT_FORM_NAME.URL, errorMessage);
+    updateRequiredForm(ASSIGNMENT_FORM_NAME.URL, target.value);
   };
 
   const handleChangeNote = ({ target }) => {
@@ -75,7 +95,7 @@ const useAssignmentForm = () => {
     init,
     handleChanges: {
       [ASSIGNMENT_FORM_NAME.GITHUB_USERNAME]: handleChangeGithubUsername,
-      [ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL]: handleChangePullRequestUrl,
+      [ASSIGNMENT_FORM_NAME.URL]: handleChangeUrl,
       [ASSIGNMENT_FORM_NAME.NOTE]: handleChangeNote,
     },
     isValid,

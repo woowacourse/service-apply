@@ -1,5 +1,9 @@
 import { JUDGMENT_STATUS } from "./../../src/constants/judgment";
-import { MISSION_STATUS, RECRUITMENT_STATUS } from "./../../src/constants/recruitment";
+import {
+  MISSION_STATUS,
+  MISSION_SUBMISSION_METHOD,
+  RECRUITMENT_STATUS,
+} from "./../../src/constants/recruitment";
 import { ISO8601DateString } from "./common";
 export type RecruitmentStatus = keyof typeof RECRUITMENT_STATUS;
 
@@ -32,12 +36,13 @@ export type Mission = {
   description: string;
   submittable: boolean;
   submitted: boolean;
+  submissionMethod: keyof typeof MISSION_SUBMISSION_METHOD;
   startDateTime: ISO8601DateString;
   endDateTime: ISO8601DateString;
   status: MissionStatus;
   runnable: boolean;
   judgment: {
-    pullRequestUrl: string;
+    url: string;
     commitHash: string;
     status: JudgmentStatus;
     passCount: number;
@@ -51,7 +56,7 @@ export type Mission = {
 export type Assignment = {
   id: number;
   githubUsername: string;
-  pullRequestUrl: string;
+  url: string;
   note: string;
 };
 

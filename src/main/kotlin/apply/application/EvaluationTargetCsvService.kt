@@ -51,7 +51,7 @@ class EvaluationTargetCsvService(
                 it.name,
                 it.email,
                 assignment?.githubUsername ?: UNSUBMITTED,
-                assignment?.pullRequestUrl ?: UNSUBMITTED,
+                assignment?.url ?: UNSUBMITTED,
                 assignment?.note ?: UNSUBMITTED,
                 it.evaluationStatus.name,
                 *scores(it.answers, evaluationItems).toTypedArray(),

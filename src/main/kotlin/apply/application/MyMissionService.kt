@@ -77,7 +77,7 @@ class MyMissionService(
     ): LastJudgmentResponse? {
         if (assignment == null || judgmentItem == null) return null
         val judgment = find { it.assignmentId == assignment.id } ?: return null
-        return LastJudgmentResponse(assignment.pullRequestUrl, judgment.lastRecord)
+        return LastJudgmentResponse(assignment.url, judgment.lastRecord)
     }
 
     fun findLastRealJudgmentByEvaluationTargetId(evaluationTargetId: Long): JudgmentData? {

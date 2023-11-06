@@ -7,15 +7,17 @@ data class SqsRequest(
     val judgmentType: String,
     val programmingLanguage: String,
     val testName: String,
-    val pullRequestUrl: String,
+    val submissionMethod: String,
+    val url: String,
     val commitHash: String
 ) {
     constructor(request: JudgmentRequest) : this(
-        request.judgmentId,
-        request.judgmentType.name,
-        request.programmingLanguage.name,
-        request.testName,
-        request.pullRequestUrl,
-        request.commit.hash
+        judgmentId = request.judgmentId,
+        judgmentType = request.judgmentType.name,
+        programmingLanguage = request.programmingLanguage.name,
+        testName = request.testName,
+        submissionMethod = request.submissionMethod.name,
+        url = request.url,
+        commitHash = request.commit.hash
     )
 }

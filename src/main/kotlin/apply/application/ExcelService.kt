@@ -70,7 +70,7 @@ class ExcelService(
                 it.name,
                 it.email,
                 assignment?.githubUsername ?: UNSUBMITTED,
-                assignment?.pullRequestUrl ?: UNSUBMITTED,
+                assignment?.url ?: UNSUBMITTED,
                 assignment?.note ?: UNSUBMITTED,
                 it.totalScore.toString(),
                 it.evaluationStatus.toText(),

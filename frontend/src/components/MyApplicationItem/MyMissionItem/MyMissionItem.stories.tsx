@@ -2,6 +2,8 @@ import { ComponentMeta, ComponentStory } from "@storybook/react";
 import { MemoryRouter } from "react-router-dom";
 import { missionsDummy } from "./../../../mock/dummy";
 import MyMissionItem from "./MyMissionItem";
+import { MISSION_STATUS, MISSION_SUBMISSION_METHOD } from "../../../constants/recruitment";
+import { ISO8601DateString } from "../../../../types/domains/common";
 
 export default {
   title: "components/MyMissionItem",
@@ -61,4 +63,22 @@ export const PassJudgmentMission = Template.bind({});
 PassJudgmentMission.args = {
   mission: missionsDummy["2"][4],
   recruitmentId: "6",
+};
+
+export const PrivateRepositorySubmission = Template.bind({});
+PrivateRepositorySubmission.args = {
+  mission: {
+    id: 2,
+    title: "비공개 저장소 제출 방식 과제",
+    description: "설명",
+    startDateTime: "2023-10-25T15:00:00" as ISO8601DateString,
+    endDateTime: "2030-11-25T15:00:00" as ISO8601DateString,
+    submitted: false,
+    submittable: true,
+    submissionMethod: MISSION_SUBMISSION_METHOD.PRIVATE_REPOSITORY,
+    status: MISSION_STATUS.SUBMITTING,
+    runnable: true,
+    judgment: null,
+  },
+  recruitmentId: "9",
 };

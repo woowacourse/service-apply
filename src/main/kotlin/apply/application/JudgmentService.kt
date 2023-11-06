@@ -38,7 +38,7 @@ class JudgmentService(
     fun findLastExampleJudgment(userId: Long, missionId: Long): LastJudgmentResponse? {
         val assignment = assignmentRepository.findByUserIdAndMissionId(userId, missionId) ?: return null
         val judgment = judgmentRepository.findByAssignmentIdAndType(assignment.id, JudgmentType.EXAMPLE)
-        return judgment?.let { LastJudgmentResponse(assignment.pullRequestUrl, it.lastRecord) }
+        return judgment?.let { LastJudgmentResponse(assignment.url, it.lastRecord) }
     }
 
     fun success(judgmentId: Long, request: SuccessJudgmentRequest) {
@@ -67,11 +67,13 @@ class JudgmentService(
     }
 
     fun judge(mission: Mission, assignment: Assignment, judgmentType: JudgmentType): LastJudgmentResponse {
-        val commit = assignmentArchive.getLastCommit(assignment.pullRequestUrl, mission.period.endDateTime)
+        val commit = assignmentArchive.getLastCommit(
+            mission.submissionMethod, assignment.url, mission.period.endDateTime
+        )
         var judgment = judgmentRepository.findByAssignmentIdAndType(assignment.id, judgmentType)
             ?: judgmentRepository.save(Judgment(assignment.id, judgmentType))
         judgment.start(commit)
         judgment = judgmentRepository.save(judgment)
-        return LastJudgmentResponse(assignment.pullRequestUrl, judgment.lastRecord)
+        return LastJudgmentResponse(assignment.url, judgment.lastRecord)
     }
 }

@@ -42,7 +42,7 @@ fun createCommit(
 }
 
 fun createLastJudgmentResponse(
-    pullRequestUrl: String = PULL_REQUEST_URL,
+    url: String = PULL_REQUEST_URL,
     commitHash: String = COMMIT_HASH,
     status: JudgmentStatus = JudgmentStatus.STARTED,
     passCount: Int = 0,
@@ -50,7 +50,7 @@ fun createLastJudgmentResponse(
     message: String = "",
     startedDateTime: LocalDateTime = now()
 ): LastJudgmentResponse {
-    return LastJudgmentResponse(pullRequestUrl, commitHash, status, passCount, totalCount, message, startedDateTime)
+    return LastJudgmentResponse(url, commitHash, status, passCount, totalCount, message, startedDateTime)
 }
 
 fun createJudgmentItem(

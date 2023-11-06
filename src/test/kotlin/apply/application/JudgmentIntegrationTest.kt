@@ -61,7 +61,7 @@ class JudgmentIntegrationTest(
         assignmentRepository.save(createAssignment(userId, mission.id))
         val commit = createCommit()
 
-        every { assignmentArchive.getLastCommit(any(), any()) } returns commit
+        every { assignmentArchive.getLastCommit(any(), any(), any()) } returns commit
 
         When("해당 과제 제출물의 예제 테스트를 실행하면") {
             val actual = judgmentService.judgeExample(userId, mission.id)
@@ -85,7 +85,7 @@ class JudgmentIntegrationTest(
         judgmentItemRepository.save(createJudgmentItem(mission.id))
         val assignment = assignmentRepository.save(createAssignment(userId, mission.id))
 
-        every { assignmentArchive.getLastCommit(any(), any()) } throws RuntimeException()
+        every { assignmentArchive.getLastCommit(any(), any(), any()) } throws RuntimeException()
 
         When("해당 과제 제출물의 예제 테스트를 실행하면") {
             Then("예외가 발생하고 자동 채점이 저장되지 않는다") {
@@ -134,7 +134,7 @@ class JudgmentIntegrationTest(
             )
         )
 
-        every { assignmentArchive.getLastCommit(any(), any()) } returns commit
+        every { assignmentArchive.getLastCommit(any(), any(), any()) } returns commit
 
         When("해당 과제 제출물의 예제 테스트를 실행하면") {
             val actual = judgmentService.judgeExample(userId, mission.id)
@@ -170,7 +170,7 @@ class JudgmentIntegrationTest(
             )
         )
 
-        every { assignmentArchive.getLastCommit(any(), any()) } returns commit
+        every { assignmentArchive.getLastCommit(any(), any(), any()) } returns commit
 
         When("해당 과제 제출물의 본 자동 채점을 실행하면") {
             val actual = judgmentService.judgeReal(assignment.id)

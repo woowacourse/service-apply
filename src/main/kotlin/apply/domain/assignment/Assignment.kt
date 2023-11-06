@@ -25,15 +25,15 @@ class Assignment(
     var githubUsername: String,
 
     @Column(nullable = false)
-    var pullRequestUrl: String,
+    var url: String,
 
     @Column(nullable = false, length = 5000)
     var note: String,
     id: Long = 0L
 ) : BaseEntity(id) {
-    fun update(githubUsername: String, pullRequestUrl: String, note: String) {
+    fun update(githubUsername: String, url: String, note: String) {
         this.githubUsername = githubUsername
-        this.pullRequestUrl = pullRequestUrl
+        this.url = url
         this.note = note
     }
 }

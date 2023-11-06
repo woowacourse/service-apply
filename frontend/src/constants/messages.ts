@@ -12,6 +12,8 @@ export const ERROR_MESSAGE = {
       "이메일 인증 코드 유효시간이 초과하였습니다. 이메일 인증 코드를 재발급해 주세요.",
     PULL_REQUEST_URL:
       "정확한 Pull Request 주소를 입력해 주세요. ex) https://github.com/woowacourse/java-baseball/pull/1",
+    REPOSITORY_URL:
+      "정확한 Repository 주소를 입력해 주세요. ex) https://github.com/javajigi/java-baseball-javajigi",
     GITHUB_USERNAME: "GitHub ID는 영어와 숫자 문자만 입력할 수 있습니다.",
     BIRTHDAY: "유효하지 않은 날짜입니다. 정확한 날짜를 입력해 주세요.",
   },
@@ -61,9 +63,16 @@ export const CONFIRM_MESSAGE = {
   CANCEL_ASSIGNMENT_SUBMIT: "정말 취소하시겠습니까? 작성하신 내용이 저장되지 않습니다.",
 } as const;
 
-export const MY_MISSION_TOOLTIP_MESSAGE = [
+export const PUBLIC_PULL_REQUEST_TOOLTIP_MESSAGE = [
   "예제 테스트 성적은 실제 성적과 무관합니다.",
   "제출 마감 후에는 예제 테스트를 실행할 수 없습니다.",
   "예제 테스트를 실행하지 않아도 제출된 Pull Request를 기반으로 채점을 진행합니다.",
+  "과제 제출을 해야 예제 테스트를 실행할 수 있습니다.",
+] as const;
+
+export const PRIVATE_REPOSITORY_TOOLTIP_MESSAGE = [
+  "예제 테스트 성적은 실제 성적과 무관합니다.",
+  "제출 마감 후에는 예제 테스트를 실행할 수 없습니다.",
+  "예제 테스트를 실행하지 않아도 제출한 저장소의 main 브랜치를 기반으로 채점을 진행합니다.",
   "과제 제출을 해야 예제 테스트를 실행할 수 있습니다.",
 ] as const;

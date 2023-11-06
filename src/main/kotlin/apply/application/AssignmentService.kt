@@ -24,14 +24,14 @@ class AssignmentService(
         check(mission.isSubmitting) { "제출 불가능한 과제입니다." }
         findEvaluationTargetOf(mission.evaluationId, userId).passIfBeforeEvaluation()
         return assignmentRepository
-            .save(Assignment(userId, missionId, request.githubUsername, request.pullRequestUrl, request.note))
+            .save(Assignment(userId, missionId, request.githubUsername, request.url, request.note))
             .let(::AssignmentResponse)
     }
 
     fun update(missionId: Long, userId: Long, request: AssignmentRequest) {
         check(missionRepository.getOrThrow(missionId).isSubmitting) { "제출 불가능한 과제입니다." }
         val assignment = assignmentRepository.getByUserIdAndMissionId(userId, missionId)
-        assignment.update(request.githubUsername, request.pullRequestUrl, request.note)
+        assignment.update(request.githubUsername, request.url, request.note)
     }
 
     private fun findEvaluationTargetOf(evaluationId: Long, userId: Long): EvaluationTarget {

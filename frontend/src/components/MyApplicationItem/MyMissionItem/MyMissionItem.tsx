@@ -79,7 +79,10 @@ const MyMissionItem = ({ mission, recruitmentId }: MyMissionItemProps) => {
 
         <hr className={styles["auto-judgment-detail-contour"]} />
 
-        <MissionDetail judgment={missionItem.judgment} />
+        <MissionDetail
+          judgment={missionItem.judgment}
+          submissionMethod={missionItem.submissionMethod}
+        />
 
         <div className={styles["button-container"]}>
           <RefreshButton
