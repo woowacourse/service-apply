@@ -544,7 +544,7 @@ export const missionsDummy = {
   ],
 };
 
-export const userInfoDummy = {
+export const memberInfoDummy = {
   id: 1,
   name: "썬",
   email: "sun@woowa.com",
