@@ -56,7 +56,7 @@ export const fetchRegister = ({
   confirmPassword,
   authenticationCode,
 }: FetchRegisterRequest) =>
-  axios.post<FetchRegisterResponseData>("/api/members/register", {
+  axios.post<FetchRegisterResponseData>("/api/users/register", {
     name,
     email,
     phoneNumber,
@@ -68,10 +68,10 @@ export const fetchRegister = ({
   });
 
 export const fetchLogin = ({ email, password }: FetchLoginRequest) =>
-  axios.post<FetchLoginResponseData>("/api/members/login", { email, password });
+  axios.post<FetchLoginResponseData>("/api/users/login", { email, password });
 
 export const fetchPasswordFind = ({ name, email, birthday }: FetchPasswordFindRequest) =>
-  axios.post<FetchPasswordFindResponseData>("/api/members/reset-password", {
+  axios.post<FetchPasswordFindResponseData>("/api/users/reset-password", {
     name,
     email,
     birthday: formatDate(birthday),
@@ -84,30 +84,28 @@ export const fetchPasswordEdit = ({
   confirmPassword,
 }: FetchPasswordEditRequest) =>
   axios.post<FetchPasswordEditResponseData>(
-    "/api/members/edit-password",
+    "/api/users/edit-password",
     { oldPassword, password, confirmPassword },
     headers({ token })
   );
 
 export const fetchMemberInfo = ({ token }: FetchMemberInfoRequest) =>
-  axios.get<FetchMemberInfoResponseData>("/api/members/me", headers({ token }));
+  axios.get<FetchMemberInfoResponseData>("/api/users/me", headers({ token }));
 
 export const fetchMemberInfoEdit = ({ token, phoneNumber }: FetchMemberInfoEditRequest) =>
   axios.patch<FetchMemberInfoEditResponseData>(
-    "/api/members/information",
+    "/api/users/information",
     { phoneNumber },
     headers({ token })
   );
 
 export const fetchAuthenticationCode = (email: FetchAuthenticationCodeRequest) =>
-  axios.post<FetchAuthenticationCodeResponseData>(
-    `/api/members/authentication-code?email=${email}`
-  );
+  axios.post<FetchAuthenticationCodeResponseData>(`/api/users/authentication-code?email=${email}`);
 
 export const fetchVerifyAuthenticationCode = ({
   email,
   authenticationCode,
 }: FetchVerifyAuthenticationCodeRequest) =>
   axios.post<FetchVerifyAuthenticationCodeResponseData>(
-    `/api/members/authenticate-email?email=${email}&authenticationCode=${authenticationCode}`
+    `/api/users/authenticate-email?email=${email}&authenticationCode=${authenticationCode}`
   );
