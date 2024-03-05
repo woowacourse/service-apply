@@ -4,7 +4,7 @@ import "../src/api/api";
 import "../src/App.css";
 import { ModalProvider } from "../src/hooks/useModalContext";
 import { RecruitmentContext } from "../src/hooks/useRecruitmentContext";
-import { UserInfoContext } from "../src/hooks/useUserInfoContext";
+import { MemberInfoContext } from "../src/hooks/useMemberInfoContext";
 import { recruitmentDummy, userInfoDummy } from "../src/mock/dummy";
 import { recruitmentFilter } from "../src/provider/RecruitmentProvider";
 import TokenProvider from "../src/provider/TokenProvider";
@@ -32,11 +32,11 @@ export const decorators = [
       }}
     >
       <TokenProvider>
-        <UserInfoContext.Provider value={{ userInfo: userInfoDummy }}>
+        <MemberInfoContext.Provider value={{ userInfo: userInfoDummy }}>
           <ModalProvider>
             <Story />
           </ModalProvider>
-        </UserInfoContext.Provider>
+        </MemberInfoContext.Provider>
       </TokenProvider>
     </RecruitmentContext.Provider>
   ),
