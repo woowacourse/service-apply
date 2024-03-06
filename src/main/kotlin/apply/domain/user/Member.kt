@@ -66,7 +66,7 @@ class Member(
     private fun identify(value: Boolean, lazyMessage: () -> Any = {}) {
         if (!value) {
             val message = lazyMessage()
-            throw UnidentifiedUserException(message.toString())
+            throw UnidentifiedMemberException(message.toString())
         }
     }
 }

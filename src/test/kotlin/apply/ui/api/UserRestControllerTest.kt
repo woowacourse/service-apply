@@ -9,7 +9,7 @@ import apply.application.mail.MailService
 import apply.createUser
 import apply.domain.authenticationcode.AuthenticationCode
 import apply.domain.user.Gender
-import apply.domain.user.UnidentifiedUserException
+import apply.domain.user.UnidentifiedMemberException
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
 import io.mockk.every
@@ -117,7 +117,7 @@ class UserRestControllerTest : RestControllerTest() {
 
     @Test
     fun `잘못된 회원 로그인 요청에 응답으로 403 Forbidden을 반환한다`() {
-        every { userAuthenticationService.generateTokenByLogin(any()) } throws UnidentifiedUserException("사용자 정보가 일치하지 않습니다.")
+        every { userAuthenticationService.generateTokenByLogin(any()) } throws UnidentifiedMemberException("사용자 정보가 일치하지 않습니다.")
 
         mockMvc.post("/api/users/login") {
             jsonContent(createAuthenticateUserRequest(password = INVALID_PASSWORD))
@@ -143,7 +143,7 @@ class UserRestControllerTest : RestControllerTest() {
 
     @Test
     fun `잘못된 비밀번호 찾기 요청에 응답으로 403 Forbidden을 반환한다`() {
-        every { userService.resetPassword(any()) } throws UnidentifiedUserException("사용자 정보가 일치하지 않습니다.")
+        every { userService.resetPassword(any()) } throws UnidentifiedMemberException("사용자 정보가 일치하지 않습니다.")
 
         mockMvc.post("/api/users/reset-password") {
             jsonContent(ResetPasswordRequest("회원", "test@email.com", createLocalDate(1995, 4, 4)))
@@ -170,7 +170,7 @@ class UserRestControllerTest : RestControllerTest() {
 
     @Test
     fun `잘못된 비밀번호 변경 요청에 응답으로 403 Forbidden을 반환한다`() {
-        every { userService.editPassword(any(), any()) } throws UnidentifiedUserException("기존 비밀번호가 일치하지 않습니다.")
+        every { userService.editPassword(any(), any()) } throws UnidentifiedMemberException("기존 비밀번호가 일치하지 않습니다.")
 
         mockMvc.post("/api/users/edit-password") {
             jsonContent(createEditPasswordRequest(oldPassword = WRONG_PASSWORD))

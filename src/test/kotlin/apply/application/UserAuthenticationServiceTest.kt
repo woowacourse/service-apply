@@ -12,7 +12,7 @@ import apply.createRegisterUserRequest
 import apply.createUser
 import apply.domain.authenticationcode.AuthenticationCodeRepository
 import apply.domain.authenticationcode.getLastByEmail
-import apply.domain.user.UnidentifiedUserException
+import apply.domain.user.UnidentifiedMemberException
 import apply.domain.user.MemberRepository
 import apply.domain.user.existsByEmail
 import apply.domain.user.findByEmail
@@ -116,7 +116,7 @@ class UserAuthenticationServiceTest : BehaviorSpec({
 
         When("다른 비밀번호로 로그인하고 토큰을 생성하면") {
             Then("예외가 발생한다") {
-                shouldThrow<UnidentifiedUserException> {
+                shouldThrow<UnidentifiedMemberException> {
                     userAuthenticationService.generateTokenByLogin(
                         createAuthenticateUserRequest(user.email, WRONG_PASSWORD)
                     )
@@ -140,7 +140,7 @@ class UserAuthenticationServiceTest : BehaviorSpec({
 
         When("해당 이메일로 로그인하고 토큰을 생성하면") {
             Then("예외가 발생한다") {
-                shouldThrow<UnidentifiedUserException> {
+                shouldThrow<UnidentifiedMemberException> {
                     userAuthenticationService.generateTokenByLogin(createAuthenticateUserRequest())
                 }
             }

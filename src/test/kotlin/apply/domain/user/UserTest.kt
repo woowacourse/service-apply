@@ -16,7 +16,7 @@ class UserTest : StringSpec({
 
     "회원의 비밀번호와 다를 경우 예외가 발생한다" {
         val user = createUser()
-        shouldThrow<UnidentifiedUserException> { user.authenticate(WRONG_PASSWORD) }
+        shouldThrow<UnidentifiedMemberException> { user.authenticate(WRONG_PASSWORD) }
     }
 
     "회원이 전화번호를 수정한다" {

@@ -6,7 +6,7 @@ import apply.RANDOM_PASSWORD_TEXT
 import apply.WRONG_PASSWORD
 import apply.createUser
 import apply.domain.user.Password
-import apply.domain.user.UnidentifiedUserException
+import apply.domain.user.UnidentifiedMemberException
 import apply.domain.user.MemberRepository
 import apply.domain.user.findByEmail
 import apply.domain.user.getOrThrow
@@ -41,7 +41,7 @@ class UserServiceTest : BehaviorSpec({
 
         When("일치하지 않는 개인정보로 비밀번호를 초기화하면") {
             Then("예외가 발생한다") {
-                shouldThrow<UnidentifiedUserException> {
+                shouldThrow<UnidentifiedMemberException> {
                     userService.resetPassword(ResetPasswordRequest("가짜 이름", user.email, user.birthday))
                 }
             }
@@ -64,7 +64,7 @@ class UserServiceTest : BehaviorSpec({
 
         When("일치하지 않는 기존 비밀번호와 함께 새 비밀번호를 변경하면") {
             Then("예외가 발생한다") {
-                shouldThrow<UnidentifiedUserException> {
+                shouldThrow<UnidentifiedMemberException> {
                     userService.editPassword(user.id, EditPasswordRequest(WRONG_PASSWORD, password, password))
                 }
             }
