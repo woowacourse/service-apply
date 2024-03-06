@@ -5,7 +5,7 @@ import apply.application.AssignmentRequest
 import apply.application.AssignmentResponse
 import apply.application.AssignmentService
 import apply.domain.member.Member
-import apply.security.LoginUser
+import apply.security.LoginMember
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
@@ -27,7 +27,7 @@ class AssignmentRestController(
         @PathVariable recruitmentId: Long,
         @PathVariable missionId: Long,
         @RequestBody @Valid request: AssignmentRequest,
-        @LoginUser user: Member
+        @LoginMember user: Member
     ): ResponseEntity<ApiResponse<AssignmentResponse>> {
         val response = assignmentService.create(missionId, user.id, request)
         return ResponseEntity.created("/missions/${response.id}/assignments/me".toUri())
@@ -39,7 +39,7 @@ class AssignmentRestController(
         @PathVariable recruitmentId: Long,
         @PathVariable missionId: Long,
         @RequestBody @Valid request: AssignmentRequest,
-        @LoginUser user: Member
+        @LoginMember user: Member
     ): ResponseEntity<Unit> {
         assignmentService.update(missionId, user.id, request)
         return ResponseEntity.ok().build()
@@ -49,7 +49,7 @@ class AssignmentRestController(
     fun getAssignment(
         @PathVariable recruitmentId: Long,
         @PathVariable missionId: Long,
-        @LoginUser user: Member
+        @LoginMember user: Member
     ): ResponseEntity<ApiResponse<AssignmentResponse>> {
         val assignment = assignmentService.getByUserIdAndMissionId(user.id, missionId)
         return ResponseEntity.ok(ApiResponse.success(assignment))
@@ -59,7 +59,7 @@ class AssignmentRestController(
     fun findByEvaluationTargetId(
         @PathVariable recruitmentId: Long,
         @PathVariable targetId: Long,
-        @LoginUser(administrator = true) user: Member
+        @LoginMember(administrator = true) user: Member
     ): ResponseEntity<ApiResponse<AssignmentData>> {
         val assignments = assignmentService.findByEvaluationTargetId(targetId)
         return ResponseEntity.ok(ApiResponse.success(assignments))

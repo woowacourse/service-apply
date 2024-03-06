@@ -8,7 +8,7 @@ import apply.application.LastJudgmentResponse
 import apply.application.SuccessJudgmentRequest
 import apply.domain.member.Member
 import apply.security.Accessor
-import apply.security.LoginUser
+import apply.security.LoginMember
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -27,7 +27,7 @@ class JudgmentRestController(
     fun judgeExample(
         @PathVariable recruitmentId: Long,
         @PathVariable missionId: Long,
-        @LoginUser user: Member
+        @LoginMember user: Member
     ): ResponseEntity<ApiResponse<LastJudgmentResponse>> {
         val response = judgmentService.judgeExample(user.id, missionId)
         return ResponseEntity.ok(ApiResponse.success(response))
@@ -37,7 +37,7 @@ class JudgmentRestController(
     fun findExample(
         @PathVariable recruitmentId: Long,
         @PathVariable missionId: Long,
-        @LoginUser user: Member
+        @LoginMember user: Member
     ): ResponseEntity<ApiResponse<LastJudgmentResponse>> {
         val response = judgmentService.findLastExampleJudgment(user.id, missionId)
         return ResponseEntity.ok(ApiResponse.success(response))
@@ -77,7 +77,7 @@ class JudgmentRestController(
     fun judgeReal(
         @PathVariable evaluationId: Long,
         @PathVariable assignmentId: Long,
-        @LoginUser(administrator = true) user: Member
+        @LoginMember(administrator = true) user: Member
     ): ResponseEntity<ApiResponse<LastJudgmentResponse>> {
         val response = judgmentService.judgeReal(assignmentId)
         return ResponseEntity.ok(ApiResponse.success(response))
@@ -86,7 +86,7 @@ class JudgmentRestController(
     @PostMapping("/evaluations/{evaluationId}/judgments/judge-all")
     fun judgeAll(
         @PathVariable evaluationId: Long,
-        @LoginUser(administrator = true) user: Member
+        @LoginMember(administrator = true) user: Member
     ): ResponseEntity<Unit> {
         judgmentAllService.judgeAll(evaluationId)
         return ResponseEntity.ok().build()

@@ -14,76 +14,76 @@ import org.springframework.core.MethodParameter
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.web.context.request.NativeWebRequest
 
-class LoginUserResolverTest : StringSpec({
+class LoginMemberResolverTest : StringSpec({
     val userService = mockk<UserService>()
     val jwtTokenProvider = mockk<JwtTokenProvider>()
     val methodParameter = mockk<MethodParameter>()
     val nativeWebRequest = mockk<NativeWebRequest>()
 
-    val loginUserResolver = LoginUserResolver(jwtTokenProvider, userService)
+    val loginMemberResolver = LoginMemberResolver(jwtTokenProvider, userService)
 
     class TestAuthController {
-        fun user(@LoginUser user: Member) {}
-        fun administrator(@LoginUser(administrator = true) user: Member) {}
-        fun guest(user: Member) {}
+        fun member(@LoginMember member: Member) {}
+        fun administrator(@LoginMember(administrator = true) member: Member) {}
+        fun guest(member: Member) {}
     }
 
-    fun createAdministratorAnnotation(): LoginUser = LoginUser(administrator = true)
-    fun createUserAnnotation(): LoginUser = LoginUser(administrator = false)
+    fun createAdministratorAnnotation(): LoginMember = LoginMember(administrator = true)
+    fun createMemberAnnotation(): LoginMember = LoginMember(administrator = false)
 
-    "주어진 함수가 @LoginUser를 지원하는지 확인한다" {
-        listOf("user" to true, "administrator" to true, "guest" to false).forAll { (methodName, expected) ->
+    "주어진 함수가 @LoginMember를 지원하는지 확인한다" {
+        listOf("member" to true, "administrator" to true, "guest" to false).forAll { (methodName, expected) ->
             val method = TestAuthController::class.java.getDeclaredMethod(methodName, Member::class.java)
-            val loginUserParameter = MethodParameter.forExecutable(method, 0)
-            loginUserResolver.supportsParameter(loginUserParameter) shouldBe expected
+            val loginMemberParameter = MethodParameter.forExecutable(method, 0)
+            loginMemberResolver.supportsParameter(loginMemberParameter) shouldBe expected
         }
     }
 
     "관리 API를 호출하면 실패한다" {
-        every { methodParameter.getParameterAnnotation<LoginUser>(any()) } returns createAdministratorAnnotation()
+        every { methodParameter.getParameterAnnotation<LoginMember>(any()) } returns createAdministratorAnnotation()
         shouldThrow<LoginFailedException> {
-            loginUserResolver.resolveArgument(methodParameter, null, nativeWebRequest, null)
+            loginMemberResolver.resolveArgument(methodParameter, null, nativeWebRequest, null)
         }
     }
 
     "요청의 Authorization 헤더로 저장된 회원을 불러온다" {
-        every { methodParameter.getParameterAnnotation<LoginUser>(any()) } returns createUserAnnotation()
+        every { methodParameter.getParameterAnnotation<LoginMember>(any()) } returns createMemberAnnotation()
         every { nativeWebRequest.getHeader(AUTHORIZATION) } returns "Bearer valid_token"
         every { jwtTokenProvider.isValidToken("valid_token") } returns true
         every { jwtTokenProvider.getSubject("valid_token") } returns "user_email@email.com"
         every { userService.getByEmail("user_email@email.com") } returns createUser()
 
-        val result = loginUserResolver.resolveArgument(methodParameter, null, nativeWebRequest, null)
+        val result = loginMemberResolver.resolveArgument(methodParameter, null, nativeWebRequest, null)
         result shouldBeEqualToComparingFields createUser()
     }
 
     "요청의 Authorization 헤더의 형식이 올바르지 않을 경우 예외가 발생한다" {
         listOf("Bearertokeninfo", "", "Bearer").forAll { header ->
-            every { methodParameter.getParameterAnnotation<LoginUser>(any()) } returns createUserAnnotation()
+            every { methodParameter.getParameterAnnotation<LoginMember>(any()) } returns createMemberAnnotation()
             every { nativeWebRequest.getHeader(AUTHORIZATION) } returns header
 
             shouldThrow<LoginFailedException> {
-                loginUserResolver.resolveArgument(methodParameter, null, nativeWebRequest, null)
+                loginMemberResolver.resolveArgument(methodParameter, null, nativeWebRequest, null)
             }
         }
     }
 
     "요청의 Authorization 헤더가 존재하지 않을 경우 예외가 발생한다" {
-        every { methodParameter.getParameterAnnotation<LoginUser>(any()) } returns createUserAnnotation()
+        every { methodParameter.getParameterAnnotation<LoginMember>(any()) } returns createMemberAnnotation()
         every { nativeWebRequest.getHeader(AUTHORIZATION) } returns null
 
         shouldThrow<LoginFailedException> {
-            loginUserResolver.resolveArgument(methodParameter, null, nativeWebRequest, null)
+            loginMemberResolver.resolveArgument(methodParameter, null, nativeWebRequest, null)
         }
     }
 
     "요청의 토큰이 유효하지 않은 경우 예외가 발생한다" {
-        every { methodParameter.getParameterAnnotation<LoginUser>(any()) } returns createUserAnnotation()
+        every { methodParameter.getParameterAnnotation<LoginMember>(any()) } returns createMemberAnnotation()
         every { nativeWebRequest.getHeader(AUTHORIZATION) } returns "invalid_token"
         every { jwtTokenProvider.isValidToken("invalid_token") } returns false
 
         shouldThrow<LoginFailedException> {
-            loginUserResolver.resolveArgument(methodParameter, null, nativeWebRequest, null)
+            loginMemberResolver.resolveArgument(methodParameter, null, nativeWebRequest, null)
         }
     }
 })

@@ -13,12 +13,12 @@ import org.springframework.web.method.support.ModelAndViewContainer
 private const val BEARER = "Bearer"
 
 @Component
-class LoginUserResolver(
+class LoginMemberResolver(
     private val jwtTokenProvider: JwtTokenProvider,
     private val userService: UserService
 ) : HandlerMethodArgumentResolver {
     override fun supportsParameter(parameter: MethodParameter): Boolean {
-        return parameter.hasParameterAnnotation(LoginUser::class.java)
+        return parameter.hasParameterAnnotation(LoginMember::class.java)
     }
 
     override fun resolveArgument(
@@ -37,7 +37,7 @@ class LoginUserResolver(
     }
 
     private fun validateIfAdministrator(parameter: MethodParameter) {
-        val annotation = parameter.getParameterAnnotation(LoginUser::class.java)
+        val annotation = parameter.getParameterAnnotation(LoginMember::class.java)
         if (annotation?.administrator == true) {
             // TODO: 관리자가 HTTP API를 사용할 때 작업
             throw LoginFailedException()
