@@ -2,7 +2,7 @@ package apply.application
 
 import apply.domain.assignment.Assignment
 import apply.domain.assignment.AssignmentRepository
-import apply.domain.assignment.getByUserIdAndMissionId
+import apply.domain.assignment.getByMemberIdAndMissionId
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.evaluationtarget.getOrThrow
@@ -19,7 +19,7 @@ class AssignmentService(
     private val evaluationTargetRepository: EvaluationTargetRepository
 ) {
     fun create(missionId: Long, userId: Long, request: AssignmentRequest): AssignmentResponse {
-        check(!assignmentRepository.existsByUserIdAndMissionId(userId, missionId)) { "이미 제출한 과제 제출물이 존재합니다." }
+        check(!assignmentRepository.existsByMemberIdAndMissionId(userId, missionId)) { "이미 제출한 과제 제출물이 존재합니다." }
         val mission = missionRepository.getOrThrow(missionId)
         check(mission.isSubmitting) { "제출 불가능한 과제입니다." }
         findEvaluationTargetOf(mission.evaluationId, userId).passIfBeforeEvaluation()
@@ -30,7 +30,7 @@ class AssignmentService(
 
     fun update(missionId: Long, userId: Long, request: AssignmentRequest) {
         check(missionRepository.getOrThrow(missionId).isSubmitting) { "제출 불가능한 과제입니다." }
-        val assignment = assignmentRepository.getByUserIdAndMissionId(userId, missionId)
+        val assignment = assignmentRepository.getByMemberIdAndMissionId(userId, missionId)
         assignment.update(request.githubUsername, request.pullRequestUrl, request.note)
     }
 
@@ -40,14 +40,14 @@ class AssignmentService(
     }
 
     fun getByUserIdAndMissionId(userId: Long, missionId: Long): AssignmentResponse {
-        val assignment = assignmentRepository.getByUserIdAndMissionId(userId, missionId)
+        val assignment = assignmentRepository.getByMemberIdAndMissionId(userId, missionId)
         return AssignmentResponse(assignment)
     }
 
     fun findByEvaluationTargetId(evaluationTargetId: Long): AssignmentData? {
         val evaluationTarget = evaluationTargetRepository.getOrThrow(evaluationTargetId)
         val mission = missionRepository.findByEvaluationId(evaluationTarget.evaluationId) ?: return null
-        val assignment = assignmentRepository.findByUserIdAndMissionId(evaluationTarget.userId, mission.id)
+        val assignment = assignmentRepository.findByMemberIdAndMissionId(evaluationTarget.userId, mission.id)
         return AssignmentData(assignment)
     }
 }

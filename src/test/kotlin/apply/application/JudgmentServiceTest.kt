@@ -8,7 +8,7 @@ import apply.createJudgment
 import apply.createJudgmentRecord
 import apply.createMission
 import apply.domain.assignment.AssignmentRepository
-import apply.domain.assignment.getByUserIdAndMissionId
+import apply.domain.assignment.getByMemberIdAndMissionId
 import apply.domain.assignment.getOrThrow
 import apply.domain.judgment.AssignmentArchive
 import apply.domain.judgment.JudgmentRepository
@@ -128,7 +128,7 @@ class JudgmentServiceTest : BehaviorSpec({
 
         every { missionRepository.getOrThrow(any()) } returns mission
         every { judgmentItemRepository.existsByMissionId(any()) } returns true
-        every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns assignment
+        every { assignmentRepository.getByMemberIdAndMissionId(any(), any()) } returns assignment
         every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns judgment
         every { assignmentArchive.getLastCommit(any(), any()) } returns createCommit()
         every { judgmentRepository.save(any()) } answers { firstArg() }
@@ -165,7 +165,7 @@ class JudgmentServiceTest : BehaviorSpec({
 
         every { assignmentRepository.getOrThrow(any()) } returns assignment
         every { missionRepository.getOrThrow(any()) } returns mission
-        every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns assignment
+        every { assignmentRepository.getByMemberIdAndMissionId(any(), any()) } returns assignment
         every { judgmentItemRepository.existsByMissionId(any()) } returns true
         every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns judgment
         every { assignmentArchive.getLastCommit(any(), any()) } returns commit
@@ -201,7 +201,7 @@ class JudgmentServiceTest : BehaviorSpec({
         val commit = createCommit("commit2")
 
         every { missionRepository.getOrThrow(any()) } returns mission
-        every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns assignment
+        every { assignmentRepository.getByMemberIdAndMissionId(any(), any()) } returns assignment
         every { judgmentItemRepository.existsByMissionId(any()) } returns true
         every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns judgment
         every { assignmentArchive.getLastCommit(any(), any()) } returns commit
@@ -238,7 +238,7 @@ class JudgmentServiceTest : BehaviorSpec({
 
         every { assignmentRepository.getOrThrow(any()) } returns assignment
         every { missionRepository.getOrThrow(any()) } returns mission
-        every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns assignment
+        every { assignmentRepository.getByMemberIdAndMissionId(any(), any()) } returns assignment
         every { judgmentItemRepository.existsByMissionId(any()) } returns true
         every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns judgment
         every { assignmentArchive.getLastCommit(any(), any()) } returns commit
@@ -272,7 +272,7 @@ class JudgmentServiceTest : BehaviorSpec({
             )
         )
 
-        every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns assignment
+        every { assignmentRepository.getByMemberIdAndMissionId(any(), any()) } returns assignment
         every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns judgment
 
         When("예제 자동 채점 결과를 조회하면") {
@@ -304,7 +304,7 @@ class JudgmentServiceTest : BehaviorSpec({
             )
         )
 
-        every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns assignment
+        every { assignmentRepository.getByMemberIdAndMissionId(any(), any()) } returns assignment
         every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns judgment
 
         When("본 자동 채점 결과를 조회하면") {
@@ -325,7 +325,7 @@ class JudgmentServiceTest : BehaviorSpec({
     Given("특정 과제 제출물에 대한 예제 자동 채점 기록이 없는 경우") {
         val assignment = createAssignment(pullRequestUrl = PULL_REQUEST_URL)
 
-        every { assignmentRepository.getByUserIdAndMissionId(any(), any()) } returns assignment
+        every { assignmentRepository.getByMemberIdAndMissionId(any(), any()) } returns assignment
         every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns null
 
         When("예제 자동 채점 결과를 조회하면") {
