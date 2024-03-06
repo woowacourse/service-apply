@@ -7,7 +7,7 @@ import javax.persistence.EnumType
 import javax.persistence.Enumerated
 
 @Embeddable
-data class UserInformation(
+data class MemberInformation(
     @Column(nullable = false, length = 30)
     val name: String,
 

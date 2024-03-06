@@ -10,7 +10,7 @@ import javax.persistence.Entity
 @Entity
 class Member(
     @Embedded
-    var information: UserInformation,
+    var information: MemberInformation,
 
     @AttributeOverride(name = "value", column = Column(name = "password", nullable = false))
     @Embedded
@@ -41,7 +41,7 @@ class Member(
         password: Password,
         id: Long = 0L
     ) : this(
-        UserInformation(name, email, phoneNumber, gender, birthday), password, id
+        MemberInformation(name, email, phoneNumber, gender, birthday), password, id
     )
 
     fun authenticate(password: Password) {
