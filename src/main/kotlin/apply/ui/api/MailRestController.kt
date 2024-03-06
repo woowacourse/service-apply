@@ -21,7 +21,7 @@ class MailRestController(
     fun sendMail(
         @RequestPart request: MailData,
         @RequestPart files: Array<MultipartFile>,
-        @LoginMember(administrator = true) user: Member
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<Unit> {
         val inputStreamFiles = files.associate { (it.originalFilename!! to ByteArrayResource(it.bytes)) }
         mailService.sendMailsByBcc(request, inputStreamFiles)

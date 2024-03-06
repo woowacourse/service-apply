@@ -23,7 +23,7 @@ class TermRestController(
     @PostMapping
     fun save(
         @RequestBody termData: TermData,
-        @LoginMember(administrator = true) user: Member
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<ApiResponse<TermResponse>> {
         val response = termService.save(termData)
         return ResponseEntity.created("/api/terms/${response.id}".toUri())
@@ -33,7 +33,7 @@ class TermRestController(
     @GetMapping("/{termId}")
     fun getById(
         @PathVariable termId: Long,
-        @LoginMember(administrator = true) user: Member
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<ApiResponse<TermResponse>> {
         val response = termService.getById(termId)
         return ResponseEntity.ok(ApiResponse.success(response))
@@ -41,7 +41,7 @@ class TermRestController(
 
     @GetMapping
     fun findAll(
-        @LoginMember(administrator = true) user: Member
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<ApiResponse<List<TermResponse>>> {
         val responses = termService.findAll()
         return ResponseEntity.ok(ApiResponse.success(responses))
@@ -50,7 +50,7 @@ class TermRestController(
     @DeleteMapping("/{termId}")
     fun deleteById(
         @PathVariable termId: Long,
-        @LoginMember(administrator = true) user: Member
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<Unit> {
         termService.deleteById(termId)
         return ResponseEntity.ok().build()

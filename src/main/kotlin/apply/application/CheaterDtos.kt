@@ -21,11 +21,11 @@ data class CheaterResponse(
     val email: String,
     val name: String?
 ) {
-    constructor(cheater: Cheater, user: Member?) : this(
+    constructor(cheater: Cheater, member: Member?) : this(
         cheater.id,
         cheater.createdDateTime,
         cheater.description,
         cheater.email,
-        user?.name
+        member?.name
     )
 }

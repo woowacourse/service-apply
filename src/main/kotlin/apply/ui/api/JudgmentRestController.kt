@@ -27,9 +27,9 @@ class JudgmentRestController(
     fun judgeExample(
         @PathVariable recruitmentId: Long,
         @PathVariable missionId: Long,
-        @LoginMember user: Member
+        @LoginMember member: Member
     ): ResponseEntity<ApiResponse<LastJudgmentResponse>> {
-        val response = judgmentService.judgeExample(user.id, missionId)
+        val response = judgmentService.judgeExample(member.id, missionId)
         return ResponseEntity.ok(ApiResponse.success(response))
     }
 
@@ -37,9 +37,9 @@ class JudgmentRestController(
     fun findExample(
         @PathVariable recruitmentId: Long,
         @PathVariable missionId: Long,
-        @LoginMember user: Member
+        @LoginMember member: Member
     ): ResponseEntity<ApiResponse<LastJudgmentResponse>> {
-        val response = judgmentService.findLastExampleJudgment(user.id, missionId)
+        val response = judgmentService.findLastExampleJudgment(member.id, missionId)
         return ResponseEntity.ok(ApiResponse.success(response))
     }
 
@@ -77,7 +77,7 @@ class JudgmentRestController(
     fun judgeReal(
         @PathVariable evaluationId: Long,
         @PathVariable assignmentId: Long,
-        @LoginMember(administrator = true) user: Member
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<ApiResponse<LastJudgmentResponse>> {
         val response = judgmentService.judgeReal(assignmentId)
         return ResponseEntity.ok(ApiResponse.success(response))
@@ -86,7 +86,7 @@ class JudgmentRestController(
     @PostMapping("/evaluations/{evaluationId}/judgments/judge-all")
     fun judgeAll(
         @PathVariable evaluationId: Long,
-        @LoginMember(administrator = true) user: Member
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<Unit> {
         judgmentAllService.judgeAll(evaluationId)
         return ResponseEntity.ok().build()

@@ -30,9 +30,9 @@ class ApplicationFormRestController(
     @PostMapping("/application-forms")
     fun create(
         @RequestBody @Valid request: CreateApplicationFormRequest,
-        @LoginMember user: Member
+        @LoginMember member: Member
     ): ResponseEntity<ApiResponse<ApplicationFormResponse>> {
-        val response = applicationFormService.create(user.id, request)
+        val response = applicationFormService.create(member.id, request)
         return ResponseEntity.created("/api/application-forms?recruitmentId=${response.recruitmentId}".toUri())
             .body(ApiResponse.success(response))
     }
@@ -40,26 +40,26 @@ class ApplicationFormRestController(
     @PatchMapping("/application-forms")
     fun update(
         @RequestBody @Valid request: UpdateApplicationFormRequest,
-        @LoginMember user: Member
+        @LoginMember member: Member
     ): ResponseEntity<Unit> {
-        applicationFormService.update(user.id, request)
+        applicationFormService.update(member.id, request)
         return ResponseEntity.ok().build()
     }
 
     @GetMapping("/application-forms/me")
     fun getMyApplicationForms(
-        @LoginMember user: Member
+        @LoginMember member: Member
     ): ResponseEntity<ApiResponse<List<MyApplicationFormResponse>>> {
-        val form = applicationFormService.getMyApplicationForms(user.id)
+        val form = applicationFormService.getMyApplicationForms(member.id)
         return ResponseEntity.ok(ApiResponse.success(form))
     }
 
     @GetMapping("/application-forms")
     fun getApplicationForm(
         @RequestParam recruitmentId: Long,
-        @LoginMember user: Member
+        @LoginMember member: Member
     ): ResponseEntity<ApiResponse<ApplicationFormResponse>> {
-        val form = applicationFormService.getApplicationForm(user.id, recruitmentId)
+        val form = applicationFormService.getApplicationForm(member.id, recruitmentId)
         return ResponseEntity.ok(ApiResponse.success(form))
     }
 
@@ -67,7 +67,7 @@ class ApplicationFormRestController(
     fun findAllByRecruitmentIdAndKeyword(
         @PathVariable recruitmentId: Long,
         @RequestParam keyword: String?,
-        @LoginMember(administrator = true) user: Member
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<ApiResponse<List<ApplicantAndFormResponse>>> {
         val applicants = applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId, keyword)
         return ResponseEntity.ok(ApiResponse.success(applicants))

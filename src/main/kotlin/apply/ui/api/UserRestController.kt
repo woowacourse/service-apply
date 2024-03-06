@@ -49,9 +49,9 @@ class UserRestController(
     @PostMapping("/edit-password")
     fun editPassword(
         @RequestBody @Valid request: EditPasswordRequest,
-        @LoginMember user: Member
+        @LoginMember member: Member
     ): ResponseEntity<Unit> {
-        userService.editPassword(user.id, request)
+        userService.editPassword(member.id, request)
         return ResponseEntity.noContent().build()
     }
 
@@ -77,7 +77,7 @@ class UserRestController(
     @GetMapping
     fun findAllByKeyword(
         @RequestParam keyword: String,
-        @LoginMember(administrator = true) user: Member
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<ApiResponse<List<UserResponse>>> {
         val responses = userService.findAllByKeyword(keyword)
         return ResponseEntity.ok(ApiResponse.success(responses))
@@ -85,18 +85,18 @@ class UserRestController(
 
     @GetMapping("/me")
     fun getMyInformation(
-        @LoginMember user: Member
+        @LoginMember member: Member
     ): ResponseEntity<ApiResponse<UserResponse>> {
-        val response = userService.getInformation(user.id)
+        val response = userService.getInformation(member.id)
         return ResponseEntity.ok(ApiResponse.success(response))
     }
 
     @PatchMapping("/information")
     fun editInformation(
         @RequestBody @Valid request: EditInformationRequest,
-        @LoginMember user: Member
+        @LoginMember member: Member
     ): ResponseEntity<Unit> {
-        userService.editInformation(user.id, request)
+        userService.editInformation(member.id, request)
         return ResponseEntity.noContent().build()
     }
 }

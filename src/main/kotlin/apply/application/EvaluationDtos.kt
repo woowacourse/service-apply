@@ -174,7 +174,7 @@ data class MailTargetResponse(
     val name: String? = null
 ) {
     constructor(userResponse: UserResponse) : this(userResponse.email, userResponse.name)
-    constructor(user: Member) : this(user.email, user.name)
+    constructor(member: Member) : this(member.email, member.name)
 }
 
 data class EvaluationItemScoreData(

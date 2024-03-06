@@ -26,7 +26,7 @@ class RecruitmentRestController(
     @PostMapping
     fun save(
         @RequestBody request: RecruitmentData,
-        @LoginMember(administrator = true) user: Member
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<ApiResponse<RecruitmentResponse>> {
         val response = recruitmentService.save(request)
         return ResponseEntity.created("/api/recruitments/${response.id}".toUri())
@@ -41,7 +41,7 @@ class RecruitmentRestController(
 
     @GetMapping("/all")
     fun findAll(
-        @LoginMember(administrator = true) user: Member
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<ApiResponse<List<RecruitmentResponse>>> {
         val responses = recruitmentService.findAll()
         return ResponseEntity.ok(ApiResponse.success(responses))
@@ -58,7 +58,7 @@ class RecruitmentRestController(
     @DeleteMapping("/{recruitmentId}")
     fun deleteById(
         @PathVariable recruitmentId: Long,
-        @LoginMember(administrator = true) user: Member
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<Unit> {
         recruitmentService.deleteById(recruitmentId)
         return ResponseEntity.ok().build()
@@ -67,7 +67,7 @@ class RecruitmentRestController(
     @GetMapping("/{recruitmentId}")
     fun getById(
         @PathVariable recruitmentId: Long,
-        @LoginMember(administrator = true) user: Member
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<ApiResponse<RecruitmentResponse>> {
         val response = recruitmentService.getById(recruitmentId)
         return ResponseEntity.ok(ApiResponse.success(response))
@@ -76,7 +76,7 @@ class RecruitmentRestController(
     @GetMapping("/{recruitmentId}/detail")
     fun getNotEndedDataById(
         @PathVariable recruitmentId: Long,
-        @LoginMember(administrator = true) user: Member
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<ApiResponse<RecruitmentData>> {
         val response = recruitmentService.getNotEndedDataById(recruitmentId)
         return ResponseEntity.ok(ApiResponse.success(response))

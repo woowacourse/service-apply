@@ -23,7 +23,7 @@ class CheaterRestController(
     @PostMapping
     fun save(
         @RequestBody request: CheaterData,
-        @LoginMember(administrator = true) user: Member
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<ApiResponse<CheaterResponse>> {
         val response = cheaterService.save(request)
         return ResponseEntity.created("/api/cheaters/${response.id}".toUri())
@@ -33,7 +33,7 @@ class CheaterRestController(
     @GetMapping("/{cheaterId}")
     fun getById(
         @PathVariable cheaterId: Long,
-        @LoginMember(administrator = true) user: Member
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<ApiResponse<CheaterResponse>> {
         val response = cheaterService.getById(cheaterId)
         return ResponseEntity.ok(ApiResponse.success(response))
@@ -41,7 +41,7 @@ class CheaterRestController(
 
     @GetMapping
     fun findAll(
-        @LoginMember(administrator = true) user: Member
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<ApiResponse<List<CheaterResponse>>> {
         val responses = cheaterService.findAll()
         return ResponseEntity.ok(ApiResponse.success(responses))
@@ -50,7 +50,7 @@ class CheaterRestController(
     @DeleteMapping("/{cheaterId}")
     fun deleteById(
         @PathVariable cheaterId: Long,
-        @LoginMember(administrator = true) user: Member
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<Unit> {
         cheaterService.deleteById(cheaterId)
         return ResponseEntity.ok().build()

@@ -27,9 +27,9 @@ class AssignmentRestController(
         @PathVariable recruitmentId: Long,
         @PathVariable missionId: Long,
         @RequestBody @Valid request: AssignmentRequest,
-        @LoginMember user: Member
+        @LoginMember member: Member
     ): ResponseEntity<ApiResponse<AssignmentResponse>> {
-        val response = assignmentService.create(missionId, user.id, request)
+        val response = assignmentService.create(missionId, member.id, request)
         return ResponseEntity.created("/missions/${response.id}/assignments/me".toUri())
             .body(ApiResponse.success(response))
     }
@@ -39,9 +39,9 @@ class AssignmentRestController(
         @PathVariable recruitmentId: Long,
         @PathVariable missionId: Long,
         @RequestBody @Valid request: AssignmentRequest,
-        @LoginMember user: Member
+        @LoginMember member: Member
     ): ResponseEntity<Unit> {
-        assignmentService.update(missionId, user.id, request)
+        assignmentService.update(missionId, member.id, request)
         return ResponseEntity.ok().build()
     }
 
@@ -49,9 +49,9 @@ class AssignmentRestController(
     fun getAssignment(
         @PathVariable recruitmentId: Long,
         @PathVariable missionId: Long,
-        @LoginMember user: Member
+        @LoginMember member: Member
     ): ResponseEntity<ApiResponse<AssignmentResponse>> {
-        val assignment = assignmentService.getByUserIdAndMissionId(user.id, missionId)
+        val assignment = assignmentService.getByUserIdAndMissionId(member.id, missionId)
         return ResponseEntity.ok(ApiResponse.success(assignment))
     }
 
@@ -59,7 +59,7 @@ class AssignmentRestController(
     fun findByEvaluationTargetId(
         @PathVariable recruitmentId: Long,
         @PathVariable targetId: Long,
-        @LoginMember(administrator = true) user: Member
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<ApiResponse<AssignmentData>> {
         val assignments = assignmentService.findByEvaluationTargetId(targetId)
         return ResponseEntity.ok(ApiResponse.success(assignments))

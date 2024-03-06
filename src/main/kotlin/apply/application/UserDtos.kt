@@ -18,13 +18,13 @@ data class UserResponse(
     val gender: Gender,
     val birthday: LocalDate
 ) {
-    constructor(user: Member) : this(
-        user.id,
-        user.name,
-        user.email,
-        user.phoneNumber,
-        user.gender,
-        user.birthday
+    constructor(member: Member) : this(
+        member.id,
+        member.name,
+        member.email,
+        member.phoneNumber,
+        member.gender,
+        member.birthday
     )
 }
 
@@ -38,13 +38,13 @@ data class ApplicantAndFormResponse(
     val isCheater: Boolean,
     val applicationForm: ApplicationForm
 ) {
-    constructor(user: Member, isCheater: Boolean, applicationForm: ApplicationForm) : this(
-        user.id,
-        user.name,
-        user.email,
-        user.phoneNumber,
-        user.gender,
-        user.birthday,
+    constructor(member: Member, isCheater: Boolean, applicationForm: ApplicationForm) : this(
+        member.id,
+        member.name,
+        member.email,
+        member.phoneNumber,
+        member.gender,
+        member.birthday,
         isCheater,
         applicationForm
     )

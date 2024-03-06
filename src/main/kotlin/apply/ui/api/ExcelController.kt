@@ -24,7 +24,7 @@ class ExcelController(
     @GetMapping("/applicants/excel")
     fun createApplicantExcel(
         @PathVariable recruitmentId: Long,
-        @LoginMember(administrator = true) user: Member
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<InputStreamResource> {
         val excel = excelService.createApplicantExcel(recruitmentId)
         val recruitment = recruitmentService.getById(recruitmentId)
@@ -42,7 +42,7 @@ class ExcelController(
     fun createTargetExcel(
         @PathVariable recruitmentId: Long,
         @PathVariable evaluationId: Long,
-        @LoginMember(administrator = true) user: Member
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<InputStreamResource> {
         val excel = excelService.createTargetExcel(evaluationId)
         val evaluation = evaluationService.getById(evaluationId)

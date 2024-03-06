@@ -18,14 +18,14 @@ class MailHistoryRestController(
     @GetMapping("/{mailHistoryId}")
     fun getById(
         @PathVariable mailHistoryId: Long,
-        @LoginMember(administrator = true) user: Member
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<ApiResponse<MailData>> {
         return ResponseEntity.ok(ApiResponse.success(mailHistoryService.getById(mailHistoryId)))
     }
 
     @GetMapping
     fun findAll(
-        @LoginMember(administrator = true) user: Member
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<ApiResponse<List<MailData>>> {
         return ResponseEntity.ok(ApiResponse.success(mailHistoryService.findAll()))
     }

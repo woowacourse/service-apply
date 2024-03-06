@@ -33,7 +33,7 @@ class EvaluationTargetRestController(
         @PathVariable recruitmentId: Long,
         @PathVariable evaluationId: Long,
         @RequestParam keyword: String,
-        @LoginMember(administrator = true) user: Member
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<ApiResponse<List<EvaluationTargetResponse>>> {
         val evaluationTargets = evaluationTargetService.findAllByEvaluationIdAndKeyword(evaluationId, keyword)
         return ResponseEntity.ok(ApiResponse.success(evaluationTargets))
@@ -43,7 +43,7 @@ class EvaluationTargetRestController(
     fun load(
         @PathVariable recruitmentId: Long,
         @PathVariable evaluationId: Long,
-        @LoginMember(administrator = true) user: Member
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<Unit> {
         evaluationTargetService.load(evaluationId)
         return ResponseEntity.ok().build()
@@ -54,7 +54,7 @@ class EvaluationTargetRestController(
         @PathVariable recruitmentId: Long,
         @PathVariable evaluationId: Long,
         @PathVariable targetId: Long,
-        @LoginMember(administrator = true) user: Member
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<ApiResponse<GradeEvaluationResponse>> {
         val gradeEvaluation = evaluationTargetService.getGradeEvaluation(targetId)
         return ResponseEntity.ok(ApiResponse.success(gradeEvaluation))
@@ -66,7 +66,7 @@ class EvaluationTargetRestController(
         @PathVariable evaluationId: Long,
         @PathVariable targetId: Long,
         @RequestBody request: EvaluationTargetData,
-        @LoginMember(administrator = true) user: Member
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<Unit> {
         evaluationTargetService.grade(targetId, request)
         return ResponseEntity.ok().build()
@@ -77,7 +77,7 @@ class EvaluationTargetRestController(
         @PathVariable recruitmentId: Long,
         @PathVariable evaluationId: Long,
         @RequestParam status: EvaluationStatus?,
-        @LoginMember(administrator = true) user: Member
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<ApiResponse<List<MailTargetResponse>>> {
         val mailSendingTargets = mailTargetService.findMailTargets(evaluationId, status)
         return ResponseEntity.ok(ApiResponse.success(mailSendingTargets))
@@ -88,7 +88,7 @@ class EvaluationTargetRestController(
         @PathVariable recruitmentId: Long,
         @PathVariable evaluationId: Long,
         @RequestParam file: MultipartFile,
-        @LoginMember(administrator = true) user: Member
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<Unit> {
         evaluationTargetCsvService.updateTarget(file.inputStream, evaluationId)
         return ResponseEntity.ok().build()

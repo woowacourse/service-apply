@@ -28,7 +28,7 @@ class MissionRestController(
     fun save(
         @PathVariable recruitmentId: Long,
         @RequestBody missionData: MissionData,
-        @LoginMember(administrator = true) user: Member
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<ApiResponse<MissionResponse>> {
         val response = missionService.save(missionData)
         return ResponseEntity.created("/api/recruitments/$recruitmentId/missions/${response.id}".toUri())
@@ -39,7 +39,7 @@ class MissionRestController(
     fun getById(
         @PathVariable recruitmentId: Long,
         @PathVariable missionId: Long,
-        @LoginMember(administrator = true) user: Member
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<ApiResponse<MissionResponse>> {
         val response = missionService.getById(missionId)
         return ResponseEntity.ok(ApiResponse.success(response))
@@ -48,7 +48,7 @@ class MissionRestController(
     @GetMapping
     fun findAllByRecruitmentId(
         @PathVariable recruitmentId: Long,
-        @LoginMember(administrator = true) user: Member
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<ApiResponse<List<MissionAndEvaluationResponse>>> {
         val responses = missionService.findAllByRecruitmentId(recruitmentId)
         return ResponseEntity.ok(ApiResponse.success(responses))
@@ -57,9 +57,9 @@ class MissionRestController(
     @GetMapping("/me")
     fun findMyMissionsByRecruitmentId(
         @PathVariable recruitmentId: Long,
-        @LoginMember user: Member
+        @LoginMember member: Member
     ): ResponseEntity<ApiResponse<List<MyMissionResponse>>> {
-        val responses = missionQueryService.findAllByUserIdAndRecruitmentId(user.id, recruitmentId)
+        val responses = missionQueryService.findAllByUserIdAndRecruitmentId(member.id, recruitmentId)
         return ResponseEntity.ok(ApiResponse.success(responses))
     }
 
@@ -67,7 +67,7 @@ class MissionRestController(
     fun deleteById(
         @PathVariable recruitmentId: Long,
         @PathVariable missionId: Long,
-        @LoginMember(administrator = true) user: Member
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<Unit> {
         missionService.deleteById(missionId)
         return ResponseEntity.ok().build()
