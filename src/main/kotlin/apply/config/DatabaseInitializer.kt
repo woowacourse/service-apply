@@ -418,7 +418,7 @@ class DatabaseInitializer(
     private fun populateAssignments() {
         val assignments = listOf(
             Assignment(
-                userId = 2L,
+                memberId = 2L,
                 missionId = 1L,
                 githubUsername = "javajigi",
                 pullRequestUrl = "https://github.com/woowacourse/java-baseball-precourse/pull/1",

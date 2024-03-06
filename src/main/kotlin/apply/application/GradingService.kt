@@ -46,7 +46,7 @@ class GradingService(
         val assignment = assignmentRepository.getOrThrow(assignmentId)
         val mission = missionRepository.getOrThrow(assignment.missionId)
         val judgmentItem = judgmentItemRepository.getByMissionId(mission.id)
-        val target = evaluationTargetRepository.getByEvaluationIdAndUserId(mission.evaluationId, assignment.userId)
+        val target = evaluationTargetRepository.getByEvaluationIdAndUserId(mission.evaluationId, assignment.memberId)
         target.updateScore(judgmentItem.evaluationItemId, score)
     }
 }
