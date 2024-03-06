@@ -12,7 +12,7 @@ fun MemberRepository.getOrThrow(id: Long): Member = findByIdOrNull(id)
     ?: throw NoSuchElementException("회원이 존재하지 않습니다. id: $id")
 
 interface MemberRepository : JpaRepository<Member, Long> {
-    @Query("select a from Member a where a.information.name like %:keyword% or a.information.email like %:keyword%")
+    @Query("select m from Member m where m.information.name like %:keyword% or m.information.email like %:keyword%")
     fun findAllByKeyword(@Param("keyword") keyword: String): List<Member>
     fun findByInformationEmail(email: String): Member?
     fun findAllByInformationEmailIn(emails: List<String>): List<Member>
