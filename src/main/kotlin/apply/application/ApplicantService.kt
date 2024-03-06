@@ -2,7 +2,7 @@ package apply.application
 
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.CheaterRepository
-import apply.domain.user.User
+import apply.domain.user.Member
 import apply.domain.user.UserRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -32,7 +32,7 @@ class ApplicantService(
             }
     }
 
-    private fun findAllByIdsAndKeyword(ids: Set<Long>, keyword: String?): List<User> {
+    private fun findAllByIdsAndKeyword(ids: Set<Long>, keyword: String?): List<Member> {
         return if (keyword != null) {
             userRepository.findAllByKeyword(keyword).filter { ids.contains(it.id) }
         } else {

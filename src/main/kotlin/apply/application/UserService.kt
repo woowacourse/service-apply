@@ -1,6 +1,6 @@
 package apply.application
 
-import apply.domain.user.User
+import apply.domain.user.Member
 import apply.domain.user.UserRepository
 import apply.domain.user.findByEmail
 import apply.domain.user.getOrThrow
@@ -13,7 +13,7 @@ class UserService(
     private val userRepository: UserRepository,
     private val passwordGenerator: PasswordGenerator
 ) {
-    fun getByEmail(email: String): User {
+    fun getByEmail(email: String): Member {
         return userRepository.findByEmail(email) ?: throw IllegalArgumentException("회원이 존재하지 않습니다. email: $email")
     }
 

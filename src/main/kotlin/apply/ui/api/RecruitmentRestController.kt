@@ -5,7 +5,7 @@ import apply.application.RecruitmentItemService
 import apply.application.RecruitmentResponse
 import apply.application.RecruitmentService
 import apply.domain.recruitmentitem.RecruitmentItem
-import apply.domain.user.User
+import apply.domain.user.Member
 import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -26,7 +26,7 @@ class RecruitmentRestController(
     @PostMapping
     fun save(
         @RequestBody request: RecruitmentData,
-        @LoginUser(administrator = true) user: User
+        @LoginUser(administrator = true) user: Member
     ): ResponseEntity<ApiResponse<RecruitmentResponse>> {
         val response = recruitmentService.save(request)
         return ResponseEntity.created("/api/recruitments/${response.id}".toUri())
@@ -41,7 +41,7 @@ class RecruitmentRestController(
 
     @GetMapping("/all")
     fun findAll(
-        @LoginUser(administrator = true) user: User
+        @LoginUser(administrator = true) user: Member
     ): ResponseEntity<ApiResponse<List<RecruitmentResponse>>> {
         val responses = recruitmentService.findAll()
         return ResponseEntity.ok(ApiResponse.success(responses))
@@ -58,7 +58,7 @@ class RecruitmentRestController(
     @DeleteMapping("/{recruitmentId}")
     fun deleteById(
         @PathVariable recruitmentId: Long,
-        @LoginUser(administrator = true) user: User
+        @LoginUser(administrator = true) user: Member
     ): ResponseEntity<Unit> {
         recruitmentService.deleteById(recruitmentId)
         return ResponseEntity.ok().build()
@@ -67,7 +67,7 @@ class RecruitmentRestController(
     @GetMapping("/{recruitmentId}")
     fun getById(
         @PathVariable recruitmentId: Long,
-        @LoginUser(administrator = true) user: User
+        @LoginUser(administrator = true) user: Member
     ): ResponseEntity<ApiResponse<RecruitmentResponse>> {
         val response = recruitmentService.getById(recruitmentId)
         return ResponseEntity.ok(ApiResponse.success(response))
@@ -76,7 +76,7 @@ class RecruitmentRestController(
     @GetMapping("/{recruitmentId}/detail")
     fun getNotEndedDataById(
         @PathVariable recruitmentId: Long,
-        @LoginUser(administrator = true) user: User
+        @LoginUser(administrator = true) user: Member
     ): ResponseEntity<ApiResponse<RecruitmentData>> {
         val response = recruitmentService.getNotEndedDataById(recruitmentId)
         return ResponseEntity.ok(ApiResponse.success(response))

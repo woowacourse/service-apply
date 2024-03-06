@@ -8,7 +8,7 @@ import javax.persistence.Embedded
 import javax.persistence.Entity
 
 @Entity
-class User(
+class Member(
     @Embedded
     var information: UserInformation,
 
@@ -16,7 +16,7 @@ class User(
     @Embedded
     var password: Password,
     id: Long = 0L
-) : BaseRootEntity<User>(id) {
+) : BaseRootEntity<Member>(id) {
     val name: String
         get() = information.name
 

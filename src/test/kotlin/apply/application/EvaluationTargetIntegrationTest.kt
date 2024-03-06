@@ -27,7 +27,7 @@ import apply.domain.evaluationtarget.EvaluationStatus.WAITING
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.evaluationtarget.getOrThrow
-import apply.domain.user.User
+import apply.domain.user.Member
 import apply.domain.user.UserRepository
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.extensions.spring.SpringTestExtension
@@ -51,7 +51,7 @@ class EvaluationTargetIntegrationTest(
 ) : BehaviorSpec({
     extensions(SpringTestExtension(SpringTestLifecycleMode.Root))
 
-    fun saveUser(email: String): User {
+    fun saveUser(email: String): Member {
         return userRepository.save(createUser(email = email))
     }
 
@@ -95,19 +95,19 @@ class EvaluationTargetIntegrationTest(
         )
     }
 
-    fun saveApplicant(recruitmentId: Long, email: String): User {
+    fun saveApplicant(recruitmentId: Long, email: String): Member {
         val user = saveUser(email)
         saveApplicationForm(user.id, recruitmentId, true, now())
         return user
     }
 
-    fun saveCheaterUser(email: String): User {
+    fun saveCheaterUser(email: String): Member {
         val user = saveUser(email)
         saveCheater(user.email)
         return user
     }
 
-    fun saveCheaterApplicant(recruitmentId: Long, email: String): User {
+    fun saveCheaterApplicant(recruitmentId: Long, email: String): Member {
         val user = saveApplicant(recruitmentId, email)
         saveCheater(user.email)
         return user

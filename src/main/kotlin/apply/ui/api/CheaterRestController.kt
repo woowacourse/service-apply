@@ -3,7 +3,7 @@ package apply.ui.api
 import apply.application.CheaterData
 import apply.application.CheaterResponse
 import apply.application.CheaterService
-import apply.domain.user.User
+import apply.domain.user.Member
 import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -23,7 +23,7 @@ class CheaterRestController(
     @PostMapping
     fun save(
         @RequestBody request: CheaterData,
-        @LoginUser(administrator = true) user: User
+        @LoginUser(administrator = true) user: Member
     ): ResponseEntity<ApiResponse<CheaterResponse>> {
         val response = cheaterService.save(request)
         return ResponseEntity.created("/api/cheaters/${response.id}".toUri())
@@ -33,7 +33,7 @@ class CheaterRestController(
     @GetMapping("/{cheaterId}")
     fun getById(
         @PathVariable cheaterId: Long,
-        @LoginUser(administrator = true) user: User
+        @LoginUser(administrator = true) user: Member
     ): ResponseEntity<ApiResponse<CheaterResponse>> {
         val response = cheaterService.getById(cheaterId)
         return ResponseEntity.ok(ApiResponse.success(response))
@@ -41,7 +41,7 @@ class CheaterRestController(
 
     @GetMapping
     fun findAll(
-        @LoginUser(administrator = true) user: User
+        @LoginUser(administrator = true) user: Member
     ): ResponseEntity<ApiResponse<List<CheaterResponse>>> {
         val responses = cheaterService.findAll()
         return ResponseEntity.ok(ApiResponse.success(responses))
@@ -50,7 +50,7 @@ class CheaterRestController(
     @DeleteMapping("/{cheaterId}")
     fun deleteById(
         @PathVariable cheaterId: Long,
-        @LoginUser(administrator = true) user: User
+        @LoginUser(administrator = true) user: Member
     ): ResponseEntity<Unit> {
         cheaterService.deleteById(cheaterId)
         return ResponseEntity.ok().build()

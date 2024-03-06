@@ -4,7 +4,7 @@ import apply.domain.evaluation.Evaluation
 import apply.domain.evaluationitem.EvaluationItem
 import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.recruitment.Recruitment
-import apply.domain.user.User
+import apply.domain.user.Member
 import javax.validation.Valid
 import javax.validation.constraints.Max
 import javax.validation.constraints.Min
@@ -174,7 +174,7 @@ data class MailTargetResponse(
     val name: String? = null
 ) {
     constructor(userResponse: UserResponse) : this(userResponse.email, userResponse.name)
-    constructor(user: User) : this(user.email, user.name)
+    constructor(user: Member) : this(user.email, user.name)
 }
 
 data class EvaluationItemScoreData(

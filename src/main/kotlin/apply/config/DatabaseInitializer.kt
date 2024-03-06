@@ -32,7 +32,7 @@ import apply.domain.term.Term
 import apply.domain.term.TermRepository
 import apply.domain.user.Gender
 import apply.domain.user.Password
-import apply.domain.user.User
+import apply.domain.user.Member
 import apply.domain.user.UserRepository
 import org.springframework.boot.CommandLineRunner
 import org.springframework.context.annotation.Profile
@@ -237,7 +237,7 @@ class DatabaseInitializer(
 
     private fun populateUsers() {
         val users = listOf(
-            User(
+            Member(
                 name = "홍길동",
                 email = "a@email.com",
                 phoneNumber = "010-0000-0000",
@@ -245,7 +245,7 @@ class DatabaseInitializer(
                 birthday = createLocalDate(2020, 4, 17),
                 password = Password("password")
             ),
-            User(
+            Member(
                 name = "홍길동2",
                 email = "b@email.com",
                 phoneNumber = "010-0000-0000",
@@ -253,7 +253,7 @@ class DatabaseInitializer(
                 birthday = createLocalDate(2020, 5, 5),
                 password = Password("password")
             ),
-            User(
+            Member(
                 name = "홍길동3",
                 email = "c@email.com",
                 phoneNumber = "010-0000-0000",
@@ -261,7 +261,7 @@ class DatabaseInitializer(
                 birthday = createLocalDate(2020, 1, 1),
                 password = Password("password")
             ),
-            User(
+            Member(
                 name = "홍길동4",
                 email = "d@email.com",
                 phoneNumber = "010-0000-0000",

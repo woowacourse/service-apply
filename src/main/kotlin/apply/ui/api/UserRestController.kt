@@ -9,7 +9,7 @@ import apply.application.UserAuthenticationService
 import apply.application.UserResponse
 import apply.application.UserService
 import apply.application.mail.MailService
-import apply.domain.user.User
+import apply.domain.user.Member
 import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -49,7 +49,7 @@ class UserRestController(
     @PostMapping("/edit-password")
     fun editPassword(
         @RequestBody @Valid request: EditPasswordRequest,
-        @LoginUser user: User
+        @LoginUser user: Member
     ): ResponseEntity<Unit> {
         userService.editPassword(user.id, request)
         return ResponseEntity.noContent().build()
@@ -77,7 +77,7 @@ class UserRestController(
     @GetMapping
     fun findAllByKeyword(
         @RequestParam keyword: String,
-        @LoginUser(administrator = true) user: User
+        @LoginUser(administrator = true) user: Member
     ): ResponseEntity<ApiResponse<List<UserResponse>>> {
         val responses = userService.findAllByKeyword(keyword)
         return ResponseEntity.ok(ApiResponse.success(responses))
@@ -85,7 +85,7 @@ class UserRestController(
 
     @GetMapping("/me")
     fun getMyInformation(
-        @LoginUser user: User
+        @LoginUser user: Member
     ): ResponseEntity<ApiResponse<UserResponse>> {
         val response = userService.getInformation(user.id)
         return ResponseEntity.ok(ApiResponse.success(response))
@@ -94,7 +94,7 @@ class UserRestController(
     @PatchMapping("/information")
     fun editInformation(
         @RequestBody @Valid request: EditInformationRequest,
-        @LoginUser user: User
+        @LoginUser user: Member
     ): ResponseEntity<Unit> {
         userService.editInformation(user.id, request)
         return ResponseEntity.noContent().build()

@@ -7,7 +7,7 @@ import apply.application.ApplicationFormService
 import apply.application.CreateApplicationFormRequest
 import apply.application.MyApplicationFormResponse
 import apply.application.UpdateApplicationFormRequest
-import apply.domain.user.User
+import apply.domain.user.Member
 import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -30,7 +30,7 @@ class ApplicationFormRestController(
     @PostMapping("/application-forms")
     fun create(
         @RequestBody @Valid request: CreateApplicationFormRequest,
-        @LoginUser user: User
+        @LoginUser user: Member
     ): ResponseEntity<ApiResponse<ApplicationFormResponse>> {
         val response = applicationFormService.create(user.id, request)
         return ResponseEntity.created("/api/application-forms?recruitmentId=${response.recruitmentId}".toUri())
@@ -40,7 +40,7 @@ class ApplicationFormRestController(
     @PatchMapping("/application-forms")
     fun update(
         @RequestBody @Valid request: UpdateApplicationFormRequest,
-        @LoginUser user: User
+        @LoginUser user: Member
     ): ResponseEntity<Unit> {
         applicationFormService.update(user.id, request)
         return ResponseEntity.ok().build()
@@ -48,7 +48,7 @@ class ApplicationFormRestController(
 
     @GetMapping("/application-forms/me")
     fun getMyApplicationForms(
-        @LoginUser user: User
+        @LoginUser user: Member
     ): ResponseEntity<ApiResponse<List<MyApplicationFormResponse>>> {
         val form = applicationFormService.getMyApplicationForms(user.id)
         return ResponseEntity.ok(ApiResponse.success(form))
@@ -57,7 +57,7 @@ class ApplicationFormRestController(
     @GetMapping("/application-forms")
     fun getApplicationForm(
         @RequestParam recruitmentId: Long,
-        @LoginUser user: User
+        @LoginUser user: Member
     ): ResponseEntity<ApiResponse<ApplicationFormResponse>> {
         val form = applicationFormService.getApplicationForm(user.id, recruitmentId)
         return ResponseEntity.ok(ApiResponse.success(form))
@@ -67,7 +67,7 @@ class ApplicationFormRestController(
     fun findAllByRecruitmentIdAndKeyword(
         @PathVariable recruitmentId: Long,
         @RequestParam keyword: String?,
-        @LoginUser(administrator = true) user: User
+        @LoginUser(administrator = true) user: Member
     ): ResponseEntity<ApiResponse<List<ApplicantAndFormResponse>>> {
         val applicants = applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId, keyword)
         return ResponseEntity.ok(ApiResponse.success(applicants))

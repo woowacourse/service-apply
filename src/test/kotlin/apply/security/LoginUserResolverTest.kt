@@ -2,7 +2,7 @@ package apply.security
 
 import apply.application.UserService
 import apply.createUser
-import apply.domain.user.User
+import apply.domain.user.Member
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.inspectors.forAll
@@ -23,9 +23,9 @@ class LoginUserResolverTest : StringSpec({
     val loginUserResolver = LoginUserResolver(jwtTokenProvider, userService)
 
     class TestAuthController {
-        fun user(@LoginUser user: User) {}
-        fun administrator(@LoginUser(administrator = true) user: User) {}
-        fun guest(user: User) {}
+        fun user(@LoginUser user: Member) {}
+        fun administrator(@LoginUser(administrator = true) user: Member) {}
+        fun guest(user: Member) {}
     }
 
     fun createAdministratorAnnotation(): LoginUser = LoginUser(administrator = true)
@@ -33,7 +33,7 @@ class LoginUserResolverTest : StringSpec({
 
     "주어진 함수가 @LoginUser를 지원하는지 확인한다" {
         listOf("user" to true, "administrator" to true, "guest" to false).forAll { (methodName, expected) ->
-            val method = TestAuthController::class.java.getDeclaredMethod(methodName, User::class.java)
+            val method = TestAuthController::class.java.getDeclaredMethod(methodName, Member::class.java)
             val loginUserParameter = MethodParameter.forExecutable(method, 0)
             loginUserResolver.supportsParameter(loginUserParameter) shouldBe expected
         }

@@ -4,7 +4,7 @@ import apply.application.AuthenticateUserRequest
 import apply.application.RegisterUserRequest
 import apply.domain.user.Gender
 import apply.domain.user.Password
-import apply.domain.user.User
+import apply.domain.user.Member
 import support.createLocalDate
 import java.time.LocalDate
 
@@ -29,8 +29,8 @@ fun createUser(
     birthday: LocalDate = BIRTHDAY,
     password: Password = PASSWORD,
     id: Long = 0L
-): User {
-    return User(name, email, phoneNumber, gender, birthday, password, id)
+): Member {
+    return Member(name, email, phoneNumber, gender, birthday, password, id)
 }
 
 fun createRegisterUserRequest(

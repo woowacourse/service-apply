@@ -6,7 +6,7 @@ import apply.application.MissionResponse
 import apply.application.MissionService
 import apply.application.MyMissionResponse
 import apply.application.MyMissionService
-import apply.domain.user.User
+import apply.domain.user.Member
 import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -28,7 +28,7 @@ class MissionRestController(
     fun save(
         @PathVariable recruitmentId: Long,
         @RequestBody missionData: MissionData,
-        @LoginUser(administrator = true) user: User
+        @LoginUser(administrator = true) user: Member
     ): ResponseEntity<ApiResponse<MissionResponse>> {
         val response = missionService.save(missionData)
         return ResponseEntity.created("/api/recruitments/$recruitmentId/missions/${response.id}".toUri())
@@ -39,7 +39,7 @@ class MissionRestController(
     fun getById(
         @PathVariable recruitmentId: Long,
         @PathVariable missionId: Long,
-        @LoginUser(administrator = true) user: User
+        @LoginUser(administrator = true) user: Member
     ): ResponseEntity<ApiResponse<MissionResponse>> {
         val response = missionService.getById(missionId)
         return ResponseEntity.ok(ApiResponse.success(response))
@@ -48,7 +48,7 @@ class MissionRestController(
     @GetMapping
     fun findAllByRecruitmentId(
         @PathVariable recruitmentId: Long,
-        @LoginUser(administrator = true) user: User
+        @LoginUser(administrator = true) user: Member
     ): ResponseEntity<ApiResponse<List<MissionAndEvaluationResponse>>> {
         val responses = missionService.findAllByRecruitmentId(recruitmentId)
         return ResponseEntity.ok(ApiResponse.success(responses))
@@ -57,7 +57,7 @@ class MissionRestController(
     @GetMapping("/me")
     fun findMyMissionsByRecruitmentId(
         @PathVariable recruitmentId: Long,
-        @LoginUser user: User
+        @LoginUser user: Member
     ): ResponseEntity<ApiResponse<List<MyMissionResponse>>> {
         val responses = missionQueryService.findAllByUserIdAndRecruitmentId(user.id, recruitmentId)
         return ResponseEntity.ok(ApiResponse.success(responses))
@@ -67,7 +67,7 @@ class MissionRestController(
     fun deleteById(
         @PathVariable recruitmentId: Long,
         @PathVariable missionId: Long,
-        @LoginUser(administrator = true) user: User
+        @LoginUser(administrator = true) user: Member
     ): ResponseEntity<Unit> {
         missionService.deleteById(missionId)
         return ResponseEntity.ok().build()

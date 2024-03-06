@@ -1,7 +1,7 @@
 package apply.security
 
 import apply.application.UserService
-import apply.domain.user.User
+import apply.domain.user.Member
 import org.springframework.core.MethodParameter
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.stereotype.Component
@@ -26,7 +26,7 @@ class LoginUserResolver(
         mavContainer: ModelAndViewContainer?,
         webRequest: NativeWebRequest,
         binderFactory: WebDataBinderFactory?
-    ): User {
+    ): Member {
         validateIfAdministrator(parameter)
         val token = extractBearerToken(webRequest)
         if (!jwtTokenProvider.isValidToken(token)) {
