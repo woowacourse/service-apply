@@ -1,9 +1,9 @@
 package apply.application
 
-import apply.domain.user.Member
-import apply.domain.user.MemberRepository
-import apply.domain.user.findByEmail
-import apply.domain.user.getOrThrow
+import apply.domain.member.Member
+import apply.domain.member.MemberRepository
+import apply.domain.member.findByEmail
+import apply.domain.member.getOrThrow
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

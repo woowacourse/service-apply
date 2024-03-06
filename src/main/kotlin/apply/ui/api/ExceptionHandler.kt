@@ -1,7 +1,7 @@
 package apply.ui.api
 
 import apply.domain.applicationform.DuplicateApplicationException
-import apply.domain.user.UnidentifiedMemberException
+import apply.domain.member.UnidentifiedMemberException
 import apply.security.LoginFailedException
 import com.fasterxml.jackson.databind.exc.InvalidFormatException
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException

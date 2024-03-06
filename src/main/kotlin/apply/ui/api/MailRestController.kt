@@ -2,7 +2,7 @@ package apply.ui.api
 
 import apply.application.mail.MailData
 import apply.application.mail.MailService
-import apply.domain.user.Member
+import apply.domain.member.Member
 import apply.security.LoginUser
 import org.springframework.core.io.ByteArrayResource
 import org.springframework.http.ResponseEntity

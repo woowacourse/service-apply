@@ -5,7 +5,7 @@ import apply.createCheater
 import apply.createUser
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.CheaterRepository
-import apply.domain.user.MemberRepository
+import apply.domain.member.MemberRepository
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue

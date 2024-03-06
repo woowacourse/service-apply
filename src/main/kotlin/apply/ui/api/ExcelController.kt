@@ -3,7 +3,7 @@ package apply.ui.api
 import apply.application.EvaluationService
 import apply.application.ExcelService
 import apply.application.RecruitmentService
-import apply.domain.user.Member
+import apply.domain.member.Member
 import apply.security.LoginUser
 import org.springframework.core.io.InputStreamResource
 import org.springframework.http.ContentDisposition

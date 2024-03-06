@@ -2,9 +2,9 @@ package apply
 
 import apply.application.AuthenticateUserRequest
 import apply.application.RegisterUserRequest
-import apply.domain.user.Gender
-import apply.domain.user.Password
-import apply.domain.user.Member
+import apply.domain.member.Gender
+import apply.domain.member.Password
+import apply.domain.member.Member
 import support.createLocalDate
 import java.time.LocalDate
 

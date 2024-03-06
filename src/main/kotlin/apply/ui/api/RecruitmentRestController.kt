@@ -5,7 +5,7 @@ import apply.application.RecruitmentItemService
 import apply.application.RecruitmentResponse
 import apply.application.RecruitmentService
 import apply.domain.recruitmentitem.RecruitmentItem
-import apply.domain.user.Member
+import apply.domain.member.Member
 import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping

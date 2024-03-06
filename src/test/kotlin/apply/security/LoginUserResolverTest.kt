@@ -2,7 +2,7 @@ package apply.security
 
 import apply.application.UserService
 import apply.createUser
-import apply.domain.user.Member
+import apply.domain.member.Member
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.inspectors.forAll

@@ -6,7 +6,7 @@ import apply.application.MissionResponse
 import apply.application.MissionService
 import apply.application.MyMissionResponse
 import apply.application.MyMissionService
-import apply.domain.user.Member
+import apply.domain.member.Member
 import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping

@@ -1,4 +1,4 @@
-package apply.domain.user
+package apply.domain.member
 
 import apply.PASSWORD
 import apply.WRONG_PASSWORD

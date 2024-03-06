@@ -6,7 +6,7 @@ import apply.application.JudgmentAllService
 import apply.application.JudgmentService
 import apply.application.LastJudgmentResponse
 import apply.application.SuccessJudgmentRequest
-import apply.domain.user.Member
+import apply.domain.member.Member
 import apply.security.Accessor
 import apply.security.LoginUser
 import org.springframework.http.ResponseEntity

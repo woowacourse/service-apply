@@ -1,9 +1,9 @@
 package apply.application
 
 import apply.domain.applicationform.ApplicationForm
-import apply.domain.user.Gender
-import apply.domain.user.Password
-import apply.domain.user.Member
+import apply.domain.member.Gender
+import apply.domain.member.Password
+import apply.domain.member.Member
 import java.time.LocalDate
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank

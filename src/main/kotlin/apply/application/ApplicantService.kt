@@ -2,8 +2,8 @@ package apply.application
 
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.CheaterRepository
-import apply.domain.user.Member
-import apply.domain.user.MemberRepository
+import apply.domain.member.Member
+import apply.domain.member.MemberRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

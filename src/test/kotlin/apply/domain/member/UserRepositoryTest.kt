@@ -1,4 +1,4 @@
-package apply.domain.user
+package apply.domain.member
 
 import apply.createUser
 import io.kotest.core.spec.style.ExpectSpec

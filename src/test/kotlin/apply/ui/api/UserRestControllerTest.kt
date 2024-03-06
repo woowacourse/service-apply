@@ -8,8 +8,8 @@ import apply.application.UserService
 import apply.application.mail.MailService
 import apply.createUser
 import apply.domain.authenticationcode.AuthenticationCode
-import apply.domain.user.Gender
-import apply.domain.user.UnidentifiedMemberException
+import apply.domain.member.Gender
+import apply.domain.member.UnidentifiedMemberException
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
 import io.mockk.every

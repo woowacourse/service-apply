@@ -4,7 +4,7 @@ import apply.application.EvaluationData
 import apply.application.EvaluationGridResponse
 import apply.application.EvaluationResponse
 import apply.application.EvaluationService
-import apply.domain.user.Member
+import apply.domain.member.Member
 import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping

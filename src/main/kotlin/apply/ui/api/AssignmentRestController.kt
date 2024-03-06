@@ -4,7 +4,7 @@ import apply.application.AssignmentData
 import apply.application.AssignmentRequest
 import apply.application.AssignmentResponse
 import apply.application.AssignmentService
-import apply.domain.user.Member
+import apply.domain.member.Member
 import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping

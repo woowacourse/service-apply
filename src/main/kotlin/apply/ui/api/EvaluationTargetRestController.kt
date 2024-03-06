@@ -8,7 +8,7 @@ import apply.application.GradeEvaluationResponse
 import apply.application.MailTargetResponse
 import apply.application.MailTargetService
 import apply.domain.evaluationtarget.EvaluationStatus
-import apply.domain.user.Member
+import apply.domain.member.Member
 import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping

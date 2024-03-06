@@ -1,4 +1,4 @@
-package apply.domain.user
+package apply.domain.member
 
 import java.time.LocalDateTime
 

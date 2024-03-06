@@ -1,7 +1,7 @@
 package apply.security
 
 import apply.application.UserService
-import apply.domain.user.Member
+import apply.domain.member.Member
 import org.springframework.core.MethodParameter
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.stereotype.Component

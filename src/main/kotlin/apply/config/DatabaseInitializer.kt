@@ -30,10 +30,10 @@ import apply.domain.recruitmentitem.RecruitmentItem
 import apply.domain.recruitmentitem.RecruitmentItemRepository
 import apply.domain.term.Term
 import apply.domain.term.TermRepository
-import apply.domain.user.Gender
-import apply.domain.user.Password
-import apply.domain.user.Member
-import apply.domain.user.MemberRepository
+import apply.domain.member.Gender
+import apply.domain.member.Password
+import apply.domain.member.Member
+import apply.domain.member.MemberRepository
 import org.springframework.boot.CommandLineRunner
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component

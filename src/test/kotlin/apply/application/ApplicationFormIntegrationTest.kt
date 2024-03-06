@@ -6,7 +6,7 @@ import apply.createUser
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.applicationform.DuplicateApplicationException
 import apply.domain.recruitment.RecruitmentRepository
-import apply.domain.user.MemberRepository
+import apply.domain.member.MemberRepository
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec

@@ -2,7 +2,7 @@ package apply.ui.api
 
 import apply.application.MailHistoryService
 import apply.application.mail.MailData
-import apply.domain.user.Member
+import apply.domain.member.Member
 import apply.security.LoginUser
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping

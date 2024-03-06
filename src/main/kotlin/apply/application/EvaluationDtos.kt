@@ -4,7 +4,7 @@ import apply.domain.evaluation.Evaluation
 import apply.domain.evaluationitem.EvaluationItem
 import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.recruitment.Recruitment
-import apply.domain.user.Member
+import apply.domain.member.Member
 import javax.validation.Valid
 import javax.validation.constraints.Max
 import javax.validation.constraints.Min

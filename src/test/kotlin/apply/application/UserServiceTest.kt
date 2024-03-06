@@ -5,11 +5,11 @@ import apply.PASSWORD
 import apply.RANDOM_PASSWORD_TEXT
 import apply.WRONG_PASSWORD
 import apply.createUser
-import apply.domain.user.Password
-import apply.domain.user.UnidentifiedMemberException
-import apply.domain.user.MemberRepository
-import apply.domain.user.findByEmail
-import apply.domain.user.getOrThrow
+import apply.domain.member.Password
+import apply.domain.member.UnidentifiedMemberException
+import apply.domain.member.MemberRepository
+import apply.domain.member.findByEmail
+import apply.domain.member.getOrThrow
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe

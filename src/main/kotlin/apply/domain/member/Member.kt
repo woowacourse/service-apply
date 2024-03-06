@@ -1,4 +1,4 @@
-package apply.domain.user
+package apply.domain.member
 
 import support.domain.BaseRootEntity
 import java.time.LocalDate
