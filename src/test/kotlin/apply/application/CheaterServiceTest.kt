@@ -3,7 +3,7 @@ package apply.application
 import apply.createCheater
 import apply.createCheaterData
 import apply.domain.cheater.CheaterRepository
-import apply.domain.user.UserRepository
+import apply.domain.user.MemberRepository
 import apply.domain.user.findByEmail
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
@@ -15,7 +15,7 @@ import io.mockk.mockk
 import support.test.spec.afterRootTest
 
 class CheaterServiceTest : BehaviorSpec({
-    val userRepository = mockk<UserRepository>()
+    val userRepository = mockk<MemberRepository>()
     val cheaterRepository = mockk<CheaterRepository>()
 
     val cheaterService = CheaterService(userRepository, cheaterRepository)

@@ -28,7 +28,7 @@ import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.evaluationtarget.getOrThrow
 import apply.domain.user.Member
-import apply.domain.user.UserRepository
+import apply.domain.user.MemberRepository
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.extensions.spring.SpringTestExtension
 import io.kotest.extensions.spring.SpringTestLifecycleMode
@@ -46,7 +46,7 @@ class EvaluationTargetIntegrationTest(
     private val evaluationTargetRepository: EvaluationTargetRepository,
     private val evaluationItemRepository: EvaluationItemRepository,
     private val applicationFormRepository: ApplicationFormRepository,
-    private val userRepository: UserRepository,
+    private val userRepository: MemberRepository,
     private val cheaterRepository: CheaterRepository
 ) : BehaviorSpec({
     extensions(SpringTestExtension(SpringTestLifecycleMode.Root))

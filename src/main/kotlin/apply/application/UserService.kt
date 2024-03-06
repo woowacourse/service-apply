@@ -1,7 +1,7 @@
 package apply.application
 
 import apply.domain.user.Member
-import apply.domain.user.UserRepository
+import apply.domain.user.MemberRepository
 import apply.domain.user.findByEmail
 import apply.domain.user.getOrThrow
 import org.springframework.stereotype.Service
@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 @Service
 class UserService(
-    private val userRepository: UserRepository,
+    private val userRepository: MemberRepository,
     private val passwordGenerator: PasswordGenerator
 ) {
     fun getByEmail(email: String): Member {

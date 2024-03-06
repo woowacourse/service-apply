@@ -33,7 +33,7 @@ import apply.domain.term.TermRepository
 import apply.domain.user.Gender
 import apply.domain.user.Password
 import apply.domain.user.Member
-import apply.domain.user.UserRepository
+import apply.domain.user.MemberRepository
 import org.springframework.boot.CommandLineRunner
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
@@ -51,7 +51,7 @@ class DatabaseInitializer(
     private val recruitmentItemRepository: RecruitmentItemRepository,
     private val evaluationRepository: EvaluationRepository,
     private val evaluationItemRepository: EvaluationItemRepository,
-    private val userRepository: UserRepository,
+    private val userRepository: MemberRepository,
     private val applicationFormRepository: ApplicationFormRepository,
     private val evaluationTargetRepository: EvaluationTargetRepository,
     private val missionRepository: MissionRepository,

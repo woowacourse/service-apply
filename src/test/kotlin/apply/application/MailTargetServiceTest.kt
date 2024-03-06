@@ -9,7 +9,7 @@ import apply.domain.evaluationtarget.EvaluationStatus.PASS
 import apply.domain.evaluationtarget.EvaluationStatus.PENDING
 import apply.domain.evaluationtarget.EvaluationStatus.WAITING
 import apply.domain.evaluationtarget.EvaluationTargetRepository
-import apply.domain.user.UserRepository
+import apply.domain.user.MemberRepository
 import apply.domain.user.findAllByEmailIn
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.collections.shouldBeEmpty
@@ -24,7 +24,7 @@ import support.test.spec.afterRootTest
 
 class MailTargetServiceTest : BehaviorSpec({
     val evaluationTargetRepository = mockk<EvaluationTargetRepository>()
-    val userRepository = mockk<UserRepository>()
+    val userRepository = mockk<MemberRepository>()
 
     val mailTargetService = MailTargetService(evaluationTargetRepository, userRepository)
 

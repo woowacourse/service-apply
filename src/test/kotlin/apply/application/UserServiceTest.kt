@@ -7,7 +7,7 @@ import apply.WRONG_PASSWORD
 import apply.createUser
 import apply.domain.user.Password
 import apply.domain.user.UnidentifiedUserException
-import apply.domain.user.UserRepository
+import apply.domain.user.MemberRepository
 import apply.domain.user.findByEmail
 import apply.domain.user.getOrThrow
 import io.kotest.assertions.throwables.shouldThrow
@@ -19,7 +19,7 @@ import io.mockk.mockk
 import support.test.spec.afterRootTest
 
 class UserServiceTest : BehaviorSpec({
-    val userRepository = mockk<UserRepository>()
+    val userRepository = mockk<MemberRepository>()
     val passwordGenerator = mockk<PasswordGenerator>()
 
     val userService = UserService(userRepository, passwordGenerator)

@@ -15,7 +15,7 @@ import support.test.RepositoryTest
 
 @RepositoryTest
 class UserRepositoryTest(
-    private val userRepository: UserRepository
+    private val userRepository: MemberRepository
 ) : ExpectSpec({
     extensions(SpringTestExtension(SpringTestLifecycleMode.Root))
 

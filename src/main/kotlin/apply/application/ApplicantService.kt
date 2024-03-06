@@ -3,7 +3,7 @@ package apply.application
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.CheaterRepository
 import apply.domain.user.Member
-import apply.domain.user.UserRepository
+import apply.domain.user.MemberRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class ApplicantService(
     private val applicationFormRepository: ApplicationFormRepository,
-    private val userRepository: UserRepository,
+    private val userRepository: MemberRepository,
     private val cheaterRepository: CheaterRepository
 ) {
     fun findAllByRecruitmentIdAndKeyword(

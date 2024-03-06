@@ -12,7 +12,7 @@ import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.evaluationtarget.getOrThrow
-import apply.domain.user.UserRepository
+import apply.domain.user.MemberRepository
 import apply.domain.user.findAllByEmailIn
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -24,7 +24,7 @@ class EvaluationTargetService(
     private val evaluationTargetRepository: EvaluationTargetRepository,
     private val evaluationItemRepository: EvaluationItemRepository,
     private val applicationFormRepository: ApplicationFormRepository,
-    private val userRepository: UserRepository,
+    private val userRepository: MemberRepository,
     private val cheaterRepository: CheaterRepository
 ) {
     fun findAllByEvaluationId(evaluationId: Long): List<EvaluationTarget> =

@@ -13,7 +13,7 @@ import apply.createUser
 import apply.domain.authenticationcode.AuthenticationCodeRepository
 import apply.domain.authenticationcode.getLastByEmail
 import apply.domain.user.UnidentifiedUserException
-import apply.domain.user.UserRepository
+import apply.domain.user.MemberRepository
 import apply.domain.user.existsByEmail
 import apply.domain.user.findByEmail
 import apply.security.JwtTokenProvider
@@ -28,7 +28,7 @@ import io.mockk.mockk
 import io.mockk.verify
 
 class UserAuthenticationServiceTest : BehaviorSpec({
-    val userRepository = mockk<UserRepository>()
+    val userRepository = mockk<MemberRepository>()
     val authenticationCodeRepository = mockk<AuthenticationCodeRepository>()
     val jwtTokenProvider = mockk<JwtTokenProvider>()
 

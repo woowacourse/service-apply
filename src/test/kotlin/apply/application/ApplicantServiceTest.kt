@@ -5,7 +5,7 @@ import apply.createCheater
 import apply.createUser
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.CheaterRepository
-import apply.domain.user.UserRepository
+import apply.domain.user.MemberRepository
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
@@ -17,7 +17,7 @@ import support.test.spec.afterRootTest
 
 class ApplicantServiceTest : BehaviorSpec({
     val applicationFormRepository = mockk<ApplicationFormRepository>()
-    val userRepository = mockk<UserRepository>()
+    val userRepository = mockk<MemberRepository>()
     val cheaterRepository = mockk<CheaterRepository>()
 
     val applicantService = ApplicantService(applicationFormRepository, userRepository, cheaterRepository)

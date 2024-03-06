@@ -6,7 +6,7 @@ import apply.createUser
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.applicationform.DuplicateApplicationException
 import apply.domain.recruitment.RecruitmentRepository
-import apply.domain.user.UserRepository
+import apply.domain.user.MemberRepository
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
@@ -19,7 +19,7 @@ import java.time.LocalDateTime.now
 @IntegrationTest
 class ApplicationFormIntegrationTest(
     private val applicationFormService: ApplicationFormService,
-    private val userRepository: UserRepository,
+    private val userRepository: MemberRepository,
     private val applicationFormRepository: ApplicationFormRepository,
     private val recruitmentRepository: RecruitmentRepository
 ) : BehaviorSpec({

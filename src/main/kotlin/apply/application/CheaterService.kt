@@ -3,7 +3,7 @@ package apply.application
 import apply.domain.cheater.Cheater
 import apply.domain.cheater.CheaterRepository
 import apply.domain.cheater.getOrThrow
-import apply.domain.user.UserRepository
+import apply.domain.user.MemberRepository
 import apply.domain.user.findAllByEmailIn
 import apply.domain.user.findByEmail
 import org.springframework.stereotype.Service
@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 @Service
 class CheaterService(
-    private val userRepository: UserRepository,
+    private val userRepository: MemberRepository,
     private val cheaterRepository: CheaterRepository
 ) {
     fun save(request: CheaterData): CheaterResponse {
