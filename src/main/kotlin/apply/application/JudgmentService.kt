@@ -26,17 +26,17 @@ class JudgmentService(
     private val judgmentItemRepository: JudgmentItemRepository,
     private val assignmentArchive: AssignmentArchive
 ) {
-    fun judgeExample(userId: Long, missionId: Long): LastJudgmentResponse {
+    fun judgeExample(memberId: Long, missionId: Long): LastJudgmentResponse {
         val mission = missionRepository.getOrThrow(missionId)
         check(mission.isSubmitting && judgmentItemRepository.existsByMissionId(mission.id)) {
             "예제 테스트를 실행할 수 없습니다."
         }
-        val assignment = assignmentRepository.getByMemberIdAndMissionId(userId, missionId)
+        val assignment = assignmentRepository.getByMemberIdAndMissionId(memberId, missionId)
         return judge(mission, assignment, JudgmentType.EXAMPLE)
     }
 
-    fun findLastExampleJudgment(userId: Long, missionId: Long): LastJudgmentResponse? {
-        val assignment = assignmentRepository.findByMemberIdAndMissionId(userId, missionId) ?: return null
+    fun findLastExampleJudgment(memberId: Long, missionId: Long): LastJudgmentResponse? {
+        val assignment = assignmentRepository.findByMemberIdAndMissionId(memberId, missionId) ?: return null
         val judgment = judgmentRepository.findByAssignmentIdAndType(assignment.id, JudgmentType.EXAMPLE)
         return judgment?.let { LastJudgmentResponse(assignment.pullRequestUrl, it.lastRecord) }
     }
