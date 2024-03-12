@@ -100,7 +100,7 @@ class EvaluationTargetService(
 
     private fun findUserIdsFromRecruitment(evaluation: Evaluation): Set<Long> {
         return applicationFormRepository.findByRecruitmentIdAndSubmittedTrue(evaluation.recruitmentId)
-            .map { it.userId }
+            .map { it.memberId }
             .toSet()
     }
 

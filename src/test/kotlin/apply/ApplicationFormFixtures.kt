@@ -63,7 +63,7 @@ fun createExceededAnswerRequest(
 
 fun createApplicationForms(
     applicationForm1: ApplicationForm = ApplicationForm(
-        userId = 1L,
+        memberId = 1L,
         recruitmentId = 1L,
         referenceUrl = "http://example.com",
         answers = ApplicationFormAnswers(
@@ -74,7 +74,7 @@ fun createApplicationForms(
         )
     ),
     applicationForm2: ApplicationForm = ApplicationForm(
-        userId = 1L,
+        memberId = 1L,
         recruitmentId = 2L,
         referenceUrl = "http://example2.com",
         answers = ApplicationFormAnswers(

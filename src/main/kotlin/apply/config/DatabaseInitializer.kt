@@ -282,7 +282,7 @@ class DatabaseInitializer(
                 modifiedDateTime = createLocalDateTime(2019, 11, 5, 10),
                 submittedDateTime = createLocalDateTime(2019, 11, 5, 10, 10, 10),
                 recruitmentId = 1L,
-                userId = 1L,
+                memberId = 1L,
                 answers = ApplicationFormAnswers(
                     mutableListOf(
                         ApplicationFormAnswer("도전, 끈기", 1L),
@@ -297,7 +297,7 @@ class DatabaseInitializer(
                 modifiedDateTime = createLocalDateTime(2019, 11, 5, 10),
                 submittedDateTime = createLocalDateTime(2019, 11, 5, 10, 10, 10),
                 recruitmentId = 1L,
-                userId = 2L,
+                memberId = 2L,
                 answers = ApplicationFormAnswers(
                     mutableListOf(
                         ApplicationFormAnswer("책임감", 1L),
@@ -312,7 +312,7 @@ class DatabaseInitializer(
                 modifiedDateTime = createLocalDateTime(2019, 11, 6, 10),
                 submittedDateTime = createLocalDateTime(2019, 11, 6, 10, 10, 10),
                 recruitmentId = 1L,
-                userId = 3L,
+                memberId = 3L,
                 answers = ApplicationFormAnswers(
                     mutableListOf(
                         ApplicationFormAnswer("건강", 1L),
@@ -327,7 +327,7 @@ class DatabaseInitializer(
                 modifiedDateTime = createLocalDateTime(2019, 11, 6, 10),
                 submittedDateTime = createLocalDateTime(2019, 11, 6, 10, 10, 10),
                 recruitmentId = 1L,
-                userId = 4L,
+                memberId = 4L,
                 answers = ApplicationFormAnswers(
                     mutableListOf(
                         ApplicationFormAnswer("사랑", 1L),

@@ -23,7 +23,7 @@ class ApplicationFormRepositoryTest(
         )
 
         expect("지원자가 지원한 모집에 대한 지원서를 조회한다") {
-            val actual = applicationFormRepository.findByRecruitmentIdAndUserId(1L, 1L)
+            val actual = applicationFormRepository.findByRecruitmentIdAndMemberId(1L, 1L)
             actual.shouldNotBeNull()
         }
     }

@@ -22,7 +22,7 @@ class ApplicationFormService(
 ) {
     fun create(userId: Long, request: CreateApplicationFormRequest): ApplicationFormResponse {
         val recruitment = findApplicableRecruitment(request.recruitmentId)
-        check(!applicationFormRepository.existsByRecruitmentIdAndUserId(recruitment.id, userId)) {
+        check(!applicationFormRepository.existsByRecruitmentIdAndMemberId(recruitment.id, userId)) {
             "이미 작성한 지원서가 있습니다."
         }
         return applicationFormRepository
@@ -47,7 +47,7 @@ class ApplicationFormService(
     }
 
     fun getMyApplicationForms(userId: Long): List<MyApplicationFormResponse> =
-        applicationFormRepository.findAllByUserId(userId).map(::MyApplicationFormResponse)
+        applicationFormRepository.findAllByMemberId(userId).map(::MyApplicationFormResponse)
 
     fun getApplicationForm(userId: Long, recruitmentId: Long): ApplicationFormResponse {
         val applicationForm = findByRecruitmentIdAndUserId(recruitmentId, userId)
@@ -58,7 +58,7 @@ class ApplicationFormService(
     }
 
     private fun findByRecruitmentIdAndUserId(recruitmentId: Long, userId: Long): ApplicationForm =
-        applicationFormRepository.findByRecruitmentIdAndUserId(recruitmentId, userId)
+        applicationFormRepository.findByRecruitmentIdAndMemberId(recruitmentId, userId)
             ?: throw NoSuchElementException("해당하는 지원서가 없습니다.")
 
     private fun findApplicableRecruitment(recruitmentId: Long): Recruitment {

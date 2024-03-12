@@ -20,7 +20,7 @@ class ApplicantService(
     ): List<ApplicantAndFormResponse> {
         val formsByApplicantId = applicationFormRepository
             .findByRecruitmentIdAndSubmittedTrue(recruitmentId)
-            .associateBy { it.userId }
+            .associateBy { it.memberId }
         val cheaterApplicantEmails = cheaterRepository.findAll().map { it.email }
         return findAllByIdsAndKeyword(formsByApplicantId.keys, keyword)
             .map {
