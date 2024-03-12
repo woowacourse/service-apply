@@ -295,10 +295,10 @@ class EvaluationTargetIntegrationTest(
 })
 
 private val List<EvaluationTarget>.summary: Map<Long, EvaluationStatus>
-    get() = associate { it.userId to it.evaluationStatus }
+    get() = associate { it.memberId to it.evaluationStatus }
 
 private fun List<EvaluationTarget>.first(evaluationId: Long, userId: Long): EvaluationTarget {
-    return first { it.evaluationId == evaluationId && it.userId == userId }
+    return first { it.evaluationId == evaluationId && it.memberId == userId }
 }
 
 private fun EvaluationAnswers.first(evaluationItemId: Long): EvaluationAnswer {

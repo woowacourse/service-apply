@@ -29,13 +29,13 @@ class AssignmentServiceTest : BehaviorSpec({
 
         every { assignmentRepository.existsByMemberIdAndMissionId(any(), any()) } returns false
         every { missionRepository.getOrThrow(any()) } returns mission
-        every { evaluationTargetRepository.findByEvaluationIdAndUserId(any(), any()) } returns evaluationTarget
+        every { evaluationTargetRepository.findByEvaluationIdAndMemberId(any(), any()) } returns evaluationTarget
         every { assignmentRepository.save(any()) } returns createAssignment()
 
         When("특정 평가 대상자가 과제 제출물을 생성하면") {
             Then("과제 제출물을 생성할 수 있다") {
                 shouldNotThrowAny {
-                    assignmentService.create(mission.id, evaluationTarget.userId, createAssignmentRequest())
+                    assignmentService.create(mission.id, evaluationTarget.memberId, createAssignmentRequest())
                 }
             }
         }
@@ -51,7 +51,7 @@ class AssignmentServiceTest : BehaviorSpec({
         When("특정 평가 대상자가 과제 제출물을 생성하면") {
             Then("예외가 발생한다") {
                 shouldThrow<IllegalStateException> {
-                    assignmentService.create(mission.id, evaluationTarget.userId, createAssignmentRequest())
+                    assignmentService.create(mission.id, evaluationTarget.memberId, createAssignmentRequest())
                 }
             }
         }

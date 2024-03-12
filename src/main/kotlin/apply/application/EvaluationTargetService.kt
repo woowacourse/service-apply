@@ -38,9 +38,9 @@ class EvaluationTargetService(
         val users = userRepository.findAllByKeyword(keyword)
 
         return evaluationTargets
-            .filter { users.any { user -> user.id == it.userId } }
+            .filter { users.any { user -> user.id == it.memberId } }
             .map {
-                val user = users.first { each -> each.id == it.userId }
+                val user = users.first { each -> each.id == it.memberId }
                 EvaluationTargetResponse(
                     it.id,
                     user.name,
@@ -65,7 +65,7 @@ class EvaluationTargetService(
         val cheaters = findCheatersIn(latestApplicants)
 
         val removedApplicants = loadedApplicants - latestApplicants
-        evaluationTargetRepository.deleteByEvaluationIdAndUserIdIn(evaluationId, removedApplicants)
+        evaluationTargetRepository.deleteByEvaluationIdAndMemberIdIn(evaluationId, removedApplicants)
 
         val loadedCheaters = loadedApplicants intersect cheaters
         updateFail(loadedCheaters, evaluation)
@@ -88,13 +88,13 @@ class EvaluationTargetService(
     private fun findPassedUserIdsFromBeforeEvaluation(evaluation: Evaluation): Set<Long> {
         return evaluationTargetRepository.findAllByEvaluationId(evaluation.beforeEvaluationId)
             .filter { it.isPassed }
-            .map { it.userId }
+            .map { it.memberId }
             .toSet()
     }
 
     private fun findLoadedApplicants(evaluationId: Long): Set<Long> {
         return evaluationTargetRepository.findAllByEvaluationId(evaluationId)
-            .map { it.userId }
+            .map { it.memberId }
             .toSet()
     }
 
@@ -113,12 +113,12 @@ class EvaluationTargetService(
 
     private fun save(userIds: Set<Long>, evaluation: Evaluation, evaluationStatus: EvaluationStatus) {
         val evaluationTargets = userRepository.findAllById(userIds)
-            .map { EvaluationTarget(evaluation.id, userId = it.id, evaluationStatus = evaluationStatus) }
+            .map { EvaluationTarget(evaluation.id, memberId = it.id, evaluationStatus = evaluationStatus) }
         evaluationTargetRepository.saveAll(evaluationTargets)
     }
 
     private fun updateFail(userIds: Set<Long>, evaluation: Evaluation) {
-        evaluationTargetRepository.findAllByEvaluationIdAndUserIdIn(evaluation.id, userIds).forEach {
+        evaluationTargetRepository.findAllByEvaluationIdAndMemberIdIn(evaluation.id, userIds).forEach {
             it.evaluationStatus = EvaluationStatus.FAIL
         }
     }

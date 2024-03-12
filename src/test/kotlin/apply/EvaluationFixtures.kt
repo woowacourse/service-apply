@@ -69,7 +69,7 @@ fun createEvaluationTarget(
     return EvaluationTarget(
         evaluationId = evaluationId,
         administratorId = administratorId,
-        userId = userId,
+        memberId = userId,
         evaluationStatus = evaluationStatus,
         evaluationAnswers = evaluationAnswers,
         note = note

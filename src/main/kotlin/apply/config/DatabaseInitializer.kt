@@ -344,25 +344,25 @@ class DatabaseInitializer(
             EvaluationTarget(
                 evaluationId = 1L,
                 administratorId = 1L,
-                userId = 1L,
+                memberId = 1L,
                 evaluationStatus = EvaluationStatus.PASS
             ),
             EvaluationTarget(
                 evaluationId = 1L,
                 administratorId = 1L,
-                userId = 2L,
+                memberId = 2L,
                 evaluationStatus = EvaluationStatus.PASS
             ),
             EvaluationTarget(
                 evaluationId = 2L,
                 administratorId = 1L,
-                userId = 1L,
+                memberId = 1L,
                 evaluationStatus = EvaluationStatus.WAITING
             ),
             EvaluationTarget(
                 evaluationId = 2L,
                 administratorId = 1L,
-                userId = 2L,
+                memberId = 2L,
                 evaluationStatus = EvaluationStatus.PASS,
                 evaluationAnswers = EvaluationAnswers(
                     listOf(
@@ -373,7 +373,7 @@ class DatabaseInitializer(
             ),
             EvaluationTarget(
                 evaluationId = 3L,
-                userId = 2L
+                memberId = 2L
             )
         )
         evaluationTargetRepository.saveAll(evaluationTargets)

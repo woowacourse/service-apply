@@ -63,12 +63,12 @@ class EvaluationTargetRepositoryTest(
         )
 
         expect("평가 대상자에서 특정 사용자를 삭제한다") {
-            evaluationTargetRepository.deleteByUserIdIn(setOf(1L, 2L))
+            evaluationTargetRepository.deleteByMemberIdIn(setOf(1L, 2L))
             evaluationTargetRepository.count().shouldBeZero()
         }
 
         expect("특정 평가의 평가 대상자에서 특정 사용자를 삭제한다") {
-            evaluationTargetRepository.deleteByEvaluationIdAndUserIdIn(1L, setOf(1L, 2L))
+            evaluationTargetRepository.deleteByEvaluationIdAndMemberIdIn(1L, setOf(1L, 2L))
             evaluationTargetRepository.count() shouldBe 1
         }
     }

@@ -42,7 +42,7 @@ class MyMissionService(
 
     private fun findMissions(userId: Long, recruitmentId: Long): List<Mission> {
         val evaluationIds = evaluationRepository.findAllByRecruitmentId(recruitmentId).map { it.id }
-        val targets = evaluationTargetRepository.findAllByUserIdAndEvaluationIdIn(userId, evaluationIds)
+        val targets = evaluationTargetRepository.findAllByMemberIdAndEvaluationIdIn(userId, evaluationIds)
         return missionRepository.findAllByEvaluationIdIn(targets.map { it.id }).filterNot { it.hidden }
     }
 
@@ -84,7 +84,7 @@ class MyMissionService(
         val evaluationTarget = evaluationTargetRepository.getOrThrow(evaluationTargetId)
         val mission = missionRepository.findByEvaluationId(evaluationTarget.evaluationId) ?: return null
         val judgmentItem = judgmentItemRepository.findByMissionId(mission.id) ?: return null
-        val assignment = assignmentRepository.findByMemberIdAndMissionId(evaluationTarget.userId, mission.id)
+        val assignment = assignmentRepository.findByMemberIdAndMissionId(evaluationTarget.memberId, mission.id)
             ?: return JudgmentData(evaluationItemId = judgmentItem.evaluationItemId)
         val judgment = judgmentRepository.findByAssignmentIdAndType(assignment.id, JudgmentType.REAL)
         return JudgmentData(
