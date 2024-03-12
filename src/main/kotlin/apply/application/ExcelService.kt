@@ -65,7 +65,7 @@ class ExcelService(
         )
         val assignments = assignmentRepository.findAllByMissionId(mission.id)
         val excelRows = targets.map {
-            val assignment = assignments.find { assignment -> assignment.memberId == it.userId }
+            val assignment = assignments.find { assignment -> assignment.memberId == it.memberId }
             ExcelRow(
                 it.name,
                 it.email,

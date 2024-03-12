@@ -52,7 +52,7 @@ class EvaluationTargetRestControllerTest : RestControllerTest() {
                 id = 1L,
                 name = "아마찌",
                 email = "wlgp2500@gmail.com",
-                userId = 1L,
+                memberId = 1L,
                 totalScore = 100,
                 evaluationStatus = PASS,
                 administratorId = 1L,
