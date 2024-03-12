@@ -53,7 +53,7 @@ class MailService(
     @Async
     @TransactionalEventListener
     fun sendFormSubmittedMail(event: ApplicationFormSubmittedEvent) {
-        val user = userRepository.getOrThrow(event.userId)
+        val user = userRepository.getOrThrow(event.memberId)
         val recruitment = recruitmentRepository.getOrThrow(event.recruitmentId)
         val context = Context().apply {
             setVariables(
