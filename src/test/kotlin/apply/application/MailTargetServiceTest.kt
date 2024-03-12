@@ -38,10 +38,10 @@ class MailTargetServiceTest : BehaviorSpec({
         )
 
         every { evaluationTargetRepository.findAllByEvaluationId(any()) } returns listOf(
-            createEvaluationTarget(evaluationId = evaluationId, userId = 1L, evaluationStatus = WAITING),
-            createEvaluationTarget(evaluationId = evaluationId, userId = 2L, evaluationStatus = PENDING),
-            createEvaluationTarget(evaluationId = evaluationId, userId = 3L, evaluationStatus = PASS),
-            createEvaluationTarget(evaluationId = evaluationId, userId = 4L, evaluationStatus = FAIL)
+            createEvaluationTarget(evaluationId = evaluationId, memberId = 1L, evaluationStatus = WAITING),
+            createEvaluationTarget(evaluationId = evaluationId, memberId = 2L, evaluationStatus = PENDING),
+            createEvaluationTarget(evaluationId = evaluationId, memberId = 3L, evaluationStatus = PASS),
+            createEvaluationTarget(evaluationId = evaluationId, memberId = 4L, evaluationStatus = FAIL)
         )
         every { userRepository.findAllById(any()) } returns users
 
@@ -60,7 +60,7 @@ class MailTargetServiceTest : BehaviorSpec({
         val user = createUser(id = 3L, email = "pass@email.com")
 
         every { evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(any(), any()) } returns listOf(
-            createEvaluationTarget(evaluationId = evaluationId, userId = user.id, evaluationStatus = PASS)
+            createEvaluationTarget(evaluationId = evaluationId, memberId = user.id, evaluationStatus = PASS)
         )
         every { userRepository.findAllById(any()) } returns listOf(user)
 
@@ -79,7 +79,7 @@ class MailTargetServiceTest : BehaviorSpec({
         val user = createUser(id = 2L, email = "fail@email.com")
 
         every { evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(any(), any()) } returns listOf(
-            createEvaluationTarget(evaluationId = evaluationId, userId = user.id, evaluationStatus = FAIL)
+            createEvaluationTarget(evaluationId = evaluationId, memberId = user.id, evaluationStatus = FAIL)
         )
         every { userRepository.findAllById(any()) } returns listOf(user)
 
@@ -98,7 +98,7 @@ class MailTargetServiceTest : BehaviorSpec({
         val user = createUser(id = 2L, email = "waiting@email.com")
 
         every { evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(any(), any()) } returns listOf(
-            createEvaluationTarget(evaluationId = evaluationId, userId = user.id, evaluationStatus = WAITING)
+            createEvaluationTarget(evaluationId = evaluationId, memberId = user.id, evaluationStatus = WAITING)
         )
         every { userRepository.findAllById(any()) } returns listOf(user)
 
@@ -118,13 +118,13 @@ class MailTargetServiceTest : BehaviorSpec({
         every { evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(any(), any()) } returns listOf(
             createEvaluationTarget(
                 evaluationId = evaluationId,
-                userId = 1L,
+                memberId = 1L,
                 evaluationStatus = FAIL,
                 evaluationAnswers = EvaluationAnswers(emptyList()),
             ),
             createEvaluationTarget(
                 evaluationId = evaluationId,
-                userId = 2L,
+                memberId = 2L,
                 evaluationStatus = FAIL,
                 evaluationAnswers = EvaluationAnswers(listOf(createEvaluationAnswer(score = 0)))
             )

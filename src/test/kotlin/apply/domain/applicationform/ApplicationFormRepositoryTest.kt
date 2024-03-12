@@ -17,8 +17,8 @@ class ApplicationFormRepositoryTest(
     context("지원서 조회") {
         applicationFormRepository.saveAll(
             listOf(
-                createApplicationForm(userId = 1L, recruitmentId = 1L),
-                createApplicationForm(userId = 1L, recruitmentId = 2L, submitted = true, submittedDateTime = now())
+                createApplicationForm(memberId = 1L, recruitmentId = 1L),
+                createApplicationForm(memberId = 1L, recruitmentId = 2L, submitted = true, submittedDateTime = now())
             )
         )
 

@@ -98,7 +98,7 @@ class ApplicationFormServiceTest : BehaviorSpec({
             createRecruitmentItem(recruitmentId = recruitmentId, id = recruitmentItemId)
         )
         every { applicationFormRepository.findByRecruitmentIdAndMemberId(any(), any()) } returns createApplicationForm(
-            userId = userId, recruitmentId = recruitmentId, submitted = false
+            memberId = userId, recruitmentId = recruitmentId, submitted = false
         )
 
         When("미제출 항목이 있는 상태에서 지원서를 최종 제출하면") {
@@ -133,7 +133,7 @@ class ApplicationFormServiceTest : BehaviorSpec({
             createRecruitmentItem(recruitmentId = recruitmentId, maximumLength = maximumLength, id = recruitmentItemId)
         )
         every { applicationFormRepository.findByRecruitmentIdAndMemberId(any(), any()) } returns createApplicationForm(
-            userId = userId, recruitmentId = recruitmentId, submitted = false
+            memberId = userId, recruitmentId = recruitmentId, submitted = false
         )
 
         When("최대 글자 수를 초과하여 항목을 작성하면") {

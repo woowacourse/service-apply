@@ -28,7 +28,7 @@ class ApplicantServiceTest : BehaviorSpec({
         val cheater = createCheater(email = user.email)
 
         every { applicationFormRepository.findByRecruitmentIdAndSubmittedTrue(any()) } returns listOf(
-            createApplicationForm(userId = user.id, recruitmentId = recruitmentId)
+            createApplicationForm(memberId = user.id, recruitmentId = recruitmentId)
         )
         every { cheaterRepository.findAll() } returns listOf(cheater)
         every { userRepository.findAllById(any()) } returns listOf(createUser(email = cheater.email, id = user.id))
@@ -51,8 +51,8 @@ class ApplicantServiceTest : BehaviorSpec({
         val cheater = createCheater(email = user1.email)
 
         every { applicationFormRepository.findByRecruitmentIdAndSubmittedTrue(any()) } returns listOf(
-            createApplicationForm(userId = user1.id, recruitmentId = recruitmentId),
-            createApplicationForm(userId = user2.id, recruitmentId = recruitmentId)
+            createApplicationForm(memberId = user1.id, recruitmentId = recruitmentId),
+            createApplicationForm(memberId = user2.id, recruitmentId = recruitmentId)
         )
         every { cheaterRepository.findAll() } returns listOf(cheater)
         every { userRepository.findAllByKeyword(keyword) } returns listOf(user1, user2)

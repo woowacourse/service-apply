@@ -16,7 +16,7 @@ class AssignmentRepositoryTest(
     extensions(SpringTestExtension(SpringTestLifecycleMode.Root))
 
     context("과제 제출물 조회") {
-        assignmentRepository.save(createAssignment(userId = 1L, missionId = 1L))
+        assignmentRepository.save(createAssignment(memberId = 1L, missionId = 1L))
 
         expect("지원자 및 과제에 해당하는 과제 제출물이 있는지 확인한다") {
             val actual = assignmentRepository.existsByMemberIdAndMissionId(1L, 1L)

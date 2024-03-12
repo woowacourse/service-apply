@@ -25,7 +25,7 @@ class AssignmentServiceTest : BehaviorSpec({
 
     Given("제출할 수 있는 과제에 대해 과제 제출물을 제출하지 않은 특정 평가 대상자가 있는 경우") {
         val mission = createMission(submittable = true)
-        val evaluationTarget = createEvaluationTarget(userId = 1L)
+        val evaluationTarget = createEvaluationTarget(memberId = 1L)
 
         every { assignmentRepository.existsByMemberIdAndMissionId(any(), any()) } returns false
         every { missionRepository.getOrThrow(any()) } returns mission
@@ -43,7 +43,7 @@ class AssignmentServiceTest : BehaviorSpec({
 
     Given("제출이 불가능한 과제에 대해 과제 제출물을 제출하지 않은 특정 평가 대상자가 있는 경우") {
         val mission = createMission(submittable = false)
-        val evaluationTarget = createEvaluationTarget(userId = 1L)
+        val evaluationTarget = createEvaluationTarget(memberId = 1L)
 
         every { assignmentRepository.existsByMemberIdAndMissionId(any(), any()) } returns false
         every { missionRepository.getOrThrow(any()) } returns mission

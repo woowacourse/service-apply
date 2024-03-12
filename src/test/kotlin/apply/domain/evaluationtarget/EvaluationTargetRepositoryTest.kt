@@ -22,8 +22,8 @@ class EvaluationTargetRepositoryTest(
         val evaluationId = 1L
         evaluationTargetRepository.saveAll(
             listOf(
-                createEvaluationTarget(evaluationId = evaluationId, userId = 1L),
-                createEvaluationTarget(evaluationId = evaluationId, userId = 2L)
+                createEvaluationTarget(evaluationId = evaluationId, memberId = 1L),
+                createEvaluationTarget(evaluationId = evaluationId, memberId = 2L)
             )
         )
 
@@ -37,9 +37,9 @@ class EvaluationTargetRepositoryTest(
         val evaluationId = 1L
         evaluationTargetRepository.saveAll(
             listOf(
-                createEvaluationTarget(evaluationId = evaluationId, userId = 1L, evaluationStatus = PASS),
-                createEvaluationTarget(evaluationId = evaluationId, userId = 2L, evaluationStatus = PASS),
-                createEvaluationTarget(evaluationId = evaluationId, userId = 3L, evaluationStatus = FAIL)
+                createEvaluationTarget(evaluationId = evaluationId, memberId = 1L, evaluationStatus = PASS),
+                createEvaluationTarget(evaluationId = evaluationId, memberId = 2L, evaluationStatus = PASS),
+                createEvaluationTarget(evaluationId = evaluationId, memberId = 3L, evaluationStatus = FAIL)
             )
         )
 
@@ -56,9 +56,9 @@ class EvaluationTargetRepositoryTest(
     context("평가 대상자 삭제") {
         evaluationTargetRepository.saveAll(
             listOf(
-                createEvaluationTarget(evaluationId = 1L, userId = 1L),
-                createEvaluationTarget(evaluationId = 1L, userId = 2L),
-                createEvaluationTarget(evaluationId = 2L, userId = 1L)
+                createEvaluationTarget(evaluationId = 1L, memberId = 1L),
+                createEvaluationTarget(evaluationId = 1L, memberId = 2L),
+                createEvaluationTarget(evaluationId = 2L, memberId = 1L)
             )
         )
 
