@@ -17,13 +17,13 @@ class ApplicationFormRepositoryTest(
     context("지원서 조회") {
         applicationFormRepository.saveAll(
             listOf(
-                createApplicationForm(userId = 1L, recruitmentId = 1L),
-                createApplicationForm(userId = 1L, recruitmentId = 2L, submitted = true, submittedDateTime = now())
+                createApplicationForm(memberId = 1L, recruitmentId = 1L),
+                createApplicationForm(memberId = 1L, recruitmentId = 2L, submitted = true, submittedDateTime = now())
             )
         )
 
         expect("지원자가 지원한 모집에 대한 지원서를 조회한다") {
-            val actual = applicationFormRepository.findByRecruitmentIdAndUserId(1L, 1L)
+            val actual = applicationFormRepository.findByRecruitmentIdAndMemberId(1L, 1L)
             actual.shouldNotBeNull()
         }
     }

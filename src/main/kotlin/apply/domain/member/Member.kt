@@ -1,4 +1,4 @@
-package apply.domain.user
+package apply.domain.member
 
 import support.domain.BaseRootEntity
 import java.time.LocalDate
@@ -8,15 +8,15 @@ import javax.persistence.Embedded
 import javax.persistence.Entity
 
 @Entity
-class User(
+class Member(
     @Embedded
-    var information: UserInformation,
+    var information: MemberInformation,
 
     @AttributeOverride(name = "value", column = Column(name = "password", nullable = false))
     @Embedded
     var password: Password,
     id: Long = 0L
-) : BaseRootEntity<User>(id) {
+) : BaseRootEntity<Member>(id) {
     val name: String
         get() = information.name
 
@@ -41,7 +41,7 @@ class User(
         password: Password,
         id: Long = 0L
     ) : this(
-        UserInformation(name, email, phoneNumber, gender, birthday), password, id
+        MemberInformation(name, email, phoneNumber, gender, birthday), password, id
     )
 
     fun authenticate(password: Password) {
@@ -66,7 +66,7 @@ class User(
     private fun identify(value: Boolean, lazyMessage: () -> Any = {}) {
         if (!value) {
             val message = lazyMessage()
-            throw UnidentifiedUserException(message.toString())
+            throw UnidentifiedMemberException(message.toString())
         }
     }
 }

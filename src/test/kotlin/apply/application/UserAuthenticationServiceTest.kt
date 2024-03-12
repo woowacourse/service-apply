@@ -12,10 +12,10 @@ import apply.createRegisterUserRequest
 import apply.createUser
 import apply.domain.authenticationcode.AuthenticationCodeRepository
 import apply.domain.authenticationcode.getLastByEmail
-import apply.domain.user.UnidentifiedUserException
-import apply.domain.user.UserRepository
-import apply.domain.user.existsByEmail
-import apply.domain.user.findByEmail
+import apply.domain.member.UnidentifiedMemberException
+import apply.domain.member.MemberRepository
+import apply.domain.member.existsByEmail
+import apply.domain.member.findByEmail
 import apply.security.JwtTokenProvider
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
@@ -28,7 +28,7 @@ import io.mockk.mockk
 import io.mockk.verify
 
 class UserAuthenticationServiceTest : BehaviorSpec({
-    val userRepository = mockk<UserRepository>()
+    val userRepository = mockk<MemberRepository>()
     val authenticationCodeRepository = mockk<AuthenticationCodeRepository>()
     val jwtTokenProvider = mockk<JwtTokenProvider>()
 
@@ -116,7 +116,7 @@ class UserAuthenticationServiceTest : BehaviorSpec({
 
         When("다른 비밀번호로 로그인하고 토큰을 생성하면") {
             Then("예외가 발생한다") {
-                shouldThrow<UnidentifiedUserException> {
+                shouldThrow<UnidentifiedMemberException> {
                     userAuthenticationService.generateTokenByLogin(
                         createAuthenticateUserRequest(user.email, WRONG_PASSWORD)
                     )
@@ -140,7 +140,7 @@ class UserAuthenticationServiceTest : BehaviorSpec({
 
         When("해당 이메일로 로그인하고 토큰을 생성하면") {
             Then("예외가 발생한다") {
-                shouldThrow<UnidentifiedUserException> {
+                shouldThrow<UnidentifiedMemberException> {
                     userAuthenticationService.generateTokenByLogin(createAuthenticateUserRequest())
                 }
             }

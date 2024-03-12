@@ -1,4 +1,4 @@
-export type User = {
+export type Member = {
   id: number;
   name: string;
   email: `${string}@${string}`;

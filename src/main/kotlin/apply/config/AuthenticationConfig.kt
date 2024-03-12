@@ -1,18 +1,18 @@
 package apply.config
 
 import apply.security.AccessorResolver
-import apply.security.LoginUserResolver
+import apply.security.LoginMemberResolver
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 @Configuration
 class AuthenticationConfig(
-    private val loginUserResolver: LoginUserResolver,
+    private val loginMemberResolver: LoginMemberResolver,
     private val accessorResolver: AccessorResolver
 ) : WebMvcConfigurer {
     override fun addArgumentResolvers(resolvers: MutableList<HandlerMethodArgumentResolver>) {
-        resolvers.add(loginUserResolver)
+        resolvers.add(loginMemberResolver)
         resolvers.add(accessorResolver)
     }
 }

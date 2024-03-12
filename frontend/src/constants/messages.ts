@@ -23,7 +23,7 @@ export const ERROR_MESSAGE = {
     LOGIN_FAILURE: "아이디(E-mail) 또는 비밀번호를 확인해 주세요.",
     EDIT_FAILURE: "변경에 실패했습니다. 잠시 후 다시 시도해 주세요.",
     TOKEN_EXPIRED: "로그인 정보가 만료되었습니다. 다시 로그인해 주세요.",
-    FETCHING_USER_INFO: "내 정보를 불러오는데 불러올 수 없습니다.",
+    FETCHING_MEMBER_INFO: "내 정보를 불러오는데 불러올 수 없습니다.",
     NOT_AUTHENTICATED: "이메일 인증을 완료해 주세요.",
     ALREADY_EXIST_EMAIL: "이미 가입된 이메일입니다.",
     INVALID_AUTHENTICATION_CODE: "인증 코드가 일치하지 않습니다.",
@@ -41,7 +41,7 @@ export const ERROR_MESSAGE = {
     CANNOT_FIND_FORM_CONTEXT: "FormContext가 존재하지 않습니다.",
     CANNOT_FIND_RECRUITMENT_CONTEXT: "recruitmentContext가 존재하지 않습니다",
     CANNOT_FIND_TOKEN_CONTEXT: "TokenContext가 존재하지 않습니다",
-    CANNOT_FIND_USER_INFO_CONTEXT: "UserInfoContext가 존재하지 않습니다",
+    CANNOT_FIND_MEMBER_INFO_CONTEXT: "MemberInfoContext가 존재하지 않습니다",
     CANNOT_FIND_MODAL_CONTEXT: "ModalContext가 존재하지 않습니다",
   },
 } as const;

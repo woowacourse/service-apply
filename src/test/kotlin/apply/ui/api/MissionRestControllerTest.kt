@@ -85,7 +85,7 @@ class MissionRestControllerTest : RestControllerTest() {
             )
         )
 
-        every { missionQueryService.findAllByUserIdAndRecruitmentId(any(), any()) } returns responses
+        every { missionQueryService.findAllByMemberIdAndRecruitmentId(any(), any()) } returns responses
 
         mockMvc.get("/api/recruitments/{recruitmentId}/missions/me", 1L) {
             bearer("valid_token")

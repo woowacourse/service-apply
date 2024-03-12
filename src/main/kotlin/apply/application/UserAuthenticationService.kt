@@ -3,10 +3,10 @@ package apply.application
 import apply.domain.authenticationcode.AuthenticationCode
 import apply.domain.authenticationcode.AuthenticationCodeRepository
 import apply.domain.authenticationcode.getLastByEmail
-import apply.domain.user.UnidentifiedUserException
-import apply.domain.user.UserRepository
-import apply.domain.user.existsByEmail
-import apply.domain.user.findByEmail
+import apply.domain.member.UnidentifiedMemberException
+import apply.domain.member.MemberRepository
+import apply.domain.member.existsByEmail
+import apply.domain.member.findByEmail
 import apply.security.JwtTokenProvider
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 @Service
 class UserAuthenticationService(
-    private val userRepository: UserRepository,
+    private val userRepository: MemberRepository,
     private val authenticationCodeRepository: AuthenticationCodeRepository,
     private val jwtTokenProvider: JwtTokenProvider
 ) {
@@ -28,7 +28,7 @@ class UserAuthenticationService(
 
     fun generateTokenByLogin(request: AuthenticateUserRequest): String {
         val user = userRepository.findByEmail(request.email)
-            ?: throw UnidentifiedUserException("사용자 정보가 일치하지 않습니다.")
+            ?: throw UnidentifiedMemberException("사용자 정보가 일치하지 않습니다.")
         user.authenticate(request.password)
         return jwtTokenProvider.createToken(user.email)
     }

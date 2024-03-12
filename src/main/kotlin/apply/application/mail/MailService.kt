@@ -6,9 +6,9 @@ import apply.domain.mail.MailHistory
 import apply.domain.mail.MailHistoryRepository
 import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitment.getOrThrow
-import apply.domain.user.PasswordResetEvent
-import apply.domain.user.UserRepository
-import apply.domain.user.getOrThrow
+import apply.domain.member.PasswordResetEvent
+import apply.domain.member.MemberRepository
+import apply.domain.member.getOrThrow
 import org.springframework.boot.autoconfigure.mail.MailProperties
 import org.springframework.core.io.ByteArrayResource
 import org.springframework.scheduling.annotation.Async
@@ -22,7 +22,7 @@ private const val MAIL_SENDING_UNIT: Int = 50
 
 @Service
 class MailService(
-    private val userRepository: UserRepository,
+    private val userRepository: MemberRepository,
     private val recruitmentRepository: RecruitmentRepository,
     private val mailHistoryRepository: MailHistoryRepository,
     private val applicationProperties: ApplicationProperties,
@@ -53,7 +53,7 @@ class MailService(
     @Async
     @TransactionalEventListener
     fun sendFormSubmittedMail(event: ApplicationFormSubmittedEvent) {
-        val user = userRepository.getOrThrow(event.userId)
+        val user = userRepository.getOrThrow(event.memberId)
         val recruitment = recruitmentRepository.getOrThrow(event.recruitmentId)
         val context = Context().apply {
             setVariables(

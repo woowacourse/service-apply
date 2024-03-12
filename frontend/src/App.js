@@ -21,7 +21,7 @@ import Recruits from "./pages/Recruits/Recruits";
 import SignUp from "./pages/SignUp/SignUp";
 import RecruitmentProvider from "./provider/RecruitmentProvider";
 import TokenProvider from "./provider/TokenProvider";
-import UserInfoProvider from "./provider/UserInfoProvider";
+import MemberInfoProvider from "./provider/MemberInfoProvider";
 import { ModalProvider } from "./hooks/useModalContext";
 
 const App = () => {
@@ -51,17 +51,17 @@ const App = () => {
                     <Route
                       path={PATH.MY_PAGE}
                       element={
-                        <UserInfoProvider>
+                        <MemberInfoProvider>
                           <MyPage />
-                        </UserInfoProvider>
+                        </MemberInfoProvider>
                       }
                     />
                     <Route
                       path={PATH.EDIT_MY_PAGE}
                       element={
-                        <UserInfoProvider>
+                        <MemberInfoProvider>
                           <MyPageEdit />
-                        </UserInfoProvider>
+                        </MemberInfoProvider>
                       }
                     />
                   </Route>

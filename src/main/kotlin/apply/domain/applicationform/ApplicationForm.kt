@@ -11,13 +11,13 @@ import javax.persistence.UniqueConstraint
 
 @Table(
     uniqueConstraints = [
-        UniqueConstraint(name = "uk_application_form", columnNames = ["recruitmentId", "userId"])
+        UniqueConstraint(name = "uk_application_form", columnNames = ["recruitmentId", "memberId"])
     ]
 )
 @Entity
 class ApplicationForm(
     @Column(nullable = false)
-    val userId: Long,
+    val memberId: Long,
 
     @Column(nullable = false)
     val recruitmentId: Long,
@@ -57,11 +57,11 @@ class ApplicationForm(
     }
 
     constructor(
-        userId: Long,
+        memberId: Long,
         recruitmentId: Long,
         applicationValidator: ApplicationValidator
-    ) : this(userId, recruitmentId) {
-        applicationValidator.validate(userId, recruitmentId)
+    ) : this(memberId, recruitmentId) {
+        applicationValidator.validate(memberId, recruitmentId)
     }
 
     fun update(referenceUrl: String, applicationFormAnswers: ApplicationFormAnswers) {
@@ -84,10 +84,10 @@ class ApplicationForm(
 
     fun submit(applicationValidator: ApplicationValidator) {
         checkSubmitted()
-        applicationValidator.validate(userId, recruitmentId)
+        applicationValidator.validate(memberId, recruitmentId)
         submitted = true
         submittedDateTime = LocalDateTime.now()
-        registerEvent(ApplicationFormSubmittedEvent(id, userId, recruitmentId))
+        registerEvent(ApplicationFormSubmittedEvent(id, memberId, recruitmentId))
     }
 
     private fun checkSubmitted() {

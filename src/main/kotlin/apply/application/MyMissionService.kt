@@ -25,11 +25,11 @@ class MyMissionService(
     private val assignmentRepository: AssignmentRepository,
     private val judgmentRepository: JudgmentRepository
 ) {
-    fun findAllByUserIdAndRecruitmentId(userId: Long, recruitmentId: Long): List<MyMissionResponse> {
-        val missions = findMissions(userId, recruitmentId)
+    fun findAllByMemberIdAndRecruitmentId(memberId: Long, recruitmentId: Long): List<MyMissionResponse> {
+        val missions = findMissions(memberId, recruitmentId)
         if (missions.isEmpty()) return emptyList()
 
-        val assignments = assignmentRepository.findAllByUserId(userId)
+        val assignments = assignmentRepository.findAllByMemberId(memberId)
         if (assignments.isEmpty()) return missions.map(::MyMissionResponse)
 
         val judgmentItems = judgmentItemRepository.findAllByMissionIdIn(missions.map { it.id })
@@ -40,9 +40,9 @@ class MyMissionService(
         return missions.mapBy(assignments, judgmentItems, judgments)
     }
 
-    private fun findMissions(userId: Long, recruitmentId: Long): List<Mission> {
+    private fun findMissions(memberId: Long, recruitmentId: Long): List<Mission> {
         val evaluationIds = evaluationRepository.findAllByRecruitmentId(recruitmentId).map { it.id }
-        val targets = evaluationTargetRepository.findAllByUserIdAndEvaluationIdIn(userId, evaluationIds)
+        val targets = evaluationTargetRepository.findAllByMemberIdAndEvaluationIdIn(memberId, evaluationIds)
         return missionRepository.findAllByEvaluationIdIn(targets.map { it.id }).filterNot { it.hidden }
     }
 
@@ -84,7 +84,7 @@ class MyMissionService(
         val evaluationTarget = evaluationTargetRepository.getOrThrow(evaluationTargetId)
         val mission = missionRepository.findByEvaluationId(evaluationTarget.evaluationId) ?: return null
         val judgmentItem = judgmentItemRepository.findByMissionId(mission.id) ?: return null
-        val assignment = assignmentRepository.findByUserIdAndMissionId(evaluationTarget.userId, mission.id)
+        val assignment = assignmentRepository.findByMemberIdAndMissionId(evaluationTarget.memberId, mission.id)
             ?: return JudgmentData(evaluationItemId = judgmentItem.evaluationItemId)
         val judgment = judgmentRepository.findByAssignmentIdAndType(assignment.id, JudgmentType.REAL)
         return JudgmentData(

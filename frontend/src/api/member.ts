@@ -2,20 +2,20 @@ import axios from "axios";
 import { headers } from "./api";
 import { formatDate } from "../utils/format/date";
 import { RequestWithToken } from "../../types/utility";
-import { User } from "../../types/domains/user";
+import { Member } from "../../types/domains/member";
 
-type FetchRegisterRequest = Omit<User, "id"> & {
+type FetchRegisterRequest = Omit<Member, "id"> & {
   confirmPassword: string;
   authenticationCode: string;
 };
 
 type FetchRegisterResponseData = string;
 
-type FetchLoginRequest = Pick<User, "email" | "password">;
+type FetchLoginRequest = Pick<Member, "email" | "password">;
 
 type FetchLoginResponseData = string;
 
-type FetchPasswordFindRequest = Pick<User, "name" | "email" | "password" | "birthday">;
+type FetchPasswordFindRequest = Pick<Member, "name" | "email" | "password" | "birthday">;
 
 type FetchPasswordFindResponseData = void;
 
@@ -27,13 +27,13 @@ type FetchPasswordEditRequest = RequestWithToken<{
 
 type FetchPasswordEditResponseData = void;
 
-type FetchUserInfoRequest = RequestWithToken;
+type FetchMemberInfoRequest = RequestWithToken;
 
-type FetchUserInfoResponseData = Omit<User, "password">;
+type FetchMemberInfoResponseData = Omit<Member, "password">;
 
-type FetchUserInfoEditRequest = RequestWithToken<{ phoneNumber: string }>;
+type FetchMemberInfoEditRequest = RequestWithToken<{ phoneNumber: string }>;
 
-type FetchUserInfoEditResponseData = void;
+type FetchMemberInfoEditResponseData = void;
 
 type FetchAuthenticationCodeRequest = string;
 
@@ -56,7 +56,7 @@ export const fetchRegister = ({
   confirmPassword,
   authenticationCode,
 }: FetchRegisterRequest) =>
-  axios.post<FetchRegisterResponseData>("/api/users/register", {
+  axios.post<FetchRegisterResponseData>("/api/members/register", {
     name,
     email,
     phoneNumber,
@@ -68,10 +68,10 @@ export const fetchRegister = ({
   });
 
 export const fetchLogin = ({ email, password }: FetchLoginRequest) =>
-  axios.post<FetchLoginResponseData>("/api/users/login", { email, password });
+  axios.post<FetchLoginResponseData>("/api/members/login", { email, password });
 
 export const fetchPasswordFind = ({ name, email, birthday }: FetchPasswordFindRequest) =>
-  axios.post<FetchPasswordFindResponseData>("/api/users/reset-password", {
+  axios.post<FetchPasswordFindResponseData>("/api/members/reset-password", {
     name,
     email,
     birthday: formatDate(birthday),
@@ -84,28 +84,30 @@ export const fetchPasswordEdit = ({
   confirmPassword,
 }: FetchPasswordEditRequest) =>
   axios.post<FetchPasswordEditResponseData>(
-    "/api/users/edit-password",
+    "/api/members/edit-password",
     { oldPassword, password, confirmPassword },
     headers({ token })
   );
 
-export const fetchUserInfo = ({ token }: FetchUserInfoRequest) =>
-  axios.get<FetchUserInfoResponseData>("/api/users/me", headers({ token }));
+export const fetchMemberInfo = ({ token }: FetchMemberInfoRequest) =>
+  axios.get<FetchMemberInfoResponseData>("/api/members/me", headers({ token }));
 
-export const fetchUserInfoEdit = ({ token, phoneNumber }: FetchUserInfoEditRequest) =>
-  axios.patch<FetchUserInfoEditResponseData>(
-    "/api/users/information",
+export const fetchMemberInfoEdit = ({ token, phoneNumber }: FetchMemberInfoEditRequest) =>
+  axios.patch<FetchMemberInfoEditResponseData>(
+    "/api/members/information",
     { phoneNumber },
     headers({ token })
   );
 
 export const fetchAuthenticationCode = (email: FetchAuthenticationCodeRequest) =>
-  axios.post<FetchAuthenticationCodeResponseData>(`/api/users/authentication-code?email=${email}`);
+  axios.post<FetchAuthenticationCodeResponseData>(
+    `/api/members/authentication-code?email=${email}`
+  );
 
 export const fetchVerifyAuthenticationCode = ({
   email,
   authenticationCode,
 }: FetchVerifyAuthenticationCodeRequest) =>
   axios.post<FetchVerifyAuthenticationCodeResponseData>(
-    `/api/users/authenticate-email?email=${email}&authenticationCode=${authenticationCode}`
+    `/api/members/authenticate-email?email=${email}&authenticationCode=${authenticationCode}`
   );

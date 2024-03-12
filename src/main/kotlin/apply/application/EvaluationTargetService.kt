@@ -12,8 +12,8 @@ import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.evaluationtarget.getOrThrow
-import apply.domain.user.UserRepository
-import apply.domain.user.findAllByEmailIn
+import apply.domain.member.MemberRepository
+import apply.domain.member.findAllByEmailIn
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -24,7 +24,7 @@ class EvaluationTargetService(
     private val evaluationTargetRepository: EvaluationTargetRepository,
     private val evaluationItemRepository: EvaluationItemRepository,
     private val applicationFormRepository: ApplicationFormRepository,
-    private val userRepository: UserRepository,
+    private val userRepository: MemberRepository,
     private val cheaterRepository: CheaterRepository
 ) {
     fun findAllByEvaluationId(evaluationId: Long): List<EvaluationTarget> =
@@ -38,9 +38,9 @@ class EvaluationTargetService(
         val users = userRepository.findAllByKeyword(keyword)
 
         return evaluationTargets
-            .filter { users.any { user -> user.id == it.userId } }
+            .filter { users.any { user -> user.id == it.memberId } }
             .map {
-                val user = users.first { each -> each.id == it.userId }
+                val user = users.first { each -> each.id == it.memberId }
                 EvaluationTargetResponse(
                     it.id,
                     user.name,
@@ -65,7 +65,7 @@ class EvaluationTargetService(
         val cheaters = findCheatersIn(latestApplicants)
 
         val removedApplicants = loadedApplicants - latestApplicants
-        evaluationTargetRepository.deleteByEvaluationIdAndUserIdIn(evaluationId, removedApplicants)
+        evaluationTargetRepository.deleteByEvaluationIdAndMemberIdIn(evaluationId, removedApplicants)
 
         val loadedCheaters = loadedApplicants intersect cheaters
         updateFail(loadedCheaters, evaluation)
@@ -88,19 +88,19 @@ class EvaluationTargetService(
     private fun findPassedUserIdsFromBeforeEvaluation(evaluation: Evaluation): Set<Long> {
         return evaluationTargetRepository.findAllByEvaluationId(evaluation.beforeEvaluationId)
             .filter { it.isPassed }
-            .map { it.userId }
+            .map { it.memberId }
             .toSet()
     }
 
     private fun findLoadedApplicants(evaluationId: Long): Set<Long> {
         return evaluationTargetRepository.findAllByEvaluationId(evaluationId)
-            .map { it.userId }
+            .map { it.memberId }
             .toSet()
     }
 
     private fun findUserIdsFromRecruitment(evaluation: Evaluation): Set<Long> {
         return applicationFormRepository.findByRecruitmentIdAndSubmittedTrue(evaluation.recruitmentId)
-            .map { it.userId }
+            .map { it.memberId }
             .toSet()
     }
 
@@ -113,12 +113,12 @@ class EvaluationTargetService(
 
     private fun save(userIds: Set<Long>, evaluation: Evaluation, evaluationStatus: EvaluationStatus) {
         val evaluationTargets = userRepository.findAllById(userIds)
-            .map { EvaluationTarget(evaluation.id, userId = it.id, evaluationStatus = evaluationStatus) }
+            .map { EvaluationTarget(evaluation.id, memberId = it.id, evaluationStatus = evaluationStatus) }
         evaluationTargetRepository.saveAll(evaluationTargets)
     }
 
     private fun updateFail(userIds: Set<Long>, evaluation: Evaluation) {
-        evaluationTargetRepository.findAllByEvaluationIdAndUserIdIn(evaluation.id, userIds).forEach {
+        evaluationTargetRepository.findAllByEvaluationIdAndMemberIdIn(evaluation.id, userIds).forEach {
             it.evaluationStatus = EvaluationStatus.FAIL
         }
     }

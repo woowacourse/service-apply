@@ -3,8 +3,8 @@ package apply.ui.api
 import apply.application.AdministratorData
 import apply.application.AdministratorResponse
 import apply.application.AdministratorService
-import apply.domain.user.User
-import apply.security.LoginUser
+import apply.domain.member.Member
+import apply.security.LoginMember
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -24,7 +24,7 @@ class AdministratorRestController(
     @PostMapping
     fun save(
         @RequestBody @Valid request: AdministratorData,
-        @LoginUser(administrator = true) user: User
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<ApiResponse<AdministratorResponse>> {
         val response = administratorService.save(request)
         return ResponseEntity.created("/api/administrators/${response.id}".toUri())
@@ -33,7 +33,7 @@ class AdministratorRestController(
 
     @GetMapping
     fun findAll(
-        @LoginUser(administrator = true) user: User
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<ApiResponse<List<AdministratorResponse>>> {
         val response = administratorService.findAll()
         return ResponseEntity.ok(ApiResponse.success(response))
@@ -42,7 +42,7 @@ class AdministratorRestController(
     @GetMapping("/{administratorId}")
     fun findById(
         @PathVariable administratorId: Long,
-        @LoginUser(administrator = true) user: User
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<ApiResponse<AdministratorResponse>> {
         val response = administratorService.findById(administratorId)
         return ResponseEntity.ok(ApiResponse.success(response))
@@ -51,7 +51,7 @@ class AdministratorRestController(
     @DeleteMapping("/{administratorId}")
     fun deleteById(
         @PathVariable administratorId: Long,
-        @LoginUser(administrator = true) user: User
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<Unit> {
         administratorService.deleteById(administratorId)
         return ResponseEntity.noContent().build()

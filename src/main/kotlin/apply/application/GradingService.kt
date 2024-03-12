@@ -3,7 +3,7 @@ package apply.application
 import apply.domain.assignment.AssignmentRepository
 import apply.domain.assignment.getOrThrow
 import apply.domain.evaluationtarget.EvaluationTargetRepository
-import apply.domain.evaluationtarget.getByEvaluationIdAndUserId
+import apply.domain.evaluationtarget.getByEvaluationIdAndMemberId
 import apply.domain.judgment.JudgmentStartedEvent
 import apply.domain.judgment.JudgmentSucceededEvent
 import apply.domain.judgment.JudgmentTouchedEvent
@@ -46,7 +46,7 @@ class GradingService(
         val assignment = assignmentRepository.getOrThrow(assignmentId)
         val mission = missionRepository.getOrThrow(assignment.missionId)
         val judgmentItem = judgmentItemRepository.getByMissionId(mission.id)
-        val target = evaluationTargetRepository.getByEvaluationIdAndUserId(mission.evaluationId, assignment.userId)
+        val target = evaluationTargetRepository.getByEvaluationIdAndMemberId(mission.evaluationId, assignment.memberId)
         target.updateScore(judgmentItem.evaluationItemId, score)
     }
 }

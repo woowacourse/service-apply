@@ -4,8 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface ApplicationFormRepository : JpaRepository<ApplicationForm, Long> {
     fun findByRecruitmentIdAndSubmittedTrue(recruitmentId: Long): List<ApplicationForm>
-    fun findByRecruitmentIdAndUserId(recruitmentId: Long, userId: Long): ApplicationForm?
-    fun findAllByUserId(userId: Long): List<ApplicationForm>
-    fun findAllByUserIdAndSubmittedTrue(userId: Long): List<ApplicationForm>
-    fun existsByRecruitmentIdAndUserId(recruitmentId: Long, userId: Long): Boolean
+    fun findByRecruitmentIdAndMemberId(recruitmentId: Long, memberId: Long): ApplicationForm?
+    fun findAllByMemberId(memberId: Long): List<ApplicationForm>
+    fun findAllByMemberIdAndSubmittedTrue(memberId: Long): List<ApplicationForm>
+    fun existsByRecruitmentIdAndMemberId(recruitmentId: Long, memberId: Long): Boolean
 }

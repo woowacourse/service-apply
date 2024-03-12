@@ -3,8 +3,8 @@ package apply.application
 import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
-import apply.domain.user.UserRepository
-import apply.domain.user.findAllByEmailIn
+import apply.domain.member.MemberRepository
+import apply.domain.member.findAllByEmailIn
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -12,10 +12,10 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class MailTargetService(
     private val evaluationTargetRepository: EvaluationTargetRepository,
-    private val userRepository: UserRepository
+    private val userRepository: MemberRepository
 ) {
     fun findMailTargets(evaluationId: Long, evaluationStatus: EvaluationStatus? = null): List<MailTargetResponse> {
-        val userIds = findEvaluationTargets(evaluationId, evaluationStatus).map { it.userId }
+        val userIds = findEvaluationTargets(evaluationId, evaluationStatus).map { it.memberId }
         return userRepository.findAllById(userIds)
             .map { MailTargetResponse(it.email, it.name) }
     }

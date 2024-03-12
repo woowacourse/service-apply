@@ -9,8 +9,8 @@ import apply.application.UserAuthenticationService
 import apply.application.UserResponse
 import apply.application.UserService
 import apply.application.mail.MailService
-import apply.domain.user.User
-import apply.security.LoginUser
+import apply.domain.member.Member
+import apply.security.LoginMember
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
@@ -49,9 +49,9 @@ class UserRestController(
     @PostMapping("/edit-password")
     fun editPassword(
         @RequestBody @Valid request: EditPasswordRequest,
-        @LoginUser user: User
+        @LoginMember member: Member
     ): ResponseEntity<Unit> {
-        userService.editPassword(user.id, request)
+        userService.editPassword(member.id, request)
         return ResponseEntity.noContent().build()
     }
 
@@ -77,7 +77,7 @@ class UserRestController(
     @GetMapping
     fun findAllByKeyword(
         @RequestParam keyword: String,
-        @LoginUser(administrator = true) user: User
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<ApiResponse<List<UserResponse>>> {
         val responses = userService.findAllByKeyword(keyword)
         return ResponseEntity.ok(ApiResponse.success(responses))
@@ -85,18 +85,18 @@ class UserRestController(
 
     @GetMapping("/me")
     fun getMyInformation(
-        @LoginUser user: User
+        @LoginMember member: Member
     ): ResponseEntity<ApiResponse<UserResponse>> {
-        val response = userService.getInformation(user.id)
+        val response = userService.getInformation(member.id)
         return ResponseEntity.ok(ApiResponse.success(response))
     }
 
     @PatchMapping("/information")
     fun editInformation(
         @RequestBody @Valid request: EditInformationRequest,
-        @LoginUser user: User
+        @LoginMember member: Member
     ): ResponseEntity<Unit> {
-        userService.editInformation(user.id, request)
+        userService.editInformation(member.id, request)
         return ResponseEntity.noContent().build()
     }
 }

@@ -10,14 +10,14 @@ const val PULL_REQUEST_URL: String = "https://github.com/woowacourse/service-app
 private const val NOTE = "과제 소감입니다."
 
 fun createAssignment(
-    userId: Long = 1L,
+    memberId: Long = 1L,
     missionId: Long = 1L,
     githubUsername: String = GITHUB_USERNAME,
     pullRequestUrl: String = PULL_REQUEST_URL,
     note: String = NOTE,
     id: Long = 0L
 ): Assignment {
-    return Assignment(userId, missionId, githubUsername, pullRequestUrl, note, id)
+    return Assignment(memberId, missionId, githubUsername, pullRequestUrl, note, id)
 }
 
 fun createAssignmentRequest(

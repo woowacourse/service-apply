@@ -1,19 +1,19 @@
 package apply.application
 
-import apply.domain.user.User
-import apply.domain.user.UserRepository
-import apply.domain.user.findByEmail
-import apply.domain.user.getOrThrow
+import apply.domain.member.Member
+import apply.domain.member.MemberRepository
+import apply.domain.member.findByEmail
+import apply.domain.member.getOrThrow
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Transactional
 @Service
 class UserService(
-    private val userRepository: UserRepository,
+    private val userRepository: MemberRepository,
     private val passwordGenerator: PasswordGenerator
 ) {
-    fun getByEmail(email: String): User {
+    fun getByEmail(email: String): Member {
         return userRepository.findByEmail(email) ?: throw IllegalArgumentException("회원이 존재하지 않습니다. email: $email")
     }
 

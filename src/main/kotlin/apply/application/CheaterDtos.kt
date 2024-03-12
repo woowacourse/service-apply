@@ -1,7 +1,7 @@
 package apply.application
 
 import apply.domain.cheater.Cheater
-import apply.domain.user.User
+import apply.domain.member.Member
 import java.time.LocalDateTime
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotNull
@@ -21,11 +21,11 @@ data class CheaterResponse(
     val email: String,
     val name: String?
 ) {
-    constructor(cheater: Cheater, user: User?) : this(
+    constructor(cheater: Cheater, member: Member?) : this(
         cheater.id,
         cheater.createdDateTime,
         cheater.description,
         cheater.email,
-        user?.name
+        member?.name
     )
 }

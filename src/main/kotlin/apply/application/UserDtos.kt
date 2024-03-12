@@ -1,9 +1,9 @@
 package apply.application
 
 import apply.domain.applicationform.ApplicationForm
-import apply.domain.user.Gender
-import apply.domain.user.Password
-import apply.domain.user.User
+import apply.domain.member.Gender
+import apply.domain.member.Password
+import apply.domain.member.Member
 import java.time.LocalDate
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
@@ -18,13 +18,13 @@ data class UserResponse(
     val gender: Gender,
     val birthday: LocalDate
 ) {
-    constructor(user: User) : this(
-        user.id,
-        user.name,
-        user.email,
-        user.phoneNumber,
-        user.gender,
-        user.birthday
+    constructor(member: Member) : this(
+        member.id,
+        member.name,
+        member.email,
+        member.phoneNumber,
+        member.gender,
+        member.birthday
     )
 }
 
@@ -38,13 +38,13 @@ data class ApplicantAndFormResponse(
     val isCheater: Boolean,
     val applicationForm: ApplicationForm
 ) {
-    constructor(user: User, isCheater: Boolean, applicationForm: ApplicationForm) : this(
-        user.id,
-        user.name,
-        user.email,
-        user.phoneNumber,
-        user.gender,
-        user.birthday,
+    constructor(member: Member, isCheater: Boolean, applicationForm: ApplicationForm) : this(
+        member.id,
+        member.name,
+        member.email,
+        member.phoneNumber,
+        member.gender,
+        member.birthday,
         isCheater,
         applicationForm
     )
@@ -69,8 +69,8 @@ data class RegisterUserRequest(
     @field:NotBlank
     val authenticationCode: String
 ) {
-    fun toEntity(): User {
-        return User(name, email, phoneNumber, gender, birthday, password)
+    fun toEntity(): Member {
+        return Member(name, email, phoneNumber, gender, birthday, password)
     }
 }
 

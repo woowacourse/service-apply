@@ -1,4 +1,4 @@
-package apply.domain.user
+package apply.domain.member
 
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldNotBe

@@ -1,5 +1,5 @@
 package apply.domain.applicationform
 
 fun interface ApplicationValidator {
-    fun validate(userId: Long, recruitmentId: Long)
+    fun validate(memberId: Long, recruitmentId: Long)
 }

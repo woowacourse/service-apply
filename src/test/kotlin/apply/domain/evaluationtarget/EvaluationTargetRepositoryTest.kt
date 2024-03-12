@@ -22,8 +22,8 @@ class EvaluationTargetRepositoryTest(
         val evaluationId = 1L
         evaluationTargetRepository.saveAll(
             listOf(
-                createEvaluationTarget(evaluationId = evaluationId, userId = 1L),
-                createEvaluationTarget(evaluationId = evaluationId, userId = 2L)
+                createEvaluationTarget(evaluationId = evaluationId, memberId = 1L),
+                createEvaluationTarget(evaluationId = evaluationId, memberId = 2L)
             )
         )
 
@@ -37,9 +37,9 @@ class EvaluationTargetRepositoryTest(
         val evaluationId = 1L
         evaluationTargetRepository.saveAll(
             listOf(
-                createEvaluationTarget(evaluationId = evaluationId, userId = 1L, evaluationStatus = PASS),
-                createEvaluationTarget(evaluationId = evaluationId, userId = 2L, evaluationStatus = PASS),
-                createEvaluationTarget(evaluationId = evaluationId, userId = 3L, evaluationStatus = FAIL)
+                createEvaluationTarget(evaluationId = evaluationId, memberId = 1L, evaluationStatus = PASS),
+                createEvaluationTarget(evaluationId = evaluationId, memberId = 2L, evaluationStatus = PASS),
+                createEvaluationTarget(evaluationId = evaluationId, memberId = 3L, evaluationStatus = FAIL)
             )
         )
 
@@ -56,19 +56,19 @@ class EvaluationTargetRepositoryTest(
     context("평가 대상자 삭제") {
         evaluationTargetRepository.saveAll(
             listOf(
-                createEvaluationTarget(evaluationId = 1L, userId = 1L),
-                createEvaluationTarget(evaluationId = 1L, userId = 2L),
-                createEvaluationTarget(evaluationId = 2L, userId = 1L)
+                createEvaluationTarget(evaluationId = 1L, memberId = 1L),
+                createEvaluationTarget(evaluationId = 1L, memberId = 2L),
+                createEvaluationTarget(evaluationId = 2L, memberId = 1L)
             )
         )
 
         expect("평가 대상자에서 특정 사용자를 삭제한다") {
-            evaluationTargetRepository.deleteByUserIdIn(setOf(1L, 2L))
+            evaluationTargetRepository.deleteByMemberIdIn(setOf(1L, 2L))
             evaluationTargetRepository.count().shouldBeZero()
         }
 
         expect("특정 평가의 평가 대상자에서 특정 사용자를 삭제한다") {
-            evaluationTargetRepository.deleteByEvaluationIdAndUserIdIn(1L, setOf(1L, 2L))
+            evaluationTargetRepository.deleteByEvaluationIdAndMemberIdIn(1L, setOf(1L, 2L))
             evaluationTargetRepository.count() shouldBe 1
         }
     }

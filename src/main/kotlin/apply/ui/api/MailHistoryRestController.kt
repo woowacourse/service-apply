@@ -2,8 +2,8 @@ package apply.ui.api
 
 import apply.application.MailHistoryService
 import apply.application.mail.MailData
-import apply.domain.user.User
-import apply.security.LoginUser
+import apply.domain.member.Member
+import apply.security.LoginMember
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -18,14 +18,14 @@ class MailHistoryRestController(
     @GetMapping("/{mailHistoryId}")
     fun getById(
         @PathVariable mailHistoryId: Long,
-        @LoginUser(administrator = true) user: User
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<ApiResponse<MailData>> {
         return ResponseEntity.ok(ApiResponse.success(mailHistoryService.getById(mailHistoryId)))
     }
 
     @GetMapping
     fun findAll(
-        @LoginUser(administrator = true) user: User
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<ApiResponse<List<MailData>>> {
         return ResponseEntity.ok(ApiResponse.success(mailHistoryService.findAll()))
     }
