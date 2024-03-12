@@ -51,7 +51,7 @@ class AssignmentRestController(
         @PathVariable missionId: Long,
         @LoginMember member: Member
     ): ResponseEntity<ApiResponse<AssignmentResponse>> {
-        val assignment = assignmentService.getByUserIdAndMissionId(member.id, missionId)
+        val assignment = assignmentService.getByMemberIdAndMissionId(member.id, missionId)
         return ResponseEntity.ok(ApiResponse.success(assignment))
     }
 
