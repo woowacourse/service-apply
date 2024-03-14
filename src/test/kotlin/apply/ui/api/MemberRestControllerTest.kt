@@ -29,7 +29,7 @@ private const val INVALID_PASSWORD = "invalid_password"
 private const val WRONG_PASSWORD = "wrong_password"
 private const val NEW_PASSWORD = "new_password"
 
-private fun createRegisterUserRequest(
+private fun createRegisterMemberRequest(
     name: String = "회원",
     email: String = "test@email.com",
     phoneNumber: String = "010-0000-0000",
@@ -51,7 +51,7 @@ private fun createRegisterUserRequest(
     )
 }
 
-private fun createAuthenticateUserRequest(
+private fun createAuthenticateMemberRequest(
     email: String = "test@email.com",
     password: String = PASSWORD
 ): Map<String, Any> {
@@ -91,7 +91,7 @@ class MemberRestControllerTest : RestControllerTest() {
         every { mailService.sendAuthenticationCodeMail(any(), any()) } just Runs
 
         mockMvc.post("/api/users/register") {
-            jsonContent(createRegisterUserRequest())
+            jsonContent(createRegisterMemberRequest())
         }.andExpect {
             status { isOk() }
             content { success(response) }
@@ -106,7 +106,7 @@ class MemberRestControllerTest : RestControllerTest() {
         every { memberAuthenticationService.generateTokenByLogin(any()) } returns response
 
         mockMvc.post("/api/users/login") {
-            jsonContent(createAuthenticateUserRequest())
+            jsonContent(createAuthenticateMemberRequest())
         }.andExpect {
             status { isOk() }
             content { success(response) }
@@ -120,7 +120,7 @@ class MemberRestControllerTest : RestControllerTest() {
         every { memberAuthenticationService.generateTokenByLogin(any()) } throws UnidentifiedMemberException("사용자 정보가 일치하지 않습니다.")
 
         mockMvc.post("/api/users/login") {
-            jsonContent(createAuthenticateUserRequest(password = INVALID_PASSWORD))
+            jsonContent(createAuthenticateMemberRequest(password = INVALID_PASSWORD))
         }.andExpect {
             status { isForbidden() }
         }.andDo {

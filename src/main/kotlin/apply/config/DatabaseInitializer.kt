@@ -81,7 +81,7 @@ class DatabaseInitializer(
         populateRecruitmentItems()
         populateEvaluations()
         populateEvaluationItems()
-        populateUsers()
+        populateMembers()
         populateApplicationForms()
         populateEvaluationTargets()
         populateMissions()
@@ -235,8 +235,8 @@ class DatabaseInitializer(
         evaluationItemRepository.saveAll(evaluationItems)
     }
 
-    private fun populateUsers() {
-        val users = listOf(
+    private fun populateMembers() {
+        val members = listOf(
             Member(
                 name = "홍길동",
                 email = "a@email.com",
@@ -270,7 +270,7 @@ class DatabaseInitializer(
                 password = Password("password")
             )
         )
-        memberRepository.saveAll(users)
+        memberRepository.saveAll(members)
     }
 
     private fun populateApplicationForms() {

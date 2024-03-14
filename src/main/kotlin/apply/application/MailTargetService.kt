@@ -15,15 +15,15 @@ class MailTargetService(
     private val memberRepository: MemberRepository
 ) {
     fun findMailTargets(evaluationId: Long, evaluationStatus: EvaluationStatus? = null): List<MailTargetResponse> {
-        val userIds = findEvaluationTargets(evaluationId, evaluationStatus).map { it.memberId }
-        return memberRepository.findAllById(userIds)
+        val memberIds = findEvaluationTargets(evaluationId, evaluationStatus).map { it.memberId }
+        return memberRepository.findAllById(memberIds)
             .map { MailTargetResponse(it.email, it.name) }
     }
 
     fun findAllByEmails(emails: List<String>): List<MailTargetResponse> {
-        val users = memberRepository.findAllByEmailIn(emails)
-        val anonymousEmails = emails - users.map { it.email }
-        return users.map { MailTargetResponse(it) } + anonymousEmails.map { MailTargetResponse(it) }
+        val members = memberRepository.findAllByEmailIn(emails)
+        val anonymousEmails = emails - members.map { it.email }
+        return members.map { MailTargetResponse(it) } + anonymousEmails.map { MailTargetResponse(it) }
     }
 
     private fun findEvaluationTargets(evaluationId: Long, evaluationStatus: EvaluationStatus?): List<EvaluationTarget> {
