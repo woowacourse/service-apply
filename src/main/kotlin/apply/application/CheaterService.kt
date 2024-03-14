@@ -21,20 +21,20 @@ class CheaterService(
             "이미 등록된 부정행위자입니다."
         }
         val cheater = cheaterRepository.save(Cheater(email, request.description))
-        val user = memberRepository.findByEmail(email)
-        return CheaterResponse(cheater, user)
+        val member = memberRepository.findByEmail(email)
+        return CheaterResponse(cheater, member)
     }
 
     fun getById(id: Long): CheaterResponse {
         val cheater = cheaterRepository.getOrThrow(id)
-        val user = memberRepository.findByEmail(cheater.email)
-        return CheaterResponse(cheater, user)
+        val member = memberRepository.findByEmail(cheater.email)
+        return CheaterResponse(cheater, member)
     }
 
     fun findAll(): List<CheaterResponse> {
         val cheaters = cheaterRepository.findAll()
-        val usersByEmail = memberRepository.findAllByEmailIn(cheaters.map { it.email }).associateBy { it.email }
-        return cheaters.map { CheaterResponse(it, usersByEmail[it.email]) }
+        val membersByEmail = memberRepository.findAllByEmailIn(cheaters.map { it.email }).associateBy { it.email }
+        return cheaters.map { CheaterResponse(it, membersByEmail[it.email]) }
     }
 
     fun deleteById(id: Long) {

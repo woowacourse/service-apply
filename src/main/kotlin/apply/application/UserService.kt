@@ -22,9 +22,9 @@ class UserService(
     }
 
     fun resetPassword(request: ResetPasswordRequest) {
-        val user = getByEmail(request.email)
-        user.resetPassword(request.name, request.birthday, passwordGenerator.generate())
-        memberRepository.save(user)
+        val member = getByEmail(request.email)
+        member.resetPassword(request.name, request.birthday, passwordGenerator.generate())
+        memberRepository.save(member)
     }
 
     fun editPassword(id: Long, request: EditPasswordRequest) {
@@ -33,8 +33,8 @@ class UserService(
     }
 
     fun getInformation(id: Long): UserResponse {
-        val user = memberRepository.getOrThrow(id)
-        return UserResponse(user)
+        val member = memberRepository.getOrThrow(id)
+        return UserResponse(member)
     }
 
     fun editInformation(id: Long, request: EditInformationRequest) {

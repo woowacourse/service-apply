@@ -22,15 +22,15 @@ class UserAuthenticationService(
         require(request.password == request.confirmPassword) { "비밀번호가 일치하지 않습니다." }
         check(!memberRepository.existsByEmail(request.email)) { "이미 가입된 이메일입니다." }
         authenticationCodeRepository.getLastByEmail(request.email).validate(request.authenticationCode)
-        val user = memberRepository.save(request.toEntity())
-        return jwtTokenProvider.createToken(user.email)
+        val member = memberRepository.save(request.toEntity())
+        return jwtTokenProvider.createToken(member.email)
     }
 
     fun generateTokenByLogin(request: AuthenticateUserRequest): String {
-        val user = memberRepository.findByEmail(request.email)
+        val member = memberRepository.findByEmail(request.email)
             ?: throw UnidentifiedMemberException("사용자 정보가 일치하지 않습니다.")
-        user.authenticate(request.password)
-        return jwtTokenProvider.createToken(user.email)
+        member.authenticate(request.password)
+        return jwtTokenProvider.createToken(member.email)
     }
 
     fun generateAuthenticationCode(email: String): String {

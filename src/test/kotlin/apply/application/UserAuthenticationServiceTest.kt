@@ -110,15 +110,15 @@ class UserAuthenticationServiceTest : BehaviorSpec({
     }
 
     Given("특정 비밀번호를 가진 회원이 있을 경우") {
-        val user = createMember(password = PASSWORD)
+        val member = createMember(password = PASSWORD)
 
-        every { memberRepository.findByEmail(any()) } returns user
+        every { memberRepository.findByEmail(any()) } returns member
 
         When("다른 비밀번호로 로그인하고 토큰을 생성하면") {
             Then("예외가 발생한다") {
                 shouldThrow<UnidentifiedMemberException> {
                     userAuthenticationService.generateTokenByLogin(
-                        createAuthenticateUserRequest(user.email, WRONG_PASSWORD)
+                        createAuthenticateUserRequest(member.email, WRONG_PASSWORD)
                     )
                 }
             }
@@ -126,7 +126,7 @@ class UserAuthenticationServiceTest : BehaviorSpec({
 
         When("동일한 비밀번호로 로그인하고 토큰을 생성하면") {
             val actual = userAuthenticationService.generateTokenByLogin(
-                createAuthenticateUserRequest(user.email, user.password)
+                createAuthenticateUserRequest(member.email, member.password)
             )
 
             Then("유효한 토큰을 반환한다") {

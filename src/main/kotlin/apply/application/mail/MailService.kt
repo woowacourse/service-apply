@@ -53,20 +53,20 @@ class MailService(
     @Async
     @TransactionalEventListener
     fun sendFormSubmittedMail(event: ApplicationFormSubmittedEvent) {
-        val user = memberRepository.getOrThrow(event.memberId)
+        val member = memberRepository.getOrThrow(event.memberId)
         val recruitment = recruitmentRepository.getOrThrow(event.recruitmentId)
         val context = Context().apply {
             setVariables(
                 mapOf(
-                    "name" to user.name,
+                    "name" to member.name,
                     "recruit" to recruitment.title,
                     "url" to applicationProperties.url
                 )
             )
         }
         mailSender.send(
-            user.email,
-            "${user.name}님, 지원이 완료되었습니다.",
+            member.email,
+            "${member.name}님, 지원이 완료되었습니다.",
             templateEngine.process("mail/submission-complete", context)
         )
     }

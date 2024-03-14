@@ -35,17 +35,17 @@ class EvaluationTargetService(
         keyword: String = ""
     ): List<EvaluationTargetResponse> {
         val evaluationTargets = findAllByEvaluationId(evaluationId)
-        val users = memberRepository.findAllByKeyword(keyword)
+        val members = memberRepository.findAllByKeyword(keyword)
 
         return evaluationTargets
-            .filter { users.any { user -> user.id == it.memberId } }
+            .filter { members.any { member -> member.id == it.memberId } }
             .map {
-                val user = users.first { each -> each.id == it.memberId }
+                val member = members.first { each -> each.id == it.memberId }
                 EvaluationTargetResponse(
                     it.id,
-                    user.name,
-                    user.email,
-                    user.id,
+                    member.name,
+                    member.email,
+                    member.id,
                     it.evaluationAnswers.countTotalScore(),
                     it.evaluationStatus,
                     it.administratorId,
@@ -79,13 +79,13 @@ class EvaluationTargetService(
 
     private fun findLatestApplicants(evaluation: Evaluation): Set<Long> {
         return if (evaluation.hasBeforeEvaluation()) {
-            findPassedUserIdsFromBeforeEvaluation(evaluation)
+            findPassedMemberIdsFromBeforeEvaluation(evaluation)
         } else {
-            findUserIdsFromRecruitment(evaluation)
+            findMemberIdsFromRecruitment(evaluation)
         }
     }
 
-    private fun findPassedUserIdsFromBeforeEvaluation(evaluation: Evaluation): Set<Long> {
+    private fun findPassedMemberIdsFromBeforeEvaluation(evaluation: Evaluation): Set<Long> {
         return evaluationTargetRepository.findAllByEvaluationId(evaluation.beforeEvaluationId)
             .filter { it.isPassed }
             .map { it.memberId }
@@ -98,27 +98,27 @@ class EvaluationTargetService(
             .toSet()
     }
 
-    private fun findUserIdsFromRecruitment(evaluation: Evaluation): Set<Long> {
+    private fun findMemberIdsFromRecruitment(evaluation: Evaluation): Set<Long> {
         return applicationFormRepository.findByRecruitmentIdAndSubmittedTrue(evaluation.recruitmentId)
             .map { it.memberId }
             .toSet()
     }
 
-    private fun findCheatersIn(userIds: Set<Long>): Set<Long> {
+    private fun findCheatersIn(memberIds: Set<Long>): Set<Long> {
         return memberRepository.findAllByEmailIn(cheaterRepository.findAll().map { it.email })
-            .filter { userIds.contains(it.id) }
+            .filter { memberIds.contains(it.id) }
             .map { it.id }
             .toSet()
     }
 
-    private fun save(userIds: Set<Long>, evaluation: Evaluation, evaluationStatus: EvaluationStatus) {
-        val evaluationTargets = memberRepository.findAllById(userIds)
+    private fun save(memberIds: Set<Long>, evaluation: Evaluation, evaluationStatus: EvaluationStatus) {
+        val evaluationTargets = memberRepository.findAllById(memberIds)
             .map { EvaluationTarget(evaluation.id, memberId = it.id, evaluationStatus = evaluationStatus) }
         evaluationTargetRepository.saveAll(evaluationTargets)
     }
 
-    private fun updateFail(userIds: Set<Long>, evaluation: Evaluation) {
-        evaluationTargetRepository.findAllByEvaluationIdAndMemberIdIn(evaluation.id, userIds).forEach {
+    private fun updateFail(memberIds: Set<Long>, evaluation: Evaluation) {
+        evaluationTargetRepository.findAllByEvaluationIdAndMemberIdIn(evaluation.id, memberIds).forEach {
             it.evaluationStatus = EvaluationStatus.FAIL
         }
     }
