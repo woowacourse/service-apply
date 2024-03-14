@@ -27,12 +27,12 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 
-class UserAuthenticationServiceTest : BehaviorSpec({
+class MemberAuthenticationServiceTest : BehaviorSpec({
     val memberRepository = mockk<MemberRepository>()
     val authenticationCodeRepository = mockk<AuthenticationCodeRepository>()
     val jwtTokenProvider = mockk<JwtTokenProvider>()
 
-    val userAuthenticationService = UserAuthenticationService(
+    val memberAuthenticationService = MemberAuthenticationService(
         memberRepository, authenticationCodeRepository, jwtTokenProvider
     )
 
@@ -42,7 +42,7 @@ class UserAuthenticationServiceTest : BehaviorSpec({
         When("해당 이메일로 회원 가입을 하고 토큰을 생성하면") {
             Then("예외가 발생한다") {
                 shouldThrow<IllegalStateException> {
-                    userAuthenticationService.generateTokenByRegister(createRegisterUserRequest())
+                    memberAuthenticationService.generateTokenByRegister(createRegisterUserRequest())
                 }
             }
         }
@@ -55,7 +55,7 @@ class UserAuthenticationServiceTest : BehaviorSpec({
         When("해당 이메일로 회원 가입을 하고 토큰을 생성하면") {
             Then("예외가 발생한다") {
                 shouldThrow<IllegalStateException> {
-                    userAuthenticationService.generateTokenByRegister(createRegisterUserRequest())
+                    memberAuthenticationService.generateTokenByRegister(createRegisterUserRequest())
                 }
             }
         }
@@ -82,7 +82,7 @@ class UserAuthenticationServiceTest : BehaviorSpec({
 
             Then("예외가 발생한다") {
                 shouldThrow<IllegalArgumentException> {
-                    userAuthenticationService.generateTokenByRegister(request)
+                    memberAuthenticationService.generateTokenByRegister(request)
                 }
             }
         }
@@ -92,13 +92,13 @@ class UserAuthenticationServiceTest : BehaviorSpec({
 
             Then("예외가 발생한다") {
                 shouldThrow<IllegalStateException> {
-                    userAuthenticationService.generateTokenByRegister(request)
+                    memberAuthenticationService.generateTokenByRegister(request)
                 }
             }
         }
 
         When("해당 이메일과 인증 코드로 회원 가입을 하고 토큰을 생성하면") {
-            val actual = userAuthenticationService.generateTokenByRegister(
+            val actual = memberAuthenticationService.generateTokenByRegister(
                 createRegisterUserRequest(email = email, authenticationCode = authenticationCode)
             )
 
@@ -117,7 +117,7 @@ class UserAuthenticationServiceTest : BehaviorSpec({
         When("다른 비밀번호로 로그인하고 토큰을 생성하면") {
             Then("예외가 발생한다") {
                 shouldThrow<UnidentifiedMemberException> {
-                    userAuthenticationService.generateTokenByLogin(
+                    memberAuthenticationService.generateTokenByLogin(
                         createAuthenticateUserRequest(member.email, WRONG_PASSWORD)
                     )
                 }
@@ -125,7 +125,7 @@ class UserAuthenticationServiceTest : BehaviorSpec({
         }
 
         When("동일한 비밀번호로 로그인하고 토큰을 생성하면") {
-            val actual = userAuthenticationService.generateTokenByLogin(
+            val actual = memberAuthenticationService.generateTokenByLogin(
                 createAuthenticateUserRequest(member.email, member.password)
             )
 
@@ -141,7 +141,7 @@ class UserAuthenticationServiceTest : BehaviorSpec({
         When("해당 이메일로 로그인하고 토큰을 생성하면") {
             Then("예외가 발생한다") {
                 shouldThrow<UnidentifiedMemberException> {
-                    userAuthenticationService.generateTokenByLogin(createAuthenticateUserRequest())
+                    memberAuthenticationService.generateTokenByLogin(createAuthenticateUserRequest())
                 }
             }
         }
@@ -154,7 +154,7 @@ class UserAuthenticationServiceTest : BehaviorSpec({
         every { authenticationCodeRepository.save(any()) } returns createAuthenticationCode(email)
 
         When("해당 이메일에 대한 인증 코드를 생성하면") {
-            val actual = userAuthenticationService.generateAuthenticationCode(email)
+            val actual = memberAuthenticationService.generateAuthenticationCode(email)
 
             Then("인증 코드가 생성된다") {
                 actual.shouldNotBeEmpty()
@@ -168,7 +168,7 @@ class UserAuthenticationServiceTest : BehaviorSpec({
         When("해당 이메일에 대한 인증 코드를 생성하면") {
             Then("예외가 발생한다") {
                 shouldThrow<IllegalStateException> {
-                    userAuthenticationService.generateAuthenticationCode(EMAIL)
+                    memberAuthenticationService.generateAuthenticationCode(EMAIL)
                 }
             }
         }
@@ -180,7 +180,7 @@ class UserAuthenticationServiceTest : BehaviorSpec({
         every { authenticationCodeRepository.getLastByEmail(any()) } returns authenticationCode
 
         When("동일한 이메일과 인증 코드로 인증하면") {
-            userAuthenticationService.authenticateEmail(authenticationCode.email, authenticationCode.code)
+            memberAuthenticationService.authenticateEmail(authenticationCode.email, authenticationCode.code)
 
             Then("인증된 인증 코드가 된다") {
                 authenticationCode.authenticated.shouldBeTrue()
@@ -190,7 +190,7 @@ class UserAuthenticationServiceTest : BehaviorSpec({
         When("이메일은 동일하지만 다른 인증 코드로 인증하면") {
             Then("예외가 발생한다") {
                 shouldThrow<IllegalArgumentException> {
-                    userAuthenticationService.authenticateEmail(authenticationCode.email, INVALID_CODE)
+                    memberAuthenticationService.authenticateEmail(authenticationCode.email, INVALID_CODE)
                 }
             }
         }

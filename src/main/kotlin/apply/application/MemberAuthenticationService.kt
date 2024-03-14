@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @Transactional
 @Service
-class UserAuthenticationService(
+class MemberAuthenticationService(
     private val memberRepository: MemberRepository,
     private val authenticationCodeRepository: AuthenticationCodeRepository,
     private val jwtTokenProvider: JwtTokenProvider

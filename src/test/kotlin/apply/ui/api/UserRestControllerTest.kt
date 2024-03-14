@@ -2,7 +2,7 @@ package apply.ui.api
 
 import apply.application.EditInformationRequest
 import apply.application.ResetPasswordRequest
-import apply.application.UserAuthenticationService
+import apply.application.MemberAuthenticationService
 import apply.application.UserResponse
 import apply.application.UserService
 import apply.application.mail.MailService
@@ -79,7 +79,7 @@ class UserRestControllerTest : RestControllerTest() {
     private lateinit var userService: UserService
 
     @MockkBean
-    private lateinit var userAuthenticationService: UserAuthenticationService
+    private lateinit var memberAuthenticationService: MemberAuthenticationService
 
     @MockkBean
     private lateinit var mailService: MailService
@@ -87,7 +87,7 @@ class UserRestControllerTest : RestControllerTest() {
     @Test
     fun `유효한 회원 생성 및 검증 요청에 대하여 응답으로 토큰이 반환된다`() {
         val response = "valid_token"
-        every { userAuthenticationService.generateTokenByRegister(any()) } returns response
+        every { memberAuthenticationService.generateTokenByRegister(any()) } returns response
         every { mailService.sendAuthenticationCodeMail(any(), any()) } just Runs
 
         mockMvc.post("/api/users/register") {
@@ -103,7 +103,7 @@ class UserRestControllerTest : RestControllerTest() {
     @Test
     fun `올바른 회원 로그인 요청에 응답으로 Token을 반환한다`() {
         val response = "valid_token"
-        every { userAuthenticationService.generateTokenByLogin(any()) } returns response
+        every { memberAuthenticationService.generateTokenByLogin(any()) } returns response
 
         mockMvc.post("/api/users/login") {
             jsonContent(createAuthenticateUserRequest())
@@ -117,7 +117,7 @@ class UserRestControllerTest : RestControllerTest() {
 
     @Test
     fun `잘못된 회원 로그인 요청에 응답으로 403 Forbidden을 반환한다`() {
-        every { userAuthenticationService.generateTokenByLogin(any()) } throws UnidentifiedMemberException("사용자 정보가 일치하지 않습니다.")
+        every { memberAuthenticationService.generateTokenByLogin(any()) } throws UnidentifiedMemberException("사용자 정보가 일치하지 않습니다.")
 
         mockMvc.post("/api/users/login") {
             jsonContent(createAuthenticateUserRequest(password = INVALID_PASSWORD))
@@ -185,7 +185,7 @@ class UserRestControllerTest : RestControllerTest() {
     @Test
     fun `이메일 인증 코드 요청에 응답으로 NoContent를 반환한다`() {
         val authenticationCode = AuthenticationCode("authentication-code@email.com")
-        every { userAuthenticationService.generateAuthenticationCode(any()) } returns authenticationCode.code
+        every { memberAuthenticationService.generateAuthenticationCode(any()) } returns authenticationCode.code
         every { mailService.sendAuthenticationCodeMail(any(), any()) } just Runs
 
         mockMvc.post("/api/users/authentication-code") {
@@ -199,7 +199,7 @@ class UserRestControllerTest : RestControllerTest() {
 
     @Test
     fun `이메일 인증 요청에 응답으로 NoContent를 반환한다`() {
-        every { userAuthenticationService.authenticateEmail(any(), any()) } just Runs
+        every { memberAuthenticationService.authenticateEmail(any(), any()) } just Runs
 
         mockMvc.post("/api/users/authenticate-email") {
             param("email", "test@email.com")

@@ -5,7 +5,7 @@ import apply.application.EditInformationRequest
 import apply.application.EditPasswordRequest
 import apply.application.RegisterUserRequest
 import apply.application.ResetPasswordRequest
-import apply.application.UserAuthenticationService
+import apply.application.MemberAuthenticationService
 import apply.application.UserResponse
 import apply.application.UserService
 import apply.application.mail.MailService
@@ -25,18 +25,18 @@ import javax.validation.Valid
 @RestController
 class UserRestController(
     private val userService: UserService,
-    private val userAuthenticationService: UserAuthenticationService,
+    private val memberAuthenticationService: MemberAuthenticationService,
     private val mailService: MailService
 ) {
     @PostMapping("/register")
     fun generateToken(@RequestBody @Valid request: RegisterUserRequest): ResponseEntity<ApiResponse<String>> {
-        val token = userAuthenticationService.generateTokenByRegister(request)
+        val token = memberAuthenticationService.generateTokenByRegister(request)
         return ResponseEntity.ok(ApiResponse.success(token))
     }
 
     @PostMapping("/login")
     fun generateToken(@RequestBody @Valid request: AuthenticateUserRequest): ResponseEntity<ApiResponse<String>> {
-        val token = userAuthenticationService.generateTokenByLogin(request)
+        val token = memberAuthenticationService.generateTokenByLogin(request)
         return ResponseEntity.ok(ApiResponse.success(token))
     }
 
@@ -59,7 +59,7 @@ class UserRestController(
     fun generateAuthenticationCode(
         @RequestParam email: String
     ): ResponseEntity<Unit> {
-        val authenticationCode = userAuthenticationService
+        val authenticationCode = memberAuthenticationService
             .generateAuthenticationCode(email)
         mailService.sendAuthenticationCodeMail(email, authenticationCode)
         return ResponseEntity.noContent().build()
@@ -70,7 +70,7 @@ class UserRestController(
         @RequestParam email: String,
         @RequestParam authenticationCode: String
     ): ResponseEntity<Unit> {
-        userAuthenticationService.authenticateEmail(email, authenticationCode)
+        memberAuthenticationService.authenticateEmail(email, authenticationCode)
         return ResponseEntity.noContent().build()
     }
 
