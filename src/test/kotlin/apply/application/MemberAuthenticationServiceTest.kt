@@ -6,7 +6,7 @@ import apply.PASSWORD
 import apply.VALID_CODE
 import apply.VALID_TOKEN
 import apply.WRONG_PASSWORD
-import apply.createAuthenticateUserRequest
+import apply.createAuthenticateMemberRequest
 import apply.createAuthenticationCode
 import apply.createRegisterUserRequest
 import apply.createMember
@@ -118,7 +118,7 @@ class MemberAuthenticationServiceTest : BehaviorSpec({
             Then("예외가 발생한다") {
                 shouldThrow<UnidentifiedMemberException> {
                     memberAuthenticationService.generateTokenByLogin(
-                        createAuthenticateUserRequest(member.email, WRONG_PASSWORD)
+                        createAuthenticateMemberRequest(member.email, WRONG_PASSWORD)
                     )
                 }
             }
@@ -126,7 +126,7 @@ class MemberAuthenticationServiceTest : BehaviorSpec({
 
         When("동일한 비밀번호로 로그인하고 토큰을 생성하면") {
             val actual = memberAuthenticationService.generateTokenByLogin(
-                createAuthenticateUserRequest(member.email, member.password)
+                createAuthenticateMemberRequest(member.email, member.password)
             )
 
             Then("유효한 토큰을 반환한다") {
@@ -141,7 +141,7 @@ class MemberAuthenticationServiceTest : BehaviorSpec({
         When("해당 이메일로 로그인하고 토큰을 생성하면") {
             Then("예외가 발생한다") {
                 shouldThrow<UnidentifiedMemberException> {
-                    memberAuthenticationService.generateTokenByLogin(createAuthenticateUserRequest())
+                    memberAuthenticationService.generateTokenByLogin(createAuthenticateMemberRequest())
                 }
             }
         }

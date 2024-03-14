@@ -26,7 +26,7 @@ class MemberAuthenticationService(
         return jwtTokenProvider.createToken(member.email)
     }
 
-    fun generateTokenByLogin(request: AuthenticateUserRequest): String {
+    fun generateTokenByLogin(request: AuthenticateMemberRequest): String {
         val member = memberRepository.findByEmail(request.email)
             ?: throw UnidentifiedMemberException("사용자 정보가 일치하지 않습니다.")
         member.authenticate(request.password)

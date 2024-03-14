@@ -74,7 +74,7 @@ data class RegisterUserRequest(
     }
 }
 
-data class AuthenticateUserRequest(
+data class AuthenticateMemberRequest(
     @field:Email
     val email: String,
     val password: Password

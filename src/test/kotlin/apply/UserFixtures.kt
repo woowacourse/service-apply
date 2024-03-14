@@ -1,6 +1,6 @@
 package apply
 
-import apply.application.AuthenticateUserRequest
+import apply.application.AuthenticateMemberRequest
 import apply.application.RegisterUserRequest
 import apply.domain.member.Gender
 import apply.domain.member.Password
@@ -55,9 +55,9 @@ fun createRegisterUserRequest(
     )
 }
 
-fun createAuthenticateUserRequest(
+fun createAuthenticateMemberRequest(
     email: String = EMAIL,
     password: Password = PASSWORD
-): AuthenticateUserRequest {
-    return AuthenticateUserRequest(email, password)
+): AuthenticateMemberRequest {
+    return AuthenticateMemberRequest(email, password)
 }

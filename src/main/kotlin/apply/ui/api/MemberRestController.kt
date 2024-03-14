@@ -1,6 +1,6 @@
 package apply.ui.api
 
-import apply.application.AuthenticateUserRequest
+import apply.application.AuthenticateMemberRequest
 import apply.application.EditInformationRequest
 import apply.application.EditPasswordRequest
 import apply.application.RegisterUserRequest
@@ -35,7 +35,7 @@ class MemberRestController(
     }
 
     @PostMapping("/login")
-    fun generateToken(@RequestBody @Valid request: AuthenticateUserRequest): ResponseEntity<ApiResponse<String>> {
+    fun generateToken(@RequestBody @Valid request: AuthenticateMemberRequest): ResponseEntity<ApiResponse<String>> {
         val token = memberAuthenticationService.generateTokenByLogin(request)
         return ResponseEntity.ok(ApiResponse.success(token))
     }
