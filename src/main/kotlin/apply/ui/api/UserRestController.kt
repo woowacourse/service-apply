@@ -7,7 +7,7 @@ import apply.application.RegisterUserRequest
 import apply.application.ResetPasswordRequest
 import apply.application.MemberAuthenticationService
 import apply.application.UserResponse
-import apply.application.UserService
+import apply.application.MemberService
 import apply.application.mail.MailService
 import apply.domain.member.Member
 import apply.security.LoginMember
@@ -24,7 +24,7 @@ import javax.validation.Valid
 @RequestMapping("/api/users")
 @RestController
 class UserRestController(
-    private val userService: UserService,
+    private val memberService: MemberService,
     private val memberAuthenticationService: MemberAuthenticationService,
     private val mailService: MailService
 ) {
@@ -42,7 +42,7 @@ class UserRestController(
 
     @PostMapping("/reset-password")
     fun resetPassword(@RequestBody @Valid request: ResetPasswordRequest): ResponseEntity<Unit> {
-        userService.resetPassword(request)
+        memberService.resetPassword(request)
         return ResponseEntity.noContent().build()
     }
 
@@ -51,7 +51,7 @@ class UserRestController(
         @RequestBody @Valid request: EditPasswordRequest,
         @LoginMember member: Member
     ): ResponseEntity<Unit> {
-        userService.editPassword(member.id, request)
+        memberService.editPassword(member.id, request)
         return ResponseEntity.noContent().build()
     }
 
@@ -79,7 +79,7 @@ class UserRestController(
         @RequestParam keyword: String,
         @LoginMember(administrator = true) member: Member
     ): ResponseEntity<ApiResponse<List<UserResponse>>> {
-        val responses = userService.findAllByKeyword(keyword)
+        val responses = memberService.findAllByKeyword(keyword)
         return ResponseEntity.ok(ApiResponse.success(responses))
     }
 
@@ -87,7 +87,7 @@ class UserRestController(
     fun getMyInformation(
         @LoginMember member: Member
     ): ResponseEntity<ApiResponse<UserResponse>> {
-        val response = userService.getInformation(member.id)
+        val response = memberService.getInformation(member.id)
         return ResponseEntity.ok(ApiResponse.success(response))
     }
 
@@ -96,7 +96,7 @@ class UserRestController(
         @RequestBody @Valid request: EditInformationRequest,
         @LoginMember member: Member
     ): ResponseEntity<Unit> {
-        userService.editInformation(member.id, request)
+        memberService.editInformation(member.id, request)
         return ResponseEntity.noContent().build()
     }
 }

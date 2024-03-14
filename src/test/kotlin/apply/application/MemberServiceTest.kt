@@ -18,11 +18,11 @@ import io.mockk.every
 import io.mockk.mockk
 import support.test.spec.afterRootTest
 
-class UserServiceTest : BehaviorSpec({
+class MemberServiceTest : BehaviorSpec({
     val memberRepository = mockk<MemberRepository>()
     val passwordGenerator = mockk<PasswordGenerator>()
 
-    val userService = UserService(memberRepository, passwordGenerator)
+    val memberService = MemberService(memberRepository, passwordGenerator)
 
     Given("특정 회원의 개인정보가 있는 경우") {
         val member = createMember()
@@ -32,7 +32,7 @@ class UserServiceTest : BehaviorSpec({
         every { memberRepository.save(any()) } returns member
 
         When("동일한 개인정보로 비밀번호를 초기화하면") {
-            userService.resetPassword(ResetPasswordRequest(member.name, member.email, member.birthday))
+            memberService.resetPassword(ResetPasswordRequest(member.name, member.email, member.birthday))
 
             Then("비밀번호가 초기화된다") {
                 member.password shouldBe Password(RANDOM_PASSWORD_TEXT)
@@ -42,7 +42,7 @@ class UserServiceTest : BehaviorSpec({
         When("일치하지 않는 개인정보로 비밀번호를 초기화하면") {
             Then("예외가 발생한다") {
                 shouldThrow<UnidentifiedMemberException> {
-                    userService.resetPassword(ResetPasswordRequest("가짜 이름", member.email, member.birthday))
+                    memberService.resetPassword(ResetPasswordRequest("가짜 이름", member.email, member.birthday))
                 }
             }
         }
@@ -55,7 +55,7 @@ class UserServiceTest : BehaviorSpec({
         every { memberRepository.getOrThrow(any()) } returns member
 
         When("기존 비밀번호와 함께 새 비밀번호를 변경하면") {
-            userService.editPassword(member.id, EditPasswordRequest(member.password, password, password))
+            memberService.editPassword(member.id, EditPasswordRequest(member.password, password, password))
 
             Then("새 비밀번호로 변경된다") {
                 member.password shouldBe password
@@ -65,7 +65,7 @@ class UserServiceTest : BehaviorSpec({
         When("일치하지 않는 기존 비밀번호와 함께 새 비밀번호를 변경하면") {
             Then("예외가 발생한다") {
                 shouldThrow<UnidentifiedMemberException> {
-                    userService.editPassword(member.id, EditPasswordRequest(WRONG_PASSWORD, password, password))
+                    memberService.editPassword(member.id, EditPasswordRequest(WRONG_PASSWORD, password, password))
                 }
             }
         }
@@ -73,7 +73,7 @@ class UserServiceTest : BehaviorSpec({
         When("이전 비밀번호는 일치하지만 새 비밀번호와 확인 비밀번호가 일치하지 않으면") {
             Then("예외가 발생한다") {
                 shouldThrow<IllegalArgumentException> {
-                    userService.editPassword(member.id, EditPasswordRequest(member.password, password, WRONG_PASSWORD))
+                    memberService.editPassword(member.id, EditPasswordRequest(member.password, password, WRONG_PASSWORD))
                 }
             }
         }
@@ -85,7 +85,7 @@ class UserServiceTest : BehaviorSpec({
         every { memberRepository.getOrThrow(any()) } returns member
 
         When("해당 회원의 정보를 조회하면") {
-            val actual = userService.getInformation(member.id)
+            val actual = memberService.getInformation(member.id)
 
             Then("회원 정보를 확인할 수 있다") {
                 actual shouldBe UserResponse(member)
@@ -100,7 +100,7 @@ class UserServiceTest : BehaviorSpec({
         every { memberRepository.getOrThrow(any()) } returns member
 
         When("특정 회원의 정보(전화번호)를 변경하면") {
-            userService.editInformation(member.id, EditInformationRequest(phoneNumber))
+            memberService.editInformation(member.id, EditInformationRequest(phoneNumber))
 
             Then("정보(전화번호)가 변경된다") {
                 member.phoneNumber shouldBe phoneNumber

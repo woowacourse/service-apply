@@ -1,6 +1,6 @@
 package apply.security
 
-import apply.application.UserService
+import apply.application.MemberService
 import apply.createMember
 import apply.domain.member.Member
 import io.kotest.assertions.throwables.shouldThrow
@@ -15,12 +15,12 @@ import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.web.context.request.NativeWebRequest
 
 class LoginMemberResolverTest : StringSpec({
-    val userService = mockk<UserService>()
+    val memberService = mockk<MemberService>()
     val jwtTokenProvider = mockk<JwtTokenProvider>()
     val methodParameter = mockk<MethodParameter>()
     val nativeWebRequest = mockk<NativeWebRequest>()
 
-    val loginMemberResolver = LoginMemberResolver(jwtTokenProvider, userService)
+    val loginMemberResolver = LoginMemberResolver(jwtTokenProvider, memberService)
 
     class TestAuthController {
         fun member(@LoginMember member: Member) {}
@@ -51,7 +51,7 @@ class LoginMemberResolverTest : StringSpec({
         every { nativeWebRequest.getHeader(AUTHORIZATION) } returns "Bearer valid_token"
         every { jwtTokenProvider.isValidToken("valid_token") } returns true
         every { jwtTokenProvider.getSubject("valid_token") } returns "user_email@email.com"
-        every { userService.getByEmail("user_email@email.com") } returns createMember()
+        every { memberService.getByEmail("user_email@email.com") } returns createMember()
 
         val result = loginMemberResolver.resolveArgument(methodParameter, null, nativeWebRequest, null)
         result shouldBeEqualToComparingFields createMember()

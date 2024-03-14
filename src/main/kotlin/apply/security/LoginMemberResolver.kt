@@ -1,6 +1,6 @@
 package apply.security
 
-import apply.application.UserService
+import apply.application.MemberService
 import apply.domain.member.Member
 import org.springframework.core.MethodParameter
 import org.springframework.http.HttpHeaders.AUTHORIZATION
@@ -15,7 +15,7 @@ private const val BEARER = "Bearer"
 @Component
 class LoginMemberResolver(
     private val jwtTokenProvider: JwtTokenProvider,
-    private val userService: UserService
+    private val memberService: MemberService
 ) : HandlerMethodArgumentResolver {
     override fun supportsParameter(parameter: MethodParameter): Boolean {
         return parameter.hasParameterAnnotation(LoginMember::class.java)
@@ -33,7 +33,7 @@ class LoginMemberResolver(
             throw LoginFailedException()
         }
         val userEmail = jwtTokenProvider.getSubject(token)
-        return userService.getByEmail(userEmail)
+        return memberService.getByEmail(userEmail)
     }
 
     private fun validateIfAdministrator(parameter: MethodParameter) {

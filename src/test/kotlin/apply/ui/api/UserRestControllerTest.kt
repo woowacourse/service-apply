@@ -4,7 +4,7 @@ import apply.application.EditInformationRequest
 import apply.application.ResetPasswordRequest
 import apply.application.MemberAuthenticationService
 import apply.application.UserResponse
-import apply.application.UserService
+import apply.application.MemberService
 import apply.application.mail.MailService
 import apply.createMember
 import apply.domain.authenticationcode.AuthenticationCode
@@ -76,7 +76,7 @@ private fun createEditPasswordRequest(
 @WebMvcTest(UserRestController::class)
 class UserRestControllerTest : RestControllerTest() {
     @MockkBean
-    private lateinit var userService: UserService
+    private lateinit var memberService: MemberService
 
     @MockkBean
     private lateinit var memberAuthenticationService: MemberAuthenticationService
@@ -130,7 +130,7 @@ class UserRestControllerTest : RestControllerTest() {
 
     @Test
     fun `올바른 비밀번호 찾기 요청에 응답으로 NoContent를 반환한다`() {
-        every { userService.resetPassword(any()) } just Runs
+        every { memberService.resetPassword(any()) } just Runs
 
         mockMvc.post("/api/users/reset-password") {
             jsonContent(ResetPasswordRequest("회원", "test@email.com", createLocalDate(1995, 2, 2)))
@@ -143,7 +143,7 @@ class UserRestControllerTest : RestControllerTest() {
 
     @Test
     fun `잘못된 비밀번호 찾기 요청에 응답으로 403 Forbidden을 반환한다`() {
-        every { userService.resetPassword(any()) } throws UnidentifiedMemberException("사용자 정보가 일치하지 않습니다.")
+        every { memberService.resetPassword(any()) } throws UnidentifiedMemberException("사용자 정보가 일치하지 않습니다.")
 
         mockMvc.post("/api/users/reset-password") {
             jsonContent(ResetPasswordRequest("회원", "test@email.com", createLocalDate(1995, 4, 4)))
@@ -156,7 +156,7 @@ class UserRestControllerTest : RestControllerTest() {
 
     @Test
     fun `올바른 비밀번호 변경 요청에 응답으로 NoContent를 반환한다`() {
-        every { userService.editPassword(any(), any()) } just Runs
+        every { memberService.editPassword(any(), any()) } just Runs
 
         mockMvc.post("/api/users/edit-password") {
             jsonContent(createEditPasswordRequest())
@@ -170,7 +170,7 @@ class UserRestControllerTest : RestControllerTest() {
 
     @Test
     fun `잘못된 비밀번호 변경 요청에 응답으로 403 Forbidden을 반환한다`() {
-        every { userService.editPassword(any(), any()) } throws UnidentifiedMemberException("기존 비밀번호가 일치하지 않습니다.")
+        every { memberService.editPassword(any(), any()) } throws UnidentifiedMemberException("기존 비밀번호가 일치하지 않습니다.")
 
         mockMvc.post("/api/users/edit-password") {
             jsonContent(createEditPasswordRequest(oldPassword = WRONG_PASSWORD))
@@ -214,7 +214,7 @@ class UserRestControllerTest : RestControllerTest() {
     @Test
     fun `키워드(이름 or 이메일)로 회원들을 조회한다`() {
         val responses = listOf(UserResponse(createMember("아마찌")))
-        every { userService.findAllByKeyword(any()) } returns responses
+        every { memberService.findAllByKeyword(any()) } returns responses
 
         mockMvc.get("/api/users") {
             bearer("valid_token")
@@ -228,7 +228,7 @@ class UserRestControllerTest : RestControllerTest() {
     @Test
     fun `회원이 자신의 정보를 조회한다`() {
         val response = UserResponse(createMember())
-        every { userService.getInformation(any()) } returns response
+        every { memberService.getInformation(any()) } returns response
 
         mockMvc.get("/api/users/me") {
             bearer("valid_token")
@@ -242,7 +242,7 @@ class UserRestControllerTest : RestControllerTest() {
 
     @Test
     fun `회원이 정보를 변경한다`() {
-        every { userService.editInformation(any(), any()) } just Runs
+        every { memberService.editInformation(any(), any()) } just Runs
 
         mockMvc.patch("/api/users/information") {
             jsonContent(EditInformationRequest("010-9999-9999"))

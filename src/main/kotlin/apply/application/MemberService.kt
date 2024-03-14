@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @Transactional
 @Service
-class UserService(
+class MemberService(
     private val memberRepository: MemberRepository,
     private val passwordGenerator: PasswordGenerator
 ) {

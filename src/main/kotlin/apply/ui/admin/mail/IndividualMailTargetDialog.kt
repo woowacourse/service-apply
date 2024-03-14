@@ -2,7 +2,7 @@ package apply.ui.admin.mail
 
 import apply.application.MailTargetResponse
 import apply.application.UserResponse
-import apply.application.UserService
+import apply.application.MemberService
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.dialog.Dialog
@@ -19,7 +19,7 @@ import support.views.createPrimarySmallButton
 import support.views.createSearchBox
 
 class IndividualMailTargetDialog(
-    private val userService: UserService,
+    private val memberService: MemberService,
     private val accept: (MailTargetResponse) -> Unit
 ) : Dialog() {
     private val mailTargetsGrid: Grid<UserResponse> = createMailTargetsGrid()
@@ -39,7 +39,7 @@ class IndividualMailTargetDialog(
 
     private fun createSearchFilter(): Component {
         return HorizontalLayout(
-            createSearchBox { mailTargetsGrid.setItems(userService.findAllByKeyword(it)) }
+            createSearchBox { mailTargetsGrid.setItems(memberService.findAllByKeyword(it)) }
         ).apply {
             element.style.set("margin-top", "10px")
             element.style.set("margin-bottom", "10px")
