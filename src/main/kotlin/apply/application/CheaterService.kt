@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 @Service
 class CheaterService(
-    private val userRepository: MemberRepository,
+    private val memberRepository: MemberRepository,
     private val cheaterRepository: CheaterRepository
 ) {
     fun save(request: CheaterData): CheaterResponse {
@@ -21,19 +21,19 @@ class CheaterService(
             "이미 등록된 부정행위자입니다."
         }
         val cheater = cheaterRepository.save(Cheater(email, request.description))
-        val user = userRepository.findByEmail(email)
+        val user = memberRepository.findByEmail(email)
         return CheaterResponse(cheater, user)
     }
 
     fun getById(id: Long): CheaterResponse {
         val cheater = cheaterRepository.getOrThrow(id)
-        val user = userRepository.findByEmail(cheater.email)
+        val user = memberRepository.findByEmail(cheater.email)
         return CheaterResponse(cheater, user)
     }
 
     fun findAll(): List<CheaterResponse> {
         val cheaters = cheaterRepository.findAll()
-        val usersByEmail = userRepository.findAllByEmailIn(cheaters.map { it.email }).associateBy { it.email }
+        val usersByEmail = memberRepository.findAllByEmailIn(cheaters.map { it.email }).associateBy { it.email }
         return cheaters.map { CheaterResponse(it, usersByEmail[it.email]) }
     }
 

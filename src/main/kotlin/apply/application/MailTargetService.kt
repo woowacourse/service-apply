@@ -12,16 +12,16 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class MailTargetService(
     private val evaluationTargetRepository: EvaluationTargetRepository,
-    private val userRepository: MemberRepository
+    private val memberRepository: MemberRepository
 ) {
     fun findMailTargets(evaluationId: Long, evaluationStatus: EvaluationStatus? = null): List<MailTargetResponse> {
         val userIds = findEvaluationTargets(evaluationId, evaluationStatus).map { it.memberId }
-        return userRepository.findAllById(userIds)
+        return memberRepository.findAllById(userIds)
             .map { MailTargetResponse(it.email, it.name) }
     }
 
     fun findAllByEmails(emails: List<String>): List<MailTargetResponse> {
-        val users = userRepository.findAllByEmailIn(emails)
+        val users = memberRepository.findAllByEmailIn(emails)
         val anonymousEmails = emails - users.map { it.email }
         return users.map { MailTargetResponse(it) } + anonymousEmails.map { MailTargetResponse(it) }
     }

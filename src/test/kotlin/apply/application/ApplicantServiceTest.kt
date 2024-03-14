@@ -17,10 +17,10 @@ import support.test.spec.afterRootTest
 
 class ApplicantServiceTest : BehaviorSpec({
     val applicationFormRepository = mockk<ApplicationFormRepository>()
-    val userRepository = mockk<MemberRepository>()
+    val memberRepository = mockk<MemberRepository>()
     val cheaterRepository = mockk<CheaterRepository>()
 
-    val applicantService = ApplicantService(applicationFormRepository, userRepository, cheaterRepository)
+    val applicantService = ApplicantService(applicationFormRepository, memberRepository, cheaterRepository)
 
     Given("특정 모집에 지원한 부정행위자가 있는 경우") {
         val recruitmentId = 1L
@@ -31,7 +31,7 @@ class ApplicantServiceTest : BehaviorSpec({
             createApplicationForm(memberId = user.id, recruitmentId = recruitmentId)
         )
         every { cheaterRepository.findAll() } returns listOf(cheater)
-        every { userRepository.findAllById(any()) } returns listOf(createMember(email = cheater.email, id = user.id))
+        every { memberRepository.findAllById(any()) } returns listOf(createMember(email = cheater.email, id = user.id))
 
         When("특정 모집에 지원한 지원 정보를 조회하면") {
             val actual = applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId)
@@ -55,7 +55,7 @@ class ApplicantServiceTest : BehaviorSpec({
             createApplicationForm(memberId = user2.id, recruitmentId = recruitmentId)
         )
         every { cheaterRepository.findAll() } returns listOf(cheater)
-        every { userRepository.findAllByKeyword(keyword) } returns listOf(user1, user2)
+        every { memberRepository.findAllByKeyword(keyword) } returns listOf(user1, user2)
 
         When("특정 키워드로 특정 모집에 지원한 지원 정보를 조회하면") {
             val actual = applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId, keyword)

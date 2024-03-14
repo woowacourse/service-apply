@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class ApplicantService(
     private val applicationFormRepository: ApplicationFormRepository,
-    private val userRepository: MemberRepository,
+    private val memberRepository: MemberRepository,
     private val cheaterRepository: CheaterRepository
 ) {
     fun findAllByRecruitmentIdAndKeyword(
@@ -34,9 +34,9 @@ class ApplicantService(
 
     private fun findAllByIdsAndKeyword(ids: Set<Long>, keyword: String?): List<Member> {
         return if (keyword != null) {
-            userRepository.findAllByKeyword(keyword).filter { ids.contains(it.id) }
+            memberRepository.findAllByKeyword(keyword).filter { ids.contains(it.id) }
         } else {
-            userRepository.findAllById(ids)
+            memberRepository.findAllById(ids)
         }
     }
 }

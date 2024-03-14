@@ -51,7 +51,7 @@ class DatabaseInitializer(
     private val recruitmentItemRepository: RecruitmentItemRepository,
     private val evaluationRepository: EvaluationRepository,
     private val evaluationItemRepository: EvaluationItemRepository,
-    private val userRepository: MemberRepository,
+    private val memberRepository: MemberRepository,
     private val applicationFormRepository: ApplicationFormRepository,
     private val evaluationTargetRepository: EvaluationTargetRepository,
     private val missionRepository: MissionRepository,
@@ -270,7 +270,7 @@ class DatabaseInitializer(
                 password = Password("password")
             )
         )
-        userRepository.saveAll(users)
+        memberRepository.saveAll(users)
     }
 
     private fun populateApplicationForms() {

@@ -24,7 +24,7 @@ class EvaluationTargetService(
     private val evaluationTargetRepository: EvaluationTargetRepository,
     private val evaluationItemRepository: EvaluationItemRepository,
     private val applicationFormRepository: ApplicationFormRepository,
-    private val userRepository: MemberRepository,
+    private val memberRepository: MemberRepository,
     private val cheaterRepository: CheaterRepository
 ) {
     fun findAllByEvaluationId(evaluationId: Long): List<EvaluationTarget> =
@@ -35,7 +35,7 @@ class EvaluationTargetService(
         keyword: String = ""
     ): List<EvaluationTargetResponse> {
         val evaluationTargets = findAllByEvaluationId(evaluationId)
-        val users = userRepository.findAllByKeyword(keyword)
+        val users = memberRepository.findAllByKeyword(keyword)
 
         return evaluationTargets
             .filter { users.any { user -> user.id == it.memberId } }
@@ -105,14 +105,14 @@ class EvaluationTargetService(
     }
 
     private fun findCheatersIn(userIds: Set<Long>): Set<Long> {
-        return userRepository.findAllByEmailIn(cheaterRepository.findAll().map { it.email })
+        return memberRepository.findAllByEmailIn(cheaterRepository.findAll().map { it.email })
             .filter { userIds.contains(it.id) }
             .map { it.id }
             .toSet()
     }
 
     private fun save(userIds: Set<Long>, evaluation: Evaluation, evaluationStatus: EvaluationStatus) {
-        val evaluationTargets = userRepository.findAllById(userIds)
+        val evaluationTargets = memberRepository.findAllById(userIds)
             .map { EvaluationTarget(evaluation.id, memberId = it.id, evaluationStatus = evaluationStatus) }
         evaluationTargetRepository.saveAll(evaluationTargets)
     }

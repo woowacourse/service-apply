@@ -46,13 +46,13 @@ class EvaluationTargetIntegrationTest(
     private val evaluationTargetRepository: EvaluationTargetRepository,
     private val evaluationItemRepository: EvaluationItemRepository,
     private val applicationFormRepository: ApplicationFormRepository,
-    private val userRepository: MemberRepository,
+    private val memberRepository: MemberRepository,
     private val cheaterRepository: CheaterRepository
 ) : BehaviorSpec({
     extensions(SpringTestExtension(SpringTestLifecycleMode.Root))
 
     fun saveMember(email: String): Member {
-        return userRepository.save(createMember(email = email))
+        return memberRepository.save(createMember(email = email))
     }
 
     fun saveCheater(email: String): Cheater {

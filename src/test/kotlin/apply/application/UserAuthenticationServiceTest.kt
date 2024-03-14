@@ -28,16 +28,16 @@ import io.mockk.mockk
 import io.mockk.verify
 
 class UserAuthenticationServiceTest : BehaviorSpec({
-    val userRepository = mockk<MemberRepository>()
+    val memberRepository = mockk<MemberRepository>()
     val authenticationCodeRepository = mockk<AuthenticationCodeRepository>()
     val jwtTokenProvider = mockk<JwtTokenProvider>()
 
     val userAuthenticationService = UserAuthenticationService(
-        userRepository, authenticationCodeRepository, jwtTokenProvider
+        memberRepository, authenticationCodeRepository, jwtTokenProvider
     )
 
     Given("특정 이메일의 회원이 있는 경우") {
-        every { userRepository.existsByEmail(any()) } returns true
+        every { memberRepository.existsByEmail(any()) } returns true
 
         When("해당 이메일로 회원 가입을 하고 토큰을 생성하면") {
             Then("예외가 발생한다") {
@@ -49,7 +49,7 @@ class UserAuthenticationServiceTest : BehaviorSpec({
     }
 
     Given("새 이메일이지만 해당 이메일의 인증 코드가 존재하지 않는 경우") {
-        every { userRepository.existsByEmail(any()) } returns false
+        every { memberRepository.existsByEmail(any()) } returns false
         every { authenticationCodeRepository.getLastByEmail(any()) } throws IllegalStateException()
 
         When("해당 이메일로 회원 가입을 하고 토큰을 생성하면") {
@@ -65,11 +65,11 @@ class UserAuthenticationServiceTest : BehaviorSpec({
         val email = EMAIL
         val authenticationCode = VALID_CODE
 
-        every { userRepository.existsByEmail(any()) } returns false
+        every { memberRepository.existsByEmail(any()) } returns false
         every { authenticationCodeRepository.getLastByEmail(any()) } returns createAuthenticationCode(
             email, authenticationCode, true
         )
-        every { userRepository.save(any()) } returns createMember(email = email)
+        every { memberRepository.save(any()) } returns createMember(email = email)
         every { jwtTokenProvider.createToken(any()) } returns VALID_TOKEN
 
         When("비밀번호와 확인 비밀번호를 일치시키지 않고 회원 가입을 하고 토큰을 생성하면") {
@@ -103,7 +103,7 @@ class UserAuthenticationServiceTest : BehaviorSpec({
             )
 
             Then("회원을 저장하고 토큰을 반환한다") {
-                verify { userRepository.save(any()) }
+                verify { memberRepository.save(any()) }
                 actual shouldBe VALID_TOKEN
             }
         }
@@ -112,7 +112,7 @@ class UserAuthenticationServiceTest : BehaviorSpec({
     Given("특정 비밀번호를 가진 회원이 있을 경우") {
         val user = createMember(password = PASSWORD)
 
-        every { userRepository.findByEmail(any()) } returns user
+        every { memberRepository.findByEmail(any()) } returns user
 
         When("다른 비밀번호로 로그인하고 토큰을 생성하면") {
             Then("예외가 발생한다") {
@@ -136,7 +136,7 @@ class UserAuthenticationServiceTest : BehaviorSpec({
     }
 
     Given("특정 이메일의 회원이 존재하지 않는 경우") {
-        every { userRepository.findByEmail(any()) } returns null
+        every { memberRepository.findByEmail(any()) } returns null
 
         When("해당 이메일로 로그인하고 토큰을 생성하면") {
             Then("예외가 발생한다") {
@@ -150,7 +150,7 @@ class UserAuthenticationServiceTest : BehaviorSpec({
     Given("새 이메일이 있는 경우") {
         val email = EMAIL
 
-        every { userRepository.existsByEmail(any()) } returns false
+        every { memberRepository.existsByEmail(any()) } returns false
         every { authenticationCodeRepository.save(any()) } returns createAuthenticationCode(email)
 
         When("해당 이메일에 대한 인증 코드를 생성하면") {
@@ -163,7 +163,7 @@ class UserAuthenticationServiceTest : BehaviorSpec({
     }
 
     Given("특정 이메일에 대한 회원이 있는 경우") {
-        every { userRepository.existsByEmail(any()) } returns true
+        every { memberRepository.existsByEmail(any()) } returns true
 
         When("해당 이메일에 대한 인증 코드를 생성하면") {
             Then("예외가 발생한다") {

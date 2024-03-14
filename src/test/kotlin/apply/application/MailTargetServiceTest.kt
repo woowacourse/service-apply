@@ -24,9 +24,9 @@ import support.test.spec.afterRootTest
 
 class MailTargetServiceTest : BehaviorSpec({
     val evaluationTargetRepository = mockk<EvaluationTargetRepository>()
-    val userRepository = mockk<MemberRepository>()
+    val memberRepository = mockk<MemberRepository>()
 
-    val mailTargetService = MailTargetService(evaluationTargetRepository, userRepository)
+    val mailTargetService = MailTargetService(evaluationTargetRepository, memberRepository)
 
     Given("특정 평가에 대한 평가 대상자가 있는 경우") {
         val evaluationId = 1L
@@ -43,7 +43,7 @@ class MailTargetServiceTest : BehaviorSpec({
             createEvaluationTarget(evaluationId = evaluationId, memberId = 3L, evaluationStatus = PASS),
             createEvaluationTarget(evaluationId = evaluationId, memberId = 4L, evaluationStatus = FAIL)
         )
-        every { userRepository.findAllById(any()) } returns users
+        every { memberRepository.findAllById(any()) } returns users
 
         When("해당 평가의 모든 평가 대상자에 대한 이메일 정보를 조회하면") {
             val actual = mailTargetService.findMailTargets(evaluationId)
@@ -62,7 +62,7 @@ class MailTargetServiceTest : BehaviorSpec({
         every { evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(any(), any()) } returns listOf(
             createEvaluationTarget(evaluationId = evaluationId, memberId = user.id, evaluationStatus = PASS)
         )
-        every { userRepository.findAllById(any()) } returns listOf(user)
+        every { memberRepository.findAllById(any()) } returns listOf(user)
 
         When("해당 평가에 합격한 모든 평가 대상자의 이메일 정보를 조회하면") {
             val actual = mailTargetService.findMailTargets(evaluationId, PASS)
@@ -81,7 +81,7 @@ class MailTargetServiceTest : BehaviorSpec({
         every { evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(any(), any()) } returns listOf(
             createEvaluationTarget(evaluationId = evaluationId, memberId = user.id, evaluationStatus = FAIL)
         )
-        every { userRepository.findAllById(any()) } returns listOf(user)
+        every { memberRepository.findAllById(any()) } returns listOf(user)
 
         When("해당 평가에 탈락한 모든 평가 대상자의 이메일 정보를 조회하면") {
             val actual = mailTargetService.findMailTargets(evaluationId, FAIL)
@@ -100,7 +100,7 @@ class MailTargetServiceTest : BehaviorSpec({
         every { evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(any(), any()) } returns listOf(
             createEvaluationTarget(evaluationId = evaluationId, memberId = user.id, evaluationStatus = WAITING)
         )
-        every { userRepository.findAllById(any()) } returns listOf(user)
+        every { memberRepository.findAllById(any()) } returns listOf(user)
 
         When("해당 평가에 보류 중인 모든 평가 대상자의 이메일 정보를 조회하면") {
             val actual = mailTargetService.findMailTargets(evaluationId, WAITING)
@@ -129,13 +129,13 @@ class MailTargetServiceTest : BehaviorSpec({
                 evaluationAnswers = EvaluationAnswers(listOf(createEvaluationAnswer(score = 0)))
             )
         )
-        every { userRepository.findAllById(any()) } returns emptyList()
+        every { memberRepository.findAllById(any()) } returns emptyList()
 
         When("해당 평가에 탈락한 모든 평가 대상자의 이메일 정보를 조회하면") {
             val actual = mailTargetService.findMailTargets(evaluationId, FAIL)
 
             Then("해당 평가 대상자의 이름 및 이메일을 확인할 수 없다") {
-                verify { userRepository.findAllById(emptyList()) }
+                verify { memberRepository.findAllById(emptyList()) }
                 actual.shouldBeEmpty()
             }
         }
@@ -144,7 +144,7 @@ class MailTargetServiceTest : BehaviorSpec({
     Given("특정 이메일을 가진 회원이 없는 경우") {
         val email = "test1@email.com"
 
-        every { userRepository.findAllByEmailIn(any()) } returns emptyList()
+        every { memberRepository.findAllByEmailIn(any()) } returns emptyList()
 
         When("해당 이메일로 이메일 정보를 조회하면") {
             val actual = mailTargetService.findAllByEmails(listOf(email))

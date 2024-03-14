@@ -22,7 +22,7 @@ private const val MAIL_SENDING_UNIT: Int = 50
 
 @Service
 class MailService(
-    private val userRepository: MemberRepository,
+    private val memberRepository: MemberRepository,
     private val recruitmentRepository: RecruitmentRepository,
     private val mailHistoryRepository: MailHistoryRepository,
     private val applicationProperties: ApplicationProperties,
@@ -53,7 +53,7 @@ class MailService(
     @Async
     @TransactionalEventListener
     fun sendFormSubmittedMail(event: ApplicationFormSubmittedEvent) {
-        val user = userRepository.getOrThrow(event.memberId)
+        val user = memberRepository.getOrThrow(event.memberId)
         val recruitment = recruitmentRepository.getOrThrow(event.recruitmentId)
         val context = Context().apply {
             setVariables(
