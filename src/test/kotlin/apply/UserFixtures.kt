@@ -21,7 +21,7 @@ val WRONG_PASSWORD: Password = Password("wrong_password")
 const val RANDOM_PASSWORD_TEXT: String = "nEw_p@ssw0rd"
 const val VALID_TOKEN: String = "SOME_VALID_TOKEN"
 
-fun createUser(
+fun createMember(
     name: String = NAME,
     email: String = EMAIL,
     phoneNumber: String = PHONE_NUMBER,

@@ -9,7 +9,7 @@ import apply.WRONG_PASSWORD
 import apply.createAuthenticateUserRequest
 import apply.createAuthenticationCode
 import apply.createRegisterUserRequest
-import apply.createUser
+import apply.createMember
 import apply.domain.authenticationcode.AuthenticationCodeRepository
 import apply.domain.authenticationcode.getLastByEmail
 import apply.domain.member.UnidentifiedMemberException
@@ -69,7 +69,7 @@ class UserAuthenticationServiceTest : BehaviorSpec({
         every { authenticationCodeRepository.getLastByEmail(any()) } returns createAuthenticationCode(
             email, authenticationCode, true
         )
-        every { userRepository.save(any()) } returns createUser(email = email)
+        every { userRepository.save(any()) } returns createMember(email = email)
         every { jwtTokenProvider.createToken(any()) } returns VALID_TOKEN
 
         When("비밀번호와 확인 비밀번호를 일치시키지 않고 회원 가입을 하고 토큰을 생성하면") {
@@ -110,7 +110,7 @@ class UserAuthenticationServiceTest : BehaviorSpec({
     }
 
     Given("특정 비밀번호를 가진 회원이 있을 경우") {
-        val user = createUser(password = PASSWORD)
+        val user = createMember(password = PASSWORD)
 
         every { userRepository.findByEmail(any()) } returns user
 

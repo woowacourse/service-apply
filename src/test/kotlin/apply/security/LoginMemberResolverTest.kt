@@ -1,7 +1,7 @@
 package apply.security
 
 import apply.application.UserService
-import apply.createUser
+import apply.createMember
 import apply.domain.member.Member
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
@@ -51,10 +51,10 @@ class LoginMemberResolverTest : StringSpec({
         every { nativeWebRequest.getHeader(AUTHORIZATION) } returns "Bearer valid_token"
         every { jwtTokenProvider.isValidToken("valid_token") } returns true
         every { jwtTokenProvider.getSubject("valid_token") } returns "user_email@email.com"
-        every { userService.getByEmail("user_email@email.com") } returns createUser()
+        every { userService.getByEmail("user_email@email.com") } returns createMember()
 
         val result = loginMemberResolver.resolveArgument(methodParameter, null, nativeWebRequest, null)
-        result shouldBeEqualToComparingFields createUser()
+        result shouldBeEqualToComparingFields createMember()
     }
 
     "요청의 Authorization 헤더의 형식이 올바르지 않을 경우 예외가 발생한다" {

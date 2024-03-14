@@ -2,7 +2,7 @@ package apply.application
 
 import apply.createApplicationForm
 import apply.createRecruitment
-import apply.createUser
+import apply.createMember
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.applicationform.DuplicateApplicationException
 import apply.domain.recruitment.RecruitmentRepository
@@ -25,7 +25,7 @@ class ApplicationFormIntegrationTest(
 ) : BehaviorSpec({
     Given("지원하지 않은 모집 중인 모집이 있는 경우") {
         val recruitment = recruitmentRepository.save(createRecruitment(recruitable = true))
-        val user = userRepository.save(createUser())
+        val user = userRepository.save(createMember())
 
         When("특정 회원이 해당 모집에 지원서를 생성하면") {
             val actual = applicationFormService.create(user.id, CreateApplicationFormRequest(recruitment.id))
@@ -39,7 +39,7 @@ class ApplicationFormIntegrationTest(
 
     Given("이미 최종 지원서를 제출한 회원과 모집 중인 모집이 있는 경우") {
         val recruitment = recruitmentRepository.save(createRecruitment(recruitable = true))
-        val user = userRepository.save(createUser())
+        val user = userRepository.save(createMember())
         applicationFormRepository.save(
             createApplicationForm(user.id, recruitment.id, submitted = true, submittedDateTime = now())
         )
@@ -57,7 +57,7 @@ class ApplicationFormIntegrationTest(
         val termId = 1L
         val recruitment1 = recruitmentRepository.save(createRecruitment(termId = termId))
         val recruitment2 = recruitmentRepository.save(createRecruitment(termId = termId, recruitable = true))
-        val user = userRepository.save(createUser())
+        val user = userRepository.save(createMember())
         applicationFormRepository.save(
             createApplicationForm(user.id, recruitment1.id, submitted = true, submittedDateTime = now())
         )
@@ -75,7 +75,7 @@ class ApplicationFormIntegrationTest(
         val termId = 1L
         val recruitment1 = recruitmentRepository.save(createRecruitment(termId = termId))
         val recruitment2 = recruitmentRepository.save(createRecruitment(termId = termId, recruitable = true))
-        val user = userRepository.save(createUser())
+        val user = userRepository.save(createMember())
         applicationFormRepository.save(createApplicationForm(user.id, recruitment1.id, submitted = false))
         applicationFormRepository.save(createApplicationForm(user.id, recruitment2.id, submitted = false))
 
@@ -95,7 +95,7 @@ class ApplicationFormIntegrationTest(
         val termId = 1L
         val recruitment1 = recruitmentRepository.save(createRecruitment(termId = termId))
         val recruitment2 = recruitmentRepository.save(createRecruitment(termId = termId, recruitable = true))
-        val user = userRepository.save(createUser())
+        val user = userRepository.save(createMember())
         applicationFormRepository.save(
             createApplicationForm(user.id, recruitment1.id, submitted = true, submittedDateTime = now())
         )

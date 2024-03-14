@@ -1,6 +1,6 @@
 package apply.ui.api
 
-import apply.createUser
+import apply.createMember
 import apply.security.AccessorResolver
 import apply.security.LoginFailedException
 import apply.security.LoginMember
@@ -74,7 +74,7 @@ abstract class RestControllerTest {
                     if (hasToken != true) {
                         throw LoginFailedException()
                     }
-                    createUser()
+                    createMember()
                 }
             }
         }

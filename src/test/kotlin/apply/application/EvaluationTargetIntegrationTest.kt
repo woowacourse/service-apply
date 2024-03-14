@@ -9,7 +9,7 @@ import apply.createEvaluation
 import apply.createEvaluationAnswer
 import apply.createEvaluationItem
 import apply.createEvaluationTarget
-import apply.createUser
+import apply.createMember
 import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.Cheater
@@ -52,7 +52,7 @@ class EvaluationTargetIntegrationTest(
     extensions(SpringTestExtension(SpringTestLifecycleMode.Root))
 
     fun saveMember(email: String): Member {
-        return userRepository.save(createUser(email = email))
+        return userRepository.save(createMember(email = email))
     }
 
     fun saveCheater(email: String): Cheater {

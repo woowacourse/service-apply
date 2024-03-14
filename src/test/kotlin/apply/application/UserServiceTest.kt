@@ -4,7 +4,7 @@ import apply.NEW_PASSWORD
 import apply.PASSWORD
 import apply.RANDOM_PASSWORD_TEXT
 import apply.WRONG_PASSWORD
-import apply.createUser
+import apply.createMember
 import apply.domain.member.Password
 import apply.domain.member.UnidentifiedMemberException
 import apply.domain.member.MemberRepository
@@ -25,7 +25,7 @@ class UserServiceTest : BehaviorSpec({
     val userService = UserService(userRepository, passwordGenerator)
 
     Given("특정 회원의 개인정보가 있는 경우") {
-        val user = createUser()
+        val user = createMember()
 
         every { userRepository.findByEmail(any()) } returns user
         every { passwordGenerator.generate() } returns RANDOM_PASSWORD_TEXT
@@ -49,7 +49,7 @@ class UserServiceTest : BehaviorSpec({
     }
 
     Given("특정 회원이 있고 변경할 비밀번호가 있는 경우") {
-        val user = createUser(id = 1L, password = PASSWORD)
+        val user = createMember(id = 1L, password = PASSWORD)
         val password = NEW_PASSWORD
 
         every { userRepository.getOrThrow(any()) } returns user
@@ -80,7 +80,7 @@ class UserServiceTest : BehaviorSpec({
     }
 
     Given("특정 회원이 있는 경우") {
-        val user = createUser(id = 1L)
+        val user = createMember(id = 1L)
 
         every { userRepository.getOrThrow(any()) } returns user
 
@@ -94,7 +94,7 @@ class UserServiceTest : BehaviorSpec({
     }
 
     Given("특정 회원이 존재하고 변경할 정보(전화번호)가 있는 경우") {
-        val user = createUser(phoneNumber = "010-0000-0000")
+        val user = createMember(phoneNumber = "010-0000-0000")
         val phoneNumber = "010-9999-9999"
 
         every { userRepository.getOrThrow(any()) } returns user

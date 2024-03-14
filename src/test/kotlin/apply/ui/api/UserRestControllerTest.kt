@@ -6,7 +6,7 @@ import apply.application.UserAuthenticationService
 import apply.application.UserResponse
 import apply.application.UserService
 import apply.application.mail.MailService
-import apply.createUser
+import apply.createMember
 import apply.domain.authenticationcode.AuthenticationCode
 import apply.domain.member.Gender
 import apply.domain.member.UnidentifiedMemberException
@@ -213,7 +213,7 @@ class UserRestControllerTest : RestControllerTest() {
 
     @Test
     fun `키워드(이름 or 이메일)로 회원들을 조회한다`() {
-        val responses = listOf(UserResponse(createUser("아마찌")))
+        val responses = listOf(UserResponse(createMember("아마찌")))
         every { userService.findAllByKeyword(any()) } returns responses
 
         mockMvc.get("/api/users") {
@@ -227,7 +227,7 @@ class UserRestControllerTest : RestControllerTest() {
 
     @Test
     fun `회원이 자신의 정보를 조회한다`() {
-        val response = UserResponse(createUser())
+        val response = UserResponse(createMember())
         every { userService.getInformation(any()) } returns response
 
         mockMvc.get("/api/users/me") {

@@ -2,7 +2,7 @@ package apply.application
 
 import apply.createEvaluationAnswer
 import apply.createEvaluationTarget
-import apply.createUser
+import apply.createMember
 import apply.domain.evaluationtarget.EvaluationAnswers
 import apply.domain.evaluationtarget.EvaluationStatus.FAIL
 import apply.domain.evaluationtarget.EvaluationStatus.PASS
@@ -31,10 +31,10 @@ class MailTargetServiceTest : BehaviorSpec({
     Given("특정 평가에 대한 평가 대상자가 있는 경우") {
         val evaluationId = 1L
         val users = listOf(
-            createUser(id = 1L, email = "waiting@email.com"),
-            createUser(id = 2L, email = "pending@email.com"),
-            createUser(id = 3L, email = "pass@email.com"),
-            createUser(id = 4L, email = "fail@email.com")
+            createMember(id = 1L, email = "waiting@email.com"),
+            createMember(id = 2L, email = "pending@email.com"),
+            createMember(id = 3L, email = "pass@email.com"),
+            createMember(id = 4L, email = "fail@email.com")
         )
 
         every { evaluationTargetRepository.findAllByEvaluationId(any()) } returns listOf(
@@ -57,7 +57,7 @@ class MailTargetServiceTest : BehaviorSpec({
 
     Given("특정 평가에 합격한 평가 대상자가 있는 경우") {
         val evaluationId = 1L
-        val user = createUser(id = 3L, email = "pass@email.com")
+        val user = createMember(id = 3L, email = "pass@email.com")
 
         every { evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(any(), any()) } returns listOf(
             createEvaluationTarget(evaluationId = evaluationId, memberId = user.id, evaluationStatus = PASS)
@@ -76,7 +76,7 @@ class MailTargetServiceTest : BehaviorSpec({
 
     Given("특정 평가에 탈락한 평가 대상자가 있는 경우") {
         val evaluationId = 1L
-        val user = createUser(id = 2L, email = "fail@email.com")
+        val user = createMember(id = 2L, email = "fail@email.com")
 
         every { evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(any(), any()) } returns listOf(
             createEvaluationTarget(evaluationId = evaluationId, memberId = user.id, evaluationStatus = FAIL)
@@ -95,7 +95,7 @@ class MailTargetServiceTest : BehaviorSpec({
 
     Given("특정 평가에 보류 중인 평가 대상자가 있는 경우") {
         val evaluationId = 1L
-        val user = createUser(id = 2L, email = "waiting@email.com")
+        val user = createMember(id = 2L, email = "waiting@email.com")
 
         every { evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(any(), any()) } returns listOf(
             createEvaluationTarget(evaluationId = evaluationId, memberId = user.id, evaluationStatus = WAITING)

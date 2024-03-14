@@ -1,6 +1,6 @@
 package apply.domain.member
 
-import apply.createUser
+import apply.createMember
 import io.kotest.core.spec.style.ExpectSpec
 import io.kotest.extensions.spring.SpringTestExtension
 import io.kotest.extensions.spring.SpringTestLifecycleMode
@@ -22,9 +22,9 @@ class MemberRepositoryTest(
     context("회원 조회") {
         memberRepository.saveAll(
             listOf(
-                createUser(name = "홍길동1", email = "a@email.com"),
-                createUser(name = "홍길동2", email = "b@email.com"),
-                createUser(name = "동해물과백두산이마르고닳도록하느님이보우하사우리나라만세무궁", email = "c@email.com")
+                createMember(name = "홍길동1", email = "a@email.com"),
+                createMember(name = "홍길동2", email = "b@email.com"),
+                createMember(name = "동해물과백두산이마르고닳도록하느님이보우하사우리나라만세무궁", email = "c@email.com")
             )
         )
 
