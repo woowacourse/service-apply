@@ -23,7 +23,7 @@ import javax.validation.Valid
 
 @RequestMapping("/api/users")
 @RestController
-class UserRestController(
+class MemberRestController(
     private val memberService: MemberService,
     private val memberAuthenticationService: MemberAuthenticationService,
     private val mailService: MailService

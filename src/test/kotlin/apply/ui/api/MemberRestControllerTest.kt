@@ -73,8 +73,8 @@ private fun createEditPasswordRequest(
     )
 }
 
-@WebMvcTest(UserRestController::class)
-class UserRestControllerTest : RestControllerTest() {
+@WebMvcTest(MemberRestController::class)
+class MemberRestControllerTest : RestControllerTest() {
     @MockkBean
     private lateinit var memberService: MemberService
 
