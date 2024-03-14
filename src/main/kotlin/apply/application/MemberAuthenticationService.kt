@@ -18,7 +18,7 @@ class MemberAuthenticationService(
     private val authenticationCodeRepository: AuthenticationCodeRepository,
     private val jwtTokenProvider: JwtTokenProvider
 ) {
-    fun generateTokenByRegister(request: RegisterUserRequest): String {
+    fun generateTokenByRegister(request: RegisterMemberRequest): String {
         require(request.password == request.confirmPassword) { "비밀번호가 일치하지 않습니다." }
         check(!memberRepository.existsByEmail(request.email)) { "이미 가입된 이메일입니다." }
         authenticationCodeRepository.getLastByEmail(request.email).validate(request.authenticationCode)

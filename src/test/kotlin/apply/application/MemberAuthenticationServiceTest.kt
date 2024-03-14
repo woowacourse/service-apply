@@ -8,7 +8,7 @@ import apply.VALID_TOKEN
 import apply.WRONG_PASSWORD
 import apply.createAuthenticateMemberRequest
 import apply.createAuthenticationCode
-import apply.createRegisterUserRequest
+import apply.createRegisterMemberRequest
 import apply.createMember
 import apply.domain.authenticationcode.AuthenticationCodeRepository
 import apply.domain.authenticationcode.getLastByEmail
@@ -42,7 +42,7 @@ class MemberAuthenticationServiceTest : BehaviorSpec({
         When("해당 이메일로 회원 가입을 하고 토큰을 생성하면") {
             Then("예외가 발생한다") {
                 shouldThrow<IllegalStateException> {
-                    memberAuthenticationService.generateTokenByRegister(createRegisterUserRequest())
+                    memberAuthenticationService.generateTokenByRegister(createRegisterMemberRequest())
                 }
             }
         }
@@ -55,7 +55,7 @@ class MemberAuthenticationServiceTest : BehaviorSpec({
         When("해당 이메일로 회원 가입을 하고 토큰을 생성하면") {
             Then("예외가 발생한다") {
                 shouldThrow<IllegalStateException> {
-                    memberAuthenticationService.generateTokenByRegister(createRegisterUserRequest())
+                    memberAuthenticationService.generateTokenByRegister(createRegisterMemberRequest())
                 }
             }
         }
@@ -73,7 +73,7 @@ class MemberAuthenticationServiceTest : BehaviorSpec({
         every { jwtTokenProvider.createToken(any()) } returns VALID_TOKEN
 
         When("비밀번호와 확인 비밀번호를 일치시키지 않고 회원 가입을 하고 토큰을 생성하면") {
-            val request = createRegisterUserRequest(
+            val request = createRegisterMemberRequest(
                 email = email,
                 password = PASSWORD,
                 confirmPassword = WRONG_PASSWORD,
@@ -88,7 +88,7 @@ class MemberAuthenticationServiceTest : BehaviorSpec({
         }
 
         When("해당 인증 코드와 다른 인증 코드로 회원 가입하고 토큰을 생성하면") {
-            val request = createRegisterUserRequest(email = email, authenticationCode = INVALID_CODE)
+            val request = createRegisterMemberRequest(email = email, authenticationCode = INVALID_CODE)
 
             Then("예외가 발생한다") {
                 shouldThrow<IllegalStateException> {
@@ -99,7 +99,7 @@ class MemberAuthenticationServiceTest : BehaviorSpec({
 
         When("해당 이메일과 인증 코드로 회원 가입을 하고 토큰을 생성하면") {
             val actual = memberAuthenticationService.generateTokenByRegister(
-                createRegisterUserRequest(email = email, authenticationCode = authenticationCode)
+                createRegisterMemberRequest(email = email, authenticationCode = authenticationCode)
             )
 
             Then("회원을 저장하고 토큰을 반환한다") {

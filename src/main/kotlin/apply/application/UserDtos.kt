@@ -50,7 +50,7 @@ data class ApplicantAndFormResponse(
     )
 }
 
-data class RegisterUserRequest(
+data class RegisterMemberRequest(
     @field:Pattern(regexp = "[가-힣]{1,30}", message = "올바른 형식의 이름이어야 합니다")
     val name: String,
 

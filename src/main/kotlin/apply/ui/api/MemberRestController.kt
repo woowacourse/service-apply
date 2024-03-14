@@ -3,7 +3,7 @@ package apply.ui.api
 import apply.application.AuthenticateMemberRequest
 import apply.application.EditInformationRequest
 import apply.application.EditPasswordRequest
-import apply.application.RegisterUserRequest
+import apply.application.RegisterMemberRequest
 import apply.application.ResetPasswordRequest
 import apply.application.MemberAuthenticationService
 import apply.application.UserResponse
@@ -29,7 +29,7 @@ class MemberRestController(
     private val mailService: MailService
 ) {
     @PostMapping("/register")
-    fun generateToken(@RequestBody @Valid request: RegisterUserRequest): ResponseEntity<ApiResponse<String>> {
+    fun generateToken(@RequestBody @Valid request: RegisterMemberRequest): ResponseEntity<ApiResponse<String>> {
         val token = memberAuthenticationService.generateTokenByRegister(request)
         return ResponseEntity.ok(ApiResponse.success(token))
     }

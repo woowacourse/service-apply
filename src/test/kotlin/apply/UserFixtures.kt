@@ -1,7 +1,7 @@
 package apply
 
 import apply.application.AuthenticateMemberRequest
-import apply.application.RegisterUserRequest
+import apply.application.RegisterMemberRequest
 import apply.domain.member.Gender
 import apply.domain.member.Password
 import apply.domain.member.Member
@@ -33,7 +33,7 @@ fun createMember(
     return Member(name, email, phoneNumber, gender, birthday, password, id)
 }
 
-fun createRegisterUserRequest(
+fun createRegisterMemberRequest(
     name: String = NAME,
     email: String = EMAIL,
     phoneNumber: String = PHONE_NUMBER,
@@ -42,8 +42,8 @@ fun createRegisterUserRequest(
     password: Password = PASSWORD,
     confirmPassword: Password = CONFIRM_PASSWORD,
     authenticationCode: String = VALID_CODE
-): RegisterUserRequest {
-    return RegisterUserRequest(
+): RegisterMemberRequest {
+    return RegisterMemberRequest(
         name,
         email,
         phoneNumber,
