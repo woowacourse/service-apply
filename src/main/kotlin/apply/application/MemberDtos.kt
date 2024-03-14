@@ -10,7 +10,7 @@ import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Past
 import javax.validation.constraints.Pattern
 
-data class UserResponse(
+data class MemberResponse(
     val id: Long,
     val name: String,
     val email: String,

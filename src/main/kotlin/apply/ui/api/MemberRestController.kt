@@ -6,7 +6,7 @@ import apply.application.EditPasswordRequest
 import apply.application.RegisterMemberRequest
 import apply.application.ResetPasswordRequest
 import apply.application.MemberAuthenticationService
-import apply.application.UserResponse
+import apply.application.MemberResponse
 import apply.application.MemberService
 import apply.application.mail.MailService
 import apply.domain.member.Member
@@ -78,7 +78,7 @@ class MemberRestController(
     fun findAllByKeyword(
         @RequestParam keyword: String,
         @LoginMember(administrator = true) member: Member
-    ): ResponseEntity<ApiResponse<List<UserResponse>>> {
+    ): ResponseEntity<ApiResponse<List<MemberResponse>>> {
         val responses = memberService.findAllByKeyword(keyword)
         return ResponseEntity.ok(ApiResponse.success(responses))
     }
@@ -86,7 +86,7 @@ class MemberRestController(
     @GetMapping("/me")
     fun getMyInformation(
         @LoginMember member: Member
-    ): ResponseEntity<ApiResponse<UserResponse>> {
+    ): ResponseEntity<ApiResponse<MemberResponse>> {
         val response = memberService.getInformation(member.id)
         return ResponseEntity.ok(ApiResponse.success(response))
     }

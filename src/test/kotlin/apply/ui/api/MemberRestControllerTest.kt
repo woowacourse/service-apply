@@ -3,7 +3,7 @@ package apply.ui.api
 import apply.application.EditInformationRequest
 import apply.application.ResetPasswordRequest
 import apply.application.MemberAuthenticationService
-import apply.application.UserResponse
+import apply.application.MemberResponse
 import apply.application.MemberService
 import apply.application.mail.MailService
 import apply.createMember
@@ -213,7 +213,7 @@ class MemberRestControllerTest : RestControllerTest() {
 
     @Test
     fun `키워드(이름 or 이메일)로 회원들을 조회한다`() {
-        val responses = listOf(UserResponse(createMember("아마찌")))
+        val responses = listOf(MemberResponse(createMember("아마찌")))
         every { memberService.findAllByKeyword(any()) } returns responses
 
         mockMvc.get("/api/users") {
@@ -227,7 +227,7 @@ class MemberRestControllerTest : RestControllerTest() {
 
     @Test
     fun `회원이 자신의 정보를 조회한다`() {
-        val response = UserResponse(createMember())
+        val response = MemberResponse(createMember())
         every { memberService.getInformation(any()) } returns response
 
         mockMvc.get("/api/users/me") {

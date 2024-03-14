@@ -88,7 +88,7 @@ class MemberServiceTest : BehaviorSpec({
             val actual = memberService.getInformation(member.id)
 
             Then("회원 정보를 확인할 수 있다") {
-                actual shouldBe UserResponse(member)
+                actual shouldBe MemberResponse(member)
             }
         }
     }

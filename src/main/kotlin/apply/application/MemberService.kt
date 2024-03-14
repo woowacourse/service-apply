@@ -17,8 +17,8 @@ class MemberService(
         return memberRepository.findByEmail(email) ?: throw IllegalArgumentException("회원이 존재하지 않습니다. email: $email")
     }
 
-    fun findAllByKeyword(keyword: String): List<UserResponse> {
-        return memberRepository.findAllByKeyword(keyword).map(::UserResponse)
+    fun findAllByKeyword(keyword: String): List<MemberResponse> {
+        return memberRepository.findAllByKeyword(keyword).map(::MemberResponse)
     }
 
     fun resetPassword(request: ResetPasswordRequest) {
@@ -32,9 +32,9 @@ class MemberService(
         memberRepository.getOrThrow(id).changePassword(request.oldPassword, request.password)
     }
 
-    fun getInformation(id: Long): UserResponse {
+    fun getInformation(id: Long): MemberResponse {
         val member = memberRepository.getOrThrow(id)
-        return UserResponse(member)
+        return MemberResponse(member)
     }
 
     fun editInformation(id: Long, request: EditInformationRequest) {
