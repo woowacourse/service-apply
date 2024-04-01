@@ -12,7 +12,7 @@ import support.views.createItemSelect
 import support.views.createSearchBox
 
 class CheaterForm() : BindingFormLayout<CheaterData>(CheaterData::class) {
-    private val users: Select<MemberResponse> = createItemSelect<MemberResponse>().apply {
+    private val members: Select<MemberResponse> = createItemSelect<MemberResponse>().apply {
         setTextRenderer { "${it.name}/${it.email}" }
     }
     private val description: TextArea = TextArea("등록 사유").apply {
@@ -20,23 +20,23 @@ class CheaterForm() : BindingFormLayout<CheaterData>(CheaterData::class) {
     }
 
     constructor(listener: (String) -> List<MemberResponse>) : this() {
-        add(createUserSearchBar(listener), description)
+        add(createMemberSearchBar(listener), description)
         setResponsiveSteps(ResponsiveStep("0", 1))
         drawRequired()
     }
 
-    private fun createUserSearchBar(listener: (String) -> List<MemberResponse>): Component {
+    private fun createMemberSearchBar(listener: (String) -> List<MemberResponse>): Component {
         val searchBar = createSearchBox("회원 검색") {
-            users.setItems(listener(it))
+            members.setItems(listener(it))
         }
-        return HorizontalLayout(searchBar, users).apply {
+        return HorizontalLayout(searchBar, members).apply {
             defaultVerticalComponentAlignment = FlexComponent.Alignment.END
         }
     }
 
     override fun bindOrNull(): CheaterData? {
         return bindDefaultOrNull()?.apply {
-            email = users.value.email
+            email = members.value.email
         }
     }
 
