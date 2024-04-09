@@ -96,7 +96,7 @@ class MemberRestControllerTest : RestControllerTest() {
             status { isOk() }
             content { success(response) }
         }.andDo {
-            handle(document("user-register-post"))
+            handle(document("member-register-post"))
         }
     }
 
@@ -111,7 +111,7 @@ class MemberRestControllerTest : RestControllerTest() {
             status { isOk() }
             content { success(response) }
         }.andDo {
-            handle(document("user-login-post"))
+            handle(document("member-login-post"))
         }
     }
 
@@ -124,7 +124,7 @@ class MemberRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isForbidden() }
         }.andDo {
-            handle(document("user-login-post-forbidden"))
+            handle(document("member-login-post-forbidden"))
         }
     }
 
@@ -137,7 +137,7 @@ class MemberRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isNoContent() }
         }.andDo {
-            handle(document("user-reset-password-post"))
+            handle(document("member-reset-password-post"))
         }
     }
 
@@ -150,7 +150,7 @@ class MemberRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isForbidden() }
         }.andDo {
-            handle(document("user-reset-password-post-forbidden"))
+            handle(document("member-reset-password-post-forbidden"))
         }
     }
 
@@ -164,7 +164,7 @@ class MemberRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isNoContent() }
         }.andDo {
-            handle(document("user-edit-password-post"))
+            handle(document("member-edit-password-post"))
         }
     }
 
@@ -178,7 +178,7 @@ class MemberRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isForbidden() }
         }.andDo {
-            handle(document("user-edit-password-post-forbidden"))
+            handle(document("member-edit-password-post-forbidden"))
         }
     }
 
@@ -193,7 +193,7 @@ class MemberRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isNoContent() }
         }.andDo {
-            handle(document("user-authentication-code-post"))
+            handle(document("member-authentication-code-post"))
         }
     }
 
@@ -207,7 +207,7 @@ class MemberRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isNoContent() }
         }.andDo {
-            handle(document("user-authenticate-email-post"))
+            handle(document("member-authenticate-email-post"))
         }
     }
 
@@ -236,7 +236,7 @@ class MemberRestControllerTest : RestControllerTest() {
             status { isOk() }
             content { success(response) }
         }.andDo {
-            handle(document("user-me-get"))
+            handle(document("member-me-get"))
         }
     }
 
@@ -250,7 +250,7 @@ class MemberRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isNoContent() }
         }.andDo {
-            handle(document("user-information-patch"))
+            handle(document("member-information-patch"))
         }
     }
 }
