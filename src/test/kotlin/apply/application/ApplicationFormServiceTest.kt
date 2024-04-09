@@ -40,15 +40,15 @@ class ApplicationFormServiceTest : BehaviorSpec({
 
     Given("지원할 수 있는 모집이 있고 특정 회원이 있는 경우") {
         val recruitment = createRecruitment(recruitable = true, id = 1L)
-        val userId = 1L
+        val memberId = 1L
 
         every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
         every { applicationFormRepository.existsByRecruitmentIdAndMemberId(any(), any()) } returns false
         every { applicationValidator.validate(any(), any()) } just Runs
-        every { applicationFormRepository.save(any()) } returns createApplicationForm(userId, recruitment.id)
+        every { applicationFormRepository.save(any()) } returns createApplicationForm(memberId, recruitment.id)
 
         When("특정 회원이 해당 모집에 대한 지원서를 생성하면") {
-            val actual = applicationFormService.create(userId, CreateApplicationFormRequest(recruitment.id))
+            val actual = applicationFormService.create(memberId, CreateApplicationFormRequest(recruitment.id))
 
             Then("임시 저장된 지원서가 생성된다") {
                 actual.submitted.shouldBeFalse()
@@ -58,7 +58,7 @@ class ApplicationFormServiceTest : BehaviorSpec({
 
     Given("지원할 수 있는 모집이 있고 해당 모집에 대해 특정 회원이 작성한 지원서가 없는 경우") {
         val recruitment = createRecruitment(recruitable = true, id = 1L)
-        val userId = 1L
+        val memberId = 1L
 
         every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
         every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns emptyList()
@@ -67,7 +67,7 @@ class ApplicationFormServiceTest : BehaviorSpec({
         When("특정 회원이 해당 모집에 대한 지원서를 수정하면") {
             Then("예외가 발생한다") {
                 shouldThrow<NoSuchElementException> {
-                    applicationFormService.update(userId, UpdateApplicationFormRequest(recruitment.id))
+                    applicationFormService.update(memberId, UpdateApplicationFormRequest(recruitment.id))
                 }
             }
         }
@@ -75,14 +75,14 @@ class ApplicationFormServiceTest : BehaviorSpec({
 
     Given("지원할 수 없는 모집이 있고 해당 모집에 지원서를 제출한 특정 회원이 있는 경우") {
         val recruitment = createRecruitment(recruitable = false, id = 1L)
-        val userId = 1L
+        val memberId = 1L
 
         every { recruitmentRepository.findByIdOrNull(any()) } returns recruitment
 
         When("특정 회원이 해당 모집에 대한 지원서를 수정하면") {
             Then("예외가 발생한다") {
                 shouldThrow<IllegalStateException> {
-                    applicationFormService.update(userId, UpdateApplicationFormRequest(recruitment.id))
+                    applicationFormService.update(memberId, UpdateApplicationFormRequest(recruitment.id))
                 }
             }
         }
@@ -91,21 +91,21 @@ class ApplicationFormServiceTest : BehaviorSpec({
     Given("특정 모집에 대한 임시 지원서를 작성한 지원자가 있고 모집 항목이 있는 경우") {
         val recruitmentId = 1L
         val recruitmentItemId = 1L
-        val userId = 1L
+        val memberId = 1L
 
         every { recruitmentRepository.getOrThrow(any()) } returns createRecruitment(id = recruitmentId)
         every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns listOf(
             createRecruitmentItem(recruitmentId = recruitmentId, id = recruitmentItemId)
         )
         every { applicationFormRepository.findByRecruitmentIdAndMemberId(any(), any()) } returns createApplicationForm(
-            memberId = userId, recruitmentId = recruitmentId, submitted = false
+            memberId = memberId, recruitmentId = recruitmentId, submitted = false
         )
 
         When("미제출 항목이 있는 상태에서 지원서를 최종 제출하면") {
             val request = UpdateApplicationFormRequest(recruitmentId = 1L, submitted = true, answers = emptyList())
 
             Then("예외가 발생한다") {
-                shouldThrow<IllegalArgumentException> { applicationFormService.update(userId, request) }
+                shouldThrow<IllegalArgumentException> { applicationFormService.update(memberId, request) }
             }
         }
 
@@ -117,7 +117,7 @@ class ApplicationFormServiceTest : BehaviorSpec({
             )
 
             Then("예외가 발생한다") {
-                shouldThrow<IllegalArgumentException> { applicationFormService.update(userId, request) }
+                shouldThrow<IllegalArgumentException> { applicationFormService.update(memberId, request) }
             }
         }
     }
@@ -126,14 +126,14 @@ class ApplicationFormServiceTest : BehaviorSpec({
         val recruitmentId = 1L
         val recruitmentItemId = 1L
         val maximumLength = 1
-        val userId = 1L
+        val memberId = 1L
 
         every { recruitmentRepository.getOrThrow(any()) } returns createRecruitment(id = recruitmentId)
         every { recruitmentItemRepository.findByRecruitmentIdOrderByPosition(any()) } returns listOf(
             createRecruitmentItem(recruitmentId = recruitmentId, maximumLength = maximumLength, id = recruitmentItemId)
         )
         every { applicationFormRepository.findByRecruitmentIdAndMemberId(any(), any()) } returns createApplicationForm(
-            memberId = userId, recruitmentId = recruitmentId, submitted = false
+            memberId = memberId, recruitmentId = recruitmentId, submitted = false
         )
 
         When("최대 글자 수를 초과하여 항목을 작성하면") {
@@ -145,7 +145,7 @@ class ApplicationFormServiceTest : BehaviorSpec({
             )
 
             Then("예외가 발생한다") {
-                shouldThrow<IllegalArgumentException> { applicationFormService.update(userId, request) }
+                shouldThrow<IllegalArgumentException> { applicationFormService.update(memberId, request) }
             }
         }
     }
