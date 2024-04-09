@@ -90,7 +90,7 @@ class MemberRestControllerTest : RestControllerTest() {
         every { memberAuthenticationService.generateTokenByRegister(any()) } returns response
         every { mailService.sendAuthenticationCodeMail(any(), any()) } just Runs
 
-        mockMvc.post("/api/users/register") {
+        mockMvc.post("/api/members/register") {
             jsonContent(createRegisterMemberRequest())
         }.andExpect {
             status { isOk() }
@@ -105,7 +105,7 @@ class MemberRestControllerTest : RestControllerTest() {
         val response = "valid_token"
         every { memberAuthenticationService.generateTokenByLogin(any()) } returns response
 
-        mockMvc.post("/api/users/login") {
+        mockMvc.post("/api/members/login") {
             jsonContent(createAuthenticateMemberRequest())
         }.andExpect {
             status { isOk() }
@@ -119,7 +119,7 @@ class MemberRestControllerTest : RestControllerTest() {
     fun `잘못된 회원 로그인 요청에 응답으로 403 Forbidden을 반환한다`() {
         every { memberAuthenticationService.generateTokenByLogin(any()) } throws UnidentifiedMemberException("사용자 정보가 일치하지 않습니다.")
 
-        mockMvc.post("/api/users/login") {
+        mockMvc.post("/api/members/login") {
             jsonContent(createAuthenticateMemberRequest(password = INVALID_PASSWORD))
         }.andExpect {
             status { isForbidden() }
@@ -132,7 +132,7 @@ class MemberRestControllerTest : RestControllerTest() {
     fun `올바른 비밀번호 찾기 요청에 응답으로 NoContent를 반환한다`() {
         every { memberService.resetPassword(any()) } just Runs
 
-        mockMvc.post("/api/users/reset-password") {
+        mockMvc.post("/api/members/reset-password") {
             jsonContent(ResetPasswordRequest("회원", "test@email.com", createLocalDate(1995, 2, 2)))
         }.andExpect {
             status { isNoContent() }
@@ -145,7 +145,7 @@ class MemberRestControllerTest : RestControllerTest() {
     fun `잘못된 비밀번호 찾기 요청에 응답으로 403 Forbidden을 반환한다`() {
         every { memberService.resetPassword(any()) } throws UnidentifiedMemberException("사용자 정보가 일치하지 않습니다.")
 
-        mockMvc.post("/api/users/reset-password") {
+        mockMvc.post("/api/members/reset-password") {
             jsonContent(ResetPasswordRequest("회원", "test@email.com", createLocalDate(1995, 4, 4)))
         }.andExpect {
             status { isForbidden() }
@@ -158,7 +158,7 @@ class MemberRestControllerTest : RestControllerTest() {
     fun `올바른 비밀번호 변경 요청에 응답으로 NoContent를 반환한다`() {
         every { memberService.editPassword(any(), any()) } just Runs
 
-        mockMvc.post("/api/users/edit-password") {
+        mockMvc.post("/api/members/edit-password") {
             jsonContent(createEditPasswordRequest())
             bearer("valid_token")
         }.andExpect {
@@ -172,7 +172,7 @@ class MemberRestControllerTest : RestControllerTest() {
     fun `잘못된 비밀번호 변경 요청에 응답으로 403 Forbidden을 반환한다`() {
         every { memberService.editPassword(any(), any()) } throws UnidentifiedMemberException("기존 비밀번호가 일치하지 않습니다.")
 
-        mockMvc.post("/api/users/edit-password") {
+        mockMvc.post("/api/members/edit-password") {
             jsonContent(createEditPasswordRequest(oldPassword = WRONG_PASSWORD))
             bearer("valid_token")
         }.andExpect {
@@ -188,7 +188,7 @@ class MemberRestControllerTest : RestControllerTest() {
         every { memberAuthenticationService.generateAuthenticationCode(any()) } returns authenticationCode.code
         every { mailService.sendAuthenticationCodeMail(any(), any()) } just Runs
 
-        mockMvc.post("/api/users/authentication-code") {
+        mockMvc.post("/api/members/authentication-code") {
             param("email", authenticationCode.email)
         }.andExpect {
             status { isNoContent() }
@@ -201,7 +201,7 @@ class MemberRestControllerTest : RestControllerTest() {
     fun `이메일 인증 요청에 응답으로 NoContent를 반환한다`() {
         every { memberAuthenticationService.authenticateEmail(any(), any()) } just Runs
 
-        mockMvc.post("/api/users/authenticate-email") {
+        mockMvc.post("/api/members/authenticate-email") {
             param("email", "test@email.com")
             param("authenticationCode", "code")
         }.andExpect {
@@ -216,7 +216,7 @@ class MemberRestControllerTest : RestControllerTest() {
         val responses = listOf(MemberResponse(createMember("아마찌")))
         every { memberService.findAllByKeyword(any()) } returns responses
 
-        mockMvc.get("/api/users") {
+        mockMvc.get("/api/members") {
             bearer("valid_token")
             param("keyword", "아마찌")
         }.andExpect {
@@ -230,7 +230,7 @@ class MemberRestControllerTest : RestControllerTest() {
         val response = MemberResponse(createMember())
         every { memberService.getInformation(any()) } returns response
 
-        mockMvc.get("/api/users/me") {
+        mockMvc.get("/api/members/me") {
             bearer("valid_token")
         }.andExpect {
             status { isOk() }
@@ -244,7 +244,7 @@ class MemberRestControllerTest : RestControllerTest() {
     fun `회원이 정보를 변경한다`() {
         every { memberService.editInformation(any(), any()) } just Runs
 
-        mockMvc.patch("/api/users/information") {
+        mockMvc.patch("/api/members/information") {
             jsonContent(EditInformationRequest("010-9999-9999"))
             bearer("valid_token")
         }.andExpect {
