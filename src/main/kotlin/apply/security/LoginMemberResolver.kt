@@ -1,7 +1,7 @@
 package apply.security
 
-import apply.application.UserService
-import apply.domain.user.User
+import apply.application.MemberService
+import apply.domain.member.Member
 import org.springframework.core.MethodParameter
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.stereotype.Component
@@ -13,12 +13,12 @@ import org.springframework.web.method.support.ModelAndViewContainer
 private const val BEARER = "Bearer"
 
 @Component
-class LoginUserResolver(
+class LoginMemberResolver(
     private val jwtTokenProvider: JwtTokenProvider,
-    private val userService: UserService
+    private val memberService: MemberService
 ) : HandlerMethodArgumentResolver {
     override fun supportsParameter(parameter: MethodParameter): Boolean {
-        return parameter.hasParameterAnnotation(LoginUser::class.java)
+        return parameter.hasParameterAnnotation(LoginMember::class.java)
     }
 
     override fun resolveArgument(
@@ -26,18 +26,18 @@ class LoginUserResolver(
         mavContainer: ModelAndViewContainer?,
         webRequest: NativeWebRequest,
         binderFactory: WebDataBinderFactory?
-    ): User {
+    ): Member {
         validateIfAdministrator(parameter)
         val token = extractBearerToken(webRequest)
         if (!jwtTokenProvider.isValidToken(token)) {
             throw LoginFailedException()
         }
         val userEmail = jwtTokenProvider.getSubject(token)
-        return userService.getByEmail(userEmail)
+        return memberService.getByEmail(userEmail)
     }
 
     private fun validateIfAdministrator(parameter: MethodParameter) {
-        val annotation = parameter.getParameterAnnotation(LoginUser::class.java)
+        val annotation = parameter.getParameterAnnotation(LoginMember::class.java)
         if (annotation?.administrator == true) {
             // TODO: 관리자가 HTTP API를 사용할 때 작업
             throw LoginFailedException()

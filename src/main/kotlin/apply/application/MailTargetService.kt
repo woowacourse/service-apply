@@ -3,8 +3,8 @@ package apply.application
 import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
-import apply.domain.user.UserRepository
-import apply.domain.user.findAllByEmailIn
+import apply.domain.member.MemberRepository
+import apply.domain.member.findAllByEmailIn
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -12,18 +12,18 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class MailTargetService(
     private val evaluationTargetRepository: EvaluationTargetRepository,
-    private val userRepository: UserRepository
+    private val memberRepository: MemberRepository
 ) {
     fun findMailTargets(evaluationId: Long, evaluationStatus: EvaluationStatus? = null): List<MailTargetResponse> {
-        val userIds = findEvaluationTargets(evaluationId, evaluationStatus).map { it.userId }
-        return userRepository.findAllById(userIds)
+        val memberIds = findEvaluationTargets(evaluationId, evaluationStatus).map { it.memberId }
+        return memberRepository.findAllById(memberIds)
             .map { MailTargetResponse(it.email, it.name) }
     }
 
     fun findAllByEmails(emails: List<String>): List<MailTargetResponse> {
-        val users = userRepository.findAllByEmailIn(emails)
-        val anonymousEmails = emails - users.map { it.email }
-        return users.map { MailTargetResponse(it) } + anonymousEmails.map { MailTargetResponse(it) }
+        val members = memberRepository.findAllByEmailIn(emails)
+        val anonymousEmails = emails - members.map { it.email }
+        return members.map { MailTargetResponse(it) } + anonymousEmails.map { MailTargetResponse(it) }
     }
 
     private fun findEvaluationTargets(evaluationId: Long, evaluationStatus: EvaluationStatus?): List<EvaluationTarget> {

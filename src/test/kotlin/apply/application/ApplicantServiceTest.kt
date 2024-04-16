@@ -2,10 +2,10 @@ package apply.application
 
 import apply.createApplicationForm
 import apply.createCheater
-import apply.createUser
+import apply.createMember
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.CheaterRepository
-import apply.domain.user.UserRepository
+import apply.domain.member.MemberRepository
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
@@ -17,21 +17,21 @@ import support.test.spec.afterRootTest
 
 class ApplicantServiceTest : BehaviorSpec({
     val applicationFormRepository = mockk<ApplicationFormRepository>()
-    val userRepository = mockk<UserRepository>()
+    val memberRepository = mockk<MemberRepository>()
     val cheaterRepository = mockk<CheaterRepository>()
 
-    val applicantService = ApplicantService(applicationFormRepository, userRepository, cheaterRepository)
+    val applicantService = ApplicantService(applicationFormRepository, memberRepository, cheaterRepository)
 
     Given("특정 모집에 지원한 부정행위자가 있는 경우") {
         val recruitmentId = 1L
-        val user = createUser(id = 1L)
-        val cheater = createCheater(email = user.email)
+        val member = createMember(id = 1L)
+        val cheater = createCheater(email = member.email)
 
         every { applicationFormRepository.findByRecruitmentIdAndSubmittedTrue(any()) } returns listOf(
-            createApplicationForm(userId = user.id, recruitmentId = recruitmentId)
+            createApplicationForm(memberId = member.id, recruitmentId = recruitmentId)
         )
         every { cheaterRepository.findAll() } returns listOf(cheater)
-        every { userRepository.findAllById(any()) } returns listOf(createUser(email = cheater.email, id = user.id))
+        every { memberRepository.findAllById(any()) } returns listOf(createMember(email = cheater.email, id = member.id))
 
         When("특정 모집에 지원한 지원 정보를 조회하면") {
             val actual = applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId)
@@ -46,16 +46,16 @@ class ApplicantServiceTest : BehaviorSpec({
     Given("이름이나 이메일에 특정 키워드를 포함하는 지원자와 부정행위자가 있는 경우") {
         val recruitmentId = 1L
         val keyword = "amazzi"
-        val user1 = createUser(name = keyword, id = 1L)
-        val user2 = createUser(email = "$keyword@email.com", id = 2L)
-        val cheater = createCheater(email = user1.email)
+        val member1 = createMember(name = keyword, id = 1L)
+        val member2 = createMember(email = "$keyword@email.com", id = 2L)
+        val cheater = createCheater(email = member1.email)
 
         every { applicationFormRepository.findByRecruitmentIdAndSubmittedTrue(any()) } returns listOf(
-            createApplicationForm(userId = user1.id, recruitmentId = recruitmentId),
-            createApplicationForm(userId = user2.id, recruitmentId = recruitmentId)
+            createApplicationForm(memberId = member1.id, recruitmentId = recruitmentId),
+            createApplicationForm(memberId = member2.id, recruitmentId = recruitmentId)
         )
         every { cheaterRepository.findAll() } returns listOf(cheater)
-        every { userRepository.findAllByKeyword(keyword) } returns listOf(user1, user2)
+        every { memberRepository.findAllByKeyword(keyword) } returns listOf(member1, member2)
 
         When("특정 키워드로 특정 모집에 지원한 지원 정보를 조회하면") {
             val actual = applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId, keyword)

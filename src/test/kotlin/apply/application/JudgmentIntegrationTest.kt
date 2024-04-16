@@ -55,16 +55,16 @@ class JudgmentIntegrationTest(
     private val events: Events
 ) : BehaviorSpec({
     Given("과제 제출물을 제출할 수 있는 특정 과제에 대한 과제 제출물이 있는 경우") {
-        val userId = 1L
+        val memberId = 1L
         val mission = missionRepository.save(createMission(submittable = true))
         judgmentItemRepository.save(createJudgmentItem(mission.id))
-        assignmentRepository.save(createAssignment(userId, mission.id))
+        assignmentRepository.save(createAssignment(memberId, mission.id))
         val commit = createCommit()
 
         every { assignmentArchive.getLastCommit(any(), any()) } returns commit
 
         When("해당 과제 제출물의 예제 테스트를 실행하면") {
-            val actual = judgmentService.judgeExample(userId, mission.id)
+            val actual = judgmentService.judgeExample(memberId, mission.id)
 
             Then("마지막 커밋에 대한 자동 채점 기록을 확인할 수 있고 자동 채점이 저장된다") {
                 assertSoftly(actual) {
@@ -80,17 +80,17 @@ class JudgmentIntegrationTest(
     }
 
     Given("특정 과제 제출물에 대한 마지막 커밋이 없어 예외가 발생하는 경우") {
-        val userId = 1L
+        val memberId = 1L
         val mission = missionRepository.save(createMission(submittable = true))
         judgmentItemRepository.save(createJudgmentItem(mission.id))
-        val assignment = assignmentRepository.save(createAssignment(userId, mission.id))
+        val assignment = assignmentRepository.save(createAssignment(memberId, mission.id))
 
         every { assignmentArchive.getLastCommit(any(), any()) } throws RuntimeException()
 
         When("해당 과제 제출물의 예제 테스트를 실행하면") {
             Then("예외가 발생하고 자동 채점이 저장되지 않는다") {
                 shouldThrowAny {
-                    judgmentService.judgeExample(userId, mission.id)
+                    judgmentService.judgeExample(memberId, mission.id)
                 }
                 judgmentRepository.findAll().shouldBeEmpty()
             }
@@ -116,10 +116,10 @@ class JudgmentIntegrationTest(
     }
 
     Given("특정 과제 제출물에 대한 예제 자동 채점 기록이 있고 이전 커밋과 마지막 커밋이 동일한 경우") {
-        val userId = 1L
+        val memberId = 1L
         val mission = missionRepository.save(createMission(submittable = true))
         judgmentItemRepository.save(createJudgmentItem(mission.id))
-        val assignment = assignmentRepository.save(createAssignment(userId, mission.id))
+        val assignment = assignmentRepository.save(createAssignment(memberId, mission.id))
         val commit = createCommit()
         judgmentRepository.save(
             createJudgment(
@@ -137,7 +137,7 @@ class JudgmentIntegrationTest(
         every { assignmentArchive.getLastCommit(any(), any()) } returns commit
 
         When("해당 과제 제출물의 예제 테스트를 실행하면") {
-            val actual = judgmentService.judgeExample(userId, mission.id)
+            val actual = judgmentService.judgeExample(memberId, mission.id)
 
             Then("해당 커밋에 대한 자동 채점 기록을 확인할 수 있다") {
                 assertSoftly(actual) {

@@ -4,7 +4,7 @@ import apply.application.EvaluationService
 import apply.application.MailTargetResponse
 import apply.application.MailTargetService
 import apply.application.RecruitmentService
-import apply.application.UserService
+import apply.application.MemberService
 import apply.application.mail.MailData
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.button.Button
@@ -29,7 +29,7 @@ import support.views.createNormalButton
 import support.views.createUpload
 
 class MailForm(
-    private val userService: UserService,
+    private val memberService: MemberService,
     private val recruitmentService: RecruitmentService,
     private val evaluationService: EvaluationService,
     private val mailTargetService: MailTargetService,
@@ -76,7 +76,7 @@ class MailForm(
 
     private fun createIndividualLoadButton(): Button {
         return createNormalButton("개별 불러오기") {
-            IndividualMailTargetDialog(userService) {
+            IndividualMailTargetDialog(memberService) {
                 refreshGrid { mailTargets.add(it) }
             }
         }

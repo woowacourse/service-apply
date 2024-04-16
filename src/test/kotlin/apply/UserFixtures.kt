@@ -1,10 +1,10 @@
 package apply
 
-import apply.application.AuthenticateUserRequest
-import apply.application.RegisterUserRequest
-import apply.domain.user.Gender
-import apply.domain.user.Password
-import apply.domain.user.User
+import apply.application.AuthenticateMemberRequest
+import apply.application.RegisterMemberRequest
+import apply.domain.member.Gender
+import apply.domain.member.Password
+import apply.domain.member.Member
 import support.createLocalDate
 import java.time.LocalDate
 
@@ -21,7 +21,7 @@ val WRONG_PASSWORD: Password = Password("wrong_password")
 const val RANDOM_PASSWORD_TEXT: String = "nEw_p@ssw0rd"
 const val VALID_TOKEN: String = "SOME_VALID_TOKEN"
 
-fun createUser(
+fun createMember(
     name: String = NAME,
     email: String = EMAIL,
     phoneNumber: String = PHONE_NUMBER,
@@ -29,11 +29,11 @@ fun createUser(
     birthday: LocalDate = BIRTHDAY,
     password: Password = PASSWORD,
     id: Long = 0L
-): User {
-    return User(name, email, phoneNumber, gender, birthday, password, id)
+): Member {
+    return Member(name, email, phoneNumber, gender, birthday, password, id)
 }
 
-fun createRegisterUserRequest(
+fun createRegisterMemberRequest(
     name: String = NAME,
     email: String = EMAIL,
     phoneNumber: String = PHONE_NUMBER,
@@ -42,8 +42,8 @@ fun createRegisterUserRequest(
     password: Password = PASSWORD,
     confirmPassword: Password = CONFIRM_PASSWORD,
     authenticationCode: String = VALID_CODE
-): RegisterUserRequest {
-    return RegisterUserRequest(
+): RegisterMemberRequest {
+    return RegisterMemberRequest(
         name,
         email,
         phoneNumber,
@@ -55,9 +55,9 @@ fun createRegisterUserRequest(
     )
 }
 
-fun createAuthenticateUserRequest(
+fun createAuthenticateMemberRequest(
     email: String = EMAIL,
     password: Password = PASSWORD
-): AuthenticateUserRequest {
-    return AuthenticateUserRequest(email, password)
+): AuthenticateMemberRequest {
+    return AuthenticateMemberRequest(email, password)
 }

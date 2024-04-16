@@ -16,20 +16,20 @@ class AssignmentRepositoryTest(
     extensions(SpringTestExtension(SpringTestLifecycleMode.Root))
 
     context("과제 제출물 조회") {
-        assignmentRepository.save(createAssignment(userId = 1L, missionId = 1L))
+        assignmentRepository.save(createAssignment(memberId = 1L, missionId = 1L))
 
         expect("지원자 및 과제에 해당하는 과제 제출물이 있는지 확인한다") {
-            val actual = assignmentRepository.existsByUserIdAndMissionId(1L, 1L)
+            val actual = assignmentRepository.existsByMemberIdAndMissionId(1L, 1L)
             actual.shouldBeTrue()
         }
 
         expect("지원자 및 과제에 해당하는 과제 제출물이 있는지 조회한다") {
-            val actual = assignmentRepository.findByUserIdAndMissionId(1L, 1L)
+            val actual = assignmentRepository.findByMemberIdAndMissionId(1L, 1L)
             actual.shouldNotBeNull()
         }
 
         expect("지원자의 모든 과제 제출물을 조회한다") {
-            val actual = assignmentRepository.findAllByUserId(1L)
+            val actual = assignmentRepository.findAllByMemberId(1L)
             actual shouldHaveSize 1
         }
     }

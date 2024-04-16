@@ -20,20 +20,20 @@ class ApplicationFormService(
     private val recruitmentItemRepository: RecruitmentItemRepository,
     private val applicationValidator: ApplicationValidator
 ) {
-    fun create(userId: Long, request: CreateApplicationFormRequest): ApplicationFormResponse {
+    fun create(memberId: Long, request: CreateApplicationFormRequest): ApplicationFormResponse {
         val recruitment = findApplicableRecruitment(request.recruitmentId)
-        check(!applicationFormRepository.existsByRecruitmentIdAndUserId(recruitment.id, userId)) {
+        check(!applicationFormRepository.existsByRecruitmentIdAndMemberId(recruitment.id, memberId)) {
             "이미 작성한 지원서가 있습니다."
         }
         return applicationFormRepository
-            .save(ApplicationForm(userId, recruitment.id, applicationValidator))
+            .save(ApplicationForm(memberId, recruitment.id, applicationValidator))
             .let(::ApplicationFormResponse)
     }
 
-    fun update(userId: Long, request: UpdateApplicationFormRequest) {
+    fun update(memberId: Long, request: UpdateApplicationFormRequest) {
         val recruitment = findApplicableRecruitment(request.recruitmentId)
         validateRequest(request)
-        val applicationForm = findByRecruitmentIdAndUserId(recruitment.id, userId)
+        val applicationForm = findByRecruitmentIdAndMemberId(recruitment.id, memberId)
         val answers = ApplicationFormAnswers(
             request.answers.map {
                 ApplicationFormAnswer(it.contents, it.recruitmentItemId)
@@ -46,19 +46,19 @@ class ApplicationFormService(
         applicationFormRepository.save(applicationForm)
     }
 
-    fun getMyApplicationForms(userId: Long): List<MyApplicationFormResponse> =
-        applicationFormRepository.findAllByUserId(userId).map(::MyApplicationFormResponse)
+    fun getMyApplicationForms(memberId: Long): List<MyApplicationFormResponse> =
+        applicationFormRepository.findAllByMemberId(memberId).map(::MyApplicationFormResponse)
 
-    fun getApplicationForm(userId: Long, recruitmentId: Long): ApplicationFormResponse {
-        val applicationForm = findByRecruitmentIdAndUserId(recruitmentId, userId)
+    fun getApplicationForm(memberId: Long, recruitmentId: Long): ApplicationFormResponse {
+        val applicationForm = findByRecruitmentIdAndMemberId(recruitmentId, memberId)
         check(!applicationForm.submitted) {
             "이미 제출한 지원서는 열람할 수 없습니다."
         }
         return ApplicationFormResponse(applicationForm)
     }
 
-    private fun findByRecruitmentIdAndUserId(recruitmentId: Long, userId: Long): ApplicationForm =
-        applicationFormRepository.findByRecruitmentIdAndUserId(recruitmentId, userId)
+    private fun findByRecruitmentIdAndMemberId(recruitmentId: Long, memberId: Long): ApplicationForm =
+        applicationFormRepository.findByRecruitmentIdAndMemberId(recruitmentId, memberId)
             ?: throw NoSuchElementException("해당하는 지원서가 없습니다.")
 
     private fun findApplicableRecruitment(recruitmentId: Long): Recruitment {
