@@ -73,7 +73,10 @@ const SignUp = () => {
           onChange={handleChanges[SIGN_UP_FORM_NAME.IS_TERM_AGREED]}
           required
         >
-          <p className={styles["summary-content"]}>{agreementContent}</p>
+          <p
+            className={styles["summary-content"]}
+            dangerouslySetInnerHTML={{ __html: agreementContent }}
+          />
         </SummaryCheckField>
 
         <EmailField
