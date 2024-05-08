@@ -1,5 +1,9 @@
 package apply.ui.api
 
+import apply.application.AgreementResponse
+import apply.application.AgreementService
+import com.ninjasquad.springmockk.MockkBean
+import io.mockk.every
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
@@ -7,26 +11,23 @@ import org.springframework.test.web.servlet.get
 
 @WebMvcTest(AgreementRestController::class)
 class AgreementRestControllerTest : RestControllerTest() {
+    @MockkBean
+    private lateinit var agreementService: AgreementService
+
     @Test
     fun `최신 버전의 동의서를 조회한다`() {
         val response = AgreementResponse(
             1L,
             20240418,
             """
-                우아한형제들은 개인정보보호법, 정보통신망 이용촉진 및 정보보호 등에 관한 법률 등 관련 법령 상의 개인정보보호 규정을 준수하며, 개인정보의 보호에 최선을 다하고 있습니다.
+                <p>
+                  (주)우아한형제들은 아래와 같이 지원자의 개인정보를 수집 및 이용합니다.
                   
-                1. 개인정보의 수집·이용 목적
-                - 우아한테크코스 또는 우아한테크캠프 Pro 지원자 모집 및 대상자 선정
-
-                2. 개인정보 수집 항목
-                - [필수] 이름, 이메일, 연락처, 성별, 생년월일
-
-                3. 개인정보 보유 및 이용기간
-                - 우아한테크코스 또는 우아한테크캠프 Pro 지원 기수 교육 대상자 선정 이후 파기
-
-                위 개인정보 수집·이용에 동의하지 않으실 수 있으며, 동의하지 않으실 경우 우아한테크코스 또는 우아한테크캠프 Pro 지원이 제한됩니다.
+                  <strong>보유 및 이용기간</strong> : <strong><span style="font-size:1.2rem">탈퇴 시 또는 이용목적 달성 시 파기</span></strong>(단, 관련법령 및 회사정책에 의해 보관이 필요한 경우 해당기간 동안 보관)
+                </p>
             """.trimIndent()
         )
+        every { agreementService.latest() } returns response
 
         mockMvc.get("/api/agreements/latest")
             .andExpect {
