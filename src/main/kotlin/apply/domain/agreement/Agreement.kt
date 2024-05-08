@@ -2,7 +2,9 @@ package apply.domain.agreement
 
 import support.domain.BaseRootEntity
 import java.time.format.DateTimeFormatter
+import javax.persistence.Entity
 
+@Entity
 class Agreement(
     val version: Int,
     val content: String,
