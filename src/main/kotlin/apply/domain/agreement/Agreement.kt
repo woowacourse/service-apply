@@ -2,11 +2,15 @@ package apply.domain.agreement
 
 import support.domain.BaseRootEntity
 import java.time.format.DateTimeFormatter
+import javax.persistence.Column
 import javax.persistence.Entity
 
 @Entity
 class Agreement(
+    @Column(nullable = false)
     val version: Int,
+
+    @Column(nullable = false, length = 5000)
     val content: String,
     id: Long = 0L,
 ) : BaseRootEntity<Agreement>(id) {
