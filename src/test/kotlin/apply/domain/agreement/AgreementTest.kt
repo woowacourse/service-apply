@@ -1,5 +1,6 @@
 package apply.domain.agreement
 
+import apply.createAgreement
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
@@ -10,11 +11,3 @@ class AgreementTest : StringSpec({
         shouldThrow<IllegalArgumentException> { createAgreement(version = 1) }
     }
 })
-
-fun createAgreement(
-    version: Int = 20240416,
-    content: String = "개인정보 수집 및 이용 동의서",
-    id: Long = 0L,
-): Agreement {
-    return Agreement(version, content, id)
-}

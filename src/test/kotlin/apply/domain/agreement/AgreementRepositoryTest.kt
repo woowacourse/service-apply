@@ -1,5 +1,6 @@
 package apply.domain.agreement
 
+import apply.createAgreement
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.ExpectSpec
 import io.kotest.extensions.spring.SpringTestExtension
