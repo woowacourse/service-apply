@@ -1,7 +1,6 @@
 package apply.application
 
 import apply.domain.applicationform.ApplicationForm
-import apply.domain.member.Gender
 import apply.domain.member.Member
 import apply.domain.member.Password
 import java.time.LocalDate
@@ -55,7 +54,6 @@ data class RegisterMemberRequest(
 
     @field:Pattern(regexp = "010-\\d{4}-\\d{4}", message = "올바른 형식의 전화번호여야 합니다")
     val phoneNumber: String,
-    val gender: Gender,
 
     @field:Past
     val birthday: LocalDate,

@@ -41,17 +41,16 @@ fun createRegisterMemberRequest(
     birthday: LocalDate = BIRTHDAY,
     password: Password = PASSWORD,
     confirmPassword: Password = CONFIRM_PASSWORD,
-    authenticationCode: String = VALID_CODE
+    authenticationCode: String = VALID_CODE,
 ): RegisterMemberRequest {
     return RegisterMemberRequest(
         name,
         email,
         phoneNumber,
-        gender,
         birthday,
         password,
         confirmPassword,
-        authenticationCode
+        authenticationCode,
     )
 }
 
