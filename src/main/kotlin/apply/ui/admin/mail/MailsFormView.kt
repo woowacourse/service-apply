@@ -3,8 +3,8 @@ package apply.ui.admin.mail
 import apply.application.EvaluationService
 import apply.application.MailHistoryService
 import apply.application.MailTargetService
-import apply.application.RecruitmentService
 import apply.application.MemberService
+import apply.application.RecruitmentService
 import apply.application.mail.MailService
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component

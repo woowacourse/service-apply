@@ -1,10 +1,10 @@
 package apply.ui.api
 
 import apply.application.EditInformationRequest
-import apply.application.ResetPasswordRequest
 import apply.application.MemberAuthenticationService
 import apply.application.MemberResponse
 import apply.application.MemberService
+import apply.application.ResetPasswordRequest
 import apply.application.mail.MailService
 import apply.createMember
 import apply.domain.authenticationcode.AuthenticationCode

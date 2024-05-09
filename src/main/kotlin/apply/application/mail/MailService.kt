@@ -4,11 +4,11 @@ import apply.application.ApplicationProperties
 import apply.domain.applicationform.ApplicationFormSubmittedEvent
 import apply.domain.mail.MailHistory
 import apply.domain.mail.MailHistoryRepository
+import apply.domain.member.MemberRepository
+import apply.domain.member.PasswordResetEvent
+import apply.domain.member.getOrThrow
 import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitment.getOrThrow
-import apply.domain.member.PasswordResetEvent
-import apply.domain.member.MemberRepository
-import apply.domain.member.getOrThrow
 import org.springframework.boot.autoconfigure.mail.MailProperties
 import org.springframework.core.io.ByteArrayResource
 import org.springframework.scheduling.annotation.Async

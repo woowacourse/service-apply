@@ -5,9 +5,9 @@ import apply.PASSWORD
 import apply.RANDOM_PASSWORD_TEXT
 import apply.WRONG_PASSWORD
 import apply.createMember
+import apply.domain.member.MemberRepository
 import apply.domain.member.Password
 import apply.domain.member.UnidentifiedMemberException
-import apply.domain.member.MemberRepository
 import apply.domain.member.findByEmail
 import apply.domain.member.getOrThrow
 import io.kotest.assertions.throwables.shouldThrow
