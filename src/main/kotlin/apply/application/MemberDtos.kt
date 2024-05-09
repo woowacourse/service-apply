@@ -64,11 +64,7 @@ data class RegisterMemberRequest(
 
     @field:NotBlank
     val authenticationCode: String
-) {
-    fun toEntity(): Member {
-        return Member(name, email, phoneNumber, gender, birthday, password)
-    }
-}
+)
 
 data class AuthenticateMemberRequest(
     @field:Email

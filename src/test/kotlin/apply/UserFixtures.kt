@@ -3,8 +3,8 @@ package apply
 import apply.application.AuthenticateMemberRequest
 import apply.application.RegisterMemberRequest
 import apply.domain.member.Gender
-import apply.domain.member.Password
 import apply.domain.member.Member
+import apply.domain.member.Password
 import support.createLocalDate
 import java.time.LocalDate
 
@@ -30,7 +30,7 @@ fun createMember(
     password: Password = PASSWORD,
     id: Long = 0L
 ): Member {
-    return Member(name, email, phoneNumber, gender, birthday, password, id)
+    return Member(name, email, phoneNumber, birthday, password, id)
 }
 
 fun createRegisterMemberRequest(

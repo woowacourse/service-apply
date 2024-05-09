@@ -26,9 +26,6 @@ class Member(
     val phoneNumber: String
         get() = information.phoneNumber
 
-    val gender: Gender
-        get() = information.gender
-
     val birthday: LocalDate
         get() = information.birthday
 
@@ -36,12 +33,11 @@ class Member(
         name: String,
         email: String,
         phoneNumber: String,
-        gender: Gender,
         birthday: LocalDate,
         password: Password,
         id: Long = 0L
     ) : this(
-        MemberInformation(name, email, phoneNumber, gender, birthday), password, id
+        MemberInformation(name, email, phoneNumber, Gender.MALE, birthday), password, id
     )
 
     fun authenticate(password: Password) {

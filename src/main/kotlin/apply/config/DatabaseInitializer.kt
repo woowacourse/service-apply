@@ -22,6 +22,9 @@ import apply.domain.judgmentitem.JudgmentItemRepository
 import apply.domain.judgmentitem.ProgrammingLanguage
 import apply.domain.mail.MailHistory
 import apply.domain.mail.MailHistoryRepository
+import apply.domain.member.Member
+import apply.domain.member.MemberRepository
+import apply.domain.member.Password
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionRepository
 import apply.domain.recruitment.Recruitment
@@ -30,10 +33,6 @@ import apply.domain.recruitmentitem.RecruitmentItem
 import apply.domain.recruitmentitem.RecruitmentItemRepository
 import apply.domain.term.Term
 import apply.domain.term.TermRepository
-import apply.domain.member.Gender
-import apply.domain.member.Password
-import apply.domain.member.Member
-import apply.domain.member.MemberRepository
 import org.springframework.boot.CommandLineRunner
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
@@ -241,33 +240,29 @@ class DatabaseInitializer(
                 name = "홍길동",
                 email = "a@email.com",
                 phoneNumber = "010-0000-0000",
-                gender = Gender.MALE,
                 birthday = createLocalDate(2020, 4, 17),
-                password = Password("password")
+                password = Password("password"),
             ),
             Member(
                 name = "홍길동2",
                 email = "b@email.com",
                 phoneNumber = "010-0000-0000",
-                gender = Gender.FEMALE,
                 birthday = createLocalDate(2020, 5, 5),
-                password = Password("password")
+                password = Password("password"),
             ),
             Member(
                 name = "홍길동3",
                 email = "c@email.com",
                 phoneNumber = "010-0000-0000",
-                gender = Gender.MALE,
                 birthday = createLocalDate(2020, 1, 1),
-                password = Password("password")
+                password = Password("password"),
             ),
             Member(
                 name = "홍길동4",
                 email = "d@email.com",
                 phoneNumber = "010-0000-0000",
-                gender = Gender.MALE,
                 birthday = createLocalDate(2020, 1, 1),
-                password = Password("password")
+                password = Password("password"),
             )
         )
         memberRepository.saveAll(members)
