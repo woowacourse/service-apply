@@ -2,8 +2,8 @@ package apply.application
 
 import apply.domain.applicationform.ApplicationForm
 import apply.domain.member.Gender
-import apply.domain.member.Password
 import apply.domain.member.Member
+import apply.domain.member.Password
 import java.time.LocalDate
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
@@ -15,16 +15,14 @@ data class MemberResponse(
     val name: String,
     val email: String,
     val phoneNumber: String,
-    val gender: Gender,
-    val birthday: LocalDate
+    val birthday: LocalDate,
 ) {
     constructor(member: Member) : this(
         member.id,
         member.name,
         member.email,
         member.phoneNumber,
-        member.gender,
-        member.birthday
+        member.birthday,
     )
 }
 
@@ -33,20 +31,18 @@ data class ApplicantAndFormResponse(
     val name: String,
     val email: String,
     val phoneNumber: String,
-    val gender: Gender,
     val birthday: LocalDate,
     val isCheater: Boolean,
-    val applicationForm: ApplicationForm
+    val applicationForm: ApplicationForm,
 ) {
     constructor(member: Member, isCheater: Boolean, applicationForm: ApplicationForm) : this(
         member.id,
         member.name,
         member.email,
         member.phoneNumber,
-        member.gender,
         member.birthday,
         isCheater,
-        applicationForm
+        applicationForm,
     )
 }
 
