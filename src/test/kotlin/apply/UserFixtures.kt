@@ -2,7 +2,6 @@ package apply
 
 import apply.application.AuthenticateMemberRequest
 import apply.application.RegisterMemberRequest
-import apply.domain.member.Gender
 import apply.domain.member.Member
 import apply.domain.member.Password
 import support.createLocalDate
@@ -11,7 +10,6 @@ import java.time.LocalDate
 const val NAME: String = "지원자"
 const val EMAIL: String = "test@email.com"
 const val PHONE_NUMBER: String = "010-0000-0000"
-val GENDER: Gender = Gender.MALE
 val BIRTHDAY: LocalDate = createLocalDate(1995, 2, 2)
 val PASSWORD: Password = Password("password")
 val CONFIRM_PASSWORD: Password = Password("password")
@@ -25,10 +23,9 @@ fun createMember(
     name: String = NAME,
     email: String = EMAIL,
     phoneNumber: String = PHONE_NUMBER,
-    gender: Gender = GENDER,
     birthday: LocalDate = BIRTHDAY,
     password: Password = PASSWORD,
-    id: Long = 0L
+    id: Long = 0L,
 ): Member {
     return Member(name, email, phoneNumber, birthday, password, id)
 }
@@ -37,7 +34,6 @@ fun createRegisterMemberRequest(
     name: String = NAME,
     email: String = EMAIL,
     phoneNumber: String = PHONE_NUMBER,
-    gender: Gender = GENDER,
     birthday: LocalDate = BIRTHDAY,
     password: Password = PASSWORD,
     confirmPassword: Password = CONFIRM_PASSWORD,
@@ -56,7 +52,7 @@ fun createRegisterMemberRequest(
 
 fun createAuthenticateMemberRequest(
     email: String = EMAIL,
-    password: Password = PASSWORD
+    password: Password = PASSWORD,
 ): AuthenticateMemberRequest {
     return AuthenticateMemberRequest(email, password)
 }
