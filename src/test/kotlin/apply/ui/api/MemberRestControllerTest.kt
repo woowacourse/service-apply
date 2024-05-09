@@ -8,7 +8,6 @@ import apply.application.ResetPasswordRequest
 import apply.application.mail.MailService
 import apply.createMember
 import apply.domain.authenticationcode.AuthenticationCode
-import apply.domain.member.Gender
 import apply.domain.member.UnidentifiedMemberException
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
@@ -33,43 +32,41 @@ private fun createRegisterMemberRequest(
     name: String = "회원",
     email: String = "test@email.com",
     phoneNumber: String = "010-0000-0000",
-    gender: Gender = Gender.MALE,
     birthday: LocalDate = createLocalDate(1995, 2, 2),
     password: String = PASSWORD,
     confirmPassword: String = PASSWORD,
-    authenticationCode: String = "3ea9fa6c"
+    authenticationCode: String = "3ea9fa6c",
 ): Map<String, Any> {
     return mapOf(
         "name" to name,
         "email" to email,
         "phoneNumber" to phoneNumber,
-        "gender" to gender,
         "birthday" to birthday,
         "password" to password,
         "confirmPassword" to confirmPassword,
-        "authenticationCode" to authenticationCode
+        "authenticationCode" to authenticationCode,
     )
 }
 
 private fun createAuthenticateMemberRequest(
     email: String = "test@email.com",
-    password: String = PASSWORD
+    password: String = PASSWORD,
 ): Map<String, Any> {
     return mapOf(
         "email" to email,
-        "password" to password
+        "password" to password,
     )
 }
 
 private fun createEditPasswordRequest(
     oldPassword: String = PASSWORD,
     password: String = NEW_PASSWORD,
-    confirmPassword: String = NEW_PASSWORD
+    confirmPassword: String = NEW_PASSWORD,
 ): Map<String, String> {
     return mapOf(
         "oldPassword" to oldPassword,
         "password" to password,
-        "confirmPassword" to confirmPassword
+        "confirmPassword" to confirmPassword,
     )
 }
 

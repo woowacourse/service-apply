@@ -15,7 +15,7 @@ class Member(
     @AttributeOverride(name = "value", column = Column(name = "password", nullable = false))
     @Embedded
     var password: Password,
-    id: Long = 0L
+    id: Long = 0L,
 ) : BaseRootEntity<Member>(id) {
     val name: String
         get() = information.name
@@ -35,7 +35,7 @@ class Member(
         phoneNumber: String,
         birthday: LocalDate,
         password: Password,
-        id: Long = 0L
+        id: Long = 0L,
     ) : this(
         MemberInformation(name, email, phoneNumber, birthday), password, id
     )
