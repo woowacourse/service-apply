@@ -37,7 +37,7 @@ class Member(
         password: Password,
         id: Long = 0L
     ) : this(
-        MemberInformation(name, email, phoneNumber, Gender.MALE, birthday), password, id
+        MemberInformation(name, email, phoneNumber, birthday), password, id
     )
 
     fun authenticate(password: Password) {
