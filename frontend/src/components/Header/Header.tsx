@@ -35,7 +35,6 @@ const Header = () => {
   const goToSignUp = async () => {
     try {
       const agreement = await fetchAgreement();
-
       navigate(PATH.SIGN_UP, { state: { agreement } });
     } catch (error) {
       alert(ERROR_MESSAGE.API.LOAD_AGREEMENT);
