@@ -424,7 +424,6 @@ class DatabaseInitializer(
             Assignment(
                 memberId = 2L,
                 missionId = 1L,
-                githubUsername = "javajigi",
                 pullRequestUrl = "https://github.com/woowacourse/java-baseball-precourse/pull/1",
                 note = "안녕하세요. 이번 미션 생각보다 쉽지 않네요."
             )
