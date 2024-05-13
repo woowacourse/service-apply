@@ -15,6 +15,7 @@ data class MemberResponse(
     val name: String,
     val email: String,
     val phoneNumber: String,
+    val githubUsername: String,
     val gender: Gender,
     val birthday: LocalDate
 ) {
@@ -23,6 +24,7 @@ data class MemberResponse(
         member.name,
         member.email,
         member.phoneNumber,
+        member.githubUsername,
         member.gender,
         member.birthday
     )
