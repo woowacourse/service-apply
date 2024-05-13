@@ -61,6 +61,9 @@ data class RegisterMemberRequest(
     val phoneNumber: String,
     val gender: Gender,
 
+    @field:NotBlank
+    val githubUsername: String,
+
     @field:Past
     val birthday: LocalDate,
     val password: Password,
@@ -70,7 +73,7 @@ data class RegisterMemberRequest(
     val authenticationCode: String
 ) {
     fun toEntity(): Member {
-        return Member(name, email, phoneNumber, gender, birthday, password)
+        return Member(name, email, phoneNumber, gender, githubUsername, birthday, password)
     }
 }
 

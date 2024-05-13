@@ -242,6 +242,7 @@ class DatabaseInitializer(
                 email = "a@email.com",
                 phoneNumber = "010-0000-0000",
                 gender = Gender.MALE,
+                githubUsername = "jaeyeonling",
                 birthday = createLocalDate(2020, 4, 17),
                 password = Password("password")
             ),
@@ -250,6 +251,7 @@ class DatabaseInitializer(
                 email = "b@email.com",
                 phoneNumber = "010-0000-0000",
                 gender = Gender.FEMALE,
+                githubUsername = "jaeyeonling",
                 birthday = createLocalDate(2020, 5, 5),
                 password = Password("password")
             ),
@@ -258,6 +260,7 @@ class DatabaseInitializer(
                 email = "c@email.com",
                 phoneNumber = "010-0000-0000",
                 gender = Gender.MALE,
+                githubUsername = "jaeyeonling",
                 birthday = createLocalDate(2020, 1, 1),
                 password = Password("password")
             ),
@@ -266,6 +269,7 @@ class DatabaseInitializer(
                 email = "d@email.com",
                 phoneNumber = "010-0000-0000",
                 gender = Gender.MALE,
+                githubUsername = "jaeyeonling",
                 birthday = createLocalDate(2020, 1, 1),
                 password = Password("password")
             )

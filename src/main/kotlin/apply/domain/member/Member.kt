@@ -29,6 +29,9 @@ class Member(
     val gender: Gender
         get() = information.gender
 
+    val githubUsername: String
+        get() = information.githubUsername
+
     val birthday: LocalDate
         get() = information.birthday
 
@@ -37,11 +40,12 @@ class Member(
         email: String,
         phoneNumber: String,
         gender: Gender,
+        githubUsername: String,
         birthday: LocalDate,
         password: Password,
         id: Long = 0L
     ) : this(
-        MemberInformation(name, email, phoneNumber, gender, birthday), password, id
+        MemberInformation(name, email, phoneNumber, githubUsername, gender, birthday), password, id
     )
 
     fun authenticate(password: Password) {

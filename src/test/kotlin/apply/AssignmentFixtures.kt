@@ -5,7 +5,6 @@ import apply.application.AssignmentRequest
 import apply.application.AssignmentResponse
 import apply.domain.assignment.Assignment
 
-private const val GITHUB_USERNAME: String = "ecsimsw"
 const val PULL_REQUEST_URL: String = "https://github.com/woowacourse/service-apply/pull/367"
 private const val NOTE = "과제 소감입니다."
 

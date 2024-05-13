@@ -18,6 +18,9 @@ data class MemberInformation(
     val phoneNumber: String,
 
     @Column(nullable = false)
+    val githubUsername: String,
+
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     val gender: Gender,
 
