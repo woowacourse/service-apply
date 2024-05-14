@@ -127,6 +127,16 @@ const SignUp = () => {
           maxLength={FORM.PASSWORD_MAX_LENGTH}
           required
         />
+        <MessageTextInput
+          label="Github Username"
+          placeholder="Github 사용자 이름을 입력해 주세요."
+          name={SIGN_UP_FORM_NAME.GITHUB_USERNAME}
+          value={form[SIGN_UP_FORM_NAME.GITHUB_USERNAME]}
+          onChange={handleChanges[SIGN_UP_FORM_NAME.GITHUB_USERNAME]}
+          maxLength={FORM.GITHUB_USERNAME_MAX_LENGTH}
+          errorMessage={errorMessage[SIGN_UP_FORM_NAME.GITHUB_USERNAME]}
+          required
+        />
         <BirthField
           name={SIGN_UP_FORM_NAME.BIRTHDAY}
           value={form[SIGN_UP_FORM_NAME.BIRTHDAY]}

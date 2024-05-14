@@ -5,6 +5,7 @@ import { isValidEmail } from "../utils/validation/email";
 import { isValidName } from "../utils/validation/name";
 import { isValidPassword } from "../utils/validation/password";
 import { isValidPhoneNumber } from "../utils/validation/phoneNumber";
+import { isValidGithubUsername } from "../utils/validation/githubUsername";
 
 export const SIGN_UP_FORM_NAME = {
   EMAIL: "email",
@@ -13,6 +14,7 @@ export const SIGN_UP_FORM_NAME = {
   PHONE_NUMBER: "phoneNumber",
   PASSWORD: "password",
   CONFIRM_PASSWORD: "confirmPassword",
+  GITHUB_USERNAME: "githubUsername",
   BIRTHDAY: "birthday",
   GENDER: "gender",
   IS_TERM_AGREED: "isTermAgreed",
@@ -25,6 +27,7 @@ const initialRequiredForm = {
   [SIGN_UP_FORM_NAME.PHONE_NUMBER]: "",
   [SIGN_UP_FORM_NAME.PASSWORD]: "",
   [SIGN_UP_FORM_NAME.CONFIRM_PASSWORD]: "",
+  [SIGN_UP_FORM_NAME.GITHUB_USERNAME]: "",
   [SIGN_UP_FORM_NAME.BIRTHDAY]: null,
   [SIGN_UP_FORM_NAME.GENDER]: "",
   [SIGN_UP_FORM_NAME.IS_TERM_AGREED]: false,
@@ -37,6 +40,7 @@ const initialErrorMessage = {
   [SIGN_UP_FORM_NAME.PHONE_NUMBER]: "",
   [SIGN_UP_FORM_NAME.PASSWORD]: "",
   [SIGN_UP_FORM_NAME.CONFIRM_PASSWORD]: "",
+  [SIGN_UP_FORM_NAME.GITHUB_USERNAME]: "",
 };
 
 const useSignUpForm = () => {
@@ -117,6 +121,15 @@ const useSignUpForm = () => {
     updateRequiredForm(SIGN_UP_FORM_NAME.CONFIRM_PASSWORD, target.value);
   };
 
+  const handleChangeGithubUsername = ({ target }) => {
+    updateRequiredForm(SIGN_UP_FORM_NAME.GITHUB_USERNAME, target.value);
+
+    const errorMessage = isValidGithubUsername(target.value)
+      ? ""
+      : ERROR_MESSAGE.VALIDATION.GITHUB_USERNAME;
+    updateErrorMessage(SIGN_UP_FORM_NAME.GITHUB_USERNAME, errorMessage);
+  };
+
   const handleChangeBirthday = (date) => {
     updateRequiredForm(SIGN_UP_FORM_NAME.BIRTHDAY, date);
   };
@@ -171,6 +184,7 @@ const useSignUpForm = () => {
       [SIGN_UP_FORM_NAME.PHONE_NUMBER]: handleChangePhoneNumber,
       [SIGN_UP_FORM_NAME.PASSWORD]: handleChangePassword,
       [SIGN_UP_FORM_NAME.CONFIRM_PASSWORD]: handleChangeConfirmPassword,
+      [SIGN_UP_FORM_NAME.GITHUB_USERNAME]: handleChangeGithubUsername,
       [SIGN_UP_FORM_NAME.BIRTHDAY]: handleChangeBirthday,
       [SIGN_UP_FORM_NAME.GENDER]: handleChangeGender,
     },

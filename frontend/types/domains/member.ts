@@ -5,5 +5,6 @@ export type Member = {
   phoneNumber: string;
   gender: "MALE" | "FEMALE";
   birthday: Date;
+  githubUsername: string;
   password: string;
 };
