@@ -40,6 +40,13 @@ const MyPage = () => {
               <div className={styles["info-title"]}>생년월일</div>
               <div className={styles["info-data"]}>{memberInfo?.birthday || ""}</div>
             </li>
+            <li className={styles.info}>
+              <div className={styles["info-title"]}>
+                Github <br />
+                사용자 이름
+              </div>
+              <div className={styles["info-data"]}>{memberInfo?.githubUsername || ""}</div>
+            </li>
           </ul>
 
           <div className={styles.buttons}>
