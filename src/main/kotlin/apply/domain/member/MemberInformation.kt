@@ -9,7 +9,7 @@ data class MemberInformation(
     @Column(nullable = false, length = 30)
     val name: String,
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     val email: String,
 
     @Column(nullable = false, length = 13)
