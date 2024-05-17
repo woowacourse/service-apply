@@ -103,7 +103,9 @@ const Header = () => {
               <>
                 <Link to={PATH.LOGIN}>로그인</Link>
                 <div className={styles.bar} />
-                <a onClick={goToSignUp}>회원가입</a>
+                <Link to="#" onClick={goToSignUp}>
+                  회원가입
+                </Link>
               </>
             )}
           </div>
