@@ -1,9 +1,8 @@
 package apply.application
 
 import apply.domain.applicationform.ApplicationForm
-import apply.domain.member.Gender
-import apply.domain.member.Password
 import apply.domain.member.Member
+import apply.domain.member.Password
 import java.time.LocalDate
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
@@ -15,16 +14,14 @@ data class MemberResponse(
     val name: String,
     val email: String,
     val phoneNumber: String,
-    val gender: Gender,
-    val birthday: LocalDate
+    val birthday: LocalDate,
 ) {
     constructor(member: Member) : this(
         member.id,
         member.name,
         member.email,
         member.phoneNumber,
-        member.gender,
-        member.birthday
+        member.birthday,
     )
 }
 
@@ -33,20 +30,18 @@ data class ApplicantAndFormResponse(
     val name: String,
     val email: String,
     val phoneNumber: String,
-    val gender: Gender,
     val birthday: LocalDate,
     val isCheater: Boolean,
-    val applicationForm: ApplicationForm
+    val applicationForm: ApplicationForm,
 ) {
     constructor(member: Member, isCheater: Boolean, applicationForm: ApplicationForm) : this(
         member.id,
         member.name,
         member.email,
         member.phoneNumber,
-        member.gender,
         member.birthday,
         isCheater,
-        applicationForm
+        applicationForm,
     )
 }
 
@@ -59,7 +54,6 @@ data class RegisterMemberRequest(
 
     @field:Pattern(regexp = "010-\\d{4}-\\d{4}", message = "올바른 형식의 전화번호여야 합니다")
     val phoneNumber: String,
-    val gender: Gender,
 
     @field:Past
     val birthday: LocalDate,
@@ -68,11 +62,7 @@ data class RegisterMemberRequest(
 
     @field:NotBlank
     val authenticationCode: String
-) {
-    fun toEntity(): Member {
-        return Member(name, email, phoneNumber, gender, birthday, password)
-    }
-}
+)
 
 data class AuthenticateMemberRequest(
     @field:Email

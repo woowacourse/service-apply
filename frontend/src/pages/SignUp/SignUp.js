@@ -10,7 +10,6 @@ import BirthField from "../../components/form/BirthField/BirthField";
 import CancelButton from "../../components/form/CancelButton/CancelButton";
 import EmailField, { EMAIL_STATUS } from "../../components/form/EmailField/EmailField";
 import Form from "../../components/form/Form/Form";
-import GenderField from "../../components/form/GenderField/GenderField";
 import SummaryCheckField from "../../components/form/SummaryCheckField/SummaryCheckField";
 import { FORM } from "../../constants/form";
 import { ERROR_MESSAGE } from "../../constants/messages";
@@ -146,13 +145,6 @@ const SignUp = () => {
           onChange={handleChanges[SIGN_UP_FORM_NAME.BIRTHDAY]}
           required
         />
-        <GenderField
-          className={styles["input-box"]}
-          value={form[SIGN_UP_FORM_NAME.GENDER]}
-          onChange={handleChanges[SIGN_UP_FORM_NAME.GENDER]}
-          required
-        />
-
         <div className={styles.buttons}>
           <CancelButton />
           <Button disabled={!isValid || isEmpty}>가입하기</Button>

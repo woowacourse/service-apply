@@ -6,7 +6,12 @@ import javax.persistence.AttributeOverride
 import javax.persistence.Column
 import javax.persistence.Embedded
 import javax.persistence.Entity
+import javax.persistence.Table
+import javax.persistence.UniqueConstraint
 
+@Table(
+    uniqueConstraints = [UniqueConstraint(name = "uk_member", columnNames = ["email"])]
+)
 @Entity
 class Member(
     @Embedded
@@ -15,7 +20,7 @@ class Member(
     @AttributeOverride(name = "value", column = Column(name = "password", nullable = false))
     @Embedded
     var password: Password,
-    id: Long = 0L
+    id: Long = 0L,
 ) : BaseRootEntity<Member>(id) {
     val name: String
         get() = information.name
@@ -26,9 +31,6 @@ class Member(
     val phoneNumber: String
         get() = information.phoneNumber
 
-    val gender: Gender
-        get() = information.gender
-
     val birthday: LocalDate
         get() = information.birthday
 
@@ -36,12 +38,11 @@ class Member(
         name: String,
         email: String,
         phoneNumber: String,
-        gender: Gender,
         birthday: LocalDate,
         password: Password,
-        id: Long = 0L
+        id: Long = 0L,
     ) : this(
-        MemberInformation(name, email, phoneNumber, gender, birthday), password, id
+        MemberInformation(name, email, phoneNumber, birthday), password, id
     )
 
     fun authenticate(password: Password) {
