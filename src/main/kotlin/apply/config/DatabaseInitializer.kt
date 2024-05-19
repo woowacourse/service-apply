@@ -2,6 +2,8 @@ package apply.config
 
 import apply.domain.administrator.Administrator
 import apply.domain.administrator.AdministratorRepository
+import apply.domain.agreement.Agreement
+import apply.domain.agreement.AgreementRepository
 import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormAnswer
 import apply.domain.applicationform.ApplicationFormAnswers
@@ -39,12 +41,14 @@ import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import support.createLocalDate
 import support.createLocalDateTime
+import support.flattenByMargin
 
 @Profile("local")
 @Transactional
 @Component
 class DatabaseInitializer(
     private val administratorRepository: AdministratorRepository,
+    private val agreementRepository: AgreementRepository,
     private val termRepository: TermRepository,
     private val recruitmentRepository: RecruitmentRepository,
     private val recruitmentItemRepository: RecruitmentItemRepository,
@@ -57,7 +61,7 @@ class DatabaseInitializer(
     private val judgmentItemRepository: JudgmentItemRepository,
     private val assignmentRepository: AssignmentRepository,
     private val mailHistoryRepository: MailHistoryRepository,
-    private val database: Database
+    private val database: Database,
 ) : CommandLineRunner {
     override fun run(vararg args: String) {
         if (shouldSkip()) return
@@ -75,6 +79,7 @@ class DatabaseInitializer(
 
     private fun populate() {
         populateAdministrator()
+        populateAgreement()
         populateTerms()
         populateRecruitments()
         populateRecruitmentItems()
@@ -97,6 +102,18 @@ class DatabaseInitializer(
             password = "{noop}1234"
         )
         administratorRepository.save(administrator)
+    }
+
+    private fun populateAgreement() {
+        val agreement = Agreement(
+            20240418,
+            """
+                |<p>(주)우아한형제들은 아래와 같이 지원자의 개인정보를 수집 및 이용합니다.</p>
+                |<br>
+                |<p><strong>보유 및 이용기간</strong> : <strong><span style="font-size:1.2rem">탈퇴 시 또는 이용목적 달성 시 파기</span></strong>(단, 관련법령 및 회사정책에 의해 보관이 필요한 경우 해당기간 동안 보관)</p>
+            """.flattenByMargin()
+        )
+        agreementRepository.save(agreement)
     }
 
     private fun populateTerms() {

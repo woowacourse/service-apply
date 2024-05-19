@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import Button from "../../components/@common/Button/Button";
 import Container, {
   CONTAINER_SIZE,
@@ -14,14 +14,15 @@ import SummaryCheckField from "../../components/form/SummaryCheckField/SummaryCh
 import { FORM } from "../../constants/form";
 import { ERROR_MESSAGE } from "../../constants/messages";
 import { PATH } from "../../constants/path";
-import { POLICY_SUMMARY } from "../../constants/policySummary";
 import useSignUpForm, { SIGN_UP_FORM_NAME } from "../../hooks/useSignUpForm";
 import useTokenContext from "../../hooks/useTokenContext";
 import styles from "./SignUp.module.css";
 
 const SignUp = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { postRegister } = useTokenContext();
+  const [agreementContent, setAgreementContent] = useState("");
 
   const [emailStatus, setEmailStatus] = useState(EMAIL_STATUS.INPUT);
   const {
@@ -52,6 +53,15 @@ const SignUp = () => {
     }
   };
 
+  useEffect(() => {
+    if (!location?.state?.agreement) {
+      navigate(PATH.RECRUITS);
+      return;
+    }
+
+    setAgreementContent(location.state.agreement?.data?.content);
+  }, [location.state]);
+
   return (
     <Container title="회원가입" titleAlign={TITLE_ALIGN.LEFT} size={CONTAINER_SIZE.NARROW}>
       <Form onSubmit={handleSubmit}>
@@ -62,7 +72,10 @@ const SignUp = () => {
           onChange={handleChanges[SIGN_UP_FORM_NAME.IS_TERM_AGREED]}
           required
         >
-          <p className={styles["summary-content"]}>{POLICY_SUMMARY}</p>
+          <p
+            className={styles["summary-content"]}
+            dangerouslySetInnerHTML={{ __html: agreementContent }}
+          />
         </SummaryCheckField>
 
         <EmailField

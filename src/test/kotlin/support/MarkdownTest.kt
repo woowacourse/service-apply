@@ -53,7 +53,7 @@ class MarkdownTest : StringSpec({
             |<li><a href="#uml">UML</a></li>
             |</ul>
             |</body>
-        """.trimMargin().replace(System.lineSeparator(), "")
+        """.flattenByMargin()
     }
 
     "마크다운을 <body> 태그를 제거한 HTML로 변환한다" {
