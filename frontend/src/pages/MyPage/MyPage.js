@@ -33,12 +33,12 @@ const MyPage = () => {
               <div className={styles["info-data"]}>{memberInfo?.email || ""}</div>
             </li>
             <li className={styles.info}>
-              <div className={styles["info-title"]}>전화번호</div>
-              <div className={styles["info-data"]}>{memberInfo?.phoneNumber || ""}</div>
-            </li>
-            <li className={styles.info}>
               <div className={styles["info-title"]}>생년월일</div>
               <div className={styles["info-data"]}>{memberInfo?.birthday || ""}</div>
+            </li>
+            <li className={styles.info}>
+              <div className={styles["info-title"]}>전화번호</div>
+              <div className={styles["info-data"]}>{memberInfo?.phoneNumber || ""}</div>
             </li>
             <li className={styles.info}>
               <div className={styles["info-title"]}>

@@ -62,6 +62,11 @@ const MyPageEdit = () => {
             value={memberInfo?.email || ""}
             disabled
           />
+          <BirthField
+            name={MY_PAGE_EDIT_FORM_NAME.BIRTHDAY}
+            value={new Date(memberInfo?.birthday || null)}
+            disabled
+          />
           <MessageTextInput
             label="휴대폰 번호"
             type="tel"
@@ -70,11 +75,6 @@ const MyPageEdit = () => {
             onChange={handleChanges[MY_PAGE_EDIT_FORM_NAME.PHONE_NUMBER]}
             errorMessage={errorMessage[MY_PAGE_EDIT_FORM_NAME.PHONE_NUMBER]}
             maxLength={FORM.PHONE_NUMBER_MAX_LENGTH}
-          />
-          <BirthField
-            name={MY_PAGE_EDIT_FORM_NAME.BIRTHDAY}
-            value={new Date(memberInfo?.birthday || null)}
-            disabled
           />
           <MessageTextInput
             label="GitHub 사용자 이름"
