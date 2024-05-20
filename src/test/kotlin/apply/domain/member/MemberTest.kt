@@ -19,7 +19,7 @@ class MemberTest : StringSpec({
         shouldThrow<UnidentifiedMemberException> { member.authenticate(WRONG_PASSWORD) }
     }
 
-    "회원이 전화번호를 수정한다" {
+    "회원이 휴대전화 번호를 수정한다" {
         val member = createMember(phoneNumber = "010-0000-0000")
         val newPhoneNumber = "010-1111-1111"
         member.changePhoneNumber(newPhoneNumber)

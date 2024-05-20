@@ -68,7 +68,7 @@ const MyPageEdit = () => {
             disabled
           />
           <MessageTextInput
-            label="휴대폰 번호"
+            label="휴대전화 번호"
             type="tel"
             name={MY_PAGE_EDIT_FORM_NAME.PHONE_NUMBER}
             value={form[MY_PAGE_EDIT_FORM_NAME.PHONE_NUMBER]}

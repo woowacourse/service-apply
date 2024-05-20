@@ -116,32 +116,32 @@ const SignUp = () => {
           required
         />
         <MessageTextInput
-            label="이름"
-            placeholder="이름을 입력해 주세요."
-            name={SIGN_UP_FORM_NAME.NAME}
-            value={form[SIGN_UP_FORM_NAME.NAME]}
-            onChange={handleChanges[SIGN_UP_FORM_NAME.NAME]}
-            maxLength={FORM.NAME_MAX_LENGTH}
-            errorMessage={errorMessage[SIGN_UP_FORM_NAME.NAME]}
-            required
+          label="이름"
+          placeholder="이름을 입력해 주세요."
+          name={SIGN_UP_FORM_NAME.NAME}
+          value={form[SIGN_UP_FORM_NAME.NAME]}
+          onChange={handleChanges[SIGN_UP_FORM_NAME.NAME]}
+          maxLength={FORM.NAME_MAX_LENGTH}
+          errorMessage={errorMessage[SIGN_UP_FORM_NAME.NAME]}
+          required
         />
         <BirthField
-            name={SIGN_UP_FORM_NAME.BIRTHDAY}
-            value={form[SIGN_UP_FORM_NAME.BIRTHDAY]}
-            onChange={handleChanges[SIGN_UP_FORM_NAME.BIRTHDAY]}
-            required
+          name={SIGN_UP_FORM_NAME.BIRTHDAY}
+          value={form[SIGN_UP_FORM_NAME.BIRTHDAY]}
+          onChange={handleChanges[SIGN_UP_FORM_NAME.BIRTHDAY]}
+          required
         />
         <MessageTextInput
-            label="휴대폰 번호"
-            placeholder="연락 가능한 휴대폰 번호를 입력해 주세요."
-            type="tel"
-            name={SIGN_UP_FORM_NAME.PHONE_NUMBER}
-            value={form[SIGN_UP_FORM_NAME.PHONE_NUMBER]}
-            onChange={handleChanges[SIGN_UP_FORM_NAME.PHONE_NUMBER]}
-            maxLength={FORM.PHONE_NUMBER_MAX_LENGTH}
-            errorMessage={errorMessage[SIGN_UP_FORM_NAME.PHONE_NUMBER]}
-            className={styles["input-box"]}
-            required
+          label="휴대전화 번호"
+          placeholder="연락 가능한 휴대전화 번호를 입력해 주세요."
+          type="tel"
+          name={SIGN_UP_FORM_NAME.PHONE_NUMBER}
+          value={form[SIGN_UP_FORM_NAME.PHONE_NUMBER]}
+          onChange={handleChanges[SIGN_UP_FORM_NAME.PHONE_NUMBER]}
+          maxLength={FORM.PHONE_NUMBER_MAX_LENGTH}
+          errorMessage={errorMessage[SIGN_UP_FORM_NAME.PHONE_NUMBER]}
+          className={styles["input-box"]}
+          required
         />
         <MessageTextInput
           label="GitHub 사용자 이름"

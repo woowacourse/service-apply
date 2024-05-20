@@ -139,7 +139,7 @@ class SelectionView(
         return Grid<ApplicantAndFormResponse>(10).apply {
             addSortableColumn("이름", ApplicantAndFormResponse::name)
             addSortableColumn("이메일", ApplicantAndFormResponse::email)
-            addSortableColumn("전화번호", ApplicantAndFormResponse::phoneNumber)
+            addSortableColumn("휴대전화 번호", ApplicantAndFormResponse::phoneNumber)
             addSortableDateColumn("생년월일", ApplicantAndFormResponse::birthday)
             addSortableDateTimeColumn("지원 일시") { it.applicationForm.submittedDateTime }
             addSortableColumn("부정행위자") { if (it.isCheater) "O" else "X" }
