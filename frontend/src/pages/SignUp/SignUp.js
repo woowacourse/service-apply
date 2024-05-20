@@ -140,8 +140,8 @@ const SignUp = () => {
           required
         />
         <MessageTextInput
-          label="Github Username"
-          placeholder="Github 사용자 이름을 입력해 주세요."
+          label="GitHub 사용자 이름"
+          placeholder="GitHub 사용자 이름을 입력해 주세요."
           name={SIGN_UP_FORM_NAME.GITHUB_USERNAME}
           value={form[SIGN_UP_FORM_NAME.GITHUB_USERNAME]}
           onChange={handleChanges[SIGN_UP_FORM_NAME.GITHUB_USERNAME]}

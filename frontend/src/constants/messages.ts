@@ -13,7 +13,7 @@ export const ERROR_MESSAGE = {
     PULL_REQUEST_URL:
       "정확한 Pull Request 주소를 입력해 주세요. ex) https://github.com/woowacourse/java-baseball/pull/1",
     GITHUB_USERNAME:
-      "Github 사용자 이름 정책에 알맞게 영문자, 숫자, 하이픈을 조합하여 39자까지만 가능합니다.",
+      "GitHub 사용자 이름 정책에 따라 영문, 숫자, 하이픈 조합을 사용하여 최대 39자까지 가능합니다.",
     BIRTHDAY: "유효하지 않은 날짜입니다. 정확한 날짜를 입력해 주세요.",
   },
   API: {

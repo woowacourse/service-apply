@@ -42,7 +42,7 @@ const MyPage = () => {
             </li>
             <li className={styles.info}>
               <div className={styles["info-title"]}>
-                Github <br />
+                GitHub <br />
                 사용자 이름
               </div>
               <div className={styles["info-data"]}>{memberInfo?.githubUsername || ""}</div>

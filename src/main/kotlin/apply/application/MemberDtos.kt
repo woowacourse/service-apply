@@ -57,7 +57,11 @@ data class RegisterMemberRequest(
     @field:Pattern(regexp = "010-\\d{4}-\\d{4}", message = "올바른 형식의 전화번호여야 합니다")
     val phoneNumber: String,
 
-    @field:NotBlank
+    @field:Pattern(
+        regexp = "^[a-z\\d](?:[a-z\\d]|-(?=[a-z\\d])){0,38}",
+        flags = [Pattern.Flag.CASE_INSENSITIVE],
+        message = "올바른 형식의 이름이어야 합니다"
+    )
     val githubUsername: String,
 
     @field:Past

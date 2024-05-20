@@ -77,7 +77,7 @@ const MyPageEdit = () => {
             disabled
           />
           <MessageTextInput
-            label="Github 사용자 이름"
+            label="GitHub 사용자 이름"
             name={MY_PAGE_EDIT_FORM_NAME.GITHUB_USERNAME}
             className={styles.input}
             value={memberInfo?.githubUsername || ""}
