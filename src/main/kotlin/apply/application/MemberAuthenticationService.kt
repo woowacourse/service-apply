@@ -3,8 +3,9 @@ package apply.application
 import apply.domain.authenticationcode.AuthenticationCode
 import apply.domain.authenticationcode.AuthenticationCodeRepository
 import apply.domain.authenticationcode.getLastByEmail
-import apply.domain.member.UnidentifiedMemberException
+import apply.domain.member.Member
 import apply.domain.member.MemberRepository
+import apply.domain.member.UnidentifiedMemberException
 import apply.domain.member.existsByEmail
 import apply.domain.member.findByEmail
 import apply.security.JwtTokenProvider
@@ -22,7 +23,16 @@ class MemberAuthenticationService(
         require(request.password == request.confirmPassword) { "비밀번호가 일치하지 않습니다." }
         check(!memberRepository.existsByEmail(request.email)) { "이미 가입된 이메일입니다." }
         authenticationCodeRepository.getLastByEmail(request.email).validate(request.authenticationCode)
-        val member = memberRepository.save(request.toEntity())
+        val member = memberRepository.save(
+            Member(
+                request.name,
+                request.email,
+                request.phoneNumber,
+                request.githubUsername,
+                request.birthday,
+                request.password
+            )
+        )
         return jwtTokenProvider.createToken(member.email)
     }
 

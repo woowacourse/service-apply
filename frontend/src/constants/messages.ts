@@ -34,6 +34,7 @@ export const ERROR_MESSAGE = {
     EDIT_PASSWORD: "입력된 정보가 올바르지 않습니다. 다시 확인해 주세요.",
     LOAD_APPLICATION_FORM: "지원서를 불러오는 데 실패했습니다. 잠시 후 다시 시도해 주세요.",
     SAVE_APPLICATION_FORM: "지원서를 저장하는 데 실패했습니다. 잠시 후 다시 시도해 주세요.",
+    LOAD_AGREEMENT: "동의서를 불러오는 데 실패했습니다. 잠시 후 다시 시도해 주세요.",
   },
   ACCESS: {
     REQUIRED_LOGIN: "로그인이 필요합니다.",

@@ -544,15 +544,6 @@ export const missionsDummy = {
   ],
 };
 
-export const memberInfoDummy = {
-  id: 1,
-  name: "썬",
-  email: "sun@woowa.com",
-  phoneNumber: "010-1234-1234",
-  gender: "FEMALE",
-  birthday: "2000-01-01",
-};
-
 export const judgmentDummy = {
   pullRequestUrl: "https://github.com/woowacourse/jwp-dashboard-http/pull/298",
   commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",

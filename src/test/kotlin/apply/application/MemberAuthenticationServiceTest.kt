@@ -8,12 +8,12 @@ import apply.VALID_TOKEN
 import apply.WRONG_PASSWORD
 import apply.createAuthenticateMemberRequest
 import apply.createAuthenticationCode
-import apply.createRegisterMemberRequest
 import apply.createMember
+import apply.createRegisterMemberRequest
 import apply.domain.authenticationcode.AuthenticationCodeRepository
 import apply.domain.authenticationcode.getLastByEmail
-import apply.domain.member.UnidentifiedMemberException
 import apply.domain.member.MemberRepository
+import apply.domain.member.UnidentifiedMemberException
 import apply.domain.member.existsByEmail
 import apply.domain.member.findByEmail
 import apply.security.JwtTokenProvider

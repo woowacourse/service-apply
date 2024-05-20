@@ -2,7 +2,6 @@ package apply
 
 import apply.application.AuthenticateMemberRequest
 import apply.application.RegisterMemberRequest
-import apply.domain.member.Gender
 import apply.domain.member.Member
 import apply.domain.member.Password
 import support.createLocalDate
@@ -12,7 +11,6 @@ const val NAME: String = "지원자"
 const val EMAIL: String = "test@email.com"
 const val PHONE_NUMBER: String = "010-0000-0000"
 const val GITHUB_USERNAME: String = "jaeyeonling"
-val GENDER: Gender = Gender.MALE
 val BIRTHDAY: LocalDate = createLocalDate(1995, 2, 2)
 val PASSWORD: Password = Password("password")
 val CONFIRM_PASSWORD: Password = Password("password")
@@ -26,13 +24,12 @@ fun createMember(
     name: String = NAME,
     email: String = EMAIL,
     phoneNumber: String = PHONE_NUMBER,
-    gender: Gender = GENDER,
     githubUsername: String = GITHUB_USERNAME,
     birthday: LocalDate = BIRTHDAY,
     password: Password = PASSWORD,
-    id: Long = 0L
+    id: Long = 0L,
 ): Member {
-    return Member(name, email, phoneNumber, gender, githubUsername, birthday, password, id)
+    return Member(name, email, phoneNumber, githubUsername, birthday, password, id)
 }
 
 fun createRegisterMemberRequest(
@@ -40,28 +37,26 @@ fun createRegisterMemberRequest(
     email: String = EMAIL,
     phoneNumber: String = PHONE_NUMBER,
     githubUsername: String = GITHUB_USERNAME,
-    gender: Gender = GENDER,
     birthday: LocalDate = BIRTHDAY,
     password: Password = PASSWORD,
     confirmPassword: Password = CONFIRM_PASSWORD,
-    authenticationCode: String = VALID_CODE
+    authenticationCode: String = VALID_CODE,
 ): RegisterMemberRequest {
     return RegisterMemberRequest(
         name,
         email,
         phoneNumber,
-        gender,
         githubUsername,
         birthday,
         password,
         confirmPassword,
-        authenticationCode
+        authenticationCode,
     )
 }
 
 fun createAuthenticateMemberRequest(
     email: String = EMAIL,
-    password: Password = PASSWORD
+    password: Password = PASSWORD,
 ): AuthenticateMemberRequest {
     return AuthenticateMemberRequest(email, password)
 }

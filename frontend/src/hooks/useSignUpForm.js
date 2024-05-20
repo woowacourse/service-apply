@@ -16,7 +16,6 @@ export const SIGN_UP_FORM_NAME = {
   CONFIRM_PASSWORD: "confirmPassword",
   GITHUB_USERNAME: "githubUsername",
   BIRTHDAY: "birthday",
-  GENDER: "gender",
   IS_TERM_AGREED: "isTermAgreed",
 };
 
@@ -29,7 +28,6 @@ const initialRequiredForm = {
   [SIGN_UP_FORM_NAME.CONFIRM_PASSWORD]: "",
   [SIGN_UP_FORM_NAME.GITHUB_USERNAME]: "",
   [SIGN_UP_FORM_NAME.BIRTHDAY]: null,
-  [SIGN_UP_FORM_NAME.GENDER]: "",
   [SIGN_UP_FORM_NAME.IS_TERM_AGREED]: false,
 };
 
@@ -134,10 +132,6 @@ const useSignUpForm = () => {
     updateRequiredForm(SIGN_UP_FORM_NAME.BIRTHDAY, date);
   };
 
-  const handleChangeGender = ({ target }) => {
-    updateRequiredForm(SIGN_UP_FORM_NAME.GENDER, target.value);
-  };
-
   const handleChangeIsTermAgreed = ({ target }) => {
     updateRequiredForm(SIGN_UP_FORM_NAME.IS_TERM_AGREED, target.checked);
   };
@@ -186,7 +180,6 @@ const useSignUpForm = () => {
       [SIGN_UP_FORM_NAME.CONFIRM_PASSWORD]: handleChangeConfirmPassword,
       [SIGN_UP_FORM_NAME.GITHUB_USERNAME]: handleChangeGithubUsername,
       [SIGN_UP_FORM_NAME.BIRTHDAY]: handleChangeBirthday,
-      [SIGN_UP_FORM_NAME.GENDER]: handleChangeGender,
     },
   };
 };
