@@ -77,7 +77,6 @@ const SignUp = () => {
             dangerouslySetInnerHTML={{ __html: agreementContent }}
           />
         </SummaryCheckField>
-
         <EmailField
           emailValue={form[SIGN_UP_FORM_NAME.EMAIL]}
           emailErrorMessage={errorMessage[SIGN_UP_FORM_NAME.EMAIL]}
@@ -89,29 +88,6 @@ const SignUp = () => {
           emailStatus={emailStatus}
           setEmailStatus={setEmailStatus}
           setErrorMessage={setErrorMessage}
-        />
-
-        <MessageTextInput
-          label="이름"
-          placeholder="이름을 입력해 주세요."
-          name={SIGN_UP_FORM_NAME.NAME}
-          value={form[SIGN_UP_FORM_NAME.NAME]}
-          onChange={handleChanges[SIGN_UP_FORM_NAME.NAME]}
-          maxLength={FORM.NAME_MAX_LENGTH}
-          errorMessage={errorMessage[SIGN_UP_FORM_NAME.NAME]}
-          required
-        />
-        <MessageTextInput
-          label="휴대폰 번호"
-          placeholder="연락 가능한 휴대폰 번호를 입력해 주세요."
-          type="tel"
-          name={SIGN_UP_FORM_NAME.PHONE_NUMBER}
-          value={form[SIGN_UP_FORM_NAME.PHONE_NUMBER]}
-          onChange={handleChanges[SIGN_UP_FORM_NAME.PHONE_NUMBER]}
-          maxLength={FORM.PHONE_NUMBER_MAX_LENGTH}
-          errorMessage={errorMessage[SIGN_UP_FORM_NAME.PHONE_NUMBER]}
-          className={styles["input-box"]}
-          required
         />
         <MessageTextInput
           label="비밀번호"
@@ -140,6 +116,34 @@ const SignUp = () => {
           required
         />
         <MessageTextInput
+            label="이름"
+            placeholder="이름을 입력해 주세요."
+            name={SIGN_UP_FORM_NAME.NAME}
+            value={form[SIGN_UP_FORM_NAME.NAME]}
+            onChange={handleChanges[SIGN_UP_FORM_NAME.NAME]}
+            maxLength={FORM.NAME_MAX_LENGTH}
+            errorMessage={errorMessage[SIGN_UP_FORM_NAME.NAME]}
+            required
+        />
+        <BirthField
+            name={SIGN_UP_FORM_NAME.BIRTHDAY}
+            value={form[SIGN_UP_FORM_NAME.BIRTHDAY]}
+            onChange={handleChanges[SIGN_UP_FORM_NAME.BIRTHDAY]}
+            required
+        />
+        <MessageTextInput
+            label="휴대폰 번호"
+            placeholder="연락 가능한 휴대폰 번호를 입력해 주세요."
+            type="tel"
+            name={SIGN_UP_FORM_NAME.PHONE_NUMBER}
+            value={form[SIGN_UP_FORM_NAME.PHONE_NUMBER]}
+            onChange={handleChanges[SIGN_UP_FORM_NAME.PHONE_NUMBER]}
+            maxLength={FORM.PHONE_NUMBER_MAX_LENGTH}
+            errorMessage={errorMessage[SIGN_UP_FORM_NAME.PHONE_NUMBER]}
+            className={styles["input-box"]}
+            required
+        />
+        <MessageTextInput
           label="GitHub 사용자 이름"
           placeholder="GitHub 사용자 이름을 입력해 주세요."
           name={SIGN_UP_FORM_NAME.GITHUB_USERNAME}
@@ -147,12 +151,6 @@ const SignUp = () => {
           onChange={handleChanges[SIGN_UP_FORM_NAME.GITHUB_USERNAME]}
           maxLength={FORM.GITHUB_USERNAME_MAX_LENGTH}
           errorMessage={errorMessage[SIGN_UP_FORM_NAME.GITHUB_USERNAME]}
-          required
-        />
-        <BirthField
-          name={SIGN_UP_FORM_NAME.BIRTHDAY}
-          value={form[SIGN_UP_FORM_NAME.BIRTHDAY]}
-          onChange={handleChanges[SIGN_UP_FORM_NAME.BIRTHDAY]}
           required
         />
         <div className={styles.buttons}>

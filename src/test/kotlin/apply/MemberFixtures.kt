@@ -33,23 +33,23 @@ fun createMember(
 }
 
 fun createRegisterMemberRequest(
-    name: String = NAME,
     email: String = EMAIL,
-    phoneNumber: String = PHONE_NUMBER,
-    githubUsername: String = GITHUB_USERNAME,
-    birthday: LocalDate = BIRTHDAY,
     password: Password = PASSWORD,
     confirmPassword: Password = CONFIRM_PASSWORD,
+    name: String = NAME,
+    birthday: LocalDate = BIRTHDAY,
+    phoneNumber: String = PHONE_NUMBER,
+    githubUsername: String = GITHUB_USERNAME,
     authenticationCode: String = VALID_CODE,
 ): RegisterMemberRequest {
     return RegisterMemberRequest(
-        name,
         email,
-        phoneNumber,
-        githubUsername,
-        birthday,
         password,
         confirmPassword,
+        name,
+        birthday,
+        phoneNumber,
+        githubUsername,
         authenticationCode,
     )
 }

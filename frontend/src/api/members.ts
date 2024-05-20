@@ -47,23 +47,23 @@ type FetchVerifyAuthenticationCodeRequest = {
 type FetchVerifyAuthenticationCodeResponseData = void;
 
 export const fetchRegister = ({
-  name,
   email,
-  phoneNumber,
-  githubUsername,
-  birthday,
   password,
   confirmPassword,
+  name,
+  birthday,
+  phoneNumber,
+  githubUsername,
   authenticationCode,
 }: FetchRegisterRequest) =>
   axios.post<FetchRegisterResponseData>("/api/members/register", {
-    name,
     email,
-    phoneNumber,
-    githubUsername,
-    birthday: formatDate(birthday),
     password,
     confirmPassword,
+    name,
+    birthday: formatDate(birthday),
+    phoneNumber,
+    githubUsername,
     authenticationCode,
   });
 

@@ -48,11 +48,16 @@ data class ApplicantAndFormResponse(
 }
 
 data class RegisterMemberRequest(
+    @field:Email
+    val email: String,
+    val password: Password,
+    val confirmPassword: Password,
+
     @field:Pattern(regexp = "[가-힣]{1,30}", message = "올바른 형식의 이름이어야 합니다")
     val name: String,
 
-    @field:Email
-    val email: String,
+    @field:Past
+    val birthday: LocalDate,
 
     @field:Pattern(regexp = "010-\\d{4}-\\d{4}", message = "올바른 형식의 전화번호여야 합니다")
     val phoneNumber: String,
@@ -64,13 +69,8 @@ data class RegisterMemberRequest(
     )
     val githubUsername: String,
 
-    @field:Past
-    val birthday: LocalDate,
-    val password: Password,
-    val confirmPassword: Password,
-
     @field:NotBlank
-    val authenticationCode: String
+    val authenticationCode: String,
 )
 
 data class AuthenticateMemberRequest(
