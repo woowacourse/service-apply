@@ -25,12 +25,12 @@ class MemberAuthenticationService(
         authenticationCodeRepository.getLastByEmail(request.email).validate(request.authenticationCode)
         val member = memberRepository.save(
             Member(
-                request.name,
-                request.email,
-                request.phoneNumber,
-                request.githubUsername,
-                request.birthday,
-                request.password
+                email = request.email,
+                password = request.password,
+                name = request.name,
+                birthday = request.birthday,
+                phoneNumber = request.phoneNumber,
+                githubUsername = request.githubUsername,
             )
         )
         return jwtTokenProvider.createToken(member.email)
