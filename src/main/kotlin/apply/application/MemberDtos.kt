@@ -11,37 +11,39 @@ import javax.validation.constraints.Pattern
 
 data class MemberResponse(
     val id: Long,
-    val name: String,
     val email: String,
+    val name: String,
+    val birthday: LocalDate,
     val phoneNumber: String,
     val githubUsername: String,
-    val birthday: LocalDate,
 ) {
     constructor(member: Member) : this(
         member.id,
-        member.name,
         member.email,
+        member.name,
+        member.birthday,
         member.phoneNumber,
         member.githubUsername,
-        member.birthday,
     )
 }
 
 data class ApplicantAndFormResponse(
     val id: Long,
-    val name: String,
     val email: String,
-    val phoneNumber: String,
+    val name: String,
     val birthday: LocalDate,
+    val phoneNumber: String,
+    val githubUsername: String,
     val isCheater: Boolean,
     val applicationForm: ApplicationForm,
 ) {
     constructor(member: Member, isCheater: Boolean, applicationForm: ApplicationForm) : this(
         member.id,
-        member.name,
         member.email,
-        member.phoneNumber,
+        member.name,
         member.birthday,
+        member.phoneNumber,
+        member.githubUsername,
         isCheater,
         applicationForm,
     )
