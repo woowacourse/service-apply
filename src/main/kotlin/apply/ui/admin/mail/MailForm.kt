@@ -23,7 +23,6 @@ import org.springframework.core.io.ByteArrayResource
 import support.views.BindingFormLayout
 import support.views.NO_NAME
 import support.views.addSortableColumn
-import support.views.createEnterBox
 import support.views.createErrorSmallButton
 import support.views.createNormalButton
 import support.views.createUpload
@@ -60,18 +59,9 @@ class MailForm(
 
     private fun createRecipientFilter(): Component {
         return HorizontalLayout(
-            createTargetEnterBox(),
             createIndividualLoadButton(),
             createGroupLoadButton()
         ).apply { defaultVerticalComponentAlignment = FlexComponent.Alignment.END }
-    }
-
-    private fun createTargetEnterBox(): Component {
-        return createEnterBox("받는사람") {
-            if (it.isNotBlank()) {
-                refreshGrid { mailTargets.add(MailTargetResponse(it, NO_NAME)) }
-            }
-        }
     }
 
     private fun createIndividualLoadButton(): Button {
