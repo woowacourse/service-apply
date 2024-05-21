@@ -42,6 +42,7 @@ class MailForm(
     private val mailTargetsGrid: Grid<MailTargetResponse> = createMailTargetsGrid(mailTargets)
     private val recipientFilter: Component = createRecipientFilter()
     private val fileUpload: Upload = createFileUpload()
+    private var mailData: MailData? = null
 
     init {
         add(subject, sender, recipientFilter, mailTargetsGrid, body, fileUpload)
@@ -129,6 +130,7 @@ class MailForm(
     }
 
     override fun fill(data: MailData) {
+        mailData = data
         fillDefault(data)
         toReadOnlyMode()
         refreshGrid { mailTargets.addAll(mailTargetService.findAllByMemberIds(data.recipients)) }
@@ -149,6 +151,8 @@ class MailForm(
     }
 
     private fun refreshGridFooter() {
-        mailTargetsGrid.columns.first().setFooter("받는사람: ${mailTargets.size}명")
+        mailData?.let {
+            mailTargetsGrid.columns.first().setFooter("받는사람: ${mailTargets.size}명 (탈퇴 회원 포함 총 ${it.recipients.size}명)")
+        } ?: mailTargetsGrid.columns.first().setFooter("받는사람: ${mailTargets.size}명")
     }
 }
