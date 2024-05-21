@@ -172,8 +172,7 @@ data class EvaluationTargetData(
 data class MailTargetResponse(
     val email: String,
     val name: String? = null,
-    // TODO: default value 제거
-    val id: Long = 0L
+    val id: Long,
 ) {
     constructor(memberResponse: MemberResponse) : this(memberResponse.email, memberResponse.name, memberResponse.id)
     constructor(member: Member) : this(member.email, member.name, member.id)
