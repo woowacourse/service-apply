@@ -257,6 +257,7 @@ class DatabaseInitializer(
                 name = "홍길동",
                 email = "a@email.com",
                 phoneNumber = "010-0000-0000",
+                githubUsername = "jaeyeonling",
                 birthday = createLocalDate(2020, 4, 17),
                 password = Password("password"),
             ),
@@ -264,6 +265,7 @@ class DatabaseInitializer(
                 name = "홍길동2",
                 email = "b@email.com",
                 phoneNumber = "010-0000-0000",
+                githubUsername = "jaeyeonling",
                 birthday = createLocalDate(2020, 5, 5),
                 password = Password("password"),
             ),
@@ -271,6 +273,7 @@ class DatabaseInitializer(
                 name = "홍길동3",
                 email = "c@email.com",
                 phoneNumber = "010-0000-0000",
+                githubUsername = "jaeyeonling",
                 birthday = createLocalDate(2020, 1, 1),
                 password = Password("password"),
             ),
@@ -278,6 +281,7 @@ class DatabaseInitializer(
                 name = "홍길동4",
                 email = "d@email.com",
                 phoneNumber = "010-0000-0000",
+                githubUsername = "jaeyeonling",
                 birthday = createLocalDate(2020, 1, 1),
                 password = Password("password"),
             )
@@ -432,7 +436,6 @@ class DatabaseInitializer(
             Assignment(
                 memberId = 2L,
                 missionId = 1L,
-                githubUsername = "javajigi",
                 pullRequestUrl = "https://github.com/woowacourse/java-baseball-precourse/pull/1",
                 note = "안녕하세요. 이번 미션 생각보다 쉽지 않네요."
             )

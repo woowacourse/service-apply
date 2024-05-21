@@ -22,27 +22,39 @@ class Member(
     var password: Password,
     id: Long = 0L,
 ) : BaseRootEntity<Member>(id) {
-    val name: String
-        get() = information.name
-
     val email: String
         get() = information.email
 
-    val phoneNumber: String
-        get() = information.phoneNumber
+    val name: String
+        get() = information.name
 
     val birthday: LocalDate
         get() = information.birthday
 
+    val phoneNumber: String
+        get() = information.phoneNumber
+
+    val githubUsername: String
+        get() = information.githubUsername
+
     constructor(
-        name: String,
         email: String,
-        phoneNumber: String,
-        birthday: LocalDate,
         password: Password,
+        name: String,
+        birthday: LocalDate,
+        phoneNumber: String,
+        githubUsername: String,
         id: Long = 0L,
     ) : this(
-        MemberInformation(name, email, phoneNumber, birthday), password, id
+        MemberInformation(
+            email = email,
+            name = name,
+            birthday = birthday,
+            phoneNumber = phoneNumber,
+            githubUsername = githubUsername
+        ),
+        password,
+        id,
     )
 
     fun authenticate(password: Password) {

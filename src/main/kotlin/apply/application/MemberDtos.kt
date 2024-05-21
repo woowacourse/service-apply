@@ -11,57 +11,68 @@ import javax.validation.constraints.Pattern
 
 data class MemberResponse(
     val id: Long,
-    val name: String,
     val email: String,
-    val phoneNumber: String,
+    val name: String,
     val birthday: LocalDate,
+    val phoneNumber: String,
+    val githubUsername: String,
 ) {
     constructor(member: Member) : this(
         member.id,
-        member.name,
         member.email,
-        member.phoneNumber,
+        member.name,
         member.birthday,
+        member.phoneNumber,
+        member.githubUsername,
     )
 }
 
 data class ApplicantAndFormResponse(
     val id: Long,
-    val name: String,
     val email: String,
-    val phoneNumber: String,
+    val name: String,
     val birthday: LocalDate,
+    val phoneNumber: String,
+    val githubUsername: String,
     val isCheater: Boolean,
     val applicationForm: ApplicationForm,
 ) {
     constructor(member: Member, isCheater: Boolean, applicationForm: ApplicationForm) : this(
         member.id,
-        member.name,
         member.email,
-        member.phoneNumber,
+        member.name,
         member.birthday,
+        member.phoneNumber,
+        member.githubUsername,
         isCheater,
         applicationForm,
     )
 }
 
 data class RegisterMemberRequest(
-    @field:Pattern(regexp = "[가-힣]{1,30}", message = "올바른 형식의 이름이어야 합니다")
-    val name: String,
-
     @field:Email
     val email: String,
-
-    @field:Pattern(regexp = "010-\\d{4}-\\d{4}", message = "올바른 형식의 전화번호여야 합니다")
-    val phoneNumber: String,
-
-    @field:Past
-    val birthday: LocalDate,
     val password: Password,
     val confirmPassword: Password,
 
+    @field:Pattern(regexp = "[가-힣]{1,30}", message = "올바른 형식의 이름이어야 합니다")
+    val name: String,
+
+    @field:Past
+    val birthday: LocalDate,
+
+    @field:Pattern(regexp = "010-\\d{4}-\\d{4}", message = "올바른 형식의 휴대전화 번호여야 합니다")
+    val phoneNumber: String,
+
+    @field:Pattern(
+        regexp = "^[a-z\\d](?:[a-z\\d]|-(?=[a-z\\d])){0,38}",
+        flags = [Pattern.Flag.CASE_INSENSITIVE],
+        message = "올바른 형식의 이름이어야 합니다"
+    )
+    val githubUsername: String,
+
     @field:NotBlank
-    val authenticationCode: String
+    val authenticationCode: String,
 )
 
 data class AuthenticateMemberRequest(
@@ -88,6 +99,6 @@ data class EditPasswordRequest(
 )
 
 data class EditInformationRequest(
-    @field:Pattern(regexp = "010-\\d{4}-\\d{4}", message = "올바른 형식의 전화번호여야 합니다")
+    @field:Pattern(regexp = "010-\\d{4}-\\d{4}", message = "올바른 형식의 휴대전화 번호여야 합니다")
     val phoneNumber: String
 )

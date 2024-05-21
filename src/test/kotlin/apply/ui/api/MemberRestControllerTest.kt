@@ -29,21 +29,23 @@ private const val WRONG_PASSWORD = "wrong_password"
 private const val NEW_PASSWORD = "new_password"
 
 private fun createRegisterMemberRequest(
-    name: String = "회원",
     email: String = "test@email.com",
-    phoneNumber: String = "010-0000-0000",
-    birthday: LocalDate = createLocalDate(1995, 2, 2),
     password: String = PASSWORD,
     confirmPassword: String = PASSWORD,
+    name: String = "회원",
+    birthday: LocalDate = createLocalDate(1995, 2, 2),
+    phoneNumber: String = "010-0000-0000",
+    githubUsername: String = "jaeyeonling",
     authenticationCode: String = "3ea9fa6c",
 ): Map<String, Any> {
     return mapOf(
-        "name" to name,
         "email" to email,
-        "phoneNumber" to phoneNumber,
-        "birthday" to birthday,
         "password" to password,
         "confirmPassword" to confirmPassword,
+        "name" to name,
+        "birthday" to birthday,
+        "phoneNumber" to phoneNumber,
+        "githubUsername" to githubUsername,
         "authenticationCode" to authenticationCode,
     )
 }

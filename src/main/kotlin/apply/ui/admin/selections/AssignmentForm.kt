@@ -13,10 +13,6 @@ class AssignmentForm(assignmentData: AssignmentData) : FormLayout() {
     init {
         add(
             H3("과제 제출물"),
-            TextField("Github Username").apply {
-                value = assignmentData.githubUsername
-                isReadOnly = true
-            },
             createUrlField(assignmentData.pullRequestUrl),
             TextArea("소감").apply {
                 value = assignmentData.note

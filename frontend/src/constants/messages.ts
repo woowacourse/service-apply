@@ -5,14 +5,15 @@ export const ERROR_MESSAGE = {
     PASSWORD: "영문, 숫자, 특수문자 포함하여 8자에서 20자 이내로 입력해 주세요.",
     PASSWORD_CAPSLOCK: "CapsLock이 켜져 있습니다.",
     CONFIRM_PASSWORD: "비밀번호를 확인해 주세요.",
-    PHONE_NUMBER: "정확한 전화번호를 입력해 주세요. ex) 010-1234-5678",
+    PHONE_NUMBER: "정확한 휴대전화 번호를 입력해 주세요. ex) 010-1234-5678",
     REQUIRED: "필수 정보입니다.",
     URL: "http(s)를 포함한 정확한 URL을 입력해 주세요.",
     TIMEOUT_EMAIL_AUTHENTICATION_CODE:
       "이메일 인증 코드 유효시간이 초과하였습니다. 이메일 인증 코드를 재발급해 주세요.",
     PULL_REQUEST_URL:
       "정확한 Pull Request 주소를 입력해 주세요. ex) https://github.com/woowacourse/java-baseball/pull/1",
-    GITHUB_USERNAME: "GitHub ID는 영어와 숫자 문자만 입력할 수 있습니다.",
+    GITHUB_USERNAME:
+      "GitHub 사용자 이름 정책에 따라 영문, 숫자, 하이픈 조합을 사용하여 최대 39자까지 가능합니다.",
     BIRTHDAY: "유효하지 않은 날짜입니다. 정확한 날짜를 입력해 주세요.",
   },
   API: {

@@ -23,7 +23,16 @@ class MemberAuthenticationService(
         require(request.password == request.confirmPassword) { "비밀번호가 일치하지 않습니다." }
         check(!memberRepository.existsByEmail(request.email)) { "이미 가입된 이메일입니다." }
         authenticationCodeRepository.getLastByEmail(request.email).validate(request.authenticationCode)
-        val member = memberRepository.save(Member(request.name, request.email, request.phoneNumber, request.birthday, request.password))
+        val member = memberRepository.save(
+            Member(
+                email = request.email,
+                password = request.password,
+                name = request.name,
+                birthday = request.birthday,
+                phoneNumber = request.phoneNumber,
+                githubUsername = request.githubUsername,
+            )
+        )
         return jwtTokenProvider.createToken(member.email)
     }
 
