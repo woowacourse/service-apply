@@ -20,7 +20,6 @@ class MailTargetService(
     }
 
     fun findAllByMemberIds(memberIds: List<Long>): List<MailTargetResponse> {
-        // TODO: memberIds에 해당하는 회원이 없는 경우에 대한 처리
         val members = memberRepository.findAllById(memberIds)
         return members.map { MailTargetResponse(it) }
     }
