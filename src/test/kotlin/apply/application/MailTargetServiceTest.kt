@@ -140,6 +140,24 @@ class MailTargetServiceTest : BehaviorSpec({
         }
     }
 
+    Given("메일 이력을 통해 회원 id 목록을 확인할 수 있는 경우") {
+        val members = listOf(
+            createMember(id = 1L),
+            createMember(id = 2L),
+            createMember(id = 3L)
+        )
+
+        every { memberRepository.findAllById(any()) } returns members
+
+        When("회원 id를 사용해 메일 수신자 정보를 조회하면") {
+            val actual = mailTargetService.findAllByMemberIds(listOf(1L, 2L, 3L, 4L))
+
+            Then("현재 회원인 메일 수신자만 확인할 수 있다") {
+                actual shouldHaveSize 3
+            }
+        }
+    }
+
     afterRootTest {
         clearAllMocks()
     }
