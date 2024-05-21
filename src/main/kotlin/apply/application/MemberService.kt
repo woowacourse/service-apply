@@ -40,4 +40,8 @@ class MemberService(
     fun editInformation(id: Long, request: EditInformationRequest) {
         memberRepository.getOrThrow(id).changePhoneNumber(request.phoneNumber)
     }
+
+    fun withdraw(id: Long) {
+        TODO("Not yet implemented")
+    }
 }

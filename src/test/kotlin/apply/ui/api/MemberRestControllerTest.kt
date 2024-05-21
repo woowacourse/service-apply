@@ -16,6 +16,7 @@ import io.mockk.just
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
+import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.patch
 import org.springframework.test.web.servlet.post
@@ -250,6 +251,19 @@ class MemberRestControllerTest : RestControllerTest() {
             status { isNoContent() }
         }.andDo {
             handle(document("member-information-patch"))
+        }
+    }
+
+    @Test
+    fun `회원이 탈퇴한다`() {
+        every { memberService.withdraw(any()) } just Runs
+
+        mockMvc.delete("/api/members/withdraw") {
+            bearer("valid_token")
+        }.andExpect {
+            status { isOk() }
+        }.andDo {
+            handle(document("member-withdraw-delete"))
         }
     }
 }
