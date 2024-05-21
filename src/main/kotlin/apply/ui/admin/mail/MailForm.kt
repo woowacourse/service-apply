@@ -133,7 +133,7 @@ class MailForm(
             return null
         }
         return bindDefaultOrNull()?.apply {
-            recipients = mailTargets.map { it.email }.toList()
+            recipients = mailTargets.map { it.id }.toList()
             attachments = uploadFile
         }
     }
@@ -141,7 +141,7 @@ class MailForm(
     override fun fill(data: MailData) {
         fillDefault(data)
         toReadOnlyMode()
-        refreshGrid { mailTargets.addAll(mailTargetService.findAllByEmails(data.recipients)) }
+        refreshGrid { mailTargets.addAll(mailTargetService.findAllByMemberIds(data.recipients)) }
     }
 
     private fun toReadOnlyMode() {

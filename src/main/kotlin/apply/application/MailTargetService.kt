@@ -26,6 +26,12 @@ class MailTargetService(
         return members.map { MailTargetResponse(it) } + anonymousEmails.map { MailTargetResponse(it) }
     }
 
+    fun findAllByMemberIds(memberIds: List<Long>): List<MailTargetResponse> {
+        // TODO: memberIds에 해당하는 회원이 없는 경우에 대한 처리
+        val members = memberRepository.findAllById(memberIds)
+        return members.map { MailTargetResponse(it) }
+    }
+
     private fun findEvaluationTargets(evaluationId: Long, evaluationStatus: EvaluationStatus?): List<EvaluationTarget> {
         return if (evaluationStatus == null) {
             evaluationTargetRepository.findAllByEvaluationId(evaluationId)
