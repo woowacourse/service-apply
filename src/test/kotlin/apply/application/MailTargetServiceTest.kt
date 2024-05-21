@@ -10,7 +10,6 @@ import apply.domain.evaluationtarget.EvaluationStatus.PENDING
 import apply.domain.evaluationtarget.EvaluationStatus.WAITING
 import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.member.MemberRepository
-import apply.domain.member.findAllByEmailIn
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
@@ -137,20 +136,6 @@ class MailTargetServiceTest : BehaviorSpec({
             Then("해당 평가 대상자의 이름 및 이메일을 확인할 수 없다") {
                 verify { memberRepository.findAllById(emptyList()) }
                 actual.shouldBeEmpty()
-            }
-        }
-    }
-
-    Given("특정 이메일을 가진 회원이 없는 경우") {
-        val email = "test1@email.com"
-
-        every { memberRepository.findAllByEmailIn(any()) } returns emptyList()
-
-        When("해당 이메일로 이메일 정보를 조회하면") {
-            val actual = mailTargetService.findAllByEmails(listOf(email))
-
-            Then("이름이 비어있는 것을 확인할 수 있다") {
-                actual[0] shouldBe MailTargetResponse(email, null)
             }
         }
     }
