@@ -69,7 +69,7 @@ class MailTargetServiceTest : BehaviorSpec({
 
             Then("평가 대상자의 이름 및 이메일을 확인할 수 있다") {
                 actual shouldHaveSize 1
-                actual[0] shouldBe MailTargetResponse(member.email, member.name)
+                actual[0] shouldBe MailTargetResponse(member)
             }
         }
     }
@@ -88,7 +88,7 @@ class MailTargetServiceTest : BehaviorSpec({
 
             Then("평가 대상자의 이름 및 이메일을 확인할 수 있다") {
                 actual shouldHaveSize 1
-                actual[0] shouldBe MailTargetResponse(member.email, member.name)
+                actual[0] shouldBe MailTargetResponse(member)
             }
         }
     }
@@ -107,7 +107,7 @@ class MailTargetServiceTest : BehaviorSpec({
 
             Then("평가 대상자의 이름 및 이메일을 확인할 수 있다") {
                 actual shouldHaveSize 1
-                actual[0] shouldBe MailTargetResponse(member.email, member.name)
+                actual[0] shouldBe MailTargetResponse(member)
             }
         }
     }
