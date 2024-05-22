@@ -4,7 +4,6 @@ import Description from "../../components/@common/Description/Description";
 import Label from "../../components/@common/Label/Label";
 import MessageTextInput from "../../components/@common/MessageTextInput/MessageTextInput";
 import CheckBox from "../../components/form/CheckBox/CheckBox";
-import { PASSWORD_EDIT_FORM_NAME } from "../../hooks/usePasswordEditForm";
 import Button, { BUTTON_VARIANT } from "../../components/@common/Button/Button";
 import { ERROR_MESSAGE } from "../../constants/messages";
 import styles from "./Withdrawal.module.css";
