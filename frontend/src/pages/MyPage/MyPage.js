@@ -59,6 +59,9 @@ const MyPage = () => {
             <Button type="button" onClick={routeToMyPageEdit}>
               내 정보 수정
             </Button>
+            <Button type="button" variant={BUTTON_VARIANT.DANGER_CONTAINED}>
+              회원 탈퇴
+            </Button>
           </div>
         </div>
       </div>

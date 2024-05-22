@@ -4,6 +4,7 @@ import styles from "./Button.module.css";
 export const BUTTON_VARIANT = {
   CONTAINED: "contained",
   OUTLINED: "outlined",
+  DANGER_CONTAINED: "danger contained",
 } as const;
 
 export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
@@ -18,9 +19,11 @@ const Button = ({
   children,
   ...props
 }: ButtonProps) => {
+  const variantClasses = variant.split(" ").map((v) => styles[v]);
+
   return (
     <button
-      className={classNames(className, styles[variant], styles.button, {
+      className={classNames(className, ...variantClasses, styles.button, {
         [styles.cancel]: cancel,
       })}
       {...props}
