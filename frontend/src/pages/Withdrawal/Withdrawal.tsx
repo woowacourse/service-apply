@@ -21,12 +21,21 @@ const initialRequiredForm = {
 
 const Withdrawal = () => {
   const [requiredForm, setRequiredForm] = useState(initialRequiredForm);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleChangedPassword = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRequiredForm({
       ...requiredForm,
       [WITHDRAWAL_FORM_NAME.PASSWORD]: event.target.value,
     });
+  };
+
+  const handleCapsLockState = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const newErrorMessage = event.getModifierState("CapsLock")
+      ? ERROR_MESSAGE.VALIDATION.PASSWORD_CAPSLOCK
+      : "";
+
+    setErrorMessage(newErrorMessage);
   };
 
   const toggleAgree = () => {
@@ -42,10 +51,12 @@ const Withdrawal = () => {
         label="본인 인증"
         placeholder="비밀번호를 입력해 주세요"
         type="password"
+        className={styles["text-input-box"]}
         name={WITHDRAWAL_FORM_NAME.PASSWORD}
         value={requiredForm[WITHDRAWAL_FORM_NAME.PASSWORD] as string}
         onChange={handleChangedPassword}
-        className={styles["text-input-box"]}
+        onKeyUp={handleCapsLockState}
+        errorMessage={errorMessage}
         required
       />
       <div className={styles["withdrawal-box"]}>
