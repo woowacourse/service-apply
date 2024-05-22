@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { AxiosError } from "axios";
+import * as Api from "../../api";
+
 import Container, { CONTAINER_SIZE } from "../../components/@common/Container/Container";
 import Description from "../../components/@common/Description/Description";
 import Label from "../../components/@common/Label/Label";
@@ -7,41 +10,67 @@ import CheckBox from "../../components/form/CheckBox/CheckBox";
 import Button, { BUTTON_VARIANT } from "../../components/@common/Button/Button";
 import { ERROR_MESSAGE } from "../../constants/messages";
 import styles from "./Withdrawal.module.css";
+import useTokenContext from "../../hooks/useTokenContext";
+import { useNavigate } from "react-router-dom";
+import { PATH } from "../../constants/path";
+import { ERROR_CODE } from "../../constants/errorCodes";
 
-export const WITHDRAWAL_FORM_NAME = {
+const WITHDRAWAL_FORM_NAME = {
   PASSWORD: "password",
   IS_AGREED: "isAgreed",
 };
 
-const initialRequiredForm = {
-  [WITHDRAWAL_FORM_NAME.PASSWORD]: "",
-  [WITHDRAWAL_FORM_NAME.IS_AGREED]: false,
-};
-
 const Withdrawal = () => {
-  const [requiredForm, setRequiredForm] = useState(initialRequiredForm);
+  const [password, setPassword] = useState("");
+  const [isAgreed, setIsAgreed] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+  const { token, resetToken } = useTokenContext();
+  const navigate = useNavigate();
+  const clickableForWithdrawal = isAgreed && password;
+
   const handleChangedPassword = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRequiredForm({
-      ...requiredForm,
-      [WITHDRAWAL_FORM_NAME.PASSWORD]: event.target.value,
-    });
+    setPassword(event.target.value);
   };
 
   const handleCapsLockState = (event: React.KeyboardEvent<HTMLInputElement>) => {
     const newErrorMessage = event.getModifierState("CapsLock")
-      ? ERROR_MESSAGE.VALIDATION.PASSWORD_CAPSLOCK
+      ? ERROR_MESSAGE.VALIDATION.PASSWORD_CAPS_LOCK
       : "";
 
     setErrorMessage(newErrorMessage);
   };
 
   const toggleAgree = () => {
-    setRequiredForm({
-      ...requiredForm,
-      [WITHDRAWAL_FORM_NAME.IS_AGREED]: !requiredForm[WITHDRAWAL_FORM_NAME.IS_AGREED],
-    });
+    setIsAgreed(!isAgreed);
+  };
+
+  const handleFailedToWithdraw = (error: AxiosError) => {
+    if (!error) return;
+
+    switch (error.response?.status) {
+      case ERROR_CODE.WITHDRAW.FORBIDDEN:
+        alert(ERROR_MESSAGE.API.FAILED_TO_WITHDRAW_BECAUSE_OF_PASSWORD);
+        return;
+      default:
+        alert(ERROR_MESSAGE.API.FAILED_TO_WITHDRAW_OTHER_REASONS);
+        return;
+    }
+  };
+
+  const requestWithdraw = async () => {
+    try {
+      await Api.fetchWithdraw({
+        token,
+        password,
+      });
+
+      resetToken();
+      alert(ERROR_MESSAGE.API.SUCCEED_TO_WITHDRAW);
+      navigate(PATH.HOME, { replace: true });
+    } catch (error) {
+      handleFailedToWithdraw(error as AxiosError);
+    }
   };
 
   return (
@@ -52,7 +81,7 @@ const Withdrawal = () => {
         type="password"
         className={styles["text-input-box"]}
         name={WITHDRAWAL_FORM_NAME.PASSWORD}
-        value={requiredForm[WITHDRAWAL_FORM_NAME.PASSWORD] as string}
+        value={password}
         onChange={handleChangedPassword}
         onKeyUp={handleCapsLockState}
         errorMessage={errorMessage}
@@ -70,7 +99,7 @@ const Withdrawal = () => {
         <CheckBox
           name="agree"
           label="모든 정보를 삭제하는 것에 동의합니다."
-          checked={requiredForm[WITHDRAWAL_FORM_NAME.IS_AGREED] as boolean}
+          checked={isAgreed}
           onChange={toggleAgree}
           className={styles["check-box"]}
           required
@@ -80,7 +109,12 @@ const Withdrawal = () => {
         <Button type="button" variant={BUTTON_VARIANT.OUTLINED}>
           취소
         </Button>
-        <Button type="button" variant={BUTTON_VARIANT.DANGER_CONTAINED}>
+        <Button
+          type="button"
+          variant={BUTTON_VARIANT.DANGER_CONTAINED}
+          disabled={!clickableForWithdrawal}
+          onClick={requestWithdraw}
+        >
           탈퇴하기
         </Button>
       </div>
