@@ -23,6 +23,7 @@ import RecruitmentProvider from "./provider/RecruitmentProvider";
 import TokenProvider from "./provider/TokenProvider";
 import MemberInfoProvider from "./provider/MemberInfoProvider";
 import { ModalProvider } from "./hooks/useModalContext";
+import Withdrawal from "./pages/Withdrawal/Withdrawal";
 
 const App = () => {
   return (
@@ -61,6 +62,14 @@ const App = () => {
                       element={
                         <MemberInfoProvider>
                           <MyPageEdit />
+                        </MemberInfoProvider>
+                      }
+                    />
+                    <Route
+                      path={PATH.WITHDRAWAL_PAGE}
+                      element={
+                        <MemberInfoProvider>
+                          <Withdrawal />
                         </MemberInfoProvider>
                       }
                     />
