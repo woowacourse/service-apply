@@ -111,7 +111,7 @@ const Withdrawal = () => {
         </Button>
         <Button
           type="button"
-          variant={BUTTON_VARIANT.DANGER_CONTAINED}
+          variant={BUTTON_VARIANT.CONTAINED}
           disabled={!clickableForWithdrawal}
           onClick={requestWithdraw}
         >
