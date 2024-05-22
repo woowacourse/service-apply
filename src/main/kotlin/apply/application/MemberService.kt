@@ -41,7 +41,7 @@ class MemberService(
         memberRepository.getOrThrow(id).changePhoneNumber(request.phoneNumber)
     }
 
-    fun withdraw(id: Long) {
+    fun withdraw(id: Long, request: WithdrawMemberRequest) {
         TODO("Not yet implemented")
     }
 }

@@ -8,6 +8,7 @@ import apply.application.MemberResponse
 import apply.application.MemberService
 import apply.application.RegisterMemberRequest
 import apply.application.ResetPasswordRequest
+import apply.application.WithdrawMemberRequest
 import apply.application.mail.MailService
 import apply.domain.member.Member
 import apply.security.LoginMember
@@ -103,9 +104,10 @@ class MemberRestController(
 
     @DeleteMapping("/withdraw")
     fun withdraw(
-        @LoginMember member: Member
+        @RequestBody @Valid request: WithdrawMemberRequest,
+        @LoginMember member: Member,
     ): ResponseEntity<Unit> {
-        memberService.withdraw(member.id)
+        memberService.withdraw(member.id, request)
         return ResponseEntity.ok().build()
     }
 }

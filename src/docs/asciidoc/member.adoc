@@ -53,3 +53,9 @@ operation::member-information-patch[snippets='http-request,http-response']
 == 회원 탈퇴
 
 operation::member-withdraw-delete[snippets='http-request,http-response']
+
+=== 회원 탈퇴 실패
+
+사용자 정보를 올바르게 입력하지 않은 경우
+
+operation::member-withdraw-delete-forbidden[snippets='http-response']
