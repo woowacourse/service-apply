@@ -32,8 +32,8 @@ class LoginMemberResolver(
         if (!jwtTokenProvider.isValidToken(token)) {
             throw LoginFailedException()
         }
-        val userEmail = jwtTokenProvider.getSubject(token)
-        return memberService.getByEmail(userEmail)
+        val email = jwtTokenProvider.getSubject(token)
+        return memberService.getByEmail(email)
     }
 
     private fun validateIfAdministrator(parameter: MethodParameter) {
