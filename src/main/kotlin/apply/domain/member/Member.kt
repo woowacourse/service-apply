@@ -3,18 +3,15 @@ package apply.domain.member
 import support.domain.BaseRootEntity
 import java.time.LocalDate
 import javax.persistence.AttributeOverride
+import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Embedded
 import javax.persistence.Entity
-import javax.persistence.Table
-import javax.persistence.UniqueConstraint
+import javax.persistence.OneToOne
 
-@Table(
-    uniqueConstraints = [UniqueConstraint(name = "uk_member", columnNames = ["email"])]
-)
 @Entity
 class Member(
-    @Embedded
+    @OneToOne(mappedBy = "member", cascade = [CascadeType.PERSIST, CascadeType.REMOVE])
     var information: MemberInformation,
 
     @AttributeOverride(name = "value", column = Column(name = "password", nullable = false))
@@ -36,6 +33,10 @@ class Member(
 
     val githubUsername: String
         get() = information.githubUsername
+
+    init {
+        information.member = this
+    }
 
     constructor(
         email: String,
