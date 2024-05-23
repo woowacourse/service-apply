@@ -2,8 +2,7 @@ package apply.domain.member
 
 import apply.createMember
 import io.kotest.core.spec.style.ExpectSpec
-import io.kotest.extensions.spring.SpringTestExtension
-import io.kotest.extensions.spring.SpringTestLifecycleMode
+import io.kotest.extensions.spring.SpringExtension
 import io.kotest.inspectors.forAll
 import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
@@ -11,13 +10,15 @@ import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
+import org.springframework.data.repository.findByIdOrNull
 import support.test.RepositoryTest
+import support.test.spec.afterRootTest
 
 @RepositoryTest
 class MemberRepositoryTest(
     private val memberRepository: MemberRepository
 ) : ExpectSpec({
-    extensions(SpringTestExtension(SpringTestLifecycleMode.Root))
+    extensions(SpringExtension)
 
     context("회원 조회") {
         memberRepository.saveAll(
@@ -27,6 +28,11 @@ class MemberRepositoryTest(
                 createMember(name = "동해물과백두산이마르고닳도록하느님이보우하사우리나라만세무궁", email = "c@email.com")
             )
         )
+
+        expect("아이디가 일치하는 회원을 조회한다") {
+            val actual = memberRepository.findByIdOrNull(1L)
+            actual.shouldNotBeNull()
+        }
 
         expect("이름이나 이메일에 키워드가 포함된 모든 회원을 조회한다") {
             listOf("홍" to 2, "a@" to 1, "" to 3, "4" to 0).forAll { (keyword, size) ->
@@ -55,5 +61,9 @@ class MemberRepositoryTest(
             memberRepository.existsByEmail("a@email.com").shouldBeTrue()
             memberRepository.existsByEmail("non-exists@email.com").shouldBeFalse()
         }
+    }
+
+    afterRootTest {
+        memberRepository.deleteAll()
     }
 })

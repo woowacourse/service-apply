@@ -33,7 +33,7 @@ data class MemberInformation(
     val githubUsername: String,
 ) {
     @OneToOne
-    @JoinColumn(foreignKey = ForeignKey(name = "fk_member_information_member_id_ref_member_id"))
+    @JoinColumn(nullable = false, foreignKey = ForeignKey(name = "fk_member_information_member_id_ref_member_id"))
     lateinit var member: Member
 
     @Id
