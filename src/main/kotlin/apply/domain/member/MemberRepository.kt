@@ -5,8 +5,17 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.data.repository.query.Param
 
+fun MemberRepository.findAllByIdIn(ids: Collection<Long>): List<Member> {
+    if (ids.isEmpty()) return emptyList()
+    return findAllById(ids)
+}
+
 fun MemberRepository.findByEmail(email: String): Member? = findBy_informationEmail(email)
-fun MemberRepository.findAllByEmailIn(emails: List<String>): List<Member> = findAllBy_informationEmailIn(emails)
+fun MemberRepository.findAllByEmailIn(emails: List<String>): List<Member> {
+    if (emails.isEmpty()) return emptyList()
+    return findAllBy_informationEmailIn(emails)
+}
+
 fun MemberRepository.existsByEmail(email: String): Boolean = existsBy_informationEmail(email)
 fun MemberRepository.getOrThrow(id: Long): Member = findByIdOrNull(id)
     ?: throw NoSuchElementException("회원이 존재하지 않습니다. id: $id")
