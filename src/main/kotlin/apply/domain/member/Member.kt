@@ -11,14 +11,18 @@ import javax.persistence.OneToOne
 
 @Entity
 class Member(
-    @OneToOne(mappedBy = "member", cascade = [CascadeType.PERSIST, CascadeType.REMOVE])
-    var information: MemberInformation,
+    information: MemberInformation,
 
     @AttributeOverride(name = "value", column = Column(name = "password", nullable = false))
     @Embedded
     var password: Password,
     id: Long = 0L,
 ) : BaseRootEntity<Member>(id) {
+    @OneToOne(mappedBy = "member", cascade = [CascadeType.PERSIST, CascadeType.REMOVE])
+    private var _information: MemberInformation? = information
+    private val information: MemberInformation
+        get() = _information ?: MemberInformation.DELETED
+
     val email: String
         get() = information.email
 
@@ -75,6 +79,11 @@ class Member(
 
     fun changePhoneNumber(phoneNumber: String) {
         information.phoneNumber = phoneNumber
+    }
+
+    fun withdraw(password: Password) {
+        identify(this.password == password) { "사용자 정보가 일치하지 않습니다." }
+        _information = null
     }
 
     private fun identify(value: Boolean, lazyMessage: () -> Any = {}) {

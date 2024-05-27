@@ -43,4 +43,14 @@ data class MemberInformation(
     fun same(name: String, birthday: LocalDate): Boolean {
         return this.name == name && this.birthday == birthday
     }
+
+    companion object {
+        val DELETED: MemberInformation = MemberInformation(
+            email = "ghost@email.com",
+            name = """👻""",
+            birthday = LocalDate.EPOCH,
+            phoneNumber = "010-0000-0000",
+            githubUsername = "ghost"
+        )
+    }
 }
