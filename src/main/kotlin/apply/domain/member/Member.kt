@@ -2,6 +2,7 @@ package apply.domain.member
 
 import support.domain.BaseRootEntity
 import java.time.LocalDate
+import java.time.Period
 import javax.persistence.AttributeOverride
 import javax.persistence.Column
 import javax.persistence.Embedded
@@ -36,6 +37,11 @@ class Member(
 
     val githubUsername: String
         get() = information.githubUsername
+
+    init {
+        val age = Period.between(birthday, LocalDate.now()).years
+        require(age >= 14) { "만 14세 미만은 회원 가입할 수 없습니다." }
+    }
 
     constructor(
         email: String,

@@ -7,8 +7,14 @@ import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
+import java.time.LocalDate
 
 class MemberTest : StringSpec({
+    "만 14세 미만은 회원 가입할 수 없다" {
+        val birthday = LocalDate.now().plusYears(13L)
+        shouldThrow<IllegalArgumentException> { createMember(birthday = birthday) }
+    }
+
     "회원의 비밀번호와 일치하는지 확인한다" {
         val member = createMember()
         shouldNotThrowAny { member.authenticate(PASSWORD) }
