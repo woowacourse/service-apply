@@ -38,6 +38,11 @@ class MemberRepositoryTest(
             actual.shouldNotBeNull()
         }
 
+        expect("아이디가 일치하는 모든 회원을 조회한다") {
+            val actual = memberRepository.findAllById(listOf(1L, 2L, 3L))
+            actual.shouldHaveSize(3)
+        }
+
         expect("이름이나 이메일에 키워드가 포함된 모든 회원을 조회한다") {
             listOf("홍" to 2, "a@" to 1, "" to 3, "4" to 0).forAll { (keyword, size) ->
                 val actual = memberRepository.findAllByKeyword(keyword)
