@@ -1,5 +1,7 @@
 package apply.domain.member
 
+import apply.NEW_PASSWORD
+import apply.PASSWORD
 import apply.createMember
 import io.kotest.core.spec.style.ExpectSpec
 import io.kotest.extensions.spring.SpringExtension
@@ -66,14 +68,27 @@ class MemberRepositoryTest(
     }
 
     context("회원 수정") {
-        val member = memberRepository.save(createMember(phoneNumber = "010-0000-0000"))
+        val member = memberRepository.save(
+            createMember(
+                password = PASSWORD,
+                phoneNumber = "010-0000-0000",
+            )
+        )
+
+        expect("회원이 비밀번호를 수정한다") {
+            val actual = memberRepository.getOrThrow(member.id)
+            actual.changePassword(PASSWORD, NEW_PASSWORD)
+        }
 
         expect("회원이 휴대전화 번호를 수정한다") {
             val actual = memberRepository.getOrThrow(member.id)
             actual.changePhoneNumber("010-1234-5678")
-            entityManager.flush()
-            entityManager.clear()
         }
+    }
+
+    afterEach {
+        entityManager.flush()
+        entityManager.clear()
     }
 
     afterRootTest {
