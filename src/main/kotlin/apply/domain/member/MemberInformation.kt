@@ -27,7 +27,7 @@ data class MemberInformation(
     val birthday: LocalDate,
 
     @Column(nullable = false, length = 13)
-    val phoneNumber: String,
+    var phoneNumber: String,
 
     @Column(nullable = false, length = 39)
     val githubUsername: String,

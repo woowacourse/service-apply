@@ -10,13 +10,15 @@ import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import org.springframework.data.repository.findByIdOrNull
 import support.test.RepositoryTest
 import support.test.spec.afterRootTest
 
 @RepositoryTest
 class MemberRepositoryTest(
-    private val memberRepository: MemberRepository
+    private val memberRepository: MemberRepository,
+    private val entityManager: TestEntityManager,
 ) : ExpectSpec({
     extensions(SpringExtension)
 
@@ -60,6 +62,17 @@ class MemberRepositoryTest(
         expect("이메일이 일치하는 회원이 있는지 확인한다") {
             memberRepository.existsByEmail("a@email.com").shouldBeTrue()
             memberRepository.existsByEmail("non-exists@email.com").shouldBeFalse()
+        }
+    }
+
+    context("회원 수정") {
+        val member = memberRepository.save(createMember(phoneNumber = "010-0000-0000"))
+
+        expect("회원이 휴대전화 번호를 수정한다") {
+            val actual = memberRepository.getOrThrow(member.id)
+            actual.changePhoneNumber("010-1234-5678")
+            entityManager.flush()
+            entityManager.clear()
         }
     }
 
