@@ -42,6 +42,6 @@ class MemberService(
     }
 
     fun withdraw(id: Long, request: WithdrawMemberRequest) {
-        TODO("Not yet implemented")
+        memberRepository.getOrThrow(id).withdraw(request.password)
     }
 }
