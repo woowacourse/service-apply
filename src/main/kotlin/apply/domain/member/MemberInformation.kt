@@ -34,7 +34,7 @@ data class MemberInformation(
 ) {
     @OneToOne
     @JoinColumn(nullable = false, foreignKey = ForeignKey(name = "fk_member_information_member_id_ref_member_id"))
-    lateinit var member: Member
+    var member: Member? = null
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

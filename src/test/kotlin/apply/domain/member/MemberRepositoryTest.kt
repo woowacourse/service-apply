@@ -86,6 +86,15 @@ class MemberRepositoryTest(
         }
     }
 
+    context("회원 탈퇴") {
+        val member = memberRepository.save(createMember(password = PASSWORD))
+
+        expect("회원 탈퇴하면 회원 정보를 삭제한다") {
+            val actual = memberRepository.getOrThrow(member.id)
+            actual.withdraw(PASSWORD)
+        }
+    }
+
     afterEach {
         entityManager.flush()
         entityManager.clear()

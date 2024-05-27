@@ -18,7 +18,7 @@ class Member(
     var password: Password,
     id: Long = 0L,
 ) : BaseRootEntity<Member>(id) {
-    @OneToOne(mappedBy = "member", cascade = [CascadeType.PERSIST, CascadeType.REMOVE])
+    @OneToOne(mappedBy = "member", cascade = [CascadeType.PERSIST, CascadeType.REMOVE], orphanRemoval = true)
     private var _information: MemberInformation? = information
     private val information: MemberInformation
         get() = _information ?: MemberInformation.DELETED
@@ -83,6 +83,7 @@ class Member(
 
     fun withdraw(password: Password) {
         identify(this.password == password) { "사용자 정보가 일치하지 않습니다." }
+        information.member = null
         _information = null
     }
 
