@@ -26,7 +26,7 @@
 }
 
 .rule-field {
-  margin: 0 0.5rem;
+  margin: 0.2rem 0.5rem 0;
   height: 0.75rem;
   font-size: 0.75rem;
   color: var(--red);

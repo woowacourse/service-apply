@@ -6,6 +6,7 @@ import { isValidGithubUsername } from "../utils/validation/githubUsername";
 import { isValidName } from "../utils/validation/name";
 import { isValidPassword } from "../utils/validation/password";
 import { isValidPhoneNumber } from "../utils/validation/phoneNumber";
+import { isAtLeast14YearsOld } from "../utils/validation/birthday";
 
 export const SIGN_UP_FORM_NAME = {
   IS_TERM_AGREED: "isTermAgreed",
@@ -37,6 +38,7 @@ const initialErrorMessage = {
   [SIGN_UP_FORM_NAME.PASSWORD]: "",
   [SIGN_UP_FORM_NAME.CONFIRM_PASSWORD]: "",
   [SIGN_UP_FORM_NAME.NAME]: "",
+  [SIGN_UP_FORM_NAME.BIRTHDAY]: "",
   [SIGN_UP_FORM_NAME.PHONE_NUMBER]: "",
   [SIGN_UP_FORM_NAME.GITHUB_USERNAME]: "",
 };
@@ -112,6 +114,11 @@ const useSignUpForm = () => {
   };
 
   const handleChangeBirthday = (date) => {
+    const errorMessage = isAtLeast14YearsOld(date)
+      ? ""
+      : ERROR_MESSAGE.VALIDATION.BIRTHDAY_IS_NOT_OVER_14;
+
+    updateErrorMessage(SIGN_UP_FORM_NAME.BIRTHDAY, errorMessage);
     updateRequiredForm(SIGN_UP_FORM_NAME.BIRTHDAY, date);
   };
 
