@@ -2,17 +2,17 @@
 
 == 회원 가입
 
-operation::user-register-post[snippets='http-request,http-response']
+operation::member-register-post[snippets='http-request,http-response']
 
 == 로그인
 
-operation::user-login-post[snippets='http-request,http-response']
+operation::member-login-post[snippets='http-request,http-response']
 
 === 로그인 실패
 
 사용자 정보를 올바르게 입력하지 않은 경우
 
-operation::user-login-post-forbidden[snippets='http-response']
+operation::member-login-post-forbidden[snippets='http-response']
 
 == 비밀번호 초기화
 
@@ -49,3 +49,13 @@ operation::member-me-get[snippets='http-request,http-response']
 == 내 정보 변경
 
 operation::member-information-patch[snippets='http-request,http-response']
+
+== 회원 탈퇴
+
+operation::member-withdraw-delete[snippets='http-request,http-response']
+
+=== 회원 탈퇴 실패
+
+사용자 정보를 올바르게 입력하지 않은 경우
+
+operation::member-withdraw-delete-forbidden[snippets='http-response']

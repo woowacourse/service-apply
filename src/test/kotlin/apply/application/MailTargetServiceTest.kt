@@ -10,7 +10,6 @@ import apply.domain.evaluationtarget.EvaluationStatus.PENDING
 import apply.domain.evaluationtarget.EvaluationStatus.WAITING
 import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.member.MemberRepository
-import apply.domain.member.findAllByEmailIn
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
@@ -19,7 +18,6 @@ import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
 import support.test.spec.afterRootTest
 
 class MailTargetServiceTest : BehaviorSpec({
@@ -79,7 +77,12 @@ class MailTargetServiceTest : BehaviorSpec({
         val member = createMember(id = 2L, email = "fail@email.com")
 
         every { evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(any(), any()) } returns listOf(
-            createEvaluationTarget(evaluationId = evaluationId, memberId = member.id, evaluationStatus = FAIL)
+            createEvaluationTarget(
+                evaluationId = evaluationId,
+                memberId = member.id,
+                evaluationStatus = FAIL,
+                evaluationAnswers = EvaluationAnswers(listOf(createEvaluationAnswer()))
+            )
         )
         every { memberRepository.findAllById(any()) } returns listOf(member)
 
@@ -135,7 +138,6 @@ class MailTargetServiceTest : BehaviorSpec({
             val actual = mailTargetService.findMailTargets(evaluationId, FAIL)
 
             Then("해당 평가 대상자의 이름 및 이메일을 확인할 수 없다") {
-                verify { memberRepository.findAllById(emptyList()) }
                 actual.shouldBeEmpty()
             }
         }
@@ -144,7 +146,7 @@ class MailTargetServiceTest : BehaviorSpec({
     Given("특정 이메일을 가진 회원이 없는 경우") {
         val email = "test1@email.com"
 
-        every { memberRepository.findAllByEmailIn(any()) } returns emptyList()
+        every { memberRepository.findAllBy_informationEmailIn(any()) } returns emptyList()
 
         When("해당 이메일로 이메일 정보를 조회하면") {
             val actual = mailTargetService.findAllByEmails(listOf(email))

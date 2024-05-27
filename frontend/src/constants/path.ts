@@ -11,6 +11,7 @@ export const PATH = {
   EDIT_PASSWORD: "/edit",
   MY_PAGE: "/mypage",
   EDIT_MY_PAGE: "/mypage/edit",
+  WITHDRAWAL_PAGE: "/withdrawal",
 } as const;
 
 export const PARAM = {
