@@ -25,6 +25,7 @@ import apply.domain.judgmentitem.ProgrammingLanguage
 import apply.domain.mail.MailHistory
 import apply.domain.mail.MailHistoryRepository
 import apply.domain.member.Member
+import apply.domain.member.MemberInformation
 import apply.domain.member.MemberRepository
 import apply.domain.member.Password
 import apply.domain.mission.Mission
@@ -254,36 +255,48 @@ class DatabaseInitializer(
     private fun populateMembers() {
         val members = listOf(
             Member(
-                name = "홍길동",
-                email = "a@email.com",
-                phoneNumber = "010-0000-0000",
-                githubUsername = "jaeyeonling",
-                birthday = createLocalDate(2020, 4, 17),
-                password = Password("password"),
+                MemberInformation(
+                    name = "홍길동",
+                    email = "a@email.com",
+                    phoneNumber = "010-0000-0000",
+                    githubUsername = "jaeyeonling",
+                    birthday = createLocalDate(2000, 4, 17),
+                ),
+                Password("password"),
+                {}
             ),
             Member(
-                name = "홍길동2",
-                email = "b@email.com",
-                phoneNumber = "010-0000-0000",
-                githubUsername = "jaeyeonling",
-                birthday = createLocalDate(2020, 5, 5),
+                MemberInformation(
+                    name = "홍길동2",
+                    email = "b@email.com",
+                    phoneNumber = "010-0000-0000",
+                    githubUsername = "jaeyeonling",
+                    birthday = createLocalDate(2000, 5, 5),
+                ),
                 password = Password("password"),
+                {}
             ),
             Member(
-                name = "홍길동3",
-                email = "c@email.com",
-                phoneNumber = "010-0000-0000",
-                githubUsername = "jaeyeonling",
-                birthday = createLocalDate(2020, 1, 1),
-                password = Password("password"),
+                MemberInformation(
+                    name = "홍길동3",
+                    email = "c@email.com",
+                    phoneNumber = "010-0000-0000",
+                    githubUsername = "jaeyeonling",
+                    birthday = createLocalDate(2000, 1, 1),
+                ),
+                Password("password"),
+                {}
             ),
             Member(
-                name = "홍길동4",
-                email = "d@email.com",
-                phoneNumber = "010-0000-0000",
-                githubUsername = "jaeyeonling",
-                birthday = createLocalDate(2020, 1, 1),
-                password = Password("password"),
+                MemberInformation(
+                    name = "홍길동4",
+                    email = "d@email.com",
+                    phoneNumber = "010-0000-0000",
+                    githubUsername = "jaeyeonling",
+                    birthday = createLocalDate(2000, 1, 1),
+                ),
+                Password("password"),
+                {}
             )
         )
         memberRepository.saveAll(members)

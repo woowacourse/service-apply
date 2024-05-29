@@ -11,8 +11,11 @@ import java.time.LocalDate
 
 class MemberTest : StringSpec({
     "만 14세 미만은 회원 가입할 수 없다" {
-        val birthday = LocalDate.now().plusYears(13L)
-        shouldThrow<IllegalArgumentException> { createMember(birthday = birthday) }
+        val now = LocalDate.now()
+        val requirement = MinimumAgeRequirement(age = 14, baseDate = now)
+        shouldThrow<IllegalArgumentException> {
+            createMember(birthday = now, authorizationRequirement = requirement)
+        }
     }
 
     "회원의 비밀번호와 일치하는지 확인한다" {
