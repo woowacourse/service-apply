@@ -7,9 +7,9 @@ class MinimumAgeRequirement(
     private val age: Int = DEFAULT_MINIMUM_AGE,
     private val baseDate: LocalDate = LocalDate.now(),
 ) : AuthorizationRequirement {
-    override fun meets(information: MemberInformation): Boolean {
+    override fun require(information: MemberInformation) {
         val age = Period.between(information.birthday, baseDate).years
-        return age >= DEFAULT_MINIMUM_AGE
+        require(age >= this.age) { "만 ${this.age}세 미만은 회원 가입할 수 없습니다." }
     }
 
     companion object {
