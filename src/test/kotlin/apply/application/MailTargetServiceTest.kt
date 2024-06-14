@@ -140,6 +140,7 @@ class MailTargetServiceTest : BehaviorSpec({
         }
     }
 
+    // TODO[#754]: 탈퇴한 회원의 경우 default 정보가 노출된다.
     Given("메일 이력을 통해 회원 id 목록을 확인할 수 있는 경우") {
         val members = listOf(
             createMember(id = 1L),

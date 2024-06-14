@@ -151,8 +151,6 @@ class MailForm(
     }
 
     private fun refreshGridFooter() {
-        mailData?.let {
-            mailTargetsGrid.columns.first().setFooter("받는사람: ${mailTargets.size}명 (탈퇴 회원 포함 총 ${it.recipients.size}명)")
-        } ?: mailTargetsGrid.columns.first().setFooter("받는사람: ${mailTargets.size}명")
+        mailTargetsGrid.columns.first().setFooter("받는사람: ${mailTargets.size}명")
     }
 }
