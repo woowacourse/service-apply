@@ -72,35 +72,49 @@ const MyMissionItem = ({ mission, recruitmentId }: MyMissionItemProps) => {
 
   return (
     <div className={classNames(styles["content-box"])}>
-      <div className={styles["text-container"]}>
-        <RecruitmentDetail startDate={formattedStartDateTime} endDate={formattedEndDateTime}>
-          {missionItem.title}
-        </RecruitmentDetail>
-
-        <hr className={styles["auto-judgment-detail-contour"]} />
-
-        <MissionDetail judgment={missionItem.judgment} />
-
-        <div className={styles["button-container"]}>
-          <RefreshButton
-            recruitmentId={Number(recruitmentId)}
-            missionItem={missionItem}
-            setMission={setMissionItem}
-          />
-          <JudgmentButton
-            recruitmentId={Number(recruitmentId)}
-            missionItem={missionItem}
-            setMission={setMissionItem}
-          />
-          <ApplyButton
-            isButtonDisabled={missionItem.status !== MISSION_STATUS.SUBMITTING}
-            onClick={routeToAssignmentSubmit({
-              recruitmentId: String(recruitmentId),
-              mission,
-            })}
-            label={applyButtonLabel}
-          />
+      <div className={styles["content-wrapper"]}>
+        <div className={styles["title-container"]}>
+          <RecruitmentDetail startDate={formattedStartDateTime} endDate={formattedEndDateTime}>
+            {missionItem.title}
+          </RecruitmentDetail>
+          <ul className={styles["title-button-list"]}>
+            <li>
+              <ApplyButton
+                isButtonDisabled={missionItem.status !== MISSION_STATUS.SUBMITTING}
+                onClick={routeToAssignmentSubmit({
+                  recruitmentId: String(recruitmentId),
+                  mission,
+                })}
+                label={applyButtonLabel}
+              />
+            </li>
+          </ul>
         </div>
+
+        <hr className={styles["divider"]} />
+
+        <MissionDetail judgment={missionItem.judgment}>
+          <ul>
+            <li>
+              {/*
+                새로고침버튼... 상태에 따라 null을 반환할 수 있음...
+                이걸 버튼에서 판별해야 하나?
+              */}
+              <RefreshButton
+                recruitmentId={Number(recruitmentId)}
+                missionItem={missionItem}
+                setMission={setMissionItem}
+              />
+            </li>
+            <li>
+              <JudgmentButton
+                recruitmentId={Number(recruitmentId)}
+                missionItem={missionItem}
+                setMission={setMissionItem}
+              />
+            </li>
+          </ul>
+        </MissionDetail>
       </div>
     </div>
   );

@@ -6,10 +6,27 @@
   word-break: break-all;
 }
 
+.detail-status-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.detail-status-container ul {
+  display: flex;
+  gap: 0.25rem;
+}
+
 .guide-container {
   display: flex;
   gap: 0.25rem;
   margin-left: auto;
   color: var(--gray-600);
   font-size: 0.815rem;
+}
+
+@media screen and (max-width: 800px) {
+  .title-container {
+    flex-direction: column;
+    gap: 0.875rem;
+  }
 }

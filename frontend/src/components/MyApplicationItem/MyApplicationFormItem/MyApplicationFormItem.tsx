@@ -68,19 +68,23 @@ const MyApplicationFormItem = ({ recruitment, submitted }: MyApplicationFormItem
 
   return (
     <div className={classNames(styles["content-box"])}>
-      <div className={styles["text-container"]}>
-        <RecruitmentDetail startDate={formattedStartDateTime} endDate={formattedEndDateTime}>
-          {recruitment.title}
-        </RecruitmentDetail>
+      <div className={styles["content-wrapper"]}>
+        <div className={styles["title-container"]}>
+          <RecruitmentDetail startDate={formattedStartDateTime} endDate={formattedEndDateTime}>
+            {recruitment.title}
+          </RecruitmentDetail>
 
-        <div className={styles["button-container"]}>
-          <ApplyButton
-            isButtonDisabled={isButtonDisabled}
-            onClick={() => {
-              routeToApplicationForm(recruitment);
-            }}
-            label={applyButtonLabel}
-          />
+          <ul className={styles["title-button-list"]}>
+            <li>
+              <ApplyButton
+                isButtonDisabled={isButtonDisabled}
+                onClick={() => {
+                  routeToApplicationForm(recruitment);
+                }}
+                label={applyButtonLabel}
+              />
+            </li>
+          </ul>
         </div>
       </div>
     </div>

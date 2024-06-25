@@ -9,7 +9,7 @@ type RecruitmentDetailProps = {
 
 const RecruitmentDetail = ({ children, startDate, endDate }: RecruitmentDetailProps) => {
   return (
-    <>
+    <div>
       <p className={styles.title}>
         <strong>{children}</strong>
       </p>
@@ -19,7 +19,7 @@ const RecruitmentDetail = ({ children, startDate, endDate }: RecruitmentDetailPr
           {startDate} ~ {endDate}
         </p>
       </div>
-    </>
+    </div>
   );
 };
 
