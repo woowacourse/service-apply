@@ -1,5 +1,5 @@
 import { AxiosError } from "axios";
-import { Mission, Recruitment } from "../../../../types/domains/recruitments";
+import { Mission, MissionStatus, Recruitment } from "../../../../types/domains/recruitments";
 import { postMyMissionJudgment } from "../../../api";
 import useTokenContext from "../../../hooks/useTokenContext";
 import { isJudgmentTimedOut } from "../../../utils/validation/judgmentTime";
@@ -18,8 +18,7 @@ const useMissionJudgement = ({ missionItem, recruitmentId }: MissionJudgementPro
   const isJudgmentAvailable =
     submitted &&
     (judgment?.status !== JUDGMENT_STATUS.STARTED || isJudgmentTimedOut(judgment)) &&
-    status !== MISSION_STATUS.ENDED &&
-    status !== MISSION_STATUS.UNSUBMITTABLE;
+    !([MISSION_STATUS.ENDED, MISSION_STATUS.UNSUBMITTABLE] as MissionStatus[]).includes(status);
 
   const fetchJudgmentMissionResult = async () => {
     try {
