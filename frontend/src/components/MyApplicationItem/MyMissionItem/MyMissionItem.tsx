@@ -14,6 +14,7 @@ import styles from "../MyApplicationItem.module.css";
 import RecruitmentDetail from "../RecruitmentDetail/RecruitmentDetail";
 import { PATH } from "./../../../constants/path";
 import useRefresh from "./useRefresh";
+import useTokenContext from "../../../hooks/useTokenContext";
 
 type MyMissionItemProps = {
   mission: Mission;
@@ -32,9 +33,11 @@ const missionLabel = (submitted: boolean, missionStatus: Mission["status"]) => {
 };
 
 const MyMissionItem = ({ mission, recruitmentId }: MyMissionItemProps) => {
+  const { token } = useTokenContext();
   const navigate = useNavigate();
+
   const [missionItem, setMissionItem] = useState<Mission>({ ...mission });
-  const { refreshAvailable } = useRefresh({
+  const { refreshAvailable, fetchRefreshedResultData } = useRefresh({
     recruitmentId: Number(recruitmentId),
     missionItem,
   });
@@ -75,6 +78,20 @@ const MyMissionItem = ({ mission, recruitmentId }: MyMissionItemProps) => {
       );
     };
 
+  const requestRefresh = async () => {
+    try {
+      const result = await fetchRefreshedResultData({
+        missionId: String(missionItem.id),
+        recruitmentId: String(recruitmentId),
+        token,
+      });
+
+      setMissionItem(result);
+    } catch (error) {
+      error instanceof Error && alert(error.message);
+    }
+  };
+
   return (
     <div className={classNames(styles["content-box"])}>
       <div className={styles["content-wrapper"]}>
@@ -100,13 +117,9 @@ const MyMissionItem = ({ mission, recruitmentId }: MyMissionItemProps) => {
 
         <MissionDetail judgment={missionItem.judgment}>
           <ul>
-            {(refreshAvailable || true) && (
+            {refreshAvailable && (
               <li>
-                <RefreshButton
-                  recruitmentId={Number(recruitmentId)}
-                  missionItem={missionItem}
-                  setMission={setMissionItem}
-                />
+                <RefreshButton onClick={requestRefresh} />
               </li>
             )}
             <li>
