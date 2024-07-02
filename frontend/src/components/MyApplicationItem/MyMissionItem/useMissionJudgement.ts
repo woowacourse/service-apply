@@ -21,14 +21,7 @@ const useMissionJudgement = ({ missionItem, recruitmentId }: MissionJudgementPro
     status !== MISSION_STATUS.ENDED &&
     status !== MISSION_STATUS.UNSUBMITTABLE;
 
-  const handleJudgeError = async (error: AxiosError) => {
-    if (!error) return;
-
-    const errorMessage = error.response?.data.message;
-    alert(errorMessage);
-  };
-
-  const handleJudgeMission = async () => {
+  const fetchJudgmentMissionResult = async () => {
     try {
       const response = await postMyMissionJudgment({
         recruitmentId: Number(recruitmentId),
@@ -38,15 +31,14 @@ const useMissionJudgement = ({ missionItem, recruitmentId }: MissionJudgementPro
 
       return { ...missionItem, judgment: response.data };
     } catch (error) {
-      handleJudgeError(error as AxiosError);
+      throw new Error((error as AxiosError).response?.data.message);
     }
   };
 
   return {
     isJudgmentAvailable,
 
-    handleJudgeError,
-    handleJudgeMission,
+    fetchJudgmentMissionResult,
   };
 };
 

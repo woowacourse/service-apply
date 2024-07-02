@@ -4,6 +4,7 @@ import { fetchMyMissionJudgment } from "../../../api";
 import { JUDGMENT_STATUS } from "../../../constants/judgment";
 import { MISSION_STATUS } from "../../../constants/recruitment";
 import { isJudgmentTimedOut } from "../../../utils/validation/judgmentTime";
+import useTokenContext from "../../../hooks/useTokenContext";
 
 type Props = {
   recruitmentId?: Recruitment["id"];
@@ -11,6 +12,7 @@ type Props = {
 };
 
 const useRefresh = ({ recruitmentId, missionItem }: Props) => {
+  const { token } = useTokenContext();
   const isValidMissionId = missionItem.id && recruitmentId;
 
   const refreshAvailable =
@@ -19,19 +21,11 @@ const useRefresh = ({ recruitmentId, missionItem }: Props) => {
     missionItem.status !== MISSION_STATUS.SUBMITTING &&
     !isJudgmentTimedOut(missionItem.judgment);
 
-  const fetchRefreshedResultData = async ({
-    missionId,
-    recruitmentId,
-    token,
-  }: {
-    missionId: string;
-    recruitmentId: string;
-    token: string;
-  }) => {
+  const fetchRefreshedResultData = async () => {
     try {
       const response = await fetchMyMissionJudgment({
+        missionId: Number(missionItem.id),
         recruitmentId: Number(recruitmentId),
-        missionId: Number(missionId),
         token,
       });
 

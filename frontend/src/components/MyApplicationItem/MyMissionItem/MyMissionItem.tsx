@@ -14,7 +14,7 @@ import styles from "../MyApplicationItem.module.css";
 import RecruitmentDetail from "../RecruitmentDetail/RecruitmentDetail";
 import { PATH } from "./../../../constants/path";
 import useRefresh from "./useRefresh";
-import useTokenContext from "../../../hooks/useTokenContext";
+import useMissionJudgement from "./useMissionJudgement";
 
 type MyMissionItemProps = {
   mission: Mission;
@@ -33,13 +33,16 @@ const missionLabel = (submitted: boolean, missionStatus: Mission["status"]) => {
 };
 
 const MyMissionItem = ({ mission, recruitmentId }: MyMissionItemProps) => {
-  const { token } = useTokenContext();
   const navigate = useNavigate();
 
   const [missionItem, setMissionItem] = useState<Mission>({ ...mission });
   const { refreshAvailable, fetchRefreshedResultData } = useRefresh({
-    recruitmentId: Number(recruitmentId),
     missionItem,
+    recruitmentId: Number(recruitmentId),
+  });
+  const { fetchJudgmentMissionResult, isJudgmentAvailable } = useMissionJudgement({
+    missionItem,
+    recruitmentId: Number(recruitmentId),
   });
 
   const applyButtonLabel = missionLabel(mission.submitted, mission.status);
@@ -80,11 +83,16 @@ const MyMissionItem = ({ mission, recruitmentId }: MyMissionItemProps) => {
 
   const requestRefresh = async () => {
     try {
-      const result = await fetchRefreshedResultData({
-        missionId: String(missionItem.id),
-        recruitmentId: String(recruitmentId),
-        token,
-      });
+      const result = await fetchRefreshedResultData();
+      setMissionItem(result);
+    } catch (error) {
+      error instanceof Error && alert(error.message);
+    }
+  };
+
+  const requestMissionJudgment = async () => {
+    try {
+      const result = await fetchJudgmentMissionResult();
 
       setMissionItem(result);
     } catch (error) {
@@ -123,11 +131,7 @@ const MyMissionItem = ({ mission, recruitmentId }: MyMissionItemProps) => {
               </li>
             )}
             <li>
-              <JudgmentButton
-                recruitmentId={Number(recruitmentId)}
-                missionItem={missionItem}
-                setMission={setMissionItem}
-              />
+              <JudgmentButton disabled={!isJudgmentAvailable} onClick={requestMissionJudgment} />
             </li>
           </ul>
         </MissionDetail>
