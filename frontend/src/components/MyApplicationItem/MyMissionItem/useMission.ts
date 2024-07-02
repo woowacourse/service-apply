@@ -27,7 +27,7 @@ const useMission = ({ mission, recruitmentId }: MissionProps) => {
   const navigate = useNavigate();
 
   const [missionItem, setMissionItem] = useState<Mission>({ ...mission });
-  const { refreshAvailable, fetchRefreshedResultData } = useRefresh({
+  const { isRefreshAvailable, fetchRefreshedResultData } = useRefresh({
     missionItem,
     recruitmentId: Number(recruitmentId),
   });
@@ -98,7 +98,7 @@ const useMission = ({ mission, recruitmentId }: MissionProps) => {
       formattedStartDateTime,
       formattedEndDateTime,
       isJudgmentAvailable,
-      refreshAvailable,
+      isRefreshAvailable,
     },
     setter: {
       setMissionItem,

@@ -15,10 +15,10 @@ const useRefresh = ({ recruitmentId, missionItem }: Props) => {
   const { token } = useTokenContext();
   const isValidMissionId = missionItem.id && recruitmentId;
 
-  const refreshAvailable =
+  const isRefreshAvailable =
     isValidMissionId &&
     missionItem.judgment?.status === JUDGMENT_STATUS.STARTED &&
-    missionItem.status !== MISSION_STATUS.SUBMITTING &&
+    missionItem.status === MISSION_STATUS.SUBMITTING &&
     !isJudgmentTimedOut(missionItem.judgment);
 
   const fetchRefreshedResultData = async () => {
@@ -36,7 +36,7 @@ const useRefresh = ({ recruitmentId, missionItem }: Props) => {
   };
 
   return {
-    refreshAvailable,
+    isRefreshAvailable,
     fetchRefreshedResultData,
   };
 };

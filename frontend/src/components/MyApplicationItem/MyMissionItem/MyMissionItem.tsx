@@ -21,7 +21,7 @@ const MyMissionItem = ({ mission, recruitmentId }: MyMissionItemProps) => {
       formattedStartDateTime,
       formattedEndDateTime,
       isJudgmentAvailable,
-      refreshAvailable,
+      isRefreshAvailable,
     },
     routeToAssignmentSubmit,
     requestRefresh,
@@ -50,12 +50,10 @@ const MyMissionItem = ({ mission, recruitmentId }: MyMissionItemProps) => {
             </li>
           </ul>
         </div>
-
         <hr className={styles["divider"]} />
-
         <MissionDetail judgment={missionItem.judgment}>
           <ul>
-            {refreshAvailable && (
+            {isRefreshAvailable && (
               <li>
                 <Button className={buttonStyles["refresh-button"]} onClick={requestRefresh}>
                   새로고침
