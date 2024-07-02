@@ -1,13 +1,12 @@
 import classNames from "classnames";
 import { Mission } from "../../../../types/domains/recruitments";
-import { BUTTON_LABEL, MISSION_STATUS } from "../../../constants/recruitment";
+import { MISSION_STATUS } from "../../../constants/recruitment";
 import MissionDetail from "../MissionDetail/MissionDetail";
-import ApplyButton from "../MyApplicationButtons/ApplyButton";
-import JudgmentButton from "../MyApplicationButtons/JudgmentButton";
-import RefreshButton from "../MyApplicationButtons/RefreshButton";
 import styles from "../MyApplicationItem.module.css";
+import buttonStyles from "./ApplicationButtonStyles.module.css";
 import RecruitmentDetail from "../RecruitmentDetail/RecruitmentDetail";
 import useMission from "./useMission";
+import Button from "../../@common/Button/Button";
 
 type MyMissionItemProps = {
   mission: Mission;
@@ -38,14 +37,16 @@ const MyMissionItem = ({ mission, recruitmentId }: MyMissionItemProps) => {
           </RecruitmentDetail>
           <ul className={styles["title-button-list"]}>
             <li>
-              <ApplyButton
-                isButtonDisabled={missionItem.status !== MISSION_STATUS.SUBMITTING}
+              <Button
+                className={buttonStyles["apply-button"]}
+                disabled={missionItem.status !== MISSION_STATUS.SUBMITTING}
                 onClick={routeToAssignmentSubmit({
                   recruitmentId: String(recruitmentId),
                   mission,
                 })}
-                label={applyButtonLabel}
-              />
+              >
+                {applyButtonLabel}
+              </Button>
             </li>
           </ul>
         </div>
@@ -56,11 +57,19 @@ const MyMissionItem = ({ mission, recruitmentId }: MyMissionItemProps) => {
           <ul>
             {refreshAvailable && (
               <li>
-                <RefreshButton onClick={requestRefresh} />
+                <Button className={buttonStyles["refresh-button"]} onClick={requestRefresh}>
+                  새로고침
+                </Button>
               </li>
             )}
             <li>
-              <JudgmentButton disabled={!isJudgmentAvailable} onClick={requestMissionJudgment} />
+              <Button
+                className={buttonStyles["judgment-button"]}
+                disabled={!isJudgmentAvailable}
+                onClick={requestMissionJudgment}
+              >
+                예제 테스트 실행
+              </Button>
             </li>
           </ul>
         </MissionDetail>

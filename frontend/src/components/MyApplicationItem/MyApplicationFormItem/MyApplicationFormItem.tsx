@@ -6,10 +6,10 @@ import { Recruitment, RecruitmentStatus } from "../../../../types/domains/recrui
 import { PARAM, PATH } from "../../../constants/path";
 import { formatDateTime } from "../../../utils/format/date";
 import { generateQuery } from "../../../utils/route/query";
-import ApplyButton from "../MyApplicationButtons/ApplyButton";
 import styles from "../MyApplicationItem.module.css";
 import RecruitmentDetail from "../RecruitmentDetail/RecruitmentDetail";
 import { BUTTON_LABEL, RECRUITMENT_STATUS } from "./../../../constants/recruitment";
+import Button from "../../@common/Button/Button";
 
 type MyApplicationFormItemProps = {
   recruitment: Recruitment;
@@ -76,13 +76,14 @@ const MyApplicationFormItem = ({ recruitment, submitted }: MyApplicationFormItem
 
           <ul className={styles["title-button-list"]}>
             <li>
-              <ApplyButton
-                isButtonDisabled={isButtonDisabled}
+              <Button
+                disabled={isButtonDisabled}
                 onClick={() => {
                   routeToApplicationForm(recruitment);
                 }}
-                label={applyButtonLabel}
-              />
+              >
+                {applyButtonLabel}
+              </Button>
             </li>
           </ul>
         </div>
