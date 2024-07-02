@@ -2,12 +2,10 @@ import { AxiosError } from "axios";
 import classNames from "classnames";
 import { Mission, Recruitment } from "../../../../types/domains/recruitments";
 import { fetchMyMissionJudgment } from "../../../api";
-import { JUDGMENT_STATUS } from "../../../constants/judgment";
-import { MISSION_STATUS } from "../../../constants/recruitment";
 import useTokenContext from "../../../hooks/useTokenContext";
 import Button, { BUTTON_VARIANT } from "../../@common/Button/Button";
-import { isJudgmentTimedOut } from "./../../../utils/validation/judgmentTime";
 import styles from "./ApplicationButtons.module.css";
+import useRefresh from "../MyMissionItem/useRefresh";
 
 type RefreshButtonProps = {
   recruitmentId?: Recruitment["id"];
@@ -18,40 +16,19 @@ type RefreshButtonProps = {
 const RefreshButton = ({ recruitmentId, missionItem, setMission }: RefreshButtonProps) => {
   const { token } = useTokenContext();
   const missionId = missionItem.id;
-  const status = missionItem.judgment?.status;
 
-  if (status !== JUDGMENT_STATUS.STARTED || missionItem.status !== MISSION_STATUS.SUBMITTING) {
-    return null;
-  }
-
-  if (missionId === undefined || recruitmentId === undefined) {
-    return null;
-  }
-
-  if (isJudgmentTimedOut(missionItem.judgment)) {
-    return null;
-  }
-
-  const handleRefreshMission = async ({
-    missionId,
-    recruitmentId,
-    token,
-  }: {
-    missionId: string;
-    recruitmentId: string;
-    token: string;
-  }) => {
+  const { fetchRefreshedResultData } = useRefresh({ recruitmentId, missionItem });
+  const requestRefresh = async () => {
     try {
-      const response = await fetchMyMissionJudgment({
-        recruitmentId: Number(recruitmentId),
-        missionId: Number(missionId),
+      const result = await fetchRefreshedResultData({
+        missionId: String(missionId),
+        recruitmentId: String(recruitmentId),
         token,
       });
-      setMission({ ...missionItem, judgment: response.data });
 
-      alert("새로고침 되었습니다");
+      setMission(result);
     } catch (error) {
-      alert((error as AxiosError).response?.data.message);
+      error instanceof Error && alert(error.message);
     }
   };
 
@@ -62,11 +39,7 @@ const RefreshButton = ({ recruitmentId, missionItem, setMission }: RefreshButton
       variant={BUTTON_VARIANT.CONTAINED}
       cancel={false}
       onClick={() => {
-        handleRefreshMission({
-          missionId: String(missionId),
-          recruitmentId: String(recruitmentId),
-          token,
-        });
+        requestRefresh();
       }}
     >
       새로고침

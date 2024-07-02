@@ -13,6 +13,7 @@ import RefreshButton from "../MyApplicationButtons/RefreshButton";
 import styles from "../MyApplicationItem.module.css";
 import RecruitmentDetail from "../RecruitmentDetail/RecruitmentDetail";
 import { PATH } from "./../../../constants/path";
+import useRefresh from "./useRefresh";
 
 type MyMissionItemProps = {
   mission: Mission;
@@ -33,6 +34,10 @@ const missionLabel = (submitted: boolean, missionStatus: Mission["status"]) => {
 const MyMissionItem = ({ mission, recruitmentId }: MyMissionItemProps) => {
   const navigate = useNavigate();
   const [missionItem, setMissionItem] = useState<Mission>({ ...mission });
+  const { refreshAvailable } = useRefresh({
+    recruitmentId: Number(recruitmentId),
+    missionItem,
+  });
 
   const applyButtonLabel = missionLabel(mission.submitted, mission.status);
 
@@ -95,17 +100,15 @@ const MyMissionItem = ({ mission, recruitmentId }: MyMissionItemProps) => {
 
         <MissionDetail judgment={missionItem.judgment}>
           <ul>
-            <li>
-              {/*
-                새로고침버튼... 상태에 따라 null을 반환할 수 있음...
-                이걸 버튼에서 판별해야 하나?
-              */}
-              <RefreshButton
-                recruitmentId={Number(recruitmentId)}
-                missionItem={missionItem}
-                setMission={setMissionItem}
-              />
-            </li>
+            {(refreshAvailable || true) && (
+              <li>
+                <RefreshButton
+                  recruitmentId={Number(recruitmentId)}
+                  missionItem={missionItem}
+                  setMission={setMissionItem}
+                />
+              </li>
+            )}
             <li>
               <JudgmentButton
                 recruitmentId={Number(recruitmentId)}
