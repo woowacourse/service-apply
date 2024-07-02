@@ -1,13 +1,8 @@
-import { AxiosError } from "axios";
 import classNames from "classnames";
 import { Mission, Recruitment } from "../../../../types/domains/recruitments";
-import { postMyMissionJudgment } from "../../../api/recruitments";
-import { JUDGMENT_STATUS } from "../../../constants/judgment";
-import { MISSION_STATUS } from "../../../constants/recruitment";
-import useTokenContext from "../../../hooks/useTokenContext";
 import Button, { BUTTON_VARIANT } from "../../@common/Button/Button";
-import { isJudgmentTimedOut } from "./../../../utils/validation/judgmentTime";
 import styles from "./ApplicationButtons.module.css";
+import useMissionJudgement from "../MyMissionItem/useMissionJudgement";
 
 type JudgmentButtonProps = {
   recruitmentId: Recruitment["id"];
@@ -16,37 +11,10 @@ type JudgmentButtonProps = {
 };
 
 const JudgmentButton = ({ missionItem, recruitmentId, setMission }: JudgmentButtonProps) => {
-  const { token } = useTokenContext();
-  const missionStatus = missionItem.status;
-  const judgment = missionItem.judgment;
-
-  const handleJudgeError = async (error: AxiosError, missionId: string) => {
-    if (!error) return;
-
-    const errorMessage = error.response?.data.message;
-    alert(errorMessage);
-  };
-
-  const handleJudgeMission = async ({
-    missionId,
+  const { handleJudgeMission, isJudgmentAvailable } = useMissionJudgement({
+    missionItem,
     recruitmentId,
-    token,
-  }: {
-    missionId: string;
-    recruitmentId: string;
-    token: string;
-  }) => {
-    try {
-      const response = await postMyMissionJudgment({
-        recruitmentId: Number(recruitmentId),
-        missionId: Number(missionId),
-        token,
-      });
-      setMission({ ...missionItem, judgment: response.data });
-    } catch (error) {
-      handleJudgeError(error as AxiosError, missionId);
-    }
-  };
+  });
 
   return (
     <Button
@@ -54,18 +22,13 @@ const JudgmentButton = ({ missionItem, recruitmentId, setMission }: JudgmentButt
       type="button"
       variant={BUTTON_VARIANT.CONTAINED}
       cancel={false}
-      disabled={
-        missionItem.submitted === false ||
-        (judgment?.status === JUDGMENT_STATUS.STARTED && !isJudgmentTimedOut(judgment)) ||
-        missionStatus === MISSION_STATUS.ENDED ||
-        missionStatus === MISSION_STATUS.UNSUBMITTABLE
-      }
-      onClick={() => {
-        handleJudgeMission({
-          missionId: String(missionItem.id),
-          recruitmentId: String(recruitmentId),
-          token,
-        });
+      disabled={!isJudgmentAvailable}
+      onClick={async () => {
+        const result = await handleJudgeMission();
+
+        if (result) {
+          setMission(result);
+        }
       }}
     >
       예제 테스트 실행
