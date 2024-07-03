@@ -11,7 +11,7 @@ type MissionJudgementProps = {
   recruitmentId: Recruitment["id"];
 };
 
-const useMissionJudgement = ({ missionItem, recruitmentId }: MissionJudgementProps) => {
+const useMissionJudgment = ({ missionItem, recruitmentId }: MissionJudgementProps) => {
   const { token } = useTokenContext();
 
   const { submitted, judgment, status } = missionItem;
@@ -41,4 +41,4 @@ const useMissionJudgement = ({ missionItem, recruitmentId }: MissionJudgementPro
   };
 };
 
-export default useMissionJudgement;
+export default useMissionJudgment;

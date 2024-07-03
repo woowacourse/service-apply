@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { formatDateTime } from "../../../utils/format/date";
-import useMissionJudgement from "./useMissionJudgement";
+import useMissionJudgment from "./useMissionJudgment";
 import { generatePath, useNavigate } from "react-router-dom";
 import useRefresh from "./useRefresh";
 import { Mission } from "../../../../types/domains/recruitments";
@@ -31,7 +31,7 @@ const useMission = ({ mission, recruitmentId }: MissionProps) => {
     missionItem,
     recruitmentId: Number(recruitmentId),
   });
-  const { fetchJudgmentMissionResult, isJudgmentAvailable } = useMissionJudgement({
+  const { fetchJudgmentMissionResult, isJudgmentAvailable } = useMissionJudgment({
     missionItem,
     recruitmentId: Number(recruitmentId),
   });
