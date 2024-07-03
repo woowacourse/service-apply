@@ -13,7 +13,7 @@ type Props = {
 
 const useRefresh = ({ recruitmentId, missionItem }: Props) => {
   const { token } = useTokenContext();
-  const isValidMissionId = missionItem.id && recruitmentId;
+  const isValidMissionId = missionItem.id !== undefined && recruitmentId !== undefined;
 
   const isRefreshAvailable =
     isValidMissionId &&
