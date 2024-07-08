@@ -15,10 +15,15 @@ const useMissionJudgment = ({ missionItem, recruitmentId }: MissionJudgementProp
   const { token } = useTokenContext();
 
   const { submitted, judgment, status } = missionItem;
-  const isJudgmentAvailable =
-    submitted &&
-    (judgment?.status !== JUDGMENT_STATUS.STARTED || isJudgmentTimedOut(judgment)) &&
-    !([MISSION_STATUS.ENDED, MISSION_STATUS.UNSUBMITTABLE] as MissionStatus[]).includes(status);
+
+  const isSubmitted = submitted;
+  const isJudgmentNotStartedOrTimedOut =
+    judgment?.status !== JUDGMENT_STATUS.STARTED || isJudgmentTimedOut(judgment);
+  const isMissionActive = !(
+    [MISSION_STATUS.ENDED, MISSION_STATUS.UNSUBMITTABLE] as MissionStatus[]
+  ).includes(status);
+
+  const isJudgmentAvailable = isSubmitted && isJudgmentNotStartedOrTimedOut && isMissionActive;
 
   const fetchJudgmentMissionResult = async () => {
     try {
