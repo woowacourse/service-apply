@@ -1,6 +1,7 @@
 package apply.ui.admin.mission
 
 import apply.application.EvaluationService
+import apply.application.MissionData
 import apply.application.MissionService
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
@@ -22,6 +23,7 @@ import support.views.createPrimaryButton
 import support.views.toDisplayName
 
 private val MISSION_FORM_URL_PATTERN: Regex = Regex("^(\\d*)/?(\\d*)/?($NEW_VALUE|$EDIT_VALUE)$")
+private const val DATA_NOT_BIND_MESSAGE: String = "모든 항목이 잘 입력되었는지 확인해 주세요."
 
 @Route(value = "admin/missions", layout = BaseLayout::class)
 class MissionsFormView(
@@ -54,29 +56,43 @@ class MissionsFormView(
         submitButton.text = displayName
     }
 
-    private fun createSubmitButton(): Button {
-        return createPrimaryButton {
-            missionForm.bindOrNull()?.let {
-                try {
-                    missionService.save(it)
-                    UI.getCurrent().navigate(MissionsView::class.java, recruitmentId)
-                } catch (e: Exception) {
-                    createNotification(e.localizedMessage)
-                }
-            }
+    private fun createButtons(): Component {
+        return HorizontalLayout(submitButton, createCancelButton(), createPreviewButton()).apply {
+            setSizeFull()
+            justifyContentMode = FlexComponent.JustifyContentMode.CENTER
         }
     }
 
-    private fun createButtons(): Component {
-        return HorizontalLayout(submitButton, createCancelButton()).apply {
-            setSizeFull()
-            justifyContentMode = FlexComponent.JustifyContentMode.CENTER
+    private fun createSubmitButton(): Button {
+        return createPrimaryButton {
+            val missionData = getDataFromMissionForm()
+            try {
+                missionService.save(missionData)
+                UI.getCurrent().navigate(MissionsView::class.java, recruitmentId)
+            } catch (e: Exception) {
+                createNotification(e.localizedMessage)
+            }
         }
     }
 
     private fun createCancelButton(): Button {
         return createContrastButton("취소") {
             UI.getCurrent().navigate(MissionsView::class.java, recruitmentId)
+        }
+    }
+
+    private fun createPreviewButton(): Button {
+        return createContrastButton("미리보기") {
+            val result = getDataFromMissionForm()
+            val body = missionService.parseDescription(result)
+            MissionPreviewDialog(body)
+        }
+    }
+
+    private fun getDataFromMissionForm(): MissionData {
+        return missionForm.bindOrNull() ?: run {
+            createNotification(DATA_NOT_BIND_MESSAGE)
+            throw IllegalArgumentException(DATA_NOT_BIND_MESSAGE)
         }
     }
 }
