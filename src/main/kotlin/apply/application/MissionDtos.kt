@@ -126,6 +126,28 @@ data class MyMissionAndJudgementResponse(
     )
 }
 
+data class MyMissionResponse(
+    val id: Long,
+    val title: String,
+    val description: String,
+    val submittable: Boolean,
+    val startDateTime: LocalDateTime,
+    val endDateTime: LocalDateTime,
+    val status: MissionStatus,
+    val submitted: Boolean,
+) {
+    constructor(mission: Mission, submitted: Boolean) : this(
+        mission.id,
+        mission.title,
+        mission.formattedDescription,
+        mission.submittable,
+        mission.period.startDateTime,
+        mission.period.endDateTime,
+        mission.status,
+        submitted
+    )
+}
+
 data class JudgmentItemData(
     var id: Long = 0L,
     var testName: String = "",

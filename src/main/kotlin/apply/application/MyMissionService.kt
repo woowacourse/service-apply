@@ -12,6 +12,7 @@ import apply.domain.judgmentitem.JudgmentItem
 import apply.domain.judgmentitem.JudgmentItemRepository
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionRepository
+import apply.domain.mission.getOrThrow
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -92,6 +93,21 @@ class MyMissionService(
             evaluationItemId = judgmentItem.evaluationItemId,
             assignmentId = assignment.id,
             judgmentRecord = judgment?.lastRecord
+        )
+    }
+
+    fun findByUserIdAndMissionId(memberId: Long, missionId: Long): MyMissionResponse {
+        val mission = missionRepository.getOrThrow(missionId)
+        val evaluationTarget = evaluationTargetRepository.findByEvaluationIdAndMemberId(mission.evaluationId, memberId)
+            ?: throw NoSuchElementException("과제 참여 대상자가 아닙니다.")
+
+        check(!mission.hidden) { "비공개 상태의 과제입니다." }
+
+        val assignment = assignmentRepository.findByMemberIdAndMissionId(memberId, missionId)
+
+        return MyMissionResponse(
+            mission = mission,
+            submitted = assignment != null,
         )
     }
 }
