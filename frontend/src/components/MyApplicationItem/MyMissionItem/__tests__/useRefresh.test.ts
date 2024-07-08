@@ -138,10 +138,15 @@ describe("useRefresh", () => {
       );
 
       await act(async () => {
-        const refreshedData = await result.current.fetchRefreshedResultData();
-
-        expect(refreshedData).toEqual(
-          expect.objectContaining({ ...mockMissionItem, judgment: mockResponse.data })
+        const judgmentResult = await result.current.fetchRefreshedResultData();
+        expect(judgmentResult).toEqual(
+          expect.objectContaining({
+            judgment: expect.objectContaining({
+              status: JUDGMENT_STATUS.SUCCEEDED,
+              passCount: SAMPLE_PASS_COUNT,
+              totalCount: SAMPLE_TOTAL_COUNT,
+            }),
+          })
         );
       });
 

@@ -98,12 +98,15 @@ describe("useMissionJudgment 훅 테스트", () => {
 
   describe("fetchJudgmentMissionResult 테스트", () => {
     it("판정 결과를 성공적으로 가져와야 한다", async () => {
+      const SAMPLE_PASS_COUNT = 8;
+      const SAMPLE_TOTAL_COUNT = 10;
+
       const mockResponse = {
         data: {
           ...createMockMission().judgment,
           status: JUDGMENT_STATUS.SUCCEEDED,
-          passCount: 8,
-          totalCount: 10,
+          passCount: SAMPLE_PASS_COUNT,
+          totalCount: SAMPLE_TOTAL_COUNT,
         },
       };
       (postMyMissionJudgment as jest.Mock).mockResolvedValue(mockResponse);
@@ -116,8 +119,8 @@ describe("useMissionJudgment 훅 테스트", () => {
           expect.objectContaining({
             judgment: expect.objectContaining({
               status: JUDGMENT_STATUS.SUCCEEDED,
-              passCount: 8,
-              totalCount: 10,
+              passCount: SAMPLE_PASS_COUNT,
+              totalCount: SAMPLE_TOTAL_COUNT,
             }),
           })
         );
