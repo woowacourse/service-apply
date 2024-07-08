@@ -5,6 +5,7 @@ import apply.application.MissionData
 import apply.application.MissionResponse
 import apply.application.MissionService
 import apply.application.MyMissionAndJudgementResponse
+import apply.application.MyMissionResponse
 import apply.application.MyMissionService
 import apply.domain.member.Member
 import apply.security.LoginMember
@@ -61,6 +62,16 @@ class MissionRestController(
     ): ResponseEntity<ApiResponse<List<MyMissionAndJudgementResponse>>> {
         val responses = missionQueryService.findAllByMemberIdAndRecruitmentId(member.id, recruitmentId)
         return ResponseEntity.ok(ApiResponse.success(responses))
+    }
+
+    @GetMapping("/{missionId}/me")
+    fun findMyMission(
+        @PathVariable recruitmentId: Long,
+        @PathVariable missionId: Long,
+        @LoginMember member: Member
+    ): ResponseEntity<ApiResponse<MyMissionResponse>> {
+        val response = missionQueryService.findByUserIdAndMissionId(member.id, missionId)
+        return ResponseEntity.ok(ApiResponse.success(response))
     }
 
     @DeleteMapping("/{missionId}")
