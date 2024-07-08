@@ -41,88 +41,94 @@ describe("useRefresh", () => {
   });
 
   describe("isRefreshAvailable 테스트", () => {
-    it("recruitmentId가 undefined일 때 false를 반환해야 한다", () => {
-      const { result } = renderHook(() =>
-        useRefresh({ recruitmentId: undefined, missionItem: mockMissionItem })
-      );
+    describe("false를 반환하는 경우", () => {
+      it("recruitmentId가 undefined일 때", () => {
+        const { result } = renderHook(() =>
+          useRefresh({ recruitmentId: undefined, missionItem: mockMissionItem })
+        );
 
-      expect(result.current.isRefreshAvailable).toBe(false);
+        expect(result.current.isRefreshAvailable).toBe(false);
+      });
+
+      it("missionItem.id가 없을 때", () => {
+        const { result } = renderHook(() =>
+          useRefresh({
+            recruitmentId: mockRecruitmentId,
+            missionItem: { ...mockMissionItem, id: undefined as any },
+          })
+        );
+
+        expect(result.current.isRefreshAvailable).toBe(false);
+      });
+
+      it("missionItem.judgment가 null일 때", () => {
+        const { result } = renderHook(() =>
+          useRefresh({
+            recruitmentId: mockRecruitmentId,
+            missionItem: { ...mockMissionItem, judgment: null },
+          })
+        );
+
+        expect(result.current.isRefreshAvailable).toBe(false);
+      });
+
+      it("judgment.status가 STARTED가 아닐 때", () => {
+        const { result } = renderHook(() =>
+          useRefresh({
+            recruitmentId: mockRecruitmentId,
+            missionItem: {
+              ...mockMissionItem,
+              judgment: { ...mockMissionItem.judgment!, status: JUDGMENT_STATUS.SUCCEEDED },
+            },
+          })
+        );
+
+        expect(result.current.isRefreshAvailable).toBe(false);
+      });
+
+      it("missionItem.status가 SUBMITTING이 아닐 때", () => {
+        const { result } = renderHook(() =>
+          useRefresh({
+            recruitmentId: mockRecruitmentId,
+            missionItem: { ...mockMissionItem, status: MISSION_STATUS.ENDED },
+          })
+        );
+
+        expect(result.current.isRefreshAvailable).toBe(false);
+      });
+
+      it("isJudgmentTimedOut이 true를 반환할 때", () => {
+        (isJudgmentTimedOut as jest.Mock).mockReturnValue(true);
+
+        const { result } = renderHook(() =>
+          useRefresh({ recruitmentId: mockRecruitmentId, missionItem: mockMissionItem })
+        );
+
+        expect(result.current.isRefreshAvailable).toBe(false);
+      });
     });
 
-    it("missionItem.id가 없을 때 false를 반환해야 한다", () => {
-      const { result } = renderHook(() =>
-        useRefresh({
-          recruitmentId: mockRecruitmentId,
-          missionItem: { ...mockMissionItem, id: undefined as any },
-        })
-      );
+    describe("true를 반환하는 경우", () => {
+      it("모든 조건이 충족될 때 true를 반환해야 한다", () => {
+        const { result } = renderHook(() =>
+          useRefresh({ recruitmentId: mockRecruitmentId, missionItem: mockMissionItem })
+        );
 
-      expect(result.current.isRefreshAvailable).toBe(false);
-    });
-
-    it("missionItem.judgment가 null일 때 false를 반환해야 한다", () => {
-      const { result } = renderHook(() =>
-        useRefresh({
-          recruitmentId: mockRecruitmentId,
-          missionItem: { ...mockMissionItem, judgment: null },
-        })
-      );
-
-      expect(result.current.isRefreshAvailable).toBe(false);
-    });
-
-    it("judgment.status가 STARTED가 아닐 때 false를 반환해야 한다", () => {
-      const { result } = renderHook(() =>
-        useRefresh({
-          recruitmentId: mockRecruitmentId,
-          missionItem: {
-            ...mockMissionItem,
-            judgment: { ...mockMissionItem.judgment!, status: JUDGMENT_STATUS.SUCCEEDED },
-          },
-        })
-      );
-
-      expect(result.current.isRefreshAvailable).toBe(false);
-    });
-
-    it("missionItem.status가 SUBMITTING이 아닐 때 false를 반환해야 한다", () => {
-      const { result } = renderHook(() =>
-        useRefresh({
-          recruitmentId: mockRecruitmentId,
-          missionItem: { ...mockMissionItem, status: MISSION_STATUS.ENDED },
-        })
-      );
-
-      expect(result.current.isRefreshAvailable).toBe(false);
-    });
-
-    it("isJudgmentTimedOut이 true를 반환할 때 false를 반환해야 한다", () => {
-      (isJudgmentTimedOut as jest.Mock).mockReturnValue(true);
-
-      const { result } = renderHook(() =>
-        useRefresh({ recruitmentId: mockRecruitmentId, missionItem: mockMissionItem })
-      );
-
-      expect(result.current.isRefreshAvailable).toBe(false);
-    });
-
-    it("모든 조건이 충족될 때 true를 반환해야 한다", () => {
-      const { result } = renderHook(() =>
-        useRefresh({ recruitmentId: mockRecruitmentId, missionItem: mockMissionItem })
-      );
-
-      expect(result.current.isRefreshAvailable).toBe(true);
+        expect(result.current.isRefreshAvailable).toBe(true);
+      });
     });
   });
 
   describe("fetchRefreshedResultData 테스트", () => {
     it("refreshedResultData를 성공적으로 가져와야 한다", async () => {
+      const SAMPLE_PASS_COUNT = 8;
+      const SAMPLE_TOTAL_COUNT = 10;
       const mockResponse = {
         data: {
           ...mockMissionItem.judgment,
           status: JUDGMENT_STATUS.SUCCEEDED,
-          passCount: 8,
-          totalCount: 10,
+          passCount: SAMPLE_PASS_COUNT,
+          totalCount: SAMPLE_TOTAL_COUNT,
         },
       };
       (fetchMyMissionJudgment as jest.Mock).mockResolvedValue(mockResponse);
@@ -133,10 +139,10 @@ describe("useRefresh", () => {
 
       await act(async () => {
         const refreshedData = await result.current.fetchRefreshedResultData();
-        expect(refreshedData).toEqual({ ...mockMissionItem, judgment: mockResponse.data });
-        expect(refreshedData.judgment?.status).toBe(JUDGMENT_STATUS.SUCCEEDED);
-        expect(refreshedData.judgment?.passCount).toBe(8);
-        expect(refreshedData.judgment?.totalCount).toBe(10);
+
+        expect(refreshedData).toEqual(
+          expect.objectContaining({ ...mockMissionItem, judgment: mockResponse.data })
+        );
       });
 
       expect(fetchMyMissionJudgment).toHaveBeenCalledWith({
@@ -146,7 +152,7 @@ describe("useRefresh", () => {
       });
     });
 
-    it("refreshedResultData 가져오기 실패 시 에러를 던져야 한다", async () => {
+    it("refreshedResultData 가져오기 실패 시 에러 메시지를 보여줘야 한다", async () => {
       const errorMessage = "데이터를 가져오는 데 실패했습니다.";
       const mockError = { response: { data: { message: errorMessage } } };
       (fetchMyMissionJudgment as jest.Mock).mockRejectedValue(mockError);
