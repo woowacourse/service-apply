@@ -5,6 +5,7 @@ import apply.application.MailHistoryService
 import apply.application.MailTargetService
 import apply.application.MemberService
 import apply.application.RecruitmentService
+import apply.application.mail.MailData
 import apply.application.mail.MailService
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
@@ -58,7 +59,7 @@ class MailsFormView(
     }
 
     private fun createButtons(): Component {
-        return HorizontalLayout(submitButton, createCancelButton()).apply {
+        return HorizontalLayout(submitButton, createCancelButton(), createPreviewButton()).apply {
             setSizeFull()
             justifyContentMode = FlexComponent.JustifyContentMode.CENTER
         }
@@ -66,11 +67,8 @@ class MailsFormView(
 
     private fun createSubmitButton(): Button {
         return createPrimaryButton("보내기") {
-            val result = mailForm.bindOrNull()
-            if (result == null) {
-                createNotification("받는사람을 한 명 이상 지정해야 합니다.")
-            } else {
-                mailService.sendMailsByBcc(result, result.attachments)
+            handleMailData { mail ->
+                mailService.sendMailsByBcc(mail, mail.attachments)
                 UI.getCurrent().navigate(MailsView::class.java)
             }
         }
@@ -79,6 +77,21 @@ class MailsFormView(
     private fun createCancelButton(): Button {
         return createContrastButton("취소") {
             UI.getCurrent().navigate(MailsView::class.java)
+        }
+    }
+
+    private fun createPreviewButton(): Button {
+        return createContrastButton("미리 보기") {
+            handleMailData { mail -> MailPreviewDialog(mailService.generateMailBody(mail)) }
+        }
+    }
+
+    private fun handleMailData(action: (MailData) -> Unit) {
+        val result = mailForm.bindOrNull()
+        if (result == null) {
+            createNotification("받는사람을 한 명 이상 지정해야 합니다.")
+        } else {
+            action(result)
         }
     }
 }
