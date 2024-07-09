@@ -26,8 +26,6 @@ import support.views.createContrastButton
 import support.views.createNotification
 import support.views.createPrimaryButton
 
-private const val NO_RECIPIENT_MESSAGE: String = "받는사람을 한 명 이상 지정해야 합니다."
-
 @Route(value = "admin/mails", layout = BaseLayout::class)
 class MailsFormView(
     memberService: MemberService,
