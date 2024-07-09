@@ -3,8 +3,8 @@ package apply.ui.api
 import apply.application.EvaluationService
 import apply.application.ExcelService
 import apply.application.RecruitmentService
-import apply.domain.user.User
-import apply.security.LoginUser
+import apply.domain.member.Member
+import apply.security.LoginMember
 import org.springframework.core.io.InputStreamResource
 import org.springframework.http.ContentDisposition
 import org.springframework.http.HttpHeaders
@@ -24,7 +24,7 @@ class ExcelController(
     @GetMapping("/applicants/excel")
     fun createApplicantExcel(
         @PathVariable recruitmentId: Long,
-        @LoginUser(administrator = true) user: User
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<InputStreamResource> {
         val excel = excelService.createApplicantExcel(recruitmentId)
         val recruitment = recruitmentService.getById(recruitmentId)
@@ -42,7 +42,7 @@ class ExcelController(
     fun createTargetExcel(
         @PathVariable recruitmentId: Long,
         @PathVariable evaluationId: Long,
-        @LoginUser(administrator = true) user: User
+        @LoginMember(administrator = true) member: Member
     ): ResponseEntity<InputStreamResource> {
         val excel = excelService.createTargetExcel(evaluationId)
         val evaluation = evaluationService.getById(evaluationId)

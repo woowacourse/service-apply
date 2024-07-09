@@ -3,8 +3,8 @@ package apply.application
 import apply.domain.evaluation.Evaluation
 import apply.domain.evaluationitem.EvaluationItem
 import apply.domain.evaluationtarget.EvaluationStatus
+import apply.domain.member.Member
 import apply.domain.recruitment.Recruitment
-import apply.domain.user.User
 import javax.validation.Valid
 import javax.validation.constraints.Max
 import javax.validation.constraints.Min
@@ -171,10 +171,11 @@ data class EvaluationTargetData(
 
 data class MailTargetResponse(
     val email: String,
-    val name: String? = null
+    val name: String? = null,
+    val id: Long,
 ) {
-    constructor(userResponse: UserResponse) : this(userResponse.email, userResponse.name)
-    constructor(user: User) : this(user.email, user.name)
+    constructor(memberResponse: MemberResponse) : this(memberResponse.email, memberResponse.name, memberResponse.id)
+    constructor(member: Member) : this(member.email, member.name, member.id)
 }
 
 data class EvaluationItemScoreData(

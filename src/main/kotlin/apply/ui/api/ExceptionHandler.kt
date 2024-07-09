@@ -1,7 +1,7 @@
 package apply.ui.api
 
 import apply.domain.applicationform.DuplicateApplicationException
-import apply.domain.user.UnidentifiedUserException
+import apply.domain.member.UnidentifiedMemberException
 import apply.security.LoginFailedException
 import com.fasterxml.jackson.databind.exc.InvalidFormatException
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
@@ -64,15 +64,15 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
             .body(ApiResponse.error(exception.message))
     }
 
-    @ExceptionHandler(UnidentifiedUserException::class)
-    fun handleForbiddenException(exception: UnidentifiedUserException): ResponseEntity<ApiResponse<Unit>> {
+    @ExceptionHandler(UnidentifiedMemberException::class)
+    fun handleForbiddenException(exception: UnidentifiedMemberException): ResponseEntity<ApiResponse<Unit>> {
         logger.error("message", exception)
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
             .body(ApiResponse.error(exception.message))
     }
 
-    @ExceptionHandler(EntityNotFoundException::class)
-    fun handleNotFoundException(exception: EntityNotFoundException): ResponseEntity<ApiResponse<Unit>> {
+    @ExceptionHandler(NoSuchElementException::class, EntityNotFoundException::class)
+    fun handleNotFoundException(exception: RuntimeException): ResponseEntity<ApiResponse<Unit>> {
         logger.error("message", exception)
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
             .body(ApiResponse.error(exception.message))

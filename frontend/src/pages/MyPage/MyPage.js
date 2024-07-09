@@ -4,13 +4,13 @@ import myPageImage from "../../assets/image/myPage.svg";
 import Button, { BUTTON_VARIANT } from "../../components/@common/Button/Button";
 import Container from "../../components/@common/Container/Container";
 import { PATH } from "../../constants/path";
-import useUserInfoContext from "../../hooks/useUserInfoContext";
+import useMemberInfoContext from "../../hooks/useMemberInfoContext";
 import styles from "./MyPage.module.css";
 
 const MyPage = () => {
   const navigate = useNavigate();
 
-  const { userInfo } = useUserInfoContext();
+  const { memberInfo } = useMemberInfoContext();
 
   const routeToPasswordEdit = () => {
     navigate(PATH.EDIT_PASSWORD);
@@ -21,7 +21,7 @@ const MyPage = () => {
   };
 
   return (
-    <Container title={`${userInfo?.name ?? ""} 님`}>
+    <Container title={`${memberInfo?.name ?? ""} 님`}>
       <div className={styles.box}>
         <div className={styles["illust-box"]}>
           <img src={myPageImage} alt="자기소개서 일러스트" />
@@ -30,15 +30,25 @@ const MyPage = () => {
           <ul>
             <li className={styles.info}>
               <div className={styles["info-title"]}>이메일</div>
-              <div className={styles["info-data"]}>{userInfo?.email || ""}</div>
-            </li>
-            <li className={styles.info}>
-              <div className={styles["info-title"]}>전화번호</div>
-              <div className={styles["info-data"]}>{userInfo?.phoneNumber || ""}</div>
+              <div className={styles["info-data"]}>{memberInfo?.email || ""}</div>
             </li>
             <li className={styles.info}>
               <div className={styles["info-title"]}>생년월일</div>
-              <div className={styles["info-data"]}>{userInfo?.birthday || ""}</div>
+              <div className={styles["info-data"]}>{memberInfo?.birthday || ""}</div>
+            </li>
+            <li className={styles.info}>
+              <div className={styles["info-title"]}>
+                휴대전화 <br />
+                번호
+              </div>
+              <div className={styles["info-data"]}>{memberInfo?.phoneNumber || ""}</div>
+            </li>
+            <li className={styles.info}>
+              <div className={styles["info-title"]}>
+                GitHub <br />
+                사용자 이름
+              </div>
+              <div className={styles["info-data"]}>{memberInfo?.githubUsername || ""}</div>
             </li>
           </ul>
 

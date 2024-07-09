@@ -10,7 +10,7 @@ import apply.application.UpdateApplicationFormRequest
 import apply.createAnswerRequest
 import apply.createApplicationForm
 import apply.createApplicationForms
-import apply.createUser
+import apply.createMember
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
 import io.mockk.every
@@ -93,9 +93,41 @@ class ApplicationFormRestControllerTest : RestControllerTest() {
     }
 
     @Test
+    fun `최종 지원서를 조회하는 경우 400으로 응답한다`() {
+        every {
+            applicationFormService.getApplicationForm(any(), any())
+        } throws IllegalStateException("이미 제출한 지원서는 열람할 수 없습니다.")
+
+        mockMvc.get("/api/application-forms") {
+            bearer("valid_token")
+            param("recruitmentId", "1")
+        }.andExpect {
+            status { isBadRequest() }
+        }.andDo {
+            handle(document("application-form-get-bad-request"))
+        }
+    }
+
+    @Test
+    fun `특정 모집에 대한 특정 회원의 지원서가 없는 경우 404로 응답한다`() {
+        every {
+            applicationFormService.getApplicationForm(any(), any())
+        } throws NoSuchElementException("해당하는 지원서가 없습니다.")
+
+        mockMvc.get("/api/application-forms") {
+            bearer("valid_token")
+            param("recruitmentId", "1")
+        }.andExpect {
+            status { isNotFound() }
+        }.andDo {
+            handle(document("application-form-get-not-found"))
+        }
+    }
+
+    @Test
     fun `특정 모집 id와 지원자에 대한 키워드(이름 or 이메일)로 지원서 정보들을 조회한다`() {
         val keyword = "아마찌"
-        val responses = listOf(ApplicantAndFormResponse(createUser(name = keyword), false, createApplicationForm()))
+        val responses = listOf(ApplicantAndFormResponse(createMember(name = keyword), false, createApplicationForm()))
         every { applicantService.findAllByRecruitmentIdAndKeyword(any(), any()) } returns responses
 
         mockMvc.get("/api/recruitments/{recruitmentId}/application-forms", 1L) {
@@ -110,8 +142,8 @@ class ApplicationFormRestControllerTest : RestControllerTest() {
     @Test
     fun `특정 모집 id에 지원완료한 지원서 정보들을 조회한다`() {
         val responses = listOf(
-            ApplicantAndFormResponse(createUser(name = "로키"), false, createApplicationForm()),
-            ApplicantAndFormResponse(createUser(name = "아마찌"), false, createApplicationForm())
+            ApplicantAndFormResponse(createMember(name = "로키"), false, createApplicationForm()),
+            ApplicantAndFormResponse(createMember(name = "아마찌"), false, createApplicationForm())
         )
         every { applicantService.findAllByRecruitmentIdAndKeyword(any()) } returns responses
 

@@ -2,6 +2,8 @@ package apply.config
 
 import apply.domain.administrator.Administrator
 import apply.domain.administrator.AdministratorRepository
+import apply.domain.agreement.Agreement
+import apply.domain.agreement.AgreementRepository
 import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormAnswer
 import apply.domain.applicationform.ApplicationFormAnswers
@@ -22,6 +24,10 @@ import apply.domain.judgmentitem.JudgmentItemRepository
 import apply.domain.judgmentitem.ProgrammingLanguage
 import apply.domain.mail.MailHistory
 import apply.domain.mail.MailHistoryRepository
+import apply.domain.member.Member
+import apply.domain.member.MemberInformation
+import apply.domain.member.MemberRepository
+import apply.domain.member.Password
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionRepository
 import apply.domain.recruitment.Recruitment
@@ -30,35 +36,33 @@ import apply.domain.recruitmentitem.RecruitmentItem
 import apply.domain.recruitmentitem.RecruitmentItemRepository
 import apply.domain.term.Term
 import apply.domain.term.TermRepository
-import apply.domain.user.Gender
-import apply.domain.user.Password
-import apply.domain.user.User
-import apply.domain.user.UserRepository
 import org.springframework.boot.CommandLineRunner
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import support.createLocalDate
 import support.createLocalDateTime
+import support.flattenByMargin
 
 @Profile("local")
 @Transactional
 @Component
 class DatabaseInitializer(
     private val administratorRepository: AdministratorRepository,
+    private val agreementRepository: AgreementRepository,
     private val termRepository: TermRepository,
     private val recruitmentRepository: RecruitmentRepository,
     private val recruitmentItemRepository: RecruitmentItemRepository,
     private val evaluationRepository: EvaluationRepository,
     private val evaluationItemRepository: EvaluationItemRepository,
-    private val userRepository: UserRepository,
+    private val memberRepository: MemberRepository,
     private val applicationFormRepository: ApplicationFormRepository,
     private val evaluationTargetRepository: EvaluationTargetRepository,
     private val missionRepository: MissionRepository,
     private val judgmentItemRepository: JudgmentItemRepository,
     private val assignmentRepository: AssignmentRepository,
     private val mailHistoryRepository: MailHistoryRepository,
-    private val database: Database
+    private val database: Database,
 ) : CommandLineRunner {
     override fun run(vararg args: String) {
         if (shouldSkip()) return
@@ -76,12 +80,13 @@ class DatabaseInitializer(
 
     private fun populate() {
         populateAdministrator()
+        populateAgreement()
         populateTerms()
         populateRecruitments()
         populateRecruitmentItems()
         populateEvaluations()
         populateEvaluationItems()
-        populateUsers()
+        populateMembers()
         populateApplicationForms()
         populateEvaluationTargets()
         populateMissions()
@@ -98,6 +103,18 @@ class DatabaseInitializer(
             password = "{noop}1234"
         )
         administratorRepository.save(administrator)
+    }
+
+    private fun populateAgreement() {
+        val agreement = Agreement(
+            20240418,
+            """
+                |<p>(주)우아한형제들은 아래와 같이 지원자의 개인정보를 수집 및 이용합니다.</p>
+                |<br>
+                |<p><strong>보유 및 이용기간</strong> : <strong><span style="font-size:1.2rem">탈퇴 시 또는 이용목적 달성 시 파기</span></strong>(단, 관련법령 및 회사정책에 의해 보관이 필요한 경우 해당기간 동안 보관)</p>
+            """.flattenByMargin()
+        )
+        agreementRepository.save(agreement)
     }
 
     private fun populateTerms() {
@@ -235,42 +252,54 @@ class DatabaseInitializer(
         evaluationItemRepository.saveAll(evaluationItems)
     }
 
-    private fun populateUsers() {
-        val users = listOf(
-            User(
-                name = "홍길동",
-                email = "a@email.com",
-                phoneNumber = "010-0000-0000",
-                gender = Gender.MALE,
-                birthday = createLocalDate(2020, 4, 17),
-                password = Password("password")
+    private fun populateMembers() {
+        val members = listOf(
+            Member(
+                MemberInformation(
+                    name = "홍길동",
+                    email = "a@email.com",
+                    phoneNumber = "010-0000-0000",
+                    githubUsername = "jaeyeonling",
+                    birthday = createLocalDate(2000, 4, 17),
+                ),
+                Password("password"),
+                {}
             ),
-            User(
-                name = "홍길동2",
-                email = "b@email.com",
-                phoneNumber = "010-0000-0000",
-                gender = Gender.FEMALE,
-                birthday = createLocalDate(2020, 5, 5),
-                password = Password("password")
+            Member(
+                MemberInformation(
+                    name = "홍길동2",
+                    email = "b@email.com",
+                    phoneNumber = "010-0000-0000",
+                    githubUsername = "jaeyeonling",
+                    birthday = createLocalDate(2000, 5, 5),
+                ),
+                password = Password("password"),
+                {}
             ),
-            User(
-                name = "홍길동3",
-                email = "c@email.com",
-                phoneNumber = "010-0000-0000",
-                gender = Gender.MALE,
-                birthday = createLocalDate(2020, 1, 1),
-                password = Password("password")
+            Member(
+                MemberInformation(
+                    name = "홍길동3",
+                    email = "c@email.com",
+                    phoneNumber = "010-0000-0000",
+                    githubUsername = "jaeyeonling",
+                    birthday = createLocalDate(2000, 1, 1),
+                ),
+                Password("password"),
+                {}
             ),
-            User(
-                name = "홍길동4",
-                email = "d@email.com",
-                phoneNumber = "010-0000-0000",
-                gender = Gender.MALE,
-                birthday = createLocalDate(2020, 1, 1),
-                password = Password("password")
+            Member(
+                MemberInformation(
+                    name = "홍길동4",
+                    email = "d@email.com",
+                    phoneNumber = "010-0000-0000",
+                    githubUsername = "jaeyeonling",
+                    birthday = createLocalDate(2000, 1, 1),
+                ),
+                Password("password"),
+                {}
             )
         )
-        userRepository.saveAll(users)
+        memberRepository.saveAll(members)
     }
 
     private fun populateApplicationForms() {
@@ -282,7 +311,7 @@ class DatabaseInitializer(
                 modifiedDateTime = createLocalDateTime(2019, 11, 5, 10),
                 submittedDateTime = createLocalDateTime(2019, 11, 5, 10, 10, 10),
                 recruitmentId = 1L,
-                userId = 1L,
+                memberId = 1L,
                 answers = ApplicationFormAnswers(
                     mutableListOf(
                         ApplicationFormAnswer("도전, 끈기", 1L),
@@ -297,7 +326,7 @@ class DatabaseInitializer(
                 modifiedDateTime = createLocalDateTime(2019, 11, 5, 10),
                 submittedDateTime = createLocalDateTime(2019, 11, 5, 10, 10, 10),
                 recruitmentId = 1L,
-                userId = 2L,
+                memberId = 2L,
                 answers = ApplicationFormAnswers(
                     mutableListOf(
                         ApplicationFormAnswer("책임감", 1L),
@@ -312,7 +341,7 @@ class DatabaseInitializer(
                 modifiedDateTime = createLocalDateTime(2019, 11, 6, 10),
                 submittedDateTime = createLocalDateTime(2019, 11, 6, 10, 10, 10),
                 recruitmentId = 1L,
-                userId = 3L,
+                memberId = 3L,
                 answers = ApplicationFormAnswers(
                     mutableListOf(
                         ApplicationFormAnswer("건강", 1L),
@@ -327,7 +356,7 @@ class DatabaseInitializer(
                 modifiedDateTime = createLocalDateTime(2019, 11, 6, 10),
                 submittedDateTime = createLocalDateTime(2019, 11, 6, 10, 10, 10),
                 recruitmentId = 1L,
-                userId = 4L,
+                memberId = 4L,
                 answers = ApplicationFormAnswers(
                     mutableListOf(
                         ApplicationFormAnswer("사랑", 1L),
@@ -344,25 +373,25 @@ class DatabaseInitializer(
             EvaluationTarget(
                 evaluationId = 1L,
                 administratorId = 1L,
-                userId = 1L,
+                memberId = 1L,
                 evaluationStatus = EvaluationStatus.PASS
             ),
             EvaluationTarget(
                 evaluationId = 1L,
                 administratorId = 1L,
-                userId = 2L,
+                memberId = 2L,
                 evaluationStatus = EvaluationStatus.PASS
             ),
             EvaluationTarget(
                 evaluationId = 2L,
                 administratorId = 1L,
-                userId = 1L,
+                memberId = 1L,
                 evaluationStatus = EvaluationStatus.WAITING
             ),
             EvaluationTarget(
                 evaluationId = 2L,
                 administratorId = 1L,
-                userId = 2L,
+                memberId = 2L,
                 evaluationStatus = EvaluationStatus.PASS,
                 evaluationAnswers = EvaluationAnswers(
                     listOf(
@@ -373,7 +402,7 @@ class DatabaseInitializer(
             ),
             EvaluationTarget(
                 evaluationId = 3L,
-                userId = 2L
+                memberId = 2L
             )
         )
         evaluationTargetRepository.saveAll(evaluationTargets)
@@ -418,9 +447,8 @@ class DatabaseInitializer(
     private fun populateAssignments() {
         val assignments = listOf(
             Assignment(
-                userId = 2L,
+                memberId = 2L,
                 missionId = 1L,
-                githubUsername = "javajigi",
                 pullRequestUrl = "https://github.com/woowacourse/java-baseball-precourse/pull/1",
                 note = "안녕하세요. 이번 미션 생각보다 쉽지 않네요."
             )
@@ -434,7 +462,7 @@ class DatabaseInitializer(
                 subject = "[우아한테크코스] 프리코스를 진행하는 목적과 사전 준비",
                 body = "안녕하세요.",
                 sender = "woowa_course@woowahan.com",
-                recipients = listOf("a@email.com", "b@email.com", "c@email.com", "d@email.com"),
+                recipients = listOf(1L, 2L, 3L, 4L),
                 sentTime = createLocalDateTime(2020, 11, 5, 10)
             )
         )

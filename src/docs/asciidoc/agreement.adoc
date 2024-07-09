@@ -1,0 +1,5 @@
+= 동의서 관련 API
+
+== 최신 버전의 동의서 조회
+
+operation::agreement-latest-get[snippets='http-request,http-response']

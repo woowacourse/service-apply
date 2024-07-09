@@ -2,7 +2,7 @@ package apply.ui.admin.cheater
 
 import apply.application.CheaterResponse
 import apply.application.CheaterService
-import apply.application.UserService
+import apply.application.MemberService
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
@@ -22,7 +22,7 @@ import support.views.createPrimaryButton
 
 @Route(value = "admin/cheaters", layout = BaseLayout::class)
 class CheatersView(
-    private val userService: UserService,
+    private val memberService: MemberService,
     private val cheaterService: CheaterService
 ) : VerticalLayout() {
     init {
@@ -39,7 +39,7 @@ class CheatersView(
     private fun createAddCheater(): Component {
         return HorizontalLayout(
             createPrimaryButton("추가") {
-                CheaterFormDialog(userService, cheaterService) {
+                CheaterFormDialog(memberService, cheaterService) {
                     UI.getCurrent().page.reload()
                 }
             }

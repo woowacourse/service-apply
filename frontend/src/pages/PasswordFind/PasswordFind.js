@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { fetchPasswordFind } from "../../api/user";
+import { fetchPasswordFind } from "../../api/members";
 import Button from "../../components/@common/Button/Button";
 import Container, { CONTAINER_SIZE } from "../../components/@common/Container/Container";
 import MessageTextInput from "../../components/@common/MessageTextInput/MessageTextInput";

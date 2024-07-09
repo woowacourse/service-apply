@@ -2,41 +2,45 @@ import { useState } from "react";
 import { ERROR_MESSAGE } from "../constants/messages";
 import { formatHyphen, PHONE_NUMBER_HYPHEN_IDX } from "../utils/format/phoneNumber";
 import { isValidEmail } from "../utils/validation/email";
+import { isValidGithubUsername } from "../utils/validation/githubUsername";
 import { isValidName } from "../utils/validation/name";
 import { isValidPassword } from "../utils/validation/password";
 import { isValidPhoneNumber } from "../utils/validation/phoneNumber";
+import { isAtLeast14YearsOld } from "../utils/validation/birthday";
 
 export const SIGN_UP_FORM_NAME = {
+  IS_TERM_AGREED: "isTermAgreed",
   EMAIL: "email",
   AUTHENTICATION_CODE: "authenticationCode",
-  NAME: "name",
-  PHONE_NUMBER: "phoneNumber",
   PASSWORD: "password",
   CONFIRM_PASSWORD: "confirmPassword",
+  NAME: "name",
   BIRTHDAY: "birthday",
-  GENDER: "gender",
-  IS_TERM_AGREED: "isTermAgreed",
+  PHONE_NUMBER: "phoneNumber",
+  GITHUB_USERNAME: "githubUsername",
 };
 
 const initialRequiredForm = {
+  [SIGN_UP_FORM_NAME.IS_TERM_AGREED]: false,
   [SIGN_UP_FORM_NAME.EMAIL]: "",
   [SIGN_UP_FORM_NAME.AUTHENTICATION_CODE]: "",
-  [SIGN_UP_FORM_NAME.NAME]: "",
-  [SIGN_UP_FORM_NAME.PHONE_NUMBER]: "",
   [SIGN_UP_FORM_NAME.PASSWORD]: "",
   [SIGN_UP_FORM_NAME.CONFIRM_PASSWORD]: "",
+  [SIGN_UP_FORM_NAME.NAME]: "",
   [SIGN_UP_FORM_NAME.BIRTHDAY]: null,
-  [SIGN_UP_FORM_NAME.GENDER]: "",
-  [SIGN_UP_FORM_NAME.IS_TERM_AGREED]: false,
+  [SIGN_UP_FORM_NAME.PHONE_NUMBER]: "",
+  [SIGN_UP_FORM_NAME.GITHUB_USERNAME]: "",
 };
 
 const initialErrorMessage = {
   [SIGN_UP_FORM_NAME.EMAIL]: "",
   [SIGN_UP_FORM_NAME.AUTHENTICATION_CODE]: "",
-  [SIGN_UP_FORM_NAME.NAME]: "",
-  [SIGN_UP_FORM_NAME.PHONE_NUMBER]: "",
   [SIGN_UP_FORM_NAME.PASSWORD]: "",
   [SIGN_UP_FORM_NAME.CONFIRM_PASSWORD]: "",
+  [SIGN_UP_FORM_NAME.NAME]: "",
+  [SIGN_UP_FORM_NAME.BIRTHDAY]: "",
+  [SIGN_UP_FORM_NAME.PHONE_NUMBER]: "",
+  [SIGN_UP_FORM_NAME.GITHUB_USERNAME]: "",
 };
 
 const useSignUpForm = () => {
@@ -64,6 +68,10 @@ const useSignUpForm = () => {
     }));
   };
 
+  const handleChangeIsTermAgreed = ({ target }) => {
+    updateRequiredForm(SIGN_UP_FORM_NAME.IS_TERM_AGREED, target.checked);
+  };
+
   const handleChangeEmail = ({ target }) => {
     const errorMessage = isValidEmail(target.value) ? "" : ERROR_MESSAGE.VALIDATION.EMAIL;
 
@@ -75,25 +83,6 @@ const useSignUpForm = () => {
     const result = target.value.replaceAll(" ", "");
 
     updateRequiredForm(SIGN_UP_FORM_NAME.AUTHENTICATION_CODE, result);
-  };
-
-  const handleChangeName = ({ target }) => {
-    const errorMessage = isValidName(target.value) ? "" : ERROR_MESSAGE.VALIDATION.NAME;
-
-    updateErrorMessage(SIGN_UP_FORM_NAME.NAME, errorMessage);
-    updateRequiredForm(SIGN_UP_FORM_NAME.NAME, target.value);
-  };
-
-  const handleChangePhoneNumber = ({ nativeEvent: { data }, target: { value } }) => {
-    if (isNaN(data)) return;
-
-    const [firstHyphenIdx, secondHyphenIdx] = PHONE_NUMBER_HYPHEN_IDX;
-    const result = formatHyphen(value, firstHyphenIdx, secondHyphenIdx).trim();
-
-    const errorMessage = isValidPhoneNumber(result) ? "" : ERROR_MESSAGE.VALIDATION.PHONE_NUMBER;
-
-    updateErrorMessage(SIGN_UP_FORM_NAME.PHONE_NUMBER, errorMessage);
-    updateRequiredForm(SIGN_UP_FORM_NAME.PHONE_NUMBER, result);
   };
 
   const handleChangePassword = ({ target }) => {
@@ -117,16 +106,41 @@ const useSignUpForm = () => {
     updateRequiredForm(SIGN_UP_FORM_NAME.CONFIRM_PASSWORD, target.value);
   };
 
+  const handleChangeName = ({ target }) => {
+    const errorMessage = isValidName(target.value) ? "" : ERROR_MESSAGE.VALIDATION.NAME;
+
+    updateErrorMessage(SIGN_UP_FORM_NAME.NAME, errorMessage);
+    updateRequiredForm(SIGN_UP_FORM_NAME.NAME, target.value);
+  };
+
   const handleChangeBirthday = (date) => {
+    const errorMessage = isAtLeast14YearsOld(date)
+      ? ""
+      : ERROR_MESSAGE.VALIDATION.BIRTHDAY_IS_NOT_OVER_14;
+
+    updateErrorMessage(SIGN_UP_FORM_NAME.BIRTHDAY, errorMessage);
     updateRequiredForm(SIGN_UP_FORM_NAME.BIRTHDAY, date);
   };
 
-  const handleChangeGender = ({ target }) => {
-    updateRequiredForm(SIGN_UP_FORM_NAME.GENDER, target.value);
+  const handleChangePhoneNumber = ({ nativeEvent: { data }, target: { value } }) => {
+    if (isNaN(data)) return;
+
+    const [firstHyphenIdx, secondHyphenIdx] = PHONE_NUMBER_HYPHEN_IDX;
+    const result = formatHyphen(value, firstHyphenIdx, secondHyphenIdx).trim();
+
+    const errorMessage = isValidPhoneNumber(result) ? "" : ERROR_MESSAGE.VALIDATION.PHONE_NUMBER;
+
+    updateErrorMessage(SIGN_UP_FORM_NAME.PHONE_NUMBER, errorMessage);
+    updateRequiredForm(SIGN_UP_FORM_NAME.PHONE_NUMBER, result);
   };
 
-  const handleChangeIsTermAgreed = ({ target }) => {
-    updateRequiredForm(SIGN_UP_FORM_NAME.IS_TERM_AGREED, target.checked);
+  const handleChangeGithubUsername = ({ target }) => {
+    updateRequiredForm(SIGN_UP_FORM_NAME.GITHUB_USERNAME, target.value);
+
+    const errorMessage = isValidGithubUsername(target.value)
+      ? ""
+      : ERROR_MESSAGE.VALIDATION.GITHUB_USERNAME;
+    updateErrorMessage(SIGN_UP_FORM_NAME.GITHUB_USERNAME, errorMessage);
   };
 
   const handleCapsLockState = (name) => (event) => {
@@ -167,12 +181,12 @@ const useSignUpForm = () => {
       [SIGN_UP_FORM_NAME.IS_TERM_AGREED]: handleChangeIsTermAgreed,
       [SIGN_UP_FORM_NAME.EMAIL]: handleChangeEmail,
       [SIGN_UP_FORM_NAME.AUTHENTICATION_CODE]: handleChangeAuthenticationCode,
-      [SIGN_UP_FORM_NAME.NAME]: handleChangeName,
-      [SIGN_UP_FORM_NAME.PHONE_NUMBER]: handleChangePhoneNumber,
       [SIGN_UP_FORM_NAME.PASSWORD]: handleChangePassword,
       [SIGN_UP_FORM_NAME.CONFIRM_PASSWORD]: handleChangeConfirmPassword,
+      [SIGN_UP_FORM_NAME.NAME]: handleChangeName,
       [SIGN_UP_FORM_NAME.BIRTHDAY]: handleChangeBirthday,
-      [SIGN_UP_FORM_NAME.GENDER]: handleChangeGender,
+      [SIGN_UP_FORM_NAME.PHONE_NUMBER]: handleChangePhoneNumber,
+      [SIGN_UP_FORM_NAME.GITHUB_USERNAME]: handleChangeGithubUsername,
     },
   };
 };

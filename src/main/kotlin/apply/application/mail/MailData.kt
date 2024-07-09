@@ -20,7 +20,7 @@ data class MailData(
     var sender: String = "",
 
     @field:NotEmpty
-    var recipients: List<String> = emptyList(),
+    var recipients: List<Long> = emptyList(),
 
     @field:NotNull
     var sentTime: LocalDateTime = LocalDateTime.now(),

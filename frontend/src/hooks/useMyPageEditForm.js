@@ -5,8 +5,9 @@ import { isValidPhoneNumber } from "../utils/validation/phoneNumber";
 
 export const MY_PAGE_EDIT_FORM_NAME = {
   EMAIL: "email",
-  PHONE_NUMBER: "phoneNumber",
   BIRTHDAY: "birthday",
+  PHONE_NUMBER: "phoneNumber",
+  GITHUB_USERNAME: "githubUsername",
 };
 
 const initialRequiredForm = {

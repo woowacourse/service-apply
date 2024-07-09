@@ -124,8 +124,8 @@ class SelectionView(
     private fun mapTabAndGrid(keyword: String): Map<Tab, Component> {
         val tabsToGrids = LinkedHashMap<Tab, Component>()
 
-        val userResponses = applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId, keyword)
-        tabsToGrids[Tab(TOTAL_APPLIED_USER_LABEL)] = createTotalUsersGrid(userResponses)
+        val applicants = applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId, keyword)
+        tabsToGrids[Tab(TOTAL_APPLICANT_LABEL)] = createTotalApplicantsGrid(applicants)
 
         evaluations = evaluationService.getAllSelectDataByRecruitmentId(recruitmentId)
         for (evaluation in evaluations) {
@@ -135,25 +135,24 @@ class SelectionView(
         return tabsToGrids
     }
 
-    private fun createTotalUsersGrid(users: List<ApplicantAndFormResponse>): Component {
+    private fun createTotalApplicantsGrid(applicants: List<ApplicantAndFormResponse>): Component {
         return Grid<ApplicantAndFormResponse>(10).apply {
             addSortableColumn("이름", ApplicantAndFormResponse::name)
             addSortableColumn("이메일", ApplicantAndFormResponse::email)
-            addSortableColumn("전화번호", ApplicantAndFormResponse::phoneNumber)
-            addSortableColumn("성별") { it.gender.title }
+            addSortableColumn("휴대전화 번호", ApplicantAndFormResponse::phoneNumber)
             addSortableDateColumn("생년월일", ApplicantAndFormResponse::birthday)
             addSortableDateTimeColumn("지원 일시") { it.applicationForm.submittedDateTime }
             addSortableColumn("부정행위자") { if (it.isCheater) "O" else "X" }
             addColumn(createButtonRenderer()).apply { isAutoWidth = true }
-            setItems(users)
+            setItems(applicants)
         }
     }
 
     private fun createButtonRenderer(): Renderer<ApplicantAndFormResponse> {
-        return ComponentRenderer { user ->
+        return ComponentRenderer { response ->
             createPrimarySmallButton("지원서") {
                 val dialog = Dialog()
-                dialog.add(*createRecruitmentItems(user.applicationForm))
+                dialog.add(*createRecruitmentItems(response.applicationForm))
                 dialog.width = "800px"
                 dialog.height = "90%"
                 dialog.open()
@@ -195,7 +194,7 @@ class SelectionView(
         val tabs = Tabs().apply {
             add(*(tabsToGrids.keys).toTypedArray())
             addSelectedChangeListener {
-                evaluationFileButtons.isVisible = !isTotalUserTab(it.selectedTab)
+                evaluationFileButtons.isVisible = !isTotalApplicantTab(it.selectedTab)
                 tabsToGrids.forEach { (tab, grid) ->
                     grid.isVisible = (tab == selectedTab)
                 }
@@ -256,7 +255,7 @@ class SelectionView(
 
     private fun createResultDownloadButton(): Button {
         return createSuccessButton("평가결과 다운로드") {
-            if (isTotalUserTab(tabs.selectedTab)) {
+            if (isTotalApplicantTab(tabs.selectedTab)) {
                 val excel = excelService.createApplicantExcel(recruitmentId)
                 downloadFile("${recruitmentService.getById(recruitmentId).title}.xlsx", excel)
             } else {
@@ -306,11 +305,11 @@ class SelectionView(
         }
     }
 
-    private fun isTotalUserTab(tab: Tab): Boolean {
-        return tab.label == TOTAL_APPLIED_USER_LABEL
+    private fun isTotalApplicantTab(tab: Tab): Boolean {
+        return tab.label == TOTAL_APPLICANT_LABEL
     }
 
     companion object {
-        private const val TOTAL_APPLIED_USER_LABEL: String = "전체 지원자"
+        private const val TOTAL_APPLICANT_LABEL: String = "전체 지원자"
     }
 }

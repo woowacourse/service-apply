@@ -9,20 +9,17 @@ import javax.persistence.UniqueConstraint
 
 @Table(
     uniqueConstraints = [
-        UniqueConstraint(name = "uk_assignment", columnNames = ["userId", "missionId"])
+        UniqueConstraint(name = "uk_assignment", columnNames = ["memberId", "missionId"])
     ],
-    indexes = [Index(name = "idx_user_id", columnList = "userId")]
+    indexes = [Index(name = "idx_member_id", columnList = "memberId")]
 )
 @Entity
 class Assignment(
     @Column(nullable = false)
-    val userId: Long,
+    val memberId: Long,
 
     @Column(nullable = false)
     val missionId: Long,
-
-    @Column(nullable = false, length = 39)
-    var githubUsername: String,
 
     @Column(nullable = false)
     var pullRequestUrl: String,
@@ -31,8 +28,7 @@ class Assignment(
     var note: String,
     id: Long = 0L
 ) : BaseEntity(id) {
-    fun update(githubUsername: String, pullRequestUrl: String, note: String) {
-        this.githubUsername = githubUsername
+    fun update(pullRequestUrl: String, note: String) {
         this.pullRequestUrl = pullRequestUrl
         this.note = note
     }

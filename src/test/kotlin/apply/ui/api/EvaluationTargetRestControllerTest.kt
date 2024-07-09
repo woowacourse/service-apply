@@ -52,7 +52,7 @@ class EvaluationTargetRestControllerTest : RestControllerTest() {
                 id = 1L,
                 name = "아마찌",
                 email = "wlgp2500@gmail.com",
-                userId = 1L,
+                memberId = 1L,
                 totalScore = 100,
                 evaluationStatus = PASS,
                 administratorId = 1L,
@@ -121,7 +121,7 @@ class EvaluationTargetRestControllerTest : RestControllerTest() {
     @EnumSource(names = ["PASS", "FAIL", "WAITING"])
     @ParameterizedTest
     fun `메일 발송 대상(합격자)들의 이메일 정보를 조회한다`(enumStatus: EvaluationStatus) {
-        val responses = listOf(MailTargetResponse("roki@woowacourse.com", "김로키"))
+        val responses = listOf(MailTargetResponse("roki@woowacourse.com", "김로키", 1L))
         every { mailTargetService.findMailTargets(any(), any()) } returns responses
 
         mockMvc.get("/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/emails", 1L, 1L) {

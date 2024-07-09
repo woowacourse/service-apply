@@ -3,7 +3,7 @@ package apply.ui.api
 import apply.application.CheaterResponse
 import apply.application.CheaterService
 import apply.createCheaterData
-import apply.createUser
+import apply.createMember
 import apply.domain.cheater.Cheater
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
@@ -23,7 +23,7 @@ class CheaterRestControllerTest : RestControllerTest() {
 
     @Test
     fun `부정행위자를 조회한다`() {
-        val response = CheaterResponse(Cheater(email = "loki@email.com"), createUser(name = "로키"))
+        val response = CheaterResponse(Cheater(email = "loki@email.com"), createMember(name = "로키"))
         every { cheaterService.getById(any()) } returns response
 
         mockMvc.get("/api/cheaters/{cheaterId}", 1L) {
@@ -37,8 +37,8 @@ class CheaterRestControllerTest : RestControllerTest() {
     @Test
     fun `모든 부정행위자를 찾는다`() {
         val responses = listOf(
-            CheaterResponse(Cheater(email = "loki@email.com"), createUser(name = "로키")),
-            CheaterResponse(Cheater(email = "amazzi@email.com"), createUser(name = "아마찌"))
+            CheaterResponse(Cheater(email = "loki@email.com"), createMember(name = "로키")),
+            CheaterResponse(Cheater(email = "amazzi@email.com"), createMember(name = "아마찌"))
         )
         every { cheaterService.findAll() } returns responses
 
@@ -52,7 +52,7 @@ class CheaterRestControllerTest : RestControllerTest() {
 
     @Test
     fun `부정행위자를 추가한다`() {
-        val response = CheaterResponse(Cheater(email = "loki@email.com"), createUser(name = "로키"))
+        val response = CheaterResponse(Cheater(email = "loki@email.com"), createMember(name = "로키"))
         every { cheaterService.save(any()) } returns response
 
         mockMvc.post("/api/cheaters") {

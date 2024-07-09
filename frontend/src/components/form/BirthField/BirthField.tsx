@@ -11,6 +11,7 @@ registerLocale("ko", ko);
 
 type BirthFieldProps = Omit<ReactDatePickerProps, "value"> & {
   value?: Date | null;
+  errorMessage?: string;
 };
 
 const BirthField = ({
@@ -19,6 +20,7 @@ const BirthField = ({
   required = false,
   className,
   name,
+  errorMessage,
   ...props
 }: BirthFieldProps) => {
   return (
@@ -43,6 +45,7 @@ const BirthField = ({
           autoComplete="off"
           {...props}
         />
+        {errorMessage && <p className={styles["rule-field"]}>{errorMessage}</p>}
       </div>
     </div>
   );

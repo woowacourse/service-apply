@@ -3,8 +3,8 @@ package apply.ui.admin.mail
 import apply.application.EvaluationService
 import apply.application.MailHistoryService
 import apply.application.MailTargetService
+import apply.application.MemberService
 import apply.application.RecruitmentService
-import apply.application.UserService
 import apply.application.mail.MailData
 import apply.application.mail.MailService
 import apply.ui.admin.BaseLayout
@@ -30,7 +30,7 @@ private const val NO_RECIPIENT_MESSAGE: String = "받는사람을 한 명 이상
 
 @Route(value = "admin/mails", layout = BaseLayout::class)
 class MailsFormView(
-    userService: UserService,
+    memberService: MemberService,
     recruitmentService: RecruitmentService,
     evaluationService: EvaluationService,
     mailTargetService: MailTargetService,
@@ -39,7 +39,7 @@ class MailsFormView(
     mailProperties: MailProperties
 ) : VerticalLayout(), HasUrlParameter<String> {
     private val mailForm: MailForm = MailForm(
-        userService,
+        memberService,
         recruitmentService,
         evaluationService,
         mailTargetService,

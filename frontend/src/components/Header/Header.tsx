@@ -7,6 +7,8 @@ import styles from "./Header.module.css";
 import { PATH } from "../../constants/path";
 import { ValueOf } from "../../../types/utility";
 import MemberIcon from "../../assets/icon/member-icon.svg";
+import { fetchAgreement } from "../../api/agreements";
+import { ERROR_MESSAGE } from "../../constants/messages";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -28,6 +30,15 @@ const Header = () => {
     setIsShowMemberMenu(false);
     resetToken();
     navigate(PATH.HOME);
+  };
+
+  const goToSignUp = async () => {
+    try {
+      const agreement = await fetchAgreement();
+      navigate(PATH.SIGN_UP, { state: { agreement } });
+    } catch (error) {
+      alert(ERROR_MESSAGE.API.LOAD_AGREEMENT);
+    }
   };
 
   return (
@@ -92,7 +103,9 @@ const Header = () => {
               <>
                 <Link to={PATH.LOGIN}>로그인</Link>
                 <div className={styles.bar} />
-                <Link to={PATH.SIGN_UP}>회원가입</Link>
+                <Link to="#" onClick={goToSignUp}>
+                  회원가입
+                </Link>
               </>
             )}
           </div>

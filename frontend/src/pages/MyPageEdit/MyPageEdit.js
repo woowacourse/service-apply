@@ -11,12 +11,12 @@ import { FORM } from "../../constants/form";
 import { ERROR_MESSAGE, SUCCESS_MESSAGE } from "../../constants/messages";
 import { PATH } from "../../constants/path";
 import useMyPageEditForm, { MY_PAGE_EDIT_FORM_NAME } from "../../hooks/useMyPageEditForm";
-import useUserInfoContext from "../../hooks/useUserInfoContext";
+import useMemberInfoContext from "../../hooks/useMemberInfoContext";
 import styles from "./MyPageEdit.module.css";
 
 const MyPageEdit = () => {
   const navigate = useNavigate();
-  const { userInfo, updateUserInfo } = useUserInfoContext();
+  const { memberInfo, updateMemberInfo } = useMemberInfoContext();
 
   const { form, errorMessage, init, handleChanges, isEmpty, isValid } = useMyPageEditForm();
 
@@ -30,7 +30,7 @@ const MyPageEdit = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await updateUserInfo(form);
+      await updateMemberInfo(form);
       alert(SUCCESS_MESSAGE.API.EDIT_MY_PAGE);
       navigate(PATH.MY_PAGE);
     } catch (error) {
@@ -39,17 +39,17 @@ const MyPageEdit = () => {
   };
 
   useEffect(() => {
-    if (userInfo === null) return;
+    if (memberInfo === null) return;
 
     init({
       requiredForm: {
-        [MY_PAGE_EDIT_FORM_NAME.PHONE_NUMBER]: userInfo.phoneNumber,
+        [MY_PAGE_EDIT_FORM_NAME.PHONE_NUMBER]: memberInfo.phoneNumber,
       },
     });
-  }, [userInfo]);
+  }, [memberInfo]);
 
   return (
-    <Container title={`${userInfo?.name ?? ""} 님`}>
+    <Container title={`${memberInfo?.name ?? ""} 님`}>
       <div className={styles.box}>
         <div className={styles["illust-box"]}>
           <img src={myPageImage} alt="자기소개서 일러스트" />
@@ -59,11 +59,16 @@ const MyPageEdit = () => {
             label="이메일"
             name={MY_PAGE_EDIT_FORM_NAME.EMAIL}
             className={styles.input}
-            value={userInfo?.email || ""}
+            value={memberInfo?.email || ""}
+            disabled
+          />
+          <BirthField
+            name={MY_PAGE_EDIT_FORM_NAME.BIRTHDAY}
+            value={new Date(memberInfo?.birthday || null)}
             disabled
           />
           <MessageTextInput
-            label="휴대폰 번호"
+            label="휴대전화 번호"
             type="tel"
             name={MY_PAGE_EDIT_FORM_NAME.PHONE_NUMBER}
             value={form[MY_PAGE_EDIT_FORM_NAME.PHONE_NUMBER]}
@@ -71,9 +76,11 @@ const MyPageEdit = () => {
             errorMessage={errorMessage[MY_PAGE_EDIT_FORM_NAME.PHONE_NUMBER]}
             maxLength={FORM.PHONE_NUMBER_MAX_LENGTH}
           />
-          <BirthField
-            name={MY_PAGE_EDIT_FORM_NAME.BIRTHDAY}
-            value={new Date(userInfo?.birthday || null)}
+          <MessageTextInput
+            label="GitHub 사용자 이름"
+            name={MY_PAGE_EDIT_FORM_NAME.GITHUB_USERNAME}
+            className={styles.input}
+            value={memberInfo?.githubUsername || ""}
             disabled
           />
           <div className={styles.buttons}>

@@ -1,10 +1,10 @@
 package apply.ui.api
 
-import apply.createUser
+import apply.createMember
 import apply.security.AccessorResolver
 import apply.security.LoginFailedException
-import apply.security.LoginUser
-import apply.security.LoginUserResolver
+import apply.security.LoginMember
+import apply.security.LoginMemberResolver
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.every
@@ -36,7 +36,7 @@ import support.test.TestEnvironment
 @TestEnvironment
 abstract class RestControllerTest {
     @MockkBean
-    private lateinit var loginUserResolver: LoginUserResolver
+    private lateinit var loginMemberResolver: LoginMemberResolver
 
     @MockkBean
     private lateinit var accessorResolver: AccessorResolver
@@ -62,10 +62,10 @@ abstract class RestControllerTest {
                     .withResponseDefaults(prettyPrint())
             )
             .build()
-        loginUserResolver.also {
+        loginMemberResolver.also {
             slot<MethodParameter>().also { slot ->
                 every { it.supportsParameter(capture(slot)) } answers {
-                    slot.captured.hasParameterAnnotation(LoginUser::class.java)
+                    slot.captured.hasParameterAnnotation(LoginMember::class.java)
                 }
             }
             slot<NativeWebRequest>().also { slot ->
@@ -74,7 +74,7 @@ abstract class RestControllerTest {
                     if (hasToken != true) {
                         throw LoginFailedException()
                     }
-                    createUser()
+                    createMember()
                 }
             }
         }

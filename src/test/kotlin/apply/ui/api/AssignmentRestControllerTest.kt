@@ -54,7 +54,7 @@ class AssignmentRestControllerTest : RestControllerTest() {
     @Test
     fun `나의 과제 제출물을 조회한다`() {
         val response = createAssignmentResponse()
-        every { assignmentService.getByUserIdAndMissionId(any(), any()) } returns response
+        every { assignmentService.getByMemberIdAndMissionId(any(), any()) } returns response
 
         mockMvc.get("/api/recruitments/{recruitmentId}/missions/{missionId}/assignments/me", 1L, 1L) {
             bearer("valid_token")

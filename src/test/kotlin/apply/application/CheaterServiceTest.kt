@@ -3,8 +3,8 @@ package apply.application
 import apply.createCheater
 import apply.createCheaterData
 import apply.domain.cheater.CheaterRepository
-import apply.domain.user.UserRepository
-import apply.domain.user.findByEmail
+import apply.domain.member.MemberRepository
+import apply.domain.member.findByEmail
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.nulls.shouldBeNull
@@ -15,17 +15,17 @@ import io.mockk.mockk
 import support.test.spec.afterRootTest
 
 class CheaterServiceTest : BehaviorSpec({
-    val userRepository = mockk<UserRepository>()
+    val memberRepository = mockk<MemberRepository>()
     val cheaterRepository = mockk<CheaterRepository>()
 
-    val cheaterService = CheaterService(userRepository, cheaterRepository)
+    val cheaterService = CheaterService(memberRepository, cheaterRepository)
 
     Given("특정 이메일의 회원이 존재하지 않는 경우") {
         val email = "cheater@email.com"
 
         every { cheaterRepository.existsByEmail(any()) } returns false
         every { cheaterRepository.save(any()) } returns createCheater(email = email)
-        every { userRepository.findByEmail(any()) } returns null
+        every { memberRepository.findByEmail(any()) } returns null
 
         When("특정 이메일로 부정행위자를 등록하면") {
             val actual = cheaterService.save(createCheaterData(email = email))

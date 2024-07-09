@@ -28,18 +28,17 @@ class ExcelService(
         val titles = recruitmentItemRepository.findByRecruitmentIdOrderByPosition(recruitmentId)
             .map { it.title }
             .toTypedArray()
-        val headerTitles = arrayOf("이름", "이메일", "전화번호", "성별", "생년월일", "지원 일시", "부정행위자", "포트폴리오 URL", *titles)
+        val headerTitles = arrayOf("이름", "이메일", "휴대전화 번호", "생년월일", "지원 일시", "부정행위자", "포트폴리오 URL", *titles)
         val excelRows = applicants.map {
             ExcelRow(
                 it.name,
                 it.email,
                 it.phoneNumber,
-                it.gender.title,
                 it.birthday.toString(),
                 it.applicationForm.submittedDateTime.toString(),
                 it.isCheater.toText(),
                 it.applicationForm.referenceUrl,
-                *it.applicationForm.answers.items.map { item -> item.contents }.toTypedArray()
+                *it.applicationForm.answers.items.map { item -> item.contents }.toTypedArray(),
             )
         }
         return excelGenerator.generateBy(headerTitles, excelRows)
@@ -61,15 +60,14 @@ class ExcelService(
         mission: Mission
     ): ByteArrayInputStream {
         val headerTitles = arrayOf(
-            NAME, EMAIL, GITHUB_USERNAME, PULL_REQUEST_URL, ASSIGNMENT_NOTE, TOTAL_SCORE, STATUS, *titles, NOTE
+            NAME, EMAIL, PULL_REQUEST_URL, ASSIGNMENT_NOTE, TOTAL_SCORE, STATUS, *titles, NOTE
         )
         val assignments = assignmentRepository.findAllByMissionId(mission.id)
         val excelRows = targets.map {
-            val assignment = assignments.find { assignment -> assignment.userId == it.userId }
+            val assignment = assignments.find { assignment -> assignment.memberId == it.memberId }
             ExcelRow(
                 it.name,
                 it.email,
-                assignment?.githubUsername ?: UNSUBMITTED,
                 assignment?.pullRequestUrl ?: UNSUBMITTED,
                 assignment?.note ?: UNSUBMITTED,
                 it.totalScore.toString(),
@@ -121,7 +119,6 @@ class ExcelService(
         private const val STATUS: String = "평가 상태"
         private const val NOTE: String = "기타 특이사항"
         private const val TOTAL_SCORE: String = "합계"
-        private const val GITHUB_USERNAME: String = "Github 유저 네임"
         private const val PULL_REQUEST_URL: String = "Pull Request URL"
         private const val ASSIGNMENT_NOTE: String = "소감"
         private const val UNSUBMITTED: String = "(미제출)"

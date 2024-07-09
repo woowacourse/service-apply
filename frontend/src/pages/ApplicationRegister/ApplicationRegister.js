@@ -77,6 +77,10 @@ const ApplicationRegister = () => {
 
   const save = async ({ referenceUrl, answers }) => {
     try {
+      if (status === PARAM.APPLICATION_FORM_STATUS.NEW) {
+        await Api.createForm({ token, recruitmentId });
+      }
+
       await Api.updateForm({
         token,
         data: {
@@ -97,6 +101,10 @@ const ApplicationRegister = () => {
 
   const tempSave = async ({ referenceUrl, answers }) => {
     try {
+      if (status === PARAM.APPLICATION_FORM_STATUS.NEW) {
+        await Api.createForm({ token, recruitmentId });
+      }
+
       await Api.updateForm({
         token,
         data: {

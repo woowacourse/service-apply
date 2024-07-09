@@ -3,8 +3,8 @@ package apply.ui.admin.mail
 import apply.application.EvaluationService
 import apply.application.MailTargetResponse
 import apply.application.MailTargetService
+import apply.application.MemberService
 import apply.application.RecruitmentService
-import apply.application.UserService
 import apply.application.mail.MailData
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.button.Button
@@ -23,13 +23,12 @@ import org.springframework.core.io.ByteArrayResource
 import support.views.BindingFormLayout
 import support.views.NO_NAME
 import support.views.addSortableColumn
-import support.views.createEnterBox
 import support.views.createErrorSmallButton
 import support.views.createNormalButton
 import support.views.createUpload
 
 class MailForm(
-    private val userService: UserService,
+    private val memberService: MemberService,
     private val recruitmentService: RecruitmentService,
     private val evaluationService: EvaluationService,
     private val mailTargetService: MailTargetService,
@@ -43,6 +42,7 @@ class MailForm(
     private val mailTargetsGrid: Grid<MailTargetResponse> = createMailTargetsGrid(mailTargets)
     private val recipientFilter: Component = createRecipientFilter()
     private val fileUpload: Upload = createFileUpload()
+    private var mailData: MailData? = null
 
     init {
         add(subject, sender, recipientFilter, mailTargetsGrid, body, fileUpload)
@@ -60,23 +60,14 @@ class MailForm(
 
     private fun createRecipientFilter(): Component {
         return HorizontalLayout(
-            createTargetEnterBox(),
             createIndividualLoadButton(),
             createGroupLoadButton()
         ).apply { defaultVerticalComponentAlignment = FlexComponent.Alignment.END }
     }
 
-    private fun createTargetEnterBox(): Component {
-        return createEnterBox("받는사람") {
-            if (it.isNotBlank()) {
-                refreshGrid { mailTargets.add(MailTargetResponse(it, NO_NAME)) }
-            }
-        }
-    }
-
     private fun createIndividualLoadButton(): Button {
         return createNormalButton("개별 불러오기") {
-            IndividualMailTargetDialog(userService) {
+            IndividualMailTargetDialog(memberService) {
                 refreshGrid { mailTargets.add(it) }
             }
         }
@@ -133,15 +124,16 @@ class MailForm(
             return null
         }
         return bindDefaultOrNull()?.apply {
-            recipients = mailTargets.map { it.email }.toList()
+            recipients = mailTargets.map { it.id }.toList()
             attachments = uploadFile
         }
     }
 
     override fun fill(data: MailData) {
+        mailData = data
         fillDefault(data)
         toReadOnlyMode()
-        refreshGrid { mailTargets.addAll(mailTargetService.findAllByEmails(data.recipients)) }
+        refreshGrid { mailTargets.addAll(mailTargetService.findAllByMemberIds(data.recipients)) }
     }
 
     private fun toReadOnlyMode() {

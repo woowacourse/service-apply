@@ -6,9 +6,10 @@
 
 == Service-Apply
 
+include::agreement.adoc[]
 include::application-form.adoc[]
 include::assignment.adoc[]
 include::judgment.adoc[]
+include::member.adoc[]
 include::mission.adoc[]
 include::recruitment.adoc[]
-include::user.adoc[]
