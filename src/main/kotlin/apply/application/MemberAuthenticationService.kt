@@ -4,7 +4,9 @@ import apply.domain.authenticationcode.AuthenticationCode
 import apply.domain.authenticationcode.AuthenticationCodeRepository
 import apply.domain.authenticationcode.getLastByEmail
 import apply.domain.member.Member
+import apply.domain.member.MemberInformation
 import apply.domain.member.MemberRepository
+import apply.domain.member.MinimumAgeRequirement
 import apply.domain.member.UnidentifiedMemberException
 import apply.domain.member.existsByEmail
 import apply.domain.member.findByEmail
@@ -25,15 +27,22 @@ class MemberAuthenticationService(
         authenticationCodeRepository.getLastByEmail(request.email).validate(request.authenticationCode)
         val member = memberRepository.save(
             Member(
-                email = request.email,
-                password = request.password,
-                name = request.name,
-                birthday = request.birthday,
-                phoneNumber = request.phoneNumber,
-                githubUsername = request.githubUsername,
+                request.toMemberInformation(),
+                request.password,
+                MinimumAgeRequirement()
             )
         )
         return jwtTokenProvider.createToken(member.email)
+    }
+
+    private fun RegisterMemberRequest.toMemberInformation(): MemberInformation {
+        return MemberInformation(
+            email = email,
+            name = name,
+            birthday = birthday,
+            phoneNumber = phoneNumber,
+            githubUsername = githubUsername,
+        )
     }
 
     fun generateTokenByLogin(request: AuthenticateMemberRequest): String {

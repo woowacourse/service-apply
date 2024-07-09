@@ -14,3 +14,9 @@
 .buttons > button {
   flex: 1;
 }
+
+.login-description {
+  font-size: 0.875rem;
+  color: var(--gray-700);
+  margin-bottom: 28px;
+}

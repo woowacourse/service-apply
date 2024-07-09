@@ -15,6 +15,7 @@ export const ERROR_MESSAGE = {
     GITHUB_USERNAME:
       "GitHub 사용자 이름 정책에 따라 영문, 숫자, 하이픈 조합을 사용하여 최대 39자까지 가능합니다.",
     BIRTHDAY: "유효하지 않은 날짜입니다. 정확한 날짜를 입력해 주세요.",
+    BIRTHDAY_IS_NOT_OVER_14: "만 14세 이상만 회원가입이 가능합니다.",
   },
   API: {
     ALREADY_REGISTER: "이미 지원한 이력이 있습니다.",

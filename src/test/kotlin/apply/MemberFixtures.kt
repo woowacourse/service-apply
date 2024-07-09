@@ -2,7 +2,9 @@ package apply
 
 import apply.application.AuthenticateMemberRequest
 import apply.application.RegisterMemberRequest
+import apply.domain.member.AuthorizationRequirement
 import apply.domain.member.Member
+import apply.domain.member.MemberInformation
 import apply.domain.member.Password
 import support.createLocalDate
 import java.time.LocalDate
@@ -27,9 +29,25 @@ fun createMember(
     birthday: LocalDate = BIRTHDAY,
     phoneNumber: String = PHONE_NUMBER,
     githubUsername: String = GITHUB_USERNAME,
+    authorizationRequirement: AuthorizationRequirement = AuthorizationRequirement {},
     id: Long = 0L,
 ): Member {
-    return Member(email, password, name, birthday, phoneNumber, githubUsername, id)
+    return Member(
+        createMemberInformation(email, name, birthday, phoneNumber, githubUsername),
+        password,
+        authorizationRequirement,
+        id
+    )
+}
+
+fun createMemberInformation(
+    email: String = EMAIL,
+    name: String = NAME,
+    birthday: LocalDate = BIRTHDAY,
+    phoneNumber: String = PHONE_NUMBER,
+    githubUsername: String = GITHUB_USERNAME,
+): MemberInformation {
+    return MemberInformation(email, name, birthday, phoneNumber, githubUsername)
 }
 
 fun createRegisterMemberRequest(
