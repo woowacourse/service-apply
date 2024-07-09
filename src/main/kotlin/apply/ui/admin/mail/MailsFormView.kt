@@ -69,9 +69,10 @@ class MailsFormView(
 
     private fun createSubmitButton(): Button {
         return createPrimaryButton("보내기") {
-            val result = getDataFromMailForm()
-            mailService.sendMailsByBcc(result, result.attachments)
-            UI.getCurrent().navigate(MailsView::class.java)
+            handleMailData { mail ->
+                mailService.sendMailsByBcc(mail, mail.attachments)
+                UI.getCurrent().navigate(MailsView::class.java)
+            }
         }
     }
 
@@ -82,17 +83,17 @@ class MailsFormView(
     }
 
     private fun createPreviewButton(): Button {
-        return createContrastButton("미리보기") {
-            val result = getDataFromMailForm()
-            val body = mailService.generateMailBody(result)
-            MailPreviewDialog(body)
+        return createContrastButton("미리 보기") {
+            handleMailData { mail -> MailPreviewDialog(mailService.generateMailBody(mail)) }
         }
     }
 
-    private fun getDataFromMailForm(): MailData {
-        return mailForm.bindOrNull() ?: run {
-            createNotification(NO_RECIPIENT_MESSAGE)
-            throw IllegalArgumentException(NO_RECIPIENT_MESSAGE)
+    private fun handleMailData(action: (MailData) -> Unit) {
+        val result = mailForm.bindOrNull()
+        if (result == null) {
+            createNotification("받는사람을 한 명 이상 지정해야 합니다.")
+        } else {
+            action(result)
         }
     }
 }

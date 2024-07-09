@@ -12,27 +12,24 @@ import org.jsoup.Jsoup
 import support.views.createContrastButton
 
 class MailPreviewDialog(
-    htmlString: String
+    htmlText: String
 ) : Dialog() {
     init {
-        add(createHeader(), createHtmlComponentFrom(htmlString), createButtons())
+        add(createHeader(), createContent(htmlText), createButtons())
         width = "700px"
         height = "800px"
         open()
     }
 
     private fun createHeader(): VerticalLayout {
-        return VerticalLayout(H2("메일 미리보기")).apply {
+        return VerticalLayout(H2("메일 미리 보기")).apply {
             isPadding = false
-            val style = element.style
-            style.set("margin-bottom", "10px")
-            style["margin-bottom"] = "10px"
             element.style["margin-bottom"] = "10px"
         }
     }
 
-    private fun createHtmlComponentFrom(htmlString: String): Component {
-        val body = Jsoup.parse(htmlString).body()
+    private fun createContent(htmlText: String): Component {
+        val body = Jsoup.parse(htmlText).body()
         return Html(body.html()).apply {
             element.style["display"] = "block"
             element.style["height"] = "600px"
