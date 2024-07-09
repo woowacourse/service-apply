@@ -6,41 +6,21 @@ import { isJudgmentTimedOut } from "../../../../utils/validation/judgmentTime";
 import { MISSION_STATUS } from "../../../../constants/recruitment";
 import { JUDGMENT_STATUS } from "../../../../constants/judgment";
 import { Mission } from "../../../../../types/domains/recruitments";
+import { createMockJudgment, createMockMission } from "./testMissionMockUtils";
 
 jest.mock("../../../../api");
 jest.mock("../../../../hooks/useTokenContext");
 jest.mock("../../../../utils/validation/judgmentTime");
 
-const MOCK_MISSION_ITEM: Mission = {
-  id: 1,
-  title: "테스트 미션",
-  description: "테스트 설명",
-  submittable: true,
-  submitted: true,
-  startDateTime: "2023-01-01T00:00:00",
-  endDateTime: "2023-12-31T23:59:59",
-  status: MISSION_STATUS.SUBMITTING,
-  runnable: true,
-  judgment: {
-    pullRequestUrl: "https://github.com/test/pr",
-    commitHash: "abcdef1234567890",
-    status: JUDGMENT_STATUS.STARTED,
-    passCount: 0,
-    totalCount: 10,
-    message: "",
-    startedDateTime: "2023-06-01T12:00:00",
-    commitUrl: "https://github.com/test/commit",
-  },
-} as const;
-
 describe("useMissionJudgment 훅 테스트", () => {
   const mockRecruitmentId = 1;
 
-  function createMockMission(overrides = {}) {
-    return {
-      ...MOCK_MISSION_ITEM,
+  function createMissionItem(overrides = {}) {
+    return createMockMission({
+      submitted: true,
+      judgment: createMockJudgment(),
       ...overrides,
-    };
+    });
   }
 
   function renderUseMissionJudgment(
@@ -52,7 +32,7 @@ describe("useMissionJudgment 훅 테스트", () => {
 
   function expectJudgmentAvailability(missionItem: Partial<Mission>, expected: boolean) {
     const { result } = renderUseMissionJudgment({
-      ...createMockMission(),
+      ...createMissionItem(),
       ...missionItem,
     } as Mission);
     expect(result.current.isJudgmentAvailable).toBe(expected);
@@ -103,7 +83,7 @@ describe("useMissionJudgment 훅 테스트", () => {
 
       const mockResponse = {
         data: {
-          ...createMockMission().judgment,
+          ...createMissionItem().judgment,
           status: JUDGMENT_STATUS.SUCCEEDED,
           passCount: SAMPLE_PASS_COUNT,
           totalCount: SAMPLE_TOTAL_COUNT,
