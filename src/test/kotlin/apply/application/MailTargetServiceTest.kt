@@ -10,7 +10,6 @@ import apply.domain.evaluationtarget.EvaluationStatus.PENDING
 import apply.domain.evaluationtarget.EvaluationStatus.WAITING
 import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.member.MemberRepository
-import apply.domain.member.findAllByEmailIn
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
@@ -69,7 +68,7 @@ class MailTargetServiceTest : BehaviorSpec({
 
             Then("평가 대상자의 이름 및 이메일을 확인할 수 있다") {
                 actual shouldHaveSize 1
-                actual[0] shouldBe MailTargetResponse(member.email, member.name)
+                actual[0] shouldBe MailTargetResponse(member)
             }
         }
     }
@@ -88,7 +87,7 @@ class MailTargetServiceTest : BehaviorSpec({
 
             Then("평가 대상자의 이름 및 이메일을 확인할 수 있다") {
                 actual shouldHaveSize 1
-                actual[0] shouldBe MailTargetResponse(member.email, member.name)
+                actual[0] shouldBe MailTargetResponse(member)
             }
         }
     }
@@ -107,7 +106,7 @@ class MailTargetServiceTest : BehaviorSpec({
 
             Then("평가 대상자의 이름 및 이메일을 확인할 수 있다") {
                 actual shouldHaveSize 1
-                actual[0] shouldBe MailTargetResponse(member.email, member.name)
+                actual[0] shouldBe MailTargetResponse(member)
             }
         }
     }
@@ -141,16 +140,21 @@ class MailTargetServiceTest : BehaviorSpec({
         }
     }
 
-    Given("특정 이메일을 가진 회원이 없는 경우") {
-        val email = "test1@email.com"
+    // TODO[#754]: 탈퇴한 회원의 경우 default 정보가 노출된다.
+    Given("메일 이력을 통해 회원 id 목록을 확인할 수 있는 경우") {
+        val members = listOf(
+            createMember(id = 1L),
+            createMember(id = 2L),
+            createMember(id = 3L)
+        )
 
-        every { memberRepository.findAllByEmailIn(any()) } returns emptyList()
+        every { memberRepository.findAllById(any()) } returns members
 
-        When("해당 이메일로 이메일 정보를 조회하면") {
-            val actual = mailTargetService.findAllByEmails(listOf(email))
+        When("회원 id를 사용해 메일 수신자 정보를 조회하면") {
+            val actual = mailTargetService.findAllByMemberIds(listOf(1L, 2L, 3L, 4L))
 
-            Then("이름이 비어있는 것을 확인할 수 있다") {
-                actual[0] shouldBe MailTargetResponse(email, null)
+            Then("현재 회원인 메일 수신자만 확인할 수 있다") {
+                actual shouldHaveSize 3
             }
         }
     }

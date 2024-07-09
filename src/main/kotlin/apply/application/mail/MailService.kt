@@ -91,7 +91,7 @@ class MailService(
     @Async
     fun sendMailsByBcc(request: MailData, files: Map<String, ByteArrayResource>) {
         val body = generateMailBody(request)
-        val recipients = request.recipients + mailProperties.username
+        val recipients = memberRepository.findAllById(request.recipients).map { it.email } + mailProperties.username
 
         // TODO: 성공과 실패를 분리하여 히스토리 관리
         val succeeded = mutableListOf<String>()

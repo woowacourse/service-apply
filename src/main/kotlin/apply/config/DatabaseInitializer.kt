@@ -462,7 +462,7 @@ class DatabaseInitializer(
                 subject = "[우아한테크코스] 프리코스를 진행하는 목적과 사전 준비",
                 body = "안녕하세요.",
                 sender = "woowa_course@woowahan.com",
-                recipients = listOf("a@email.com", "b@email.com", "c@email.com", "d@email.com"),
+                recipients = listOf(1L, 2L, 3L, 4L),
                 sentTime = createLocalDateTime(2020, 11, 5, 10)
             )
         )
