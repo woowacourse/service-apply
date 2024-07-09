@@ -20,6 +20,7 @@ class Member(
     @AttributeOverride(name = "value", column = Column(name = "password", nullable = false))
     @Embedded
     var password: Password,
+    authorizationRequirement: AuthorizationRequirement,
     id: Long = 0L,
 ) : BaseRootEntity<Member>(id) {
     val email: String
@@ -37,25 +38,9 @@ class Member(
     val githubUsername: String
         get() = information.githubUsername
 
-    constructor(
-        email: String,
-        password: Password,
-        name: String,
-        birthday: LocalDate,
-        phoneNumber: String,
-        githubUsername: String,
-        id: Long = 0L,
-    ) : this(
-        MemberInformation(
-            email = email,
-            name = name,
-            birthday = birthday,
-            phoneNumber = phoneNumber,
-            githubUsername = githubUsername
-        ),
-        password,
-        id,
-    )
+    init {
+        authorizationRequirement.require(information)
+    }
 
     fun authenticate(password: Password) {
         identify(this.password == password) { "사용자 정보가 일치하지 않습니다." }
