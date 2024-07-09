@@ -5,42 +5,20 @@ import { MISSION_STATUS } from "../../../../constants/recruitment";
 import { isJudgmentTimedOut } from "../../../../utils/validation/judgmentTime";
 import useTokenContext from "../../../../hooks/useTokenContext";
 import { fetchMyMissionJudgment } from "../../../../api";
-import { Mission } from "../../../../../types/domains/recruitments";
+import { createMockJudgment, createMockMission } from "./testMissionMockUtils";
 
 jest.mock("../../../../utils/validation/judgmentTime");
 jest.mock("../../../../hooks/useTokenContext");
 jest.mock("../../../../api");
 
-const MOCK_MISSION_ITEM: Mission = {
-  id: 1,
-  title: "우아한테크코스 99주 차 미션",
-  description: "테스트 설명",
-  submittable: true,
-  submitted: false,
-  startDateTime: "2023-01-01T00:00:00",
-  endDateTime: "2023-12-31T23:59:59",
-  status: MISSION_STATUS.SUBMITTING,
-  runnable: true,
-  judgment: {
-    pullRequestUrl: "https://github.com/test/pr",
-    commitHash: "abcdef1234567890",
-    status: JUDGMENT_STATUS.STARTED,
-    passCount: 0,
-    totalCount: 10,
-    message: "",
-    startedDateTime: "2023-06-01T12:00:00",
-    commitUrl: "https://github.com/test/commit",
-  },
-};
-
 describe("useRefresh", () => {
   const mockRecruitmentId = 1;
 
-  function createMockMission(overrides = {}) {
-    return {
-      ...MOCK_MISSION_ITEM,
-      ...overrides,
-    };
+  function createMissionItem(overrides = {}) {
+    return createMockMission({
+      title: "우아한테크코스 99주 차 미션",
+      judgment: createMockJudgment(),
+    });
   }
 
   beforeEach(() => {
@@ -52,7 +30,7 @@ describe("useRefresh", () => {
     describe("false를 반환하는 경우", () => {
       it("recruitmentId가 undefined일 때", () => {
         const { result } = renderHook(() =>
-          useRefresh({ recruitmentId: undefined, missionItem: createMockMission() })
+          useRefresh({ recruitmentId: undefined, missionItem: createMissionItem() })
         );
 
         expect(result.current.isRefreshAvailable).toBe(false);
@@ -62,7 +40,7 @@ describe("useRefresh", () => {
         const { result } = renderHook(() =>
           useRefresh({
             recruitmentId: mockRecruitmentId,
-            missionItem: { ...createMockMission(), id: undefined as any },
+            missionItem: { ...createMissionItem(), id: undefined as any },
           })
         );
 
@@ -73,7 +51,7 @@ describe("useRefresh", () => {
         const { result } = renderHook(() =>
           useRefresh({
             recruitmentId: mockRecruitmentId,
-            missionItem: { ...createMockMission(), judgment: null },
+            missionItem: { ...createMissionItem(), judgment: null },
           })
         );
 
@@ -85,8 +63,8 @@ describe("useRefresh", () => {
           useRefresh({
             recruitmentId: mockRecruitmentId,
             missionItem: {
-              ...createMockMission(),
-              judgment: { ...createMockMission().judgment, status: JUDGMENT_STATUS.SUCCEEDED },
+              ...createMissionItem(),
+              judgment: createMockJudgment({ status: JUDGMENT_STATUS.SUCCEEDED }),
             },
           })
         );
@@ -98,7 +76,7 @@ describe("useRefresh", () => {
         const { result } = renderHook(() =>
           useRefresh({
             recruitmentId: mockRecruitmentId,
-            missionItem: { ...createMockMission(), status: MISSION_STATUS.ENDED },
+            missionItem: { ...createMissionItem(), status: MISSION_STATUS.ENDED },
           })
         );
 
@@ -109,7 +87,7 @@ describe("useRefresh", () => {
         (isJudgmentTimedOut as jest.Mock).mockReturnValue(true);
 
         const { result } = renderHook(() =>
-          useRefresh({ recruitmentId: mockRecruitmentId, missionItem: createMockMission() })
+          useRefresh({ recruitmentId: mockRecruitmentId, missionItem: createMissionItem() })
         );
 
         expect(result.current.isRefreshAvailable).toBe(false);
@@ -119,7 +97,7 @@ describe("useRefresh", () => {
     describe("true를 반환하는 경우", () => {
       it("모든 조건이 충족될 때 true를 반환해야 한다", () => {
         const { result } = renderHook(() =>
-          useRefresh({ recruitmentId: mockRecruitmentId, missionItem: createMockMission() })
+          useRefresh({ recruitmentId: mockRecruitmentId, missionItem: createMissionItem() })
         );
 
         expect(result.current.isRefreshAvailable).toBe(true);
@@ -133,7 +111,7 @@ describe("useRefresh", () => {
       const SAMPLE_TOTAL_COUNT = 10;
       const mockResponse = {
         data: {
-          ...createMockMission().judgment,
+          ...createMissionItem().judgment,
           status: JUDGMENT_STATUS.SUCCEEDED,
           passCount: SAMPLE_PASS_COUNT,
           totalCount: SAMPLE_TOTAL_COUNT,
@@ -142,7 +120,7 @@ describe("useRefresh", () => {
       (fetchMyMissionJudgment as jest.Mock).mockResolvedValue(mockResponse);
 
       const { result } = renderHook(() =>
-        useRefresh({ recruitmentId: mockRecruitmentId, missionItem: createMockMission() })
+        useRefresh({ recruitmentId: mockRecruitmentId, missionItem: createMissionItem() })
       );
 
       await act(async () => {
@@ -159,7 +137,7 @@ describe("useRefresh", () => {
       });
 
       expect(fetchMyMissionJudgment).toHaveBeenCalledWith({
-        missionId: createMockMission().id,
+        missionId: createMissionItem().id,
         recruitmentId: mockRecruitmentId,
         token: "mockToken",
       });
@@ -171,7 +149,7 @@ describe("useRefresh", () => {
       (fetchMyMissionJudgment as jest.Mock).mockRejectedValue(mockError);
 
       const { result } = renderHook(() =>
-        useRefresh({ recruitmentId: mockRecruitmentId, missionItem: createMockMission() })
+        useRefresh({ recruitmentId: mockRecruitmentId, missionItem: createMissionItem() })
       );
 
       await expect(result.current.fetchRefreshedResultData()).rejects.toThrow(errorMessage);
