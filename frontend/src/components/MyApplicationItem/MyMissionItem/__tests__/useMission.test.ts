@@ -5,7 +5,7 @@ import useMissionJudgment from "../useMissionJudgment";
 import { generatePath, useNavigate } from "react-router-dom";
 import { PARAM, PATH } from "../../../../constants/path";
 import { BUTTON_LABEL } from "../../../../constants/recruitment";
-import { Mission } from "../../../../../types/domains/recruitments";
+import { createMockMission } from "./testMissionMockUtils";
 
 jest.mock("../useRefresh");
 jest.mock("../useMissionJudgment");
@@ -14,27 +14,15 @@ jest.mock("react-router-dom", () => ({
   useNavigate: jest.fn(),
 }));
 
-const MOCK_MISSION_ITEM: Mission = {
-  id: 1,
-  title: "Test Mission",
-  description: "Test Description",
-  submittable: true,
-  submitted: false,
-  startDateTime: "2023-01-01T00:00:00",
-  endDateTime: "2023-12-31T23:59:59",
-  status: "SUBMITTING",
-  runnable: true,
-  judgment: null,
-} as const;
-
 describe("useMission", () => {
   const mockRecruitmentId = "123";
 
-  function createMockMission(overrides = {}) {
-    return {
-      ...MOCK_MISSION_ITEM,
+  function createMissionItem(overrides = {}) {
+    return createMockMission({
+      title: "Test Mission",
+      description: "Test Description",
       ...overrides,
-    };
+    });
   }
 
   beforeEach(() => {
@@ -42,20 +30,20 @@ describe("useMission", () => {
       isRefreshAvailable: true,
       fetchRefreshedResultData: jest
         .fn()
-        .mockResolvedValue({ ...createMockMission(), title: "Refreshed Mission" }),
+        .mockResolvedValue({ ...createMissionItem(), title: "Refreshed Mission" }),
     });
     (useMissionJudgment as jest.Mock).mockReturnValue({
       isJudgmentAvailable: true,
       fetchJudgmentMissionResult: jest
         .fn()
-        .mockResolvedValue({ ...createMockMission(), title: "Judged Mission" }),
+        .mockResolvedValue({ ...createMissionItem(), title: "Judged Mission" }),
     });
     (useNavigate as jest.Mock).mockReturnValue(jest.fn());
     (generatePath as jest.Mock).mockImplementation((path) => path);
   });
 
   describe("초기 상태 및 계산된 값을 점검", () => {
-    const mockMission = createMockMission();
+    const mockMission = createMissionItem();
 
     it("missionItem, 버튼 레이블, 날짜, flag 값을 정해진 형식대로 설정해야 한다", () => {
       const { result } = renderHook(() =>
@@ -76,7 +64,7 @@ describe("useMission", () => {
   });
 
   describe("Mission props를 통한 상태 업데이트", () => {
-    const mockMission = createMockMission();
+    const mockMission = createMissionItem();
 
     it("missionItem 상태를 새로운 값으로 갱신해야 한다", () => {
       const { result, rerender } = renderHook(
@@ -92,7 +80,7 @@ describe("useMission", () => {
   });
 
   describe("라우팅 테스트", () => {
-    const mockMission = createMockMission();
+    const mockMission = createMissionItem();
     it("미션 과제제출물 미제출 시, 'new' 상태로 과제 제출 페이지로 이동해야 한다", () => {
       const mockNavigate = jest.fn();
       (useNavigate as jest.Mock).mockReturnValue(mockNavigate);
@@ -154,7 +142,7 @@ describe("useMission", () => {
   });
   describe("데이터 갱신 테스트", () => {
     describe("requestRefresh 함수 테스트", () => {
-      const mockMission = createMockMission();
+      const mockMission = createMissionItem();
 
       it("fetchRefreshedResultData 성공 시 missionItem 상태를 갱신해야 한다", async () => {
         const { result } = renderHook(() =>
@@ -190,7 +178,7 @@ describe("useMission", () => {
     });
 
     describe("requestMissionJudgment 함수 테스트", () => {
-      const mockMission = createMockMission();
+      const mockMission = createMissionItem();
 
       it("fetchJudgmentMissionResult 성공 시 missionItem 상태를 갱신해야 한다", async () => {
         const { result } = renderHook(() =>
