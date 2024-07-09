@@ -61,6 +61,11 @@ const Login = () => {
   return (
     <Container size={CONTAINER_SIZE.NARROW} title="로그인">
       <Form onSubmit={handleSubmit}>
+        <div className={styles["login-description"]}>
+          우아한테크코스는 개인정보 수집 및 이용 목적이 달성된 후에는 개인정보 보유 및 이용 기간에
+          따라 해당 정보를 지체 없이 파기합니다. 이전에 가입하셨으나 로그인이 되지 않는 경우 신규
+          회원으로 등록하시기를 바랍니다.
+        </div>
         <MessageTextInput
           name={LOGIN_FORM_NAME.EMAIL}
           type="email"
