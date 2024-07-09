@@ -13,13 +13,14 @@ type Props = {
 
 const useRefresh = ({ recruitmentId, missionItem }: Props) => {
   const { token } = useTokenContext();
+
   const isValidMissionId = missionItem.id !== undefined && recruitmentId !== undefined;
+  const isJudgmentStarted = missionItem.judgment?.status === JUDGMENT_STATUS.STARTED;
+  const isMissionSubmitting = missionItem.status === MISSION_STATUS.SUBMITTING;
+  const isJudgmentNotTimedOut = !isJudgmentTimedOut(missionItem.judgment);
 
   const isRefreshAvailable =
-    isValidMissionId &&
-    missionItem.judgment?.status === JUDGMENT_STATUS.STARTED &&
-    missionItem.status === MISSION_STATUS.SUBMITTING &&
-    !isJudgmentTimedOut(missionItem.judgment);
+    isValidMissionId && isJudgmentStarted && isMissionSubmitting && isJudgmentNotTimedOut;
 
   const fetchRefreshedResultData = async () => {
     try {
