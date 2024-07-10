@@ -120,4 +120,19 @@ class MissionService(
             ?.let(::EvaluationItemSelectData)
             ?: EvaluationItemSelectData()
     }
+
+    fun parseDescription(missionData: MissionData): String {
+        val mission = Mission(
+            missionData.title,
+            missionData.description,
+            missionData.evaluation.id,
+            missionData.startDateTime,
+            missionData.endDateTime,
+            missionData.submittable,
+            missionData.hidden,
+            missionData.id
+        )
+
+        return mission.formattedDescription
+    }
 }
