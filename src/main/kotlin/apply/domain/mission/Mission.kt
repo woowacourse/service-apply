@@ -3,6 +3,7 @@ package apply.domain.mission
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
 import support.domain.BaseEntity
+import support.markdownToEmbeddedHtml
 import java.time.LocalDateTime
 import javax.persistence.Column
 import javax.persistence.Embedded
@@ -39,6 +40,9 @@ class Mission(
 
     val isSubmitting: Boolean
         get() = status == MissionStatus.SUBMITTING
+
+    val formattedDescription: String
+        get() = markdownToEmbeddedHtml(description)
 
     constructor(
         title: String,
