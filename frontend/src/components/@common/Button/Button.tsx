@@ -9,7 +9,6 @@ export const BUTTON_VARIANT = {
 export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: typeof BUTTON_VARIANT[keyof typeof BUTTON_VARIANT];
   cancel?: boolean;
-  disabled?: boolean;
 };
 
 const Button = ({
