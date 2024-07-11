@@ -5,7 +5,7 @@ import apply.application.JudgmentItemData
 import apply.application.LastJudgmentResponse
 import apply.application.MissionData
 import apply.application.MissionResponse
-import apply.application.MyMissionResponse
+import apply.application.MyMissionAndJudgementResponse
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionStatus
 import java.time.LocalDateTime
@@ -83,8 +83,8 @@ fun createMyMissionResponse(
     runnable: Boolean = true,
     judgment: LastJudgmentResponse? = createLastJudgmentResponse(),
     id: Long = 0L
-): MyMissionResponse {
-    return MyMissionResponse(
+): MyMissionAndJudgementResponse {
+    return MyMissionAndJudgementResponse(
         id,
         title,
         description,

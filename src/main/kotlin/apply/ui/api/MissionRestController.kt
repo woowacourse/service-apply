@@ -4,7 +4,7 @@ import apply.application.MissionAndEvaluationResponse
 import apply.application.MissionData
 import apply.application.MissionResponse
 import apply.application.MissionService
-import apply.application.MyMissionResponse
+import apply.application.MyMissionAndJudgementResponse
 import apply.application.MyMissionService
 import apply.domain.member.Member
 import apply.security.LoginMember
@@ -58,7 +58,7 @@ class MissionRestController(
     fun findMyMissionsByRecruitmentId(
         @PathVariable recruitmentId: Long,
         @LoginMember member: Member
-    ): ResponseEntity<ApiResponse<List<MyMissionResponse>>> {
+    ): ResponseEntity<ApiResponse<List<MyMissionAndJudgementResponse>>> {
         val responses = missionQueryService.findAllByMemberIdAndRecruitmentId(member.id, recruitmentId)
         return ResponseEntity.ok(ApiResponse.success(responses))
     }

@@ -25,12 +25,12 @@ class MyMissionService(
     private val assignmentRepository: AssignmentRepository,
     private val judgmentRepository: JudgmentRepository
 ) {
-    fun findAllByMemberIdAndRecruitmentId(memberId: Long, recruitmentId: Long): List<MyMissionResponse> {
+    fun findAllByMemberIdAndRecruitmentId(memberId: Long, recruitmentId: Long): List<MyMissionAndJudgementResponse> {
         val missions = findMissions(memberId, recruitmentId)
         if (missions.isEmpty()) return emptyList()
 
         val assignments = assignmentRepository.findAllByMemberId(memberId)
-        if (assignments.isEmpty()) return missions.map(::MyMissionResponse)
+        if (assignments.isEmpty()) return missions.map(::MyMissionAndJudgementResponse)
 
         val judgmentItems = judgmentItemRepository.findAllByMissionIdIn(missions.map { it.id })
         if (judgmentItems.isEmpty()) return missions.mapBy(assignments)
@@ -46,10 +46,10 @@ class MyMissionService(
         return missionRepository.findAllByEvaluationIdIn(targets.map { it.id }).filterNot { it.hidden }
     }
 
-    private fun List<Mission>.mapBy(assignments: List<Assignment>): List<MyMissionResponse> {
+    private fun List<Mission>.mapBy(assignments: List<Assignment>): List<MyMissionAndJudgementResponse> {
         return map { mission ->
             val assignment = assignments.find { it.missionId == mission.id }
-            MyMissionResponse(mission, assignment != null)
+            MyMissionAndJudgementResponse(mission, assignment != null)
         }
     }
 
@@ -57,12 +57,12 @@ class MyMissionService(
         assignments: List<Assignment>,
         judgmentItems: List<JudgmentItem>,
         judgments: List<Judgment>
-    ): List<MyMissionResponse> {
+    ): List<MyMissionAndJudgementResponse> {
         return map { mission ->
             val assignment = assignments.find { it.missionId == mission.id }
             val judgmentItem = judgmentItems.find { it.missionId == mission.id }
             val judgment = judgments.findLastJudgment(assignment, judgmentItem)
-            MyMissionResponse(
+            MyMissionAndJudgementResponse(
                 mission = mission,
                 submitted = assignment != null,
                 runnable = assignment != null && judgmentItem != null,

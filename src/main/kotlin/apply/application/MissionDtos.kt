@@ -95,7 +95,7 @@ data class MissionResponse(
     )
 }
 
-data class MyMissionResponse(
+data class MyMissionAndJudgementResponse(
     val id: Long,
     val title: String,
     val description: String,
