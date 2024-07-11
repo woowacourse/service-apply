@@ -15,17 +15,8 @@ type MyMissionItemProps = {
 
 const MyMissionItem = ({ mission, recruitmentId }: MyMissionItemProps) => {
   const {
-    getter: {
-      missionItem,
-      applyButtonLabel,
-      formattedStartDateTime,
-      formattedEndDateTime,
-      isJudgmentAvailable,
-      isRefreshAvailable,
-    },
+    getter: { missionItem, applyButtonLabel, formattedStartDateTime, formattedEndDateTime },
     routeToAssignmentSubmit,
-    requestRefresh,
-    requestMissionJudgment,
   } = useMission({ mission, recruitmentId });
 
   return (
@@ -51,26 +42,11 @@ const MyMissionItem = ({ mission, recruitmentId }: MyMissionItemProps) => {
           </ul>
         </div>
         <hr className={styles["divider"]} />
-        <MissionDetail judgment={missionItem.judgment}>
-          <ul>
-            {isRefreshAvailable && (
-              <li>
-                <Button className={buttonStyles["refresh-button"]} onClick={requestRefresh}>
-                  새로고침
-                </Button>
-              </li>
-            )}
-            <li>
-              <Button
-                className={buttonStyles["judgment-button"]}
-                disabled={!isJudgmentAvailable}
-                onClick={requestMissionJudgment}
-              >
-                예제 테스트 실행
-              </Button>
-            </li>
-          </ul>
-        </MissionDetail>
+        <MissionDetail
+          mission={mission}
+          recruitmentId={recruitmentId}
+          judgment={missionItem.judgment}
+        />
       </div>
     </div>
   );

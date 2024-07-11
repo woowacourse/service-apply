@@ -1,21 +1,48 @@
-import { PropsWithChildren } from "react";
 import { Mission } from "../../../../types/domains/recruitments";
 import { MY_MISSION_TOOLTIP_MESSAGE } from "../../../constants/messages";
-import Tooltip from "../../@common/Tooltip/Tooltip";
+import Button from "../../@common/Button/Button";
 import CommitHash from "../CommitHash/CommitHash";
 import JudgmentResultText from "../JudgmentResult/JudgmentResult";
+import Tooltip from "../../@common/Tooltip/Tooltip";
+import useMission from "../MyMissionItem/useMission";
+import buttonStyles from "../MyMissionItem/ApplicationButtonStyles.module.css";
 import styles from "./MissionDetail.module.css";
 
-type MissionDetailProps = PropsWithChildren<{
+type MissionDetailProps = {
+  mission: Mission;
+  recruitmentId: string;
   judgment: Mission["judgment"];
-}>;
+};
 
-const MissionDetail = ({ judgment, children }: MissionDetailProps) => {
+const MissionDetail = ({ mission, recruitmentId, judgment }: MissionDetailProps) => {
+  const {
+    getter: { isJudgmentAvailable, isRefreshAvailable },
+    requestRefresh,
+    requestMissionJudgment,
+  } = useMission({ mission, recruitmentId });
+
   return (
     <div className={styles["detail-container"]}>
       <div className={styles["detail-status-container"]}>
         <JudgmentResultText judgment={judgment} />
-        <div>{children}</div>
+        <ul>
+          {isRefreshAvailable && (
+            <li>
+              <Button className={buttonStyles["refresh-button"]} onClick={requestRefresh}>
+                새로고침
+              </Button>
+            </li>
+          )}
+          <li>
+            <Button
+              className={buttonStyles["judgment-button"]}
+              disabled={!isJudgmentAvailable}
+              onClick={requestMissionJudgment}
+            >
+              예제 테스트 실행
+            </Button>
+          </li>
+        </ul>
       </div>
       <CommitHash judgment={judgment} />
       <div className={styles["guide-container"]}>
