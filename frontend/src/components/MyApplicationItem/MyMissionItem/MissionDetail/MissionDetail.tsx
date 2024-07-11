@@ -1,11 +1,11 @@
-import { Mission } from "../../../../types/domains/recruitments";
-import { MY_MISSION_TOOLTIP_MESSAGE } from "../../../constants/messages";
-import Button from "../../@common/Button/Button";
-import CommitHash from "../CommitHash/CommitHash";
-import JudgmentResultText from "../JudgmentResult/JudgmentResult";
-import Tooltip from "../../@common/Tooltip/Tooltip";
-import useMission from "../MyMissionItem/useMission";
-import buttonStyles from "../MyMissionItem/ApplicationButtonStyles.module.css";
+import { Mission } from "../../../../../types/domains/recruitments";
+import { MY_MISSION_TOOLTIP_MESSAGE } from "../../../../constants/messages";
+import Button from "../../../@common/Button/Button";
+import CommitHash from "../../CommitHash/CommitHash";
+import JudgmentResultText from "../../JudgmentResult/JudgmentResult";
+import Tooltip from "../../../@common/Tooltip/Tooltip";
+import useMission from "../useMission";
+import buttonStyles from "../ApplicationButtonStyles.module.css";
 import styles from "./MissionDetail.module.css";
 
 type MissionDetailProps = {

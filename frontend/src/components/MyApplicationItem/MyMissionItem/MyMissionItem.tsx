@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { Mission } from "../../../../types/domains/recruitments";
 import { MISSION_STATUS } from "../../../constants/recruitment";
-import MissionDetail from "../MissionDetail/MissionDetail";
+import MissionDetail from "./MissionDetail/MissionDetail";
 import styles from "../MyApplicationItem.module.css";
 import buttonStyles from "./ApplicationButtonStyles.module.css";
 import RecruitmentDetail from "../RecruitmentDetail/RecruitmentDetail";
