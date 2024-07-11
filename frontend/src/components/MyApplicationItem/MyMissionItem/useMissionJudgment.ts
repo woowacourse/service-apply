@@ -41,7 +41,6 @@ const useMissionJudgment = ({ missionItem, recruitmentId }: MissionJudgementProp
 
   return {
     isJudgmentAvailable,
-
     fetchJudgmentMissionResult,
   };
 };
