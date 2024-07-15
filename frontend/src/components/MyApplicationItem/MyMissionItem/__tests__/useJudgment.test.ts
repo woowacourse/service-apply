@@ -65,7 +65,7 @@ describe("useMissionJudgment 훅 테스트", () => {
       });
     });
 
-    describe("미션 상태에 따른 판정 가능 여부", () => {
+    describe("미션 상태에 따른 채점 요청 가능 여부", () => {
       it("미션 상태가 제출 기간 이후 시점(ENDED)일 때 false를 반환해야 한다", () => {
         expectJudgmentAvailability({ status: MISSION_STATUS.ENDED }, false);
       });
@@ -77,7 +77,7 @@ describe("useMissionJudgment 훅 테스트", () => {
   });
 
   describe("fetchJudgmentMissionResult 테스트", () => {
-    it("판정 결과를 성공적으로 가져와야 한다", async () => {
+    it("채점 결과를 성공적으로 가져와야 한다", async () => {
       const SAMPLE_PASS_COUNT = 8;
       const SAMPLE_TOTAL_COUNT = 10;
 
@@ -113,8 +113,8 @@ describe("useMissionJudgment 훅 테스트", () => {
       });
     });
 
-    it("판정 결과 가져오기 실패 시 에러를 던져야 한다", async () => {
-      const errorMessage = "판정 결과를 가져오는 데 실패했습니다.";
+    it("채점 결과 가져오기 실패 시 에러를 던져야 한다", async () => {
+      const errorMessage = "채점 결과를 가져오는 데 실패했습니다.";
       const mockError = { response: { data: { message: errorMessage } } };
       (postMyMissionJudgment as jest.Mock).mockRejectedValue(mockError);
 
