@@ -31,11 +31,11 @@
   flex: 1;
 }
 
-.title-button-list {
+ul.title-button-list {
   display: flex;
 }
 
-.title-button-list li:not(:last-child) {
+ul.title-button-list > li:not(:last-child) {
   margin-right: 0.4rem;
 }
 
@@ -45,11 +45,11 @@
     gap: 0.875rem;
   }
 
-  .title-button-list > li {
+  ul.title-button-list > li {
     flex: 1;
   }
 
-  .title-button-list > li > button {
+  ul.title-button-list > li > button {
     width: 100%;
   }
 }
