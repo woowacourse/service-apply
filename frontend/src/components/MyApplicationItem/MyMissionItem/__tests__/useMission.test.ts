@@ -81,7 +81,7 @@ describe("useMission", () => {
 
   describe("라우팅 테스트", () => {
     const mockMission = createMissionItem();
-    it("미션 과제제출물 미제출 시, 'new' 상태로 과제 제출 페이지로 이동해야 한다", () => {
+    it("미션 과제 제출물 미제출 시, 'new' 상태로 과제 제출 페이지로 이동해야 한다", () => {
       const mockNavigate = jest.fn();
       (useNavigate as jest.Mock).mockReturnValue(mockNavigate);
 
@@ -110,7 +110,7 @@ describe("useMission", () => {
       );
     });
 
-    it("미션 과제제출물 제출 시, 'edit' 상태로 과제 제출 페이지로 이동해야 한다", () => {
+    it("미션 과제 제출물 제출 시, 'edit' 상태로 과제 제출 페이지로 이동해야 한다", () => {
       const mockNavigate = jest.fn();
       (useNavigate as jest.Mock).mockReturnValue(mockNavigate);
 
@@ -141,10 +141,10 @@ describe("useMission", () => {
     });
   });
   describe("데이터 갱신 테스트", () => {
-    describe("requestRefresh 함수 테스트", () => {
+    describe("채점 결과 새로고침 함수 테스트", () => {
       const mockMission = createMissionItem();
 
-      it("fetchRefreshedResultData 성공 시 missionItem 상태를 갱신해야 한다", async () => {
+      it("채점 결과 새로고침 요청에 성공하면, missionItem 상태를 갱신해야 한다", async () => {
         const { result } = renderHook(() =>
           useMission({ mission: mockMission, recruitmentId: mockRecruitmentId })
         );
@@ -156,7 +156,7 @@ describe("useMission", () => {
         expect(result.current.getter.missionItem.title).toBe("Refreshed Mission");
       });
 
-      it("fetchRefreshedResultData 실패 시 에러 메시지를 보여줘야 한다.", async () => {
+      it("채점 결과 새로고침 요청에 실패하면, 에러 메시지를 보여줘야 한다.", async () => {
         const errorMessage = "Refresh failed";
         (useRefresh as jest.Mock).mockReturnValue({
           isRefreshAvailable: true,
@@ -177,10 +177,10 @@ describe("useMission", () => {
       });
     });
 
-    describe("requestMissionJudgment 함수 테스트", () => {
+    describe("채점 요청 함수 테스트", () => {
       const mockMission = createMissionItem();
 
-      it("fetchJudgmentMissionResult 성공 시 missionItem 상태를 갱신해야 한다", async () => {
+      it("채점 요청 성공 시 missionItem 상태를 갱신해야 한다", async () => {
         const { result } = renderHook(() =>
           useMission({ mission: mockMission, recruitmentId: mockRecruitmentId })
         );
@@ -192,7 +192,7 @@ describe("useMission", () => {
         expect(result.current.getter.missionItem.title).toBe("Judged Mission");
       });
 
-      it("fetchJudgmentMissionResult 실패 시 에러 메시지를 보여줘야 한다.", async () => {
+      it("채점 요청 실패 시 에러 메시지를 보여줘야 한다.", async () => {
         const errorMessage = "Judgment failed";
         (useMissionJudgment as jest.Mock).mockReturnValue({
           isJudgmentAvailable: true,

@@ -26,8 +26,8 @@ describe("useRefresh", () => {
     (isJudgmentTimedOut as jest.Mock).mockReturnValue(false);
   });
 
-  describe("isRefreshAvailable 테스트", () => {
-    describe("false를 반환하는 경우", () => {
+  describe("채점 결과 새로고침 가능 여부 테스트", () => {
+    describe("새로고침이 불가능한 경우", () => {
       it("recruitmentId가 undefined일 때", () => {
         const { result } = renderHook(() =>
           useRefresh({ recruitmentId: undefined, missionItem: createMissionItem() })
@@ -36,7 +36,7 @@ describe("useRefresh", () => {
         expect(result.current.isRefreshAvailable).toBe(false);
       });
 
-      it("missionItem.id가 없을 때", () => {
+      it("missionItem의 id 값이 없을 때", () => {
         const { result } = renderHook(() =>
           useRefresh({
             recruitmentId: mockRecruitmentId,
@@ -47,7 +47,7 @@ describe("useRefresh", () => {
         expect(result.current.isRefreshAvailable).toBe(false);
       });
 
-      it("missionItem.judgment가 null일 때", () => {
+      it("missionItem의 채점 정보가 null일 때", () => {
         const { result } = renderHook(() =>
           useRefresh({
             recruitmentId: mockRecruitmentId,
@@ -58,7 +58,7 @@ describe("useRefresh", () => {
         expect(result.current.isRefreshAvailable).toBe(false);
       });
 
-      it("judgment.status가 STARTED가 아닐 때", () => {
+      it("채점 상태가 시작된 상태가 아닐 때", () => {
         const { result } = renderHook(() =>
           useRefresh({
             recruitmentId: mockRecruitmentId,
@@ -72,7 +72,7 @@ describe("useRefresh", () => {
         expect(result.current.isRefreshAvailable).toBe(false);
       });
 
-      it("missionItem.status가 SUBMITTING이 아닐 때", () => {
+      it("미션 상태가 제출 기간 중이 아닐 때", () => {
         const { result } = renderHook(() =>
           useRefresh({
             recruitmentId: mockRecruitmentId,
@@ -83,7 +83,7 @@ describe("useRefresh", () => {
         expect(result.current.isRefreshAvailable).toBe(false);
       });
 
-      it("isJudgmentTimedOut이 true를 반환할 때", () => {
+      it("채점 시 타임아웃이 발생했을 때", () => {
         (isJudgmentTimedOut as jest.Mock).mockReturnValue(true);
 
         const { result } = renderHook(() =>
@@ -94,7 +94,7 @@ describe("useRefresh", () => {
       });
     });
 
-    describe("true를 반환하는 경우", () => {
+    describe("새로고침이 가능한 경우", () => {
       it("모든 조건이 충족될 때 true를 반환해야 한다", () => {
         const { result } = renderHook(() =>
           useRefresh({ recruitmentId: mockRecruitmentId, missionItem: createMissionItem() })
@@ -105,8 +105,8 @@ describe("useRefresh", () => {
     });
   });
 
-  describe("fetchRefreshedResultData 테스트", () => {
-    it("refreshedResultData를 성공적으로 가져와야 한다", async () => {
+  describe("채점 새로고침 테스트", () => {
+    it("채점 새로고침이 성공하면, 관련된 데이터를 성공적으로 가져와야 한다", async () => {
       const SAMPLE_PASS_COUNT = 8;
       const SAMPLE_TOTAL_COUNT = 10;
       const mockResponse = {
@@ -143,7 +143,7 @@ describe("useRefresh", () => {
       });
     });
 
-    it("refreshedResultData 가져오기 실패 시 에러 메시지를 보여줘야 한다", async () => {
+    it("채점 새로고침이 실패하면, 에러 메시지를 보여줘야 한다", async () => {
       const errorMessage = "데이터를 가져오는 데 실패했습니다.";
       const mockError = { response: { data: { message: errorMessage } } };
       (fetchMyMissionJudgment as jest.Mock).mockRejectedValue(mockError);
