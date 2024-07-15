@@ -8,6 +8,8 @@ import useMission from "../useMission";
 import buttonStyles from "../ApplicationButtonStyles.module.css";
 import styles from "./MissionDetail.module.css";
 import { BUTTON_LABEL } from "../../../../constants/recruitment";
+import useRefresh from "../useRefresh";
+import useMissionJudgment from "../useMissionJudgment";
 
 type MissionDetailProps = {
   mission: Mission;
@@ -17,10 +19,38 @@ type MissionDetailProps = {
 
 const MissionDetail = ({ mission, recruitmentId, judgment }: MissionDetailProps) => {
   const {
-    getter: { isJudgmentAvailable, isRefreshAvailable },
-    requestRefresh,
-    requestMissionJudgment,
+    getter: { missionItem },
+    setter: { setMissionItem },
   } = useMission({ mission, recruitmentId });
+
+  const { isJudgmentAvailable, fetchJudgmentMissionResult } = useMissionJudgment({
+    missionItem,
+    recruitmentId: Number(recruitmentId),
+  });
+
+  const { isRefreshAvailable, fetchRefreshedResultData } = useRefresh({
+    missionItem,
+    recruitmentId: Number(recruitmentId),
+  });
+
+  const requestRefresh = async () => {
+    try {
+      const result = await fetchRefreshedResultData();
+      setMissionItem(result);
+    } catch (error) {
+      error instanceof Error && alert(error.message);
+    }
+  };
+
+  const requestMissionJudgment = async () => {
+    try {
+      const result = await fetchJudgmentMissionResult();
+
+      setMissionItem(result);
+    } catch (error) {
+      error instanceof Error && alert(error.message);
+    }
+  };
 
   return (
     <div className={styles["detail-container"]}>

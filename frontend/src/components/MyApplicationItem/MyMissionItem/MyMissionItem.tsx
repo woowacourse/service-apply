@@ -7,6 +7,8 @@ import buttonStyles from "./ApplicationButtonStyles.module.css";
 import RecruitmentDetail from "../RecruitmentDetail/RecruitmentDetail";
 import useMission from "./useMission";
 import Button from "../../@common/Button/Button";
+import { generatePath, useNavigate } from "react-router-dom";
+import { PARAM, PATH } from "../../../constants/path";
 
 type MyMissionItemProps = {
   mission: Mission;
@@ -14,10 +16,31 @@ type MyMissionItemProps = {
 };
 
 const MyMissionItem = ({ mission, recruitmentId }: MyMissionItemProps) => {
+  const navigate = useNavigate();
+
   const {
     getter: { missionItem, applyButtonLabel, formattedStartDateTime, formattedEndDateTime },
-    routeToAssignmentSubmit,
   } = useMission({ mission, recruitmentId });
+
+  const routeToAssignmentSubmit =
+    ({ recruitmentId, mission }: { recruitmentId: string; mission: Mission }) =>
+    () => {
+      const isSubmitted = mission.submitted;
+
+      navigate(
+        {
+          pathname: generatePath(PATH.ASSIGNMENT, {
+            status: isSubmitted ? PARAM.ASSIGNMENT_STATUS.EDIT : PARAM.ASSIGNMENT_STATUS.NEW,
+          }),
+        },
+        {
+          state: {
+            recruitmentId,
+            currentMission: mission,
+          },
+        }
+      );
+    };
 
   return (
     <div className={classNames(styles["content-box"])}>
