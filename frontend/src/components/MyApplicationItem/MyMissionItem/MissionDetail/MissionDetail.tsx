@@ -7,6 +7,7 @@ import Tooltip from "../../../@common/Tooltip/Tooltip";
 import useMission from "../useMission";
 import buttonStyles from "../ApplicationButtonStyles.module.css";
 import styles from "./MissionDetail.module.css";
+import { BUTTON_LABEL } from "../../../../constants/recruitment";
 
 type MissionDetailProps = {
   mission: Mission;
@@ -29,7 +30,7 @@ const MissionDetail = ({ mission, recruitmentId, judgment }: MissionDetailProps)
           {isRefreshAvailable && (
             <li>
               <Button className={buttonStyles["refresh-button"]} onClick={requestRefresh}>
-                새로고침
+                {BUTTON_LABEL.REFRESH}
               </Button>
             </li>
           )}
@@ -39,7 +40,7 @@ const MissionDetail = ({ mission, recruitmentId, judgment }: MissionDetailProps)
               disabled={!isJudgmentAvailable}
               onClick={requestMissionJudgment}
             >
-              예제 테스트 실행
+              {BUTTON_LABEL.JUDGMENT}
             </Button>
           </li>
         </ul>

@@ -3,15 +3,9 @@ import { MemoryRouter } from "react-router-dom";
 import MyMissionItem from "../MyMissionItem";
 import * as useMissionModule from "../useMission";
 import { createMockMission } from "./testMissionMockUtils";
-import { MISSION_STATUS } from "../../../../constants/recruitment";
+import { BUTTON_LABEL, MISSION_STATUS } from "../../../../constants/recruitment";
 
 jest.mock("../useMission");
-
-const LABELS = {
-  APPLY: "과제 제출",
-  REFRESH: "새로고침",
-  JUDGMENT: "예제 테스트 실행",
-};
 
 describe("MyMissionItem 통합 테스트", () => {
   const mockRecruitmentId = "123";
@@ -20,7 +14,7 @@ describe("MyMissionItem 통합 테스트", () => {
   const mockUseMission = {
     getter: {
       missionItem: mockMission,
-      applyButtonLabel: LABELS.APPLY,
+      applyButtonLabel: BUTTON_LABEL.APPLY,
       formattedStartDateTime: "2023-01-01 00:00",
       formattedEndDateTime: "2023-12-31 23:59",
       isJudgmentAvailable: true,
@@ -44,9 +38,9 @@ describe("MyMissionItem 통합 테스트", () => {
       );
 
       expect(screen.getByText(mockMission.title)).toBeInTheDocument();
-      expect(screen.getByText(LABELS.APPLY)).toBeInTheDocument();
-      expect(screen.getByText(LABELS.REFRESH)).toBeInTheDocument();
-      expect(screen.getByText(LABELS.JUDGMENT)).toBeInTheDocument();
+      expect(screen.getByText(BUTTON_LABEL.APPLY)).toBeInTheDocument();
+      expect(screen.getByText(BUTTON_LABEL.REFRESH)).toBeInTheDocument();
+      expect(screen.getByText(BUTTON_LABEL.JUDGMENT)).toBeInTheDocument();
     });
 
     it("미션 상태가 SUBMITTING이 아닐 때 과제 제출 버튼이 비활성화되어야 한다", () => {
@@ -62,7 +56,7 @@ describe("MyMissionItem 통합 테스트", () => {
         </MemoryRouter>
       );
 
-      expect(screen.getByText(LABELS.APPLY)).toBeDisabled();
+      expect(screen.getByText(BUTTON_LABEL.APPLY)).toBeDisabled();
     });
 
     it("judgment가 없을 때 새로고침 버튼이 보이지 않아야 한다", () => {
@@ -82,7 +76,7 @@ describe("MyMissionItem 통합 테스트", () => {
         </MemoryRouter>
       );
 
-      expect(screen.queryByText(LABELS.REFRESH)).not.toBeInTheDocument();
+      expect(screen.queryByText(BUTTON_LABEL.REFRESH)).not.toBeInTheDocument();
     });
 
     it("isJudgmentAvailable이 false일 때 예제 테스트 실행 버튼이 비활성화되어야 한다", () => {
@@ -97,7 +91,7 @@ describe("MyMissionItem 통합 테스트", () => {
         </MemoryRouter>
       );
 
-      expect(screen.getByText(LABELS.JUDGMENT)).toBeDisabled();
+      expect(screen.getByText(BUTTON_LABEL.JUDGMENT)).toBeDisabled();
     });
   });
 
@@ -109,7 +103,7 @@ describe("MyMissionItem 통합 테스트", () => {
         </MemoryRouter>
       );
 
-      fireEvent.click(screen.getByText(LABELS.APPLY));
+      fireEvent.click(screen.getByText(BUTTON_LABEL.APPLY));
       expect(mockUseMission.routeToAssignmentSubmit).toHaveBeenCalled();
     });
 
@@ -120,7 +114,7 @@ describe("MyMissionItem 통합 테스트", () => {
         </MemoryRouter>
       );
 
-      fireEvent.click(screen.getByText(LABELS.REFRESH));
+      fireEvent.click(screen.getByText(BUTTON_LABEL.REFRESH));
       await waitFor(() => {
         expect(mockUseMission.requestRefresh).toHaveBeenCalled();
       });
@@ -133,7 +127,7 @@ describe("MyMissionItem 통합 테스트", () => {
         </MemoryRouter>
       );
 
-      fireEvent.click(screen.getByText(LABELS.JUDGMENT));
+      fireEvent.click(screen.getByText(BUTTON_LABEL.JUDGMENT));
       await waitFor(() => {
         expect(mockUseMission.requestMissionJudgment).toHaveBeenCalled();
       });
