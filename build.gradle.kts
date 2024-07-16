@@ -6,7 +6,7 @@ plugins {
     kotlin("jvm")
     kotlin("plugin.spring")
     kotlin("plugin.jpa")
-    id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
+//    id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
     id("com.vaadin") version "0.8.0"
     id("org.asciidoctor.jvm.convert") version "3.3.2"
     id("org.flywaydb.flyway") version "7.15.0"
@@ -62,6 +62,7 @@ dependencies {
     testImplementation("com.ninja-squad:springmockk:3.1.2")
     testImplementation("io.kotest:kotest-runner-junit5:5.4.2")
     testImplementation("io.kotest.extensions:kotest-extensions-spring:1.1.2")
+    implementation("net.bytebuddy:byte-buddy:1.14.18")
 }
 
 dependencyManagement {
@@ -80,10 +81,10 @@ tasks {
             jvmTarget = "1.8"
         }
     }
-    ktlint {
-        verbose.set(true)
-        disabledRules.addAll("import-ordering")
-    }
+//    ktlint {
+//        verbose.set(true)
+//        disabledRules.addAll("import-ordering")
+//    }
     flyway {
         url = "jdbc:mysql://localhost:53306/apply?characterEncoding=UTF-8&serverTimezone=UTC"
         user = "user"
@@ -91,7 +92,7 @@ tasks {
     }
     test {
         useJUnitPlatform()
-        outputs.dir(snippetsDir)
+//        outputs.dir(snippetsDir)
     }
     asciidoctor {
         inputs.dir(snippetsDir)
@@ -104,10 +105,10 @@ tasks {
         from("${asciidoctor.get().outputDir}/index.html")
         into("src/main/resources/static/docs")
     }
-    bootJar {
-        dependsOn(asciidoctor)
-        from("${asciidoctor.get().outputDir}/index.html") {
-            into("static/docs")
-        }
-    }
+//    bootJar {
+//        dependsOn(asciidoctor)
+//        from("${asciidoctor.get().outputDir}/index.html") {
+//            into("static/docs")
+//        }
+//    }
 }
