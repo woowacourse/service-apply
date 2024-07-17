@@ -65,12 +65,13 @@ class MissionsFormView(
 
     private fun createSubmitButton(): Button {
         return createPrimaryButton {
-            val missionData = getDataFromMissionForm()
-            try {
-                missionService.save(missionData)
-                UI.getCurrent().navigate(MissionsView::class.java, recruitmentId)
-            } catch (e: Exception) {
-                createNotification(e.localizedMessage)
+            handleMissionData { mission ->
+                try {
+                    missionService.save(mission)
+                    UI.getCurrent().navigate(MissionsView::class.java, recruitmentId)
+                } catch (e: Exception) {
+                    createNotification(e.localizedMessage)
+                }
             }
         }
     }
@@ -83,16 +84,19 @@ class MissionsFormView(
 
     private fun createPreviewButton(): Button {
         return createContrastButton("미리보기") {
-            val result = getDataFromMissionForm()
-            val body = missionService.parseDescription(result)
-            MissionPreviewDialog(body)
+            handleMissionData { mission ->
+                val body = missionService.parseDescription(mission)
+                MissionPreviewDialog(body)
+            }
         }
     }
 
-    private fun getDataFromMissionForm(): MissionData {
-        return missionForm.bindOrNull() ?: run {
+    private fun handleMissionData(action: (MissionData) -> Unit) {
+        val result = missionForm.bindOrNull()
+        if (result == null) {
             createNotification(DATA_NOT_BIND_MESSAGE)
-            throw IllegalArgumentException(DATA_NOT_BIND_MESSAGE)
+        } else {
+            action(result)
         }
     }
 }
