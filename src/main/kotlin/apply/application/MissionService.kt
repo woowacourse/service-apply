@@ -11,6 +11,7 @@ import apply.domain.mission.getOrThrow
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import support.markdownToEmbeddedHtml
 
 @Transactional
 @Service
@@ -121,18 +122,7 @@ class MissionService(
             ?: EvaluationItemSelectData()
     }
 
-    fun parseDescription(missionData: MissionData): String {
-        val mission = Mission(
-            missionData.title,
-            missionData.description,
-            missionData.evaluation.id,
-            missionData.startDateTime,
-            missionData.endDateTime,
-            missionData.submittable,
-            missionData.hidden,
-            missionData.id
-        )
-
-        return mission.formattedDescription
+    fun parseDescription(description: String): String {
+        return markdownToEmbeddedHtml(description)
     }
 }

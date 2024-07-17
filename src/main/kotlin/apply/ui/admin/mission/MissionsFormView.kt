@@ -85,8 +85,8 @@ class MissionsFormView(
     private fun createPreviewButton(): Button {
         return createContrastButton("미리보기") {
             handleMissionData { mission ->
-                val body = missionService.parseDescription(mission)
-                MissionPreviewDialog(body)
+                val formattedDescription = missionService.parseDescription(mission.description)
+                MissionPreviewDialog(formattedDescription)
             }
         }
     }
