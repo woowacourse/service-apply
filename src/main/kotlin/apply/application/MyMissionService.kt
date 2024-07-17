@@ -15,6 +15,7 @@ import apply.domain.mission.MissionRepository
 import apply.domain.mission.getOrThrow
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import support.markdownToEmbeddedHtml
 
 @Transactional(readOnly = true)
 @Service
@@ -108,6 +109,7 @@ class MyMissionService(
         return MyMissionResponse(
             mission = mission,
             submitted = assignment != null,
+            markdownToEmbeddedHtml(mission.description),
         )
     }
 }
