@@ -98,7 +98,6 @@ data class MissionResponse(
 data class MyMissionAndJudgementResponse(
     val id: Long,
     val title: String,
-    val description: String,
     val submittable: Boolean,
     val submitted: Boolean,
     val startDateTime: LocalDateTime,
@@ -115,7 +114,6 @@ data class MyMissionAndJudgementResponse(
     ) : this(
         mission.id,
         mission.title,
-        mission.description,
         mission.submittable,
         submitted,
         mission.period.startDateTime,

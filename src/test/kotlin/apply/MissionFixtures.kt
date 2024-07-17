@@ -74,7 +74,6 @@ fun createMissionResponse(
 
 fun createMyMissionResponse(
     title: String = MISSION_TITLE,
-    description: String = MISSION_DESCRIPTION,
     submittable: Boolean = true,
     submitted: Boolean = true,
     startDateTime: LocalDateTime = START_DATE_TIME,
@@ -87,7 +86,6 @@ fun createMyMissionResponse(
     return MyMissionAndJudgementResponse(
         id,
         title,
-        description,
         submittable,
         submitted,
         startDateTime,
