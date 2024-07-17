@@ -99,7 +99,7 @@ class MyMissionService(
 
     fun findByMemberIdAndMissionId(memberId: Long, missionId: Long): MyMissionResponse {
         val mission = missionRepository.getOrThrow(missionId)
-        val evaluationTarget = evaluationTargetRepository.findByEvaluationIdAndMemberId(mission.evaluationId, memberId)
+        evaluationTargetRepository.findByEvaluationIdAndMemberId(mission.evaluationId, memberId)
             ?: throw NoSuchElementException("과제 참여 대상자가 아닙니다.")
 
         check(!mission.hidden) { "비공개 상태의 과제입니다." }
