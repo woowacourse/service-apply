@@ -8,7 +8,7 @@ import apply.createLastJudgmentResponse
 import apply.createMission
 import apply.createMissionData
 import apply.createMissionResponse
-import apply.createMyMissionResponse
+import apply.createMyMissionAndJudgementResponse
 import apply.domain.judgment.JudgmentStatus
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
@@ -76,9 +76,9 @@ class MissionRestControllerTest : RestControllerTest() {
     @Test
     fun `나의 과제들을 조회한다`() {
         val responses = listOf(
-            createMyMissionResponse(id = 1L, runnable = false, judgment = null),
-            createMyMissionResponse(id = 2L, runnable = true, judgment = createLastJudgmentResponse()),
-            createMyMissionResponse(
+            createMyMissionAndJudgementResponse(id = 1L, runnable = false, judgment = null),
+            createMyMissionAndJudgementResponse(id = 2L, runnable = true, judgment = createLastJudgmentResponse()),
+            createMyMissionAndJudgementResponse(
                 id = 3L,
                 runnable = true,
                 judgment = createLastJudgmentResponse(passCount = 9, totalCount = 10, status = JudgmentStatus.SUCCEEDED)

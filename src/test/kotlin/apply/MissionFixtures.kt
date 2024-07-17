@@ -72,7 +72,7 @@ fun createMissionResponse(
     )
 }
 
-fun createMyMissionResponse(
+fun createMyMissionAndJudgementResponse(
     title: String = MISSION_TITLE,
     submittable: Boolean = true,
     submitted: Boolean = true,
