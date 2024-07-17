@@ -47,7 +47,7 @@ class MyMissionServiceTest : BehaviorSpec({
         every { assignmentRepository.findByMemberIdAndMissionId(eq(participatedUser.id), any()) } returns createAssignment()
 
         When("요청한 유저가 과제 참여자이면") {
-            val actual = myMissionService.findByUserIdAndMissionId(participatedUser.id, mission.id)
+            val actual = myMissionService.findByMemberIdAndMissionId(participatedUser.id, mission.id)
 
             Then("과제의 상세 내용을 확인할 수 있다") {
                 actual.shouldNotBeNull()
@@ -59,7 +59,7 @@ class MyMissionServiceTest : BehaviorSpec({
         When("요청한 유저가 과제 참여자가 아니면") {
             Then("과제의 상세 내용을 확인할 수 없다") {
                 shouldThrow<NoSuchElementException> {
-                    myMissionService.findByUserIdAndMissionId(notParticipatedUser.id, mission.id)
+                    myMissionService.findByMemberIdAndMissionId(notParticipatedUser.id, mission.id)
                 }
             }
         }
@@ -78,7 +78,7 @@ class MyMissionServiceTest : BehaviorSpec({
         When("요청한 유저가 과제 참여자이면") {
             Then("과제 상태로 인한 예외로 상세 내용을 확인할 수 없다") {
                 shouldThrow<IllegalStateException> {
-                    myMissionService.findByUserIdAndMissionId(participatedUser.id, mission.id)
+                    myMissionService.findByMemberIdAndMissionId(participatedUser.id, mission.id)
                 }
             }
         }
@@ -86,7 +86,7 @@ class MyMissionServiceTest : BehaviorSpec({
         When("요청한 유저가 과제 참여자가 아니면") {
             Then("참여 대상자가 아니기 때문에 발생한 예외로 상세 내용을 확인할 수 없다") {
                 shouldThrow<NoSuchElementException> {
-                    myMissionService.findByUserIdAndMissionId(notParticipatedUser.id, mission.id)
+                    myMissionService.findByMemberIdAndMissionId(notParticipatedUser.id, mission.id)
                 }
             }
         }

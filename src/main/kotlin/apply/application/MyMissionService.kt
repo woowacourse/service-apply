@@ -97,7 +97,7 @@ class MyMissionService(
         )
     }
 
-    fun findByUserIdAndMissionId(memberId: Long, missionId: Long): MyMissionResponse {
+    fun findByMemberIdAndMissionId(memberId: Long, missionId: Long): MyMissionResponse {
         val mission = missionRepository.getOrThrow(missionId)
         val evaluationTarget = evaluationTargetRepository.findByEvaluationIdAndMemberId(mission.evaluationId, memberId)
             ?: throw NoSuchElementException("과제 참여 대상자가 아닙니다.")

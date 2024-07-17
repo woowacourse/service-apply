@@ -70,7 +70,7 @@ class MissionRestController(
         @PathVariable missionId: Long,
         @LoginMember member: Member
     ): ResponseEntity<ApiResponse<MyMissionResponse>> {
-        val response = missionQueryService.findByUserIdAndMissionId(member.id, missionId)
+        val response = missionQueryService.findByMemberIdAndMissionId(member.id, missionId)
         return ResponseEntity.ok(ApiResponse.success(response))
     }
 
