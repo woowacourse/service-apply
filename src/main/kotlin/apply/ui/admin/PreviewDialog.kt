@@ -1,4 +1,4 @@
-package apply.ui.admin.mission
+package apply.ui.admin
 
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.Html
@@ -8,31 +8,29 @@ import com.vaadin.flow.component.html.H2
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
+import org.jsoup.Jsoup
 import support.views.createContrastButton
 
-class MissionPreviewDialog(
-    htmlString: String
+class PreviewDialog(
+    htmlText: String
 ) : Dialog() {
     init {
-        add(createHeader(), createHtmlComponentFrom(htmlString), createButtons())
+        add(createHeader(), createContent(htmlText), createButtons())
         width = "700px"
         height = "800px"
         open()
     }
 
     private fun createHeader(): VerticalLayout {
-        return VerticalLayout(H2("과제 설명 미리보기")).apply {
+        return VerticalLayout(H2("미리 보기")).apply {
             isPadding = false
-            val style = element.style
-            style.set("margin-bottom", "10px")
-            style["margin-bottom"] = "10px"
             element.style["margin-bottom"] = "10px"
         }
     }
 
-    private fun createHtmlComponentFrom(htmlString: String): Component {
-        val wrappedHtmlString = "<div>$htmlString</div>"
-        return Html(wrappedHtmlString).apply {
+    private fun createContent(htmlText: String): Component {
+        val body = Jsoup.parse(htmlText).body()
+        return Html(body.html()).apply {
             element.style["display"] = "block"
             element.style["height"] = "600px"
             element.style["overflow"] = "auto"

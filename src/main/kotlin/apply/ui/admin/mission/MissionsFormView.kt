@@ -4,6 +4,7 @@ import apply.application.EvaluationService
 import apply.application.MissionData
 import apply.application.MissionService
 import apply.ui.admin.BaseLayout
+import apply.ui.admin.PreviewDialog
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.button.Button
@@ -86,7 +87,7 @@ class MissionsFormView(
         return createContrastButton("미리보기") {
             handleMissionData { mission ->
                 val formattedDescription = missionService.parseDescription(mission.description)
-                MissionPreviewDialog(formattedDescription)
+                PreviewDialog("<div>$formattedDescription</div>")
             }
         }
     }
