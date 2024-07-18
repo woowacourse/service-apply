@@ -42,6 +42,9 @@ class Mission(
     val isSubmitting: Boolean
         get() = status == MissionStatus.SUBMITTING
 
+    val isDescriptionViewable: Boolean
+        get() = !hidden && (status == MissionStatus.SUBMITTING || status == MissionStatus.UNSUBMITTABLE)
+
     constructor(
         title: String,
         description: String,
