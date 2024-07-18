@@ -6,6 +6,7 @@ import apply.application.LastJudgmentResponse
 import apply.application.MissionData
 import apply.application.MissionResponse
 import apply.application.MyMissionAndJudgementResponse
+import apply.application.MyMissionResponse
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionStatus
 import java.time.LocalDateTime
@@ -93,5 +94,27 @@ fun createMyMissionAndJudgementResponse(
         missionStatus,
         runnable,
         judgment
+    )
+}
+
+fun createMyMissionResponse(
+    title: String = MISSION_TITLE,
+    description: String = MISSION_DESCRIPTION,
+    submittable: Boolean = true,
+    startDateTime: LocalDateTime = START_DATE_TIME,
+    endDateTime: LocalDateTime = END_DATE_TIME,
+    missionStatus: MissionStatus = MissionStatus.SUBMITTING,
+    submitted: Boolean = true,
+    id: Long = 0L,
+): MyMissionResponse {
+    return MyMissionResponse(
+        id,
+        title,
+        description,
+        submittable,
+        startDateTime,
+        endDateTime,
+        missionStatus,
+        submitted,
     )
 }

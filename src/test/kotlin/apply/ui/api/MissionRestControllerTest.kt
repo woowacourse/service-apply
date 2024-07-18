@@ -9,6 +9,7 @@ import apply.createMission
 import apply.createMissionData
 import apply.createMissionResponse
 import apply.createMyMissionAndJudgementResponse
+import apply.createMyMissionResponse
 import apply.domain.judgment.JudgmentStatus
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
@@ -92,6 +93,22 @@ class MissionRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isOk() }
             content { success(responses) }
+        }.andDo {
+            handle(document("mission-list-me-get"))
+        }
+    }
+
+    @Test
+    fun `나의 과제를 상세 조회한다`() {
+        val response = createMyMissionResponse(id = 1L)
+
+        every { missionQueryService.findByMemberIdAndMissionId(any(), any()) } returns response
+
+        mockMvc.get("/api/recruitments/{recruitmentId}/missions/{missionId}/me", 1L, 1L) {
+            bearer("valid_token")
+        }.andExpect {
+            status { isOk() }
+            content { success(response) }
         }.andDo {
             handle(document("mission-me-get"))
         }
