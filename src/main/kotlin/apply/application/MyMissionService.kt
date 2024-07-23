@@ -99,16 +99,11 @@ class MyMissionService(
 
     fun findByMemberIdAndMissionId(memberId: Long, missionId: Long): MyMissionResponse {
         val mission = missionRepository.getOrThrow(missionId)
-
-        evaluationTargetRepository.findByEvaluationIdAndMemberId(mission.evaluationId, memberId)
-            ?: throw NoSuchElementException("과제가 존재하지 않습니다. id: $missionId")
-
-        if (!mission.isDescriptionViewable) {
+        val evaluationTarget = evaluationTargetRepository.findByEvaluationIdAndMemberId(mission.evaluationId, memberId)
+        if (!mission.isDescriptionViewable || evaluationTarget == null) {
             throw NoSuchElementException("과제가 존재하지 않습니다. id: $missionId")
         }
-
         val assignment = assignmentRepository.findByMemberIdAndMissionId(memberId, missionId)
-
         return MyMissionResponse(
             mission = mission,
             formattedDescription = markdownToEmbeddedHtml(mission.description),
