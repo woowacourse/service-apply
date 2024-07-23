@@ -111,8 +111,8 @@ class MyMissionService(
 
         return MyMissionResponse(
             mission = mission,
+            formattedDescription = markdownToEmbeddedHtml(mission.description),
             submitted = assignment != null,
-            markdownToEmbeddedHtml(mission.description),
         )
     }
 }
