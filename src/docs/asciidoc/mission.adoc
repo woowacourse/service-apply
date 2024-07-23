@@ -4,6 +4,6 @@
 
 operation::mission-list-me-get[snippets='http-request,http-response']
 
-== 내 과제 상세 조회
+== 내 과제 조회
 
 operation::mission-me-get[snippets='http-request,http-response']
