@@ -35,7 +35,7 @@ class MyMissionServiceTest : BehaviorSpec({
         judgmentRepository
     )
 
-    Given("공개 상태의 과제가 있는 경우") {
+    Given("공개된 과제가 있는 경우") {
         val participatedUser = createMember(id = 1L)
         val notParticipatedUser = createMember(id = 2L)
         val mission = createMission()
@@ -46,18 +46,18 @@ class MyMissionServiceTest : BehaviorSpec({
         every { evaluationTargetRepository.findByEvaluationIdAndMemberId(any(), neq(participatedUser.id)) } returns null
         every { assignmentRepository.findByMemberIdAndMissionId(eq(participatedUser.id), any()) } returns createAssignment()
 
-        When("요청한 유저가 과제 참여자이면") {
+        When("요청한 유저가 평가 대상자면") {
             val actual = myMissionService.findByMemberIdAndMissionId(participatedUser.id, mission.id)
 
-            Then("과제의 상세 내용을 확인할 수 있다") {
+            Then("과제 내용을 확인할 수 있다") {
                 actual.shouldNotBeNull()
                 actual.description.shouldNotBeNull()
                 actual.submitted.shouldBeTrue()
             }
         }
 
-        When("요청한 유저가 과제 참여자가 아니면") {
-            Then("과제의 상세 내용을 확인할 수 없다") {
+        When("요청한 유저가 평가 대상자가 아니면") {
+            Then("과제 내용을 확인할 수 없다") {
                 shouldThrow<NoSuchElementException> {
                     myMissionService.findByMemberIdAndMissionId(notParticipatedUser.id, mission.id)
                 }
@@ -65,7 +65,7 @@ class MyMissionServiceTest : BehaviorSpec({
         }
     }
 
-    Given("비공개 상태의 과제가 있는 경우") {
+    Given("비공개된 과제가 있는 경우") {
         val participatedUser = createMember(id = 1L)
         val notParticipatedUser = createMember(id = 2L)
         val mission = createMission(hidden = true)
@@ -75,16 +75,16 @@ class MyMissionServiceTest : BehaviorSpec({
         every { evaluationTargetRepository.findByEvaluationIdAndMemberId(any(), eq(participatedUser.id)) } returns target
         every { evaluationTargetRepository.findByEvaluationIdAndMemberId(any(), neq(participatedUser.id)) } returns null
 
-        When("요청한 유저가 과제 참여자이면") {
-            Then("과제 상태로 인한 예외로 상세 내용을 확인할 수 없다") {
-                shouldThrow<IllegalStateException> {
+        When("요청한 유저가 평가 대상자면") {
+            Then("과제 내용을 확인할 수 없다") {
+                shouldThrow<NoSuchElementException> {
                     myMissionService.findByMemberIdAndMissionId(participatedUser.id, mission.id)
                 }
             }
         }
 
-        When("요청한 유저가 과제 참여자가 아니면") {
-            Then("참여 대상자가 아니기 때문에 발생한 예외로 상세 내용을 확인할 수 없다") {
+        When("요청한 유저가 평가 대상자가 아니면") {
+            Then("과제 내용을 확인할 수 없다") {
                 shouldThrow<NoSuchElementException> {
                     myMissionService.findByMemberIdAndMissionId(notParticipatedUser.id, mission.id)
                 }
