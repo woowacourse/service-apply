@@ -11,6 +11,7 @@ import apply.domain.mission.getOrThrow
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import support.markdownToEmbeddedHtml
 
 @Transactional
 @Service
@@ -119,5 +120,9 @@ class MissionService(
             .findByIdOrNull(evaluationItemId)
             ?.let(::EvaluationItemSelectData)
             ?: EvaluationItemSelectData()
+    }
+
+    fun parseDescription(description: String): String {
+        return markdownToEmbeddedHtml(description)
     }
 }

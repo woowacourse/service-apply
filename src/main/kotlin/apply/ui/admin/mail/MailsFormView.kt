@@ -8,6 +8,7 @@ import apply.application.RecruitmentService
 import apply.application.mail.MailData
 import apply.application.mail.MailService
 import apply.ui.admin.BaseLayout
+import apply.ui.admin.PreviewDialog
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.button.Button
@@ -82,7 +83,7 @@ class MailsFormView(
 
     private fun createPreviewButton(): Button {
         return createContrastButton("미리 보기") {
-            handleMailData { mail -> MailPreviewDialog(mailService.generateMailBody(mail)) }
+            handleMailData { mail -> PreviewDialog(mailService.generateMailBody(mail)) }
         }
     }
 

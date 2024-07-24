@@ -7,6 +7,7 @@ import java.time.LocalDateTime
 import javax.persistence.Column
 import javax.persistence.Embedded
 import javax.persistence.Entity
+import javax.persistence.Lob
 
 @SQLDelete(sql = "update mission set deleted = true where id = ?")
 @Where(clause = "deleted = false")
@@ -16,6 +17,7 @@ class Mission(
     val title: String,
 
     @Column(nullable = false)
+    @Lob
     val description: String,
 
     @Column(nullable = false)
@@ -39,6 +41,9 @@ class Mission(
 
     val isSubmitting: Boolean
         get() = status == MissionStatus.SUBMITTING
+
+    val isDescriptionViewable: Boolean
+        get() = !hidden && status in listOf(MissionStatus.SUBMITTING, MissionStatus.UNSUBMITTABLE)
 
     constructor(
         title: String,

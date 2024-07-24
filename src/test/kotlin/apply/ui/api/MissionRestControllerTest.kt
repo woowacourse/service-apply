@@ -8,6 +8,7 @@ import apply.createLastJudgmentResponse
 import apply.createMission
 import apply.createMissionData
 import apply.createMissionResponse
+import apply.createMyMissionAndJudgementResponse
 import apply.createMyMissionResponse
 import apply.domain.judgment.JudgmentStatus
 import com.ninjasquad.springmockk.MockkBean
@@ -74,17 +75,16 @@ class MissionRestControllerTest : RestControllerTest() {
     }
 
     @Test
-    fun `나의 과제들을 조회한다`() {
+    fun `나의 과제 목록을 조회한다`() {
         val responses = listOf(
-            createMyMissionResponse(id = 1L, runnable = false, judgment = null),
-            createMyMissionResponse(id = 2L, runnable = true, judgment = createLastJudgmentResponse()),
-            createMyMissionResponse(
+            createMyMissionAndJudgementResponse(id = 1L, runnable = false, judgment = null),
+            createMyMissionAndJudgementResponse(id = 2L, runnable = true, judgment = createLastJudgmentResponse()),
+            createMyMissionAndJudgementResponse(
                 id = 3L,
                 runnable = true,
                 judgment = createLastJudgmentResponse(passCount = 9, totalCount = 10, status = JudgmentStatus.SUCCEEDED)
             )
         )
-
         every { missionQueryService.findAllByMemberIdAndRecruitmentId(any(), any()) } returns responses
 
         mockMvc.get("/api/recruitments/{recruitmentId}/missions/me", 1L) {
@@ -92,6 +92,21 @@ class MissionRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isOk() }
             content { success(responses) }
+        }.andDo {
+            handle(document("mission-list-me-get"))
+        }
+    }
+
+    @Test
+    fun `나의 과제를 조회한다`() {
+        val response = createMyMissionResponse(id = 1L)
+        every { missionQueryService.findByMemberIdAndMissionId(any(), any()) } returns response
+
+        mockMvc.get("/api/recruitments/{recruitmentId}/missions/{missionId}/me", 1L, 1L) {
+            bearer("valid_token")
+        }.andExpect {
+            status { isOk() }
+            content { success(response) }
         }.andDo {
             handle(document("mission-me-get"))
         }

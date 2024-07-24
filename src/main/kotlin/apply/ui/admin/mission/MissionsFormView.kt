@@ -1,8 +1,10 @@
 package apply.ui.admin.mission
 
 import apply.application.EvaluationService
+import apply.application.MissionData
 import apply.application.MissionService
 import apply.ui.admin.BaseLayout
+import apply.ui.admin.PreviewDialog
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.button.Button
@@ -54,11 +56,18 @@ class MissionsFormView(
         submitButton.text = displayName
     }
 
+    private fun createButtons(): Component {
+        return HorizontalLayout(submitButton, createCancelButton(), createPreviewButton()).apply {
+            setSizeFull()
+            justifyContentMode = FlexComponent.JustifyContentMode.CENTER
+        }
+    }
+
     private fun createSubmitButton(): Button {
         return createPrimaryButton {
-            missionForm.bindOrNull()?.let {
+            handleMissionData { mission ->
                 try {
-                    missionService.save(it)
+                    missionService.save(mission)
                     UI.getCurrent().navigate(MissionsView::class.java, recruitmentId)
                 } catch (e: Exception) {
                     createNotification(e.localizedMessage)
@@ -67,16 +76,27 @@ class MissionsFormView(
         }
     }
 
-    private fun createButtons(): Component {
-        return HorizontalLayout(submitButton, createCancelButton()).apply {
-            setSizeFull()
-            justifyContentMode = FlexComponent.JustifyContentMode.CENTER
-        }
-    }
-
     private fun createCancelButton(): Button {
         return createContrastButton("취소") {
             UI.getCurrent().navigate(MissionsView::class.java, recruitmentId)
+        }
+    }
+
+    private fun createPreviewButton(): Button {
+        return createContrastButton("미리보기") {
+            handleMissionData { mission ->
+                val formattedDescription = missionService.parseDescription(mission.description)
+                PreviewDialog("<div>$formattedDescription</div>")
+            }
+        }
+    }
+
+    private fun handleMissionData(action: (MissionData) -> Unit) {
+        val result = missionForm.bindOrNull()
+        if (result == null) {
+            createNotification("모든 항목이 정확하게 입력되었는지 확인해 주세요.")
+        } else {
+            action(result)
         }
     }
 }
