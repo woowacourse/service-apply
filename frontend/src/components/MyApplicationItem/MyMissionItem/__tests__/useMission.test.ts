@@ -1,5 +1,5 @@
 import { renderHook } from "@testing-library/react";
-import useMission from "../useMission";
+import useMission from "../../../../hooks/useMission";
 import { BUTTON_LABEL } from "../../../../constants/recruitment";
 import { createMockMission } from "./testMissionMockUtils";
 

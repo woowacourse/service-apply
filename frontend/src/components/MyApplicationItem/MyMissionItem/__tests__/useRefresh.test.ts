@@ -1,5 +1,5 @@
 import { renderHook, act } from "@testing-library/react";
-import useRefresh from "../useRefresh";
+import useRefresh from "../../../../hooks/useRefresh";
 import { JUDGMENT_STATUS } from "../../../../constants/judgment";
 import { MISSION_STATUS } from "../../../../constants/recruitment";
 import { isJudgmentTimedOut } from "../../../../utils/validation/judgmentTime";

@@ -1,5 +1,5 @@
 import { renderHook, act } from "@testing-library/react";
-import useMissionJudgment from "../useMissionJudgment";
+import useMissionJudgment from "../../../../hooks/useMissionJudgment";
 import { postMyMissionJudgment } from "../../../../api";
 import useTokenContext from "../../../../hooks/useTokenContext";
 import { isJudgmentTimedOut } from "../../../../utils/validation/judgmentTime";

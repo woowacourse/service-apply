@@ -1,10 +1,10 @@
 import { AxiosError } from "axios";
-import { Mission, MissionStatus, Recruitment } from "../../../../types/domains/recruitments";
-import { postMyMissionJudgment } from "../../../api";
-import useTokenContext from "../../../hooks/useTokenContext";
-import { isJudgmentTimedOut } from "../../../utils/validation/judgmentTime";
-import { MISSION_STATUS } from "../../../constants/recruitment";
-import { JUDGMENT_STATUS } from "../../../constants/judgment";
+import { Mission, MissionStatus, Recruitment } from "../../types/domains/recruitments";
+import { postMyMissionJudgment } from "../api";
+import useTokenContext from "./useTokenContext";
+import { isJudgmentTimedOut } from "../utils/validation/judgmentTime";
+import { MISSION_STATUS } from "../constants/recruitment";
+import { JUDGMENT_STATUS } from "../constants/judgment";
 
 type MissionJudgementProps = {
   missionItem: Mission;

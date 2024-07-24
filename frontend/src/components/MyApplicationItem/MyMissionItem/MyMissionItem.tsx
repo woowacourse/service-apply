@@ -5,7 +5,7 @@ import MissionDetail from "./MissionDetail/MissionDetail";
 import styles from "../MyApplicationItem.module.css";
 import buttonStyles from "./ApplicationButtonStyles.module.css";
 import RecruitmentDetail from "../RecruitmentDetail/RecruitmentDetail";
-import useMission from "./useMission";
+import useMission from "../../../hooks/useMission";
 import Button from "../../@common/Button/Button";
 import { generatePath, useNavigate } from "react-router-dom";
 import { PARAM, PATH } from "../../../constants/path";

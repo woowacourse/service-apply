@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { formatDateTime } from "../../../utils/format/date";
-import { Mission } from "../../../../types/domains/recruitments";
-import { BUTTON_LABEL } from "../../../constants/recruitment";
+import { formatDateTime } from "../utils/format/date";
+import { Mission } from "../../types/domains/recruitments";
+import { BUTTON_LABEL } from "../constants/recruitment";
 
 type MissionProps = {
   mission: Mission;

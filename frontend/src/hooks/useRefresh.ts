@@ -1,10 +1,10 @@
 import { AxiosError } from "axios";
-import { Mission, Recruitment } from "../../../../types/domains/recruitments";
-import { fetchMyMissionJudgment } from "../../../api";
-import { JUDGMENT_STATUS } from "../../../constants/judgment";
-import { MISSION_STATUS } from "../../../constants/recruitment";
-import { isJudgmentTimedOut } from "../../../utils/validation/judgmentTime";
-import useTokenContext from "../../../hooks/useTokenContext";
+import { Mission, Recruitment } from "../../types/domains/recruitments";
+import { fetchMyMissionJudgment } from "../api";
+import { JUDGMENT_STATUS } from "../constants/judgment";
+import { MISSION_STATUS } from "../constants/recruitment";
+import { isJudgmentTimedOut } from "../utils/validation/judgmentTime";
+import useTokenContext from "./useTokenContext";
 
 type Props = {
   recruitmentId?: Recruitment["id"];

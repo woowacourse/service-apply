@@ -4,12 +4,12 @@ import Button from "../../../@common/Button/Button";
 import CommitHash from "../../CommitHash/CommitHash";
 import JudgmentResultText from "../../JudgmentResult/JudgmentResult";
 import Tooltip from "../../../@common/Tooltip/Tooltip";
-import useMission from "../useMission";
+import useMission from "../../../../hooks/useMission";
 import buttonStyles from "../ApplicationButtonStyles.module.css";
 import styles from "./MissionDetail.module.css";
 import { BUTTON_LABEL } from "../../../../constants/recruitment";
-import useRefresh from "../useRefresh";
-import useMissionJudgment from "../useMissionJudgment";
+import useRefresh from "../../../../hooks/useRefresh";
+import useMissionJudgment from "../../../../hooks/useMissionJudgment";
 
 type MissionDetailProps = {
   mission: Mission;
@@ -18,10 +18,7 @@ type MissionDetailProps = {
 };
 
 const MissionDetail = ({ mission, recruitmentId, judgment }: MissionDetailProps) => {
-  const {
-    getter: { missionItem },
-    setter: { setMissionItem },
-  } = useMission({ mission, recruitmentId });
+  const { missionItem, setMissionItem } = useMission({ mission, recruitmentId });
 
   const { isJudgmentAvailable, fetchJudgmentMissionResult } = useMissionJudgment({
     missionItem,
