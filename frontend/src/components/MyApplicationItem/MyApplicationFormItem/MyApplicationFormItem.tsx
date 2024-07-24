@@ -6,10 +6,10 @@ import { Recruitment, RecruitmentStatus } from "../../../../types/domains/recrui
 import { PARAM, PATH } from "../../../constants/path";
 import { formatDateTime } from "../../../utils/format/date";
 import { generateQuery } from "../../../utils/route/query";
-import ApplyButton from "../MyApplicationButtons/ApplyButton";
 import styles from "../MyApplicationItem.module.css";
 import RecruitmentDetail from "../RecruitmentDetail/RecruitmentDetail";
 import { BUTTON_LABEL, RECRUITMENT_STATUS } from "./../../../constants/recruitment";
+import Button from "../../@common/Button/Button";
 
 type MyApplicationFormItemProps = {
   recruitment: Recruitment;
@@ -68,19 +68,24 @@ const MyApplicationFormItem = ({ recruitment, submitted }: MyApplicationFormItem
 
   return (
     <div className={classNames(styles["content-box"])}>
-      <div className={styles["text-container"]}>
-        <RecruitmentDetail startDate={formattedStartDateTime} endDate={formattedEndDateTime}>
-          {recruitment.title}
-        </RecruitmentDetail>
+      <div className={styles["content-wrapper"]}>
+        <div className={styles["title-container"]}>
+          <RecruitmentDetail startDate={formattedStartDateTime} endDate={formattedEndDateTime}>
+            {recruitment.title}
+          </RecruitmentDetail>
 
-        <div className={styles["button-container"]}>
-          <ApplyButton
-            isButtonDisabled={isButtonDisabled}
-            onClick={() => {
-              routeToApplicationForm(recruitment);
-            }}
-            label={applyButtonLabel}
-          />
+          <ul className={styles["title-button-list"]}>
+            <li>
+              <Button
+                disabled={isButtonDisabled}
+                onClick={() => {
+                  routeToApplicationForm(recruitment);
+                }}
+              >
+                {applyButtonLabel}
+              </Button>
+            </li>
+          </ul>
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import { ISO8601DateString } from "../../types/domains/common";
+import { Judgment } from "../../types/domains/recruitments";
 import { JUDGMENT_STATUS } from "./../constants/judgment";
 import { MISSION_STATUS, RECRUITMENT_STATUS } from "./../constants/recruitment";
 
@@ -544,7 +545,7 @@ export const missionsDummy = {
   ],
 };
 
-export const judgmentDummy = {
+export const judgmentDummy: Judgment = {
   pullRequestUrl: "https://github.com/woowacourse/jwp-dashboard-http/pull/298",
   commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
   status: JUDGMENT_STATUS.SUCCEEDED,

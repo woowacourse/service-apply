@@ -19,4 +19,7 @@ export const BUTTON_LABEL = {
   UNSUBMITTABLE: "제출불가",
   COMPLETE: "제출완료",
   UNSUBMITTED: "미제출",
+  APPLY: "과제 제출",
+  REFRESH: "새로고침",
+  JUDGMENT: "예제 테스트 실행",
 } as const;

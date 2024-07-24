@@ -2,6 +2,7 @@ import axios from "axios";
 import {
   Assignment,
   AssignmentData,
+  Judgment,
   Mission,
   Recruitment,
   RecruitmentItem,
@@ -23,6 +24,8 @@ export type FetchMyMissionJudgmentRequest = RequestWithToken<{
   recruitmentId: number;
   missionId: number;
 }>;
+
+export type FetchMyMissionJudgmentResponseData = Judgment;
 
 export type FetchMyMissionsResponseData = Mission[];
 
@@ -73,7 +76,7 @@ export const fetchMyMissionJudgment = ({
   missionId,
   token,
 }: FetchMyMissionJudgmentRequest) =>
-  axios.get(
+  axios.get<FetchMyMissionJudgmentResponseData>(
     `/api/recruitments/${recruitmentId}/missions/${missionId}/judgments/judge-example`,
     headers({ token })
   );

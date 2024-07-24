@@ -36,17 +36,19 @@ export type Mission = {
   endDateTime: ISO8601DateString;
   status: MissionStatus;
   runnable: boolean;
-  judgment: {
-    pullRequestUrl: string;
-    commitHash: string;
-    status: JudgmentStatus;
-    passCount: number;
-    totalCount: number;
-    message: string;
-    startedDateTime: ISO8601DateString;
-    commitUrl: string;
-  } | null;
+  judgment: Judgment;
 };
+
+export type Judgment = {
+  pullRequestUrl: string;
+  commitHash: string;
+  status: JudgmentStatus;
+  passCount: number;
+  totalCount: number;
+  message: string;
+  startedDateTime: ISO8601DateString;
+  commitUrl: string;
+} | null;
 
 export type Assignment = {
   id: number;
