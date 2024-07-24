@@ -39,15 +39,12 @@ const useMission = ({ mission, recruitmentId }: MissionProps) => {
   );
 
   return {
-    getter: {
-      missionItem,
-      applyButtonLabel,
-      formattedStartDateTime,
-      formattedEndDateTime,
-    },
-    setter: {
-      setMissionItem,
-    },
+    missionItem,
+    applyButtonLabel,
+    formattedStartDateTime,
+    formattedEndDateTime,
+
+    setMissionItem,
   };
 };
 

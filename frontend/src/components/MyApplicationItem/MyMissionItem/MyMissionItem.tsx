@@ -18,9 +18,8 @@ type MyMissionItemProps = {
 const MyMissionItem = ({ mission, recruitmentId }: MyMissionItemProps) => {
   const navigate = useNavigate();
 
-  const {
-    getter: { missionItem, applyButtonLabel, formattedStartDateTime, formattedEndDateTime },
-  } = useMission({ mission, recruitmentId });
+  const { missionItem, applyButtonLabel, formattedStartDateTime, formattedEndDateTime } =
+    useMission({ mission, recruitmentId });
 
   const routeToAssignmentSubmit =
     ({ recruitmentId, mission }: { recruitmentId: string; mission: Mission }) =>
