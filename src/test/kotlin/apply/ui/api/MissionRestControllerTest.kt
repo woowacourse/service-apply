@@ -75,7 +75,7 @@ class MissionRestControllerTest : RestControllerTest() {
     }
 
     @Test
-    fun `나의 과제들을 조회한다`() {
+    fun `나의 과제 목록을 조회한다`() {
         val responses = listOf(
             createMyMissionAndJudgementResponse(id = 1L, runnable = false, judgment = null),
             createMyMissionAndJudgementResponse(id = 2L, runnable = true, judgment = createLastJudgmentResponse()),
@@ -85,7 +85,6 @@ class MissionRestControllerTest : RestControllerTest() {
                 judgment = createLastJudgmentResponse(passCount = 9, totalCount = 10, status = JudgmentStatus.SUCCEEDED)
             )
         )
-
         every { missionQueryService.findAllByMemberIdAndRecruitmentId(any(), any()) } returns responses
 
         mockMvc.get("/api/recruitments/{recruitmentId}/missions/me", 1L) {
@@ -99,9 +98,8 @@ class MissionRestControllerTest : RestControllerTest() {
     }
 
     @Test
-    fun `나의 과제를 상세 조회한다`() {
+    fun `나의 과제를 조회한다`() {
         val response = createMyMissionResponse(id = 1L)
-
         every { missionQueryService.findByMemberIdAndMissionId(any(), any()) } returns response
 
         mockMvc.get("/api/recruitments/{recruitmentId}/missions/{missionId}/me", 1L, 1L) {

@@ -106,7 +106,7 @@ class MyMissionService(
         val assignment = assignmentRepository.findByMemberIdAndMissionId(memberId, missionId)
         return MyMissionResponse(
             mission = mission,
-            formattedDescription = markdownToEmbeddedHtml(mission.description),
+            description = markdownToEmbeddedHtml(mission.description),
             submitted = assignment != null,
         )
     }

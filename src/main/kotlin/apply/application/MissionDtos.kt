@@ -134,10 +134,10 @@ data class MyMissionResponse(
     val status: MissionStatus,
     val submitted: Boolean,
 ) {
-    constructor(mission: Mission, formattedDescription: String, submitted: Boolean) : this(
+    constructor(mission: Mission, description: String, submitted: Boolean) : this(
         mission.id,
         mission.title,
-        formattedDescription,
+        description,
         mission.submittable,
         mission.period.startDateTime,
         mission.period.endDateTime,

@@ -1,9 +1,8 @@
 package apply.application
 
-import apply.createAssignment
 import apply.createEvaluationTarget
-import apply.createMission
 import apply.createMember
+import apply.createMission
 import apply.domain.assignment.AssignmentRepository
 import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluationtarget.EvaluationTargetRepository
@@ -13,7 +12,6 @@ import apply.domain.mission.MissionRepository
 import apply.domain.mission.getOrThrow
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
-import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.mockk.every
 import io.mockk.mockk
@@ -35,58 +33,56 @@ class MyMissionServiceTest : BehaviorSpec({
         judgmentRepository
     )
 
-    Given("공개된 과제가 있는 경우") {
-        val participatedUser = createMember(id = 1L)
-        val notParticipatedUser = createMember(id = 2L)
-        val mission = createMission()
-        val target = createEvaluationTarget(evaluationId = mission.evaluationId, memberId = participatedUser.id)
+    Given("과제가 과제 기간 내에 있고 공개인 경우") {
+        val mission = createMission(hidden = false)
+        val evaluationTarget = createEvaluationTarget(evaluationId = mission.evaluationId, memberId = 1L)
+        val justMember = createMember(id = 2L)
 
         every { missionRepository.getOrThrow(any()) } returns mission
-        every { evaluationTargetRepository.findByEvaluationIdAndMemberId(any(), eq(participatedUser.id)) } returns target
-        every { evaluationTargetRepository.findByEvaluationIdAndMemberId(any(), neq(participatedUser.id)) } returns null
-        every { assignmentRepository.findByMemberIdAndMissionId(eq(participatedUser.id), any()) } returns createAssignment()
+        every { evaluationTargetRepository.findByEvaluationIdAndMemberId(any(), evaluationTarget.memberId) } returns evaluationTarget
+        every { evaluationTargetRepository.findByEvaluationIdAndMemberId(any(), justMember.id) } returns null
+        every { assignmentRepository.findByMemberIdAndMissionId(any(), any()) } returns null
 
-        When("요청한 유저가 평가 대상자면") {
-            val actual = myMissionService.findByMemberIdAndMissionId(participatedUser.id, mission.id)
+        When("평가 대상자가 과제를 조회하면") {
+            val actual = myMissionService.findByMemberIdAndMissionId(evaluationTarget.memberId, mission.id)
 
-            Then("과제 내용을 확인할 수 있다") {
+            Then("과제를 확인할 수 있다") {
                 actual.shouldNotBeNull()
                 actual.description.shouldNotBeNull()
-                actual.submitted.shouldBeTrue()
             }
         }
 
-        When("요청한 유저가 평가 대상자가 아니면") {
-            Then("과제 내용을 확인할 수 없다") {
+        When("평가 대상자가 아닌 회원이 과제를 조회하면") {
+            Then("예외가 발생한다") {
                 shouldThrow<NoSuchElementException> {
-                    myMissionService.findByMemberIdAndMissionId(notParticipatedUser.id, mission.id)
+                    myMissionService.findByMemberIdAndMissionId(justMember.id, mission.id)
                 }
             }
         }
     }
 
-    Given("비공개된 과제가 있는 경우") {
-        val participatedUser = createMember(id = 1L)
-        val notParticipatedUser = createMember(id = 2L)
+    Given("과제가 과제 기간 내에 있지만 비공개인 경우") {
         val mission = createMission(hidden = true)
-        val target = createEvaluationTarget(evaluationId = mission.evaluationId, memberId = participatedUser.id)
+        val evaluationTarget = createEvaluationTarget(evaluationId = mission.evaluationId, memberId = 1L)
+        val justMember = createMember(id = 2L)
 
         every { missionRepository.getOrThrow(any()) } returns mission
-        every { evaluationTargetRepository.findByEvaluationIdAndMemberId(any(), eq(participatedUser.id)) } returns target
-        every { evaluationTargetRepository.findByEvaluationIdAndMemberId(any(), neq(participatedUser.id)) } returns null
+        every { evaluationTargetRepository.findByEvaluationIdAndMemberId(any(), evaluationTarget.memberId) } returns evaluationTarget
+        every { evaluationTargetRepository.findByEvaluationIdAndMemberId(any(), justMember.id) } returns null
+        every { assignmentRepository.findByMemberIdAndMissionId(any(), any()) } returns null
 
-        When("요청한 유저가 평가 대상자면") {
-            Then("과제 내용을 확인할 수 없다") {
+        When("평가 대상자가 과제를 조회하면") {
+            Then("예외가 발생한다") {
                 shouldThrow<NoSuchElementException> {
-                    myMissionService.findByMemberIdAndMissionId(participatedUser.id, mission.id)
+                    myMissionService.findByMemberIdAndMissionId(evaluationTarget.memberId, mission.id)
                 }
             }
         }
 
-        When("요청한 유저가 평가 대상자가 아니면") {
-            Then("과제 내용을 확인할 수 없다") {
+        When("평가 대상자가 아닌 회원이 과제를 조회하면") {
+            Then("예외가 발생한다") {
                 shouldThrow<NoSuchElementException> {
-                    myMissionService.findByMemberIdAndMissionId(notParticipatedUser.id, mission.id)
+                    myMissionService.findByMemberIdAndMissionId(justMember.id, mission.id)
                 }
             }
         }

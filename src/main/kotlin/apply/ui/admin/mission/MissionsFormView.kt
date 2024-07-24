@@ -24,7 +24,6 @@ import support.views.createPrimaryButton
 import support.views.toDisplayName
 
 private val MISSION_FORM_URL_PATTERN: Regex = Regex("^(\\d*)/?(\\d*)/?($NEW_VALUE|$EDIT_VALUE)$")
-private const val DATA_NOT_BIND_MESSAGE: String = "모든 항목이 잘 입력되었는지 확인해 주세요."
 
 @Route(value = "admin/missions", layout = BaseLayout::class)
 class MissionsFormView(
@@ -95,7 +94,7 @@ class MissionsFormView(
     private fun handleMissionData(action: (MissionData) -> Unit) {
         val result = missionForm.bindOrNull()
         if (result == null) {
-            createNotification(DATA_NOT_BIND_MESSAGE)
+            createNotification("모든 항목이 정확하게 입력되었는지 확인해 주세요.")
         } else {
             action(result)
         }

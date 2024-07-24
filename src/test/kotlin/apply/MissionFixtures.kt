@@ -9,10 +9,21 @@ import apply.application.MyMissionAndJudgementResponse
 import apply.application.MyMissionResponse
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionStatus
+import support.flattenByMargin
 import java.time.LocalDateTime
 
 private const val MISSION_TITLE: String = "숫자야구게임"
 private const val MISSION_DESCRIPTION: String = "과제 설명입니다."
+private val FORMATTED_MISSION_DESCRIPTION: String =
+    """
+        |<h1>미션 - 숫자 야구 게임</h1>
+        |<h2>🔍 진행 방식</h2>
+        |<ul>
+        |<li>미션은 <strong>기능 요구 사항, 프로그래밍 요구 사항, 과제 진행 요구 사항</strong> 세 가지로 구성되어 있다.</li>
+        |<li>세 개의 요구 사항을 만족하기 위해 노력한다. 특히 기능을 구현하기 전에 기능 목록을 만들고, 기능 단위로 커밋 하는 방식으로 진행한다.</li>
+        |<li>기능 요구 사항에 기재되지 않은 내용은 스스로 판단하여 구현한다.</li>
+        |</ul>
+    """.flattenByMargin()
 private val START_DATE_TIME: LocalDateTime = LocalDateTime.now()
 private val END_DATE_TIME: LocalDateTime = LocalDateTime.now().plusDays(7L)
 
@@ -99,7 +110,7 @@ fun createMyMissionAndJudgementResponse(
 
 fun createMyMissionResponse(
     title: String = MISSION_TITLE,
-    description: String = MISSION_DESCRIPTION,
+    description: String = FORMATTED_MISSION_DESCRIPTION,
     submittable: Boolean = true,
     startDateTime: LocalDateTime = START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
