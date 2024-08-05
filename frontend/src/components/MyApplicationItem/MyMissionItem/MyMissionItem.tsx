@@ -51,6 +51,20 @@ const MyMissionItem = ({ mission, recruitmentId }: MyMissionItemProps) => {
           <ul className={styles["title-button-list"]}>
             <li>
               <Button
+                className={buttonStyles["assignment-button"]}
+                onClick={() => {
+                  navigate(
+                    generatePath("/to-do-assignment-viewer-path", {
+                      recruitmentId,
+                    })
+                  );
+                }}
+              >
+                과제 보기
+              </Button>
+            </li>
+            <li>
+              <Button
                 className={buttonStyles["apply-button"]}
                 disabled={missionItem.status !== MISSION_STATUS.SUBMITTING}
                 onClick={routeToAssignmentSubmit({
