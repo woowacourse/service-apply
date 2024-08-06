@@ -54,8 +54,9 @@ const MyMissionItem = ({ mission, recruitmentId }: MyMissionItemProps) => {
                 className={buttonStyles["assignment-button"]}
                 onClick={() => {
                   navigate(
-                    generatePath("/to-do-assignment-viewer-path", {
+                    generatePath(PATH.ASSIGNMENT_VIEW, {
                       recruitmentId,
+                      missionId: String(mission.id),
                     })
                   );
                 }}

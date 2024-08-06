@@ -23,6 +23,7 @@ import RecruitmentProvider from "./provider/RecruitmentProvider";
 import TokenProvider from "./provider/TokenProvider";
 import MemberInfoProvider from "./provider/MemberInfoProvider";
 import { ModalProvider } from "./hooks/useModalContext";
+import AssignmentViewer from "./pages/AssignmentViewer/AssignmentViewer";
 
 const App = () => {
   return (
@@ -45,6 +46,7 @@ const App = () => {
                     <Route path={PATH.EDIT_PASSWORD} element={<PasswordEdit />} />
                     <Route path={PATH.MY_APPLICATION} element={<MyApplication />} />
                     <Route path={PATH.ASSIGNMENT} element={<AssignmentSubmit />} />
+                    <Route path={PATH.ASSIGNMENT_VIEW} element={<AssignmentViewer />} />
                   </Route>
 
                   <Route element={<PrivateRoute />}>

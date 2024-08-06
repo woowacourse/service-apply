@@ -4,6 +4,7 @@ export const PATH = {
   SIGN_UP: "/sign-up",
   MY_APPLICATION: "/applications/me",
   ASSIGNMENT: "/assignment/:status",
+  ASSIGNMENT_VIEW: "/assignment/:recruitmentId/mission/:missionId",
   APPLICATION_FORM: "/application-forms/:status",
   LOGIN: "/login",
   FIND_PASSWORD: "/find",

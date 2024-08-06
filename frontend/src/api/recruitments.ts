@@ -4,11 +4,14 @@ import {
   AssignmentData,
   Judgment,
   Mission,
+  MissionStatus,
   Recruitment,
   RecruitmentItem,
 } from "../../types/domains/recruitments";
 import { RequestWithToken } from "../../types/utility";
 import { headers } from "./api";
+import { r } from "msw/lib/glossary-dc3fd077";
+import { ISO8601DateString } from "../../types/domains/common";
 
 export type FetchRecruitmentItemsRequest = number;
 
@@ -30,7 +33,7 @@ export type FetchMyMissionJudgmentResponseData = Judgment;
 export type FetchMyMissionsResponseData = Mission[];
 
 export type FetchAssignmentRequest = RequestWithToken<{
-  recruitmentId: number;
+  recruitmentId: string;
   missionId: number;
 }>;
 
@@ -58,6 +61,22 @@ export type PostJudgmentRequest = RequestWithToken<{
 }>;
 
 export type PostJudgmentResponseData = Mission["judgment"];
+
+export type FetchMissionRequest = RequestWithToken<{
+  recruitmentId: string;
+  missionId: number;
+}>;
+
+export type FetchMissionResponseData = {
+  id: number;
+  title: string;
+  description: string;
+  submittable: boolean;
+  startDateTime: ISO8601DateString;
+  endDateTime: ISO8601DateString;
+  status: MissionStatus;
+  submitted: boolean;
+};
 
 export const fetchRecruitmentItems = (recruitmentId: FetchRecruitmentItemsRequest) =>
   axios.get<FetchRecruitmentItemsResponseData>(`/api/recruitments/${recruitmentId}/items`);
@@ -115,5 +134,15 @@ export const patchAssignment = ({
   axios.patch<PatchAssignmentResponseData>(
     `/api/recruitments/${recruitmentId}/missions/${missionId}/assignments`,
     assignmentData,
+    headers({ token })
+  );
+
+export const fetchMissionRequirements = ({
+  token,
+  recruitmentId,
+  missionId,
+}: FetchAssignmentRequest) =>
+  axios.get<FetchMissionRequest>(
+    `/api/recruitments/${recruitmentId}/missions/${missionId}/me`,
     headers({ token })
   );
