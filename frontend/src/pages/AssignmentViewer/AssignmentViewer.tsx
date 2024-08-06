@@ -5,11 +5,12 @@ import useTokenContext from "../../hooks/useTokenContext";
 import styles from "./AssignmentViewer.module.css";
 import { PATH } from "../../constants/path";
 import { fetchMissionRequirements } from "../../api";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const AssignmentViewer = () => {
   const navigate = useNavigate();
   const { recruitmentId, missionId } = useParams<{ recruitmentId: string; missionId: string }>();
+  const [description, setDescription] = useState<string>("");
 
   if (!recruitmentId || !missionId) {
     throw new Error("recruitmentId 또는 missionId가 없습니다.");
@@ -33,6 +34,8 @@ const AssignmentViewer = () => {
         missionId: parseInt(missionId, 10),
       });
 
+      setDescription(response?.data?.description);
+
       console.log(response);
     } catch (error) {
       console.error(error);
@@ -45,7 +48,7 @@ const AssignmentViewer = () => {
 
   return (
     <Container>
-      <div>asdf</div>
+      <div dangerouslySetInnerHTML={{ __html: description }} />
       <ul className={styles.buttons}>
         <li>
           <Button type="button" variant={BUTTON_VARIANT.OUTLINED} onClick={goBack}>

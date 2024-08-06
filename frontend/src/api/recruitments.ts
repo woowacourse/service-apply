@@ -142,7 +142,7 @@ export const fetchMissionRequirements = ({
   recruitmentId,
   missionId,
 }: FetchAssignmentRequest) =>
-  axios.get<FetchMissionRequest>(
+  axios.get<FetchMissionResponseData>(
     `/api/recruitments/${recruitmentId}/missions/${missionId}/me`,
     headers({ token })
   );
