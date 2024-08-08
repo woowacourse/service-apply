@@ -45,7 +45,7 @@ class MyMissionService(
     private fun findMissions(memberId: Long, recruitmentId: Long): List<Mission> {
         val evaluationIds = evaluationRepository.findAllByRecruitmentId(recruitmentId).map { it.id }
         val targets = evaluationTargetRepository.findAllByMemberIdAndEvaluationIdIn(memberId, evaluationIds)
-        return missionRepository.findAllByEvaluationIdIn(targets.map { it.id }).filterNot { it.hidden }
+        return missionRepository.findAllByEvaluationIdIn(targets.map { it.evaluationId }).filterNot { it.hidden }
     }
 
     private fun List<Mission>.mapBy(assignments: List<Assignment>): List<MyMissionAndJudgementResponse> {
