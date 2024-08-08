@@ -2,6 +2,8 @@ package support
 
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldContainInOrder
 import io.kotest.matchers.string.shouldNotContain
 
 class MarkdownTest : StringSpec({
@@ -60,5 +62,27 @@ class MarkdownTest : StringSpec({
         val markdownText = "2004년에 존 그루버(John Gruber)와 애런 스워츠(Aaron Swartz)가 만든 마크업 언어의 하나로 읽기 쉽고 쓰기 쉬운 텍스트 포맷입니다."
         val actual = markdownToEmbeddedHtml(markdownText)
         actual shouldNotContain "<body>"
+    }
+
+    "코드 포맷을 사용하는 경우 <code> 태그가 추가된다" {
+        val markdownText = """
+            |`buildSrc`
+        """.trimMargin()
+        val actual = markdownToEmbeddedHtml(markdownText)
+        actual shouldContain "<code>buildSrc</code>"
+    }
+
+    "프로그래밍 언어를 지정하면 <code> 태그에 클래스 속성이 지정된다" {
+        val markdownText = """
+            |```kotlin
+            |class Cat {
+            |    fun purr() {
+            |        println("Purr purr")
+            |    }
+            |}
+            |```
+        """.trimMargin()
+        val actual = markdownToEmbeddedHtml(markdownText)
+        actual.shouldContainInOrder("<pre>", "<code class=\"language-kotlin\">", "</code>", "</pre>")
     }
 })

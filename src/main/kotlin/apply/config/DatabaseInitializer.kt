@@ -420,6 +420,48 @@ class DatabaseInitializer(
                     |- 미션은 **기능 요구 사항, 프로그래밍 요구 사항, 과제 진행 요구 사항** 세 가지로 구성되어 있다.
                     |- 세 개의 요구 사항을 만족하기 위해 노력한다. 특히 기능을 구현하기 전에 기능 목록을 만들고, 기능 단위로 커밋 하는 방식으로 진행한다.
                     |- 기능 요구 사항에 기재되지 않은 내용은 스스로 판단하여 구현한다.
+                    |
+                    |---
+                    |
+                    |## 🎯 프로그래밍 요구 사항
+                    |
+                    |### 라이브러리
+                    |
+                    |- `camp.nextstep.edu.missionutils`에서 제공하는 `Randoms` 및 `Console` API를 사용하여 구현해야 한다.
+                    |   - Random 값 추출은 `camp.nextstep.edu.missionutils.Randoms`의 `pickNumberInRange()`를 활용한다.
+                    |   - 사용자가 입력하는 값은 `camp.nextstep.edu.missionutils.Console`의 `readLine()`을 활용한다.
+                    |
+                    |#### 사용 예시
+                    |
+                    |```java
+                    |List<Integer> computer = new ArrayList<>();
+                    |while (computer.size() < 3) {
+                    |    int randomNumber = Randoms.pickNumberInRange(1, 9);
+                    |    if (!computer.contains(randomNumber)) {
+                    |        computer.add(randomNumber);
+                    |    }
+                    |}
+                    |```
+                    |
+                    |```javascript
+                    |const computer = [];
+                    |while (computer.length < 3) {
+                    |  const number = MissionUtils.Random.pickNumberInRange(1, 9);
+                    |  if (!computer.includes(number)) {
+                    |    computer.push(number);
+                    |  }
+                    |}
+                    |```
+                    |
+                    |```kotlin
+                    |val computer = mutableListOf()
+                    |while (computer.size() < 3) {
+                    |    val randomNumber = Randoms.pickNumberInRange(1, 9)
+                    |    if (!computer.contains(randomNumber)) {
+                    |        computer.add(randomNumber)
+                    |    }
+                    |}
+                    |```
                 """.trimMargin(),
                 evaluationId = 2L,
                 startDateTime = createLocalDateTime(2020, 11, 24, 15),
