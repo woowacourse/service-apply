@@ -6,6 +6,9 @@ import styles from "./AssignmentViewer.module.css";
 import { PATH } from "../../constants/path";
 import { fetchMissionRequirements } from "../../api";
 import { useEffect, useState } from "react";
+import highlighter from "highlight.js";
+import "github-markdown-css/github-markdown-light.css";
+import "highlight.js/styles/github.css";
 
 const AssignmentViewer = () => {
   const navigate = useNavigate();
@@ -46,9 +49,16 @@ const AssignmentViewer = () => {
     fetchRequirement();
   }, []);
 
+  useEffect(() => {
+    highlighter.highlightAll();
+  }, [description]);
+
   return (
     <Container>
-      <div dangerouslySetInnerHTML={{ __html: description }} />
+      <div
+        className={`${styles["mission-viewer-body"]} markdown-body`}
+        dangerouslySetInnerHTML={{ __html: description }}
+      />
       <ul className={styles.buttons}>
         <li>
           <Button type="button" variant={BUTTON_VARIANT.OUTLINED} onClick={goBack}>

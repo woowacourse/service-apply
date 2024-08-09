@@ -8422,6 +8422,11 @@ giget@^1.0.0:
     pathe "^1.1.0"
     tar "^6.1.13"
 
+github-markdown-css@^5.6.1:
+  version "5.6.1"
+  resolved "https://registry.yarnpkg.com/github-markdown-css/-/github-markdown-css-5.6.1.tgz#8ca3d5c3d93d79ea429fddafea091347ab374f78"
+  integrity sha512-DItLFgHd+s7HQmk63YN4/TdvLeRqk1QP7pPKTTPrDTYoI5x7f/luJWSOZxesmuxBI2srHp8RDyoZd+9WF+WK8Q==
+
 github-slugger@^1.0.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/github-slugger/-/github-slugger-1.4.0.tgz#206eb96cdb22ee56fdc53a28d5a302338463444e"
@@ -8659,6 +8664,11 @@ headers-polyfill@^3.1.0:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/headers-polyfill/-/headers-polyfill-3.1.1.tgz#798e265f80edfc53fb8fd01e8963b356b12c2514"
   integrity sha512-ifvvIC+VDeLTEkJDwxECSI7k9rJF7sJavCh/UfhGsgJ+LXMbGILRf+NXhc4znuf+JA5X2/leQdOXk6Lq6Y2/wQ==
+
+highlight.js@^11.10.0:
+  version "11.10.0"
+  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-11.10.0.tgz#6e3600dc4b33d6dc23d5bd94fbf72405f5892b92"
+  integrity sha512-SYVnVFswQER+zu1laSya563s+F8VDGt7o35d4utbamowvUNLLMovFqwCLSocpZTz3MgaSRA1IbqRWZv97dtErQ==
 
 history@^5.2.0:
   version "5.3.0"

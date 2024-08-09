@@ -13,3 +13,7 @@
 .buttons li > button {
   width: 100%;
 }
+
+.mission-viewer-body li {
+  list-style: disc;
+}
