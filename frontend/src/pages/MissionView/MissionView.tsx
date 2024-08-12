@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Button, { BUTTON_VARIANT } from "../../components/@common/Button/Button";
 import Container from "../../components/@common/Container/Container";
 import useTokenContext from "../../hooks/useTokenContext";
-import styles from "./AssignmentViewer.module.css";
+import styles from "./MissionView.module.css";
 import { PATH } from "../../constants/path";
 import { fetchMissionRequirements } from "../../api";
 import { useEffect, useState } from "react";
@@ -10,7 +10,7 @@ import highlighter from "highlight.js";
 import "github-markdown-css/github-markdown-light.css";
 import "highlight.js/styles/github.css";
 
-const AssignmentViewer = () => {
+const MissionView = () => {
   const navigate = useNavigate();
   const { recruitmentId, missionId } = useParams<{ recruitmentId: string; missionId: string }>();
   const [description, setDescription] = useState<string>("");
@@ -75,4 +75,4 @@ const AssignmentViewer = () => {
   );
 };
 
-export default AssignmentViewer;
+export default MissionView;
