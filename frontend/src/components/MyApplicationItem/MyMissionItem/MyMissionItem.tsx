@@ -57,13 +57,7 @@ const MyMissionItem = ({ mission, recruitmentId }: MyMissionItemProps) => {
                     generatePath(PATH.ASSIGNMENT_VIEW, {
                       recruitmentId,
                       missionId: String(mission.id),
-                    }),
-                    {
-                      state: {
-                        recruitmentId,
-                        currentMission: mission,
-                      },
-                    }
+                    })
                   );
                 }}
               >

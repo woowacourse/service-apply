@@ -67,17 +67,6 @@ export type FetchMissionRequest = RequestWithToken<{
   missionId: number;
 }>;
 
-export type FetchMissionResponseData = {
-  id: number;
-  title: string;
-  description: string;
-  submittable: boolean;
-  startDateTime: ISO8601DateString;
-  endDateTime: ISO8601DateString;
-  status: MissionStatus;
-  submitted: boolean;
-};
-
 export const fetchRecruitmentItems = (recruitmentId: FetchRecruitmentItemsRequest) =>
   axios.get<FetchRecruitmentItemsResponseData>(`/api/recruitments/${recruitmentId}/items`);
 
@@ -142,7 +131,7 @@ export const fetchMissionRequirements = ({
   recruitmentId,
   missionId,
 }: FetchAssignmentRequest) =>
-  axios.get<FetchMissionResponseData>(
+  axios.get<Mission>(
     `/api/recruitments/${recruitmentId}/missions/${missionId}/me`,
     headers({ token })
   );
