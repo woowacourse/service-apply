@@ -15,6 +15,7 @@ import { MISSION_STATUS } from "../../constants/recruitment";
 import { AxiosError } from "axios";
 
 const MissionView = () => {
+  const { token } = useTokenContext();
   const navigate = useNavigate();
 
   const { recruitmentId, missionId } = useParams<{ recruitmentId: string; missionId: string }>();
@@ -26,12 +27,6 @@ const MissionView = () => {
     mission?.submitted ?? false,
     mission?.status ?? MISSION_STATUS.UNSUBMITTABLE
   );
-
-  if (!recruitmentId || !missionId) {
-    throw new Error("recruitmentId 또는 missionId가 없습니다.");
-  }
-
-  const { token } = useTokenContext();
 
   const goBack = () => {
     navigate(-1);
@@ -57,6 +52,11 @@ const MissionView = () => {
 
   const fetchRequirement = async () => {
     try {
+      if (!recruitmentId || !missionId) {
+        goBack();
+        return;
+      }
+
       const response = await fetchMissionRequirements({
         token,
         recruitmentId,
