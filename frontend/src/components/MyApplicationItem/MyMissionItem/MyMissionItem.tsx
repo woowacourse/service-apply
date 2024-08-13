@@ -55,7 +55,7 @@ const MyMissionItem = ({ mission, recruitmentId }: MyMissionItemProps) => {
                 disabled={missionItem.status === MISSION_STATUS.ENDED}
                 onClick={() => {
                   navigate(
-                    generatePath(PATH.ASSIGNMENT_VIEW, {
+                    generatePath(PATH.MISSION_VIEW, {
                       recruitmentId,
                       missionId: String(mission.id),
                     })

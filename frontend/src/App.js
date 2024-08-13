@@ -46,7 +46,7 @@ const App = () => {
                     <Route path={PATH.EDIT_PASSWORD} element={<PasswordEdit />} />
                     <Route path={PATH.MY_APPLICATION} element={<MyApplication />} />
                     <Route path={PATH.ASSIGNMENT} element={<AssignmentSubmit />} />
-                    <Route path={PATH.ASSIGNMENT_VIEW} element={<MissionView />} />
+                    <Route path={PATH.MISSION_VIEW} element={<MissionView />} />
                   </Route>
 
                   <Route element={<PrivateRoute />}>
