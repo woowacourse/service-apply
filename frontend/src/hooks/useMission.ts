@@ -8,7 +8,7 @@ type MissionProps = {
   recruitmentId: string;
 };
 
-const missionLabel = (submitted: boolean, missionStatus: Mission["status"]) => {
+export const getMissionLabel = (submitted: boolean, missionStatus: Mission["status"]) => {
   const labelMap = {
     SUBMITTABLE: BUTTON_LABEL.BEFORE_SUBMIT,
     SUBMITTING: submitted ? BUTTON_LABEL.EDIT : BUTTON_LABEL.SUBMIT,
@@ -22,7 +22,7 @@ const missionLabel = (submitted: boolean, missionStatus: Mission["status"]) => {
 const useMission = ({ mission, recruitmentId }: MissionProps) => {
   const [missionItem, setMissionItem] = useState<Mission>({ ...mission });
 
-  const applyButtonLabel = missionLabel(mission.submitted, mission.status);
+  const applyButtonLabel = getMissionLabel(mission.submitted, mission.status);
 
   useEffect(() => {
     setMissionItem(mission);
