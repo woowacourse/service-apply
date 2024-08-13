@@ -52,6 +52,7 @@ const MyMissionItem = ({ mission, recruitmentId }: MyMissionItemProps) => {
             <li>
               <Button
                 className={buttonStyles["assignment-button"]}
+                disabled={missionItem.status === MISSION_STATUS.ENDED}
                 onClick={() => {
                   navigate(
                     generatePath(PATH.ASSIGNMENT_VIEW, {
