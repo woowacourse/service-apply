@@ -22,7 +22,12 @@ const MissionView = () => {
   const [mission, setMission] = useState<Mission | null>(null);
   const description = mission?.description ?? "";
 
-  const submittable = !mission || mission.submittable;
+  const isMissionSubmittable =
+    !mission ||
+    mission?.submittable ||
+    mission?.status === MISSION_STATUS.SUBMITTABLE ||
+    mission?.status === MISSION_STATUS.SUBMITTING;
+
   const missionLabel = getMissionLabel(
     mission?.submitted ?? false,
     mission?.status ?? MISSION_STATUS.UNSUBMITTABLE
@@ -94,7 +99,7 @@ const MissionView = () => {
           </Button>
         </li>
         <li>
-          <Button type="button" onClick={routeToAssignmentSubmit} disabled={!submittable}>
+          <Button type="button" onClick={routeToAssignmentSubmit} disabled={!isMissionSubmittable}>
             {missionLabel}
           </Button>
         </li>
