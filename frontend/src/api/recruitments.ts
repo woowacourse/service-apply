@@ -30,7 +30,7 @@ export type FetchMyMissionJudgmentResponseData = Judgment;
 export type FetchMyMissionsResponseData = Mission[];
 
 export type FetchAssignmentRequest = RequestWithToken<{
-  recruitmentId: string;
+  recruitmentId: number;
   missionId: number;
 }>;
 

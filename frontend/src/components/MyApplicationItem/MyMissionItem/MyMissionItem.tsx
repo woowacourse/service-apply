@@ -41,6 +41,15 @@ const MyMissionItem = ({ mission, recruitmentId }: MyMissionItemProps) => {
       );
     };
 
+  const routeToMissionView = () => {
+    navigate(
+      generatePath(PATH.MISSION_VIEW, {
+        recruitmentId,
+        missionId: String(mission.id),
+      })
+    );
+  };
+
   return (
     <div className={classNames(styles["content-box"])}>
       <div className={styles["content-wrapper"]}>
@@ -52,18 +61,8 @@ const MyMissionItem = ({ mission, recruitmentId }: MyMissionItemProps) => {
             <li>
               <Button
                 className={buttonStyles["assignment-button"]}
-                disabled={
-                  missionItem.status === MISSION_STATUS.ENDED ||
-                  missionItem.status === MISSION_STATUS.UNSUBMITTABLE
-                }
-                onClick={() => {
-                  navigate(
-                    generatePath(PATH.MISSION_VIEW, {
-                      recruitmentId,
-                      missionId: String(mission.id),
-                    })
-                  );
-                }}
+                disabled={missionItem.status !== MISSION_STATUS.SUBMITTING}
+                onClick={routeToMissionView}
               >
                 과제 보기
               </Button>

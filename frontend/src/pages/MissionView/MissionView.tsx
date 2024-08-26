@@ -56,21 +56,18 @@ const MissionView = () => {
   };
 
   const fetchRequirement = async () => {
-    try {
-      if (!recruitmentId || !missionId) {
-        goBack();
-        return;
-      }
+    if (!recruitmentId || !missionId) {
+      return;
+    }
 
+    try {
       const response = await fetchMissionRequirements({
         token,
-        recruitmentId,
+        recruitmentId: parseInt(recruitmentId, 10),
         missionId: parseInt(missionId, 10),
       });
 
       setMission(response?.data);
-
-      console.log(response);
     } catch (error) {
       alert((error as AxiosError).response?.data.message);
 
@@ -79,10 +76,20 @@ const MissionView = () => {
   };
 
   useEffect(() => {
+    if (!recruitmentId || !missionId) {
+      goBack();
+      return;
+    }
+
     fetchRequirement();
   }, []);
 
   useEffect(() => {
+    /*
+      url - https://highlightjs.org/
+      <pre><code> 태그 내의 코드를 자동으로 감지하여 하이라이팅합니다.
+      자동 감지가 실패할 경우, class 속성에 언어를 명시적으로 지정할 수 있습니다.
+    */
     highlighter.highlightAll();
   }, [description]);
 
