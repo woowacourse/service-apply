@@ -59,6 +59,11 @@ export type PostJudgmentRequest = RequestWithToken<{
 
 export type PostJudgmentResponseData = Mission["judgment"];
 
+export type FetchMissionRequest = RequestWithToken<{
+  recruitmentId: string;
+  missionId: number;
+}>;
+
 export const fetchRecruitmentItems = (recruitmentId: FetchRecruitmentItemsRequest) =>
   axios.get<FetchRecruitmentItemsResponseData>(`/api/recruitments/${recruitmentId}/items`);
 
@@ -115,5 +120,15 @@ export const patchAssignment = ({
   axios.patch<PatchAssignmentResponseData>(
     `/api/recruitments/${recruitmentId}/missions/${missionId}/assignments`,
     assignmentData,
+    headers({ token })
+  );
+
+export const fetchMissionRequirements = ({
+  token,
+  recruitmentId,
+  missionId,
+}: FetchAssignmentRequest) =>
+  axios.get<Mission>(
+    `/api/recruitments/${recruitmentId}/missions/${missionId}/me`,
     headers({ token })
   );

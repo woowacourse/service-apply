@@ -1,3 +1,7 @@
+.assignment-button {
+  background-color: var(--blue);
+}
+
 .refresh-button {
   background-color: var(--blue-gray-500);
 }
@@ -11,6 +15,7 @@
 }
 
 @media screen and (max-width: 800px) {
+  .assignment-button,
   .judgment-button,
   .apply-button,
   .refresh-button {
