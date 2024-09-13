@@ -67,7 +67,7 @@ class MyMissionService(
             MyMissionAndJudgementResponse(
                 mission = mission,
                 submitted = assignment != null,
-                runnable = assignment != null && judgmentItem != null,
+                testable = assignment != null && judgmentItem != null,
                 judgment = judgment
             )
         }
