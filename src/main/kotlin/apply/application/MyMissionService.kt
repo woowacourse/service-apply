@@ -32,8 +32,6 @@ class MyMissionService(
         if (missions.isEmpty()) return emptyList()
 
         val assignments = assignmentRepository.findAllByMemberId(memberId)
-        if (assignments.isEmpty()) return missions.map(::MyMissionAndJudgementResponse)
-
         val judgmentItems = judgmentItemRepository.findAllByMissionIdIn(missions.map { it.id })
         if (judgmentItems.isEmpty()) return missions.mapBy(assignments)
 
@@ -67,7 +65,7 @@ class MyMissionService(
             MyMissionAndJudgementResponse(
                 mission = mission,
                 submitted = assignment != null,
-                testable = assignment != null && judgmentItem != null,
+                testable = judgmentItem != null,
                 judgment = judgment
             )
         }
