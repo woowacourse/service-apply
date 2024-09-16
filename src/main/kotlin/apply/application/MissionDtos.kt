@@ -108,8 +108,8 @@ data class MyMissionAndJudgementResponse(
 ) {
     constructor(
         mission: Mission,
-        submitted: Boolean = false,
-        testable: Boolean = false,
+        submitted: Boolean,
+        testable: Boolean,
         judgment: LastJudgmentResponse? = null
     ) : this(
         mission.id,
