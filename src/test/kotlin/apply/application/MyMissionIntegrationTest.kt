@@ -7,7 +7,6 @@ import apply.createJudgmentItem
 import apply.createMission
 import apply.domain.assignment.Assignment
 import apply.domain.assignment.AssignmentRepository
-import apply.domain.evaluation.Evaluation
 import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
@@ -37,16 +36,19 @@ class MyMissionIntegrationTest(
 ) : BehaviorSpec({
     extensions(SpringTestExtension(SpringTestLifecycleMode.Root))
 
-    fun saveEvaluationWithMission(
-        recruitmentId: Long,
+    fun saveMission(
+        recruitmentId: Long = 1L,
         submittable: Boolean = true,
         hidden: Boolean = false,
-    ): Pair<Evaluation, Mission> {
+    ): Mission {
         val evaluation = evaluationRepository.save(createEvaluation(recruitmentId = recruitmentId))
-        val mission = missionRepository.save(
-            createMission(evaluationId = evaluation.id, submittable = submittable, hidden = hidden)
+        return missionRepository.save(
+            createMission(
+                evaluationId = evaluation.id,
+                submittable = submittable,
+                hidden = hidden
+            )
         )
-        return evaluation to mission
     }
 
     fun saveEvaluationTarget(evaluationId: Long, memberId: Long): EvaluationTarget {
@@ -64,10 +66,10 @@ class MyMissionIntegrationTest(
     Given("특정 모집의 과제가 있는 여러 평가와 평가 대상자가 있는 경우") {
         val memberId = 1L
         val recruitmentId = 1L
-        val (evaluation1, mission1) = saveEvaluationWithMission(recruitmentId)
-        val (evaluation2, mission2) = saveEvaluationWithMission(recruitmentId)
-        saveEvaluationTarget(evaluationId = evaluation1.id, memberId = memberId)
-        saveEvaluationTarget(evaluationId = evaluation2.id, memberId = memberId)
+        val mission1 = saveMission(recruitmentId)
+        val mission2 = saveMission(recruitmentId)
+        saveEvaluationTarget(evaluationId = mission1.evaluationId, memberId = memberId)
+        saveEvaluationTarget(evaluationId = mission2.evaluationId, memberId = memberId)
 
         When("해당 모집에 대한 특정 회원의 모든 과제를 조회하면") {
             val actual = myMissionService.findAllByMemberIdAndRecruitmentId(memberId, recruitmentId)
@@ -83,9 +85,9 @@ class MyMissionIntegrationTest(
     Given("특정 회원이 과제가 있는 일부 평가에 대해서만 평가 대상자인 경우") {
         val memberId = 1L
         val recruitmentId = 1L
-        val (evaluation, mission) = saveEvaluationWithMission(recruitmentId)
-        saveEvaluationWithMission(recruitmentId)
-        saveEvaluationTarget(evaluationId = evaluation.id, memberId = memberId)
+        val mission = saveMission(recruitmentId)
+        saveMission(recruitmentId)
+        saveEvaluationTarget(evaluationId = mission.evaluationId, memberId = memberId)
 
         When("해당 모집에 대한 특정 회원의 모든 과제를 조회하면") {
             val actual = myMissionService.findAllByMemberIdAndRecruitmentId(memberId, recruitmentId)
@@ -100,10 +102,10 @@ class MyMissionIntegrationTest(
     Given("특정 회원이 평가 대상자이더라도 과제가 비공개인 경우") {
         val memberId = 1L
         val recruitmentId = 1L
-        val (evaluation1) = saveEvaluationWithMission(recruitmentId, hidden = true)
-        val (evaluation2, mission2) = saveEvaluationWithMission(recruitmentId)
-        saveEvaluationTarget(evaluationId = evaluation1.id, memberId = memberId)
-        saveEvaluationTarget(evaluationId = evaluation2.id, memberId = memberId)
+        val mission1 = saveMission(recruitmentId, hidden = true)
+        val mission2 = saveMission(recruitmentId)
+        saveEvaluationTarget(evaluationId = mission1.evaluationId, memberId = memberId)
+        saveEvaluationTarget(evaluationId = mission2.evaluationId, memberId = memberId)
 
         When("해당 모집에 대한 특정 회원의 모든 과제를 조회하면") {
             val actual = myMissionService.findAllByMemberIdAndRecruitmentId(memberId, recruitmentId)
@@ -118,10 +120,10 @@ class MyMissionIntegrationTest(
     Given("일부 과제에 대해 과제 제출물을 제출한 경우") {
         val memberId = 1L
         val recruitmentId = 1L
-        val (evaluation1, mission1) = saveEvaluationWithMission(recruitmentId)
-        val (evaluation2, mission2) = saveEvaluationWithMission(recruitmentId)
-        saveEvaluationTarget(evaluationId = evaluation1.id, memberId = memberId)
-        saveEvaluationTarget(evaluationId = evaluation2.id, memberId = memberId)
+        val mission1 = saveMission(recruitmentId)
+        val mission2 = saveMission(recruitmentId)
+        saveEvaluationTarget(evaluationId = mission1.evaluationId, memberId = memberId)
+        saveEvaluationTarget(evaluationId = mission2.evaluationId, memberId = memberId)
         saveAssignment(memberId = memberId, missionId = mission1.id)
 
         When("해당 모집에 대한 특정 회원의 모든 과제를 조회하면") {
@@ -138,10 +140,10 @@ class MyMissionIntegrationTest(
     Given("일부 과제에 자동 채점 항목이 있는 경우") {
         val memberId = 1L
         val recruitmentId = 1L
-        val (evaluation1, mission1) = saveEvaluationWithMission(recruitmentId)
-        val (evaluation2, mission2) = saveEvaluationWithMission(recruitmentId)
-        saveEvaluationTarget(evaluationId = evaluation1.id, memberId = memberId)
-        saveEvaluationTarget(evaluationId = evaluation2.id, memberId = memberId)
+        val mission1 = saveMission(recruitmentId)
+        val mission2 = saveMission(recruitmentId)
+        saveEvaluationTarget(evaluationId = mission1.evaluationId, memberId = memberId)
+        saveEvaluationTarget(evaluationId = mission2.evaluationId, memberId = memberId)
         saveJudgmentItem(missionId = mission1.id)
 
         When("해당 모집에 대한 특정 회원의 모든 과제를 조회하면") {
@@ -158,10 +160,10 @@ class MyMissionIntegrationTest(
     Given("자동 채점 항목이 있는 과제에 대해 과제 제출물을 제출한 경우") {
         val memberId = 1L
         val recruitmentId = 1L
-        val (evaluation1, mission1) = saveEvaluationWithMission(recruitmentId)
-        val (evaluation2, mission2) = saveEvaluationWithMission(recruitmentId)
-        saveEvaluationTarget(evaluationId = evaluation1.id, memberId = memberId)
-        saveEvaluationTarget(evaluationId = evaluation2.id, memberId = memberId)
+        val mission1 = saveMission(recruitmentId)
+        val mission2 = saveMission(recruitmentId)
+        saveEvaluationTarget(evaluationId = mission1.evaluationId, memberId = memberId)
+        saveEvaluationTarget(evaluationId = mission2.evaluationId, memberId = memberId)
         saveJudgmentItem(missionId = mission1.id)
         saveAssignment(memberId = memberId, missionId = mission1.id)
 
@@ -179,7 +181,7 @@ class MyMissionIntegrationTest(
     Given("과제가 공개이고 과제 기간 내에 있는 경우") {
         val memberId = 1L
         val recruitmentId = 1L
-        val (_, mission) = saveEvaluationWithMission(recruitmentId, hidden = false)
+        val mission = saveMission(recruitmentId, hidden = false)
         saveEvaluationTarget(evaluationId = mission.id, memberId = memberId)
 
         When("평가 대상자가 과제를 조회하면") {
@@ -203,7 +205,7 @@ class MyMissionIntegrationTest(
     Given("과제 기간 내이지만 과제가 비공개인 경우") {
         val memberId = 1L
         val recruitmentId = 1L
-        val (_, mission) = saveEvaluationWithMission(recruitmentId, hidden = true)
+        val mission = saveMission(recruitmentId, hidden = true)
         saveEvaluationTarget(evaluationId = mission.id, memberId = memberId)
 
         When("평가 대상자가 과제를 조회하면") {

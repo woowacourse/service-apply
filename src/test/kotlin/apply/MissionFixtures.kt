@@ -12,7 +12,7 @@ import apply.domain.mission.MissionStatus
 import support.flattenByMargin
 import java.time.LocalDateTime
 
-private const val MISSION_TITLE: String = "숫자야구게임"
+private const val MISSION_TITLE: String = "숫자 야구"
 private const val MISSION_DESCRIPTION: String = "과제 설명입니다."
 private val FORMATTED_MISSION_DESCRIPTION: String =
     """

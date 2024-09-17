@@ -13,8 +13,6 @@ import apply.ui.admin.selections.EvaluationItemScoreForm
 
 const val EVALUATION_ID = 1L
 const val EVALUATION_TITLE1 = "프리코스 대상자 선발"
-const val EVALUATION_TITLE2 = "1주차 - 숫자야구게임"
-const val EVALUATION_TITLE3 = "2주차 - 자동차경주게임 "
 const val EVALUATION_DESCRIPTION = "[리뷰 절차]\n" +
     "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse"
 
