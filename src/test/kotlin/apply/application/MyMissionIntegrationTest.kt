@@ -182,7 +182,7 @@ class MyMissionIntegrationTest(
         val memberId = 1L
         val recruitmentId = 1L
         val mission = saveMission(recruitmentId, hidden = false)
-        saveEvaluationTarget(evaluationId = mission.id, memberId = memberId)
+        saveEvaluationTarget(evaluationId = mission.evaluationId, memberId = memberId)
 
         When("평가 대상자가 과제를 조회하면") {
             val actual = myMissionService.findByMemberIdAndMissionId(memberId, mission.id)
@@ -206,7 +206,7 @@ class MyMissionIntegrationTest(
         val memberId = 1L
         val recruitmentId = 1L
         val mission = saveMission(recruitmentId, hidden = true)
-        saveEvaluationTarget(evaluationId = mission.id, memberId = memberId)
+        saveEvaluationTarget(evaluationId = mission.evaluationId, memberId = memberId)
 
         When("평가 대상자가 과제를 조회하면") {
             Then("예외가 발생한다") {
