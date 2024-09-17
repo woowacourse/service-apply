@@ -77,10 +77,18 @@ class MissionRestControllerTest : RestControllerTest() {
     @Test
     fun `나의 과제 목록을 조회한다`() {
         val responses = listOf(
-            createMyMissionAndJudgementResponse(id = 1L, testable = false, judgment = null),
-            createMyMissionAndJudgementResponse(id = 2L, testable = true, judgment = createLastJudgmentResponse()),
+            createMyMissionAndJudgementResponse(id = 1L, submitted = false, testable = false, judgment = null),
+            createMyMissionAndJudgementResponse(id = 2L, submitted = false, testable = true, judgment = null),
+            createMyMissionAndJudgementResponse(id = 3L, submitted = true, testable = true, judgment = null),
             createMyMissionAndJudgementResponse(
-                id = 3L,
+                id = 4L,
+                submitted = true,
+                testable = true,
+                judgment = createLastJudgmentResponse()
+            ),
+            createMyMissionAndJudgementResponse(
+                id = 5L,
+                submitted = true,
                 testable = true,
                 judgment = createLastJudgmentResponse(passCount = 9, totalCount = 10, status = JudgmentStatus.SUCCEEDED)
             )
