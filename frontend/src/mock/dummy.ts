@@ -270,6 +270,18 @@ export const missionsDummy = {
           "https://github.com/woowacourse/service-apply/pull/367/commits/642951e1324eaf66914bd53df339d94cad5667e3",
       },
     },
+    {
+      id: 24,
+      title: "제출 후 & 자동 채점 항목이 없는 경우",
+      description: "설명",
+      startDateTime: "2020-10-25T15:00:00" as ISO8601DateString,
+      endDateTime: "2020-11-25T15:00:00" as ISO8601DateString,
+      submitted: true,
+      submittable: true,
+      status: MISSION_STATUS.SUBMITTING,
+      testable: false,
+      judgment: null,
+    },
   ],
   3: [
     {
