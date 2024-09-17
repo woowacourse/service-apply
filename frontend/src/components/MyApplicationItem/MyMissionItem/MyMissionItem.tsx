@@ -81,12 +81,16 @@ const MyMissionItem = ({ mission, recruitmentId }: MyMissionItemProps) => {
             </li>
           </ul>
         </div>
-        <hr className={styles["divider"]} />
-        <MissionDetail
-          mission={mission}
-          recruitmentId={recruitmentId}
-          judgment={missionItem.judgment}
-        />
+        {missionItem.testable && (
+          <>
+            <hr className={styles["divider"]} />
+            <MissionDetail
+              mission={mission}
+              recruitmentId={recruitmentId}
+              judgment={missionItem.judgment}
+            />
+          </>
+        )}
       </div>
     </div>
   );
