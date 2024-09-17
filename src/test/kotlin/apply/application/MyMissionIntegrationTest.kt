@@ -15,10 +15,12 @@ import apply.domain.judgmentitem.JudgmentItem
 import apply.domain.judgmentitem.JudgmentItemRepository
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionRepository
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.extensions.spring.SpringTestExtension
 import io.kotest.extensions.spring.SpringTestLifecycleMode
 import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import org.springframework.transaction.annotation.Transactional
 import support.test.IntegrationTest
@@ -170,6 +172,53 @@ class MyMissionIntegrationTest(
                 actual shouldHaveSize 2
                 actual[0].shouldBe(mission1, submitted = true, testable = true)
                 actual[1].shouldBe(mission2, submitted = false, testable = false)
+            }
+        }
+    }
+
+    Given("과제가 공개이고 과제 기간 내에 있는 경우") {
+        val memberId = 1L
+        val recruitmentId = 1L
+        val (_, mission) = saveEvaluationWithMission(recruitmentId, hidden = false)
+        saveEvaluationTarget(evaluationId = mission.id, memberId = memberId)
+
+        When("평가 대상자가 과제를 조회하면") {
+            val actual = myMissionService.findByMemberIdAndMissionId(memberId, mission.id)
+
+            Then("과제를 확인할 수 있다") {
+                actual.shouldNotBeNull()
+                actual.description.shouldNotBeNull()
+            }
+        }
+
+        When("평가 대상자가 아닌 회원이 과제를 조회하면") {
+            Then("예외가 발생한다") {
+                shouldThrow<NoSuchElementException> {
+                    myMissionService.findByMemberIdAndMissionId(2L, mission.id)
+                }
+            }
+        }
+    }
+
+    Given("과제 기간 내이지만 과제가 비공개인 경우") {
+        val memberId = 1L
+        val recruitmentId = 1L
+        val (_, mission) = saveEvaluationWithMission(recruitmentId, hidden = true)
+        saveEvaluationTarget(evaluationId = mission.id, memberId = memberId)
+
+        When("평가 대상자가 과제를 조회하면") {
+            Then("예외가 발생한다") {
+                shouldThrow<NoSuchElementException> {
+                    myMissionService.findByMemberIdAndMissionId(memberId, mission.id)
+                }
+            }
+        }
+
+        When("평가 대상자가 아닌 회원이 과제를 조회하면") {
+            Then("예외가 발생한다") {
+                shouldThrow<NoSuchElementException> {
+                    myMissionService.findByMemberIdAndMissionId(2L, mission.id)
+                }
             }
         }
     }
