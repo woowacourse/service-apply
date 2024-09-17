@@ -149,7 +149,7 @@ class MyMissionIntegrationTest(
         When("해당 모집에 대한 특정 회원의 모든 과제를 조회하면") {
             val actual = myMissionService.findAllByMemberIdAndRecruitmentId(memberId, recruitmentId)
 
-            Then("과제 제출물의 제출 여부와 관계없이 예제 테스트를 실행할 수 있다") {
+            Then("과제 제출물의 제출 여부와 관계없이 예제 테스트를 실행할 수 있음을 확인할 수 있다") {
                 actual shouldHaveSize 2
                 actual[0].shouldBe(mission1, submitted = false, testable = true)
                 actual[1].shouldBe(mission2, submitted = false, testable = false)
@@ -170,7 +170,7 @@ class MyMissionIntegrationTest(
         When("해당 모집에 대한 특정 회원의 모든 과제를 조회하면") {
             val actual = myMissionService.findAllByMemberIdAndRecruitmentId(memberId, recruitmentId)
 
-            Then("과제 제출물이 제출되었는지 확인할 수 있으며 예제 테스트를 실행할 수 있다") {
+            Then("과제 제출물이 제출되었는지 확인할 수 있으며 예제 테스트를 실행할 수 있음을 확인할 수 있다") {
                 actual shouldHaveSize 2
                 actual[0].shouldBe(mission1, submitted = true, testable = true)
                 actual[1].shouldBe(mission2, submitted = false, testable = false)
