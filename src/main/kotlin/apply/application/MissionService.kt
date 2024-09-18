@@ -26,10 +26,10 @@ class MissionService(
         val mission = missionRepository.save(
             Mission(
                 request.title,
-                request.description,
                 request.evaluation.id,
                 request.startDateTime,
                 request.endDateTime,
+                request.description,
                 request.submittable,
                 request.hidden,
                 request.submissionMethod,

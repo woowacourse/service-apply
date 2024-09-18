@@ -30,10 +30,10 @@ private val END_DATE_TIME: LocalDateTime = LocalDateTime.now().plusDays(7L)
 
 fun createMission(
     title: String = MISSION_TITLE,
-    description: String = MISSION_DESCRIPTION,
     evaluationId: Long = 1L,
     startDateTime: LocalDateTime = START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
+    description: String = MISSION_DESCRIPTION,
     submittable: Boolean = true,
     hidden: Boolean = false,
     submissionMethod: SubmissionMethod = SubmissionMethod.PUBLIC_PULL_REQUEST,
@@ -41,10 +41,10 @@ fun createMission(
 ): Mission {
     return Mission(
         title,
-        description,
         evaluationId,
         startDateTime,
         endDateTime,
+        description,
         submittable,
         hidden,
         submissionMethod,

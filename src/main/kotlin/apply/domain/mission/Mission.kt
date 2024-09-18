@@ -19,14 +19,14 @@ class Mission(
     val title: String,
 
     @Column(nullable = false)
-    @Lob
-    val description: String,
-
-    @Column(nullable = false)
     val evaluationId: Long,
 
     @Embedded
     var period: MissionPeriod,
+
+    @Column(nullable = false)
+    @Lob
+    val description: String,
 
     @Column(nullable = false)
     var submittable: Boolean = false,
@@ -53,19 +53,19 @@ class Mission(
 
     constructor(
         title: String,
-        description: String,
         evaluationId: Long,
         startDateTime: LocalDateTime,
         endDateTime: LocalDateTime,
-        submittable: Boolean = false,
-        hidden: Boolean = true,
-        submissionMethod: SubmissionMethod = SubmissionMethod.PUBLIC_PULL_REQUEST,
+        description: String,
+        submittable: Boolean,
+        hidden: Boolean,
+        submissionMethod: SubmissionMethod,
         id: Long = 0L,
     ) : this(
         title,
-        description,
         evaluationId,
         MissionPeriod(startDateTime, endDateTime),
+        description,
         submittable,
         hidden,
         submissionMethod,
