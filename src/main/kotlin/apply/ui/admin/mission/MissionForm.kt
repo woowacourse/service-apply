@@ -4,6 +4,8 @@ import apply.application.EvaluationItemSelectData
 import apply.application.EvaluationSelectData
 import apply.application.JudgmentItemData
 import apply.application.MissionData
+import apply.domain.mission.SubmissionMethod
+import apply.domain.mission.SubmissionMethod.PUBLIC_PULL_REQUEST
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.datetimepicker.DateTimePicker
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup
@@ -15,23 +17,26 @@ import support.views.createBooleanRadioButtonGroup
 import support.views.createErrorSmallButton
 import support.views.createItemSelect
 import support.views.createPrimarySmallButton
+import support.views.createRadioButtonGroup
 
 class MissionForm() : BindingIdentityFormLayout<MissionData>(MissionData::class) {
     private val title: TextField = TextField("과제명")
-    private val description: TextArea = TextArea("설명")
     private val evaluation: Select<EvaluationSelectData> = createItemSelect<EvaluationSelectData>("평가").apply {
         setItemLabelGenerator(EvaluationSelectData::title)
         isEmptySelectionAllowed = false
     }
     private val startDateTime: DateTimePicker = DateTimePicker("시작 일시")
     private val endDateTime: DateTimePicker = DateTimePicker("종료 일시")
+    private val description: TextArea = TextArea("설명")
     private val submittable: RadioButtonGroup<Boolean> = createBooleanRadioButtonGroup("제출 여부", "제출 시작", "제출 중지", false)
     private val hidden: RadioButtonGroup<Boolean> = createBooleanRadioButtonGroup("공개 여부", "비공개", "공개", true)
+    private val submissionMethod: RadioButtonGroup<SubmissionMethod> =
+        createRadioButtonGroup("제출 방식", PUBLIC_PULL_REQUEST, SubmissionMethod::label)
     private val addButton: Button = createAddButton()
     private val judgmentItemForm: JudgmentItemForm = JudgmentItemForm()
 
     init {
-        add(title, evaluation, startDateTime, endDateTime, description, submittable, hidden)
+        add(title, evaluation, startDateTime, endDateTime, description, submittable, hidden, submissionMethod)
         setResponsiveSteps(ResponsiveStep("0", 1))
         addFormItem(addButton, "자동 채점 항목")
         drawRequired()

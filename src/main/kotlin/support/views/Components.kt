@@ -34,13 +34,26 @@ fun createBooleanRadioButtonGroup(
     labelText: String,
     trueText: String = true.toString(),
     falseText: String = false.toString(),
-    defaultValue: Boolean = false
+    defaultValue: Boolean = false,
 ): RadioButtonGroup<Boolean> {
     return RadioButtonGroup<Boolean>().apply {
         setItems(true, false)
         label = labelText
         value = defaultValue
         setRenderer(createTextRenderer(trueText, falseText))
+    }
+}
+
+inline fun <reified T : Enum<T>> createRadioButtonGroup(
+    labelText: String,
+    defaultValue: T,
+    crossinline renderer: (T) -> String,
+): RadioButtonGroup<T> {
+    return RadioButtonGroup<T>().apply {
+        setItems(*enumValues<T>())
+        label = labelText
+        value = defaultValue
+        setRenderer(ComponentRenderer { text -> Text(renderer(text)) })
     }
 }
 
@@ -57,7 +70,7 @@ private fun createTextRenderer(trueText: String, falseText: String): ComponentRe
 private fun createBox(
     icon: VaadinIcon,
     labelText: String = "",
-    eventListener: (name: String) -> Unit
+    eventListener: (name: String) -> Unit,
 ): HorizontalLayout {
     val textField = TextField().apply {
         label = labelText
