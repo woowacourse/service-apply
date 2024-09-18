@@ -9,6 +9,7 @@ import apply.application.MyMissionAndJudgementResponse
 import apply.application.MyMissionResponse
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionStatus
+import apply.domain.mission.SubmissionMethod
 import support.flattenByMargin
 import java.time.LocalDateTime
 
@@ -35,9 +36,20 @@ fun createMission(
     endDateTime: LocalDateTime = END_DATE_TIME,
     submittable: Boolean = true,
     hidden: Boolean = false,
-    id: Long = 0L
+    submissionMethod: SubmissionMethod = SubmissionMethod.PUBLIC_PULL_REQUEST,
+    id: Long = 0L,
 ): Mission {
-    return Mission(title, description, evaluationId, startDateTime, endDateTime, submittable, hidden, id)
+    return Mission(
+        title,
+        description,
+        evaluationId,
+        startDateTime,
+        endDateTime,
+        submittable,
+        hidden,
+        submissionMethod,
+        id
+    )
 }
 
 fun createMissionData(
@@ -46,10 +58,11 @@ fun createMissionData(
     startDateTime: LocalDateTime = START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
     description: String = MISSION_DESCRIPTION,
-    judgmentItemData: JudgmentItemData = JudgmentItemData(),
     submittable: Boolean = true,
     hidden: Boolean = true,
-    id: Long = 0L
+    submissionMethod: SubmissionMethod = SubmissionMethod.PUBLIC_PULL_REQUEST,
+    judgmentItemData: JudgmentItemData = JudgmentItemData(),
+    id: Long = 0L,
 ): MissionData {
     return MissionData(
         title,
@@ -57,9 +70,10 @@ fun createMissionData(
         startDateTime,
         endDateTime,
         description,
-        judgmentItemData,
         submittable,
         hidden,
+        submissionMethod,
+        judgmentItemData,
         id
     )
 }
@@ -71,7 +85,7 @@ fun createMissionResponse(
     startDateTime: LocalDateTime = START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
     missionStatus: MissionStatus = MissionStatus.SUBMITTING,
-    id: Long = 0L
+    id: Long = 0L,
 ): MissionResponse {
     return MissionResponse(
         id,
@@ -93,7 +107,7 @@ fun createMyMissionAndJudgementResponse(
     missionStatus: MissionStatus = MissionStatus.SUBMITTING,
     testable: Boolean = true,
     judgment: LastJudgmentResponse? = createLastJudgmentResponse(),
-    id: Long = 0L
+    id: Long = 0L,
 ): MyMissionAndJudgementResponse {
     return MyMissionAndJudgementResponse(
         id,

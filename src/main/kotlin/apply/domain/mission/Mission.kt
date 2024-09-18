@@ -7,6 +7,8 @@ import java.time.LocalDateTime
 import javax.persistence.Column
 import javax.persistence.Embedded
 import javax.persistence.Entity
+import javax.persistence.EnumType
+import javax.persistence.Enumerated
 import javax.persistence.Lob
 
 @SQLDelete(sql = "update mission set deleted = true where id = ?")
@@ -31,7 +33,11 @@ class Mission(
 
     @Column(nullable = false)
     var hidden: Boolean = true,
-    id: Long = 0L
+
+    @Column(nullable = false, columnDefinition = "varchar(255) default 'PUBLIC_PULL_REQUEST'")
+    @Enumerated(EnumType.STRING)
+    val submissionMethod: SubmissionMethod,
+    id: Long = 0L,
 ) : BaseEntity(id) {
     @Column(nullable = false)
     private var deleted: Boolean = false
@@ -53,6 +59,16 @@ class Mission(
         endDateTime: LocalDateTime,
         submittable: Boolean = false,
         hidden: Boolean = true,
-        id: Long = 0L
-    ) : this(title, description, evaluationId, MissionPeriod(startDateTime, endDateTime), submittable, hidden, id)
+        submissionMethod: SubmissionMethod = SubmissionMethod.PUBLIC_PULL_REQUEST,
+        id: Long = 0L,
+    ) : this(
+        title,
+        description,
+        evaluationId,
+        MissionPeriod(startDateTime, endDateTime),
+        submittable,
+        hidden,
+        submissionMethod,
+        id
+    )
 }

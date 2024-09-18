@@ -79,6 +79,7 @@ class MissionForm() : BindingIdentityFormLayout<MissionData>(MissionData::class)
     override fun fill(data: MissionData) {
         fillDefault(data)
         evaluation.isReadOnly = true
+        submissionMethod.isReadOnly = true // https://github.com/vaadin/flow-components/issues/1058
         if (data.judgmentItemData != JudgmentItemData()) {
             addJudgmentItemForm()
             judgmentItemForm.fill(data.judgmentItemData)

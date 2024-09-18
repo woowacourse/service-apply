@@ -19,7 +19,7 @@ class MissionService(
     private val missionRepository: MissionRepository,
     private val evaluationRepository: EvaluationRepository,
     private val evaluationItemRepository: EvaluationItemRepository,
-    private val judgmentItemRepository: JudgmentItemRepository
+    private val judgmentItemRepository: JudgmentItemRepository,
 ) {
     fun save(request: MissionData): MissionResponse {
         validate(request)
@@ -32,6 +32,7 @@ class MissionService(
                 request.endDateTime,
                 request.submittable,
                 request.hidden,
+                request.submissionMethod,
                 request.id
             )
         )
