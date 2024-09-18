@@ -28,12 +28,10 @@ class MyMissionService(
     private val judgmentRepository: JudgmentRepository
 ) {
     fun findAllByMemberIdAndRecruitmentId(memberId: Long, recruitmentId: Long): List<MyMissionAndJudgementResponse> {
-        val missions = findMissions(memberId, recruitmentId)
+        val missions = findMyMissions(memberId, recruitmentId)
         if (missions.isEmpty()) return emptyList()
 
         val assignments = assignmentRepository.findAllByMemberId(memberId)
-        if (assignments.isEmpty()) return missions.map(::MyMissionAndJudgementResponse)
-
         val judgmentItems = judgmentItemRepository.findAllByMissionIdIn(missions.map { it.id })
         if (judgmentItems.isEmpty()) return missions.mapBy(assignments)
 
@@ -42,7 +40,7 @@ class MyMissionService(
         return missions.mapBy(assignments, judgmentItems, judgments)
     }
 
-    private fun findMissions(memberId: Long, recruitmentId: Long): List<Mission> {
+    private fun findMyMissions(memberId: Long, recruitmentId: Long): List<Mission> {
         val evaluationIds = evaluationRepository.findAllByRecruitmentId(recruitmentId).map { it.id }
         val targets = evaluationTargetRepository.findAllByMemberIdAndEvaluationIdIn(memberId, evaluationIds)
         return missionRepository.findAllByEvaluationIdIn(targets.map { it.evaluationId }).filterNot { it.hidden }
@@ -51,7 +49,7 @@ class MyMissionService(
     private fun List<Mission>.mapBy(assignments: List<Assignment>): List<MyMissionAndJudgementResponse> {
         return map { mission ->
             val assignment = assignments.find { it.missionId == mission.id }
-            MyMissionAndJudgementResponse(mission, assignment != null)
+            MyMissionAndJudgementResponse(mission, submitted = assignment != null, testable = false)
         }
     }
 
@@ -67,7 +65,7 @@ class MyMissionService(
             MyMissionAndJudgementResponse(
                 mission = mission,
                 submitted = assignment != null,
-                runnable = assignment != null && judgmentItem != null,
+                testable = judgmentItem != null,
                 judgment = judgment
             )
         }

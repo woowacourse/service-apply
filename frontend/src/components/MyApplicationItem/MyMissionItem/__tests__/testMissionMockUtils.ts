@@ -13,7 +13,7 @@ export function createMockMission(overrides: Partial<Mission> = {}): Mission {
     startDateTime: "2023-01-01T00:00:00" as ISO8601DateString,
     endDateTime: "2023-12-31T23:59:59" as ISO8601DateString,
     status: MISSION_STATUS.SUBMITTING,
-    runnable: true,
+    testable: true,
     judgment: null,
   };
 

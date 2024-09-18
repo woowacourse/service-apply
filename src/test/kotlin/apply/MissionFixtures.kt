@@ -12,7 +12,7 @@ import apply.domain.mission.MissionStatus
 import support.flattenByMargin
 import java.time.LocalDateTime
 
-private const val MISSION_TITLE: String = "숫자야구게임"
+private const val MISSION_TITLE: String = "숫자 야구"
 private const val MISSION_DESCRIPTION: String = "과제 설명입니다."
 private val FORMATTED_MISSION_DESCRIPTION: String =
     """
@@ -91,7 +91,7 @@ fun createMyMissionAndJudgementResponse(
     startDateTime: LocalDateTime = START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
     missionStatus: MissionStatus = MissionStatus.SUBMITTING,
-    runnable: Boolean = true,
+    testable: Boolean = true,
     judgment: LastJudgmentResponse? = createLastJudgmentResponse(),
     id: Long = 0L
 ): MyMissionAndJudgementResponse {
@@ -103,7 +103,7 @@ fun createMyMissionAndJudgementResponse(
         startDateTime,
         endDateTime,
         missionStatus,
-        runnable,
+        testable,
         judgment
     )
 }
