@@ -30,6 +30,7 @@ import apply.domain.member.MemberRepository
 import apply.domain.member.Password
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionRepository
+import apply.domain.mission.SubmissionMethod
 import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitmentitem.RecruitmentItem
@@ -412,6 +413,9 @@ class DatabaseInitializer(
         val missions = listOf(
             Mission(
                 title = "1주 차 프리코스 - 숫자 야구 게임",
+                evaluationId = 2L,
+                startDateTime = createLocalDateTime(2020, 11, 24, 15),
+                endDateTime = createLocalDateTime(2120, 12, 1, 0),
                 description = """
                     |# 미션 - 숫자 야구 게임
                     |
@@ -463,14 +467,15 @@ class DatabaseInitializer(
                     |}
                     |```
                 """.trimMargin(),
-                evaluationId = 2L,
-                startDateTime = createLocalDateTime(2020, 11, 24, 15),
-                endDateTime = createLocalDateTime(2120, 12, 1, 0),
                 submittable = true,
-                hidden = false
+                hidden = false,
+                submissionMethod = SubmissionMethod.PUBLIC_PULL_REQUEST
             ),
             Mission(
                 title = "2주 차 프리코스 - 자동차 경주 게임",
+                evaluationId = 3L,
+                startDateTime = createLocalDateTime(2020, 12, 1, 15),
+                endDateTime = createLocalDateTime(2120, 12, 8, 0),
                 description = """
                     |# 미션 - 자동차 경주 게임
                     |
@@ -480,11 +485,9 @@ class DatabaseInitializer(
                     |- 세 개의 요구 사항을 만족하기 위해 노력한다. 특히 기능을 구현하기 전에 기능 목록을 만들고, 기능 단위로 커밋 하는 방식으로 진행한다.
                     |- 기능 요구 사항에 기재되지 않은 내용은 스스로 판단하여 구현한다.
                 """.trimMargin(),
-                evaluationId = 3L,
-                startDateTime = createLocalDateTime(2020, 12, 1, 15),
-                endDateTime = createLocalDateTime(2120, 12, 8, 0),
                 submittable = true,
-                hidden = false
+                hidden = false,
+                submissionMethod = SubmissionMethod.PRIVATE_REPOSITORY
             )
         )
         missionRepository.saveAll(missions)

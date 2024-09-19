@@ -9,6 +9,7 @@ import apply.application.MyMissionAndJudgementResponse
 import apply.application.MyMissionResponse
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionStatus
+import apply.domain.mission.SubmissionMethod
 import support.flattenByMargin
 import java.time.LocalDateTime
 
@@ -29,15 +30,26 @@ private val END_DATE_TIME: LocalDateTime = LocalDateTime.now().plusDays(7L)
 
 fun createMission(
     title: String = MISSION_TITLE,
-    description: String = MISSION_DESCRIPTION,
     evaluationId: Long = 1L,
     startDateTime: LocalDateTime = START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
+    description: String = MISSION_DESCRIPTION,
     submittable: Boolean = true,
     hidden: Boolean = false,
-    id: Long = 0L
+    submissionMethod: SubmissionMethod = SubmissionMethod.PUBLIC_PULL_REQUEST,
+    id: Long = 0L,
 ): Mission {
-    return Mission(title, description, evaluationId, startDateTime, endDateTime, submittable, hidden, id)
+    return Mission(
+        title,
+        evaluationId,
+        startDateTime,
+        endDateTime,
+        description,
+        submittable,
+        hidden,
+        submissionMethod,
+        id
+    )
 }
 
 fun createMissionData(
@@ -46,10 +58,11 @@ fun createMissionData(
     startDateTime: LocalDateTime = START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
     description: String = MISSION_DESCRIPTION,
-    judgmentItemData: JudgmentItemData = JudgmentItemData(),
     submittable: Boolean = true,
     hidden: Boolean = true,
-    id: Long = 0L
+    submissionMethod: SubmissionMethod = SubmissionMethod.PUBLIC_PULL_REQUEST,
+    judgmentItemData: JudgmentItemData = JudgmentItemData(),
+    id: Long = 0L,
 ): MissionData {
     return MissionData(
         title,
@@ -57,52 +70,57 @@ fun createMissionData(
         startDateTime,
         endDateTime,
         description,
-        judgmentItemData,
         submittable,
         hidden,
+        submissionMethod,
+        judgmentItemData,
         id
     )
 }
 
 fun createMissionResponse(
     title: String = MISSION_TITLE,
-    description: String = MISSION_DESCRIPTION,
-    submittable: Boolean = true,
     startDateTime: LocalDateTime = START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
-    missionStatus: MissionStatus = MissionStatus.SUBMITTING,
-    id: Long = 0L
+    description: String = MISSION_DESCRIPTION,
+    submittable: Boolean = true,
+    hidden: Boolean = false,
+    submissionMethod: SubmissionMethod = SubmissionMethod.PUBLIC_PULL_REQUEST,
+    id: Long = 0L,
 ): MissionResponse {
     return MissionResponse(
         id,
         title,
-        description,
-        submittable,
         startDateTime,
         endDateTime,
-        missionStatus
+        description,
+        submittable,
+        hidden,
+        submissionMethod
     )
 }
 
 fun createMyMissionAndJudgementResponse(
     title: String = MISSION_TITLE,
-    submittable: Boolean = true,
-    submitted: Boolean = true,
     startDateTime: LocalDateTime = START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
-    missionStatus: MissionStatus = MissionStatus.SUBMITTING,
-    testable: Boolean = true,
-    judgment: LastJudgmentResponse? = createLastJudgmentResponse(),
-    id: Long = 0L
+    submittable: Boolean = true,
+    submissionMethod: SubmissionMethod = SubmissionMethod.PUBLIC_PULL_REQUEST,
+    status: MissionStatus = MissionStatus.SUBMITTING,
+    submitted: Boolean = false,
+    testable: Boolean = false,
+    judgment: LastJudgmentResponse? = null,
+    id: Long = 0L,
 ): MyMissionAndJudgementResponse {
     return MyMissionAndJudgementResponse(
         id,
         title,
-        submittable,
-        submitted,
         startDateTime,
         endDateTime,
-        missionStatus,
+        submittable,
+        submissionMethod,
+        status,
+        submitted,
         testable,
         judgment
     )
@@ -110,22 +128,24 @@ fun createMyMissionAndJudgementResponse(
 
 fun createMyMissionResponse(
     title: String = MISSION_TITLE,
-    description: String = FORMATTED_MISSION_DESCRIPTION,
-    submittable: Boolean = true,
     startDateTime: LocalDateTime = START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
-    missionStatus: MissionStatus = MissionStatus.SUBMITTING,
+    description: String = FORMATTED_MISSION_DESCRIPTION,
+    submittable: Boolean = true,
+    submissionMethod: SubmissionMethod = SubmissionMethod.PUBLIC_PULL_REQUEST,
+    status: MissionStatus = MissionStatus.SUBMITTING,
     submitted: Boolean = true,
     id: Long = 0L,
 ): MyMissionResponse {
     return MyMissionResponse(
         id,
         title,
-        description,
-        submittable,
         startDateTime,
         endDateTime,
-        missionStatus,
-        submitted,
+        description,
+        submittable,
+        submissionMethod,
+        status,
+        submitted
     )
 }
