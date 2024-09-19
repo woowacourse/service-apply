@@ -71,4 +71,8 @@ class Mission(
         submissionMethod,
         id
     )
+
+    fun validateSameEvaluation(evaluationId: Long) {
+        require(this.evaluationId == evaluationId) { "과제의 평가는 수정할 수 없습니다." }
+    }
 }
