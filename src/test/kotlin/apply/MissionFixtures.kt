@@ -107,9 +107,9 @@ fun createMyMissionAndJudgementResponse(
     submittable: Boolean = true,
     submissionMethod: SubmissionMethod = SubmissionMethod.PUBLIC_PULL_REQUEST,
     status: MissionStatus = MissionStatus.SUBMITTING,
-    submitted: Boolean = true,
-    testable: Boolean = true,
-    judgment: LastJudgmentResponse? = createLastJudgmentResponse(),
+    submitted: Boolean = false,
+    testable: Boolean = false,
+    judgment: LastJudgmentResponse? = null,
     id: Long = 0L,
 ): MyMissionAndJudgementResponse {
     return MyMissionAndJudgementResponse(

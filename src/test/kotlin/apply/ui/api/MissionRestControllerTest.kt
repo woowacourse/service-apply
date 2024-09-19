@@ -10,7 +10,9 @@ import apply.createMissionData
 import apply.createMissionResponse
 import apply.createMyMissionAndJudgementResponse
 import apply.createMyMissionResponse
-import apply.domain.judgment.JudgmentStatus
+import apply.domain.judgment.JudgmentStatus.SUCCEEDED
+import apply.domain.mission.SubmissionMethod.PRIVATE_REPOSITORY
+import apply.domain.mission.SubmissionMethod.PUBLIC_PULL_REQUEST
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
 import io.mockk.every
@@ -77,20 +79,31 @@ class MissionRestControllerTest : RestControllerTest() {
     @Test
     fun `나의 과제 목록을 조회한다`() {
         val responses = listOf(
-            createMyMissionAndJudgementResponse(id = 1L, submitted = false, testable = false, judgment = null),
-            createMyMissionAndJudgementResponse(id = 2L, submitted = false, testable = true, judgment = null),
-            createMyMissionAndJudgementResponse(id = 3L, submitted = true, testable = true, judgment = null),
+            createMyMissionAndJudgementResponse(id = 1L, submissionMethod = PUBLIC_PULL_REQUEST),
+            createMyMissionAndJudgementResponse(id = 2L, submissionMethod = PRIVATE_REPOSITORY),
+            createMyMissionAndJudgementResponse(
+                id = 3L,
+                submitted = false,
+                testable = true,
+                judgment = null
+            ),
             createMyMissionAndJudgementResponse(
                 id = 4L,
                 submitted = true,
                 testable = true,
-                judgment = createLastJudgmentResponse()
+                judgment = null
             ),
             createMyMissionAndJudgementResponse(
                 id = 5L,
                 submitted = true,
                 testable = true,
-                judgment = createLastJudgmentResponse(passCount = 9, totalCount = 10, status = JudgmentStatus.SUCCEEDED)
+                judgment = createLastJudgmentResponse()
+            ),
+            createMyMissionAndJudgementResponse(
+                id = 6L,
+                submitted = true,
+                testable = true,
+                judgment = createLastJudgmentResponse(passCount = 9, totalCount = 10, status = SUCCEEDED)
             )
         )
         every { missionQueryService.findAllByMemberIdAndRecruitmentId(any(), any()) } returns responses
