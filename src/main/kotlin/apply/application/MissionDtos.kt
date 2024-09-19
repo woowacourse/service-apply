@@ -83,31 +83,34 @@ data class MissionAndEvaluationResponse(
 data class MissionResponse(
     val id: Long,
     val title: String,
-    val description: String,
-    val submittable: Boolean,
     val startDateTime: LocalDateTime,
     val endDateTime: LocalDateTime,
-    val status: MissionStatus,
+    val description: String,
+    val submittable: Boolean,
+    val hidden: Boolean,
+    val submissionMethod: SubmissionMethod,
 ) {
     constructor(mission: Mission) : this(
         mission.id,
         mission.title,
-        mission.description,
-        mission.submittable,
         mission.period.startDateTime,
         mission.period.endDateTime,
-        mission.status
+        mission.description,
+        mission.submittable,
+        mission.hidden,
+        mission.submissionMethod
     )
 }
 
 data class MyMissionAndJudgementResponse(
     val id: Long,
     val title: String,
-    val submittable: Boolean,
-    val submitted: Boolean,
     val startDateTime: LocalDateTime,
     val endDateTime: LocalDateTime,
+    val submittable: Boolean,
+    val submissionMethod: SubmissionMethod,
     val status: MissionStatus,
+    val submitted: Boolean,
     val testable: Boolean,
     val judgment: LastJudgmentResponse?,
 ) {
@@ -119,11 +122,12 @@ data class MyMissionAndJudgementResponse(
     ) : this(
         mission.id,
         mission.title,
-        mission.submittable,
-        submitted,
         mission.period.startDateTime,
         mission.period.endDateTime,
+        mission.submittable,
+        mission.submissionMethod,
         mission.status,
+        submitted,
         testable,
         judgment
     )
@@ -132,20 +136,22 @@ data class MyMissionAndJudgementResponse(
 data class MyMissionResponse(
     val id: Long,
     val title: String,
-    val description: String,
-    val submittable: Boolean,
     val startDateTime: LocalDateTime,
     val endDateTime: LocalDateTime,
+    val description: String,
+    val submittable: Boolean,
+    val submissionMethod: SubmissionMethod,
     val status: MissionStatus,
     val submitted: Boolean,
 ) {
     constructor(mission: Mission, description: String, submitted: Boolean) : this(
         mission.id,
         mission.title,
-        description,
-        mission.submittable,
         mission.period.startDateTime,
         mission.period.endDateTime,
+        description,
+        mission.submittable,
+        mission.submissionMethod,
         mission.status,
         submitted
     )
