@@ -1,7 +1,7 @@
 package apply.domain.assignment
 
 @JvmInline
-value class Url(private val value: String) {
+value class Url(val value: String) {
     init {
         require(ASSIGNMENT_URL_PATTERN.matches(value)) { "URL 형식이 올바르지 않습니다." }
     }
