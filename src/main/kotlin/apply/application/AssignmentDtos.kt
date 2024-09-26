@@ -18,7 +18,7 @@ data class AssignmentRequest(
 )
 
 data class AssignmentData(
-    val pullRequestUrl: String,
+    val url: String,
     val note: String,
     val id: Long
 ) {

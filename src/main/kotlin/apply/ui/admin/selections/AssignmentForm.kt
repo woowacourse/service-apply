@@ -13,7 +13,7 @@ class AssignmentForm(assignmentData: AssignmentData) : FormLayout() {
     init {
         add(
             H3("과제 제출물"),
-            createUrlField(assignmentData.pullRequestUrl),
+            createUrlField(assignmentData.url),
             TextArea("소감").apply {
                 value = assignmentData.note
                 isReadOnly = true
@@ -24,7 +24,7 @@ class AssignmentForm(assignmentData: AssignmentData) : FormLayout() {
 
     private fun createUrlField(url: String): Component {
         return HorizontalLayout(
-            TextField("Pull Request URL").apply {
+            TextField("URL").apply {
                 value = url
                 isReadOnly = true
                 setWidthFull()
