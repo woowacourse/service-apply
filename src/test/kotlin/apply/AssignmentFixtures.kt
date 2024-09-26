@@ -19,24 +19,24 @@ fun createAssignment(
 }
 
 fun createAssignmentRequest(
-    pullRequestUrl: String = PULL_REQUEST_URL,
+    url: String = PULL_REQUEST_URL,
     note: String = NOTE,
 ): AssignmentRequest {
-    return AssignmentRequest(pullRequestUrl, note)
+    return AssignmentRequest(url, note)
 }
 
 fun createAssignmentResponse(
-    pullRequestUrl: String = PULL_REQUEST_URL,
+    url: String = PULL_REQUEST_URL,
     note: String = NOTE,
     id: Long = 0L,
 ): AssignmentResponse {
-    return AssignmentResponse(id, pullRequestUrl, note)
+    return AssignmentResponse(id, url, note)
 }
 
 fun createAssignmentData(
-    pullRequestUrl: String = PULL_REQUEST_URL,
+    url: String = PULL_REQUEST_URL,
     note: String = NOTE,
     id: Long = 0L,
 ): AssignmentData {
-    return AssignmentData(pullRequestUrl, note, id)
+    return AssignmentData(url, note, id)
 }
