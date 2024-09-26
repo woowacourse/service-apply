@@ -11,11 +11,11 @@ private const val NOTE: String = "과제 소감입니다."
 fun createAssignment(
     memberId: Long = 1L,
     missionId: Long = 1L,
-    pullRequestUrl: String = PULL_REQUEST_URL,
+    url: String = PULL_REQUEST_URL,
     note: String = NOTE,
     id: Long = 0L,
 ): Assignment {
-    return Assignment(memberId, missionId, pullRequestUrl, note, id)
+    return Assignment(memberId, missionId, url, note, id)
 }
 
 fun createAssignmentRequest(
