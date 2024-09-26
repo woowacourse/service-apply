@@ -68,7 +68,7 @@ class ExcelService(
             ExcelRow(
                 it.name,
                 it.email,
-                assignment?.pullRequestUrl ?: UNSUBMITTED,
+                assignment?.url ?: UNSUBMITTED,
                 assignment?.note ?: UNSUBMITTED,
                 it.totalScore.toString(),
                 it.evaluationStatus.toText(),

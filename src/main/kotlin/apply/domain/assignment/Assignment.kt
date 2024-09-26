@@ -20,21 +20,19 @@ class Assignment(
 
     @Column(nullable = false)
     val missionId: Long,
-
-    @Column(nullable = false)
-    var url: Url,
+    url: String,
 
     @Column(nullable = false, length = 5000)
     var note: String,
     id: Long = 0L,
 ) : BaseEntity(id) {
-    val pullRequestUrl: String
-        get() = url.value
-
-    constructor(memberId: Long, missionId: Long, url: String, note: String) : this(memberId, missionId, Url(url), note)
+    @Column(name = "url", nullable = false)
+    private var _url: Url = Url(url)
+    val url: String
+        get() = this._url.value
 
     fun update(url: String, note: String) {
-        this.url = Url(url)
+        this._url = Url(url)
         this.note = note
     }
 }

@@ -50,7 +50,7 @@ class EvaluationTargetCsvService(
                 it.id.toString(),
                 it.name,
                 it.email,
-                assignment?.pullRequestUrl ?: UNSUBMITTED,
+                assignment?.url ?: UNSUBMITTED,
                 assignment?.note ?: UNSUBMITTED,
                 it.evaluationStatus.name,
                 *scores(it.answers, evaluationItems).toTypedArray(),

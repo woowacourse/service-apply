@@ -23,7 +23,7 @@ data class AssignmentData(
     val id: Long
 ) {
     constructor(assignment: Assignment?) : this(
-        assignment?.pullRequestUrl.orEmpty(),
+        assignment?.url.orEmpty(),
         assignment?.note.orEmpty(),
         assignment?.id ?: 0L
     )
@@ -36,7 +36,7 @@ data class AssignmentResponse(
 ) {
     constructor(assignment: Assignment) : this(
         assignment.id,
-        assignment.pullRequestUrl,
+        assignment.url,
         assignment.note
     )
 }

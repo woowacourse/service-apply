@@ -4,10 +4,9 @@ import apply.application.AssignmentData
 import apply.application.AssignmentRequest
 import apply.application.AssignmentResponse
 import apply.domain.assignment.Assignment
-import apply.domain.assignment.Url
 
 const val PULL_REQUEST_URL: String = "https://github.com/woowacourse/service-apply/pull/367"
-private const val NOTE = "과제 소감입니다."
+private const val NOTE: String = "과제 소감입니다."
 
 fun createAssignment(
     memberId: Long = 1L,
@@ -16,7 +15,7 @@ fun createAssignment(
     note: String = NOTE,
     id: Long = 0L,
 ): Assignment {
-    return Assignment(memberId, missionId, Url(pullRequestUrl), note, id)
+    return Assignment(memberId, missionId, pullRequestUrl, note, id)
 }
 
 fun createAssignmentRequest(

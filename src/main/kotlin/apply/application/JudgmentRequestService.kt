@@ -26,7 +26,7 @@ class JudgmentRequestService(
                 event.type,
                 judgmentItem.programmingLanguage,
                 judgmentItem.testName,
-                assignment.pullRequestUrl,
+                assignment.url,
                 event.commit
             )
         )
