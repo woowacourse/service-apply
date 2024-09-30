@@ -3,7 +3,6 @@ package apply.infra.github
 import apply.PUBLIC_PULL_REQUEST_URL
 import apply.createCommit
 import apply.domain.mission.SubmissionMethod.PRIVATE_REPOSITORY
-import apply.domain.mission.SubmissionMethod.PUBLIC_PULL_REQUEST
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
@@ -31,7 +30,7 @@ class GitHubClientTest(
     }
 
     "커밋이 100개 이상인 풀 리퀘스트에서 마지막 커밋을 조회한다" {
-        val actual = gitHubClient.getLastCommitFromPullRequest(
+        val actual = gitHubClient.getLastCommit(
             "https://github.com/woowacourse/nextstep_test/pull/697",
             now
         )
@@ -55,7 +54,7 @@ class GitHubClientTest(
     "토큰이 유효하지 않으면 예외가 발생한다" {
         val client = GitHubClient(properties.copy(accessKey = "invalid_token"), builder)
         shouldThrow<IllegalStateException> {
-            client.getLastCommit(PUBLIC_PULL_REQUEST, "https://github.com/woowacourse/java-chicken-2019", now)
+            client.getLastCommit(PRIVATE_REPOSITORY, "https://github.com/woowacourse/java-chicken-2019", now)
         }
     }
 

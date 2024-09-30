@@ -9,7 +9,6 @@ import org.springframework.http.HttpHeaders.ACCEPT
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
 import org.springframework.http.RequestEntity
-import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
 import org.springframework.web.client.HttpClientErrorException.Forbidden
 import org.springframework.web.client.HttpClientErrorException.NotFound
@@ -42,14 +41,17 @@ class GitHubClient(
     private fun bearerToken(token: String): String = if (token.isEmpty()) "" else "Bearer $token"
 
     override fun getLastCommit(url: String, endDateTime: LocalDateTime): Commit {
-        val (owner, repo, pullNumber) = PULL_REQUEST_URL_PATTERN.get(url)
-        return retrieveLastCommit(
-            "${gitHubProperties.uri}/repos/$owner/$repo/pulls/$pullNumber/commits?per_page=$PAGE_SIZE",
-            endDateTime
-        )
+        return getLastCommit(SubmissionMethod.PUBLIC_PULL_REQUEST, url, endDateTime)
     }
 
-    fun getLastCommitFromPullRequest(url: String, endDateTime: LocalDateTime): Commit {
+    override fun getLastCommit(submissionMethod: SubmissionMethod, url: String, endDateTime: LocalDateTime): Commit {
+        return when (submissionMethod) {
+            SubmissionMethod.PUBLIC_PULL_REQUEST -> getLastCommitFromPullRequest(url, endDateTime)
+            SubmissionMethod.PRIVATE_REPOSITORY -> getLastCommitFromRepository(url, endDateTime)
+        }
+    }
+
+    private fun getLastCommitFromPullRequest(url: String, endDateTime: LocalDateTime): Commit {
         val (owner, repo, pullNumber) = PULL_REQUEST_URL_PATTERN.get(url)
         return generateSequence(1) { page -> page + 1 }
             .map { page -> listCommits(owner, repo, pullNumber, page) }
@@ -65,10 +67,10 @@ class GitHubClient(
      * @see [API](https://docs.github.com/en/rest/pulls/pulls#list-commits-on-a-pull-request)
      */
     private fun listCommits(owner: String, repo: String, pullNumber: String, page: Int): List<CommitResponse> {
-        val request = RequestEntity
-            .get("${gitHubProperties.uri}/repos/$owner/$repo/pulls/$pullNumber/commits?per_page=$PAGE_SIZE&page=$page")
-            .build()
+        val url = "${gitHubProperties.uri}/repos/$owner/$repo/pulls/$pullNumber/commits?per_page=$PAGE_SIZE&page=$page"
+        val request = RequestEntity.get(url).build()
         return runCatching { restTemplate.exchange<List<CommitResponse>>(request) }
+            .onFailure { handleException(it, url) }
             .map { it.body }
             .getOrThrow()
             ?: emptyList()
@@ -78,25 +80,21 @@ class GitHubClient(
      * 조회 시 커밋 날짜를 기준으로 내림차순으로 제공한다.
      * @see [API](https://docs.github.com/en/rest/commits/commits#list-commits)
      */
-    fun getLastCommit(submissionMethod: SubmissionMethod, url: String, endDateTime: LocalDateTime): Commit {
+    private fun getLastCommitFromRepository(url: String, endDateTime: LocalDateTime): Commit {
         val (owner, repo) = REPOSITORY_URL_PATTERN.get(url)
-        return retrieveLastCommit(
-            "${gitHubProperties.uri}/repos/$owner/$repo/commits",
-            endDateTime
-        )
+        val url = "${gitHubProperties.uri}/repos/$owner/$repo/commits"
+        val request = RequestEntity.get(url).build()
+        val responses = runCatching { restTemplate.exchange<List<CommitResponse>>(request) }
+            .onFailure { handleException(it, url) }
+            .map { it.body }
+            .getOrThrow()
+            ?: emptyList()
+        return responses.last(endDateTime)
     }
 
     private fun Regex.get(url: String): List<String> {
         val result = find(url) ?: throw IllegalArgumentException("올바른 형식의 URL이어야 합니다.")
         return result.destructured.toList()
-    }
-
-    private fun retrieveLastCommit(url: String, endDateTime: LocalDateTime): Commit {
-        val request = RequestEntity.get(url).build()
-        return runCatching { restTemplate.exchange<List<CommitResponse>>(request) }
-            .onFailure { handleException(it, url) }
-            .map { it.last(endDateTime) }
-            .getOrThrow()
     }
 
     private fun handleException(exception: Throwable, url: String) {
@@ -108,15 +106,6 @@ class GitHubClient(
             is NotFound -> throw IllegalArgumentException("리소스가 존재하지 않거나 접근할 수 없습니다.")
             else -> throw RuntimeException("예기치 않은 예외가 발생했습니다.", exception)
         }
-    }
-
-    private fun ResponseEntity<List<CommitResponse>>.last(endDateTime: LocalDateTime): Commit {
-        val zonedDateTime = endDateTime.atZone(ZoneId.systemDefault())
-        return body
-            ?.filter { it.date <= zonedDateTime }
-            ?.maxByOrNull { it.date }
-            ?.let { Commit(it.hash) }
-            ?: throw IllegalArgumentException("해당 커밋이 존재하지 않습니다. endDateTime: $endDateTime")
     }
 
     private fun List<CommitResponse>.last(endDateTime: LocalDateTime): Commit {
