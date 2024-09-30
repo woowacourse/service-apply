@@ -297,6 +297,19 @@ export const missionsDummy = {
       testable: false,
       judgment: null,
     },
+    {
+      id: 25,
+      title: "비공개 저장소 제출 방식 과제",
+      description: "설명",
+      startDateTime: "2023-10-25T15:00:00" as ISO8601DateString,
+      endDateTime: "2030-11-25T15:00:00" as ISO8601DateString,
+      submitted: false,
+      submittable: true,
+      submissionMethod: MISSION_SUBMISSION_METHOD.PRIVATE_REPOSITORY,
+      status: MISSION_STATUS.SUBMITTING,
+      testable: true,
+      judgment: null,
+    },
   ],
   3: [
     {
