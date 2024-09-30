@@ -51,13 +51,12 @@ class GitHubClient(
 
     fun getLastCommitFromPullRequest(url: String, endDateTime: LocalDateTime): Commit {
         val (owner, repo, pullNumber) = PULL_REQUEST_URL_PATTERN.get(url)
-        var page = 1
-        val responses = listCommits(owner, repo, pullNumber, page).toMutableList()
-        while (page != responses.size / PAGE_SIZE + 1) {
-            page++
-            responses += listCommits(owner, repo, pullNumber, page)
-        }
-        return responses.last(endDateTime)
+        return generateSequence(1) { page -> page + 1 }
+            .map { page -> listCommits(owner, repo, pullNumber, page) }
+            .takeWhile { it.isNotEmpty() }
+            .flatten()
+            .toList()
+            .last(endDateTime)
     }
 
     /**
