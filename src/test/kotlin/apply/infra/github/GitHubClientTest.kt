@@ -3,6 +3,7 @@ package apply.infra.github
 import apply.PUBLIC_PULL_REQUEST_URL
 import apply.createCommit
 import apply.domain.mission.SubmissionMethod.PRIVATE_REPOSITORY
+import apply.domain.mission.SubmissionMethod.PUBLIC_PULL_REQUEST
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
@@ -20,19 +21,20 @@ class GitHubClientTest(
     val now = now()
 
     "설정된 날짜와 시간을 기준으로 마지막 커밋을 조회한다" {
-        val actual = gitHubClient.getLastCommit(PUBLIC_PULL_REQUEST_URL, createLocalDateTime(2021, 10, 11))
+        val actual = gitHubClient.getLastCommit(
+            PUBLIC_PULL_REQUEST, PUBLIC_PULL_REQUEST_URL, createLocalDateTime(2021, 10, 11)
+        )
         actual shouldBe createCommit("8c2d61313838d9220848bd38a5a5adc34efc5169")
     }
 
     "풀 리퀘스트의 마지막 커밋을 조회한다" {
-        val actual = gitHubClient.getLastCommit(PUBLIC_PULL_REQUEST_URL, now)
+        val actual = gitHubClient.getLastCommit(PUBLIC_PULL_REQUEST, PUBLIC_PULL_REQUEST_URL, now)
         actual shouldBe createCommit("eeb43de3f53f4bec08e7d63f07badb66c12dfa31")
     }
 
     "커밋이 100개 이상인 풀 리퀘스트에서 마지막 커밋을 조회한다" {
         val actual = gitHubClient.getLastCommit(
-            "https://github.com/woowacourse/nextstep_test/pull/697",
-            now
+            PUBLIC_PULL_REQUEST, "https://github.com/woowacourse/nextstep_test/pull/697", now
         )
         actual shouldBe createCommit("8c4a97b43cf4db7f3d3f6ec53de0751eb20bdae0")
     }
@@ -60,13 +62,13 @@ class GitHubClientTest(
 
     "리소스가 없으면 예외가 발생한다" {
         shouldThrow<IllegalArgumentException> {
-            gitHubClient.getLastCommit("https://github.com/woowacourse/service-apply/pull/1", now)
+            gitHubClient.getLastCommit(PUBLIC_PULL_REQUEST, "https://github.com/woowacourse/service-apply/pull/1", now)
         }
     }
 
     "해당 커밋이 없으면 예외가 발생한다" {
         shouldThrow<IllegalArgumentException> {
-            gitHubClient.getLastCommit(PUBLIC_PULL_REQUEST_URL, createLocalDateTime(2018))
+            gitHubClient.getLastCommit(PUBLIC_PULL_REQUEST, PUBLIC_PULL_REQUEST_URL, createLocalDateTime(2018))
         }
     }
 

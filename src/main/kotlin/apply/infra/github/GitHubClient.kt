@@ -40,10 +40,6 @@ class GitHubClient(
 
     private fun bearerToken(token: String): String = if (token.isEmpty()) "" else "Bearer $token"
 
-    override fun getLastCommit(url: String, endDateTime: LocalDateTime): Commit {
-        return getLastCommit(SubmissionMethod.PUBLIC_PULL_REQUEST, url, endDateTime)
-    }
-
     override fun getLastCommit(submissionMethod: SubmissionMethod, url: String, endDateTime: LocalDateTime): Commit {
         return when (submissionMethod) {
             SubmissionMethod.PUBLIC_PULL_REQUEST -> getLastCommitFromPullRequest(url, endDateTime)

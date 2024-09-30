@@ -70,7 +70,7 @@ class JudgmentServiceTest : BehaviorSpec({
         every { judgmentItemRepository.existsByMissionId(any()) } returns true
         every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns null
         every { judgmentRepository.save(any()) } answers { firstArg() }
-        every { assignmentArchive.getLastCommit(any(), any()) } returns createCommit()
+        every { assignmentArchive.getLastCommit(any(), any(), any()) } returns createCommit()
 
         When("해당 과제 제출물의 본 자동 채점을 실행하면") {
             val actual = judgmentService.judgeReal(assignment.id)
@@ -130,7 +130,7 @@ class JudgmentServiceTest : BehaviorSpec({
         every { judgmentItemRepository.existsByMissionId(any()) } returns true
         every { assignmentRepository.getByMemberIdAndMissionId(any(), any()) } returns assignment
         every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns judgment
-        every { assignmentArchive.getLastCommit(any(), any()) } returns createCommit()
+        every { assignmentArchive.getLastCommit(any(), any(), any()) } returns createCommit()
         every { judgmentRepository.save(any()) } answers { firstArg() }
 
         When("해당 과제 제출물의 예제 테스트를 실행하면") {
@@ -168,7 +168,7 @@ class JudgmentServiceTest : BehaviorSpec({
         every { assignmentRepository.getByMemberIdAndMissionId(any(), any()) } returns assignment
         every { judgmentItemRepository.existsByMissionId(any()) } returns true
         every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns judgment
-        every { assignmentArchive.getLastCommit(any(), any()) } returns commit
+        every { assignmentArchive.getLastCommit(any(), any(), any()) } returns commit
         every { judgmentRepository.save(any()) } returns judgment
 
         When("해당 과제 제출물의 본 자동 채점을 실행하면") {
@@ -204,7 +204,7 @@ class JudgmentServiceTest : BehaviorSpec({
         every { assignmentRepository.getByMemberIdAndMissionId(any(), any()) } returns assignment
         every { judgmentItemRepository.existsByMissionId(any()) } returns true
         every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns judgment
-        every { assignmentArchive.getLastCommit(any(), any()) } returns commit
+        every { assignmentArchive.getLastCommit(any(), any(), any()) } returns commit
         every { judgmentRepository.save(any()) } returns judgment
 
         When("해당 과제 제출물의 예제 테스트를 실행하면") {
@@ -241,7 +241,7 @@ class JudgmentServiceTest : BehaviorSpec({
         every { assignmentRepository.getByMemberIdAndMissionId(any(), any()) } returns assignment
         every { judgmentItemRepository.existsByMissionId(any()) } returns true
         every { judgmentRepository.findByAssignmentIdAndType(any(), any()) } returns judgment
-        every { assignmentArchive.getLastCommit(any(), any()) } returns commit
+        every { assignmentArchive.getLastCommit(any(), any(), any()) } returns commit
         every { judgmentRepository.save(any()) } returns judgment
 
         When("해당 과제 제출물의 본 자동 채점을 실행하면") {
