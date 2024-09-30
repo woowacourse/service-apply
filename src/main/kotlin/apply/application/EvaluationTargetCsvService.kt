@@ -41,7 +41,7 @@ class EvaluationTargetCsvService(
         mission: Mission
     ): ByteArrayInputStream {
         val headerTitles = arrayOf(
-            ID, NAME, EMAIL, PULL_REQUEST_URL, ASSIGNMENT_NOTE, STATUS, *evaluationItemHeaders, NOTE
+            ID, NAME, EMAIL, URL, ASSIGNMENT_NOTE, STATUS, *evaluationItemHeaders, NOTE
         )
         val assignments = assignmentRepository.findAllByMissionId(mission.id)
         val csvRows = targets.map {
@@ -136,7 +136,7 @@ class EvaluationTargetCsvService(
         private const val EMAIL: String = "이메일"
         private const val STATUS: String = "평가 상태"
         private const val NOTE: String = "기타 특이사항"
-        private const val PULL_REQUEST_URL: String = "Pull Request URL"
+        private const val URL: String = "URL"
         private const val ASSIGNMENT_NOTE: String = "소감"
         private const val UNSUBMITTED: String = "(미제출)"
     }
