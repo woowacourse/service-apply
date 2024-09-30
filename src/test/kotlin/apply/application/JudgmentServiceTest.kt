@@ -77,7 +77,7 @@ class JudgmentServiceTest : BehaviorSpec({
 
             Then("자동 채점 기록을 확인할 수 있다") {
                 assertSoftly(actual) {
-                    pullRequestUrl shouldBe PUBLIC_PULL_REQUEST_URL
+                    url shouldBe PUBLIC_PULL_REQUEST_URL
                     commitHash shouldBe COMMIT_HASH
                     status shouldBe STARTED
                 }

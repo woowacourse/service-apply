@@ -9,7 +9,7 @@ import apply.domain.mission.SubmissionMethod
 import java.time.LocalDateTime
 
 data class LastJudgmentResponse(
-    val pullRequestUrl: String,
+    val url: String,
     val commitHash: String,
     val status: JudgmentStatus,
     val passCount: Int = 0,
@@ -18,10 +18,10 @@ data class LastJudgmentResponse(
     val startedDateTime: LocalDateTime,
 ) {
     val commitUrl: String
-        get() = "$pullRequestUrl/commits/$commitHash"
+        get() = "$url/commits/$commitHash"
 
-    constructor(pullRequestUrl: String, record: JudgmentRecord) : this(
-        pullRequestUrl,
+    constructor(url: String, record: JudgmentRecord) : this(
+        url,
         record.commit.hash,
         record.status,
         record.result.passCount,
