@@ -39,7 +39,7 @@ const AssignmentSubmit = () => {
     handleChanges,
     isValid,
     isEmpty,
-  } = useAssignmentForm();
+  } = useAssignmentForm(submissionMethod);
 
   const handleSubmitError = (error) => {
     if (!error) return;

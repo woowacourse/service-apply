@@ -1,5 +1,8 @@
 import { ComponentMeta, ComponentStory } from "@storybook/react";
-import { MY_MISSION_TOOLTIP_MESSAGE } from "../../../constants/messages";
+import {
+  PRIVATE_REPOSITORY_TOOLTIP_MESSAGE,
+  PUBLIC_PULL_REQUEST_TOOLTIP_MESSAGE,
+} from "../../../constants/messages";
 import Tooltip from "./Tooltip";
 
 export default {
@@ -22,9 +25,16 @@ export default {
   ],
 } as ComponentMeta<typeof Tooltip>;
 
-const Template: ComponentStory<typeof Tooltip> = () => (
-  <Tooltip tooltipId="" messages={MY_MISSION_TOOLTIP_MESSAGE} />
-);
+const Template: ComponentStory<typeof Tooltip> = (args) => <Tooltip {...args} />;
 
-export const Default = Template.bind({});
-Default.args = {};
+export const PullRequestSubmittion = Template.bind({});
+PullRequestSubmittion.args = {
+  tooltipId: "",
+  messages: PUBLIC_PULL_REQUEST_TOOLTIP_MESSAGE,
+};
+
+export const RepositorySubmission = Template.bind({});
+RepositorySubmission.args = {
+  tooltipId: "",
+  messages: PRIVATE_REPOSITORY_TOOLTIP_MESSAGE,
+};
