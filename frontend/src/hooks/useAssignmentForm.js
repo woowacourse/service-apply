@@ -3,17 +3,17 @@ import { ERROR_MESSAGE } from "../constants/messages";
 import { isValidPullRequestUrl } from "../utils/validation/pullRequestUrl";
 
 export const ASSIGNMENT_FORM_NAME = {
-  PULL_REQUEST_URL: "pullRequestUrl",
+  URL: "url",
   NOTE: "note",
 };
 
 const initialRequiredForm = {
-  [ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL]: "",
+  [ASSIGNMENT_FORM_NAME.URL]: "",
   [ASSIGNMENT_FORM_NAME.NOTE]: "",
 };
 
 const initialErrorMessage = {
-  [ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL]: "",
+  [ASSIGNMENT_FORM_NAME.URL]: "",
 };
 
 const useAssignmentForm = () => {
@@ -49,8 +49,8 @@ const useAssignmentForm = () => {
       ? ""
       : ERROR_MESSAGE.VALIDATION.PULL_REQUEST_URL;
 
-    updateErrorMessage(ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL, errorMessage);
-    updateRequiredForm(ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL, target.value);
+    updateErrorMessage(ASSIGNMENT_FORM_NAME.URL, errorMessage);
+    updateRequiredForm(ASSIGNMENT_FORM_NAME.URL, target.value);
   };
 
   const handleChangeNote = ({ target }) => {
@@ -62,7 +62,7 @@ const useAssignmentForm = () => {
     errorMessage,
     init,
     handleChanges: {
-      [ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL]: handleChangePullRequestUrl,
+      [ASSIGNMENT_FORM_NAME.URL]: handleChangePullRequestUrl,
       [ASSIGNMENT_FORM_NAME.NOTE]: handleChangeNote,
     },
     isValid,

@@ -35,7 +35,7 @@ NoResultText.args = {
 export const StartedResultText = Template.bind({});
 StartedResultText.args = {
   judgment: {
-    pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
+    url: "https://github.com/woowacourse/service-apply/pull/367",
     commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
     status: "STARTED",
     passCount: 0,
@@ -50,7 +50,7 @@ StartedResultText.args = {
 export const PassResultText = Template.bind({});
 PassResultText.args = {
   judgment: {
-    pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
+    url: "https://github.com/woowacourse/service-apply/pull/367",
     commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
     status: "SUCCEEDED",
     passCount: 5,
@@ -65,7 +65,7 @@ PassResultText.args = {
 export const NoPassResultText = Template.bind({});
 NoPassResultText.args = {
   judgment: {
-    pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
+    url: "https://github.com/woowacourse/service-apply/pull/367",
     commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
     status: "SUCCEEDED",
     passCount: 4,
@@ -80,7 +80,7 @@ NoPassResultText.args = {
 export const FailJudgmentMission = Template.bind({});
 FailJudgmentMission.args = {
   judgment: {
-    pullRequestUrl: "https://github.com/woowacourse/service-apply/pull/367",
+    url: "https://github.com/woowacourse/service-apply/pull/367",
     commitHash: "642951e1324eaf66914bd53df339d94cad5667e3",
     status: "FAILED",
     passCount: 0,

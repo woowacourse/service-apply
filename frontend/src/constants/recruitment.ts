@@ -12,6 +12,12 @@ export const MISSION_STATUS = {
   ENDED: "ENDED",
 } as const;
 
+// TODO: 과제 도메인 상수 분리
+export const MISSION_SUBMISSION_METHOD = {
+  PUBLIC_PULL_REQUEST: "PUBLIC_PULL_REQUEST",
+  PRIVATE_REPOSITORY: "PRIVATE_REPOSITORY",
+} as const;
+
 export const BUTTON_LABEL = {
   BEFORE_SUBMIT: "준비 중",
   EDIT: "수정하기",
