@@ -41,9 +41,6 @@ class GitHubClient(
 
     private fun bearerToken(token: String): String = if (token.isEmpty()) "" else "Bearer $token"
 
-    /**
-     * @see [API](https://docs.github.com/en/rest/pulls/pulls#list-commits-on-a-pull-request)
-     */
     override fun getLastCommit(url: String, endDateTime: LocalDateTime): Commit {
         val (owner, repo, pullNumber) = PULL_REQUEST_URL_PATTERN.get(url)
         return retrieveLastCommit(
@@ -52,13 +49,40 @@ class GitHubClient(
         )
     }
 
+    fun getLastCommitFromPullRequest(url: String, endDateTime: LocalDateTime): Commit {
+        val (owner, repo, pullNumber) = PULL_REQUEST_URL_PATTERN.get(url)
+        var page = 1
+        val responses = listCommits(owner, repo, pullNumber, page).toMutableList()
+        while (page != responses.size / PAGE_SIZE + 1) {
+            page++
+            responses += listCommits(owner, repo, pullNumber, page)
+        }
+        return responses.last(endDateTime)
+    }
+
     /**
+     * 조회 시 커밋 날짜를 기준으로 오름차순으로 제공한다.
+     * 커밋이 250개가 넘는 경우 별도 대응이 필요하다.
+     * @see [API](https://docs.github.com/en/rest/pulls/pulls#list-commits-on-a-pull-request)
+     */
+    private fun listCommits(owner: String, repo: String, pullNumber: String, page: Int): List<CommitResponse> {
+        val request = RequestEntity
+            .get("${gitHubProperties.uri}/repos/$owner/$repo/pulls/$pullNumber/commits?per_page=$PAGE_SIZE&page=$page")
+            .build()
+        return runCatching { restTemplate.exchange<List<CommitResponse>>(request) }
+            .map { it.body }
+            .getOrThrow()
+            ?: emptyList()
+    }
+
+    /**
+     * 조회 시 커밋 날짜를 기준으로 내림차순으로 제공한다.
      * @see [API](https://docs.github.com/en/rest/commits/commits#list-commits)
      */
     fun getLastCommit(submissionMethod: SubmissionMethod, url: String, endDateTime: LocalDateTime): Commit {
         val (owner, repo) = REPOSITORY_URL_PATTERN.get(url)
         return retrieveLastCommit(
-            "${gitHubProperties.uri}/repos/$owner/$repo/commits?per_page=$PAGE_SIZE",
+            "${gitHubProperties.uri}/repos/$owner/$repo/commits",
             endDateTime
         )
     }
@@ -92,6 +116,14 @@ class GitHubClient(
         return body
             ?.filter { it.date <= zonedDateTime }
             ?.maxByOrNull { it.date }
+            ?.let { Commit(it.hash) }
+            ?: throw IllegalArgumentException("해당 커밋이 존재하지 않습니다. endDateTime: $endDateTime")
+    }
+
+    private fun List<CommitResponse>.last(endDateTime: LocalDateTime): Commit {
+        val zonedDateTime = endDateTime.atZone(ZoneId.systemDefault())
+        return filter { it.date <= zonedDateTime }
+            .maxByOrNull { it.date }
             ?.let { Commit(it.hash) }
             ?: throw IllegalArgumentException("해당 커밋이 존재하지 않습니다. endDateTime: $endDateTime")
     }
