@@ -2,6 +2,7 @@ package apply.application
 
 import apply.COMMIT_HASH
 import apply.PUBLIC_PULL_REQUEST_URL
+import apply.PUBLIC_PULL_REQUEST_URL_VALUE
 import apply.createAssignment
 import apply.createCommit
 import apply.createJudgment
@@ -77,7 +78,7 @@ class JudgmentServiceTest : BehaviorSpec({
 
             Then("자동 채점 기록을 확인할 수 있다") {
                 assertSoftly(actual) {
-                    url shouldBe PUBLIC_PULL_REQUEST_URL
+                    url shouldBe PUBLIC_PULL_REQUEST_URL_VALUE
                     commitHash shouldBe COMMIT_HASH
                     status shouldBe STARTED
                 }

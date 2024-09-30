@@ -1,6 +1,6 @@
 package apply.infra.github
 
-import apply.PUBLIC_PULL_REQUEST_URL
+import apply.PUBLIC_PULL_REQUEST_URL_VALUE
 import apply.createCommit
 import apply.domain.mission.SubmissionMethod.PRIVATE_REPOSITORY
 import apply.domain.mission.SubmissionMethod.PUBLIC_PULL_REQUEST
@@ -22,13 +22,13 @@ class GitHubClientTest(
 
     "설정된 날짜와 시간을 기준으로 마지막 커밋을 조회한다" {
         val actual = gitHubClient.getLastCommit(
-            PUBLIC_PULL_REQUEST, PUBLIC_PULL_REQUEST_URL, createLocalDateTime(2021, 10, 11)
+            PUBLIC_PULL_REQUEST, PUBLIC_PULL_REQUEST_URL_VALUE, createLocalDateTime(2021, 10, 11)
         )
         actual shouldBe createCommit("8c2d61313838d9220848bd38a5a5adc34efc5169")
     }
 
     "풀 리퀘스트의 마지막 커밋을 조회한다" {
-        val actual = gitHubClient.getLastCommit(PUBLIC_PULL_REQUEST, PUBLIC_PULL_REQUEST_URL, now)
+        val actual = gitHubClient.getLastCommit(PUBLIC_PULL_REQUEST, PUBLIC_PULL_REQUEST_URL_VALUE, now)
         actual shouldBe createCommit("eeb43de3f53f4bec08e7d63f07badb66c12dfa31")
     }
 
@@ -68,7 +68,7 @@ class GitHubClientTest(
 
     "해당 커밋이 없으면 예외가 발생한다" {
         shouldThrow<IllegalArgumentException> {
-            gitHubClient.getLastCommit(PUBLIC_PULL_REQUEST, PUBLIC_PULL_REQUEST_URL, createLocalDateTime(2018))
+            gitHubClient.getLastCommit(PUBLIC_PULL_REQUEST, PUBLIC_PULL_REQUEST_URL_VALUE, createLocalDateTime(2018))
         }
     }
 

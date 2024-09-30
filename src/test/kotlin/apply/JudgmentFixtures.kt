@@ -42,7 +42,7 @@ fun createCommit(
 }
 
 fun createLastJudgmentResponse(
-    url: String = PUBLIC_PULL_REQUEST_URL,
+    url: String = PUBLIC_PULL_REQUEST_URL_VALUE,
     commitHash: String = COMMIT_HASH,
     status: JudgmentStatus = JudgmentStatus.STARTED,
     passCount: Int = 0,

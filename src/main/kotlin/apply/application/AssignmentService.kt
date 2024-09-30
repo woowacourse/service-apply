@@ -2,6 +2,7 @@ package apply.application
 
 import apply.domain.assignment.Assignment
 import apply.domain.assignment.AssignmentRepository
+import apply.domain.assignment.Url
 import apply.domain.assignment.getByMemberIdAndMissionId
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
@@ -24,14 +25,15 @@ class AssignmentService(
         check(mission.isSubmitting) { "제출 불가능한 과제입니다." }
         findEvaluationTargetOf(mission.evaluationId, memberId).passIfBeforeEvaluation()
         return assignmentRepository
-            .save(Assignment(memberId, missionId, request.url, request.note))
+            .save(Assignment(memberId, missionId, Url.of(request.url, mission.submissionMethod), request.note))
             .let(::AssignmentResponse)
     }
 
     fun update(missionId: Long, memberId: Long, request: AssignmentRequest) {
-        check(missionRepository.getOrThrow(missionId).isSubmitting) { "제출 불가능한 과제입니다." }
+        val mission = missionRepository.getOrThrow(missionId)
+        check(mission.isSubmitting) { "제출 불가능한 과제입니다." }
         val assignment = assignmentRepository.getByMemberIdAndMissionId(memberId, missionId)
-        assignment.update(request.url, request.note)
+        assignment.update(Url.of(request.url, mission.submissionMethod), request.note)
     }
 
     private fun findEvaluationTargetOf(evaluationId: Long, memberId: Long): EvaluationTarget {
