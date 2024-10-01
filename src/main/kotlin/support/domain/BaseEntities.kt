@@ -18,9 +18,7 @@ abstract class BaseEntity(
 
         other as BaseEntity
 
-        if (id != other.id) return false
-
-        return true
+        return id == other.id
     }
 
     override fun hashCode(): Int {
@@ -38,11 +36,9 @@ abstract class BaseRootEntity<T : AbstractAggregateRoot<T>>(
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as BaseEntity
+        other as BaseRootEntity<*>
 
-        if (id != other.id) return false
-
-        return true
+        return id == other.id
     }
 
     override fun hashCode(): Int {
