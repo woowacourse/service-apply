@@ -1,5 +1,9 @@
 import { Mission } from "../../../../../types/domains/recruitments";
-import { MY_MISSION_TOOLTIP_MESSAGE } from "../../../../constants/messages";
+import {
+  PRIVATE_REPOSITORY_TOOLTIP_MESSAGE,
+  PUBLIC_PULL_REQUEST_TOOLTIP_MESSAGE,
+} from "../../../../constants/messages";
+import { MISSION_SUBMISSION_METHOD } from "../../../../constants/recruitment";
 import Button from "../../../@common/Button/Button";
 import CommitHash from "../../CommitHash/CommitHash";
 import JudgmentResultText from "../../JudgmentResult/JudgmentResult";
@@ -15,6 +19,11 @@ type MissionDetailProps = {
   mission: Mission;
   recruitmentId: string;
   judgment: Mission["judgment"];
+};
+
+const TOOLTIP_MESSAGE = {
+  [MISSION_SUBMISSION_METHOD.PRIVATE_REPOSITORY]: PRIVATE_REPOSITORY_TOOLTIP_MESSAGE,
+  [MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST]: PUBLIC_PULL_REQUEST_TOOLTIP_MESSAGE,
 };
 
 const MissionDetail = ({ mission, recruitmentId, judgment }: MissionDetailProps) => {
@@ -74,8 +83,11 @@ const MissionDetail = ({ mission, recruitmentId, judgment }: MissionDetailProps)
       </div>
       <CommitHash judgment={judgment} />
       <div className={styles["guide-container"]}>
-        <p>테스트 코드 실행이 끝나기까지 3 ~ 5분이 걸릴 수 있습니다</p>
-        <Tooltip tooltipId="auto-judgment-tooltip" messages={MY_MISSION_TOOLTIP_MESSAGE} />
+        <p>예제 테스트 실행이 완료되는 데 3~5분 정도 소요될 수 있습니다.</p>
+        <Tooltip
+          tooltipId="auto-judgment-tooltip"
+          messages={TOOLTIP_MESSAGE[mission.submissionMethod]}
+        />
       </div>
     </div>
   );

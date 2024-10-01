@@ -14,6 +14,7 @@ import { PATH, PARAM } from "../../constants/path";
 import useAssignmentForm, { ASSIGNMENT_FORM_NAME } from "../../hooks/useAssignmentForm";
 import useTokenContext from "../../hooks/useTokenContext";
 import styles from "./AssignmentSubmit.module.css";
+import { MISSION_SUBMISSION_METHOD } from "../../constants/recruitment";
 
 const AssignmentSubmit = () => {
   const navigate = useNavigate();
@@ -24,6 +25,13 @@ const AssignmentSubmit = () => {
   const recruitmentId = location.state?.recruitmentId ?? null;
   const currentMission = location.state?.currentMission ?? null;
 
+  const submissionMethod =
+    currentMission?.submissionMethod ?? MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST;
+  const urlInputLabel =
+    submissionMethod === MISSION_SUBMISSION_METHOD.PRIVATE_REPOSITORY
+      ? "저장소 주소"
+      : "풀 리퀘스트 주소";
+
   const {
     form,
     errorMessage,
@@ -31,7 +39,7 @@ const AssignmentSubmit = () => {
     handleChanges,
     isValid,
     isEmpty,
-  } = useAssignmentForm();
+  } = useAssignmentForm(submissionMethod);
 
   const handleSubmitError = (error) => {
     if (!error) return;
@@ -90,12 +98,12 @@ const AssignmentSubmit = () => {
     <Container title={currentMission?.title ?? ""} titleAlign={TITLE_ALIGN.LEFT}>
       <Form onSubmit={handleSubmit} className={styles.form}>
         <MessageTextInput
-          label="Pull Request 주소"
+          label={urlInputLabel}
           type="url"
-          name={ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL}
-          value={form[ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL]}
-          onChange={handleChanges[ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL]}
-          errorMessage={errorMessage[ASSIGNMENT_FORM_NAME.PULL_REQUEST_URL]}
+          name={ASSIGNMENT_FORM_NAME.URL}
+          value={form[ASSIGNMENT_FORM_NAME.URL]}
+          onChange={handleChanges[ASSIGNMENT_FORM_NAME.URL]}
+          errorMessage={errorMessage[ASSIGNMENT_FORM_NAME.URL]}
           required
         />
         <MessageTextarea

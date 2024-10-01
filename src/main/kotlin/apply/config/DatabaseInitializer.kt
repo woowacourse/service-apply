@@ -10,6 +10,7 @@ import apply.domain.applicationform.ApplicationFormAnswers
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.assignment.Assignment
 import apply.domain.assignment.AssignmentRepository
+import apply.domain.assignment.Url
 import apply.domain.evaluation.Evaluation
 import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluationitem.EvaluationItem
@@ -510,7 +511,10 @@ class DatabaseInitializer(
             Assignment(
                 memberId = 2L,
                 missionId = 1L,
-                pullRequestUrl = "https://github.com/woowacourse/java-baseball-precourse/pull/1",
+                url = Url.of(
+                    "https://github.com/woowacourse/java-baseball-precourse/pull/1",
+                    SubmissionMethod.PUBLIC_PULL_REQUEST
+                ),
                 note = "안녕하세요. 이번 미션 생각보다 쉽지 않네요."
             )
         )

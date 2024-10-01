@@ -2,6 +2,8 @@ import { ComponentMeta, ComponentStory } from "@storybook/react";
 import { MemoryRouter } from "react-router-dom";
 import { missionsDummy } from "./../../../mock/dummy";
 import MyMissionItem from "./MyMissionItem";
+import { MISSION_STATUS, MISSION_SUBMISSION_METHOD } from "../../../constants/recruitment";
+import { ISO8601DateString } from "../../../../types/domains/common";
 
 export default {
   title: "components/MyMissionItem",
@@ -61,4 +63,10 @@ export const PassJudgmentMission = Template.bind({});
 PassJudgmentMission.args = {
   mission: missionsDummy["2"][4],
   recruitmentId: "6",
+};
+
+export const PrivateRepositorySubmission = Template.bind({});
+PrivateRepositorySubmission.args = {
+  mission: missionsDummy["2"][9],
+  recruitmentId: "9",
 };
