@@ -10,6 +10,7 @@ import apply.domain.applicationform.ApplicationFormAnswers
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.assignment.Assignment
 import apply.domain.assignment.AssignmentRepository
+import apply.domain.assignment.Url
 import apply.domain.evaluation.Evaluation
 import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluationitem.EvaluationItem
@@ -30,6 +31,7 @@ import apply.domain.member.MemberRepository
 import apply.domain.member.Password
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionRepository
+import apply.domain.mission.SubmissionMethod
 import apply.domain.recruitment.Recruitment
 import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitmentitem.RecruitmentItem
@@ -412,21 +414,81 @@ class DatabaseInitializer(
         val missions = listOf(
             Mission(
                 title = "1주 차 프리코스 - 숫자 야구 게임",
-                description = "https://github.com/woowacourse/java-baseball-precourse",
                 evaluationId = 2L,
                 startDateTime = createLocalDateTime(2020, 11, 24, 15),
                 endDateTime = createLocalDateTime(2120, 12, 1, 0),
+                description = """
+                    |# 미션 - 숫자 야구 게임
+                    |
+                    |## 🔍 진행 방식
+                    |
+                    |- 미션은 **기능 요구 사항, 프로그래밍 요구 사항, 과제 진행 요구 사항** 세 가지로 구성되어 있다.
+                    |- 세 개의 요구 사항을 만족하기 위해 노력한다. 특히 기능을 구현하기 전에 기능 목록을 만들고, 기능 단위로 커밋 하는 방식으로 진행한다.
+                    |- 기능 요구 사항에 기재되지 않은 내용은 스스로 판단하여 구현한다.
+                    |
+                    |---
+                    |
+                    |## 🎯 프로그래밍 요구 사항
+                    |
+                    |### 라이브러리
+                    |
+                    |- `camp.nextstep.edu.missionutils`에서 제공하는 `Randoms` 및 `Console` API를 사용하여 구현해야 한다.
+                    |   - Random 값 추출은 `camp.nextstep.edu.missionutils.Randoms`의 `pickNumberInRange()`를 활용한다.
+                    |   - 사용자가 입력하는 값은 `camp.nextstep.edu.missionutils.Console`의 `readLine()`을 활용한다.
+                    |
+                    |#### 사용 예시
+                    |
+                    |```java
+                    |List<Integer> computer = new ArrayList<>();
+                    |while (computer.size() < 3) {
+                    |    int randomNumber = Randoms.pickNumberInRange(1, 9);
+                    |    if (!computer.contains(randomNumber)) {
+                    |        computer.add(randomNumber);
+                    |    }
+                    |}
+                    |```
+                    |
+                    |```javascript
+                    |const computer = [];
+                    |while (computer.length < 3) {
+                    |  const number = MissionUtils.Random.pickNumberInRange(1, 9);
+                    |  if (!computer.includes(number)) {
+                    |    computer.push(number);
+                    |  }
+                    |}
+                    |```
+                    |
+                    |```kotlin
+                    |val computer = mutableListOf()
+                    |while (computer.size() < 3) {
+                    |    val randomNumber = Randoms.pickNumberInRange(1, 9)
+                    |    if (!computer.contains(randomNumber)) {
+                    |        computer.add(randomNumber)
+                    |    }
+                    |}
+                    |```
+                """.trimMargin(),
                 submittable = true,
-                hidden = false
+                hidden = false,
+                submissionMethod = SubmissionMethod.PUBLIC_PULL_REQUEST
             ),
             Mission(
                 title = "2주 차 프리코스 - 자동차 경주 게임",
-                description = "https://github.com/woowacourse/java-racingcar-precourse",
                 evaluationId = 3L,
                 startDateTime = createLocalDateTime(2020, 12, 1, 15),
                 endDateTime = createLocalDateTime(2120, 12, 8, 0),
+                description = """
+                    |# 미션 - 자동차 경주 게임
+                    |
+                    |## 🔍 진행 방식
+                    |
+                    |- 미션은 **기능 요구 사항, 프로그래밍 요구 사항, 과제 진행 요구 사항** 세 가지로 구성되어 있다.
+                    |- 세 개의 요구 사항을 만족하기 위해 노력한다. 특히 기능을 구현하기 전에 기능 목록을 만들고, 기능 단위로 커밋 하는 방식으로 진행한다.
+                    |- 기능 요구 사항에 기재되지 않은 내용은 스스로 판단하여 구현한다.
+                """.trimMargin(),
                 submittable = true,
-                hidden = false
+                hidden = false,
+                submissionMethod = SubmissionMethod.PRIVATE_REPOSITORY
             )
         )
         missionRepository.saveAll(missions)
@@ -449,7 +511,10 @@ class DatabaseInitializer(
             Assignment(
                 memberId = 2L,
                 missionId = 1L,
-                pullRequestUrl = "https://github.com/woowacourse/java-baseball-precourse/pull/1",
+                url = Url.of(
+                    "https://github.com/woowacourse/java-baseball-precourse/pull/1",
+                    SubmissionMethod.PUBLIC_PULL_REQUEST
+                ),
                 note = "안녕하세요. 이번 미션 생각보다 쉽지 않네요."
             )
         )

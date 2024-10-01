@@ -12,6 +12,12 @@ export const MISSION_STATUS = {
   ENDED: "ENDED",
 } as const;
 
+// TODO: 과제 도메인 상수 분리
+export const MISSION_SUBMISSION_METHOD = {
+  PUBLIC_PULL_REQUEST: "PUBLIC_PULL_REQUEST",
+  PRIVATE_REPOSITORY: "PRIVATE_REPOSITORY",
+} as const;
+
 export const BUTTON_LABEL = {
   BEFORE_SUBMIT: "준비 중",
   EDIT: "수정하기",
@@ -19,4 +25,7 @@ export const BUTTON_LABEL = {
   UNSUBMITTABLE: "제출불가",
   COMPLETE: "제출완료",
   UNSUBMITTED: "미제출",
+  APPLY: "과제 제출",
+  REFRESH: "새로고침",
+  JUDGMENT: "예제 테스트 실행",
 } as const;

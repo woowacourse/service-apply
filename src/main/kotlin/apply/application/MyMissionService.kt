@@ -12,8 +12,10 @@ import apply.domain.judgmentitem.JudgmentItem
 import apply.domain.judgmentitem.JudgmentItemRepository
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionRepository
+import apply.domain.mission.getOrThrow
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import support.markdownToEmbeddedHtml
 
 @Transactional(readOnly = true)
 @Service
@@ -25,13 +27,11 @@ class MyMissionService(
     private val assignmentRepository: AssignmentRepository,
     private val judgmentRepository: JudgmentRepository
 ) {
-    fun findAllByMemberIdAndRecruitmentId(memberId: Long, recruitmentId: Long): List<MyMissionResponse> {
-        val missions = findMissions(memberId, recruitmentId)
+    fun findAllByMemberIdAndRecruitmentId(memberId: Long, recruitmentId: Long): List<MyMissionAndJudgementResponse> {
+        val missions = findMyMissions(memberId, recruitmentId)
         if (missions.isEmpty()) return emptyList()
 
         val assignments = assignmentRepository.findAllByMemberId(memberId)
-        if (assignments.isEmpty()) return missions.map(::MyMissionResponse)
-
         val judgmentItems = judgmentItemRepository.findAllByMissionIdIn(missions.map { it.id })
         if (judgmentItems.isEmpty()) return missions.mapBy(assignments)
 
@@ -40,16 +40,16 @@ class MyMissionService(
         return missions.mapBy(assignments, judgmentItems, judgments)
     }
 
-    private fun findMissions(memberId: Long, recruitmentId: Long): List<Mission> {
+    private fun findMyMissions(memberId: Long, recruitmentId: Long): List<Mission> {
         val evaluationIds = evaluationRepository.findAllByRecruitmentId(recruitmentId).map { it.id }
         val targets = evaluationTargetRepository.findAllByMemberIdAndEvaluationIdIn(memberId, evaluationIds)
-        return missionRepository.findAllByEvaluationIdIn(targets.map { it.id }).filterNot { it.hidden }
+        return missionRepository.findAllByEvaluationIdIn(targets.map { it.evaluationId }).filterNot { it.hidden }
     }
 
-    private fun List<Mission>.mapBy(assignments: List<Assignment>): List<MyMissionResponse> {
+    private fun List<Mission>.mapBy(assignments: List<Assignment>): List<MyMissionAndJudgementResponse> {
         return map { mission ->
             val assignment = assignments.find { it.missionId == mission.id }
-            MyMissionResponse(mission, assignment != null)
+            MyMissionAndJudgementResponse(mission, submitted = assignment != null, testable = false)
         }
     }
 
@@ -57,15 +57,15 @@ class MyMissionService(
         assignments: List<Assignment>,
         judgmentItems: List<JudgmentItem>,
         judgments: List<Judgment>
-    ): List<MyMissionResponse> {
+    ): List<MyMissionAndJudgementResponse> {
         return map { mission ->
             val assignment = assignments.find { it.missionId == mission.id }
             val judgmentItem = judgmentItems.find { it.missionId == mission.id }
             val judgment = judgments.findLastJudgment(assignment, judgmentItem)
-            MyMissionResponse(
+            MyMissionAndJudgementResponse(
                 mission = mission,
                 submitted = assignment != null,
-                runnable = assignment != null && judgmentItem != null,
+                testable = judgmentItem != null,
                 judgment = judgment
             )
         }
@@ -77,7 +77,7 @@ class MyMissionService(
     ): LastJudgmentResponse? {
         if (assignment == null || judgmentItem == null) return null
         val judgment = find { it.assignmentId == assignment.id } ?: return null
-        return LastJudgmentResponse(assignment.pullRequestUrl, judgment.lastRecord)
+        return LastJudgmentResponse(assignment.url, judgment.lastRecord)
     }
 
     fun findLastRealJudgmentByEvaluationTargetId(evaluationTargetId: Long): JudgmentData? {
@@ -92,6 +92,20 @@ class MyMissionService(
             evaluationItemId = judgmentItem.evaluationItemId,
             assignmentId = assignment.id,
             judgmentRecord = judgment?.lastRecord
+        )
+    }
+
+    fun findByMemberIdAndMissionId(memberId: Long, missionId: Long): MyMissionResponse {
+        val mission = missionRepository.getOrThrow(missionId)
+        val evaluationTarget = evaluationTargetRepository.findByEvaluationIdAndMemberId(mission.evaluationId, memberId)
+        if (!mission.isDescriptionViewable || evaluationTarget == null) {
+            throw NoSuchElementException("과제가 존재하지 않습니다. id: $missionId")
+        }
+        val assignment = assignmentRepository.findByMemberIdAndMissionId(memberId, missionId)
+        return MyMissionResponse(
+            mission = mission,
+            description = markdownToEmbeddedHtml(mission.description),
+            submitted = assignment != null,
         )
     }
 }

@@ -1,3 +1,7 @@
+.divider {
+  border: 0.5px solid var(--gray-300);
+}
+
 .content-box {
   position: relative;
   display: flex;
@@ -11,29 +15,41 @@
   border: 1px solid var(--gray-300);
 }
 
-.text-container {
+.content-wrapper {
   display: flex;
   flex-direction: column;
   gap: 0.875rem;
   width: 100%;
 }
 
-.auto-judgment-detail-contour {
-  border: 0.5px solid var(--gray-300);
+.title-container {
+  display: flex;
+  justify-content: space-between;
 }
 
-.button-container {
-  position: absolute;
-  top: 1.25rem;
-  right: 1.5rem;
+.title-text {
+  flex: 1;
+}
+
+ul.title-button-list {
   display: flex;
-  gap: 1rem;
+}
+
+ul.title-button-list > li:not(:last-child) {
+  margin-right: 0.4rem;
 }
 
 @media screen and (max-width: 800px) {
-  .button-container {
-    position: static;
-    gap: 0.4rem;
-    margin-left: auto;
+  .title-container {
+    flex-direction: column;
+    gap: 0.875rem;
+  }
+
+  ul.title-button-list > li {
+    flex: 1;
+  }
+
+  ul.title-button-list > li > button {
+    width: 100%;
   }
 }

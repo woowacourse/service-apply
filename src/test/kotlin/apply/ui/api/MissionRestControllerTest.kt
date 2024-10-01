@@ -8,8 +8,11 @@ import apply.createLastJudgmentResponse
 import apply.createMission
 import apply.createMissionData
 import apply.createMissionResponse
+import apply.createMyMissionAndJudgementResponse
 import apply.createMyMissionResponse
-import apply.domain.judgment.JudgmentStatus
+import apply.domain.judgment.JudgmentStatus.SUCCEEDED
+import apply.domain.mission.SubmissionMethod.PRIVATE_REPOSITORY
+import apply.domain.mission.SubmissionMethod.PUBLIC_PULL_REQUEST
 import com.ninjasquad.springmockk.MockkBean
 import io.mockk.Runs
 import io.mockk.every
@@ -74,17 +77,35 @@ class MissionRestControllerTest : RestControllerTest() {
     }
 
     @Test
-    fun `나의 과제들을 조회한다`() {
+    fun `나의 과제 목록을 조회한다`() {
         val responses = listOf(
-            createMyMissionResponse(id = 1L, runnable = false, judgment = null),
-            createMyMissionResponse(id = 2L, runnable = true, judgment = createLastJudgmentResponse()),
-            createMyMissionResponse(
+            createMyMissionAndJudgementResponse(id = 1L, submissionMethod = PUBLIC_PULL_REQUEST),
+            createMyMissionAndJudgementResponse(id = 2L, submissionMethod = PRIVATE_REPOSITORY),
+            createMyMissionAndJudgementResponse(
                 id = 3L,
-                runnable = true,
-                judgment = createLastJudgmentResponse(passCount = 9, totalCount = 10, status = JudgmentStatus.SUCCEEDED)
+                submitted = false,
+                testable = true,
+                judgment = null
+            ),
+            createMyMissionAndJudgementResponse(
+                id = 4L,
+                submitted = true,
+                testable = true,
+                judgment = null
+            ),
+            createMyMissionAndJudgementResponse(
+                id = 5L,
+                submitted = true,
+                testable = true,
+                judgment = createLastJudgmentResponse()
+            ),
+            createMyMissionAndJudgementResponse(
+                id = 6L,
+                submitted = true,
+                testable = true,
+                judgment = createLastJudgmentResponse(passCount = 9, totalCount = 10, status = SUCCEEDED)
             )
         )
-
         every { missionQueryService.findAllByMemberIdAndRecruitmentId(any(), any()) } returns responses
 
         mockMvc.get("/api/recruitments/{recruitmentId}/missions/me", 1L) {
@@ -92,6 +113,21 @@ class MissionRestControllerTest : RestControllerTest() {
         }.andExpect {
             status { isOk() }
             content { success(responses) }
+        }.andDo {
+            handle(document("mission-list-me-get"))
+        }
+    }
+
+    @Test
+    fun `나의 과제를 조회한다`() {
+        val response = createMyMissionResponse(id = 1L)
+        every { missionQueryService.findByMemberIdAndMissionId(any(), any()) } returns response
+
+        mockMvc.get("/api/recruitments/{recruitmentId}/missions/{missionId}/me", 1L, 1L) {
+            bearer("valid_token")
+        }.andExpect {
+            status { isOk() }
+            content { success(response) }
         }.andDo {
             handle(document("mission-me-get"))
         }

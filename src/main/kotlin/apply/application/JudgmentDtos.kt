@@ -5,22 +5,23 @@ import apply.domain.judgment.JudgmentRecord
 import apply.domain.judgment.JudgmentStatus
 import apply.domain.judgment.JudgmentType
 import apply.domain.judgmentitem.ProgrammingLanguage
+import apply.domain.mission.SubmissionMethod
 import java.time.LocalDateTime
 
 data class LastJudgmentResponse(
-    val pullRequestUrl: String,
+    val url: String,
     val commitHash: String,
     val status: JudgmentStatus,
     val passCount: Int = 0,
     val totalCount: Int = 0,
     val message: String = "",
-    val startedDateTime: LocalDateTime
+    val startedDateTime: LocalDateTime,
 ) {
     val commitUrl: String
-        get() = "$pullRequestUrl/commits/$commitHash"
+        get() = "$url/commits/$commitHash"
 
-    constructor(pullRequestUrl: String, record: JudgmentRecord) : this(
-        pullRequestUrl,
+    constructor(url: String, record: JudgmentRecord) : this(
+        url,
         record.commit.hash,
         record.status,
         record.result.passCount,
@@ -35,24 +36,25 @@ data class JudgmentRequest(
     val judgmentType: JudgmentType,
     val programmingLanguage: ProgrammingLanguage,
     val testName: String,
-    val pullRequestUrl: String,
-    val commit: Commit
+    val submissionMethod: SubmissionMethod,
+    val url: String,
+    val commit: Commit,
 )
 
 data class SuccessJudgmentRequest(
     val commit: String,
     val passCount: Int,
-    val totalCount: Int
+    val totalCount: Int,
 )
 
 data class FailJudgmentRequest(
     val commit: String,
-    val message: String
+    val message: String,
 )
 
 data class CancelJudgmentRequest(
     val commit: String,
-    val message: String
+    val message: String,
 )
 
 data class JudgmentData(
@@ -64,13 +66,13 @@ data class JudgmentData(
     val totalCount: Int?,
     val message: String?,
     val startedDateTime: LocalDateTime?,
-    val id: Long
+    val id: Long,
 ) {
     constructor(
         id: Long? = null,
         evaluationItemId: Long,
         assignmentId: Long? = null,
-        judgmentRecord: JudgmentRecord? = null
+        judgmentRecord: JudgmentRecord? = null,
     ) : this(
         evaluationItemId,
         assignmentId ?: 0L,

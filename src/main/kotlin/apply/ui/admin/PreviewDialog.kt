@@ -1,4 +1,4 @@
-package apply.ui.admin.mail
+package apply.ui.admin
 
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.Html
@@ -11,7 +11,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import org.jsoup.Jsoup
 import support.views.createContrastButton
 
-class MailPreviewDialog(
+class PreviewDialog(
     htmlText: String
 ) : Dialog() {
     init {
@@ -22,7 +22,7 @@ class MailPreviewDialog(
     }
 
     private fun createHeader(): VerticalLayout {
-        return VerticalLayout(H2("메일 미리 보기")).apply {
+        return VerticalLayout(H2("미리 보기")).apply {
             isPadding = false
             element.style["margin-bottom"] = "10px"
         }
