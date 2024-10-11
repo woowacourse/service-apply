@@ -24,6 +24,9 @@ data class MissionData(
     var startDateTime: LocalDateTime = LocalDateTime.MIN,
 
     @field:NotNull
+    var submissionStartDateTime: LocalDateTime = LocalDateTime.MIN,
+
+    @field:NotNull
     var endDateTime: LocalDateTime = LocalDateTime.MIN,
 
     @field:NotBlank
@@ -43,6 +46,7 @@ data class MissionData(
     constructor(mission: Mission, evaluation: Evaluation, judgmentItemData: JudgmentItemData) : this(
         mission.title,
         EvaluationSelectData(evaluation),
+        mission.period.startDateTime,
         mission.period.startDateTime,
         mission.period.endDateTime,
         mission.description,
