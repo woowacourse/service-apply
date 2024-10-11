@@ -30,6 +30,7 @@ import apply.domain.member.MemberInformation
 import apply.domain.member.MemberRepository
 import apply.domain.member.Password
 import apply.domain.mission.Mission
+import apply.domain.mission.MissionPeriod
 import apply.domain.mission.MissionRepository
 import apply.domain.mission.SubmissionMethod
 import apply.domain.recruitment.Recruitment
@@ -415,8 +416,11 @@ class DatabaseInitializer(
             Mission(
                 title = "1주 차 프리코스 - 숫자 야구 게임",
                 evaluationId = 2L,
-                startDateTime = createLocalDateTime(2020, 11, 24, 15),
-                endDateTime = createLocalDateTime(2120, 12, 1, 0),
+                period = MissionPeriod(
+                    startDateTime = createLocalDateTime(2020, 11, 24, 15),
+                    submissionStartDateTime = createLocalDateTime(2020, 11, 24, 15),
+                    endDateTime = createLocalDateTime(2120, 12, 1, 0)
+                ),
                 description = """
                     |# 미션 - 숫자 야구 게임
                     |
@@ -475,8 +479,11 @@ class DatabaseInitializer(
             Mission(
                 title = "2주 차 프리코스 - 자동차 경주 게임",
                 evaluationId = 3L,
-                startDateTime = createLocalDateTime(2020, 12, 1, 15),
-                endDateTime = createLocalDateTime(2120, 12, 8, 0),
+                period = MissionPeriod(
+                    startDateTime = createLocalDateTime(2020, 12, 1, 15),
+                    submissionStartDateTime = createLocalDateTime(2020, 12, 1, 15),
+                    endDateTime = createLocalDateTime(2120, 12, 8, 0)
+                ),
                 description = """
                     |# 미션 - 자동차 경주 게임
                     |

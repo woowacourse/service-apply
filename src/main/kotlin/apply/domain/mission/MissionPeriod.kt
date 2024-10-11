@@ -16,10 +16,14 @@ data class MissionPeriod(
     val startDateTime: LocalDateTime,
 
     @Column(nullable = false)
-    val endDateTime: LocalDateTime
+    val endDateTime: LocalDateTime,
+
+    @Column(nullable = false)
+    val submissionStartDateTime: LocalDateTime = startDateTime,
 ) {
     init {
         require(endDateTime >= startDateTime) { "시작 일시는 종료 일시보다 이후일 수 없습니다." }
+        require(submissionStartDateTime in startDateTime..endDateTime) { "제출 시작 일시는 시작 일시와 종료 일시 사이여야 합니다." }
     }
 
     fun contains(value: LocalDateTime): Boolean = (startDateTime..endDateTime).contains(value)

@@ -26,15 +26,16 @@ class MissionService(
         validate(request)
         val mission = missionRepository.save(
             Mission(
-                request.title,
-                request.evaluation.id,
-                request.startDateTime,
-                request.endDateTime,
-                request.description,
-                request.submittable,
-                request.hidden,
-                request.submissionMethod,
-                request.id
+                title = request.title,
+                evaluationId = request.evaluation.id,
+                startDateTime = request.startDateTime,
+                submissionStartDateTime = request.submissionStartDateTime,
+                endDateTime = request.endDateTime,
+                description = request.description,
+                submittable = request.submittable,
+                hidden = request.hidden,
+                submissionMethod = request.submissionMethod,
+                id = request.id
             )
         )
         judgmentItemRepository.findByMissionId(mission.id)

@@ -8,6 +8,7 @@ import apply.application.MissionResponse
 import apply.application.MyMissionAndJudgementResponse
 import apply.application.MyMissionResponse
 import apply.domain.mission.Mission
+import apply.domain.mission.MissionPeriod
 import apply.domain.mission.MissionStatus
 import apply.domain.mission.SubmissionMethod
 import support.flattenByMargin
@@ -32,6 +33,7 @@ fun createMission(
     title: String = MISSION_TITLE,
     evaluationId: Long = 1L,
     startDateTime: LocalDateTime = START_DATE_TIME,
+    submissionStartDateTime: LocalDateTime = START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
     description: String = MISSION_DESCRIPTION,
     submittable: Boolean = true,
@@ -42,8 +44,7 @@ fun createMission(
     return Mission(
         title,
         evaluationId,
-        startDateTime,
-        endDateTime,
+        MissionPeriod(startDateTime, endDateTime, submissionStartDateTime),
         description,
         submittable,
         hidden,
@@ -56,6 +57,7 @@ fun createMissionData(
     title: String = MISSION_TITLE,
     evaluation: EvaluationSelectData = EvaluationSelectData(),
     startDateTime: LocalDateTime = START_DATE_TIME,
+    submissionStartDateTime: LocalDateTime = START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
     description: String = MISSION_DESCRIPTION,
     submittable: Boolean = true,
@@ -68,6 +70,7 @@ fun createMissionData(
         title,
         evaluation,
         startDateTime,
+        submissionStartDateTime,
         endDateTime,
         description,
         submittable,

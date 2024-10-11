@@ -55,6 +55,7 @@ class Mission(
         title: String,
         evaluationId: Long,
         startDateTime: LocalDateTime,
+        submissionStartDateTime: LocalDateTime,
         endDateTime: LocalDateTime,
         description: String,
         submittable: Boolean,
@@ -64,7 +65,11 @@ class Mission(
     ) : this(
         title,
         evaluationId,
-        MissionPeriod(startDateTime, endDateTime),
+        MissionPeriod(
+            startDateTime = startDateTime,
+            submissionStartDateTime = submissionStartDateTime,
+            endDateTime = endDateTime
+        ),
         description,
         submittable,
         hidden,
