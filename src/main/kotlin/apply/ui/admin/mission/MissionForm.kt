@@ -25,7 +25,9 @@ class MissionForm() : BindingIdentityFormLayout<MissionData>(MissionData::class)
         setItemLabelGenerator(EvaluationSelectData::title)
         isEmptySelectionAllowed = false
     }
-    private val startDateTime: DateTimePicker = DateTimePicker("시작 일시")
+    private val startDateTime: DateTimePicker = DateTimePicker("시작 일시").apply {
+        addValueChangeListener { submissionStartDateTime.value = it.value }
+    }
     private val submissionStartDateTime: DateTimePicker = DateTimePicker("제출 시작 일시")
     private val endDateTime: DateTimePicker = DateTimePicker("종료 일시")
     private val description: TextArea = TextArea("설명")
