@@ -10,9 +10,9 @@ import { PARAM, PATH } from "../../../../constants/path";
 import { Mission } from "../../../../../types/domains/recruitments";
 import { BUTTON_LABEL } from "../../../../constants/recruitment";
 
-jest.mock("../useMission");
-jest.mock("../useRefresh");
-jest.mock("../useMissionJudgment");
+jest.mock("../../../../hooks/useMission");
+jest.mock("../../../../hooks/useRefresh");
+jest.mock("../../../../hooks/useMissionJudgment");
 
 const mockNavigate = jest.fn();
 jest.mock("react-router-dom", () => ({
@@ -27,15 +27,10 @@ describe("MyMissionItem 컴포넌트 테스트", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (useMission as jest.Mock).mockReturnValue({
-      getter: {
-        missionItem: MISSION_ITEM,
-        applyButtonLabel: BUTTON_LABEL.SUBMIT,
-        formattedStartDateTime: "2023-01-01 00:00",
-        formattedEndDateTime: "2023-01-31 23:59",
-      },
-      setter: {
-        setMissionItem: jest.fn(),
-      },
+      missionItem: MISSION_ITEM,
+      applyButtonLabel: BUTTON_LABEL.SUBMIT,
+      formattedStartDateTime: "2023-01-01 00:00",
+      formattedEndDateTime: "2023-01-31 23:59",
     });
     (useRefresh as jest.Mock).mockReturnValue({ requestRefresh: jest.fn() });
     (useMissionJudgment as jest.Mock).mockReturnValue({
@@ -58,15 +53,11 @@ describe("MyMissionItem 컴포넌트 테스트", () => {
 
     it("미션 상태가 제출 중이 아닐 때 과제 제출 버튼이 비활성화되어야 한다", () => {
       (useMission as jest.Mock).mockReturnValue({
-        getter: {
-          missionItem: { ...MISSION_ITEM, status: "NOT_SUBMITTING" },
-          applyButtonLabel: BUTTON_LABEL.SUBMIT,
-          formattedStartDateTime: "2023-01-01 00:00",
-          formattedEndDateTime: "2023-01-31 23:59",
-        },
-        setter: {
-          setMissionItem: jest.fn(),
-        },
+        missionItem: { ...MISSION_ITEM, status: "NOT_SUBMITTING" },
+        applyButtonLabel: BUTTON_LABEL.SUBMIT,
+        formattedStartDateTime: "2023-01-01 00:00",
+        formattedEndDateTime: "2023-01-31 23:59",
+        setMissionItem: jest.fn(),
       });
 
       render(
@@ -105,15 +96,11 @@ describe("MyMissionItem 컴포넌트 테스트", () => {
     it("미션 과제 제출물 미제출 시, 'new' 상태로 과제 제출 페이지로 이동해야 한다", () => {
       const mockMission: Mission = { ...MISSION_ITEM, submitted: false, status: "SUBMITTING" };
       (useMission as jest.Mock).mockReturnValue({
-        getter: {
-          missionItem: mockMission,
-          applyButtonLabel: BUTTON_LABEL.SUBMIT,
-          formattedStartDateTime: "2023-01-01 00:00",
-          formattedEndDateTime: "2023-01-31 23:59",
-        },
-        setter: {
-          setMissionItem: jest.fn(),
-        },
+        missionItem: mockMission,
+        applyButtonLabel: BUTTON_LABEL.SUBMIT,
+        formattedStartDateTime: "2023-01-01 00:00",
+        formattedEndDateTime: "2023-01-31 23:59",
+        setMissionItem: jest.fn(),
       });
 
       render(<MyMissionItem recruitmentId={RECRUITMENT_ID} mission={mockMission} />);
@@ -138,15 +125,11 @@ describe("MyMissionItem 컴포넌트 테스트", () => {
     it("미션 과제 제출물 제출 시, 'edit' 상태로 과제 제출 페이지로 이동해야 한다", () => {
       const mockMission: Mission = { ...MISSION_ITEM, submitted: true, status: "SUBMITTING" };
       (useMission as jest.Mock).mockReturnValue({
-        getter: {
-          missionItem: mockMission,
-          applyButtonLabel: BUTTON_LABEL.EDIT,
-          formattedStartDateTime: "2023-01-01 00:00",
-          formattedEndDateTime: "2023-01-31 23:59",
-        },
-        setter: {
-          setMissionItem: jest.fn(),
-        },
+        missionItem: mockMission,
+        applyButtonLabel: BUTTON_LABEL.EDIT,
+        formattedStartDateTime: "2023-01-01 00:00",
+        formattedEndDateTime: "2023-01-31 23:59",
+        setMissionItem: jest.fn(),
       });
 
       render(
