@@ -3,7 +3,6 @@ package apply.ui.admin.mission
 import apply.application.MissionAndEvaluationResponse
 import apply.application.MissionService
 import apply.application.RecruitmentService
-import apply.domain.mission.MissionStatus
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
@@ -30,7 +29,7 @@ import support.views.createPrimarySmallButton
 @Route(value = "admin/missions", layout = BaseLayout::class)
 class MissionsView(
     private val recruitmentService: RecruitmentService,
-    private val missionService: MissionService
+    private val missionService: MissionService,
 ) : VerticalLayout(), HasUrlParameter<Long> {
     private var recruitmentId: Long = 0L
 
@@ -58,7 +57,7 @@ class MissionsView(
         return Grid<MissionAndEvaluationResponse>(10).apply {
             addSortableColumn("과제명", MissionAndEvaluationResponse::title)
             addSortableColumn("평가명", MissionAndEvaluationResponse::evaluationTitle)
-            addSortableColumn("상태") { it.status.toText() }
+            addSortableColumn("상태") { it.status.label }
             addSortableColumn("공개 여부") { it.hidden.toText() }
             addSortableColumn("제출 방식") { it.submissionMethod.label }
             addSortableDateTimeColumn("시작일시", MissionAndEvaluationResponse::startDateTime)
@@ -88,15 +87,6 @@ class MissionsView(
     private fun createDeleteButton(mission: MissionAndEvaluationResponse): Button {
         return createDeleteButtonWithDialog("과제를 삭제하시겠습니까?") {
             missionService.deleteById(mission.id)
-        }
-    }
-
-    private fun MissionStatus.toText(): String {
-        return when (this) {
-            MissionStatus.SUBMITTABLE -> "제출 예정"
-            MissionStatus.SUBMITTING -> "제출 중"
-            MissionStatus.UNSUBMITTABLE -> "제출 중지"
-            MissionStatus.ENDED -> "제출 종료"
         }
     }
 
