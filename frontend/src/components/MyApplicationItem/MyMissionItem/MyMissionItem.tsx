@@ -61,7 +61,10 @@ const MyMissionItem = ({ mission, recruitmentId }: MyMissionItemProps) => {
             <li>
               <Button
                 className={buttonStyles["assignment-button"]}
-                disabled={missionItem.status !== MISSION_STATUS.SUBMITTING}
+                disabled={
+                  missionItem.status !== MISSION_STATUS.IN_PROGRESS &&
+                  missionItem.status !== MISSION_STATUS.SUBMITTING
+                }
                 onClick={routeToMissionView}
               >
                 과제 보기

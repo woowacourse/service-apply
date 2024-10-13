@@ -107,21 +107,34 @@ export const missionsDummy = {
   1: [
     {
       id: 1,
-      title: "과제제출 기간 전",
+      title: "과제 시작 일시 전",
       description: "설명",
       startDateTime: "2020-10-25T15:00:00" as ISO8601DateString,
       endDateTime: "2020-11-25T15:00:00" as ISO8601DateString,
       submitted: false,
       submittable: true,
       submissionMethod: MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST,
-      status: MISSION_STATUS.SUBMITTABLE,
+      status: MISSION_STATUS.PREPARED,
+      testable: true,
+      judgment: null,
+    },
+    {
+      id: 2,
+      title: "과제 시작 일시 후 제출 시작 일시 전",
+      description: "설명",
+      startDateTime: "2020-10-25T15:00:00" as ISO8601DateString,
+      endDateTime: "2020-11-25T15:00:00" as ISO8601DateString,
+      submitted: false,
+      submittable: true,
+      submissionMethod: MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST,
+      status: MISSION_STATUS.IN_PROGRESS,
       testable: true,
       judgment: null,
     },
   ],
   2: [
     {
-      id: 2,
+      id: 3,
       title: "과제제출 시작 & 제출 전 & 실행전",
       description: "설명",
       startDateTime: "2020-10-25T15:00:00" as ISO8601DateString,
@@ -134,7 +147,7 @@ export const missionsDummy = {
       judgment: null,
     },
     {
-      id: 3,
+      id: 4,
       title: "과제제출 시작 & 제출 후 & 실행 전",
       description: "설명",
       startDateTime: "2020-10-25T15:00:00" as ISO8601DateString,
@@ -147,7 +160,7 @@ export const missionsDummy = {
       judgment: null,
     },
     {
-      id: 4,
+      id: 5,
       title: "과제제출 시작 & 제출 후 & STARTED & 5분전",
       description: "설명",
       startDateTime: "2020-10-25T15:00:00" as ISO8601DateString,
@@ -170,7 +183,7 @@ export const missionsDummy = {
       },
     },
     {
-      id: 5,
+      id: 6,
       title: "과제제출 시작 & 제출 후 & !STARTED & 5분 후",
       description: "설명",
       startDateTime: "2020-10-25T15:00:00" as ISO8601DateString,
@@ -193,7 +206,7 @@ export const missionsDummy = {
       },
     },
     {
-      id: 6,
+      id: 7,
       title: "과제제출 시작 & 제출 후 & 완료(전체케이스통과)",
       description: "설명",
       startDateTime: "2020-10-25T15:00:00" as ISO8601DateString,
@@ -216,7 +229,7 @@ export const missionsDummy = {
       },
     },
     {
-      id: 7,
+      id: 8,
       title: "과제제출 시작 & 제출 후 & 완료(실패 케이스 존재)",
       description: "설명",
       startDateTime: "2020-10-25T15:00:00" as ISO8601DateString,
@@ -239,7 +252,7 @@ export const missionsDummy = {
       },
     },
     {
-      id: 8,
+      id: 9,
       title: "과제제출 시작 & 제출 후 & 완료(빌드실패)",
       description: "설명",
       startDateTime: "2020-10-25T15:00:00" as ISO8601DateString,

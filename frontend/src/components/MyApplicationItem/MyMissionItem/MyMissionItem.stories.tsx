@@ -35,8 +35,20 @@ export default {
 
 const Template: ComponentStory<typeof MyMissionItem> = (args) => <MyMissionItem {...args} />;
 
-export const NotSubmittedMission = Template.bind({});
-NotSubmittedMission.args = {
+export const PreparedMission = Template.bind({});
+PreparedMission.args = {
+  mission: missionsDummy["1"][0],
+  recruitmentId: "1",
+};
+
+export const InProgressMission = Template.bind({});
+InProgressMission.args = {
+  mission: missionsDummy["1"][1],
+  recruitmentId: "1",
+};
+
+export const SubmittingMission = Template.bind({});
+SubmittingMission.args = {
   mission: missionsDummy["2"][0],
   recruitmentId: "1",
 };
