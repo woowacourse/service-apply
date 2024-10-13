@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import { Mission } from "../../../../types/domains/recruitments";
+import { Mission, MissionStatus } from "../../../../types/domains/recruitments";
 import { MISSION_STATUS } from "../../../constants/recruitment";
 import MissionDetail from "./MissionDetail/MissionDetail";
 import styles from "../MyApplicationItem.module.css";
@@ -20,6 +20,14 @@ const MyMissionItem = ({ mission, recruitmentId }: MyMissionItemProps) => {
 
   const { missionItem, applyButtonLabel, formattedStartDateTime, formattedEndDateTime } =
     useMission({ mission, recruitmentId });
+
+  const viewable = (
+    [
+      MISSION_STATUS.IN_PROGRESS,
+      MISSION_STATUS.SUBMITTING,
+      MISSION_STATUS.UNSUBMITTABLE,
+    ] as MissionStatus[]
+  ).includes(missionItem.status);
 
   const routeToAssignmentSubmit =
     ({ recruitmentId, mission }: { recruitmentId: string; mission: Mission }) =>
@@ -61,10 +69,7 @@ const MyMissionItem = ({ mission, recruitmentId }: MyMissionItemProps) => {
             <li>
               <Button
                 className={buttonStyles["assignment-button"]}
-                disabled={
-                  missionItem.status !== MISSION_STATUS.IN_PROGRESS &&
-                  missionItem.status !== MISSION_STATUS.SUBMITTING
-                }
+                disabled={!viewable}
                 onClick={routeToMissionView}
               >
                 과제 보기

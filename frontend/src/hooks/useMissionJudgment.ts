@@ -19,9 +19,7 @@ const useMissionJudgment = ({ missionItem, recruitmentId }: MissionJudgementProp
   const isSubmitted = submitted;
   const isJudgmentNotStartedOrTimedOut =
     judgment?.status !== JUDGMENT_STATUS.STARTED || isJudgmentTimedOut(judgment);
-  const isMissionActive = !(
-    [MISSION_STATUS.ENDED, MISSION_STATUS.UNSUBMITTABLE] as MissionStatus[]
-  ).includes(status);
+  const isMissionActive = status === MISSION_STATUS.SUBMITTING;
 
   const isJudgmentAvailable = isSubmitted && isJudgmentNotStartedOrTimedOut && isMissionActive;
 
