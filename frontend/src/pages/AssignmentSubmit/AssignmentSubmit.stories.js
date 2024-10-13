@@ -12,7 +12,6 @@ const withMemoryRouterDecorator = (Story, { args }) => {
       startDateTime: "2020-10-25T15:00:00",
       endDateTime: "2020-11-25T15:00:00",
       submitted: false,
-      submittable: true,
       status: MISSION_STATUS.SUBMITTABLE,
       testable: true,
       judgment: null,
