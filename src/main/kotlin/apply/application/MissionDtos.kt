@@ -68,6 +68,7 @@ data class MissionAndEvaluationResponse(
     val hidden: Boolean,
     val submissionMethod: SubmissionMethod,
     val startDateTime: LocalDateTime,
+    val submissionStartDateTime: LocalDateTime,
     val endDateTime: LocalDateTime,
 ) {
     constructor(mission: Mission, evaluation: Evaluation) : this(
@@ -80,6 +81,7 @@ data class MissionAndEvaluationResponse(
         mission.hidden,
         mission.submissionMethod,
         mission.period.startDateTime,
+        mission.period.submissionStartDateTime,
         mission.period.endDateTime
     )
 }
@@ -88,6 +90,7 @@ data class MissionResponse(
     val id: Long,
     val title: String,
     val startDateTime: LocalDateTime,
+    val submissionStartDateTime: LocalDateTime,
     val endDateTime: LocalDateTime,
     val description: String,
     val submittable: Boolean,
@@ -98,6 +101,7 @@ data class MissionResponse(
         mission.id,
         mission.title,
         mission.period.startDateTime,
+        mission.period.submissionStartDateTime,
         mission.period.endDateTime,
         mission.description,
         mission.submittable,
@@ -110,6 +114,7 @@ data class MyMissionAndJudgementResponse(
     val id: Long,
     val title: String,
     val startDateTime: LocalDateTime,
+    val submissionStartDateTime: LocalDateTime,
     val endDateTime: LocalDateTime,
     val submissionMethod: SubmissionMethod,
     val status: MissionStatus,
@@ -126,6 +131,7 @@ data class MyMissionAndJudgementResponse(
         mission.id,
         mission.title,
         mission.period.startDateTime,
+        mission.period.submissionStartDateTime,
         mission.period.endDateTime,
         mission.submissionMethod,
         mission.status,
@@ -139,6 +145,7 @@ data class MyMissionResponse(
     val id: Long,
     val title: String,
     val startDateTime: LocalDateTime,
+    val submissionStartDateTime: LocalDateTime,
     val endDateTime: LocalDateTime,
     val description: String,
     val submissionMethod: SubmissionMethod,
@@ -149,6 +156,7 @@ data class MyMissionResponse(
         mission.id,
         mission.title,
         mission.period.startDateTime,
+        mission.period.submissionStartDateTime,
         mission.period.endDateTime,
         description,
         mission.submissionMethod,

@@ -27,13 +27,14 @@ private val FORMATTED_MISSION_DESCRIPTION: String =
         |</ul>
     """.flattenByMargin()
 private val START_DATE_TIME: LocalDateTime = LocalDateTime.now()
-private val END_DATE_TIME: LocalDateTime = LocalDateTime.now().plusDays(7L)
+private val SUBMISSION_START_DATE_TIME: LocalDateTime = START_DATE_TIME
+private val END_DATE_TIME: LocalDateTime = START_DATE_TIME.plusDays(7L)
 
 fun createMission(
     title: String = MISSION_TITLE,
     evaluationId: Long = 1L,
     startDateTime: LocalDateTime = START_DATE_TIME,
-    submissionStartDateTime: LocalDateTime = START_DATE_TIME,
+    submissionStartDateTime: LocalDateTime = SUBMISSION_START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
     description: String = MISSION_DESCRIPTION,
     submittable: Boolean = true,
@@ -57,7 +58,7 @@ fun createMissionData(
     title: String = MISSION_TITLE,
     evaluation: EvaluationSelectData = EvaluationSelectData(),
     startDateTime: LocalDateTime = START_DATE_TIME,
-    submissionStartDateTime: LocalDateTime = START_DATE_TIME,
+    submissionStartDateTime: LocalDateTime = SUBMISSION_START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
     description: String = MISSION_DESCRIPTION,
     submittable: Boolean = true,
@@ -84,6 +85,7 @@ fun createMissionData(
 fun createMissionResponse(
     title: String = MISSION_TITLE,
     startDateTime: LocalDateTime = START_DATE_TIME,
+    submissionStartDateTime: LocalDateTime = SUBMISSION_START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
     description: String = MISSION_DESCRIPTION,
     submittable: Boolean = true,
@@ -95,6 +97,7 @@ fun createMissionResponse(
         id,
         title,
         startDateTime,
+        submissionStartDateTime,
         endDateTime,
         description,
         submittable,
@@ -106,6 +109,7 @@ fun createMissionResponse(
 fun createMyMissionAndJudgementResponse(
     title: String = MISSION_TITLE,
     startDateTime: LocalDateTime = START_DATE_TIME,
+    submissionStartDateTime: LocalDateTime = SUBMISSION_START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
     submissionMethod: SubmissionMethod = SubmissionMethod.PUBLIC_PULL_REQUEST,
     status: MissionStatus = MissionStatus.SUBMITTING,
@@ -118,6 +122,7 @@ fun createMyMissionAndJudgementResponse(
         id,
         title,
         startDateTime,
+        submissionStartDateTime,
         endDateTime,
         submissionMethod,
         status,
@@ -130,6 +135,7 @@ fun createMyMissionAndJudgementResponse(
 fun createMyMissionResponse(
     title: String = MISSION_TITLE,
     startDateTime: LocalDateTime = START_DATE_TIME,
+    submissionStartDateTime: LocalDateTime = SUBMISSION_START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
     description: String = FORMATTED_MISSION_DESCRIPTION,
     submissionMethod: SubmissionMethod = SubmissionMethod.PUBLIC_PULL_REQUEST,
@@ -141,6 +147,7 @@ fun createMyMissionResponse(
         id,
         title,
         startDateTime,
+        submissionStartDateTime,
         endDateTime,
         description,
         submissionMethod,

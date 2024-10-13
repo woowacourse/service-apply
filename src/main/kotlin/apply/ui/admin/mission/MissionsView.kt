@@ -60,8 +60,9 @@ class MissionsView(
             addSortableColumn("상태") { it.status.label }
             addSortableColumn("공개 여부") { it.hidden.toText() }
             addSortableColumn("제출 방식") { it.submissionMethod.label }
-            addSortableDateTimeColumn("시작일시", MissionAndEvaluationResponse::startDateTime)
-            addSortableDateTimeColumn("종료일시", MissionAndEvaluationResponse::endDateTime)
+            addSortableDateTimeColumn("시작 일시", MissionAndEvaluationResponse::startDateTime)
+            addSortableDateTimeColumn("제출 시작 일시", MissionAndEvaluationResponse::submissionStartDateTime)
+            addSortableDateTimeColumn("종료 일시", MissionAndEvaluationResponse::endDateTime)
             addColumn(createButtonRenderer()).apply { isAutoWidth = true }
             setItems(missionService.findAllByRecruitmentId(recruitmentId))
         }
