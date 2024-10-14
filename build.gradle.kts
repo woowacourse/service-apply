@@ -8,7 +8,7 @@ plugins {
     kotlin("plugin.spring") version kotlinVersion
     kotlin("plugin.jpa") version kotlinVersion
     id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
-    id("com.vaadin") version "0.8.0"
+    id("com.vaadin") version "0.14.10.4"
     id("org.asciidoctor.jvm.convert") version "3.3.2"
     id("org.flywaydb.flyway") version "7.15.0"
 }
@@ -111,5 +111,8 @@ tasks {
         from("${asciidoctor.get().outputDir}/index.html") {
             into("static/docs")
         }
+    }
+    jar {
+        enabled = false
     }
 }
