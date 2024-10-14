@@ -27,7 +27,7 @@ describe("useMission 훅 테스트", () => {
         useMission({ mission: mockMission, recruitmentId: mockRecruitmentId })
       );
 
-      expect(result.current.getter).toEqual(
+      expect(result.current).toEqual(
         expect.objectContaining({
           missionItem: expect.objectContaining({ ...mockMission }),
           applyButtonLabel: BUTTON_LABEL.SUBMIT,
@@ -50,7 +50,7 @@ describe("useMission 훅 테스트", () => {
       const updatedMission = { ...mockMission, title: "Updated Mission" };
       rerender({ mission: updatedMission });
 
-      expect(result.current.getter.missionItem).toEqual(updatedMission);
+      expect(result.current.missionItem).toEqual(updatedMission);
     });
   });
 });

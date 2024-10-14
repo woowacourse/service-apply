@@ -15,6 +15,7 @@ export function createMockMission(overrides: Partial<Mission> = {}): Mission {
     status: MISSION_STATUS.SUBMITTING,
     testable: true,
     judgment: null,
+    submissionMethod: "PUBLIC_PULL_REQUEST",
   };
 
   return {
@@ -33,6 +34,7 @@ export function createMockJudgment(overrides: Partial<Judgment> = {}): Judgment 
     message: "",
     startedDateTime: "2023-06-01T12:00:00" as ISO8601DateString,
     commitUrl: "https://github.com/test/commit",
+    url: "https://github.com/test",
   };
 
   return {
