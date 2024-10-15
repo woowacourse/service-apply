@@ -8,6 +8,7 @@ import apply.application.MissionResponse
 import apply.application.MyMissionAndJudgementResponse
 import apply.application.MyMissionResponse
 import apply.domain.mission.Mission
+import apply.domain.mission.MissionPeriod
 import apply.domain.mission.MissionStatus
 import apply.domain.mission.SubmissionMethod
 import support.flattenByMargin
@@ -26,12 +27,14 @@ private val FORMATTED_MISSION_DESCRIPTION: String =
         |</ul>
     """.flattenByMargin()
 private val START_DATE_TIME: LocalDateTime = LocalDateTime.now()
-private val END_DATE_TIME: LocalDateTime = LocalDateTime.now().plusDays(7L)
+private val SUBMISSION_START_DATE_TIME: LocalDateTime = START_DATE_TIME
+private val END_DATE_TIME: LocalDateTime = START_DATE_TIME.plusDays(7L)
 
 fun createMission(
     title: String = MISSION_TITLE,
     evaluationId: Long = 1L,
     startDateTime: LocalDateTime = START_DATE_TIME,
+    submissionStartDateTime: LocalDateTime = SUBMISSION_START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
     description: String = MISSION_DESCRIPTION,
     submittable: Boolean = true,
@@ -42,8 +45,7 @@ fun createMission(
     return Mission(
         title,
         evaluationId,
-        startDateTime,
-        endDateTime,
+        MissionPeriod(startDateTime, endDateTime, submissionStartDateTime),
         description,
         submittable,
         hidden,
@@ -56,6 +58,7 @@ fun createMissionData(
     title: String = MISSION_TITLE,
     evaluation: EvaluationSelectData = EvaluationSelectData(),
     startDateTime: LocalDateTime = START_DATE_TIME,
+    submissionStartDateTime: LocalDateTime = SUBMISSION_START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
     description: String = MISSION_DESCRIPTION,
     submittable: Boolean = true,
@@ -68,6 +71,7 @@ fun createMissionData(
         title,
         evaluation,
         startDateTime,
+        submissionStartDateTime,
         endDateTime,
         description,
         submittable,
@@ -81,6 +85,7 @@ fun createMissionData(
 fun createMissionResponse(
     title: String = MISSION_TITLE,
     startDateTime: LocalDateTime = START_DATE_TIME,
+    submissionStartDateTime: LocalDateTime = SUBMISSION_START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
     description: String = MISSION_DESCRIPTION,
     submittable: Boolean = true,
@@ -92,6 +97,7 @@ fun createMissionResponse(
         id,
         title,
         startDateTime,
+        submissionStartDateTime,
         endDateTime,
         description,
         submittable,
@@ -103,8 +109,8 @@ fun createMissionResponse(
 fun createMyMissionAndJudgementResponse(
     title: String = MISSION_TITLE,
     startDateTime: LocalDateTime = START_DATE_TIME,
+    submissionStartDateTime: LocalDateTime = SUBMISSION_START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
-    submittable: Boolean = true,
     submissionMethod: SubmissionMethod = SubmissionMethod.PUBLIC_PULL_REQUEST,
     status: MissionStatus = MissionStatus.SUBMITTING,
     submitted: Boolean = false,
@@ -116,8 +122,8 @@ fun createMyMissionAndJudgementResponse(
         id,
         title,
         startDateTime,
+        submissionStartDateTime,
         endDateTime,
-        submittable,
         submissionMethod,
         status,
         submitted,
@@ -129,9 +135,9 @@ fun createMyMissionAndJudgementResponse(
 fun createMyMissionResponse(
     title: String = MISSION_TITLE,
     startDateTime: LocalDateTime = START_DATE_TIME,
+    submissionStartDateTime: LocalDateTime = SUBMISSION_START_DATE_TIME,
     endDateTime: LocalDateTime = END_DATE_TIME,
     description: String = FORMATTED_MISSION_DESCRIPTION,
-    submittable: Boolean = true,
     submissionMethod: SubmissionMethod = SubmissionMethod.PUBLIC_PULL_REQUEST,
     status: MissionStatus = MissionStatus.SUBMITTING,
     submitted: Boolean = true,
@@ -141,9 +147,9 @@ fun createMyMissionResponse(
         id,
         title,
         startDateTime,
+        submissionStartDateTime,
         endDateTime,
         description,
-        submittable,
         submissionMethod,
         status,
         submitted

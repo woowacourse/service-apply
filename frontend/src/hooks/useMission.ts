@@ -10,6 +10,8 @@ type MissionProps = {
 
 export const getMissionLabel = (submitted: boolean, missionStatus: Mission["status"]) => {
   const labelMap = {
+    PREPARED: BUTTON_LABEL.BEFORE_SUBMIT,
+    IN_PROGRESS: BUTTON_LABEL.BEFORE_SUBMIT,
     SUBMITTABLE: BUTTON_LABEL.BEFORE_SUBMIT,
     SUBMITTING: submitted ? BUTTON_LABEL.EDIT : BUTTON_LABEL.SUBMIT,
     UNSUBMITTABLE: BUTTON_LABEL.UNSUBMITTABLE,

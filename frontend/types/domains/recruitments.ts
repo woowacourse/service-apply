@@ -33,13 +33,12 @@ export type RecruitmentItem = {
 export type Mission = {
   id: number;
   title: string;
-  description: string;
-  submittable: boolean;
-  submitted: boolean;
-  submissionMethod: keyof typeof MISSION_SUBMISSION_METHOD;
   startDateTime: ISO8601DateString;
   endDateTime: ISO8601DateString;
+  description: string;
+  submissionMethod: keyof typeof MISSION_SUBMISSION_METHOD;
   status: MissionStatus;
+  submitted: boolean;
   testable: boolean;
   judgment: Judgment;
 };

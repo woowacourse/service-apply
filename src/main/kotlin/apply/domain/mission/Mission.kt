@@ -42,19 +42,15 @@ class Mission(
     @Column(nullable = false)
     private var deleted: Boolean = false
 
-    val status: MissionStatus
-        get() = MissionStatus.of(period, submittable)
-
-    val isSubmitting: Boolean
-        get() = status == MissionStatus.SUBMITTING
-
-    val isDescriptionViewable: Boolean
-        get() = !hidden && status in listOf(MissionStatus.SUBMITTING, MissionStatus.UNSUBMITTABLE)
+    val status: MissionStatus get() = MissionStatus.of(period, submittable)
+    val isSubmitting: Boolean get() = status.submittable
+    val isDescriptionViewable: Boolean get() = !hidden && status.viewable
 
     constructor(
         title: String,
         evaluationId: Long,
         startDateTime: LocalDateTime,
+        submissionStartDateTime: LocalDateTime,
         endDateTime: LocalDateTime,
         description: String,
         submittable: Boolean,
@@ -64,7 +60,11 @@ class Mission(
     ) : this(
         title,
         evaluationId,
-        MissionPeriod(startDateTime, endDateTime),
+        MissionPeriod(
+            startDateTime = startDateTime,
+            submissionStartDateTime = submissionStartDateTime,
+            endDateTime = endDateTime
+        ),
         description,
         submittable,
         hidden,

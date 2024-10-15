@@ -53,8 +53,8 @@ class RecruitmentsView(private val recruitmentService: RecruitmentService) : Ver
             addSortableColumn("기수") { it.term.name }
             addSortableColumn("상태") { it.status.toText() }
             addSortableColumn("공개 여부") { it.hidden.toText() }
-            addSortableDateTimeColumn("시작일시", RecruitmentResponse::startDateTime)
-            addSortableDateTimeColumn("종료일시", RecruitmentResponse::endDateTime)
+            addSortableDateTimeColumn("시작 일시", RecruitmentResponse::startDateTime)
+            addSortableDateTimeColumn("종료 일시", RecruitmentResponse::endDateTime)
             addColumn(createButtonRenderer()).apply { isAutoWidth = true }
             setItems(recruitmentService.findAll())
         }

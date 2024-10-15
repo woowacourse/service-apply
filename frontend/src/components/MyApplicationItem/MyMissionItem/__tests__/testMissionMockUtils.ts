@@ -7,15 +7,14 @@ export function createMockMission(overrides: Partial<Mission> = {}): Mission {
   const defaultMission: Mission = {
     id: 1,
     title: "테스트 미션",
-    description: "테스트 설명",
-    submittable: true,
-    submitted: false,
     startDateTime: "2023-01-01T00:00:00" as ISO8601DateString,
     endDateTime: "2023-12-31T23:59:59" as ISO8601DateString,
+    description: "테스트 설명",
+    submissionMethod: "PUBLIC_PULL_REQUEST",
     status: MISSION_STATUS.SUBMITTING,
+    submitted: false,
     testable: true,
     judgment: null,
-    submissionMethod: "PUBLIC_PULL_REQUEST",
   };
 
   return {

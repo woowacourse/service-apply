@@ -25,7 +25,10 @@ class MissionForm() : BindingIdentityFormLayout<MissionData>(MissionData::class)
         setItemLabelGenerator(EvaluationSelectData::title)
         isEmptySelectionAllowed = false
     }
-    private val startDateTime: DateTimePicker = DateTimePicker("시작 일시")
+    private val startDateTime: DateTimePicker = DateTimePicker("시작 일시").apply {
+        addValueChangeListener { submissionStartDateTime.value = it.value }
+    }
+    private val submissionStartDateTime: DateTimePicker = DateTimePicker("제출 시작 일시")
     private val endDateTime: DateTimePicker = DateTimePicker("종료 일시")
     private val description: TextArea = TextArea("설명")
     private val submittable: RadioButtonGroup<Boolean> = createBooleanRadioButtonGroup("제출 여부", "제출 시작", "제출 중지", false)
@@ -36,7 +39,17 @@ class MissionForm() : BindingIdentityFormLayout<MissionData>(MissionData::class)
     private val judgmentItemForm: JudgmentItemForm = JudgmentItemForm()
 
     init {
-        add(title, evaluation, startDateTime, endDateTime, description, submittable, hidden, submissionMethod)
+        add(
+            title,
+            evaluation,
+            startDateTime,
+            submissionStartDateTime,
+            endDateTime,
+            description,
+            submittable,
+            hidden,
+            submissionMethod
+        )
         setResponsiveSteps(ResponsiveStep("0", 1))
         addFormItem(addButton, "자동 채점 항목")
         drawRequired()
