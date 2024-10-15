@@ -47,7 +47,7 @@ data class MissionData(
         mission.title,
         EvaluationSelectData(evaluation),
         mission.period.startDateTime,
-        mission.period.startDateTime,
+        mission.period.submissionStartDateTime,
         mission.period.endDateTime,
         mission.description,
         mission.submittable,
