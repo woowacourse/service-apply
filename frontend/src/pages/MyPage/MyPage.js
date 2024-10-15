@@ -20,6 +20,10 @@ const MyPage = () => {
     navigate(PATH.EDIT_MY_PAGE);
   };
 
+  const routeToWithdrawal = () => {
+    navigate(PATH.WITHDRAWAL_PAGE);
+  };
+
   return (
     <Container title={`${memberInfo?.name ?? ""} 님`}>
       <div className={styles.box}>
@@ -58,6 +62,13 @@ const MyPage = () => {
             </Button>
             <Button type="button" onClick={routeToMyPageEdit}>
               내 정보 수정
+            </Button>
+            <Button
+              type="button"
+              variant={BUTTON_VARIANT.DANGER_CONTAINED}
+              onClick={routeToWithdrawal}
+            >
+              회원 탈퇴
             </Button>
           </div>
         </div>

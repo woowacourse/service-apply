@@ -27,9 +27,14 @@
   color: var(--white);
 }
 
+.danger {
+  background-color: var(--red-800);
+}
+
 .cancel {
   background: var(--gray-700);
 }
+
 button:disabled {
   cursor: default;
   background: var(--gray-400);

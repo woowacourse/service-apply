@@ -14,6 +14,7 @@ import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.evaluationtarget.getOrThrow
 import apply.domain.member.MemberRepository
 import apply.domain.member.findAllByEmailIn
+import apply.domain.member.findAllByIdIn
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -112,7 +113,7 @@ class EvaluationTargetService(
     }
 
     private fun save(memberIds: Set<Long>, evaluation: Evaluation, evaluationStatus: EvaluationStatus) {
-        val evaluationTargets = memberRepository.findAllById(memberIds)
+        val evaluationTargets = memberRepository.findAllByIdIn(memberIds)
             .map { EvaluationTarget(evaluation.id, memberId = it.id, evaluationStatus = evaluationStatus) }
         evaluationTargetRepository.saveAll(evaluationTargets)
     }
