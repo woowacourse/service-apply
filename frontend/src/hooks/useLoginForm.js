@@ -35,7 +35,7 @@ const useLoginForm = () => {
 
   const handleCapsLockState = (name) => (event) => {
     const newErrorMessage = event.getModifierState("CapsLock")
-      ? ERROR_MESSAGE.VALIDATION.PASSWORD_CAPSLOCK
+      ? ERROR_MESSAGE.VALIDATION.PASSWORD_CAPS_LOCK
       : "";
 
     setErrorMessage((prev) => ({

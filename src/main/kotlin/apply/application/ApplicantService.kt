@@ -4,6 +4,7 @@ import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.CheaterRepository
 import apply.domain.member.Member
 import apply.domain.member.MemberRepository
+import apply.domain.member.findAllByIdIn
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -36,7 +37,7 @@ class ApplicantService(
         return if (keyword != null) {
             memberRepository.findAllByKeyword(keyword).filter { ids.contains(it.id) }
         } else {
-            memberRepository.findAllById(ids)
+            memberRepository.findAllByIdIn(ids)
         }
     }
 }

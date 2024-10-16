@@ -3,7 +3,7 @@ export const ERROR_MESSAGE = {
     EMAIL: "정확한 이메일 양식을 입력해 주세요.",
     NAME: "정확한 한글 이름을 입력해 주세요.",
     PASSWORD: "영문, 숫자, 특수문자 포함하여 8자에서 20자 이내로 입력해 주세요.",
-    PASSWORD_CAPSLOCK: "CapsLock이 켜져 있습니다.",
+    PASSWORD_CAPS_LOCK: "CapsLock이 켜져 있습니다.",
     CONFIRM_PASSWORD: "비밀번호를 확인해 주세요.",
     PHONE_NUMBER: "정확한 휴대전화 번호를 입력해 주세요. ex) 010-1234-5678",
     REQUIRED: "필수 정보입니다.",
@@ -38,6 +38,9 @@ export const ERROR_MESSAGE = {
     LOAD_APPLICATION_FORM: "지원서를 불러오는 데 실패했습니다. 잠시 후 다시 시도해 주세요.",
     SAVE_APPLICATION_FORM: "지원서를 저장하는 데 실패했습니다. 잠시 후 다시 시도해 주세요.",
     LOAD_AGREEMENT: "동의서를 불러오는 데 실패했습니다. 잠시 후 다시 시도해 주세요.",
+    SUCCEED_TO_WITHDRAW: "회원탈퇴가 완료되었습니다. 메인으로 돌아갑니다.",
+    FAILED_TO_WITHDRAW_OTHER_REASONS: "회원탈퇴에 실패했습니다. 잠시 후 다시 시도해 주세요.",
+    FAILED_TO_WITHDRAW_BECAUSE_OF_PASSWORD: "입력된 정보가 올바르지 않습니다. 다시 확인해 주세요.",
   },
   ACCESS: {
     REQUIRED_LOGIN: "로그인이 필요합니다.",

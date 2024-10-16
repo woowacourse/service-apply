@@ -34,4 +34,15 @@ class MemberTest : StringSpec({
         member.changePhoneNumber(newPhoneNumber)
         member.phoneNumber shouldBe newPhoneNumber
     }
+
+    "회원 탈퇴" {
+        val member = createMember(password = PASSWORD)
+        member.withdraw(PASSWORD)
+        member.name shouldBe MemberInformation.DELETED.name
+    }
+
+    "비밀번호가 일치하지 않으면 회원 탈퇴가 실패한다" {
+        val member = createMember(password = PASSWORD)
+        shouldThrow<UnidentifiedMemberException> { member.withdraw(WRONG_PASSWORD) }
+    }
 })

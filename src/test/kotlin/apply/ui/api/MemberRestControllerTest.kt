@@ -16,6 +16,7 @@ import io.mockk.just
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
+import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.patch
 import org.springframework.test.web.servlet.post
@@ -24,7 +25,6 @@ import support.test.web.servlet.bearer
 import java.time.LocalDate
 
 private const val PASSWORD = "password"
-private const val INVALID_PASSWORD = "invalid_password"
 private const val WRONG_PASSWORD = "wrong_password"
 private const val NEW_PASSWORD = "new_password"
 
@@ -69,6 +69,14 @@ private fun createEditPasswordRequest(
         "oldPassword" to oldPassword,
         "password" to password,
         "confirmPassword" to confirmPassword,
+    )
+}
+
+private fun createWithdrawMemberRequest(
+    password: String = PASSWORD,
+): Map<String, String> {
+    return mapOf(
+        "password" to password,
     )
 }
 
@@ -119,7 +127,7 @@ class MemberRestControllerTest : RestControllerTest() {
         every { memberAuthenticationService.generateTokenByLogin(any()) } throws UnidentifiedMemberException("사용자 정보가 일치하지 않습니다.")
 
         mockMvc.post("/api/members/login") {
-            jsonContent(createAuthenticateMemberRequest(password = INVALID_PASSWORD))
+            jsonContent(createAuthenticateMemberRequest(password = WRONG_PASSWORD))
         }.andExpect {
             status { isForbidden() }
         }.andDo {
@@ -250,6 +258,34 @@ class MemberRestControllerTest : RestControllerTest() {
             status { isNoContent() }
         }.andDo {
             handle(document("member-information-patch"))
+        }
+    }
+
+    @Test
+    fun `회원이 탈퇴한다`() {
+        every { memberService.withdraw(any(), any()) } just Runs
+
+        mockMvc.delete("/api/members/withdraw") {
+            jsonContent(createWithdrawMemberRequest())
+            bearer("valid_token")
+        }.andExpect {
+            status { isOk() }
+        }.andDo {
+            handle(document("member-withdraw-delete"))
+        }
+    }
+
+    @Test
+    fun `회원 탈퇴 시 잘못된 정보를 입력하면 403 Forbidden으로 응답한다`() {
+        every { memberService.withdraw(any(), any()) } throws UnidentifiedMemberException("사용자 정보가 일치하지 않습니다.")
+
+        mockMvc.delete("/api/members/withdraw") {
+            jsonContent(createWithdrawMemberRequest(WRONG_PASSWORD))
+            bearer("valid_token")
+        }.andExpect {
+            status { isForbidden() }
+        }.andDo {
+            handle(document("member-withdraw-delete-forbidden"))
         }
     }
 }

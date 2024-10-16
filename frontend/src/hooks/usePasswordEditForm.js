@@ -26,7 +26,7 @@ const usePasswordEditForm = () => {
 
   const isValid =
     Object.values(errorMessage).filter(
-      (errMsg) => errMsg && errMsg !== ERROR_MESSAGE.VALIDATION.PASSWORD_CAPSLOCK
+      (errMsg) => errMsg && errMsg !== ERROR_MESSAGE.VALIDATION.PASSWORD_CAPS_LOCK
     ).length === 0;
   const isEmpty =
     Object.values(requiredForm).filter(Boolean).length < Object.keys(requiredForm).length;
@@ -72,7 +72,7 @@ const usePasswordEditForm = () => {
 
   const handleCapsLockState = (name) => (event) => {
     const newErrorMessage = event.getModifierState("CapsLock")
-      ? ERROR_MESSAGE.VALIDATION.PASSWORD_CAPSLOCK
+      ? ERROR_MESSAGE.VALIDATION.PASSWORD_CAPS_LOCK
       : errorMessage[name];
 
     updateErrorMessage(name, newErrorMessage);

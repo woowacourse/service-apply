@@ -8,10 +8,12 @@ import apply.application.MemberResponse
 import apply.application.MemberService
 import apply.application.RegisterMemberRequest
 import apply.application.ResetPasswordRequest
+import apply.application.WithdrawMemberRequest
 import apply.application.mail.MailService
 import apply.domain.member.Member
 import apply.security.LoginMember
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -98,5 +100,14 @@ class MemberRestController(
     ): ResponseEntity<Unit> {
         memberService.editInformation(member.id, request)
         return ResponseEntity.noContent().build()
+    }
+
+    @DeleteMapping("/withdraw")
+    fun withdraw(
+        @RequestBody @Valid request: WithdrawMemberRequest,
+        @LoginMember member: Member,
+    ): ResponseEntity<Unit> {
+        memberService.withdraw(member.id, request)
+        return ResponseEntity.ok().build()
     }
 }
