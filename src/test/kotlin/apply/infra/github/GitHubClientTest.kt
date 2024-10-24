@@ -6,6 +6,7 @@ import apply.domain.mission.SubmissionMethod.PRIVATE_REPOSITORY
 import apply.domain.mission.SubmissionMethod.PUBLIC_PULL_REQUEST
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import org.springframework.boot.web.client.RestTemplateBuilder
 import support.createLocalDateTime
@@ -69,6 +70,17 @@ class GitHubClientTest(
     "해당 커밋이 없으면 예외가 발생한다" {
         shouldThrow<IllegalArgumentException> {
             gitHubClient.getLastCommit(PUBLIC_PULL_REQUEST, PUBLIC_PULL_REQUEST_URL_VALUE, createLocalDateTime(2018))
+        }
+    }
+
+    "저장소 초대 목록을 조회한다" {
+        val actual = gitHubClient.getInvitations()
+        actual shouldHaveSize 0
+    }
+
+    "존재하지 않는 초대 ID를 수락하면 예외가 발생한다" {
+        shouldThrow<IllegalArgumentException> {
+            gitHubClient.acceptInvitation(0L)
         }
     }
 

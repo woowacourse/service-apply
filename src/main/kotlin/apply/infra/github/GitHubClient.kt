@@ -47,6 +47,7 @@ class GitHubClient(
             PUBLIC_PULL_REQUEST -> getCommitsFromPullRequest(url)
             PRIVATE_REPOSITORY -> getCommitsFromRepository(url)
         }
+        log.debug { "commits: $commits" }
         return Commit(commits.last(endDateTime).hash)
     }
 
@@ -103,5 +104,31 @@ class GitHubClient(
         return filter { it.date <= zonedDateTime }
             .maxByOrNull { it.date }
             ?: throw IllegalArgumentException("해당 커밋이 존재하지 않습니다. endDateTime: $endDateTime")
+    }
+
+    fun getInvitations(): List<InvitationResponse> {
+        return generateSequence(1) { page -> page + 1 }
+            .map { page -> getInvitations("${gitHubProperties.uri}/user/repository_invitations?per_page=$PAGE_SIZE&page=$page") }
+            .takeWhile { it.isNotEmpty() }
+            .flatten()
+            .toList()
+            .also { log.debug { "invitations: $it" } }
+    }
+
+    private fun getInvitations(url: String): List<InvitationResponse> {
+        val request = RequestEntity.get(url).build()
+        return runCatching { restTemplate.exchange<List<InvitationResponse>>(request) }
+            .onFailure { handleException(it, url) }
+            .map { it.body }
+            .getOrThrow()
+            ?: emptyList()
+    }
+
+    fun acceptInvitation(invitationId: Long) {
+        val url = "${gitHubProperties.uri}/user/repository_invitations/$invitationId"
+        val request = RequestEntity.patch(url).build()
+        runCatching { restTemplate.exchange<String>(request) }
+            .onFailure { handleException(it, url) }
+            .getOrThrow()
     }
 }
