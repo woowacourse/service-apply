@@ -4,7 +4,6 @@ import apply.application.EvaluationService
 import apply.application.MissionData
 import apply.application.MissionService
 import apply.ui.admin.BaseLayout
-import apply.ui.admin.PreviewDialog
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.button.Button
@@ -17,6 +16,7 @@ import com.vaadin.flow.router.Route
 import com.vaadin.flow.router.WildcardParameter
 import support.views.EDIT_VALUE
 import support.views.NEW_VALUE
+import support.views.PreviewDialog
 import support.views.Title
 import support.views.createContrastButton
 import support.views.createNotification
@@ -28,7 +28,7 @@ private val MISSION_FORM_URL_PATTERN: Regex = Regex("^(\\d*)/?(\\d*)/?($NEW_VALU
 @Route(value = "admin/missions", layout = BaseLayout::class)
 class MissionsFormView(
     private val evaluationService: EvaluationService,
-    private val missionService: MissionService
+    private val missionService: MissionService,
 ) : VerticalLayout(), HasUrlParameter<String> {
     private var recruitmentId: Long = 0L
     private val title: Title = Title()

@@ -8,7 +8,6 @@ import apply.application.RecruitmentService
 import apply.application.mail.MailData
 import apply.application.mail.MailService
 import apply.ui.admin.BaseLayout
-import apply.ui.admin.PreviewDialog
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.button.Button
@@ -22,6 +21,7 @@ import com.vaadin.flow.router.WildcardParameter
 import org.springframework.boot.autoconfigure.mail.MailProperties
 import support.views.EDIT_VALUE
 import support.views.FORM_URL_PATTERN
+import support.views.PreviewDialog
 import support.views.Title
 import support.views.createContrastButton
 import support.views.createNotification
@@ -35,7 +35,7 @@ class MailsFormView(
     mailTargetService: MailTargetService,
     private val mailHistoryService: MailHistoryService,
     private val mailService: MailService,
-    mailProperties: MailProperties
+    mailProperties: MailProperties,
 ) : VerticalLayout(), HasUrlParameter<String> {
     private val mailForm: MailForm = MailForm(
         memberService,

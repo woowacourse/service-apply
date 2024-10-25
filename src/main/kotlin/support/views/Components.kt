@@ -2,21 +2,26 @@ package support.views
 
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.HasText
+import com.vaadin.flow.component.Html
 import com.vaadin.flow.component.Key
 import com.vaadin.flow.component.Text
 import com.vaadin.flow.component.button.Button
+import com.vaadin.flow.component.dialog.Dialog
 import com.vaadin.flow.component.html.H1
+import com.vaadin.flow.component.html.H2
 import com.vaadin.flow.component.icon.Icon
 import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.notification.Notification
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
+import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup
 import com.vaadin.flow.component.select.Select
 import com.vaadin.flow.component.tabs.Tabs
 import com.vaadin.flow.component.tabs.TabsVariant
 import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.data.renderer.ComponentRenderer
+import org.jsoup.Jsoup
 
 fun createIntSelect(min: Int = 0, max: Int): Select<Int> {
     return Select(*(min..max).toList().toTypedArray())
@@ -132,5 +137,46 @@ class Title(val value: H1) : HorizontalLayout(), HasText {
 
     override fun getText(): String {
         return value.text
+    }
+}
+
+class PreviewDialog(
+    htmlText: String,
+) : Dialog() {
+    init {
+        add(createHeader(), createContent(htmlText), createButtons())
+        width = "700px"
+        height = "800px"
+        open()
+    }
+
+    private fun createHeader(): VerticalLayout {
+        return VerticalLayout(H2("미리 보기")).apply {
+            isPadding = false
+            element.style["margin-bottom"] = "10px"
+        }
+    }
+
+    private fun createContent(htmlText: String): Component {
+        val body = Jsoup.parse(htmlText).body()
+        return Html(body.html()).apply {
+            element.style["display"] = "block"
+            element.style["height"] = "600px"
+            element.style["overflow"] = "auto"
+        }
+    }
+
+    private fun createButtons(): Component {
+        return HorizontalLayout(createCloseButton()).apply {
+            setWidthFull()
+            justifyContentMode = FlexComponent.JustifyContentMode.CENTER
+            element.style["margin-top"] = "20px"
+        }
+    }
+
+    private fun createCloseButton(): Button {
+        return createContrastButton("닫기") {
+            close()
+        }
     }
 }
