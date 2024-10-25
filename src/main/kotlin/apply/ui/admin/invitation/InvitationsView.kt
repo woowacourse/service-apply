@@ -1,5 +1,7 @@
 package apply.ui.admin.invitation
 
+import apply.application.InvitationResponse
+import apply.application.InvitationService
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.grid.Grid
@@ -14,10 +16,11 @@ import support.views.addSortableColumn
 import support.views.addSortableDateTimeColumn
 import support.views.createErrorSmallButton
 import support.views.createPrimarySmallButton
-import java.time.LocalDateTime
 
 @Route(value = "admin/invitations", layout = BaseLayout::class)
-class InvitationsView : VerticalLayout() {
+class InvitationsView(
+    private val invitationService: InvitationService,
+) : VerticalLayout() {
     init {
         add(createTitle(), createGrid())
     }
@@ -30,23 +33,13 @@ class InvitationsView : VerticalLayout() {
     }
 
     private fun createGrid(): Component {
-        val invitations = listOf(
-            InvitationResponse(
-                id = 1L,
-                githubUsername = "woowahan-pjs",
-                repositoryName = "nextstep_test",
-                repositoryFullName = "woowahan-pjs/nextstep_test",
-                invitationDateTime = LocalDateTime.now(),
-                expired = false
-            ),
-        )
         return Grid<InvitationResponse>(10).apply {
             addSortableColumn("GitHub 사용자 이름", InvitationResponse::githubUsername)
             addSortableColumn("저장소 이름", InvitationResponse::repositoryName)
             addSortableColumn("저장소 전체 이름", InvitationResponse::repositoryFullName)
             addSortableDateTimeColumn("초대 일시", InvitationResponse::invitationDateTime)
             addColumn(createButtonRenderer()).apply { isAutoWidth = true }
-            setItems(invitations)
+            setItems(invitationService.findAll())
         }
     }
 
@@ -63,20 +56,13 @@ class InvitationsView : VerticalLayout() {
 
     private fun createAcceptButton(invitation: InvitationResponse): Component {
         return createPrimarySmallButton("수락") {
+            invitationService.accept(invitation.id)
         }
     }
 
     private fun createDeclineButton(invitation: InvitationResponse): Component {
         return createErrorSmallButton("거절") {
+            invitationService.decline(invitation.id)
         }
     }
 }
-
-data class InvitationResponse(
-    val id: Long,
-    val githubUsername: String,
-    val repositoryName: String,
-    val repositoryFullName: String,
-    val invitationDateTime: LocalDateTime,
-    val expired: Boolean,
-)
