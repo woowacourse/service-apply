@@ -4,6 +4,7 @@ import apply.application.InvitationResponse
 import apply.application.InvitationService
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
+import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.html.H1
 import com.vaadin.flow.component.orderedlayout.FlexComponent
@@ -15,6 +16,7 @@ import com.vaadin.flow.router.Route
 import support.views.addSortableColumn
 import support.views.addSortableDateTimeColumn
 import support.views.createErrorSmallButton
+import support.views.createPrimaryButton
 import support.views.createPrimarySmallButton
 
 @Route(value = "admin/invitations", layout = BaseLayout::class)
@@ -22,13 +24,24 @@ class InvitationsView(
     private val invitationService: InvitationService,
 ) : VerticalLayout() {
     init {
-        add(createTitle(), createGrid())
+        add(createTitle(), createAcceptAllButton(), createGrid())
     }
 
     private fun createTitle(): Component {
         return HorizontalLayout(H1("초대 관리")).apply {
             setSizeFull()
             justifyContentMode = FlexComponent.JustifyContentMode.CENTER
+        }
+    }
+
+    private fun createAcceptAllButton(): Component {
+        return HorizontalLayout(
+            createPrimaryButton("조건부 수락") {
+                InviteAcceptanceDialog(invitationService).open()
+            }
+        ).apply {
+            setSizeFull()
+            justifyContentMode = FlexComponent.JustifyContentMode.END
         }
     }
 
