@@ -23,7 +23,7 @@ class GitHub(
     override fun getLastCommit(submissionMethod: SubmissionMethod, url: String, endDateTime: LocalDateTime): Commit {
         val commits = when (submissionMethod) {
             PUBLIC_PULL_REQUEST -> getCommitsFromPullRequest(url)
-            PRIVATE_REPOSITORY -> getCommitsFromRepository(url)
+            PRIVATE_REPOSITORY -> getCommitsFromRepository(url, endDateTime)
         }
         log.debug { "commits: $commits" }
         return Commit(commits.last(endDateTime).hash)
@@ -38,19 +38,25 @@ class GitHub(
             .toList()
     }
 
-    private fun getCommitsFromRepository(url: String): List<CommitResponse> {
+    private fun getCommitsFromRepository(url: String, endDateTime: LocalDateTime): List<CommitResponse> {
         val (owner, repo) = REPOSITORY_URL_PATTERN.extractParts(url)
         return runCatching { gitHubClient.getCommitsFromRepository(owner, repo) }
             .getOrElse {
                 when (it) {
-                    is IllegalArgumentException -> acceptInvitationAndFetchCommits(owner, repo)
+                    is IllegalArgumentException -> acceptInvitationAndFetchCommits(owner, repo, endDateTime)
                     else -> throw it
                 }
             }
     }
 
-    private fun acceptInvitationAndFetchCommits(owner: String, repo: String): List<CommitResponse> {
-        val invitation = getInvitations().first { it.repository.fullName.equals("$owner/$repo", ignoreCase = true) }
+    private fun acceptInvitationAndFetchCommits(
+        owner: String,
+        repo: String,
+        endDateTime: LocalDateTime,
+    ): List<CommitResponse> {
+        val invitation = getInvitations()
+            .filter { it.createdAt.withZoneSameInstant(ZoneId.systemDefault()) <= endDateTime.atZone(ZoneId.systemDefault()) }
+            .first { it.repository.fullName.equals("$owner/$repo", ignoreCase = true) }
         gitHubClient.acceptInvitation(invitation.id)
         return gitHubClient.getCommitsFromRepository(owner, repo)
     }

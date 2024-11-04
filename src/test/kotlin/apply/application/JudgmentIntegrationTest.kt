@@ -42,7 +42,7 @@ import support.test.context.event.RecordEventsConfiguration
 import support.test.spec.afterRootTest
 import java.time.LocalDateTime.now
 
-@MockkBean(value = [AssignmentArchive::class, JudgmentAgency::class], relaxUnitFun = true)
+@MockkBean(value = [AssignmentArchive::class, JudgmentAgency::class, InvitationService::class], relaxUnitFun = true)
 @Import(RecordEventsConfiguration::class)
 @IntegrationTest
 class JudgmentIntegrationTest(
@@ -52,7 +52,7 @@ class JudgmentIntegrationTest(
     private val assignmentRepository: AssignmentRepository,
     private val judgmentRepository: JudgmentRepository,
     private val assignmentArchive: AssignmentArchive,
-    private val events: Events
+    private val events: Events,
 ) : BehaviorSpec({
     Given("과제 제출물을 제출할 수 있는 특정 과제에 대한 과제 제출물이 있는 경우") {
         val memberId = 1L

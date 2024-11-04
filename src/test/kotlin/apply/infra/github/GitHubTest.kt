@@ -26,7 +26,9 @@ class GitHubTest : BehaviorSpec({
         every { gitHubClient.getCommitsFromRepository(any(), any()) }
             .throws(IllegalArgumentException())
             .andThen(listOf(CommitResponse("hash", yesterday.atZone(ZoneId.systemDefault()))))
-        every { gitHubClient.getInvitations(any(), any()) } returns listOf(createInvitationResponse(owner, repo))
+        every { gitHubClient.getInvitations(any(), any()) } returns listOf(
+            createInvitationResponse(owner, repo, yesterday.atZone(ZoneId.systemDefault()))
+        )
         every { gitHubClient.acceptInvitation(any()) } just Runs
 
         When("마지막 커밋을 조회하면") {
@@ -47,6 +49,7 @@ class GitHubTest : BehaviorSpec({
 private fun createInvitationResponse(
     owner: String,
     repo: String,
+    createdAt: ZonedDateTime,
 ): InvitationResponse {
     return InvitationResponse(
         1L,
@@ -58,7 +61,7 @@ private fun createInvitationResponse(
             private = true,
             fork = true
         ),
-        ZonedDateTime.now(),
+        createdAt,
         false
     )
 }
