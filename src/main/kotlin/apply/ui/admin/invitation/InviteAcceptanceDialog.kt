@@ -11,6 +11,7 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.textfield.TextField
 import support.views.createContrastButton
+import support.views.createNotification
 import support.views.createPrimaryButton
 import java.time.LocalDateTime
 
@@ -53,9 +54,13 @@ class InviteAcceptanceDialog(
 
     private fun createAcceptButton(): Component {
         return createPrimaryButton("수락") {
-            invitationService.acceptAll(keyword.value, deadlineDateTime.value)
-            reloadComponents()
-            close()
+            try {
+                invitationService.acceptAll(keyword.value, deadlineDateTime.value)
+                reloadComponents()
+                close()
+            } catch (e: Exception) {
+                createNotification(e.localizedMessage)
+            }
         }
     }
 }

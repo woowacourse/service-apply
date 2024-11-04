@@ -63,6 +63,9 @@ class GitHubClient(
             ?: emptyList()
     }
 
+    /**
+     * @see [API](https://docs.github.com/en/rest/collaborators/invitations#list-repository-invitations-for-the-authenticated-user)
+     */
     fun getInvitations(page: Int, size: Int): List<InvitationResponse> {
         val url = "${gitHubProperties.uri}/user/repository_invitations?per_page=$size&page=$page"
         val request = RequestEntity.get(url).build()
@@ -73,6 +76,9 @@ class GitHubClient(
             ?: emptyList()
     }
 
+    /**
+     * @see [API](https://docs.github.com/en/rest/collaborators/invitations#accept-a-repository-invitation)
+     */
     fun acceptInvitation(invitationId: Long) {
         val url = "${gitHubProperties.uri}/user/repository_invitations/$invitationId"
         val request = RequestEntity.patch(url).build()

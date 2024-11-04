@@ -50,7 +50,7 @@ class GitHub(
     }
 
     private fun acceptInvitationAndFetchCommits(owner: String, repo: String): List<CommitResponse> {
-        val invitation = getInvitations().first { it.repository.fullName.equals("$owner/$repo", false) }
+        val invitation = getInvitations().first { it.repository.fullName.equals("$owner/$repo", ignoreCase = true) }
         gitHubClient.acceptInvitation(invitation.id)
         return gitHubClient.getCommitsFromRepository(owner, repo)
     }
