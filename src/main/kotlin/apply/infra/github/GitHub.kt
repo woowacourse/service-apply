@@ -54,11 +54,20 @@ class GitHub(
         repo: String,
         endDateTime: LocalDateTime,
     ): List<CommitResponse> {
-        val invitation = getInvitations()
-            .filter { it.createdAt.withZoneSameInstant(ZoneId.systemDefault()) <= endDateTime.atZone(ZoneId.systemDefault()) }
-            .first { it.repository.fullName.equals("$owner/$repo", ignoreCase = true) }
+        val invitation = getInvitation(owner, repo, endDateTime)
         gitHubClient.acceptInvitation(invitation.id)
         return gitHubClient.getCommitsFromRepository(owner, repo)
+    }
+
+    private fun getInvitation(owner: String, repo: String, deadlineDateTime: LocalDateTime): InvitationResponse {
+        return getInvitations()
+            .filter { it.createdAt.withZoneSameInstant(ZoneId.systemDefault()) <= deadlineDateTime.atZone(ZoneId.systemDefault()) }
+            .firstOrNull { it.matchesRepository(owner, repo) }
+            ?: throw NoSuchElementException("조건을 충족하는 초대가 존재하지 않습니다.")
+    }
+
+    private fun InvitationResponse.matchesRepository(owner: String, repo: String): Boolean {
+        return repository.fullName.equals("$owner/$repo", ignoreCase = true)
     }
 
     private fun Regex.extractParts(url: String): List<String> {

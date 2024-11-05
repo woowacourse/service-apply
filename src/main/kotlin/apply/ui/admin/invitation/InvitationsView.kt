@@ -4,6 +4,7 @@ import apply.application.InvitationResponse
 import apply.application.InvitationService
 import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
+import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.html.H1
 import com.vaadin.flow.component.orderedlayout.FlexComponent
@@ -69,6 +70,7 @@ class InvitationsView(
     private fun createAcceptButton(invitation: InvitationResponse): Component {
         return createPrimarySmallButton("수락") {
             invitationService.accept(invitation.id)
+            UI.getCurrent().page.reload()
         }
     }
 
