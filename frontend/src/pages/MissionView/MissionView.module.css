@@ -17,3 +17,7 @@
 .mission-viewer-body li {
   list-style: disc;
 }
+
+.mission-viewer-body pre code {
+  tab-size: 10;
+}
