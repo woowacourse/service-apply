@@ -95,6 +95,10 @@ class GitHub(
         gitHubClient.acceptInvitation(invitationId)
     }
 
+    fun declineInvitation(invitationId: Long) {
+        gitHubClient.declineInvitation(invitationId)
+    }
+
     private fun <T> Sequence<T>.takeUntil(predicate: (T) -> Boolean): Sequence<T> {
         return sequence {
             for (element in this@takeUntil) {

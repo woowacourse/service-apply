@@ -87,6 +87,17 @@ class GitHubClient(
             .getOrThrow()
     }
 
+    /**
+     * @see [API](https://docs.github.com/en/rest/collaborators/invitations#decline-a-repository-invitation)
+     */
+    fun declineInvitation(invitationId: Long) {
+        val url = "${gitHubProperties.uri}/user/repository_invitations/$invitationId"
+        val request = RequestEntity.delete(url).build()
+        runCatching { restTemplate.exchange<String>(request) }
+            .onFailure { handleException(it, url) }
+            .getOrThrow()
+    }
+
     private fun handleException(exception: Throwable, url: String) {
         val response = (exception as? RestClientResponseException)?.responseBodyAsString ?: throw exception
         log.error { "error response: $response, url: $url" }

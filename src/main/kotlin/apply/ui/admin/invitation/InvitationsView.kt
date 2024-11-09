@@ -82,6 +82,7 @@ class InvitationsView(
     private fun createDeclineButton(invitation: InvitationResponse): Component {
         return createErrorSmallButton("거절") {
             invitationService.decline(invitation.id)
+            UI.getCurrent().page.reload()
         }
     }
 }

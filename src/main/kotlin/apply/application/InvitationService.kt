@@ -37,6 +37,6 @@ class InvitationService(
     }
 
     fun decline(invitationId: Long) {
-        throw UnsupportedOperationException()
+        gitHub.declineInvitation(invitationId)
     }
 }
