@@ -7,7 +7,6 @@ import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.html.H1
-import com.vaadin.flow.component.html.Label
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
@@ -17,6 +16,7 @@ import com.vaadin.flow.router.Route
 import support.views.addSortableColumn
 import support.views.addSortableDateTimeColumn
 import support.views.createErrorSmallButton
+import support.views.createNotification
 import support.views.createPrimaryButton
 import support.views.createPrimarySmallButton
 
@@ -54,11 +54,17 @@ class InvitationsView(
             addSortableColumn("저장소 전체 이름", InvitationResponse::repositoryFullName)
             addSortableDateTimeColumn("초대 일시", InvitationResponse::invitationDateTime)
             addColumn(createButtonRenderer()).apply { isAutoWidth = true }
-            invitationService.findAll().also {
+            fetchInvitations().also {
                 setItems(it)
                 columns.first().setFooter("총 ${it.size}개")
             }
         }
+    }
+
+    private fun fetchInvitations(): List<InvitationResponse> {
+        return runCatching { invitationService.findAll() }
+            .onFailure { createNotification(it.localizedMessage) }
+            .getOrDefault(emptyList())
     }
 
     private fun createButtonRenderer(): Renderer<InvitationResponse> {
