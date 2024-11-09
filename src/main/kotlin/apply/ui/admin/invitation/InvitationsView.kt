@@ -7,6 +7,7 @@ import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.html.H1
+import com.vaadin.flow.component.html.Label
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
@@ -24,12 +25,13 @@ class InvitationsView(
     private val invitationService: InvitationService,
 ) : VerticalLayout() {
     init {
+        setSizeFull()
         add(createTitle(), createAcceptAllButton(), createGrid())
     }
 
     private fun createTitle(): Component {
         return HorizontalLayout(H1("초대 관리")).apply {
-            setSizeFull()
+            setWidthFull()
             justifyContentMode = FlexComponent.JustifyContentMode.CENTER
         }
     }
@@ -40,7 +42,7 @@ class InvitationsView(
                 InviteAcceptanceDialog(invitationService).open()
             }
         ).apply {
-            setSizeFull()
+            setWidthFull()
             justifyContentMode = FlexComponent.JustifyContentMode.END
         }
     }
@@ -52,7 +54,10 @@ class InvitationsView(
             addSortableColumn("저장소 전체 이름", InvitationResponse::repositoryFullName)
             addSortableDateTimeColumn("초대 일시", InvitationResponse::invitationDateTime)
             addColumn(createButtonRenderer()).apply { isAutoWidth = true }
-            setItems(invitationService.findAll())
+            invitationService.findAll().also {
+                setItems(it)
+                columns.first().setFooter("총 ${it.size}개")
+            }
         }
     }
 

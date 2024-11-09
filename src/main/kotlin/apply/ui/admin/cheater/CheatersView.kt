@@ -44,8 +44,8 @@ class CheatersView(
                 }
             }
         ).apply {
-            justifyContentMode = FlexComponent.JustifyContentMode.END
             setSizeFull()
+            justifyContentMode = FlexComponent.JustifyContentMode.END
         }
     }
 
