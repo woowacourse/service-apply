@@ -82,7 +82,7 @@ class MailService(
         }
         mailSender.send(
             email,
-            "메일 인증 코드를 발송해 드립니다.",
+            "Email verification code issued / 메일 인증 코드를 발송해 드립니다.",
             templateEngine.process("mail/email-authentication.html", context)
         )
     }
