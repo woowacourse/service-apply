@@ -65,7 +65,7 @@ class MailService(
         }
         mailSender.send(
             member.email,
-            "${member.name}님, 지원이 완료되었습니다.",
+            "Your application has been submitted / ${member.name}님, 지원이 완료되었습니다.",
             templateEngine.process("mail/submission-complete", context)
         )
     }

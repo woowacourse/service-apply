@@ -68,7 +68,8 @@
                         padding-top: 48px;
                       "
                     >
-                      지원 완료
+                      Application Received<br/>
+                      <span style="margin-top: 8px; display: block;">지원 완료</span>
                     </td>
                   </tr>
                   <tr style="color: #333333; padding: 0; font-size: 16px">
@@ -84,12 +85,17 @@
                         text-align: center;
                       "
                     >
-                      안녕하세요. <span th:text="${name}"></span>님.
+                      Hello <span th:text="${name}"></span>,<br /><br />
+                      Your application for the <strong><span th:text="${recruit}"></span></strong> has been successfully submitted.<br />
+                      We will keep you updated on the next steps via this email. Please stay tuned for further updates.<br /><br />
+                      Thank you for your application. We appreciate it!
                       <br /><br />
-                      우아한테크코스 <span th:text="${recruit}"></span> 지원이
-                      완료되었습니다.<br />추후 진행 사항은 해당 이메일을 통해
-                      안내됩니다. <br /><br />
-                      감사합니다.
+                      <span style="display: block; margin-top: 24px; color: #666666;">
+                        안녕하세요. <span th:text="${name}"></span>님.<br /><br />
+                        우아한테크코스 <span th:text="${recruit}"></span> 지원이 완료되었습니다.<br />
+                        추후 진행 사항은 해당 이메일을 통해 안내됩니다.<br /><br />
+                        감사합니다.
+                      </span>
                     </td>
                   </tr>
                 </table>
