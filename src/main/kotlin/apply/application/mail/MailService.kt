@@ -44,7 +44,7 @@ class MailService(
         }
         mailSender.send(
             event.email,
-            "Temporary password issued / ${event.name}님, 임시 비밀번호를 발송해 드립니다.",
+            "Temporary password issued / 임시 비밀번호를 발송해 드립니다.",
             templateEngine.process("mail/password-reset", context)
         )
     }
@@ -65,7 +65,7 @@ class MailService(
         }
         mailSender.send(
             member.email,
-            "Your application has been submitted / ${member.name}님, 지원이 완료되었습니다.",
+            "Your application has been submitted / 지원이 완료되었습니다.",
             templateEngine.process("mail/submission-complete", context)
         )
     }
