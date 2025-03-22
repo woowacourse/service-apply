@@ -62,7 +62,7 @@ const Header = () => {
                 src="/assets/logo/logo_no_text_dark.png"
                 alt="우아한테크코스 로고"
               />
-              <span>지원하기</span>
+              <span>테크코스</span>
             </Link>
           </h1>
 

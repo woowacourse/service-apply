@@ -76,7 +76,7 @@ const Recruits = () => {
       </div>
 
       <div className={styles["recruitment-list-box"]}>
-        <h2 className={styles["recruitment-list-title"]}>지원하기</h2>
+        <h2 className={styles["recruitment-list-title"]}>모집 목록</h2>
         <div className={styles["program-tab-list"]}>
           {PROGRAM_TAB_LIST.map((programTabListItem) => (
             <TabItem
