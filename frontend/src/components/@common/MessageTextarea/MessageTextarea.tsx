@@ -35,7 +35,7 @@ const MessageTextarea = ({
         <Label className={styles.label} required={required}>
           {label}
         </Label>
-        {description && <Description>{description}</Description>}
+        {description && <Description className={styles.description}>{description}</Description>}
         {shouldShowCount && (
           <div className={styles["length-limit"]}>
             {value?.length} / {maxLength}
