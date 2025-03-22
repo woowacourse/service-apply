@@ -53,7 +53,6 @@ const Header = () => {
 
   return (
     <div className={styles.box}>
-      <div id="google_translate_element" />
       <header className={styles.header}>
         <div className={styles.content}>
           <h1>
@@ -67,7 +66,8 @@ const Header = () => {
             </Link>
           </h1>
 
-          <div className={styles.languageSwitcher}>
+          <div className={styles["language-switcher"]}>
+            <div className={styles["google-translate-hidden"]} id="google_translate_element" />
             <button className={styles.lang} onClick={() => selectLanguage("ko")}>
               🇰🇷 한국어
             </button>
