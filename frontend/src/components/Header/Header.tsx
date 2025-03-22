@@ -111,7 +111,7 @@ const Header = () => {
                           type="button"
                           onClick={() => routeTo({ pathname: PATH.MY_APPLICATION })}
                         >
-                          내 지원 현황
+                          내 지원서
                         </button>
                       </li>
                       <li className={styles["member-menu-listitem"]} onClick={onLogout}>

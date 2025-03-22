@@ -60,7 +60,7 @@ const MyApplication = () => {
   return (
     <div className={styles.box}>
       {/* @ts-ignore */}
-      <Container title="내 지원 현황" className={styles["page-title"]} />
+      <Container title="내 지원서" className={styles["page-title"]} />
       {myRecruitments.map(({ submitted, ...recruitment }, index) => {
         return (
           <Panel
