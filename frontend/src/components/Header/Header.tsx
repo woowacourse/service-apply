@@ -2,13 +2,18 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import classNames from "classnames";
 
-import useTokenContext from "../../hooks/useTokenContext";
-import styles from "./Header.module.css";
-import { PATH } from "../../constants/path";
 import { ValueOf } from "../../../types/utility";
-import MemberIcon from "../../assets/icon/member-icon.svg";
-import { fetchAgreement } from "../../api/agreements";
+
+import { PATH } from "../../constants/path";
 import { ERROR_MESSAGE } from "../../constants/messages";
+
+import MemberIcon from "../../assets/icon/member-icon.svg";
+
+import { fetchAgreement } from "../../api/agreements";
+import useTokenContext from "../../hooks/useTokenContext";
+import useGoogleTranslate from "../../hooks/useGoogleTranslate";
+
+import styles from "./Header.module.css";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -16,6 +21,8 @@ const Header = () => {
   const { token, resetToken } = useTokenContext();
 
   const [isShowMemberMenu, setIsShowMemberMenu] = useState(false);
+
+  useGoogleTranslate();
 
   const onChange: React.ChangeEventHandler<HTMLInputElement> = ({ target }) => {
     setIsShowMemberMenu(target.checked);
@@ -41,8 +48,19 @@ const Header = () => {
     }
   };
 
+  const selectLanguage = (language: "en" | "ko" | "de") => {
+    const languageDropdown = document.querySelector<HTMLSelectElement>(".goog-te-combo");
+    if (!languageDropdown) {
+      alert("Google Translate is still loading.");
+      return;
+    }
+    languageDropdown.value = language;
+    languageDropdown.dispatchEvent(new Event("change"));
+  };
+
   return (
     <div className={styles.box}>
+      <div id="google_translate_element" />
       <header className={styles.header}>
         <div className={styles.content}>
           <h1>
@@ -55,6 +73,18 @@ const Header = () => {
               <span>지원하기</span>
             </Link>
           </h1>
+
+          <div className={styles.languageSwitcher}>
+            <button className={styles.lang} onClick={() => selectLanguage("ko")}>
+              🇰🇷 한국어
+            </button>
+            <button className={styles.lang} onClick={() => selectLanguage("en")}>
+              🇺🇸 English
+            </button>
+            <button className={styles.lang} onClick={() => selectLanguage("de")}>
+              🇩🇪 Deutsch
+            </button>
+          </div>
 
           <div className={styles["link-container"]}>
             {token ? (
