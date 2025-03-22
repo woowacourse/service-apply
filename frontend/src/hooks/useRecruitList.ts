@@ -12,7 +12,8 @@ const matchProgram = (recruitmentTitle: string, programLabel: string) => {
 
   const matchingProgram =
     programList.find(({ label }) => {
-      return new RegExp(String.raw`^${label}`, "i").test(recruitmentTitle);
+      const title = label.replace(/\s*\(.*$/, "");
+      return new RegExp(String.raw`^${title}`, "i").test(recruitmentTitle);
     }) ?? PROGRAM_TAB.ALL;
 
   return matchingProgram.label === programLabel;
