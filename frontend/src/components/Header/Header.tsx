@@ -10,8 +10,9 @@ import { ERROR_MESSAGE } from "../../constants/messages";
 import MemberIcon from "../../assets/icon/member-icon.svg";
 
 import { fetchAgreement } from "../../api/agreements";
-import useTokenContext from "../../hooks/useTokenContext";
 import useGoogleTranslate from "../../hooks/useGoogleTranslate";
+import useLanguageSwitcher from "../../hooks/useLanguageSwitcher";
+import useTokenContext from "../../hooks/useTokenContext";
 
 import styles from "./Header.module.css";
 
@@ -21,6 +22,8 @@ const Header = () => {
   const { token, resetToken } = useTokenContext();
 
   const [isShowMemberMenu, setIsShowMemberMenu] = useState(false);
+
+  const { selectLanguage } = useLanguageSwitcher();
 
   useGoogleTranslate();
 
@@ -46,16 +49,6 @@ const Header = () => {
     } catch (error) {
       alert(ERROR_MESSAGE.API.LOAD_AGREEMENT);
     }
-  };
-
-  const selectLanguage = (language: "en" | "ko" | "de") => {
-    const languageDropdown = document.querySelector<HTMLSelectElement>(".goog-te-combo");
-    if (!languageDropdown) {
-      alert("Google Translate is still loading.");
-      return;
-    }
-    languageDropdown.value = language;
-    languageDropdown.dispatchEvent(new Event("change"));
   };
 
   return (
