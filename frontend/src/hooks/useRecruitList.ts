@@ -5,18 +5,18 @@ import { Recruitment } from "../../types/domains/recruitments";
 
 type ProgramTabStatus = typeof PROGRAM_TAB[keyof typeof PROGRAM_TAB];
 
-const matchProgram = (recruitmentTitle: string, programLabel: string) => {
+const matchProgram = (recruitmentTitle: string, programName: string) => {
   const programList = Array.from(Object.values(PROGRAM_TAB)).sort(
     (a, b) => b.label.length - a.label.length
   );
 
   const matchingProgram =
-    programList.find(({ label }) => {
-      const title = label.replace(/\s*\(.*$/, "");
-      return new RegExp(String.raw`^${title}`, "i").test(recruitmentTitle);
+    programList.find(({ korean, english }) => {
+      const lowerTitle = recruitmentTitle.toLowerCase();
+      return [korean, english].some((it) => lowerTitle.includes(it.toLowerCase()));
     }) ?? PROGRAM_TAB.ALL;
 
-  return matchingProgram.label === programLabel;
+  return matchingProgram.name === programName;
 };
 
 const sortRecruitmentsByStartDateTime: (recruitments: Recruitment[]) => Recruitment[] = (
@@ -28,9 +28,9 @@ const sortRecruitmentsByStartDateTime: (recruitments: Recruitment[]) => Recruitm
 
 const filterRecruitmentsByProgramLabel: (
   recruitments: Recruitment[],
-  programLabel: ProgramTabStatus["label"]
-) => Recruitment[] = (recruitments, programLabel) =>
-  recruitments.filter((recruitmentItem) => matchProgram(recruitmentItem.title, programLabel));
+  programName: ProgramTabStatus["name"]
+) => Recruitment[] = (recruitments, programName) =>
+  recruitments.filter((recruitmentItem) => matchProgram(recruitmentItem.title, programName));
 
 const useRecruitList: () => {
   programTabStatus: ProgramTabStatus;
@@ -46,11 +46,11 @@ const useRecruitList: () => {
     const recruitments: Recruitment[] = recruitment[RECRUITS_TAB.ALL.name];
     const sortedRecruitments: Recruitment[] = sortRecruitmentsByStartDateTime(recruitments);
 
-    if (programTabStatus.label === PROGRAM_TAB.ALL.label) {
+    if (programTabStatus === PROGRAM_TAB.ALL) {
       return sortedRecruitments;
     }
 
-    return filterRecruitmentsByProgramLabel(sortedRecruitments, programTabStatus.label);
+    return filterRecruitmentsByProgramLabel(sortedRecruitments, programTabStatus.name);
   }, [recruitment, programTabStatus]);
 
   return { programTabStatus, setProgramTabStatus, filteredRecruitments };

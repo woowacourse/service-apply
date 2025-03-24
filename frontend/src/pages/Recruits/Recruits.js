@@ -86,7 +86,7 @@ const Recruits = () => {
                 setProgramTabStatus(programTabListItem);
               }}
             >
-              {programTabListItem.label}
+              {programTabListItem.korean}({programTabListItem.english})
             </TabItem>
           ))}
         </div>
