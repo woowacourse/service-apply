@@ -68,13 +68,13 @@ const Header = () => {
 
           <div className={styles["language-switcher"]}>
             <div className={styles["google-translate-hidden"]} id="google_translate_element" />
-            <button className={styles.lang} onClick={() => selectLanguage("ko")}>
+            <button className={styles.lang} onClick={() => selectLanguage("ko")} translate={"no"}>
               🇰🇷 한국어
             </button>
-            <button className={styles.lang} onClick={() => selectLanguage("en")}>
+            <button className={styles.lang} onClick={() => selectLanguage("en")} translate={"no"}>
               🇺🇸 English
             </button>
-            <button className={styles.lang} onClick={() => selectLanguage("de")}>
+            <button className={styles.lang} onClick={() => selectLanguage("de")} translate={"no"}>
               🇩🇪 Deutsch
             </button>
           </div>

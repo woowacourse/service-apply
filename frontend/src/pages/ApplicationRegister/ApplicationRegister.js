@@ -156,6 +156,7 @@ const ApplicationRegister = () => {
               className={styles["label-bold"]}
               showCount
               required
+              translate="no"
             />
           ))}
 
@@ -178,7 +179,7 @@ const ApplicationRegister = () => {
             label="URL"
             className={styles["label-bold"]}
             maxLength={FORM.REFERENCE_URL_MAX_LENGTH}
-            placeholder="ex) https://tecoble.techcourse.co.kr/"
+            placeholder="e.g. https://tecoble.techcourse.co.kr"
           />
 
           <div className={styles["box-agree"]}>

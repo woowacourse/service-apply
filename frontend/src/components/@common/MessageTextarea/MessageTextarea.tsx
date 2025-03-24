@@ -11,6 +11,7 @@ export type MessageTextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElem
   name: string;
   errorMessage?: string;
   showCount?: boolean;
+  translate?: "yes" | "no";
   onChange: React.ChangeEventHandler<HTMLTextAreaElement>;
 };
 
@@ -24,6 +25,7 @@ const MessageTextarea = ({
   name,
   errorMessage,
   showCount = false,
+  translate = "yes",
   onChange,
   ...props
 }: MessageTextareaProps) => {
@@ -32,10 +34,14 @@ const MessageTextarea = ({
   return (
     <div className={classNames(styles.box, className)}>
       <div className={styles["text-field"]}>
-        <Label className={styles.label} required={required}>
+        <Label className={styles.label} required={required} translate={translate}>
           {label}
         </Label>
-        {description && <Description className={styles.description}>{description}</Description>}
+        {description && (
+          <Description className={styles.description} translate={translate}>
+            {description}
+          </Description>
+        )}
         {shouldShowCount && (
           <div className={styles["length-limit"]}>
             {value?.length} / {maxLength}

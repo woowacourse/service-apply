@@ -94,6 +94,7 @@ const MissionView = () => {
       <div
         className={`${styles["mission-viewer-body"]} markdown-body`}
         dangerouslySetInnerHTML={{ __html: description }}
+        translate={"no"}
       />
       <ul className={styles.buttons}>
         <li>
