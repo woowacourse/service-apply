@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as Api from "../api";
 import { PATH } from "../constants/path";
+import { ERROR_MESSAGE } from "../constants/messages";
 
 const useRecruitmentItem = (recruitmentId) => {
   const [recruitmentItems, setRecruitmentItems] = useState([]);
@@ -13,7 +14,7 @@ const useRecruitmentItem = (recruitmentId) => {
 
       setRecruitmentItems(data);
     } catch (error) {
-      alert("지원서를 불러오는 데 실패했습니다.");
+      alert(ERROR_MESSAGE.API.LOAD_APPLICATION_FORM);
       navigate(PATH.HOME, { replace: true });
     }
   };
