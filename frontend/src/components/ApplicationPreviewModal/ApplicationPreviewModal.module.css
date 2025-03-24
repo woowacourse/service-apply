@@ -41,6 +41,7 @@
 .application-item-description {
   color: var(--gray-700);
   margin-bottom: 0.5rem;
+  white-space: pre-line;
 }
 
 .application-item-answer-length {
