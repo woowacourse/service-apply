@@ -16,7 +16,7 @@ const RecruitmentDetail = ({ children, startDate, endDate }: RecruitmentDetailPr
       <div className={styles.date}>
         <img src={CalendarIcon} alt="달력 아이콘" className={styles.icon} />
         <p>
-          {startDate} ~ {endDate}
+          {startDate} ~ {endDate} (UTC+9)
         </p>
       </div>
     </div>
