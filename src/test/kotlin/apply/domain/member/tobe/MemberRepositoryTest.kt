@@ -5,6 +5,8 @@ import apply.PASSWORD
 import apply.domain.member.Password
 import io.kotest.core.spec.style.ExpectSpec
 import io.kotest.extensions.spring.SpringExtension
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.nulls.shouldNotBeNull
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
@@ -21,6 +23,28 @@ class MemberRepositoryTest(
     private val entityManager: TestEntityManager,
 ) : ExpectSpec({
     extensions(SpringExtension)
+
+    context("회원 조회") {
+        memberRepository.saveAll(
+            listOf(
+                createMember(name = "홍길동1", email = "a@email.com"),
+                createMember(name = "홍길동2", email = "b@email.com"),
+                createMember(name = "동해물과백두산이마르고닳도록하느님이보우하사우리나라만세무궁", email = "c@email.com")
+            )
+        )
+
+        expect("아이디가 일치하는 회원을 조회한다") {
+            val actual = memberRepository.findByIdOrNull(1L)
+            actual.shouldNotBeNull()
+            actual.information.shouldNotBeNull()
+        }
+
+        // N + 1
+        expect("아이디가 일치하는 모든 회원을 조회한다") {
+            val actual = memberRepository.findAllByIdIn(listOf(1L, 2L, 3L))
+            actual.shouldHaveSize(3)
+        }
+    }
 
     context("회원 저장") {
         expect("회원과 회원 정보를 함께 저장한다") {
@@ -62,9 +86,12 @@ class MemberRepositoryTest(
     }
 })
 
-private fun createMember(): Member {
+private fun createMember(
+    email: String = "EMAIL",
+    name: String = "NAME",
+): Member {
     return Member(
-        MemberInformation("", "", LocalDate.now(), "", ""),
+        MemberInformation(email, name, LocalDate.now(), "", ""),
         Password("")
     ) {}
 }
