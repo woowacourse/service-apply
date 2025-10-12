@@ -5,6 +5,7 @@ import apply.PASSWORD
 import apply.domain.member.Password
 import io.kotest.core.spec.style.ExpectSpec
 import io.kotest.extensions.spring.SpringExtension
+import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.nulls.shouldNotBeNull
 import org.springframework.boot.autoconfigure.domain.EntityScan
@@ -39,10 +40,14 @@ class MemberRepositoryTest(
             actual.information.shouldNotBeNull()
         }
 
-        // N + 1
         expect("아이디가 일치하는 모든 회원을 조회한다") {
             val actual = memberRepository.findAllByIdIn(listOf(1L, 2L, 3L))
             actual.shouldHaveSize(3)
+        }
+
+        expect("빈 목록으로 조회하면 빈 목록을 반환한다") {
+            val actual = memberRepository.findAllByIdIn(emptyList())
+            actual.shouldBeEmpty()
         }
     }
 

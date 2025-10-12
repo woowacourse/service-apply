@@ -1,5 +1,5 @@
 package support.infra
 
-@Target(AnnotationTarget.PROPERTY)
+@Target(AnnotationTarget.PROPERTY, AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)
-annotation class PersistenceOnly(val reason: String = "")
+annotation class PersistenceOnly(val reason: String = "", val replaceWith: String = "")
