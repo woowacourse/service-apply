@@ -7,6 +7,7 @@ import io.kotest.core.spec.style.ExpectSpec
 import io.kotest.extensions.spring.SpringExtension
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
@@ -46,13 +47,24 @@ class MemberRepositoryTest(
         }
 
         expect("이메일이 일치하는 회원을 조회한다") {
-            val actual = memberRepository.findByInformationEmail("a@email.com")
+            val actual = memberRepository.findByEmail("a@email.com")
             actual.shouldNotBeNull()
+            actual.information.shouldNotBeNull()
+        }
+
+        expect("이메일이 일치하는 회원이 없으면 null을 반환한다") {
+            val actual = memberRepository.findByEmail("notexist@email.com")
+            actual.shouldBeNull()
+        }
+
+        expect("이메일이 일치하는 모든 회원을 조회한다") {
+            val actual = memberRepository.findAllByInformationEmailIn(listOf("b@email.com", "c@email.com"))
+            actual shouldHaveSize 2
         }
 
         expect("빈 목록으로 조회하면 빈 목록을 반환한다") {
-            val actual = memberRepository.findAllByIdIn(emptyList())
-            actual.shouldBeEmpty()
+            memberRepository.findAllByIdIn(emptyList()).shouldBeEmpty()
+            memberRepository.findAllByEmailIn(emptyList()).shouldBeEmpty()
         }
     }
 
