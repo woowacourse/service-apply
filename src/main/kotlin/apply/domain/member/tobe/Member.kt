@@ -38,6 +38,14 @@ class Member(
         information.member = this
     }
 
+    fun changePassword(oldPassword: Password, newPassword: Password) {
+        this.password = newPassword
+    }
+
+    fun changePhoneNumber(phoneNumber: String) {
+        information?.phoneNumber = phoneNumber
+    }
+
     init {
         // authorizationRequirement.require(information)
     }
