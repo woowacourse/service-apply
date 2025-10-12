@@ -13,4 +13,7 @@ interface MemberRepository : JpaRepository<Member, Long> {
     @PersistenceOnly(replaceWith = "this.findAllByIdIn(ids)")
     @Query("select m from Member m left join fetch m.information where m.id in :ids")
     override fun findAllById(ids: Iterable<Long>): List<Member>
+
+    @Query("select m from Member m left join fetch m.information where m.information.email = :email")
+    fun findByInformationEmail(email: String): Member?
 }

@@ -45,6 +45,11 @@ class MemberRepositoryTest(
             actual.shouldHaveSize(3)
         }
 
+        expect("이메일이 일치하는 회원을 조회한다") {
+            val actual = memberRepository.findByInformationEmail("a@email.com")
+            actual.shouldNotBeNull()
+        }
+
         expect("빈 목록으로 조회하면 빈 목록을 반환한다") {
             val actual = memberRepository.findAllByIdIn(emptyList())
             actual.shouldBeEmpty()
