@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 import org.springframework.data.repository.findByIdOrNull
 import support.test.RepositoryTest
+import support.test.spec.afterRootTest
 import java.time.LocalDate
 
 @EnableJpaRepositories("apply.domain.member.tobe")
@@ -42,9 +43,22 @@ class MemberRepositoryTest(
         }
     }
 
+    context("회원 탈퇴") {
+        val member = memberRepository.save(createMember())
+
+        expect("회원 탈퇴하면 회원 정보를 삭제한다") {
+            val actual = memberRepository.findByIdOrNull(member.id)!!
+            actual.withdraw(PASSWORD)
+        }
+    }
+
     afterEach {
         entityManager.flush()
         entityManager.clear()
+    }
+
+    afterRootTest {
+        memberRepository.deleteAll()
     }
 })
 
