@@ -5,6 +5,9 @@ import apply.PASSWORD
 import apply.domain.member.Password
 import io.kotest.core.spec.style.ExpectSpec
 import io.kotest.extensions.spring.SpringExtension
+import io.kotest.inspectors.forAll
+import io.kotest.matchers.booleans.shouldBeFalse
+import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.nulls.shouldBeNull
@@ -26,6 +29,36 @@ class MemberRepositoryTest(
 ) : ExpectSpec({
     extensions(SpringExtension)
 
+    context("회원 저장") {
+        expect("회원과 회원 정보를 함께 저장한다") {
+            val member = createMember()
+            memberRepository.save(member)
+        }
+    }
+
+    context("회원 수정") {
+        val member = memberRepository.save(createMember())
+
+        expect("회원이 비밀번호를 수정한다") {
+            val actual = memberRepository.getOrThrow(member.id)
+            actual.changePassword(PASSWORD, NEW_PASSWORD)
+        }
+
+        expect("회원이 휴대전화 번호를 수정한다") {
+            val actual = memberRepository.getOrThrow(member.id)
+            actual.changePhoneNumber("010-1234-5678")
+        }
+    }
+
+    context("회원 탈퇴") {
+        val member = memberRepository.save(createMember())
+
+        expect("회원 탈퇴하면 회원 정보를 삭제한다") {
+            val actual = memberRepository.getOrThrow(member.id)
+            actual.withdraw(PASSWORD)
+        }
+    }
+
     context("회원 조회") {
         memberRepository.saveAll(
             listOf(
@@ -36,8 +69,7 @@ class MemberRepositoryTest(
         )
 
         expect("아이디가 일치하는 회원을 조회한다") {
-            val actual = memberRepository.findByIdOrNull(1L)
-            actual.shouldNotBeNull()
+            val actual = memberRepository.getOrThrow(1L)
             actual.information.shouldNotBeNull()
         }
 
@@ -58,7 +90,7 @@ class MemberRepositoryTest(
         }
 
         expect("이메일이 일치하는 모든 회원을 조회한다") {
-            val actual = memberRepository.findAllByInformationEmailIn(listOf("b@email.com", "c@email.com"))
+            val actual = memberRepository.findAllByEmailIn(listOf("b@email.com", "c@email.com"))
             actual shouldHaveSize 2
         }
 
@@ -66,35 +98,17 @@ class MemberRepositoryTest(
             memberRepository.findAllByIdIn(emptyList()).shouldBeEmpty()
             memberRepository.findAllByEmailIn(emptyList()).shouldBeEmpty()
         }
-    }
 
-    context("회원 저장") {
-        expect("회원과 회원 정보를 함께 저장한다") {
-            val member = createMember()
-            memberRepository.save(member)
-        }
-    }
-
-    context("회원 수정") {
-        val member = memberRepository.save(createMember())
-
-        expect("회원이 비밀번호를 수정한다") {
-            val actual = memberRepository.findByIdOrNull(member.id)!!
-            actual.changePassword(PASSWORD, NEW_PASSWORD)
+        expect("이메일이 일치하는 회원이 있는지 확인한다") {
+            memberRepository.existsByEmail("a@email.com").shouldBeTrue()
+            memberRepository.existsByEmail("non-exists@email.com").shouldBeFalse()
         }
 
-        expect("회원이 휴대전화 번호를 수정한다") {
-            val actual = memberRepository.findByIdOrNull(member.id)!!
-            actual.changePhoneNumber("010-1234-5678")
-        }
-    }
-
-    context("회원 탈퇴") {
-        val member = memberRepository.save(createMember())
-
-        expect("회원 탈퇴하면 회원 정보를 삭제한다") {
-            val actual = memberRepository.findByIdOrNull(member.id)!!
-            actual.withdraw(PASSWORD)
+        expect("이름이나 이메일에 키워드가 포함된 모든 회원을 조회한다") {
+            listOf("홍" to 2, "a@" to 1, "" to 3, "4" to 0).forAll { (keyword, size) ->
+                val actual = memberRepository.findAllByKeyword(keyword)
+                actual shouldHaveSize size
+            }
         }
     }
 

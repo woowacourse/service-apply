@@ -2,6 +2,7 @@ package apply.domain.member.tobe
 
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.findByIdOrNull
 import support.infra.PersistenceOnly
 
 fun MemberRepository.findAllByIdIn(ids: Collection<Long>): List<Member> {
@@ -15,6 +16,10 @@ fun MemberRepository.findAllByEmailIn(emails: Collection<String>): List<Member> 
     return findAllByInformationEmailIn(emails)
 }
 
+fun MemberRepository.existsByEmail(email: String): Boolean = existsByInformationEmail(email)
+fun MemberRepository.getOrThrow(id: Long): Member = findByIdOrNull(id)
+    ?: throw NoSuchElementException("회원이 존재하지 않습니다. id: $id")
+
 interface MemberRepository : JpaRepository<Member, Long> {
     @PersistenceOnly(replaceWith = "this.findAllByIdIn(ids)")
     @Query("select m from Member m left join fetch m.information where m.id in :ids")
@@ -27,4 +32,10 @@ interface MemberRepository : JpaRepository<Member, Long> {
     @PersistenceOnly(replaceWith = "this.findAllByEmailIn(emails)")
     @Query("select m from Member m left join fetch m.information where m.information.email in :emails")
     fun findAllByInformationEmailIn(emails: Collection<String>): List<Member>
+
+    @PersistenceOnly(replaceWith = "this.existsByEmail(email)")
+    fun existsByInformationEmail(email: String): Boolean
+
+    @Query("select m from Member m left join fetch m.information where m.information.name like %:keyword% or m.information.email like %:keyword%")
+    fun findAllByKeyword(keyword: String): List<Member>
 }
