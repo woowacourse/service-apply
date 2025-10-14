@@ -41,4 +41,8 @@ class MemberInformation(
     @OneToOne
     @JoinColumn(foreignKey = ForeignKey(name = "fk_member_information_member_id_ref_member_id"))
     internal var member: Member? = null
+
+    fun same(name: String, birthday: LocalDate): Boolean {
+        return this.name == name && this.birthday == birthday
+    }
 }

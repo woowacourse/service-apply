@@ -2,7 +2,11 @@ package apply.domain.member.tobe
 
 import apply.domain.member.AuthorizationRequirement
 import apply.domain.member.Password
+import apply.domain.member.PasswordResetEvent
+import apply.domain.member.UnidentifiedMemberException
 import support.domain.BaseRootEntity
+import support.infra.PersistenceOnly
+import java.time.LocalDate
 import javax.persistence.AttributeOverride
 import javax.persistence.CascadeType
 import javax.persistence.Column
@@ -26,11 +30,27 @@ class Member(
     authorizationRequirement: AuthorizationRequirement,
 ) : BaseRootEntity<Member>() {
     @OneToOne(mappedBy = "member", cascade = [CascadeType.PERSIST], orphanRemoval = true)
-    var information: MemberInformation? = null
-        private set
+    private var _information: MemberInformation? = null
+    val information: MemberInformation
+        get() = _information ?: throw IllegalStateException("회원 정보가 존재하지 않습니다.")
 
     init {
+        // authorizationRequirement.require(information)
         attachInformation(information)
+    }
+
+    fun authenticate(password: Password) {
+        identify(this.password == password) { "사용자 정보가 일치하지 않습니다." }
+    }
+
+    fun resetPassword(
+        name: String,
+        birthday: LocalDate,
+        password: String,
+    ) {
+        identify(information.same(name, birthday)) { "사용자 정보가 일치하지 않습니다." }
+        this.password = Password(password)
+        registerEvent(PasswordResetEvent(id, name, information.email, password))
     }
 
     fun changePassword(oldPassword: Password, newPassword: Password) {
@@ -38,24 +58,32 @@ class Member(
     }
 
     fun changePhoneNumber(phoneNumber: String) {
-        information?.phoneNumber = phoneNumber
+        _information?.phoneNumber = phoneNumber
     }
 
     fun withdraw(password: Password) {
         detachInformation()
     }
 
+    private fun identify(
+        value: Boolean,
+        lazyMessage: () -> Any = {},
+    ) {
+        if (!value) {
+            val message = lazyMessage()
+            throw UnidentifiedMemberException(message.toString())
+        }
+    }
+
+    @PersistenceOnly
     private fun attachInformation(information: MemberInformation) {
-        this.information = information
+        _information = information
         information.member = this
     }
 
+    @PersistenceOnly
     private fun detachInformation() {
-        information?.member = null
-        information = null
-    }
-
-    init {
-        // authorizationRequirement.require(information)
+        _information?.member = null
+        _information = null
     }
 }
