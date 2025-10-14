@@ -15,7 +15,6 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
-import org.springframework.data.repository.findByIdOrNull
 import support.test.RepositoryTest
 import support.test.spec.afterRootTest
 import java.time.LocalDate
@@ -60,21 +59,21 @@ class MemberRepositoryTest(
     }
 
     context("회원 조회") {
-        memberRepository.saveAll(
+        val members = memberRepository.saveAll(
             listOf(
                 createMember(name = "홍길동1", email = "a@email.com"),
                 createMember(name = "홍길동2", email = "b@email.com"),
-                createMember(name = "동해물과백두산이마르고닳도록하느님이보우하사우리나라만세무궁", email = "c@email.com")
+                createMember(name = "동해물과백두산이마르고닳도록하느님이보우하사우리나라만세무궁", email = "c@email.com"),
             )
         )
 
         expect("아이디가 일치하는 회원을 조회한다") {
-            val actual = memberRepository.getOrThrow(1L)
+            val actual = memberRepository.getOrThrow(members[0].id)
             actual.information.shouldNotBeNull()
         }
 
         expect("아이디가 일치하는 모든 회원을 조회한다") {
-            val actual = memberRepository.findAllByIdIn(listOf(1L, 2L, 3L))
+            val actual = memberRepository.findAllByIdIn(members.map(Member::id))
             actual.shouldHaveSize(3)
         }
 
