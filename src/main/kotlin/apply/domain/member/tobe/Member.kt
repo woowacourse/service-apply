@@ -24,15 +24,14 @@ class Member(
     @Embedded
     var password: Password,
 
+    authorizationRequirement: AuthorizationRequirement,
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    val status: MemberStatus = MemberStatus.ACTIVE,
-    authorizationRequirement: AuthorizationRequirement,
+    var status: MemberStatus = MemberStatus.ACTIVE,
 ) : BaseRootEntity<Member>() {
     @OneToOne(mappedBy = "member", cascade = [CascadeType.PERSIST], orphanRemoval = true)
     private var _information: MemberInformation? = null
-    val information: MemberInformation
-        get() = _information ?: throw IllegalStateException("회원 정보가 존재하지 않습니다.")
+    val information: MemberInformation get() = _information ?: throw IllegalStateException("회원 정보가 존재하지 않습니다.")
 
     init {
         // authorizationRequirement.require(information)
@@ -54,21 +53,21 @@ class Member(
     }
 
     fun changePassword(oldPassword: Password, newPassword: Password) {
-        this.password = newPassword
+        identify(password == oldPassword) { "기존 비밀번호가 일치하지 않습니다." }
+        password = newPassword
     }
 
     fun changePhoneNumber(phoneNumber: String) {
-        _information?.phoneNumber = phoneNumber
+        information.phoneNumber = phoneNumber
     }
 
     fun withdraw(password: Password) {
+        identify(this.password == password) { "사용자 정보가 일치하지 않습니다." }
+        status = MemberStatus.WITHDRAWN
         detachInformation()
     }
 
-    private fun identify(
-        value: Boolean,
-        lazyMessage: () -> Any = {},
-    ) {
+    private fun identify(value: Boolean, lazyMessage: () -> Any) {
         if (!value) {
             val message = lazyMessage()
             throw UnidentifiedMemberException(message.toString())

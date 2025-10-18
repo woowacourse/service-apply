@@ -10,10 +10,10 @@ fun MemberRepository.findAllByIdIn(ids: Collection<Long>): List<Member> {
     return findAllById(ids)
 }
 
-fun MemberRepository.findByEmail(email: String): Member? = findByInformationEmail(email)
+fun MemberRepository.findByEmail(email: String): Member? = findBy_informationEmail(email)
 fun MemberRepository.findAllByEmailIn(emails: Collection<String>): List<Member> {
     if (emails.isEmpty()) return emptyList()
-    return findAllByInformationEmailIn(emails)
+    return findAllBy_informationEmailIn(emails)
 }
 
 fun MemberRepository.existsByEmail(email: String): Boolean = existsBy_informationEmail(email)
@@ -27,11 +27,11 @@ interface MemberRepository : JpaRepository<Member, Long> {
 
     @PersistenceOnly(replaceWith = "this.findByEmail(email)")
     @Query("select m from Member m left join fetch m._information where m._information.email = :email")
-    fun findByInformationEmail(email: String): Member?
+    fun findBy_informationEmail(email: String): Member?
 
     @PersistenceOnly(replaceWith = "this.findAllByEmailIn(emails)")
     @Query("select m from Member m left join fetch m._information where m._information.email in :emails")
-    fun findAllByInformationEmailIn(emails: Collection<String>): List<Member>
+    fun findAllBy_informationEmailIn(emails: Collection<String>): List<Member>
 
     @PersistenceOnly(replaceWith = "this.existsByEmail(email)")
     fun existsBy_informationEmail(email: String): Boolean

@@ -2,7 +2,10 @@ package apply.domain.member.tobe
 
 import apply.NEW_PASSWORD
 import apply.PASSWORD
+import apply.domain.member.AuthorizationRequirement
 import apply.domain.member.Password
+import io.kotest.assertions.throwables.shouldNotThrowAny
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.ExpectSpec
 import io.kotest.extensions.spring.SpringExtension
 import io.kotest.inspectors.forAll
@@ -10,12 +13,15 @@ import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.longs.shouldNotBeZero
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 import support.test.RepositoryTest
+import support.test.autoconfigure.orm.jpa.flushAndClear
 import support.test.spec.afterRootTest
 import java.time.LocalDate
 
@@ -30,31 +36,51 @@ class MemberRepositoryTest(
 
     context("회원 저장") {
         expect("회원과 회원 정보를 함께 저장한다") {
-            val member = createMember()
-            memberRepository.save(member)
+            val actual = memberRepository.save(createMember())
+            actual.id.shouldNotBeZero()
+            shouldNotThrowAny { actual.information }
         }
     }
 
     context("회원 수정") {
-        val member = memberRepository.save(createMember())
+        val base = memberRepository.save(createMember(password = PASSWORD, phoneNumber = "010-0000-0000"))
+
+        expect("회원이 비밀번호를 초기화한다") {
+            val member = memberRepository.getOrThrow(base.id)
+            member.resetPassword("NAME", LocalDate.now(), "new_password")
+            val actual = memberRepository.save(member)
+            actual.id.shouldNotBeZero()
+            actual.password shouldBe Password("new_password")
+            shouldNotThrowAny { actual.information }
+        }
 
         expect("회원이 비밀번호를 수정한다") {
+            val member = memberRepository.getOrThrow(base.id)
+            member.changePassword(PASSWORD, NEW_PASSWORD)
+            entityManager.flushAndClear()
             val actual = memberRepository.getOrThrow(member.id)
-            actual.changePassword(PASSWORD, NEW_PASSWORD)
+            actual.password shouldBe NEW_PASSWORD
         }
 
         expect("회원이 휴대전화 번호를 수정한다") {
+            val member = memberRepository.getOrThrow(base.id)
+            member.changePhoneNumber("010-1234-5678")
+            entityManager.flushAndClear()
             val actual = memberRepository.getOrThrow(member.id)
-            actual.changePhoneNumber("010-1234-5678")
+            actual.information.phoneNumber shouldBe "010-1234-5678"
         }
     }
 
     context("회원 탈퇴") {
-        val member = memberRepository.save(createMember())
+        val base = memberRepository.save(createMember())
 
         expect("회원 탈퇴하면 회원 정보를 삭제한다") {
+            val member = memberRepository.getOrThrow(base.id)
+            member.withdraw(PASSWORD)
+            entityManager.flushAndClear()
             val actual = memberRepository.getOrThrow(member.id)
-            actual.withdraw(PASSWORD)
+            actual.status shouldBe MemberStatus.WITHDRAWN
+            shouldThrow<IllegalStateException> { actual.information }
         }
     }
 
@@ -111,11 +137,6 @@ class MemberRepositoryTest(
         }
     }
 
-    afterEach {
-        entityManager.flush()
-        entityManager.clear()
-    }
-
     afterRootTest {
         memberRepository.deleteAll()
     }
@@ -124,9 +145,14 @@ class MemberRepositoryTest(
 private fun createMember(
     email: String = "EMAIL",
     name: String = "NAME",
+    birthday: LocalDate = LocalDate.now(),
+    phoneNumber: String = "PHONE_NUMBER",
+    password: Password = PASSWORD,
+    authorizationRequirement: AuthorizationRequirement = AuthorizationRequirement {},
 ): Member {
     return Member(
-        MemberInformation(email, name, LocalDate.now(), "", ""),
-        Password("")
-    ) {}
+        MemberInformation(email, name, birthday, phoneNumber, ""),
+        password,
+        authorizationRequirement
+    )
 }
