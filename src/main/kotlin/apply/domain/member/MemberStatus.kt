@@ -1,4 +1,4 @@
-package apply.domain.member.tobe
+package apply.domain.member
 
 enum class MemberStatus {
     ACTIVE,

@@ -2,7 +2,6 @@ package apply.domain.member
 
 import apply.PASSWORD
 import apply.WRONG_PASSWORD
-import apply.createMember
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
@@ -32,13 +31,13 @@ class MemberTest : StringSpec({
         val member = createMember(phoneNumber = "010-0000-0000")
         val newPhoneNumber = "010-1111-1111"
         member.changePhoneNumber(newPhoneNumber)
-        member.phoneNumber shouldBe newPhoneNumber
+        member.information.phoneNumber shouldBe newPhoneNumber
     }
 
     "회원 탈퇴" {
         val member = createMember(password = PASSWORD)
         member.withdraw(PASSWORD)
-        member.name shouldBe MemberInformation.DELETED.name
+        member.status shouldBe MemberStatus.WITHDRAWN
     }
 
     "비밀번호가 일치하지 않으면 회원 탈퇴가 실패한다" {
@@ -46,3 +45,18 @@ class MemberTest : StringSpec({
         shouldThrow<UnidentifiedMemberException> { member.withdraw(WRONG_PASSWORD) }
     }
 })
+
+private fun createMember(
+    email: String = "EMAIL",
+    name: String = "NAME",
+    birthday: LocalDate = LocalDate.now(),
+    phoneNumber: String = "PHONE_NUMBER",
+    password: Password = PASSWORD,
+    authorizationRequirement: AuthorizationRequirement = AuthorizationRequirement {},
+): Member {
+    return Member(
+        MemberInformation(email, name, birthday, phoneNumber, ""),
+        password,
+        authorizationRequirement
+    )
+}

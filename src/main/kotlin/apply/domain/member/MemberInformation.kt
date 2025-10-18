@@ -1,13 +1,13 @@
 package apply.domain.member
 
+import support.infra.PersistenceOnly
 import java.time.LocalDate
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.ForeignKey
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
+import javax.persistence.MapsId
 import javax.persistence.OneToOne
 import javax.persistence.Table
 import javax.persistence.UniqueConstraint
@@ -16,7 +16,7 @@ import javax.persistence.UniqueConstraint
     uniqueConstraints = [UniqueConstraint(name = "uk_member_information", columnNames = ["email"])]
 )
 @Entity
-data class MemberInformation(
+class MemberInformation(
     @Column(nullable = false)
     val email: String,
 
@@ -32,25 +32,17 @@ data class MemberInformation(
     @Column(nullable = false, length = 39)
     val githubUsername: String,
 ) {
-    @OneToOne
-    @JoinColumn(nullable = false, foreignKey = ForeignKey(name = "fk_member_information_member_id_ref_member_id"))
-    var member: Member? = null
-
+    @PersistenceOnly
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private val id: Long = 0L
+    private val memberId: Long = 0L
+
+    @PersistenceOnly
+    @MapsId
+    @OneToOne
+    @JoinColumn(foreignKey = ForeignKey(name = "fk_member_information_member_id_ref_member_id"))
+    internal var member: Member? = null
 
     fun same(name: String, birthday: LocalDate): Boolean {
         return this.name == name && this.birthday == birthday
-    }
-
-    companion object {
-        val DELETED: MemberInformation = MemberInformation(
-            email = "ghost@email.com",
-            name = """👻""",
-            birthday = LocalDate.EPOCH,
-            phoneNumber = "010-0000-0000",
-            githubUsername = "ghost"
-        )
     }
 }
