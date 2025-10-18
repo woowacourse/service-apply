@@ -2,6 +2,7 @@ package apply.domain.member
 
 import apply.NEW_PASSWORD
 import apply.PASSWORD
+import apply.createMember
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.ExpectSpec
@@ -15,16 +16,11 @@ import io.kotest.matchers.longs.shouldNotBeZero
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
-import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 import support.test.RepositoryTest
 import support.test.autoconfigure.orm.jpa.flushAndClear
 import support.test.spec.afterRootTest
-import java.time.LocalDate
 
-@EnableJpaRepositories("apply.domain.member.tobe")
-@EntityScan("apply.domain.member.tobe")
 @RepositoryTest
 class MemberRepositoryTest(
     private val memberRepository: MemberRepository,
@@ -45,7 +41,7 @@ class MemberRepositoryTest(
 
         expect("회원이 비밀번호를 초기화한다") {
             val member = memberRepository.getOrThrow(base.id)
-            member.resetPassword("NAME", LocalDate.now(), "new_password")
+            member.resetPassword(base.name, base.birthday, "new_password")
             val actual = memberRepository.save(member)
             actual.id.shouldNotBeZero()
             actual.password shouldBe Password("new_password")
@@ -102,9 +98,10 @@ class MemberRepositoryTest(
         }
 
         expect("이메일이 일치하는 회원을 조회한다") {
-            val actual = memberRepository.findByEmail("a@email.com")
+            val actual = memberRepository.findByEmail("b@email.com")
             actual.shouldNotBeNull()
             actual.information.shouldNotBeNull()
+            actual.information.name shouldBe "홍길동2"
         }
 
         expect("이메일이 일치하는 회원이 없으면 null을 반환한다") {
@@ -139,18 +136,3 @@ class MemberRepositoryTest(
         memberRepository.deleteAll()
     }
 })
-
-private fun createMember(
-    email: String = "EMAIL",
-    name: String = "NAME",
-    birthday: LocalDate = LocalDate.now(),
-    phoneNumber: String = "PHONE_NUMBER",
-    password: Password = PASSWORD,
-    authorizationRequirement: AuthorizationRequirement = AuthorizationRequirement {},
-): Member {
-    return Member(
-        MemberInformation(email, name, birthday, phoneNumber, ""),
-        password,
-        authorizationRequirement
-    )
-}

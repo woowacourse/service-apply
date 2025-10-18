@@ -30,14 +30,9 @@ class Judgment(
     )
     private val records: MutableList<JudgmentRecord> = records.toMutableList()
 
-    val lastCommit: Commit
-        get() = lastRecord.commit
-
-    val lastStatus: JudgmentStatus
-        get() = lastRecord.status
-
-    val lastRecord: JudgmentRecord
-        get() = records.maxByOrNull { it.startedDateTime } ?: throw NoSuchElementException()
+    val lastCommit: Commit get() = lastRecord.commit
+    val lastStatus: JudgmentStatus get() = lastRecord.status
+    val lastRecord: JudgmentRecord get() = records.maxByOrNull { it.startedDateTime } ?: throw NoSuchElementException()
 
     fun start(commit: Commit) {
         check(canStart()) { "자동 채점을 시작할 수 없습니다." }

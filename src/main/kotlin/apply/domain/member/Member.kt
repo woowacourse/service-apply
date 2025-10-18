@@ -19,15 +19,22 @@ class Member(
     @AttributeOverride(name = "value", column = Column(name = "password", nullable = false))
     @Embedded
     var password: Password,
-
     authorizationRequirement: AuthorizationRequirement,
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     var status: MemberStatus = MemberStatus.ACTIVE,
-) : BaseRootEntity<Member>() {
+    id: Long = 0L,
+) : BaseRootEntity<Member>(id) {
     @OneToOne(mappedBy = "member", cascade = [CascadeType.PERSIST], orphanRemoval = true)
     private var _information: MemberInformation? = null
     val information: MemberInformation get() = _information ?: throw IllegalStateException("회원 정보가 존재하지 않습니다.")
+
+    val email: String get() = information.email
+    val name: String get() = information.name
+    val birthday: LocalDate get() = information.birthday
+    val phoneNumber: String get() = information.phoneNumber
+    val githubUsername: String get() = information.githubUsername
 
     init {
         authorizationRequirement.require(information)

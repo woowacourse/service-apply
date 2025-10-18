@@ -2,6 +2,7 @@ package apply.domain.member
 
 import apply.PASSWORD
 import apply.WRONG_PASSWORD
+import apply.createMember
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
@@ -45,18 +46,3 @@ class MemberTest : StringSpec({
         shouldThrow<UnidentifiedMemberException> { member.withdraw(WRONG_PASSWORD) }
     }
 })
-
-private fun createMember(
-    email: String = "EMAIL",
-    name: String = "NAME",
-    birthday: LocalDate = LocalDate.now(),
-    phoneNumber: String = "PHONE_NUMBER",
-    password: Password = PASSWORD,
-    authorizationRequirement: AuthorizationRequirement = AuthorizationRequirement {},
-): Member {
-    return Member(
-        MemberInformation(email, name, birthday, phoneNumber, ""),
-        password,
-        authorizationRequirement
-    )
-}
