@@ -28,6 +28,7 @@ import apply.domain.mail.MailHistoryRepository
 import apply.domain.member.Member
 import apply.domain.member.MemberInformation
 import apply.domain.member.MemberRepository
+import apply.domain.member.MemberStatus
 import apply.domain.member.Password
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionRepository
@@ -88,11 +89,11 @@ class DatabaseInitializer(
         populateRecruitmentItems()
         populateEvaluations()
         populateEvaluationItems()
+        populateMissions()
+        populateJudgmentItems()
         populateMembers()
         populateApplicationForms()
         populateEvaluationTargets()
-        populateMissions()
-        populateJudgmentItems()
         populateAssignments()
         populateMailHistories()
     }
@@ -124,7 +125,7 @@ class DatabaseInitializer(
             Term("1기"),
             Term("2기"),
             Term("3기"),
-            Term("4기")
+            Term("4기"),
         )
         termRepository.saveAll(terms)
     }
@@ -132,33 +133,33 @@ class DatabaseInitializer(
     private fun populateRecruitments() {
         val recruitments = listOf(
             Recruitment(
-                title = "지원할 제목",
-                startDateTime = createLocalDateTime(2019, 10, 5, 10),
-                endDateTime = createLocalDateTime(2120, 11, 5, 10),
+                title = "웹 백엔드 1기",
+                startDateTime = createLocalDateTime(2019, 3, 4, 10),
+                endDateTime = createLocalDateTime(2120, 3, 13, 10),
                 recruitable = true,
-                hidden = false
+                hidden = false,
             ),
             Recruitment(
                 title = "웹 백엔드 2기",
                 startDateTime = createLocalDateTime(2019, 10, 25, 10),
                 endDateTime = createLocalDateTime(2019, 11, 5, 10),
                 recruitable = true,
-                hidden = false
+                hidden = false,
             ),
             Recruitment(
                 title = "웹 백엔드 3기",
                 startDateTime = createLocalDateTime(2020, 10, 25, 15),
                 endDateTime = createLocalDateTime(2020, 11, 5, 10),
                 recruitable = true,
-                hidden = true
+                hidden = true,
             ),
             Recruitment(
                 title = "웹 프론트엔드 3기",
                 startDateTime = createLocalDateTime(2020, 10, 25, 15),
                 endDateTime = createLocalDateTime(2020, 11, 5, 10),
                 recruitable = false,
-                hidden = false
-            )
+                hidden = false,
+            ),
         )
         recruitmentRepository.saveAll(recruitments)
     }
@@ -166,19 +167,40 @@ class DatabaseInitializer(
     private fun populateRecruitmentItems() {
         val recruitmentItems = listOf(
             RecruitmentItem(
-                title = "프로그래밍 학습 과정과 현재 자신이 생각하는 역량은",
-                description = "우아한테크코스는 프로그래밍에 대한 기본 지식과 경험을 가진 교육생을 선발하기 때문에 프로그래밍 경험이 있는 상태에서 지원하게 됩니다. 프로그래밍 학습을 어떤 계기로 시작했으며, 어떻게 학습해왔는지, 이를 통해 현재 어느 정도의 역량을 보유한 상태인지를 구체적으로 작성해 주세요.",
                 recruitmentId = 1L,
+                title = "프로그래밍 학습 과정과 현재 자신이 생각하는 역량은?",
+                position = 1,
                 maximumLength = 1000,
-                position = 1
+                description = "학습 시작 계기, 학습 방법, 현재 역량 수준을 구체적으로 작성해 주세요.",
             ),
             RecruitmentItem(
-                title = "프로그래머가 되려는 이유는 무엇인가요?",
-                description = "어떤 계기로 프로그래머라는 직업을 꿈꾸게 되었나요? 프로그래밍을 배워 최종적으로 하고 싶은 일이 무엇인지, 프로그래밍을 통해 만들고 싶은 소프트웨어가 있다면 무엇인지에 대해 작성해 주세요.",
                 recruitmentId = 1L,
+                title = "프로그래머가 되려는 이유는 무엇인가요?",
+                position = 2,
                 maximumLength = 1000,
-                position = 2
-            )
+                description = "계기, 하고 싶은 일, 만들고 싶은 소프트웨어에 대해 작성해 주세요.",
+            ),
+            RecruitmentItem(
+                recruitmentId = 1L,
+                title = "최근 해결한 기술적 문제는 무엇이며 어떻게 해결하였나요?",
+                position = 3,
+                maximumLength = 1000,
+                description = "문제 정의, 시도한 접근, 실패와 교훈, 최종 해결을 작성해 주세요.",
+            ),
+            RecruitmentItem(
+                recruitmentId = 2L,
+                title = "자기소개 및 학습 여정",
+                position = 1,
+                maximumLength = 1000,
+                description = "당신의 배경과 최근 학습 경험을 알려 주세요.",
+            ),
+            RecruitmentItem(
+                recruitmentId = 2L,
+                title = "협업 경험과 역할",
+                position = 2,
+                maximumLength = 1000,
+                description = "팀 내 역할, 갈등 해결, 커뮤니케이션 방식을 중심으로 작성해 주세요.",
+            ),
         )
         recruitmentItemRepository.saveAll(recruitmentItems)
     }
@@ -187,24 +209,21 @@ class DatabaseInitializer(
         val evaluations = listOf(
             Evaluation(
                 title = "프리코스 대상자 선발",
-                description = "[리뷰 절차]\n" +
-                    "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
-                recruitmentId = 1L
+                description = "[리뷰 절차]\nhttps://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
+                recruitmentId = 1L,
             ),
             Evaluation(
-                title = "1주차 - 숫자야구게임",
-                description = "[리뷰 절차]\n" +
-                    "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
+                title = "1주 차 프리코스",
+                description = "[리뷰 절차]\nhttps://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
                 recruitmentId = 1L,
-                beforeEvaluationId = 1L
+                beforeEvaluationId = 1L,
             ),
             Evaluation(
-                title = "2주차 - 자동차경주게임 ",
-                description = "[리뷰 절차]\n" +
-                    "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
+                title = "2주 차 프리코스",
+                description = "[리뷰 절차]\nhttps://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
                 recruitmentId = 1L,
-                beforeEvaluationId = 2L
-            )
+                beforeEvaluationId = 2L,
+            ),
         )
         evaluationRepository.saveAll(evaluations)
     }
@@ -214,200 +233,40 @@ class DatabaseInitializer(
             EvaluationItem(
                 title = "학습과정/역량",
                 description = "학습 기간과 전공 유무도 고려한다.",
-                evaluationId = 1L,
                 maximumScore = 5,
-                position = 1
+                position = 1,
+                evaluationId = 1L,
             ),
             EvaluationItem(
                 title = "README.md 파일에 기능 목록이 추가되어 있는가?",
-                description = "[리뷰 절차]\n" +
-                    "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
-                evaluationId = 2L,
+                description = "[리뷰 절차]\nhttps://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
                 maximumScore = 2,
-                position = 1
+                position = 1,
+                evaluationId = 2L,
             ),
             EvaluationItem(
-                title = "하드코딩을 상수화 했는가?",
-                description = "[리뷰 절차]\n" +
-                    "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
-                evaluationId = 2L,
+                title = "상수를 하드코딩하였는가?",
+                description = "[리뷰 절차]\nhttps://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
                 maximumScore = 2,
-                position = 2
+                position = 2,
+                evaluationId = 2L,
             ),
             EvaluationItem(
-                title = "인덴트가 2 이하인가?",
-                description = "[리뷰 절차]\n" +
-                    "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
-                evaluationId = 2L,
+                title = "들여쓰기가 2 이하인가?",
+                description = "[리뷰 절차]\nhttps://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
                 maximumScore = 3,
-                position = 3
+                position = 3,
+                evaluationId = 2L,
             ),
             EvaluationItem(
                 title = "기능 요구 사항을 만족하는가?",
-                description = "[리뷰 절차]\n" +
-                    "https://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
-                evaluationId = 2L,
+                description = "[리뷰 절차]\nhttps://github.com/woowacourse/woowacourse-docs/tree/master/precourse",
                 maximumScore = 10,
-                position = 4
-            )
+                position = 4,
+                evaluationId = 2L,
+            ),
         )
         evaluationItemRepository.saveAll(evaluationItems)
-    }
-
-    private fun populateMembers() {
-        val members = listOf(
-            Member(
-                MemberInformation(
-                    name = "홍길동",
-                    email = "a@email.com",
-                    phoneNumber = "010-0000-0000",
-                    githubUsername = "jaeyeonling",
-                    birthday = createLocalDate(2000, 4, 17),
-                ),
-                Password("password"),
-                {}
-            ),
-            Member(
-                MemberInformation(
-                    name = "홍길동2",
-                    email = "b@email.com",
-                    phoneNumber = "010-0000-0000",
-                    githubUsername = "jaeyeonling",
-                    birthday = createLocalDate(2000, 5, 5),
-                ),
-                password = Password("password"),
-                {}
-            ),
-            Member(
-                MemberInformation(
-                    name = "홍길동3",
-                    email = "c@email.com",
-                    phoneNumber = "010-0000-0000",
-                    githubUsername = "jaeyeonling",
-                    birthday = createLocalDate(2000, 1, 1),
-                ),
-                Password("password"),
-                {}
-            ),
-            Member(
-                MemberInformation(
-                    name = "홍길동4",
-                    email = "d@email.com",
-                    phoneNumber = "010-0000-0000",
-                    githubUsername = "jaeyeonling",
-                    birthday = createLocalDate(2000, 1, 1),
-                ),
-                Password("password"),
-                {}
-            )
-        )
-        memberRepository.saveAll(members)
-    }
-
-    private fun populateApplicationForms() {
-        val applicationForms = listOf(
-            ApplicationForm(
-                referenceUrl = "",
-                submitted = true,
-                createdDateTime = createLocalDateTime(2019, 10, 25, 10),
-                modifiedDateTime = createLocalDateTime(2019, 11, 5, 10),
-                submittedDateTime = createLocalDateTime(2019, 11, 5, 10, 10, 10),
-                recruitmentId = 1L,
-                memberId = 1L,
-                answers = ApplicationFormAnswers(
-                    mutableListOf(
-                        ApplicationFormAnswer("도전, 끈기", 1L),
-                        ApplicationFormAnswer("고객에게 가치를 전달하고 싶습니다.", 2L)
-                    )
-                )
-            ),
-            ApplicationForm(
-                referenceUrl = "https://www.google.com",
-                submitted = true,
-                createdDateTime = createLocalDateTime(2019, 10, 25, 10),
-                modifiedDateTime = createLocalDateTime(2019, 11, 5, 10),
-                submittedDateTime = createLocalDateTime(2019, 11, 5, 10, 10, 10),
-                recruitmentId = 1L,
-                memberId = 2L,
-                answers = ApplicationFormAnswers(
-                    mutableListOf(
-                        ApplicationFormAnswer("책임감", 1L),
-                        ApplicationFormAnswer("스타트업을 하고 싶습니다.", 2L)
-                    )
-                )
-            ),
-            ApplicationForm(
-                referenceUrl = "https://www.google.com",
-                submitted = false,
-                createdDateTime = createLocalDateTime(2019, 10, 25, 10),
-                modifiedDateTime = createLocalDateTime(2019, 11, 6, 10),
-                submittedDateTime = createLocalDateTime(2019, 11, 6, 10, 10, 10),
-                recruitmentId = 1L,
-                memberId = 3L,
-                answers = ApplicationFormAnswers(
-                    mutableListOf(
-                        ApplicationFormAnswer("건강", 1L),
-                        ApplicationFormAnswer("바딘을 배우고 싶습니다.", 2L)
-                    )
-                )
-            ),
-            ApplicationForm(
-                referenceUrl = "https://www.google.com",
-                submitted = false,
-                createdDateTime = createLocalDateTime(2019, 10, 25, 10),
-                modifiedDateTime = createLocalDateTime(2019, 11, 6, 10),
-                submittedDateTime = createLocalDateTime(2019, 11, 6, 10, 10, 10),
-                recruitmentId = 1L,
-                memberId = 4L,
-                answers = ApplicationFormAnswers(
-                    mutableListOf(
-                        ApplicationFormAnswer("사랑", 1L),
-                        ApplicationFormAnswer("코딩 교육을 하고 싶습니다.", 2L)
-                    )
-                )
-            )
-        )
-        applicationFormRepository.saveAll(applicationForms)
-    }
-
-    private fun populateEvaluationTargets() {
-        val evaluationTargets = listOf(
-            EvaluationTarget(
-                evaluationId = 1L,
-                administratorId = 1L,
-                memberId = 1L,
-                evaluationStatus = EvaluationStatus.PASS
-            ),
-            EvaluationTarget(
-                evaluationId = 1L,
-                administratorId = 1L,
-                memberId = 2L,
-                evaluationStatus = EvaluationStatus.PASS
-            ),
-            EvaluationTarget(
-                evaluationId = 2L,
-                administratorId = 1L,
-                memberId = 1L,
-                evaluationStatus = EvaluationStatus.WAITING
-            ),
-            EvaluationTarget(
-                evaluationId = 2L,
-                administratorId = 1L,
-                memberId = 2L,
-                evaluationStatus = EvaluationStatus.PASS,
-                evaluationAnswers = EvaluationAnswers(
-                    listOf(
-                        EvaluationAnswer(score = 2, evaluationItemId = 2L),
-                        EvaluationAnswer(score = 1, evaluationItemId = 3L)
-                    )
-                )
-            ),
-            EvaluationTarget(
-                evaluationId = 3L,
-                memberId = 2L
-            )
-        )
-        evaluationTargetRepository.saveAll(evaluationTargets)
     }
 
     private fun populateMissions() {
@@ -470,7 +329,7 @@ class DatabaseInitializer(
                 """.trimMargin(),
                 submittable = true,
                 hidden = false,
-                submissionMethod = SubmissionMethod.PUBLIC_PULL_REQUEST
+                submissionMethod = SubmissionMethod.PUBLIC_PULL_REQUEST,
             ),
             Mission(
                 title = "2주 차 프리코스 - 자동차 경주 게임",
@@ -488,8 +347,8 @@ class DatabaseInitializer(
                 """.trimMargin(),
                 submittable = true,
                 hidden = false,
-                submissionMethod = SubmissionMethod.PRIVATE_REPOSITORY
-            )
+                submissionMethod = SubmissionMethod.PRIVATE_REPOSITORY,
+            ),
         )
         missionRepository.saveAll(missions)
     }
@@ -500,23 +359,270 @@ class DatabaseInitializer(
                 missionId = 1L,
                 evaluationItemId = 5L,
                 testName = "baseball",
-                programmingLanguage = ProgrammingLanguage.JAVA
-            )
+                programmingLanguage = ProgrammingLanguage.JAVA,
+            ),
         )
         judgmentItemRepository.saveAll(judgmentItems)
+    }
+
+    private fun populateMembers() {
+        val members = listOf(
+            Member(
+                MemberInformation(
+                    name = "홍길동1",
+                    email = "a@email.com",
+                    phoneNumber = "010-0000-0000",
+                    githubUsername = "applicant-a",
+                    birthday = createLocalDate(2000, 4, 17),
+                ),
+                Password("password"),
+                {},
+            ),
+            Member(
+                MemberInformation(
+                    name = "홍길동2",
+                    email = "b@email.com",
+                    phoneNumber = "010-0000-0000",
+                    githubUsername = "applicant-b",
+                    birthday = createLocalDate(2000, 5, 5),
+                ),
+                password = Password("password"),
+                {},
+            ),
+            Member(
+                null,
+                Password("password"),
+                {},
+                MemberStatus.WITHDRAWN,
+            ),
+            Member(
+                MemberInformation(
+                    name = "홍길동4",
+                    email = "d@email.com",
+                    phoneNumber = "010-0000-0000",
+                    githubUsername = "applicant-d",
+                    birthday = createLocalDate(2000, 1, 1),
+                ),
+                Password("password"),
+                {},
+            ),
+            Member(
+                MemberInformation(
+                    name = "홍길동5",
+                    email = "e@email.com",
+                    phoneNumber = "010-0000-0000",
+                    githubUsername = "applicant-e",
+                    birthday = createLocalDate(2000, 1, 1),
+                ),
+                Password("password"),
+                {},
+            ),
+        )
+        memberRepository.saveAll(members)
+    }
+
+    private fun populateApplicationForms() {
+        val applicationForms = listOf(
+            ApplicationForm(
+                memberId = 1L,
+                recruitmentId = 1L,
+                referenceUrl = "",
+                answers = ApplicationFormAnswers(
+                    mutableListOf(
+                        ApplicationFormAnswer("도전, 끈기", 1L),
+                        ApplicationFormAnswer("고객에게 가치를 전달하고 싶습니다.", 2L),
+                        ApplicationFormAnswer("과거 프로젝트에서의 역할과 의사결정 과정", 3L)
+                    )
+                ),
+                submitted = true,
+                submittedDateTime = createLocalDateTime(2019, 11, 5, 10, 10, 10),
+                createdDateTime = createLocalDateTime(2019, 10, 25, 10),
+                modifiedDateTime = createLocalDateTime(2019, 11, 5, 10),
+            ),
+            ApplicationForm(
+                memberId = 2L,
+                recruitmentId = 1L,
+                referenceUrl = "https://www.google.com",
+                answers = ApplicationFormAnswers(
+                    mutableListOf(
+                        ApplicationFormAnswer("책임감", 1L),
+                        ApplicationFormAnswer("스타트업을 하고 싶습니다.", 2L),
+                        ApplicationFormAnswer("가장 기억에 남는 문제 해결 경험", 3L)
+                    )
+                ),
+                submitted = true,
+                submittedDateTime = createLocalDateTime(2019, 11, 5, 10, 10, 10),
+                createdDateTime = createLocalDateTime(2019, 10, 25, 10),
+                modifiedDateTime = createLocalDateTime(2019, 11, 5, 10),
+            ),
+            ApplicationForm(
+                memberId = 3L,
+                recruitmentId = 1L,
+                referenceUrl = "https://www.github.com",
+                answers = ApplicationFormAnswers(
+                    mutableListOf(
+                        ApplicationFormAnswer("성장", 1L),
+                        ApplicationFormAnswer("함께 배우고 성장하는 문화를 만들고 싶습니다.", 2L),
+                        ApplicationFormAnswer("커뮤니티 활동과 코드 리뷰 문화 확산 경험", 3L)
+                    )
+                ),
+                submitted = true,
+                submittedDateTime = createLocalDateTime(2019, 11, 7, 9, 15, 30),
+                createdDateTime = createLocalDateTime(2019, 10, 26, 9),
+                modifiedDateTime = createLocalDateTime(2019, 11, 7, 9),
+            ),
+            ApplicationForm(
+                memberId = 4L,
+                recruitmentId = 1L,
+                referenceUrl = "https://www.google.com",
+                answers = ApplicationFormAnswers(
+                    mutableListOf(
+                        ApplicationFormAnswer("사랑", 1L),
+                        ApplicationFormAnswer("코딩 교육을 하고 싶습니다.", 2L),
+                        ApplicationFormAnswer("초기 설계에서의 실수와 교정 과정", 3L)
+                    )
+                ),
+                submitted = true,
+                submittedDateTime = createLocalDateTime(2019, 11, 6, 10, 10, 10),
+                createdDateTime = createLocalDateTime(2019, 10, 25, 10),
+                modifiedDateTime = createLocalDateTime(2019, 11, 6, 10),
+            ),
+            ApplicationForm(
+                memberId = 5L,
+                recruitmentId = 1L,
+                referenceUrl = "https://www.google.com",
+                answers = ApplicationFormAnswers(
+                    mutableListOf(
+                        ApplicationFormAnswer("건강", 1L),
+                        ApplicationFormAnswer("바딘을 배우고 싶습니다.", 2L),
+                        ApplicationFormAnswer("사이드 프로젝트를 통한 배움 정리", 3L)
+                    )
+                ),
+                submitted = false,
+                submittedDateTime = null,
+                createdDateTime = createLocalDateTime(2019, 10, 25, 10),
+                modifiedDateTime = createLocalDateTime(2019, 11, 6, 10),
+            ),
+            ApplicationForm(
+                memberId = 2L,
+                recruitmentId = 2L,
+                referenceUrl = "https://www.notion.so/example",
+                answers = ApplicationFormAnswers(
+                    mutableListOf(
+                        ApplicationFormAnswer("간단한 자기소개와 최근 학습 여정입니다.", 4L),
+                        ApplicationFormAnswer("팀에서 맡았던 역할과 갈등 해결 경험입니다.", 5L),
+                    )
+                ),
+                submitted = true,
+                submittedDateTime = createLocalDateTime(2020, 11, 1, 9, 15, 30),
+                createdDateTime = createLocalDateTime(2020, 10, 26, 9),
+                modifiedDateTime = createLocalDateTime(2020, 11, 1, 9),
+            ),
+        )
+        applicationFormRepository.saveAll(applicationForms)
+    }
+
+    private fun populateEvaluationTargets() {
+        val evaluationTargets = listOf(
+            EvaluationTarget(
+                evaluationId = 1L,
+                administratorId = 1L,
+                memberId = 1L,
+                evaluationStatus = EvaluationStatus.PASS,
+            ),
+            EvaluationTarget(
+                evaluationId = 1L,
+                administratorId = 1L,
+                memberId = 2L,
+                evaluationStatus = EvaluationStatus.PASS,
+            ),
+            EvaluationTarget(
+                evaluationId = 1L,
+                administratorId = 1L,
+                memberId = 3L,
+                evaluationStatus = EvaluationStatus.PASS,
+            ),
+            EvaluationTarget(
+                evaluationId = 1L,
+                administratorId = null,
+                memberId = 4L,
+                evaluationStatus = EvaluationStatus.WAITING,
+            ),
+            EvaluationTarget(
+                evaluationId = 2L,
+                administratorId = 1L,
+                memberId = 1L,
+                evaluationStatus = EvaluationStatus.PASS,
+                evaluationAnswers = EvaluationAnswers(
+                    listOf(
+                        EvaluationAnswer(score = 2, evaluationItemId = 2L),
+                        EvaluationAnswer(score = 2, evaluationItemId = 3L),
+                        EvaluationAnswer(score = 3, evaluationItemId = 4L),
+                        EvaluationAnswer(score = 10, evaluationItemId = 5L),
+                    )
+                ),
+            ),
+            EvaluationTarget(
+                evaluationId = 2L,
+                administratorId = 1L,
+                memberId = 2L,
+                evaluationStatus = EvaluationStatus.PASS,
+                evaluationAnswers = EvaluationAnswers(
+                    listOf(
+                        EvaluationAnswer(score = 2, evaluationItemId = 2L),
+                        EvaluationAnswer(score = 1, evaluationItemId = 3L),
+                        EvaluationAnswer(score = 0, evaluationItemId = 4L),
+                        EvaluationAnswer(score = 10, evaluationItemId = 5L),
+                    )
+                ),
+            ),
+            EvaluationTarget(
+                evaluationId = 2L,
+                administratorId = 1L,
+                memberId = 3L,
+                evaluationStatus = EvaluationStatus.PASS,
+                evaluationAnswers = EvaluationAnswers(
+                    listOf(
+                        EvaluationAnswer(score = 0, evaluationItemId = 2L),
+                        EvaluationAnswer(score = 0, evaluationItemId = 3L),
+                        EvaluationAnswer(score = 0, evaluationItemId = 4L),
+                        EvaluationAnswer(score = 10, evaluationItemId = 5L),
+                    )
+                ),
+            ),
+        )
+        evaluationTargetRepository.saveAll(evaluationTargets)
     }
 
     private fun populateAssignments() {
         val assignments = listOf(
             Assignment(
-                memberId = 2L,
+                memberId = 1L,
                 missionId = 1L,
                 url = Url.of(
                     "https://github.com/woowacourse/java-baseball-precourse/pull/1",
                     SubmissionMethod.PUBLIC_PULL_REQUEST
                 ),
-                note = "안녕하세요. 이번 미션 생각보다 쉽지 않네요."
-            )
+                note = "안녕하세요. 이번 미션 생각보다 쉽지 않네요.",
+            ),
+            Assignment(
+                memberId = 2L,
+                missionId = 1L,
+                url = Url.of(
+                    "https://github.com/woowacourse/java-baseball-precourse/pull/2",
+                    SubmissionMethod.PUBLIC_PULL_REQUEST
+                ),
+                note = "테스트 코드를 먼저 작성해 봤습니다.",
+            ),
+            Assignment(
+                memberId = 3L,
+                missionId = 1L,
+                url = Url.of(
+                    "https://github.com/woowacourse/java-baseball-precourse/pull/3",
+                    SubmissionMethod.PUBLIC_PULL_REQUEST
+                ),
+                note = "탈퇴 전 제출 기록입니다.",
+            ),
         )
         assignmentRepository.saveAll(assignments)
     }
@@ -528,8 +634,22 @@ class DatabaseInitializer(
                 body = "안녕하세요.",
                 sender = "woowa_course@woowahan.com",
                 recipients = listOf(1L, 2L, 3L, 4L),
-                sentTime = createLocalDateTime(2020, 11, 5, 10)
-            )
+                sentTime = createLocalDateTime(2020, 11, 5, 10),
+            ),
+            MailHistory(
+                subject = "[우아한테크코스] 1주 차 미션 시작 안내",
+                body = "숫자 야구 미션이 시작되었습니다.",
+                sender = "woowa_course@woowahan.com",
+                recipients = listOf(1L, 2L, 3L, 4L),
+                sentTime = createLocalDateTime(2020, 11, 24, 16),
+            ),
+            MailHistory(
+                subject = "[우아한테크코스] 1주 차 미션 통과 안내",
+                body = "축하합니다. 다음 단계 진행 안내를 확인해 주세요.",
+                sender = "woowa_course@woowahan.com",
+                recipients = listOf(1L, 2L, 3L),
+                sentTime = createLocalDateTime(2020, 11, 25, 10),
+            ),
         )
         mailHistoryRepository.saveAll(mailHistories)
     }
