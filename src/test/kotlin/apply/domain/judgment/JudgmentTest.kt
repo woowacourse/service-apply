@@ -43,7 +43,7 @@ class JudgmentTest : StringSpec({
                         createCommit("commit1"),
                         JudgmentResult(status = status),
                         startedDateTime = now,
-                        completedDateTime = now
+                        completedDateTime = now,
                     )
                 )
             )
