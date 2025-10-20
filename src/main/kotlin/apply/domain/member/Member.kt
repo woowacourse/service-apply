@@ -14,14 +14,14 @@ import javax.persistence.OneToOne
 
 @Entity
 class Member(
-    information: MemberInformation,
+    information: MemberInformation?,
 
     @AttributeOverride(name = "value", column = Column(name = "password", nullable = false))
     @Embedded
     var password: Password,
     authorizationRequirement: AuthorizationRequirement,
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "varchar(20) default 'ACTIVE'")
     @Enumerated(EnumType.STRING)
     var status: MemberStatus = MemberStatus.ACTIVE,
     id: Long = 0L,
@@ -37,8 +37,11 @@ class Member(
     val githubUsername: String get() = information.githubUsername
 
     init {
-        authorizationRequirement.require(information)
-        attachInformation(information)
+        if (status == MemberStatus.ACTIVE) {
+            requireNotNull(information)
+            authorizationRequirement.require(information)
+            attachInformation(information)
+        }
     }
 
     fun authenticate(password: Password) {
