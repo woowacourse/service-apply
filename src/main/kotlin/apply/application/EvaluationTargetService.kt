@@ -12,7 +12,6 @@ import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.evaluationtarget.getOrThrow
-import apply.domain.member.Member
 import apply.domain.member.MemberRepository
 import apply.domain.member.MemberStatus
 import org.springframework.stereotype.Service
@@ -36,24 +35,17 @@ class EvaluationTargetService(
         keyword: String = "",
     ): List<EvaluationTargetResponse> {
         val evaluationTargets = findAllByEvaluationId(evaluationId)
-        val ids = evaluationTargets.map { it.memberId }
-        val members = findAllByIdsAndKeyword(ids, keyword).associateBy { it.id }
+        val membersById = memberRepository
+            .findAllByIdInAndKeyword(evaluationTargets.map(EvaluationTarget::memberId), keyword)
+            .associateBy { it.id }
         return evaluationTargets
             .map {
-                val member = requireNotNull(members[it.memberId])
+                val member = requireNotNull(membersById[it.memberId])
                 when (member.status) {
                     MemberStatus.ACTIVE -> EvaluationTargetResponse(it, member)
                     else -> EvaluationTargetResponse(it, member.id)
                 }
             }
-    }
-
-    private fun findAllByIdsAndKeyword(ids: Collection<Long>, keyword: String): List<Member> {
-        return if (keyword.isEmpty()) {
-            memberRepository.findAllByIdIn(ids)
-        } else {
-            memberRepository.findAllByKeyword(keyword).filter { it.id in ids }
-        }
     }
 
     /**

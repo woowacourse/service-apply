@@ -9,6 +9,14 @@ interface MemberRepository : JpaRepository<Member, Long> {
     fun getOrThrow(id: Long): Member = findByIdOrNull(id)
         ?: throw NoSuchElementException("회원이 존재하지 않습니다. id: $id")
 
+    fun findAllByIdInAndKeyword(ids: Collection<Long>, keyword: String?): List<Member> {
+        return if (keyword.isNullOrEmpty()) {
+            findAllByIdIn(ids)
+        } else {
+            findAllByKeyword(keyword).filter { it.id in ids }
+        }
+    }
+
     fun findAllByIdIn(ids: Collection<Long>): List<Member> {
         if (ids.isEmpty()) return emptyList()
         return findAllById(ids)

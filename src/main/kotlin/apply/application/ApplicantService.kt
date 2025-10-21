@@ -2,7 +2,6 @@ package apply.application
 
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.CheaterRepository
-import apply.domain.member.Member
 import apply.domain.member.MemberRepository
 import apply.domain.member.MemberStatus
 import org.springframework.stereotype.Service
@@ -23,7 +22,7 @@ class ApplicantService(
             .findByRecruitmentIdAndSubmittedTrue(recruitmentId)
             .associateBy { it.memberId }
         val cheaterApplicantEmails = cheaterRepository.findAll().map { it.email }
-        return findAllByIdsAndKeyword(formsByApplicantId.keys, keyword)
+        return memberRepository.findAllByIdInAndKeyword(formsByApplicantId.keys, keyword)
             .map {
                 when (it.status) {
                     MemberStatus.ACTIVE -> ApplicantAndFormResponse(
@@ -35,13 +34,5 @@ class ApplicantService(
                     else -> ApplicantAndFormResponse(it.id, formsByApplicantId.getValue(it.id))
                 }
             }
-    }
-
-    private fun findAllByIdsAndKeyword(ids: Collection<Long>, keyword: String?): List<Member> {
-        return if (keyword.isNullOrEmpty()) {
-            memberRepository.findAllByIdIn(ids)
-        } else {
-            memberRepository.findAllByKeyword(keyword).filter { it.id in ids }
-        }
     }
 }
