@@ -14,8 +14,6 @@ import apply.domain.authenticationcode.AuthenticationCodeRepository
 import apply.domain.authenticationcode.getLastByEmail
 import apply.domain.member.MemberRepository
 import apply.domain.member.UnidentifiedMemberException
-import apply.domain.member.existsByEmail
-import apply.domain.member.findByEmail
 import apply.security.JwtTokenProvider
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec

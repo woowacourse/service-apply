@@ -4,8 +4,6 @@ import apply.domain.cheater.Cheater
 import apply.domain.cheater.CheaterRepository
 import apply.domain.cheater.getOrThrow
 import apply.domain.member.MemberRepository
-import apply.domain.member.findAllByEmailIn
-import apply.domain.member.findByEmail
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

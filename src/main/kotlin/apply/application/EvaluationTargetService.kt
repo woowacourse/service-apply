@@ -15,7 +15,6 @@ import apply.domain.evaluationtarget.getOrThrow
 import apply.domain.member.Member
 import apply.domain.member.MemberRepository
 import apply.domain.member.MemberStatus
-import apply.domain.member.findAllByEmailIn
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

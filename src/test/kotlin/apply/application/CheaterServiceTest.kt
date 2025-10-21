@@ -4,7 +4,6 @@ import apply.createCheater
 import apply.createCheaterData
 import apply.domain.cheater.CheaterRepository
 import apply.domain.member.MemberRepository
-import apply.domain.member.findByEmail
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.nulls.shouldBeNull
