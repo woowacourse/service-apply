@@ -31,7 +31,7 @@ class ApplicantServiceTest : BehaviorSpec({
             createApplicationForm(memberId = member.id, recruitmentId = recruitmentId)
         )
         every { cheaterRepository.findAll() } returns listOf(cheater)
-        every { memberRepository.findAllById(any()) } returns listOf(createMember(email = cheater.email, id = member.id))
+        every { memberRepository.findAllByIdIn(any()) } returns listOf(createMember(email = cheater.email, id = member.id))
 
         When("특정 모집에 지원한 지원 정보를 조회하면") {
             val actual = applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId)
