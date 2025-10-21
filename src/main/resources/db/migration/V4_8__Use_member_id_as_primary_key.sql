@@ -1,5 +1,6 @@
 alter table member
-    add status varchar(20) not null default 'ACTIVE' after password;
+    add status varchar(20) not null default 'ACTIVE' after password,
+    add index ix_member_status_id (status, id);
 
 alter table member_information
     drop primary key,

@@ -10,8 +10,11 @@ import javax.persistence.Embedded
 import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
+import javax.persistence.Index
 import javax.persistence.OneToOne
+import javax.persistence.Table
 
+@Table(indexes = [Index(name = "ix_member_status_id", columnList = "status, id")])
 @Entity
 class Member(
     information: MemberInformation?,
