@@ -12,9 +12,10 @@ import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.evaluationtarget.getOrThrow
+import apply.domain.member.Member
 import apply.domain.member.MemberRepository
+import apply.domain.member.MemberStatus
 import apply.domain.member.findAllByEmailIn
-import apply.domain.member.findAllByIdIn
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -26,34 +27,55 @@ class EvaluationTargetService(
     private val evaluationItemRepository: EvaluationItemRepository,
     private val applicationFormRepository: ApplicationFormRepository,
     private val memberRepository: MemberRepository,
-    private val cheaterRepository: CheaterRepository
+    private val cheaterRepository: CheaterRepository,
 ) {
     fun findAllByEvaluationId(evaluationId: Long): List<EvaluationTarget> =
         evaluationTargetRepository.findAllByEvaluationId(evaluationId)
 
     fun findAllByEvaluationIdAndKeyword(
         evaluationId: Long,
-        keyword: String = ""
+        keyword: String = "",
     ): List<EvaluationTargetResponse> {
         val evaluationTargets = findAllByEvaluationId(evaluationId)
-        val members = memberRepository.findAllByKeyword(keyword)
-
+        val ids = evaluationTargets.map { it.memberId }
+        val members = findAllByIdsAndKeyword(ids, keyword).associateBy { it.id }
         return evaluationTargets
-            .filter { members.any { member -> member.id == it.memberId } }
             .map {
-                val member = members.first { each -> each.id == it.memberId }
-                EvaluationTargetResponse(
-                    it.id,
-                    member.name,
-                    member.email,
-                    member.id,
-                    it.evaluationAnswers.countTotalScore(),
-                    it.evaluationStatus,
-                    it.administratorId,
-                    it.note,
-                    it.evaluationAnswers
-                )
+                val member = requireNotNull(members[it.memberId])
+                when (member.status) {
+                    MemberStatus.ACTIVE -> EvaluationTargetResponse(
+                        it.id,
+                        member.name,
+                        member.email,
+                        member.id,
+                        it.evaluationAnswers.countTotalScore(),
+                        it.evaluationStatus,
+                        it.administratorId,
+                        it.note,
+                        it.evaluationAnswers,
+                    )
+
+                    else -> EvaluationTargetResponse(
+                        it.id,
+                        name = "(탈퇴 회원)",
+                        email = "deleted+${it.id}@invalid.local",
+                        memberId = member.id,
+                        totalScore = it.evaluationAnswers.countTotalScore(),
+                        evaluationStatus = it.evaluationStatus,
+                        administratorId = it.administratorId,
+                        note = it.note,
+                        answers = it.evaluationAnswers,
+                    )
+                }
             }
+    }
+
+    private fun findAllByIdsAndKeyword(ids: Collection<Long>, keyword: String): List<Member> {
+        return if (keyword.isEmpty()) {
+            memberRepository.findAllByIdIn(ids)
+        } else {
+            memberRepository.findAllByKeyword(keyword).filter { it.id in ids }
+        }
     }
 
     /**

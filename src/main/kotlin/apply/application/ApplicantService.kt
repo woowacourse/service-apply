@@ -47,11 +47,11 @@ class ApplicantService(
             }
     }
 
-    private fun findAllByIdsAndKeyword(ids: Set<Long>, keyword: String?): List<Member> {
+    private fun findAllByIdsAndKeyword(ids: Collection<Long>, keyword: String?): List<Member> {
         return if (keyword.isNullOrEmpty()) {
             memberRepository.findAllByIdIn(ids)
         } else {
-            memberRepository.findAllByKeyword(keyword).filter { ids.contains(it.id) }
+            memberRepository.findAllByKeyword(keyword).filter { it.id in ids }
         }
     }
 }
