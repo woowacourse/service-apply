@@ -29,7 +29,7 @@ class MailTargetService(
             .map {
                 when (it.status) {
                     MemberStatus.ACTIVE -> MailTargetResponse(it)
-                    else -> MailTargetResponse("", null, it.id)
+                    else -> MailTargetResponse(it.id)
                 }
             }
     }

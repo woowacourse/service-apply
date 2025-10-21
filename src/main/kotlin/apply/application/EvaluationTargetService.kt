@@ -42,29 +42,8 @@ class EvaluationTargetService(
             .map {
                 val member = requireNotNull(members[it.memberId])
                 when (member.status) {
-                    MemberStatus.ACTIVE -> EvaluationTargetResponse(
-                        it.id,
-                        member.name,
-                        member.email,
-                        member.id,
-                        it.evaluationAnswers.countTotalScore(),
-                        it.evaluationStatus,
-                        it.administratorId,
-                        it.note,
-                        it.evaluationAnswers,
-                    )
-
-                    else -> EvaluationTargetResponse(
-                        it.id,
-                        name = "(탈퇴 회원)",
-                        email = "deleted+${it.id}@invalid.local",
-                        memberId = member.id,
-                        totalScore = it.evaluationAnswers.countTotalScore(),
-                        evaluationStatus = it.evaluationStatus,
-                        administratorId = it.administratorId,
-                        note = it.note,
-                        answers = it.evaluationAnswers,
-                    )
+                    MemberStatus.ACTIVE -> EvaluationTargetResponse(it, member)
+                    else -> EvaluationTargetResponse(it, member.id)
                 }
             }
     }

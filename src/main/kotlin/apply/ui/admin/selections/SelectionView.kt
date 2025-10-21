@@ -39,6 +39,7 @@ import com.vaadin.flow.router.BeforeEvent
 import com.vaadin.flow.router.HasUrlParameter
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.router.WildcardParameter
+import support.views.WITHDRAWN_NAME
 import support.views.addSortableColumn
 import support.views.addSortableDateColumn
 import support.views.addSortableDateTimeColumn
@@ -50,6 +51,7 @@ import support.views.createPrimarySmallButton
 import support.views.createSearchBox
 import support.views.createSuccessButton
 import support.views.downloadFile
+import support.views.toText
 
 @Route(value = "admin/selections", layout = BaseLayout::class)
 class SelectionView(
@@ -137,12 +139,12 @@ class SelectionView(
 
     private fun createTotalApplicantsGrid(applicants: List<ApplicantAndFormResponse>): Component {
         return Grid<ApplicantAndFormResponse>(10).apply {
-            addSortableColumn("이름", ApplicantAndFormResponse::name)
+            addSortableColumn("이름") { it.name ?: WITHDRAWN_NAME }
             addSortableColumn("이메일", ApplicantAndFormResponse::email)
             addSortableColumn("휴대전화 번호", ApplicantAndFormResponse::phoneNumber)
             addSortableDateColumn("생년월일", ApplicantAndFormResponse::birthday)
             addSortableDateTimeColumn("지원 일시") { it.applicationForm.submittedDateTime }
-            addSortableColumn("부정행위자") { if (it.isCheater) "O" else "X" }
+            addSortableColumn("부정행위자") { it.isCheater.toText() }
             addColumn(createButtonRenderer()).apply { isAutoWidth = true }
             setItems(applicants)
         }
@@ -162,7 +164,7 @@ class SelectionView(
 
     private fun createEvaluationTargetsGrid(evaluationTargets: List<EvaluationTargetResponse>): Component {
         return Grid<EvaluationTargetResponse>(10).apply {
-            addSortableColumn("이름", EvaluationTargetResponse::name)
+            addSortableColumn("이름") { it.name ?: WITHDRAWN_NAME }
             addSortableColumn("이메일", EvaluationTargetResponse::email)
             addSortableColumn("합계", EvaluationTargetResponse::totalScore)
             addSortableColumn("평가 상태", EvaluationTargetResponse::evaluationStatus)

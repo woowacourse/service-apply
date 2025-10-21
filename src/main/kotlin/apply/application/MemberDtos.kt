@@ -29,12 +29,12 @@ data class MemberResponse(
 
 data class ApplicantAndFormResponse(
     val id: Long,
-    val email: String,
-    val name: String,
-    val birthday: LocalDate,
-    val phoneNumber: String,
-    val githubUsername: String,
-    val isCheater: Boolean,
+    val email: String?,
+    val name: String?,
+    val birthday: LocalDate?,
+    val phoneNumber: String?,
+    val githubUsername: String?,
+    val isCheater: Boolean?,
     val applicationForm: ApplicationForm,
 ) {
     constructor(member: Member, isCheater: Boolean, applicationForm: ApplicationForm) : this(
@@ -45,6 +45,17 @@ data class ApplicantAndFormResponse(
         member.phoneNumber,
         member.githubUsername,
         isCheater,
+        applicationForm,
+    )
+
+    constructor(memberId: Long, applicationForm: ApplicationForm) : this(
+        memberId,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
         applicationForm,
     )
 }

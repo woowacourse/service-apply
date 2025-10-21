@@ -6,7 +6,10 @@ import com.vaadin.flow.data.renderer.LocalDateTimeRenderer
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-fun <T : Any> Grid<T>.addSortableColumn(labelText: String, valueProvider: (T) -> Any): Grid.Column<T> {
+fun <T : Any> Grid<T>.addSortableColumn(
+    labelText: String,
+    valueProvider: (T) -> Any?
+): Grid.Column<T> {
     return addColumn(valueProvider).apply {
         addSortableHeader(labelText)
     }
@@ -14,7 +17,7 @@ fun <T : Any> Grid<T>.addSortableColumn(labelText: String, valueProvider: (T) ->
 
 fun <T : Any> Grid<T>.addSortableDateTimeColumn(
     labelText: String,
-    valueProvider: (T) -> LocalDateTime?
+    valueProvider: (T) -> LocalDateTime?,
 ): Grid.Column<T> {
     return addColumn(LocalDateTimeRenderer(valueProvider, "yyyy-MM-dd HH:mm:ss")).apply {
         addSortableHeader(labelText)
@@ -24,7 +27,7 @@ fun <T : Any> Grid<T>.addSortableDateTimeColumn(
 
 fun <T : Any> Grid<T>.addSortableDateColumn(
     labelText: String,
-    valueProvider: (T) -> LocalDate
+    valueProvider: (T) -> LocalDate?,
 ): Grid.Column<T> {
     return addColumn(LocalDateRenderer(valueProvider, "yyyy-MM-dd")).apply {
         addSortableHeader(labelText)

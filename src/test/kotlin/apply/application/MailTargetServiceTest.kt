@@ -10,10 +10,12 @@ import apply.domain.evaluationtarget.EvaluationStatus.PENDING
 import apply.domain.evaluationtarget.EvaluationStatus.WAITING
 import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.member.MemberRepository
+import apply.domain.member.MemberStatus
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.every
@@ -158,7 +160,21 @@ class MailTargetServiceTest :
             }
         }
 
-        // TODO: 탈퇴 회원의 경우 기본 정보가 노출된다.
+        Given("탈퇴한 회원이 있는 경우") {
+            val member = createMember(status = MemberStatus.WITHDRAWN)
+
+            every { memberRepository.findAllByIdIn(any()) } returns listOf(member)
+
+            When("해당 회원의 이메일 정보를 조회하면") {
+                val actual = mailTargetService.findAllByMemberIds(listOf(member.id))
+
+                Then("회원의 이름 및 이메일을 확인할 수 없다") {
+                    actual shouldHaveSize 1
+                    actual[0].name.shouldBeNull()
+                    actual[0].email.shouldBeNull()
+                }
+            }
+        }
 
         afterRootTest {
             clearAllMocks()

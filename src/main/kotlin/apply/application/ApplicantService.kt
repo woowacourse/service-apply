@@ -7,7 +7,6 @@ import apply.domain.member.MemberRepository
 import apply.domain.member.MemberStatus
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.time.LocalDate
 
 @Transactional
 @Service
@@ -33,16 +32,7 @@ class ApplicantService(
                         formsByApplicantId.getValue(it.id),
                     )
 
-                    else -> ApplicantAndFormResponse(
-                        it.id,
-                        email = "deleted+${it.id}@invalid.local",
-                        name = "(탈퇴 회원)",
-                        birthday = LocalDate.MIN,
-                        phoneNumber = "010-0000-0000",
-                        githubUsername = "",
-                        isCheater = false,
-                        applicationForm = formsByApplicantId.getValue(it.id),
-                    )
+                    else -> ApplicantAndFormResponse(it.id, formsByApplicantId.getValue(it.id))
                 }
             }
     }

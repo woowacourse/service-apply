@@ -21,7 +21,7 @@ import elemental.json.JsonObject
 import org.springframework.boot.autoconfigure.mail.MailProperties
 import org.springframework.core.io.ByteArrayResource
 import support.views.BindingFormLayout
-import support.views.NO_NAME
+import support.views.WITHDRAWN_NAME
 import support.views.addSortableColumn
 import support.views.createErrorSmallButton
 import support.views.createNormalButton
@@ -32,7 +32,7 @@ class MailForm(
     private val recruitmentService: RecruitmentService,
     private val evaluationService: EvaluationService,
     private val mailTargetService: MailTargetService,
-    private val mailProperties: MailProperties
+    private val mailProperties: MailProperties,
 ) : BindingFormLayout<MailData>(MailData::class) {
     private val subject: TextField = TextField("제목").apply { setWidthFull() }
     private val sender: TextField = createSender()
@@ -83,7 +83,7 @@ class MailForm(
 
     private fun createMailTargetsGrid(mailTargets: Set<MailTargetResponse>): Grid<MailTargetResponse> {
         return Grid<MailTargetResponse>(10).apply {
-            addSortableColumn("이름") { it.name ?: NO_NAME }
+            addSortableColumn("이름") { it.name ?: WITHDRAWN_NAME }
             addSortableColumn("이메일", MailTargetResponse::email)
             addColumn(createRemoveButton())
             setItems(mailTargets)

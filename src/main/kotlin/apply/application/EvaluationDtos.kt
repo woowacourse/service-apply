@@ -170,12 +170,12 @@ data class EvaluationTargetData(
 )
 
 data class MailTargetResponse(
-    val email: String,
-    val name: String? = null,
     val id: Long,
+    val email: String? = null,
+    val name: String? = null,
 ) {
-    constructor(memberResponse: MemberResponse) : this(memberResponse.email, memberResponse.name, memberResponse.id)
-    constructor(member: Member) : this(member.email, member.name, member.id)
+    constructor(memberResponse: MemberResponse) : this(memberResponse.id, memberResponse.email, memberResponse.name)
+    constructor(member: Member) : this(member.id, member.email, member.name)
 }
 
 data class EvaluationItemScoreData(

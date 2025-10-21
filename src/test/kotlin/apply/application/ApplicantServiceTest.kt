@@ -38,7 +38,7 @@ class ApplicantServiceTest : BehaviorSpec({
 
             Then("지원 정보 및 부정행위 여부를 확인할 수 있다") {
                 actual shouldHaveSize 1
-                actual[0].isCheater.shouldBeTrue()
+                actual[0].isCheater?.shouldBeTrue()
             }
         }
     }
@@ -63,8 +63,8 @@ class ApplicantServiceTest : BehaviorSpec({
             Then("지원 정보 및 부정행위 여부를 확인할 수 있다") {
                 actual shouldHaveSize 2
                 actual.filter { it.hasKeywordInNameOrEmail(keyword) } shouldHaveSize 2
-                actual[0].isCheater.shouldBeTrue()
-                actual[1].isCheater.shouldBeFalse()
+                actual[0].isCheater?.shouldBeTrue()
+                actual[1].isCheater?.shouldBeFalse()
             }
         }
     }
@@ -75,5 +75,5 @@ class ApplicantServiceTest : BehaviorSpec({
 })
 
 private fun ApplicantAndFormResponse.hasKeywordInNameOrEmail(keyword: String): Boolean {
-    return name.contains(keyword) || email.contains(keyword)
+    return keyword in name.orEmpty() || keyword in email.orEmpty()
 }
