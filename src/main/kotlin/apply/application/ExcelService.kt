@@ -21,7 +21,7 @@ class ExcelService(
     private val evaluationItemRepository: EvaluationItemRepository,
     private val missionRepository: MissionRepository,
     private val assignmentRepository: AssignmentRepository,
-    private val excelGenerator: ExcelGenerator
+    private val excelGenerator: ExcelGenerator,
 ) {
     fun createApplicantExcel(recruitmentId: Long): ByteArrayInputStream {
         val applicants = applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId)
@@ -97,10 +97,11 @@ class ExcelService(
         return excelGenerator.generateBy(headerTitles, excelRows)
     }
 
-    private fun Boolean.toText(): String {
+    private fun Boolean?.toText(): String? {
         return when (this) {
             true -> "O"
-            else -> "X"
+            false -> "X"
+            else -> null
         }
     }
 

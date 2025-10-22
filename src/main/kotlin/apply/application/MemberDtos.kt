@@ -29,12 +29,12 @@ data class MemberResponse(
 
 data class ApplicantAndFormResponse(
     val id: Long,
-    val email: String,
-    val name: String,
-    val birthday: LocalDate,
-    val phoneNumber: String,
-    val githubUsername: String,
-    val isCheater: Boolean,
+    val email: String?,
+    val name: String?,
+    val birthday: LocalDate?,
+    val phoneNumber: String?,
+    val githubUsername: String?,
+    val isCheater: Boolean?,
     val applicationForm: ApplicationForm,
 ) {
     constructor(member: Member, isCheater: Boolean, applicationForm: ApplicationForm) : this(
@@ -45,6 +45,17 @@ data class ApplicantAndFormResponse(
         member.phoneNumber,
         member.githubUsername,
         isCheater,
+        applicationForm,
+    )
+
+    constructor(memberId: Long, applicationForm: ApplicationForm) : this(
+        memberId,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
         applicationForm,
     )
 }
@@ -102,3 +113,5 @@ data class EditInformationRequest(
     @field:Pattern(regexp = "010-\\d{4}-\\d{4}", message = "올바른 형식의 휴대전화 번호여야 합니다")
     val phoneNumber: String
 )
+
+data class WithdrawMemberRequest(val password: Password)

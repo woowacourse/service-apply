@@ -5,6 +5,7 @@ import apply.application.RegisterMemberRequest
 import apply.domain.member.AuthorizationRequirement
 import apply.domain.member.Member
 import apply.domain.member.MemberInformation
+import apply.domain.member.MemberStatus
 import apply.domain.member.Password
 import support.createLocalDate
 import java.time.LocalDate
@@ -24,19 +25,21 @@ const val VALID_TOKEN: String = "SOME_VALID_TOKEN"
 
 fun createMember(
     email: String = EMAIL,
-    password: Password = PASSWORD,
     name: String = NAME,
     birthday: LocalDate = BIRTHDAY,
     phoneNumber: String = PHONE_NUMBER,
     githubUsername: String = GITHUB_USERNAME,
+    password: Password = PASSWORD,
     authorizationRequirement: AuthorizationRequirement = AuthorizationRequirement {},
+    status: MemberStatus = MemberStatus.ACTIVE,
     id: Long = 0L,
 ): Member {
     return Member(
         createMemberInformation(email, name, birthday, phoneNumber, githubUsername),
         password,
         authorizationRequirement,
-        id
+        status,
+        id,
     )
 }
 

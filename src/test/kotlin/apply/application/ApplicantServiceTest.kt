@@ -31,14 +31,16 @@ class ApplicantServiceTest : BehaviorSpec({
             createApplicationForm(memberId = member.id, recruitmentId = recruitmentId)
         )
         every { cheaterRepository.findAll() } returns listOf(cheater)
-        every { memberRepository.findAllById(any()) } returns listOf(createMember(email = cheater.email, id = member.id))
+        every { memberRepository.findAllByIdInAndKeyword(any(), any()) } returns listOf(
+            createMember(email = cheater.email, id = member.id)
+        )
 
         When("특정 모집에 지원한 지원 정보를 조회하면") {
             val actual = applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId)
 
             Then("지원 정보 및 부정행위 여부를 확인할 수 있다") {
                 actual shouldHaveSize 1
-                actual[0].isCheater.shouldBeTrue()
+                actual[0].isCheater?.shouldBeTrue()
             }
         }
     }
@@ -55,7 +57,7 @@ class ApplicantServiceTest : BehaviorSpec({
             createApplicationForm(memberId = member2.id, recruitmentId = recruitmentId)
         )
         every { cheaterRepository.findAll() } returns listOf(cheater)
-        every { memberRepository.findAllByKeyword(keyword) } returns listOf(member1, member2)
+        every { memberRepository.findAllByIdInAndKeyword(any(), any()) } returns listOf(member1, member2)
 
         When("특정 키워드로 특정 모집에 지원한 지원 정보를 조회하면") {
             val actual = applicantService.findAllByRecruitmentIdAndKeyword(recruitmentId, keyword)
@@ -63,8 +65,8 @@ class ApplicantServiceTest : BehaviorSpec({
             Then("지원 정보 및 부정행위 여부를 확인할 수 있다") {
                 actual shouldHaveSize 2
                 actual.filter { it.hasKeywordInNameOrEmail(keyword) } shouldHaveSize 2
-                actual[0].isCheater.shouldBeTrue()
-                actual[1].isCheater.shouldBeFalse()
+                actual[0].isCheater?.shouldBeTrue()
+                actual[1].isCheater?.shouldBeFalse()
             }
         }
     }
@@ -75,5 +77,5 @@ class ApplicantServiceTest : BehaviorSpec({
 })
 
 private fun ApplicantAndFormResponse.hasKeywordInNameOrEmail(keyword: String): Boolean {
-    return name.contains(keyword) || email.contains(keyword)
+    return keyword in name.orEmpty() || keyword in email.orEmpty()
 }

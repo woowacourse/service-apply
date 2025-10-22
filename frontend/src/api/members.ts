@@ -111,3 +111,6 @@ export const fetchVerifyAuthenticationCode = ({
   axios.post<FetchVerifyAuthenticationCodeResponseData>(
     `/api/members/authenticate-email?email=${email}&authenticationCode=${authenticationCode}`
   );
+
+export const fetchWithdraw = ({ token, password }: RequestWithToken<{ password: string }>) =>
+  axios.delete<void>("/api/members/withdraw", { ...headers({ token }), data: { password } });

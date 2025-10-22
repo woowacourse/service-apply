@@ -13,7 +13,7 @@ import apply.domain.evaluationtarget.EvaluationTarget
 import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.evaluationtarget.getOrThrow
 import apply.domain.member.MemberRepository
-import apply.domain.member.findAllByEmailIn
+import apply.domain.member.MemberStatus
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -25,33 +25,26 @@ class EvaluationTargetService(
     private val evaluationItemRepository: EvaluationItemRepository,
     private val applicationFormRepository: ApplicationFormRepository,
     private val memberRepository: MemberRepository,
-    private val cheaterRepository: CheaterRepository
+    private val cheaterRepository: CheaterRepository,
 ) {
     fun findAllByEvaluationId(evaluationId: Long): List<EvaluationTarget> =
         evaluationTargetRepository.findAllByEvaluationId(evaluationId)
 
     fun findAllByEvaluationIdAndKeyword(
         evaluationId: Long,
-        keyword: String = ""
+        keyword: String = "",
     ): List<EvaluationTargetResponse> {
         val evaluationTargets = findAllByEvaluationId(evaluationId)
-        val members = memberRepository.findAllByKeyword(keyword)
-
+        val membersById = memberRepository
+            .findAllByIdInAndKeyword(evaluationTargets.map(EvaluationTarget::memberId), keyword)
+            .associateBy { it.id }
         return evaluationTargets
-            .filter { members.any { member -> member.id == it.memberId } }
             .map {
-                val member = members.first { each -> each.id == it.memberId }
-                EvaluationTargetResponse(
-                    it.id,
-                    member.name,
-                    member.email,
-                    member.id,
-                    it.evaluationAnswers.countTotalScore(),
-                    it.evaluationStatus,
-                    it.administratorId,
-                    it.note,
-                    it.evaluationAnswers
-                )
+                val member = requireNotNull(membersById[it.memberId])
+                when (member.status) {
+                    MemberStatus.ACTIVE -> EvaluationTargetResponse(it, member)
+                    else -> EvaluationTargetResponse(it, member.id)
+                }
             }
     }
 
@@ -112,15 +105,15 @@ class EvaluationTargetService(
     }
 
     private fun save(memberIds: Set<Long>, evaluation: Evaluation, evaluationStatus: EvaluationStatus) {
-        val evaluationTargets = memberRepository.findAllById(memberIds)
+        val evaluationTargets = memberRepository.findAllActiveByIdIn(memberIds)
             .map { EvaluationTarget(evaluation.id, memberId = it.id, evaluationStatus = evaluationStatus) }
         evaluationTargetRepository.saveAll(evaluationTargets)
     }
 
     private fun updateFail(memberIds: Set<Long>, evaluation: Evaluation) {
-        evaluationTargetRepository.findAllByEvaluationIdAndMemberIdIn(evaluation.id, memberIds).forEach {
-            it.evaluationStatus = EvaluationStatus.FAIL
-        }
+        evaluationTargetRepository
+            .findAllByEvaluationIdAndMemberIdIn(evaluation.id, memberIds)
+            .forEach { it.evaluationStatus = EvaluationStatus.FAIL }
     }
 
     fun getGradeEvaluation(targetId: Long): GradeEvaluationResponse {
