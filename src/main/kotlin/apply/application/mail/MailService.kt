@@ -6,7 +6,6 @@ import apply.domain.mail.MailHistory
 import apply.domain.mail.MailHistoryRepository
 import apply.domain.member.MemberRepository
 import apply.domain.member.PasswordResetEvent
-import apply.domain.member.getOrThrow
 import apply.domain.recruitment.RecruitmentRepository
 import apply.domain.recruitment.getOrThrow
 import org.springframework.boot.autoconfigure.mail.MailProperties
@@ -28,7 +27,7 @@ class MailService(
     private val applicationProperties: ApplicationProperties,
     private val templateEngine: ISpringTemplateEngine,
     private val mailSender: MailSender,
-    private val mailProperties: MailProperties
+    private val mailProperties: MailProperties,
 ) {
     @Async
     @TransactionalEventListener
@@ -91,7 +90,7 @@ class MailService(
     @Async
     fun sendMailsByBcc(request: MailData, files: Map<String, ByteArrayResource>) {
         val body = generateMailBody(request)
-        val recipients = memberRepository.findAllById(request.recipients).map { it.email } + mailProperties.username
+        val recipients = memberRepository.findAllActiveByIdIn(request.recipients).map { it.email } + mailProperties.username
 
         // TODO: 성공과 실패를 분리하여 히스토리 관리
         val succeeded = mutableListOf<String>()

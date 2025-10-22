@@ -10,15 +10,16 @@ import apply.domain.evaluationtarget.EvaluationStatus.PENDING
 import apply.domain.evaluationtarget.EvaluationStatus.WAITING
 import apply.domain.evaluationtarget.EvaluationTargetRepository
 import apply.domain.member.MemberRepository
+import apply.domain.member.MemberStatus
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
 import support.test.spec.afterRootTest
 
 class MailTargetServiceTest : BehaviorSpec({
@@ -33,16 +34,16 @@ class MailTargetServiceTest : BehaviorSpec({
             createMember(id = 1L, email = "waiting@email.com"),
             createMember(id = 2L, email = "pending@email.com"),
             createMember(id = 3L, email = "pass@email.com"),
-            createMember(id = 4L, email = "fail@email.com")
+            createMember(id = 4L, email = "fail@email.com"),
         )
 
         every { evaluationTargetRepository.findAllByEvaluationId(any()) } returns listOf(
             createEvaluationTarget(evaluationId = evaluationId, memberId = 1L, evaluationStatus = WAITING),
             createEvaluationTarget(evaluationId = evaluationId, memberId = 2L, evaluationStatus = PENDING),
             createEvaluationTarget(evaluationId = evaluationId, memberId = 3L, evaluationStatus = PASS),
-            createEvaluationTarget(evaluationId = evaluationId, memberId = 4L, evaluationStatus = FAIL)
+            createEvaluationTarget(evaluationId = evaluationId, memberId = 4L, evaluationStatus = FAIL),
         )
-        every { memberRepository.findAllById(any()) } returns members
+        every { memberRepository.findAllActiveByIdIn(any()) } returns members
 
         When("해당 평가의 모든 평가 대상자에 대한 이메일 정보를 조회하면") {
             val actual = mailTargetService.findMailTargets(evaluationId)
@@ -61,7 +62,7 @@ class MailTargetServiceTest : BehaviorSpec({
         every { evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(any(), any()) } returns listOf(
             createEvaluationTarget(evaluationId = evaluationId, memberId = member.id, evaluationStatus = PASS)
         )
-        every { memberRepository.findAllById(any()) } returns listOf(member)
+        every { memberRepository.findAllActiveByIdIn(any()) } returns listOf(member)
 
         When("해당 평가에 합격한 모든 평가 대상자의 이메일 정보를 조회하면") {
             val actual = mailTargetService.findMailTargets(evaluationId, PASS)
@@ -78,9 +79,14 @@ class MailTargetServiceTest : BehaviorSpec({
         val member = createMember(id = 2L, email = "fail@email.com")
 
         every { evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(any(), any()) } returns listOf(
-            createEvaluationTarget(evaluationId = evaluationId, memberId = member.id, evaluationStatus = FAIL)
+            createEvaluationTarget(
+                evaluationId = evaluationId,
+                memberId = member.id,
+                evaluationStatus = FAIL,
+                evaluationAnswers = EvaluationAnswers(listOf(createEvaluationAnswer())),
+            ),
         )
-        every { memberRepository.findAllById(any()) } returns listOf(member)
+        every { memberRepository.findAllActiveByIdIn(any()) } returns listOf(member)
 
         When("해당 평가에 탈락한 모든 평가 대상자의 이메일 정보를 조회하면") {
             val actual = mailTargetService.findMailTargets(evaluationId, FAIL)
@@ -97,9 +103,9 @@ class MailTargetServiceTest : BehaviorSpec({
         val member = createMember(id = 2L, email = "waiting@email.com")
 
         every { evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(any(), any()) } returns listOf(
-            createEvaluationTarget(evaluationId = evaluationId, memberId = member.id, evaluationStatus = WAITING)
+            createEvaluationTarget(evaluationId = evaluationId, memberId = member.id, evaluationStatus = WAITING),
         )
-        every { memberRepository.findAllById(any()) } returns listOf(member)
+        every { memberRepository.findAllActiveByIdIn(any()) } returns listOf(member)
 
         When("해당 평가에 보류 중인 모든 평가 대상자의 이메일 정보를 조회하면") {
             val actual = mailTargetService.findMailTargets(evaluationId, WAITING)
@@ -125,36 +131,32 @@ class MailTargetServiceTest : BehaviorSpec({
                 evaluationId = evaluationId,
                 memberId = 2L,
                 evaluationStatus = FAIL,
-                evaluationAnswers = EvaluationAnswers(listOf(createEvaluationAnswer(score = 0)))
-            )
+                evaluationAnswers = EvaluationAnswers(listOf(createEvaluationAnswer(score = 0))),
+            ),
         )
-        every { memberRepository.findAllById(any()) } returns emptyList()
+        every { memberRepository.findAllActiveByIdIn(any()) } returns emptyList()
 
         When("해당 평가에 탈락한 모든 평가 대상자의 이메일 정보를 조회하면") {
             val actual = mailTargetService.findMailTargets(evaluationId, FAIL)
 
             Then("해당 평가 대상자의 이름 및 이메일을 확인할 수 없다") {
-                verify { memberRepository.findAllById(emptyList()) }
                 actual.shouldBeEmpty()
             }
         }
     }
 
-    // TODO[#754]: 탈퇴한 회원의 경우 default 정보가 노출된다.
-    Given("메일 이력을 통해 회원 id 목록을 확인할 수 있는 경우") {
-        val members = listOf(
-            createMember(id = 1L),
-            createMember(id = 2L),
-            createMember(id = 3L)
-        )
+    Given("탈퇴한 회원이 있는 경우") {
+        val member = createMember(status = MemberStatus.WITHDRAWN)
 
-        every { memberRepository.findAllById(any()) } returns members
+        every { memberRepository.findAllByIdIn(any()) } returns listOf(member)
 
-        When("회원 id를 사용해 메일 수신자 정보를 조회하면") {
-            val actual = mailTargetService.findAllByMemberIds(listOf(1L, 2L, 3L, 4L))
+        When("해당 회원의 이메일 정보를 조회하면") {
+            val actual = mailTargetService.findAllByMemberIds(listOf(member.id))
 
-            Then("현재 회원인 메일 수신자만 확인할 수 있다") {
-                actual shouldHaveSize 3
+            Then("회원의 이름 및 이메일을 확인할 수 없다") {
+                actual shouldHaveSize 1
+                actual[0].name.shouldBeNull()
+                actual[0].email.shouldBeNull()
             }
         }
     }

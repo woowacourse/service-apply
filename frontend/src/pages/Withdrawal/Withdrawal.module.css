@@ -1,0 +1,40 @@
+.text-input-box {
+  margin-bottom: 32px;
+}
+
+.text-input-box label,
+.withdrawal-box > label:first-child {
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+.withdrawal-box {
+  margin-top: 32px;
+}
+
+.withdrawal-terms {
+  margin-bottom: 16px;
+}
+
+.withdrawal-terms > li {
+  list-style-type: disc;
+  margin-left: 24px;
+}
+
+.withdrawal-terms > li:not(:last-child) {
+  margin-bottom: 16px;
+}
+
+.check-box > label {
+  font-size: 0.8rem;
+}
+
+.buttons {
+  margin-top: 1.8rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.buttons > * {
+  flex: 1;
+}

@@ -7,5 +7,5 @@ data class PasswordResetEvent(
     val name: String,
     val email: String,
     val password: String,
-    val occurredOn: LocalDateTime = LocalDateTime.now()
+    val occurredOn: LocalDateTime = LocalDateTime.now(),
 )

@@ -6,7 +6,6 @@ import apply.domain.member.Member
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.inspectors.forAll
-import io.kotest.matchers.equality.shouldBeEqualToComparingFields
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
@@ -47,14 +46,16 @@ class LoginMemberResolverTest : StringSpec({
     }
 
     "요청의 Authorization 헤더로 저장된 회원을 불러온다" {
+        val member = createMember()
+
         every { methodParameter.getParameterAnnotation<LoginMember>(any()) } returns createMemberAnnotation()
         every { nativeWebRequest.getHeader(AUTHORIZATION) } returns "Bearer valid_token"
         every { jwtTokenProvider.isValidToken("valid_token") } returns true
-        every { jwtTokenProvider.getSubject("valid_token") } returns "user_email@email.com"
-        every { memberService.getByEmail("user_email@email.com") } returns createMember()
+        every { jwtTokenProvider.getSubject("valid_token") } returns member.email
+        every { memberService.getByEmail(member.email) } returns member
 
-        val result = loginMemberResolver.resolveArgument(methodParameter, null, nativeWebRequest, null)
-        result shouldBeEqualToComparingFields createMember()
+        val actual = loginMemberResolver.resolveArgument(methodParameter, null, nativeWebRequest, null)
+        actual shouldBe member
     }
 
     "요청의 Authorization 헤더의 형식이 올바르지 않을 경우 예외가 발생한다" {

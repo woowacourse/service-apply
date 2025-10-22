@@ -11,6 +11,7 @@ import { PATH } from "./constants/path";
 import ApplicationRegister from "./pages/ApplicationRegister/ApplicationRegister";
 import AssignmentSubmit from "./pages/AssignmentSubmit/AssignmentSubmit";
 import Login from "./pages/Login/Login";
+import MissionView from "./pages/MissionView/MissionView";
 import MyApplication from "./pages/MyApplication/MyApplication";
 import MyPage from "./pages/MyPage/MyPage";
 import MyPageEdit from "./pages/MyPageEdit/MyPageEdit";
@@ -19,11 +20,11 @@ import PasswordFind from "./pages/PasswordFind/PasswordFind";
 import PasswordFindResult from "./pages/PasswordFindResult/PasswordFindResult";
 import Recruits from "./pages/Recruits/Recruits";
 import SignUp from "./pages/SignUp/SignUp";
+import Withdrawal from "./pages/Withdrawal/Withdrawal";
+import MemberInfoProvider from "./provider/MemberInfoProvider";
 import RecruitmentProvider from "./provider/RecruitmentProvider";
 import TokenProvider from "./provider/TokenProvider";
-import MemberInfoProvider from "./provider/MemberInfoProvider";
 import { ModalProvider } from "./hooks/useModalContext";
-import MissionView from "./pages/MissionView/MissionView";
 
 const App = () => {
   return (
@@ -63,6 +64,14 @@ const App = () => {
                       element={
                         <MemberInfoProvider>
                           <MyPageEdit />
+                        </MemberInfoProvider>
+                      }
+                    />
+                    <Route
+                      path={PATH.WITHDRAWAL_PAGE}
+                      element={
+                        <MemberInfoProvider>
+                          <Withdrawal />
                         </MemberInfoProvider>
                       }
                     />

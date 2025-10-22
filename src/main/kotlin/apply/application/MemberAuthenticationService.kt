@@ -8,8 +8,6 @@ import apply.domain.member.MemberInformation
 import apply.domain.member.MemberRepository
 import apply.domain.member.MinimumAgeRequirement
 import apply.domain.member.UnidentifiedMemberException
-import apply.domain.member.existsByEmail
-import apply.domain.member.findByEmail
 import apply.security.JwtTokenProvider
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

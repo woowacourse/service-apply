@@ -2,8 +2,6 @@ package apply.application
 
 import apply.domain.member.Member
 import apply.domain.member.MemberRepository
-import apply.domain.member.findByEmail
-import apply.domain.member.getOrThrow
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -39,5 +37,9 @@ class MemberService(
 
     fun editInformation(id: Long, request: EditInformationRequest) {
         memberRepository.getOrThrow(id).changePhoneNumber(request.phoneNumber)
+    }
+
+    fun withdraw(id: Long, request: WithdrawMemberRequest) {
+        memberRepository.getOrThrow(id).withdraw(request.password)
     }
 }

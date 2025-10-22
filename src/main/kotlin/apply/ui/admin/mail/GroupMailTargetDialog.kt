@@ -19,7 +19,7 @@ import com.vaadin.flow.component.select.Select
 import com.vaadin.flow.data.provider.ListDataProvider
 import dev.mett.vaadin.tooltip.Tooltips
 import dev.mett.vaadin.tooltip.config.TooltipConfiguration
-import support.views.NO_NAME
+import support.views.WITHDRAWN_NAME
 import support.views.addSortableColumn
 import support.views.createContrastButton
 import support.views.createItemSelect
@@ -49,7 +49,7 @@ class GroupMailTargetDialog(
 
     private fun createMailTargetsGrid(): Grid<MailTargetResponse> {
         return Grid<MailTargetResponse>(10).apply {
-            addSortableColumn("이름") { it.name ?: NO_NAME }
+            addSortableColumn("이름") { it.name ?: WITHDRAWN_NAME }
             addSortableColumn("이메일", MailTargetResponse::email)
         }
     }

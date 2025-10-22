@@ -11,7 +11,6 @@ import apply.application.GradeEvaluationResponse
 import apply.application.MailTargetResponse
 import apply.application.MailTargetService
 import apply.createEvaluationItem
-import apply.domain.evaluationtarget.EvaluationAnswers
 import apply.domain.evaluationtarget.EvaluationStatus
 import apply.domain.evaluationtarget.EvaluationStatus.PASS
 import com.ninjasquad.springmockk.MockkBean
@@ -50,14 +49,14 @@ class EvaluationTargetRestControllerTest : RestControllerTest() {
         val responses = listOf(
             EvaluationTargetResponse(
                 id = 1L,
+                memberId = 1L,
                 name = "아마찌",
                 email = "wlgp2500@gmail.com",
-                memberId = 1L,
                 totalScore = 100,
                 evaluationStatus = PASS,
                 administratorId = 1L,
                 note = EVALUATION_TARGET_NOTE,
-                answers = EvaluationAnswers(mutableListOf())
+                answers = emptyList(),
             )
         )
         every { evaluationTargetService.findAllByEvaluationIdAndKeyword(any(), any()) } returns responses
@@ -121,7 +120,7 @@ class EvaluationTargetRestControllerTest : RestControllerTest() {
     @EnumSource(names = ["PASS", "FAIL", "WAITING"])
     @ParameterizedTest
     fun `메일 발송 대상(합격자)들의 이메일 정보를 조회한다`(enumStatus: EvaluationStatus) {
-        val responses = listOf(MailTargetResponse("roki@woowacourse.com", "김로키", 1L))
+        val responses = listOf(MailTargetResponse(1L, "roki@woowacourse.com", "김로키"))
         every { mailTargetService.findMailTargets(any(), any()) } returns responses
 
         mockMvc.get("/api/recruitments/{recruitmentId}/evaluations/{evaluationId}/targets/emails", 1L, 1L) {
