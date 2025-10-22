@@ -30,21 +30,19 @@ class MailTargetServiceTest : BehaviorSpec({
 
     Given("특정 평가에 대한 평가 대상자가 있는 경우") {
         val evaluationId = 1L
-        val members =
-            listOf(
-                createMember(id = 1L, email = "waiting@email.com"),
-                createMember(id = 2L, email = "pending@email.com"),
-                createMember(id = 3L, email = "pass@email.com"),
-                createMember(id = 4L, email = "fail@email.com"),
-            )
+        val members = listOf(
+            createMember(id = 1L, email = "waiting@email.com"),
+            createMember(id = 2L, email = "pending@email.com"),
+            createMember(id = 3L, email = "pass@email.com"),
+            createMember(id = 4L, email = "fail@email.com"),
+        )
 
-        every { evaluationTargetRepository.findAllByEvaluationId(any()) } returns
-            listOf(
-                createEvaluationTarget(evaluationId = evaluationId, memberId = 1L, evaluationStatus = WAITING),
-                createEvaluationTarget(evaluationId = evaluationId, memberId = 2L, evaluationStatus = PENDING),
-                createEvaluationTarget(evaluationId = evaluationId, memberId = 3L, evaluationStatus = PASS),
-                createEvaluationTarget(evaluationId = evaluationId, memberId = 4L, evaluationStatus = FAIL),
-            )
+        every { evaluationTargetRepository.findAllByEvaluationId(any()) } returns listOf(
+            createEvaluationTarget(evaluationId = evaluationId, memberId = 1L, evaluationStatus = WAITING),
+            createEvaluationTarget(evaluationId = evaluationId, memberId = 2L, evaluationStatus = PENDING),
+            createEvaluationTarget(evaluationId = evaluationId, memberId = 3L, evaluationStatus = PASS),
+            createEvaluationTarget(evaluationId = evaluationId, memberId = 4L, evaluationStatus = FAIL),
+        )
         every { memberRepository.findAllActiveByIdIn(any()) } returns members
 
         When("해당 평가의 모든 평가 대상자에 대한 이메일 정보를 조회하면") {
@@ -61,14 +59,9 @@ class MailTargetServiceTest : BehaviorSpec({
         val evaluationId = 1L
         val member = createMember(id = 3L, email = "pass@email.com")
 
-        every { evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(any(), any()) } returns
-            listOf(
-                createEvaluationTarget(
-                    evaluationId = evaluationId,
-                    memberId = member.id,
-                    evaluationStatus = PASS,
-                )
-            )
+        every { evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(any(), any()) } returns listOf(
+            createEvaluationTarget(evaluationId = evaluationId, memberId = member.id, evaluationStatus = PASS)
+        )
         every { memberRepository.findAllActiveByIdIn(any()) } returns listOf(member)
 
         When("해당 평가에 합격한 모든 평가 대상자의 이메일 정보를 조회하면") {
@@ -85,15 +78,14 @@ class MailTargetServiceTest : BehaviorSpec({
         val evaluationId = 1L
         val member = createMember(id = 2L, email = "fail@email.com")
 
-        every { evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(any(), any()) } returns
-            listOf(
-                createEvaluationTarget(
-                    evaluationId = evaluationId,
-                    memberId = member.id,
-                    evaluationStatus = FAIL,
-                    evaluationAnswers = EvaluationAnswers(listOf(createEvaluationAnswer())),
-                ),
-            )
+        every { evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(any(), any()) } returns listOf(
+            createEvaluationTarget(
+                evaluationId = evaluationId,
+                memberId = member.id,
+                evaluationStatus = FAIL,
+                evaluationAnswers = EvaluationAnswers(listOf(createEvaluationAnswer())),
+            ),
+        )
         every { memberRepository.findAllActiveByIdIn(any()) } returns listOf(member)
 
         When("해당 평가에 탈락한 모든 평가 대상자의 이메일 정보를 조회하면") {
@@ -110,14 +102,9 @@ class MailTargetServiceTest : BehaviorSpec({
         val evaluationId = 1L
         val member = createMember(id = 2L, email = "waiting@email.com")
 
-        every { evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(any(), any()) } returns
-            listOf(
-                createEvaluationTarget(
-                    evaluationId = evaluationId,
-                    memberId = member.id,
-                    evaluationStatus = WAITING,
-                ),
-            )
+        every { evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(any(), any()) } returns listOf(
+            createEvaluationTarget(evaluationId = evaluationId, memberId = member.id, evaluationStatus = WAITING),
+        )
         every { memberRepository.findAllActiveByIdIn(any()) } returns listOf(member)
 
         When("해당 평가에 보류 중인 모든 평가 대상자의 이메일 정보를 조회하면") {
@@ -133,21 +120,20 @@ class MailTargetServiceTest : BehaviorSpec({
     Given("특정 평가에 평가를 받지 않고 탈락한 평가 대상자가 있는 경우") {
         val evaluationId = 1L
 
-        every { evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(any(), any()) } returns
-            listOf(
-                createEvaluationTarget(
-                    evaluationId = evaluationId,
-                    memberId = 1L,
-                    evaluationStatus = FAIL,
-                    evaluationAnswers = EvaluationAnswers(emptyList()),
-                ),
-                createEvaluationTarget(
-                    evaluationId = evaluationId,
-                    memberId = 2L,
-                    evaluationStatus = FAIL,
-                    evaluationAnswers = EvaluationAnswers(listOf(createEvaluationAnswer(score = 0))),
-                ),
-            )
+        every { evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(any(), any()) } returns listOf(
+            createEvaluationTarget(
+                evaluationId = evaluationId,
+                memberId = 1L,
+                evaluationStatus = FAIL,
+                evaluationAnswers = EvaluationAnswers(emptyList()),
+            ),
+            createEvaluationTarget(
+                evaluationId = evaluationId,
+                memberId = 2L,
+                evaluationStatus = FAIL,
+                evaluationAnswers = EvaluationAnswers(listOf(createEvaluationAnswer(score = 0))),
+            ),
+        )
         every { memberRepository.findAllActiveByIdIn(any()) } returns emptyList()
 
         When("해당 평가에 탈락한 모든 평가 대상자의 이메일 정보를 조회하면") {
