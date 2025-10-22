@@ -111,9 +111,9 @@ class EvaluationTargetService(
     }
 
     private fun updateFail(memberIds: Set<Long>, evaluation: Evaluation) {
-        evaluationTargetRepository.findAllByEvaluationIdAndMemberIdIn(evaluation.id, memberIds).forEach {
-            it.evaluationStatus = EvaluationStatus.FAIL
-        }
+        evaluationTargetRepository
+            .findAllByEvaluationIdAndMemberIdIn(evaluation.id, memberIds)
+            .forEach { it.evaluationStatus = EvaluationStatus.FAIL }
     }
 
     fun getGradeEvaluation(targetId: Long): GradeEvaluationResponse {

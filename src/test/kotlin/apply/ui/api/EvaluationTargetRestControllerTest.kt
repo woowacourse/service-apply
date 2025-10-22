@@ -56,7 +56,7 @@ class EvaluationTargetRestControllerTest : RestControllerTest() {
                 evaluationStatus = PASS,
                 administratorId = 1L,
                 note = EVALUATION_TARGET_NOTE,
-                answers = emptyList()
+                answers = emptyList(),
             )
         )
         every { evaluationTargetService.findAllByEvaluationIdAndKeyword(any(), any()) } returns responses

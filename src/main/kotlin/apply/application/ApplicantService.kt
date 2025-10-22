@@ -22,7 +22,8 @@ class ApplicantService(
             .findByRecruitmentIdAndSubmittedTrue(recruitmentId)
             .associateBy { it.memberId }
         val cheaterApplicantEmails = cheaterRepository.findAll().map { it.email }
-        return memberRepository.findAllByIdInAndKeyword(formsByApplicantId.keys, keyword)
+        return memberRepository
+            .findAllByIdInAndKeyword(formsByApplicantId.keys, keyword)
             .map {
                 when (it.status) {
                     MemberStatus.ACTIVE -> ApplicantAndFormResponse(

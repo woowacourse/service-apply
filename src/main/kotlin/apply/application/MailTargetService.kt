@@ -25,7 +25,8 @@ class MailTargetService(
     }
 
     fun findAllByMemberIds(memberIds: List<Long>): List<MailTargetResponse> {
-        return memberRepository.findAllByIdIn(memberIds)
+        return memberRepository
+            .findAllByIdIn(memberIds)
             .map {
                 when (it.status) {
                     MemberStatus.ACTIVE -> MailTargetResponse(it)
@@ -37,22 +38,20 @@ class MailTargetService(
     private fun findEvaluationTargets(
         evaluationId: Long,
         evaluationStatus: EvaluationStatus?,
-    ): List<EvaluationTarget> =
-        if (evaluationStatus == null) {
+    ): List<EvaluationTarget> {
+        return if (evaluationStatus == null) {
             evaluationTargetRepository.findAllByEvaluationId(evaluationId)
         } else {
             findEvaluationTargetsByEvaluationStatus(evaluationId, evaluationStatus)
         }
+    }
 
     private fun findEvaluationTargetsByEvaluationStatus(
         evaluationId: Long,
         evaluationStatus: EvaluationStatus,
     ): List<EvaluationTarget> {
-        val evaluationTargets =
-            evaluationTargetRepository.findAllByEvaluationIdAndEvaluationStatus(
-                evaluationId,
-                evaluationStatus,
-            )
+        val evaluationTargets = evaluationTargetRepository
+            .findAllByEvaluationIdAndEvaluationStatus(evaluationId, evaluationStatus)
         return if (evaluationStatus == EvaluationStatus.FAIL) {
             evaluationTargets.filter { it.evaluated() }
         } else {
