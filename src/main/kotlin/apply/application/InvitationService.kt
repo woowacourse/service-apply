@@ -19,7 +19,7 @@ class InvitationService(
                     it.repository.name,
                     it.repository.fullName,
                     it.createdAt.withZoneSameInstant(ZoneId.systemDefault()).toLocalDateTime(),
-                    it.expired
+                    it.expired,
                 )
             }
     }

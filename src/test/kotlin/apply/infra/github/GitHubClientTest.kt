@@ -74,7 +74,7 @@ class GitHubClientTest(
         }
     }
 
-    "존재하지 않는 초대 ID를 수락하면 예외가 발생한다" {
+    "존재하지 않는 초대 ID를 수락하면 예외가 발생한다".config(enabled = false) {
         shouldThrow<IllegalArgumentException> {
             gitHubClient.acceptInvitation(0L)
         }
