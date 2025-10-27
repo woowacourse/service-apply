@@ -35,20 +35,19 @@ class MissionsView(
 
     override fun setParameter(event: BeforeEvent, @WildcardParameter parameter: Long) {
         recruitmentId = parameter
-        add(createTitle(), createButton(), createGrid())
+        setSizeFull()
+        add(createTitle(), createToolbar(), createGrid())
     }
 
-    private fun createTitle(): Component {
-        return Title("${recruitmentService.getById(recruitmentId).title} 과제 관리")
-    }
+    private fun createTitle(): Component = Title("${recruitmentService.getById(recruitmentId).title} 과제 관리")
 
-    private fun createButton(): Component {
+    private fun createToolbar(): Component {
         return HorizontalLayout(
             createPrimaryButton("생성") {
                 UI.getCurrent().navigate(MissionsFormView::class.java, "$recruitmentId/$NEW_VALUE")
             }
         ).apply {
-            setSizeFull()
+            setWidthFull()
             justifyContentMode = FlexComponent.JustifyContentMode.END
         }
     }

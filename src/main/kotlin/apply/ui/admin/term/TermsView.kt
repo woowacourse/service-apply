@@ -8,7 +8,6 @@ import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.grid.Grid
-import com.vaadin.flow.component.html.H1
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
@@ -17,6 +16,7 @@ import com.vaadin.flow.data.renderer.Renderer
 import com.vaadin.flow.router.Route
 import support.views.EDIT_VALUE
 import support.views.NEW_VALUE
+import support.views.Title
 import support.views.addSortableColumn
 import support.views.createDeleteButtonWithDialog
 import support.views.createPrimaryButton
@@ -24,19 +24,17 @@ import support.views.createPrimarySmallButton
 import support.views.toDisplayName
 
 @Route(value = "admin/terms", layout = BaseLayout::class)
-class TermsView(private val termService: TermService) : VerticalLayout() {
+class TermsView(
+    private val termService: TermService,
+) : VerticalLayout() {
     init {
-        add(createTitle(), createButton(), createGrid())
+        setSizeFull()
+        add(createTitle(), createToolbar(), createGrid())
     }
 
-    private fun createTitle(): Component {
-        return HorizontalLayout(H1("기수 관리")).apply {
-            setSizeFull()
-            justifyContentMode = FlexComponent.JustifyContentMode.CENTER
-        }
-    }
+    private fun createTitle(): Component = Title("기수 관리")
 
-    private fun createButton(): Component {
+    private fun createToolbar(): Component {
         return HorizontalLayout(
             createPrimaryButton("생성") {
                 TermFormDialog(termService, NEW_VALUE.toDisplayName()) {
@@ -44,7 +42,7 @@ class TermsView(private val termService: TermService) : VerticalLayout() {
                 }
             }
         ).apply {
-            setSizeFull()
+            setWidthFull()
             justifyContentMode = FlexComponent.JustifyContentMode.END
         }
     }

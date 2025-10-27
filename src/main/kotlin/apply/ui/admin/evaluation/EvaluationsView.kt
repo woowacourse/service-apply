@@ -6,7 +6,6 @@ import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.grid.Grid
-import com.vaadin.flow.component.html.H1
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
@@ -15,31 +14,30 @@ import com.vaadin.flow.data.renderer.Renderer
 import com.vaadin.flow.router.Route
 import support.views.EDIT_VALUE
 import support.views.NEW_VALUE
+import support.views.Title
 import support.views.addSortableColumn
 import support.views.createDeleteButtonWithDialog
 import support.views.createPrimaryButton
 import support.views.createPrimarySmallButton
 
 @Route(value = "admin/evaluations", layout = BaseLayout::class)
-class EvaluationsView(private val evaluationService: EvaluationService) : VerticalLayout() {
+class EvaluationsView(
+    private val evaluationService: EvaluationService,
+) : VerticalLayout() {
     init {
-        add(createTitle(), createButton(), createGrid())
+        setSizeFull()
+        add(createTitle(), createToolbar(), createGrid())
     }
 
-    private fun createTitle(): Component {
-        return HorizontalLayout(H1("평가 관리")).apply {
-            setSizeFull()
-            justifyContentMode = FlexComponent.JustifyContentMode.CENTER
-        }
-    }
+    private fun createTitle(): Component = Title("평가 관리")
 
-    private fun createButton(): Component {
+    private fun createToolbar(): Component {
         return HorizontalLayout(
             createPrimaryButton("생성") {
                 UI.getCurrent().navigate(EvaluationsFormView::class.java, NEW_VALUE)
             }
         ).apply {
-            setSizeFull()
+            setWidthFull()
             justifyContentMode = FlexComponent.JustifyContentMode.END
         }
     }
