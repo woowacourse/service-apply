@@ -6,6 +6,7 @@ import apply.domain.mission.SubmissionMethod.PRIVATE_REPOSITORY
 import apply.domain.mission.SubmissionMethod.PUBLIC_PULL_REQUEST
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import org.springframework.boot.web.client.RestTemplateBuilder
 import support.createLocalDateTime
@@ -17,37 +18,38 @@ class GitHubClientTest(
     private val gitHubClient: GitHubClient,
     private val properties: GitHubProperties,
     private val builder: RestTemplateBuilder,
+    private val gitHub: GitHub,
 ) : StringSpec({
     val now = now()
 
     "설정된 날짜와 시간을 기준으로 마지막 커밋을 조회한다" {
-        val actual = gitHubClient.getLastCommit(
+        val actual = gitHub.getLastCommit(
             PUBLIC_PULL_REQUEST, PUBLIC_PULL_REQUEST_URL_VALUE, createLocalDateTime(2021, 10, 11)
         )
         actual shouldBe createCommit("8c2d61313838d9220848bd38a5a5adc34efc5169")
     }
 
     "풀 리퀘스트의 마지막 커밋을 조회한다" {
-        val actual = gitHubClient.getLastCommit(PUBLIC_PULL_REQUEST, PUBLIC_PULL_REQUEST_URL_VALUE, now)
+        val actual = gitHub.getLastCommit(PUBLIC_PULL_REQUEST, PUBLIC_PULL_REQUEST_URL_VALUE, now)
         actual shouldBe createCommit("eeb43de3f53f4bec08e7d63f07badb66c12dfa31")
     }
 
     "커밋이 100개 이상인 풀 리퀘스트에서 마지막 커밋을 조회한다" {
-        val actual = gitHubClient.getLastCommit(
+        val actual = gitHub.getLastCommit(
             PUBLIC_PULL_REQUEST, "https://github.com/woowacourse/nextstep_test/pull/697", now
         )
         actual shouldBe createCommit("8c4a97b43cf4db7f3d3f6ec53de0751eb20bdae0")
     }
 
     "저장소의 마지막 커밋을 조회한다" {
-        val actual = gitHubClient.getLastCommit(
+        val actual = gitHub.getLastCommit(
             PRIVATE_REPOSITORY, "https://github.com/woowacourse/java-chicken-2019", now
         )
         actual shouldBe createCommit("e7d2311185e7a5f8dbee4e14231d27ece16ae343")
     }
 
     "커밋이 100개 이상인 저장소에서 마지막 커밋을 조회한다" {
-        val actual = gitHubClient.getLastCommit(
+        val actual = gitHub.getLastCommit(
             PRIVATE_REPOSITORY, "https://github.com/woowahan-pjs/nextstep_test", now
         )
         actual shouldBe createCommit("8c4a97b43cf4db7f3d3f6ec53de0751eb20bdae0")
@@ -56,24 +58,35 @@ class GitHubClientTest(
     "토큰이 유효하지 않으면 예외가 발생한다" {
         val client = GitHubClient(properties.copy(accessKey = "invalid_token"), builder)
         shouldThrow<IllegalStateException> {
-            client.getLastCommit(PRIVATE_REPOSITORY, "https://github.com/woowacourse/java-chicken-2019", now)
+            client.getCommitsFromRepository(owner = "woowacourse", repo = "java-chicken-2019")
         }
     }
 
     "리소스가 없으면 예외가 발생한다" {
         shouldThrow<IllegalArgumentException> {
-            gitHubClient.getLastCommit(PUBLIC_PULL_REQUEST, "https://github.com/woowacourse/service-apply/pull/1", now)
+            gitHub.getLastCommit(PUBLIC_PULL_REQUEST, "https://github.com/woowacourse/service-apply/pull/1", now)
         }
     }
 
     "해당 커밋이 없으면 예외가 발생한다" {
         shouldThrow<IllegalArgumentException> {
-            gitHubClient.getLastCommit(PUBLIC_PULL_REQUEST, PUBLIC_PULL_REQUEST_URL_VALUE, createLocalDateTime(2018))
+            gitHub.getLastCommit(PUBLIC_PULL_REQUEST, PUBLIC_PULL_REQUEST_URL_VALUE, createLocalDateTime(2018))
         }
     }
 
+    "존재하지 않는 초대 ID를 수락하면 예외가 발생한다".config(enabled = false) {
+        shouldThrow<IllegalArgumentException> {
+            gitHubClient.acceptInvitation(0L)
+        }
+    }
+
+    "저장소 초대 목록을 조회한다".config(enabled = false) {
+        val actual = gitHubClient.getInvitations(1, 100)
+        actual shouldHaveSize 0
+    }
+
     "비공개 저장소의 마지막 커밋을 조회한다".config(enabled = false) {
-        val actual = gitHubClient.getLastCommit(PRIVATE_REPOSITORY, "https://github.com/applicant01/all-fail", now)
+        val actual = gitHub.getLastCommit(PRIVATE_REPOSITORY, "https://github.com/applicant01/all-fail", now)
         actual shouldBe createCommit("936a0afb8da904ed9dfdea405042860395600047")
     }
 })
