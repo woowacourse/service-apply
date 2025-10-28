@@ -23,7 +23,6 @@ import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.dialog.Dialog
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.html.Div
-import com.vaadin.flow.component.html.H1
 import com.vaadin.flow.component.html.H4
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
@@ -39,6 +38,7 @@ import com.vaadin.flow.router.BeforeEvent
 import com.vaadin.flow.router.HasUrlParameter
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.router.WildcardParameter
+import support.views.Title
 import support.views.WITHDRAWN_NAME
 import support.views.addSortableColumn
 import support.views.addSortableDateColumn
@@ -65,7 +65,7 @@ class SelectionView(
     private val judgmentAllService: JudgmentAllService,
     private val myMissionService: MyMissionService,
     private val excelService: ExcelService,
-    private val evaluationTargetCsvService: EvaluationTargetCsvService
+    private val evaluationTargetCsvService: EvaluationTargetCsvService,
 ) : VerticalLayout(), HasUrlParameter<Long> {
     private var recruitmentId: Long = 0L
     private var evaluations: List<EvaluationSelectData> =
@@ -76,25 +76,21 @@ class SelectionView(
 
     override fun setParameter(event: BeforeEvent, @WildcardParameter parameter: Long) {
         this.recruitmentId = parameter
+        setSizeFull()
         add(createTitle(), createContent())
     }
 
-    private fun createTitle(): Component {
-        return HorizontalLayout(H1(recruitmentService.getById(recruitmentId).title)).apply {
-            setWidthFull()
-            justifyContentMode = FlexComponent.JustifyContentMode.CENTER
-        }
-    }
+    private fun createTitle(): Component = Title(recruitmentService.getById(recruitmentId).title)
 
     private fun createContent(keyword: String = ""): Component {
         val tabsToGrids: Map<Tab, Component> = mapTabAndGrid(keyword)
         val (tabs, grids) = createTabComponents(tabsToGrids)
-        val menu = HorizontalLayout(
+        val toolbar = HorizontalLayout(
             createSearchBox {
                 removeAll()
                 add(
                     createTitle(),
-                    createContent(keyword = it)
+                    createContent(keyword = it),
                 )
                 selectedTabIndex = tabs.selectedIndex
             },
@@ -102,13 +98,16 @@ class SelectionView(
             HorizontalLayout(
                 createLoadButton(tabs),
                 createResultDownloadButton(),
-                createJudgeAllButton(tabs)
-            )
+                createJudgeAllButton(tabs),
+            ),
         ).apply {
             setWidthFull()
             justifyContentMode = FlexComponent.JustifyContentMode.BETWEEN
         }
-        return VerticalLayout(menu, grids, evaluationFileButtons).apply { setWidthFull() }
+        return VerticalLayout(toolbar, *grids.toTypedArray(), evaluationFileButtons).apply {
+            setSizeFull()
+            isPadding = false
+        }
     }
 
     private fun createEvaluationFileButtons(): HorizontalLayout {
@@ -192,23 +191,20 @@ class SelectionView(
         }
     }
 
-    private fun createTabComponents(tabsToGrids: Map<Tab, Component>): Pair<Tabs, Div> {
+    private fun createTabComponents(tabsToGrids: Map<Tab, Component>): Pair<Tabs, Collection<Component>> {
         val tabs = Tabs().apply {
             add(*(tabsToGrids.keys).toTypedArray())
             addSelectedChangeListener {
                 evaluationFileButtons.isVisible = !isTotalApplicantTab(it.selectedTab)
-                tabsToGrids.forEach { (tab, grid) ->
-                    grid.isVisible = (tab == selectedTab)
-                }
+                tabsToGrids.forEach { (tab, grid) -> grid.isVisible = (tab == selectedTab) }
             }
             setWidthFull()
             tabsToGrids.forEach { (tab, grid) -> grid.isVisible = (tab == selectedTab) }
             selectedIndex = selectedTabIndex
             tabs = this
         }
-
-        val grids = Div(*tabsToGrids.values.toTypedArray()).apply { setWidthFull() }
-
+        val grids = tabsToGrids.values
+        // val grids = Div(*tabsToGrids.values.toTypedArray()).apply { setSizeFull() }
         return tabs to grids
     }
 

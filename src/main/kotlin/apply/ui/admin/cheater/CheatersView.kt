@@ -45,7 +45,7 @@ class CheatersView(
         }
     }
 
-    private fun createGrid(): Grid<CheaterResponse> {
+    private fun createGrid(): Component {
         return Grid<CheaterResponse>(10).apply {
             addSortableColumn("이름") { it.name ?: NO_NAME }
             addSortableColumn("이메일") { it.email }
