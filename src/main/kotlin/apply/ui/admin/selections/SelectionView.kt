@@ -203,9 +203,7 @@ class SelectionView(
             selectedIndex = selectedTabIndex
             tabs = this
         }
-        val grids = tabsToGrids.values
-        // val grids = Div(*tabsToGrids.values.toTypedArray()).apply { setSizeFull() }
-        return tabs to grids
+        return tabs to tabsToGrids.values
     }
 
     private fun createLoadButton(tabs: Tabs): Button {
