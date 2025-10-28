@@ -333,7 +333,7 @@ class EvaluationTargetIntegrationTest(
         When("해당 평가에서 특정 키워드로 평가 대상자를 조회하면") {
             val actual = evaluationTargetService.findAllByEvaluationIdAndKeyword(evaluation.id, keyword)
 
-            Then("키워드와 일치하는 평가 대상자만 반환한다") {
+            Then("키워드와 일치하는 탈퇴하지 않은 평가 대상자만 조회한다") {
                 actual shouldHaveSize 1
                 actual[0].email shouldContain keyword
             }
