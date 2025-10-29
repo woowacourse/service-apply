@@ -125,7 +125,7 @@ fun createTabs(components: List<Component>): Component {
 class Title(val value: H1) : HorizontalLayout(), HasText {
     init {
         add(value)
-        setSizeFull()
+        setWidthFull()
         justifyContentMode = FlexComponent.JustifyContentMode.CENTER
     }
 

@@ -16,6 +16,7 @@ import com.vaadin.flow.data.renderer.Renderer
 import com.vaadin.flow.router.Route
 import support.views.EDIT_VALUE
 import support.views.NEW_VALUE
+import support.views.Title
 import support.views.addSortableColumn
 import support.views.createDeleteButtonWithDialog
 import support.views.createPrimaryButton
@@ -23,19 +24,17 @@ import support.views.createPrimarySmallButton
 import support.views.toDisplayName
 
 @Route(value = "admin/administrators", layout = BaseLayout::class)
-class AdministratorsView(private val administratorService: AdministratorService) : VerticalLayout() {
+class AdministratorsView(
+    private val administratorService: AdministratorService,
+) : VerticalLayout() {
     init {
-        add(createTitle(), createButton(), createGrid())
+        setSizeFull()
+        add(createTitle(), createToolbar(), createGrid())
     }
 
-    private fun createTitle(): Component {
-        return HorizontalLayout(H1("관리자")).apply {
-            setSizeFull()
-            justifyContentMode = FlexComponent.JustifyContentMode.CENTER
-        }
-    }
+    private fun createTitle(): Component = Title(H1("관리자"))
 
-    private fun createButton(): Component {
+    private fun createToolbar(): Component {
         return HorizontalLayout(
             createPrimaryButton("생성") {
                 AdministratorFormDialog(administratorService, NEW_VALUE.toDisplayName()) {
@@ -43,7 +42,7 @@ class AdministratorsView(private val administratorService: AdministratorService)
                 }
             }
         ).apply {
-            setSizeFull()
+            setWidthFull()
             justifyContentMode = FlexComponent.JustifyContentMode.END
         }
     }

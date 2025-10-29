@@ -133,7 +133,7 @@ class EvaluationTargetRestControllerTest : RestControllerTest() {
     }
 
     @Test
-    fun `평가지를 기준으로 평가대상자들의 상태를 업데이트한다`() {
+    fun `평가지를 기준으로 평가 대상자들의 상태를 업데이트한다`() {
         val contentStream = Path("src/test/resources/another_evaluation.csv").inputStream()
         val file = MockMultipartFile("evaluation", "evaluation.csv", "text/csv", contentStream)
 

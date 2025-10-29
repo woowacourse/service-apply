@@ -43,6 +43,15 @@ fun createMember(
     )
 }
 
+fun createWithdrawnMember(
+    information: MemberInformation? = null,
+    password: Password = PASSWORD,
+    authorizationRequirement: AuthorizationRequirement = AuthorizationRequirement {},
+    id: Long = 0L,
+): Member {
+    return Member(information, password, authorizationRequirement, MemberStatus.WITHDRAWN, id)
+}
+
 fun createMemberInformation(
     email: String = EMAIL,
     name: String = NAME,

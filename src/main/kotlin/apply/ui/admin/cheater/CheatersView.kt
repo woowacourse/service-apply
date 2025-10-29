@@ -7,7 +7,6 @@ import apply.ui.admin.BaseLayout
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.UI
 import com.vaadin.flow.component.grid.Grid
-import com.vaadin.flow.component.html.H1
 import com.vaadin.flow.component.orderedlayout.FlexComponent
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
@@ -15,6 +14,7 @@ import com.vaadin.flow.data.renderer.ComponentRenderer
 import com.vaadin.flow.data.renderer.Renderer
 import com.vaadin.flow.router.Route
 import support.views.NO_NAME
+import support.views.Title
 import support.views.addSortableColumn
 import support.views.addSortableDateTimeColumn
 import support.views.createDeleteButtonWithDialog
@@ -23,20 +23,16 @@ import support.views.createPrimaryButton
 @Route(value = "admin/cheaters", layout = BaseLayout::class)
 class CheatersView(
     private val memberService: MemberService,
-    private val cheaterService: CheaterService
+    private val cheaterService: CheaterService,
 ) : VerticalLayout() {
     init {
-        add(createTitle(), createAddCheater(), createCheaterGrid())
+        setSizeFull()
+        add(createTitle(), createToolbar(), createGrid())
     }
 
-    private fun createTitle(): Component {
-        return HorizontalLayout(H1("부정행위자")).apply {
-            setSizeFull()
-            justifyContentMode = FlexComponent.JustifyContentMode.CENTER
-        }
-    }
+    private fun createTitle(): Component = Title("부정행위자")
 
-    private fun createAddCheater(): Component {
+    private fun createToolbar(): Component {
         return HorizontalLayout(
             createPrimaryButton("추가") {
                 CheaterFormDialog(memberService, cheaterService) {
@@ -44,12 +40,12 @@ class CheatersView(
                 }
             }
         ).apply {
-            setSizeFull()
+            setWidthFull()
             justifyContentMode = FlexComponent.JustifyContentMode.END
         }
     }
 
-    private fun createCheaterGrid(): Grid<CheaterResponse> {
+    private fun createGrid(): Component {
         return Grid<CheaterResponse>(10).apply {
             addSortableColumn("이름") { it.name ?: NO_NAME }
             addSortableColumn("이메일") { it.email }

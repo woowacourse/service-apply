@@ -27,23 +27,20 @@ class EvaluationTargetService(
     private val memberRepository: MemberRepository,
     private val cheaterRepository: CheaterRepository,
 ) {
-    fun findAllByEvaluationId(evaluationId: Long): List<EvaluationTarget> =
-        evaluationTargetRepository.findAllByEvaluationId(evaluationId)
-
     fun findAllByEvaluationIdAndKeyword(
         evaluationId: Long,
         keyword: String = "",
     ): List<EvaluationTargetResponse> {
-        val evaluationTargets = findAllByEvaluationId(evaluationId)
-        val membersById = memberRepository
-            .findAllByIdInAndKeyword(evaluationTargets.map(EvaluationTarget::memberId), keyword)
-            .associateBy { it.id }
-        return evaluationTargets
+        val targetsByMemberId = evaluationTargetRepository
+            .findAllByEvaluationId(evaluationId)
+            .associateBy { it.memberId }
+        return memberRepository
+            .findAllByIdInAndKeyword(targetsByMemberId.keys, keyword)
             .map {
-                val member = requireNotNull(membersById[it.memberId])
-                when (member.status) {
-                    MemberStatus.ACTIVE -> EvaluationTargetResponse(it, member)
-                    else -> EvaluationTargetResponse(it, member.id)
+                val evaluationTarget = targetsByMemberId.getValue(it.id)
+                when (it.status) {
+                    MemberStatus.ACTIVE -> EvaluationTargetResponse(evaluationTarget, it)
+                    else -> EvaluationTargetResponse(evaluationTarget, it.id)
                 }
             }
     }

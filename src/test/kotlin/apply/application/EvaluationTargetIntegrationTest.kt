@@ -10,6 +10,7 @@ import apply.createEvaluationAnswer
 import apply.createEvaluationItem
 import apply.createEvaluationTarget
 import apply.createMember
+import apply.createWithdrawnMember
 import apply.domain.applicationform.ApplicationForm
 import apply.domain.applicationform.ApplicationFormRepository
 import apply.domain.cheater.Cheater
@@ -32,7 +33,10 @@ import apply.domain.member.MemberRepository
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.extensions.spring.SpringTestExtension
 import io.kotest.extensions.spring.SpringTestLifecycleMode
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import org.springframework.transaction.annotation.Transactional
 import support.test.IntegrationTest
 import java.time.LocalDateTime
@@ -47,7 +51,7 @@ class EvaluationTargetIntegrationTest(
     private val evaluationItemRepository: EvaluationItemRepository,
     private val applicationFormRepository: ApplicationFormRepository,
     private val memberRepository: MemberRepository,
-    private val cheaterRepository: CheaterRepository
+    private val cheaterRepository: CheaterRepository,
 ) : BehaviorSpec({
     extensions(SpringTestExtension(SpringTestLifecycleMode.Root))
 
@@ -63,7 +67,7 @@ class EvaluationTargetIntegrationTest(
         memberId: Long,
         recruitmentId: Long,
         submitted: Boolean,
-        submittedDateTime: LocalDateTime
+        submittedDateTime: LocalDateTime,
     ): ApplicationForm {
         return applicationFormRepository.save(
             createApplicationForm(memberId, recruitmentId, submitted = submitted, submittedDateTime = submittedDateTime)
@@ -74,7 +78,7 @@ class EvaluationTargetIntegrationTest(
         recruitmentId: Long = 1L,
         beforeEvaluationId: Long = 0L,
         title: String = EVALUATION_TITLE1,
-        description: String = EVALUATION_DESCRIPTION
+        description: String = EVALUATION_DESCRIPTION,
     ): Evaluation {
         return evaluationRepository.save(createEvaluation(title, description, recruitmentId, beforeEvaluationId))
     }
@@ -88,7 +92,7 @@ class EvaluationTargetIntegrationTest(
         memberId: Long,
         evaluationStatus: EvaluationStatus,
         note: String = EVALUATION_TARGET_NOTE,
-        evaluationAnswers: List<EvaluationAnswer> = emptyList()
+        evaluationAnswers: List<EvaluationAnswer> = emptyList(),
     ): EvaluationTarget {
         return evaluationTargetRepository.save(
             createEvaluationTarget(evaluationId, memberId, evaluationStatus, note, EvaluationAnswers(evaluationAnswers))
@@ -110,6 +114,12 @@ class EvaluationTargetIntegrationTest(
     fun saveCheaterApplicant(recruitmentId: Long, email: String): Member {
         val member = saveApplicant(recruitmentId, email)
         saveCheater(member.email)
+        return member
+    }
+
+    fun saveWithdrawnApplicant(recruitmentId: Long): Member {
+        val member = memberRepository.save(createWithdrawnMember())
+        saveApplicationForm(member.id, recruitmentId, true, now())
         return member
     }
 
@@ -289,6 +299,43 @@ class EvaluationTargetIntegrationTest(
                 actual.evaluationStatus shouldBe PASS
                 actual.evaluationAnswers.first(1L).score shouldBe 5
                 actual.note shouldBe "특이 사항(수정)"
+            }
+        }
+    }
+
+    Given("특정 평가의 평가 대상자가 탈퇴한 회원인 경우") {
+        val recruitmentId = 1L
+        val member = saveWithdrawnApplicant(recruitmentId)
+        val evaluation = saveEvaluation(recruitmentId)
+        saveEvaluationTarget(evaluation.id, member.id, PASS)
+
+        When("해당 평가에서 키워드 없이 평가 대상자를 조회하면") {
+            val actual = evaluationTargetService.findAllByEvaluationIdAndKeyword(evaluation.id)
+
+            Then("평가 대상자는 조회되지만 회원 정보는 확인할 수 없다") {
+                actual shouldHaveSize 1
+                actual[0].name.shouldBeNull()
+                actual[0].email.shouldBeNull()
+                actual[0].evaluationStatus shouldBe PASS
+            }
+        }
+    }
+
+    Given("특정 평가의 평가 대상자에 회원과 탈퇴한 회원이 혼재한 경우") {
+        val recruitmentId = 1L
+        val keyword = "chaechae"
+        val member1 = saveApplicant(recruitmentId, "$keyword@email.com")
+        val member2 = saveWithdrawnApplicant(recruitmentId)
+        val evaluation = saveEvaluation(recruitmentId)
+        saveEvaluationTarget(evaluation.id, member1.id, PASS)
+        saveEvaluationTarget(evaluation.id, member2.id, PASS)
+
+        When("해당 평가에서 특정 키워드로 평가 대상자를 조회하면") {
+            val actual = evaluationTargetService.findAllByEvaluationIdAndKeyword(evaluation.id, keyword)
+
+            Then("키워드와 일치하는 탈퇴하지 않은 평가 대상자만 조회한다") {
+                actual shouldHaveSize 1
+                actual[0].email shouldContain keyword
             }
         }
     }
