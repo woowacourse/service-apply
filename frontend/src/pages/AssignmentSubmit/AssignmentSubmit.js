@@ -25,7 +25,7 @@ function getSubmissionMethodInputLabel(submissionMethod) {
     return "풀 리퀘스트 주소";
   }
 
-  return "과제 제출물 URL";
+  return "과제 제출물 주소";
 }
 
 const AssignmentSubmit = () => {
