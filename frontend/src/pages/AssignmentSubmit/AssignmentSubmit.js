@@ -16,6 +16,18 @@ import useTokenContext from "../../hooks/useTokenContext";
 import styles from "./AssignmentSubmit.module.css";
 import { MISSION_SUBMISSION_METHOD } from "../../constants/recruitment";
 
+function getSubmissionMethodInputLabel(submissionMethod) {
+  if (submissionMethod === MISSION_SUBMISSION_METHOD.PRIVATE_REPOSITORY) {
+    return "저장소 주소";
+  }
+
+  if (submissionMethod === MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST) {
+    return "풀 리퀘스트 주소";
+  }
+
+  return "과제 제출물 URL";
+}
+
 const AssignmentSubmit = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -27,10 +39,7 @@ const AssignmentSubmit = () => {
 
   const submissionMethod =
     currentMission?.submissionMethod ?? MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST;
-  const urlInputLabel =
-    submissionMethod === MISSION_SUBMISSION_METHOD.PRIVATE_REPOSITORY
-      ? "저장소 주소"
-      : "풀 리퀘스트 주소";
+  const urlInputLabel = getSubmissionMethodInputLabel(submissionMethod);
 
   const {
     form,

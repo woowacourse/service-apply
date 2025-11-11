@@ -19,29 +19,32 @@ const initialErrorMessage = {
   [ASSIGNMENT_FORM_NAME.URL]: "",
 };
 
-const VALIDATORS = {
-  [MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST]: {
-    test: isValidPullRequestUrl,
-    error: ERROR_MESSAGE.VALIDATION.PULL_REQUEST_URL,
-  },
-  [MISSION_SUBMISSION_METHOD.PRIVATE_REPOSITORY]: {
-    test: isValidRepositoryUrl,
-    error: ERROR_MESSAGE.VALIDATION.REPOSITORY_URL,
-  },
-  default: {
+function getValidator(submissionMethod) {
+  if (submissionMethod === MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST) {
+    return {
+      test: isValidPullRequestUrl,
+      error: ERROR_MESSAGE.VALIDATION.PULL_REQUEST_URL,
+    };
+  }
+
+  if (submissionMethod === MISSION_SUBMISSION_METHOD.PRIVATE_REPOSITORY) {
+    return {
+      test: isValidRepositoryUrl,
+      error: ERROR_MESSAGE.VALIDATION.REPOSITORY_URL,
+    };
+  }
+
+  return {
     test: isValidUrl,
     error: ERROR_MESSAGE.VALIDATION.URL,
-  },
-};
+  };
+}
 
 const useAssignmentForm = (submissionMethod = MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST) => {
   const [requiredForm, setRequiredForm] = useState(initialRequiredForm);
   const [errorMessage, setErrorMessage] = useState(initialErrorMessage);
 
-  const validator = useMemo(
-    () => VALIDATORS[submissionMethod] ?? VALIDATORS.default,
-    [submissionMethod]
-  );
+  const validator = getValidator(submissionMethod);
 
   const isValid = Object.values(errorMessage).filter(Boolean).length === 0;
   const isEmpty =
