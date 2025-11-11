@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { ERROR_MESSAGE } from "../constants/messages";
 import { isValidPullRequestUrl } from "../utils/validation/pullRequestUrl";
 import { isValidRepositoryUrl } from "../utils/validation/repositoryUrl";
+import { isValidUrl } from "../utils/validation/url";
 import { MISSION_SUBMISSION_METHOD } from "../constants/recruitment";
 
 export const ASSIGNMENT_FORM_NAME = {
@@ -18,9 +19,29 @@ const initialErrorMessage = {
   [ASSIGNMENT_FORM_NAME.URL]: "",
 };
 
+const VALIDATORS = {
+  [MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST]: {
+    test: isValidPullRequestUrl,
+    error: ERROR_MESSAGE.VALIDATION.PULL_REQUEST_URL,
+  },
+  [MISSION_SUBMISSION_METHOD.PRIVATE_REPOSITORY]: {
+    test: isValidRepositoryUrl,
+    error: ERROR_MESSAGE.VALIDATION.REPOSITORY_URL,
+  },
+  default: {
+    test: isValidUrl,
+    error: ERROR_MESSAGE.VALIDATION.URL,
+  },
+};
+
 const useAssignmentForm = (submissionMethod = MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST) => {
   const [requiredForm, setRequiredForm] = useState(initialRequiredForm);
   const [errorMessage, setErrorMessage] = useState(initialErrorMessage);
+
+  const validator = useMemo(
+    () => VALIDATORS[submissionMethod] ?? VALIDATORS.default,
+    [submissionMethod]
+  );
 
   const isValid = Object.values(errorMessage).filter(Boolean).length === 0;
   const isEmpty =
@@ -46,28 +67,13 @@ const useAssignmentForm = (submissionMethod = MISSION_SUBMISSION_METHOD.PUBLIC_P
     }));
   };
 
-  const validateUrl = (url, submissionMethod) => {
-    if (submissionMethod === MISSION_SUBMISSION_METHOD.PRIVATE_REPOSITORY) {
-      return isValidRepositoryUrl(url);
-    }
-
-    return isValidPullRequestUrl(url);
-  };
-
-  const generateErrorMessage = (url, submissionMethod) => {
-    if (validateUrl(url, submissionMethod)) {
-      return "";
-    }
-
-    if (submissionMethod === MISSION_SUBMISSION_METHOD.PRIVATE_REPOSITORY) {
-      return ERROR_MESSAGE.VALIDATION.REPOSITORY_URL;
-    }
-
-    return ERROR_MESSAGE.VALIDATION.PULL_REQUEST_URL;
+  const validateAndMessage = (url) => {
+    const value = typeof url === "string" ? url.trim() : url;
+    return validator.test(value) ? "" : validator.error;
   };
 
   const handleChangeUrl = ({ target }) => {
-    const errorMessage = generateErrorMessage(target.value, submissionMethod);
+    const errorMessage = validateAndMessage(target.value);
 
     updateErrorMessage(ASSIGNMENT_FORM_NAME.URL, errorMessage);
     updateRequiredForm(ASSIGNMENT_FORM_NAME.URL, target.value);
