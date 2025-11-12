@@ -11,9 +11,11 @@ value class Url private constructor(val value: String) {
     companion object {
         private val PULL_REQUEST_URL_PATTERN: Regex = """https://github\.com(/[\w\-]+){2}/pull/[1-9]\d*""".toRegex()
         private val REPOSITORY_URL_PATTERN: Regex = """https://github\.com(/[\w\-]+){2}""".toRegex()
+        private val GENERIC_URL_PATTERN: Regex = """(http://www\.|https://www\.|http://|https://)[a-z0-9]+([-.][a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(/.*)?${'$'}""".toRegex()
         private val ASSIGNMENT_URL_PATTERNS: Map<SubmissionMethod, Regex> = mapOf(
             SubmissionMethod.PUBLIC_PULL_REQUEST to PULL_REQUEST_URL_PATTERN,
-            SubmissionMethod.PRIVATE_REPOSITORY to REPOSITORY_URL_PATTERN
+            SubmissionMethod.PRIVATE_REPOSITORY to REPOSITORY_URL_PATTERN,
+            SubmissionMethod.GENERIC_URL to GENERIC_URL_PATTERN,
         )
 
         // TODO: 코틀린 1.9에서 부 생성자로 변경
