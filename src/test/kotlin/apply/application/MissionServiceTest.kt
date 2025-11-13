@@ -8,7 +8,9 @@ import apply.domain.evaluation.EvaluationRepository
 import apply.domain.evaluation.getOrThrow
 import apply.domain.evaluationitem.EvaluationItemRepository
 import apply.domain.judgmentitem.JudgmentItemRepository
+import apply.domain.judgmentitem.ProgrammingLanguage
 import apply.domain.mission.MissionRepository
+import apply.domain.mission.SubmissionMethod
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
@@ -49,6 +51,53 @@ class MissionServiceTest : BehaviorSpec({
 
             Then("과제가 생성된다") {
                 actual shouldBe createMissionResponse()
+            }
+        }
+    }
+
+    Given("일반 URL 제출 방식인 경우") {
+        val evaluation = createEvaluation()
+
+        every { evaluationRepository.getOrThrow(any()) } returns evaluation
+        every { missionRepository.findByIdOrNull(any()) } returns null
+        every { missionRepository.existsByEvaluationId(any()) } returns false
+        every { missionRepository.save(any()) } returns createMission(
+            evaluationId = evaluation.id,
+            submissionMethod = SubmissionMethod.GENERIC_URL
+        )
+        every { judgmentItemRepository.findByMissionId(any()) } returns null
+
+        When("자동 채점 항목이 존재하면") {
+            val judgmentItemData = JudgmentItemData(
+                id = 1L,
+                testName = "test",
+                evaluationItemSelectData = EvaluationItemSelectData(id = 1L, title = "평가 항목"),
+                programmingLanguage = ProgrammingLanguage.KOTLIN
+            )
+            val request = createMissionData(
+                evaluation = EvaluationSelectData(evaluation),
+                submissionMethod = SubmissionMethod.GENERIC_URL,
+                judgmentItemData = judgmentItemData
+            )
+
+            Then("예외가 발생한다") {
+                shouldThrow<IllegalArgumentException> {
+                    missionService.save(request)
+                }
+            }
+        }
+
+        When("자동 채점 항목이 없으면") {
+            val request = createMissionData(
+                evaluation = EvaluationSelectData(evaluation),
+                submissionMethod = SubmissionMethod.GENERIC_URL,
+                judgmentItemData = JudgmentItemData()
+            )
+
+            Then("과제가 생성된다") {
+                shouldNotThrowAny {
+                    missionService.save(request)
+                }
             }
         }
     }
