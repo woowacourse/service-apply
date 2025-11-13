@@ -77,8 +77,20 @@ PassJudgmentMission.args = {
   recruitmentId: "6",
 };
 
+export const NoTestableMission = Template.bind({});
+NoTestableMission.args = {
+  mission: missionsDummy["2"][8],
+  recruitmentId: "24",
+};
+
 export const PrivateRepositorySubmission = Template.bind({});
 PrivateRepositorySubmission.args = {
   mission: missionsDummy["2"][9],
   recruitmentId: "9",
+};
+
+export const GenericUrlSubmission = Template.bind({});
+GenericUrlSubmission.args = {
+  mission: missionsDummy["2"][10],
+  recruitmentId: "27",
 };
