@@ -8,6 +8,7 @@ import apply.domain.judgmentitem.JudgmentItem
 import apply.domain.judgmentitem.JudgmentItemRepository
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionRepository
+import apply.domain.mission.SubmissionMethod
 import apply.domain.mission.getOrThrow
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -47,6 +48,9 @@ class MissionService(
     private fun validate(request: MissionData) {
         val evaluation = evaluationRepository.getOrThrow(request.evaluation.id)
         val mission = missionRepository.findByIdOrNull(request.id)
+        if (request.submissionMethod == SubmissionMethod.GENERIC_URL && request.judgmentItemData != JudgmentItemData()) {
+            throw IllegalArgumentException("일반 URL 제출 방식에서는 자동 채점 항목을 설정할 수 없습니다.")
+        }
         mission?.validateSameEvaluation(evaluation.id) ?: evaluation.validateNoMission()
     }
 
