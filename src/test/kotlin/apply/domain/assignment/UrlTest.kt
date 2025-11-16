@@ -1,6 +1,8 @@
 package apply.domain.assignment
 
-import apply.domain.mission.SubmissionMethod.*
+import apply.domain.mission.SubmissionMethod.GENERIC_URL
+import apply.domain.mission.SubmissionMethod.PRIVATE_REPOSITORY
+import apply.domain.mission.SubmissionMethod.PUBLIC_PULL_REQUEST
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
@@ -26,10 +28,21 @@ class UrlTest : StringSpec({
     }
 
     "일반 URL 형식을 지원한다" {
-        shouldNotThrowAny { createGenericUrl("https://github.com/woowacourse/service-apply/pull/734") }
-        shouldNotThrowAny { createGenericUrl("https://github.com/woowacourse/service-apply") }
-        shouldNotThrowAny { createGenericUrl("https://github.com/woowacourse") }
-        shouldNotThrowAny { createGenericUrl("https://docs.google.com/document/d/1sTK12QvsdpUkH6eylBxwoWuXBDjocO1f_2PMpBjXUaQ/edit?tab=t.0") }
-        shouldThrow<IllegalArgumentException> { createGenericUrl("") }
+        shouldNotThrowAny { createGenericUrl("http://example.com") }
+        shouldNotThrowAny { createGenericUrl("https://example.com") }
+        shouldNotThrowAny { createGenericUrl("https://apply.techcourse.co.kr") }
+        shouldNotThrowAny { createGenericUrl("https://sub.domain.example.com/path/to/resource") }
+        shouldNotThrowAny { createGenericUrl("https://example.com?query=param&foo=bar") }
+        shouldNotThrowAny { createGenericUrl("https://example.com#section") }
+        shouldNotThrowAny { createGenericUrl("https://example.com:8080/path") }
+        shouldThrow<IllegalArgumentException> { createGenericUrl("http//missing-colon.com") }
+        shouldThrow<IllegalArgumentException> { createGenericUrl("htp://typo.com") }
+        shouldThrow<IllegalArgumentException> { createGenericUrl("://missing-scheme.com") }
+        shouldThrow<IllegalArgumentException> { createGenericUrl("example.com") }
+        shouldThrow<IllegalArgumentException> { createGenericUrl("ftp://example.com") }
+        shouldThrow<IllegalArgumentException> { createGenericUrl("https://") }
+        shouldThrow<IllegalArgumentException> { createGenericUrl("   https://example.com") }
+        shouldThrow<IllegalArgumentException> { createGenericUrl("https://example.com  ") }
+        shouldThrow<IllegalArgumentException> { createGenericUrl("https://exa mple.com") }
     }
 })
