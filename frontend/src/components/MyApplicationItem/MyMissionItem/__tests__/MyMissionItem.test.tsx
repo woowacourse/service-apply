@@ -83,7 +83,7 @@ describe("MyMissionItem 컴포넌트 테스트", () => {
       expect(runExampleTestButton).toBeDisabled();
     });
 
-    it("일반 URL 제출 방식이고, 예제 테스트를 할 수 없는 상태일 때, 예제 테스트 실행 버튼이 보이지 않아야 한다.", () => {
+    it("일반 URL 제출 방식일 때, 예제 테스트 실행 버튼이 보이지 않아야 한다", () => {
       const GENERIC_URL_MISSION = createMockMission({
         submissionMethod: MISSION_SUBMISSION_METHOD.GENERIC_URL,
         status: MISSION_STATUS.SUBMITTING,

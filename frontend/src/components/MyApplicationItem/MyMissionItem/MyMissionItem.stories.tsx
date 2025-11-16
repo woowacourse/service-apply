@@ -62,35 +62,35 @@ StartedJudgmentMission.args = {
 export const NoPassJudgmentMission = Template.bind({});
 NoPassJudgmentMission.args = {
   mission: missionsDummy["2"][5],
-  recruitmentId: "7",
+  recruitmentId: "1",
 };
 
 export const FailJudgmentMission = Template.bind({});
 FailJudgmentMission.args = {
   mission: missionsDummy["2"][6],
-  recruitmentId: "8",
+  recruitmentId: "1",
 };
 
 export const PassJudgmentMission = Template.bind({});
 PassJudgmentMission.args = {
   mission: missionsDummy["2"][4],
-  recruitmentId: "6",
+  recruitmentId: "1",
 };
 
 export const NoTestableMission = Template.bind({});
 NoTestableMission.args = {
   mission: missionsDummy["2"][8],
-  recruitmentId: "24",
+  recruitmentId: "1",
 };
 
 export const PrivateRepositorySubmission = Template.bind({});
 PrivateRepositorySubmission.args = {
   mission: missionsDummy["2"][9],
-  recruitmentId: "9",
+  recruitmentId: "1",
 };
 
 export const GenericUrlSubmission = Template.bind({});
 GenericUrlSubmission.args = {
   mission: missionsDummy["2"][10],
-  recruitmentId: "27",
+  recruitmentId: "1",
 };

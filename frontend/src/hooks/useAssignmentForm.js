@@ -45,7 +45,6 @@ const useAssignmentForm = (submissionMethod = MISSION_SUBMISSION_METHOD.PUBLIC_P
   const [errorMessage, setErrorMessage] = useState(initialErrorMessage);
 
   const validator = getValidator(submissionMethod);
-
   const isValid = Object.values(errorMessage).filter(Boolean).length === 0;
   const isEmpty =
     Object.values(requiredForm)

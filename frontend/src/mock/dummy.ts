@@ -312,8 +312,8 @@ export const missionsDummy = {
       judgment: null,
     },
     {
-      id: 27,
-      title: "과제제출 시작 & 제출 후 & 일반 URL 제출 방식 & 실행 전",
+      id: 26,
+      title: "과제제출 시작 & 제출 후 & 일반 URL 제출 방식",
       startDateTime: "2020-10-25T15:00:00" as ISO8601DateString,
       endDateTime: "2020-11-25T15:00:00" as ISO8601DateString,
       description: "설명",
