@@ -3,7 +3,9 @@ package apply.infra.github
 import apply.domain.judgment.AssignmentArchive
 import apply.domain.judgment.Commit
 import apply.domain.mission.SubmissionMethod
-import apply.domain.mission.SubmissionMethod.*
+import apply.domain.mission.SubmissionMethod.GENERIC_URL
+import apply.domain.mission.SubmissionMethod.PRIVATE_REPOSITORY
+import apply.domain.mission.SubmissionMethod.PUBLIC_PULL_REQUEST
 import mu.KotlinLogging
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
@@ -23,7 +25,7 @@ class GitHub(
         val commits = when (submissionMethod) {
             PUBLIC_PULL_REQUEST -> getCommitsFromPullRequest(url)
             PRIVATE_REPOSITORY -> getCommitsFromRepository(url, endDateTime)
-            GENERIC_URL -> TODO()
+            GENERIC_URL -> throw IllegalArgumentException()
         }
         log.debug { "commits: $commits" }
         return Commit(commits.last(endDateTime).hash)
