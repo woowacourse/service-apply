@@ -177,6 +177,8 @@ data class JudgmentItemData(
         evaluationItemSelectData,
         judgmentItem.programmingLanguage
     )
+
+    fun isEmpty(): Boolean = this == JudgmentItemData()
 }
 
 data class EvaluationItemSelectData(

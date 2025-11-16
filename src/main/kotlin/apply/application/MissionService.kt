@@ -48,8 +48,8 @@ class MissionService(
     private fun validate(request: MissionData) {
         val evaluation = evaluationRepository.getOrThrow(request.evaluation.id)
         val mission = missionRepository.findByIdOrNull(request.id)
-        if (request.submissionMethod == SubmissionMethod.GENERIC_URL && request.judgmentItemData != JudgmentItemData()) {
-            throw IllegalArgumentException("일반 URL 제출 방식에서는 자동 채점 항목을 설정할 수 없습니다.")
+        if (request.submissionMethod == SubmissionMethod.GENERIC_URL) {
+            require(request.judgmentItemData.isEmpty()) { "일반 URL 제출 방식에서는 자동 채점 항목을 설정할 수 없습니다." }
         }
         mission?.validateSameEvaluation(evaluation.id) ?: evaluation.validateNoMission()
     }
@@ -59,7 +59,7 @@ class MissionService(
     }
 
     private fun JudgmentItem.update(request: MissionData) {
-        if (request.judgmentItemData == JudgmentItemData()) {
+        if (request.judgmentItemData.isEmpty()) {
             judgmentItemRepository.deleteByMissionId(request.id)
         } else {
             update(
@@ -71,7 +71,7 @@ class MissionService(
     }
 
     private fun createJudgmentItem(request: MissionData, missionId: Long) {
-        if (request.judgmentItemData != JudgmentItemData()) {
+        if (!request.judgmentItemData.isEmpty()) {
             judgmentItemRepository.save(
                 JudgmentItem(
                     missionId,
