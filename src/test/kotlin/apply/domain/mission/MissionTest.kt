@@ -65,6 +65,7 @@ class MissionTest : StringSpec({
         listOf(PUBLIC_PULL_REQUEST, PRIVATE_REPOSITORY).forAll { submissionMethod ->
             val mission = createMission(
                 startDateTime = today,
+                submissionStartDateTime = today,
                 endDateTime = tomorrow,
                 submittable = true,
                 submissionMethod = submissionMethod,
@@ -78,6 +79,7 @@ class MissionTest : StringSpec({
     "제출 방식이 일반 URL이면 자동 채점을 실행할 수 없다" {
         val mission = createMission(
             startDateTime = today,
+            submissionStartDateTime = today,
             endDateTime = tomorrow,
             submittable = true,
             submissionMethod = GENERIC_URL,
