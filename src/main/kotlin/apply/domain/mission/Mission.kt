@@ -1,5 +1,6 @@
 package apply.domain.mission
 
+import apply.domain.judgmentitem.JudgmentItem
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.Where
 import support.domain.BaseEntity
@@ -74,5 +75,17 @@ class Mission(
 
     fun validateSameEvaluation(evaluationId: Long) {
         require(this.evaluationId == evaluationId) { "과제의 평가는 수정할 수 없습니다." }
+    }
+
+    fun checkExampleJudgeable(judgmentItem: JudgmentItem?) {
+        check(isSubmitting && canBeJudged(judgmentItem)) { "예제 테스트를 실행할 수 없습니다." }
+    }
+
+    fun checkRealJudgeable(judgmentItem: JudgmentItem?) {
+        check(canBeJudged(judgmentItem)) { "자동 채점을 실행할 수 없습니다." }
+    }
+
+    fun canBeJudged(judgmentItem: JudgmentItem?): Boolean {
+        return submissionMethod != SubmissionMethod.GENERIC_URL && judgmentItem != null
     }
 }

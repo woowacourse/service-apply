@@ -18,7 +18,7 @@ class JudgmentAllService(
     @Async
     fun judgeAll(evaluationId: Long) {
         val mission = missionRepository.getByEvaluationId(evaluationId)
-        check(judgmentItemRepository.existsByMissionId(mission.id)) { "자동 채점을 실행할 수 없습니다." }
+        mission.checkRealJudgeable(judgmentItemRepository.findByMissionId(mission.id))
         val assignments = assignmentRepository.findAllByMissionId(mission.id)
         assignments.forEach {
             runCatching { judgmentService.judge(mission, it, JudgmentType.REAL) }

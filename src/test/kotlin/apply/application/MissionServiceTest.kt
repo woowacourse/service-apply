@@ -9,6 +9,7 @@ import apply.domain.evaluation.getOrThrow
 import apply.domain.evaluationitem.EvaluationItemRepository
 import apply.domain.judgmentitem.JudgmentItemRepository
 import apply.domain.mission.MissionRepository
+import apply.domain.mission.SubmissionMethod
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
@@ -76,6 +77,49 @@ class MissionServiceTest : BehaviorSpec({
             Then("예외가 발생한다") {
                 shouldThrow<IllegalArgumentException> {
                     missionService.save(createMissionData(evaluation = EvaluationSelectData(evaluation)))
+                }
+            }
+        }
+    }
+
+    Given("제출 방식이 일반 URL이고 자동 채점 항목이 비어 있는 경우") {
+        val evaluation = createEvaluation()
+        val missionData = createMissionData(
+            evaluation = EvaluationSelectData(evaluation),
+            submissionMethod = SubmissionMethod.GENERIC_URL,
+            judgmentItemData = JudgmentItemData(),
+        )
+
+        every { evaluationRepository.getOrThrow(any()) } returns evaluation
+        every { missionRepository.findByIdOrNull(any()) } returns null
+        every { missionRepository.existsByEvaluationId(any()) } returns false
+        every { missionRepository.save(any()) } returns createMission(evaluationId = evaluation.id)
+        every { judgmentItemRepository.findByMissionId(any()) } returns null
+
+        When("과제를 생성하면") {
+            Then("과제가 생성된다") {
+                shouldNotThrowAny {
+                    missionService.save(missionData)
+                }
+            }
+        }
+    }
+
+    Given("제출 방식이 일반 URL이고 자동 채점 항목이 설정된 경우") {
+        val evaluation = createEvaluation()
+        val missionData = createMissionData(
+            evaluation = EvaluationSelectData(evaluation),
+            submissionMethod = SubmissionMethod.GENERIC_URL,
+            judgmentItemData = JudgmentItemData(testName = "baseball"),
+        )
+
+        every { evaluationRepository.getOrThrow(any()) } returns evaluation
+        every { missionRepository.findByIdOrNull(any()) } returns null
+
+        When("과제를 생성하면") {
+            Then("예외가 발생한다") {
+                shouldThrow<IllegalArgumentException> {
+                    missionService.save(missionData)
                 }
             }
         }

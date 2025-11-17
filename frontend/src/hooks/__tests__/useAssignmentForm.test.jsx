@@ -24,7 +24,7 @@ describe("useAssignmentForm", () => {
   describe("SubmissionMethod가 PUBLIC_PULL_REQUEST인 경우", () => {
     const submissionMethod = MISSION_SUBMISSION_METHOD.PUBLIC_PULL_REQUEST;
 
-    test("과제 제출물 url로 Pull Request URL을 제출할 수 있어야 한다.", () => {
+    test("과제 제출물 URL로 Pull Request URL을 제출할 수 있어야 한다.", () => {
       // given
       const url = "https://github.com/woowacourse-precourse/java-lotto/pull/1";
 
@@ -39,7 +39,7 @@ describe("useAssignmentForm", () => {
       expect(result.current.errorMessage[ASSIGNMENT_FORM_NAME.URL]).toBe("");
     });
 
-    test("과제 제출물 url로 GitHub Repository URL을 제출할 수 없어야 한다.", () => {
+    test("과제 제출물 URL로 GitHub Repository URL을 제출할 수 없어야 한다.", () => {
       // given
       const url = "https://github.com/woowacourse-precourse/java-lotto";
 
@@ -60,7 +60,7 @@ describe("useAssignmentForm", () => {
   describe("SubmissionMethod가 PRIVATE_REPOSITORY인 경우", () => {
     const submissionMethod = MISSION_SUBMISSION_METHOD.PRIVATE_REPOSITORY;
 
-    test("과제 제출물 url로 GitHub Repository URL을 제출할 수 있어야 한다.", () => {
+    test("과제 제출물 URL로 GitHub Repository URL을 제출할 수 있어야 한다.", () => {
       // given
       const url = "https://github.com/woowacourse-precourse/java-lotto";
 
@@ -75,7 +75,7 @@ describe("useAssignmentForm", () => {
       expect(result.current.errorMessage[ASSIGNMENT_FORM_NAME.URL]).toBe("");
     });
 
-    test("과제 제출물 url로 Pull Request URL을 제출할 수 없어야 한다.", () => {
+    test("과제 제출물 URL로 Pull Request URL을 제출할 수 없어야 한다.", () => {
       // given
       const url = "https://github.com/woowacourse-precourse/java-lotto/pull/1";
 
@@ -90,6 +90,25 @@ describe("useAssignmentForm", () => {
       expect(result.current.errorMessage[ASSIGNMENT_FORM_NAME.URL]).toBe(
         ERROR_MESSAGE.VALIDATION.REPOSITORY_URL
       );
+    });
+  });
+
+  describe("SubmissionMethod가 GENERIC_URL인 경우", () => {
+    const submissionMethod = MISSION_SUBMISSION_METHOD.GENERIC_URL;
+
+    test("과제 제출물 URL로 모든 URL을 제출할 수 있어야 한다.", () => {
+      // given
+      const url = "https://apply.techcourse.co.kr";
+
+      // when
+      const { result } = renderHook(() => useAssignmentForm(submissionMethod));
+      act(() => {
+        result.current.handleChanges[ASSIGNMENT_FORM_NAME.URL]({ target: { value: url } });
+      });
+
+      // then
+      expect(result.current.isValid).toBe(true);
+      expect(result.current.errorMessage[ASSIGNMENT_FORM_NAME.URL]).toBe("");
     });
   });
 

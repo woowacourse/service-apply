@@ -2,15 +2,16 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { generatePath, MemoryRouter } from "react-router-dom";
 import "@testing-library/jest-dom";
 import MyMissionItem from "../MyMissionItem";
-import useMission from "../../../../hooks/useMission";
 import useRefresh from "../../../../hooks/useRefresh";
 import useMissionJudgment from "../../../../hooks/useMissionJudgment";
 import { createMockMission } from "./testMissionMockUtils";
 import { PARAM, PATH } from "../../../../constants/path";
-import { Mission } from "../../../../../types/domains/recruitments";
-import { BUTTON_LABEL } from "../../../../constants/recruitment";
+import {
+  BUTTON_LABEL,
+  MISSION_STATUS,
+  MISSION_SUBMISSION_METHOD,
+} from "../../../../constants/recruitment";
 
-jest.mock("../../../../hooks/useMission");
 jest.mock("../../../../hooks/useRefresh");
 jest.mock("../../../../hooks/useMissionJudgment");
 
@@ -26,12 +27,6 @@ describe("MyMissionItem 컴포넌트 테스트", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    (useMission as jest.Mock).mockReturnValue({
-      missionItem: MISSION_ITEM,
-      applyButtonLabel: BUTTON_LABEL.SUBMIT,
-      formattedStartDateTime: "2023-01-01 00:00",
-      formattedEndDateTime: "2023-01-31 23:59",
-    });
     (useRefresh as jest.Mock).mockReturnValue({ requestRefresh: jest.fn() });
     (useMissionJudgment as jest.Mock).mockReturnValue({
       isJudgmentAvailable: false,
@@ -52,21 +47,18 @@ describe("MyMissionItem 컴포넌트 테스트", () => {
     });
 
     it("미션 상태가 제출 중이 아닐 때 과제 제출 버튼이 비활성화되어야 한다", () => {
-      (useMission as jest.Mock).mockReturnValue({
-        missionItem: { ...MISSION_ITEM, status: "NOT_SUBMITTING" },
-        applyButtonLabel: BUTTON_LABEL.SUBMIT,
-        formattedStartDateTime: "2023-01-01 00:00",
-        formattedEndDateTime: "2023-01-31 23:59",
-        setMissionItem: jest.fn(),
+      const notSubmittingMission = createMockMission({
+        status: MISSION_STATUS.IN_PROGRESS,
+        submitted: false,
       });
 
       render(
         <MemoryRouter>
-          <MyMissionItem recruitmentId={RECRUITMENT_ID} mission={MISSION_ITEM} />
+          <MyMissionItem recruitmentId={RECRUITMENT_ID} mission={notSubmittingMission} />
         </MemoryRouter>
       );
 
-      const submitButton = screen.getByText(BUTTON_LABEL.SUBMIT);
+      const submitButton = screen.getByText(BUTTON_LABEL.BEFORE_SUBMIT);
       expect(submitButton).toBeDisabled();
     });
 
@@ -90,20 +82,37 @@ describe("MyMissionItem 컴포넌트 테스트", () => {
       const runExampleTestButton = screen.getByText(BUTTON_LABEL.JUDGMENT);
       expect(runExampleTestButton).toBeDisabled();
     });
+
+    it("일반 URL 제출 방식일 때, 예제 테스트 실행 버튼이 보이지 않아야 한다", () => {
+      const GENERIC_URL_MISSION = createMockMission({
+        submissionMethod: MISSION_SUBMISSION_METHOD.GENERIC_URL,
+        status: MISSION_STATUS.SUBMITTING,
+        submitted: true,
+        testable: false,
+        judgment: null,
+      });
+
+      render(
+        <MemoryRouter>
+          <MyMissionItem recruitmentId={RECRUITMENT_ID} mission={GENERIC_URL_MISSION} />
+        </MemoryRouter>
+      );
+      expect(screen.queryByText(BUTTON_LABEL.JUDGMENT)).not.toBeInTheDocument();
+    });
   });
 
   describe("라우팅 테스트", () => {
     it("미션 과제 제출물 미제출 시, 'new' 상태로 과제 제출 페이지로 이동해야 한다", () => {
-      const mockMission: Mission = { ...MISSION_ITEM, submitted: false, status: "SUBMITTING" };
-      (useMission as jest.Mock).mockReturnValue({
-        missionItem: mockMission,
-        applyButtonLabel: BUTTON_LABEL.SUBMIT,
-        formattedStartDateTime: "2023-01-01 00:00",
-        formattedEndDateTime: "2023-01-31 23:59",
-        setMissionItem: jest.fn(),
+      const mockMission = createMockMission({
+        submitted: false,
+        status: MISSION_STATUS.SUBMITTING,
       });
 
-      render(<MyMissionItem recruitmentId={RECRUITMENT_ID} mission={mockMission} />);
+      render(
+        <MemoryRouter>
+          <MyMissionItem recruitmentId={RECRUITMENT_ID} mission={mockMission} />
+        </MemoryRouter>
+      );
 
       const submitButton = screen.getByText(BUTTON_LABEL.SUBMIT);
       expect(submitButton).toBeEnabled();
@@ -123,14 +132,7 @@ describe("MyMissionItem 컴포넌트 테스트", () => {
     });
 
     it("미션 과제 제출물 제출 시, 'edit' 상태로 과제 제출 페이지로 이동해야 한다", () => {
-      const mockMission: Mission = { ...MISSION_ITEM, submitted: true, status: "SUBMITTING" };
-      (useMission as jest.Mock).mockReturnValue({
-        missionItem: mockMission,
-        applyButtonLabel: BUTTON_LABEL.EDIT,
-        formattedStartDateTime: "2023-01-01 00:00",
-        formattedEndDateTime: "2023-01-31 23:59",
-        setMissionItem: jest.fn(),
-      });
+      const mockMission = createMockMission({ submitted: true, status: MISSION_STATUS.SUBMITTING });
 
       render(
         <MemoryRouter>

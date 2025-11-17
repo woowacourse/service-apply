@@ -58,3 +58,12 @@ SubmissionMethodPrivateRepository.args = {
     },
   },
 };
+
+export const SubmissionMethodGenericUrl = Template.bind({});
+SubmissionMethodGenericUrl.args = {
+  state: {
+    currentMission: {
+      submissionMethod: MISSION_SUBMISSION_METHOD.GENERIC_URL,
+    },
+  },
+};

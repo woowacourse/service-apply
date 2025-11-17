@@ -12,6 +12,7 @@ import apply.domain.judgmentitem.JudgmentItem
 import apply.domain.judgmentitem.JudgmentItemRepository
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionRepository
+import apply.domain.mission.SubmissionMethod
 import apply.domain.mission.getOrThrow
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -56,7 +57,7 @@ class MyMissionService(
     private fun List<Mission>.mapBy(
         assignments: List<Assignment>,
         judgmentItems: List<JudgmentItem>,
-        judgments: List<Judgment>
+        judgments: List<Judgment>,
     ): List<MyMissionAndJudgementResponse> {
         return map { mission ->
             val assignment = assignments.find { it.missionId == mission.id }
@@ -65,8 +66,8 @@ class MyMissionService(
             MyMissionAndJudgementResponse(
                 mission = mission,
                 submitted = assignment != null,
-                testable = judgmentItem != null,
-                judgment = judgment
+                testable = mission.canBeJudged(judgmentItem),
+                judgment = judgment,
             )
         }
     }

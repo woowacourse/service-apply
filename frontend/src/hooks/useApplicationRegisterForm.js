@@ -5,7 +5,7 @@ import { FORM } from "../constants/form";
 import { ERROR_MESSAGE } from "../constants/messages";
 import { PATH, PARAM } from "../constants/path";
 import { formatDateTime } from "../utils/format/date";
-import { isValidURL } from "../utils/validation/url";
+import { isValidUrl } from "../utils/validation/url";
 import useTokenContext from "./useTokenContext";
 
 export const APPLICATION_REGISTER_FORM_NAME = {
@@ -74,7 +74,7 @@ const useApplicationRegisterForm = ({
   const handleChangeReferenceUrl = ({ target }) => {
     if (target.value.length > FORM.REFERENCE_URL) return;
 
-    const errorMessage = isValidURL(target.value) ? "" : ERROR_MESSAGE.VALIDATION.URL;
+    const errorMessage = isValidUrl(target.value) ? "" : ERROR_MESSAGE.VALIDATION.URL;
 
     updateErrorMessage(APPLICATION_REGISTER_FORM_NAME.REFERENCE_URL, errorMessage);
     setForm((prev) => ({
