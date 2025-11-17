@@ -13,7 +13,6 @@ import apply.domain.judgment.getOrThrow
 import apply.domain.judgmentitem.JudgmentItemRepository
 import apply.domain.mission.Mission
 import apply.domain.mission.MissionRepository
-import apply.domain.mission.SubmissionMethod
 import apply.domain.mission.getOrThrow
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -29,9 +28,7 @@ class JudgmentService(
 ) {
     fun judgeExample(memberId: Long, missionId: Long): LastJudgmentResponse {
         val mission = missionRepository.getOrThrow(missionId)
-        check(mission.isSubmitting && mission.canBeJudged()) {
-            "예제 테스트를 실행할 수 없습니다."
-        }
+        mission.checkExampleJudgeable(judgmentItemRepository.findByMissionId(mission.id))
         val assignment = assignmentRepository.getByMemberIdAndMissionId(memberId, missionId)
         return judge(mission, assignment, JudgmentType.EXAMPLE)
     }
@@ -63,12 +60,8 @@ class JudgmentService(
     fun judgeReal(assignmentId: Long): LastJudgmentResponse {
         val assignment = assignmentRepository.getOrThrow(assignmentId)
         val mission = missionRepository.getOrThrow(assignment.missionId)
-        check(mission.canBeJudged()) { "자동 채점을 실행할 수 없습니다." }
+        mission.checkRealJudgeable(judgmentItemRepository.findByMissionId(mission.id))
         return judge(mission, assignment, JudgmentType.REAL)
-    }
-
-    private fun Mission.canBeJudged(): Boolean {
-        return submissionMethod != SubmissionMethod.GENERIC_URL && judgmentItemRepository.existsByMissionId(id)
     }
 
     fun judge(mission: Mission, assignment: Assignment, judgmentType: JudgmentType): LastJudgmentResponse {

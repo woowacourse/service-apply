@@ -66,7 +66,7 @@ class MyMissionService(
             MyMissionAndJudgementResponse(
                 mission = mission,
                 submitted = assignment != null,
-                testable = mission.submissionMethod != SubmissionMethod.GENERIC_URL && judgmentItem != null,
+                testable = mission.canBeJudged(judgmentItem),
                 judgment = judgment,
             )
         }

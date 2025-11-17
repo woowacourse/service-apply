@@ -9,5 +9,4 @@ interface JudgmentItemRepository : JpaRepository<JudgmentItem, Long> {
     fun findByMissionId(missionId: Long): JudgmentItem?
     fun findAllByMissionIdIn(missionIds: Collection<Long>): List<JudgmentItem>
     fun deleteByMissionId(missionId: Long)
-    fun existsByMissionId(missionId: Long): Boolean
 }
