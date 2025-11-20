@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
-
-type SupportedLanguage = "en" | "ko" | "de";
+import { SupportedLanguage } from "../../types/domains/language";
 
 const useLanguageSwitcher = () => {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
