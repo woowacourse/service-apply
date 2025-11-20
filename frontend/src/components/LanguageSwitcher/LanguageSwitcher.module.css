@@ -1,0 +1,17 @@
+.language-switcher {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-left: auto;
+  margin-right: 1rem;
+}
+
+.google-translate-hidden {
+  display: none !important;
+}
+
+.lang {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 0.5rem;
+}

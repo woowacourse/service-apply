@@ -2,10 +2,6 @@
   margin-bottom: 4.5rem;
 }
 
-.google-translate-hidden {
-  display: none !important;
-}
-
 .header {
   position: fixed;
   width: 100%;
@@ -34,20 +30,6 @@
 .logo {
   width: 1.5rem;
   margin-right: 0.5rem;
-}
-
-.language-switcher {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-  margin-left: auto;
-  margin-right: 1rem;
-}
-
-.lang {
-  display: inline-block;
-  vertical-align: middle;
-  margin-left: 0.5rem;
 }
 
 .link-container {
