@@ -9,7 +9,6 @@ import { ERROR_MESSAGE } from "../../constants/messages";
 import MemberIcon from "../../assets/icon/member-icon.svg";
 
 import { fetchAgreement } from "../../api/agreements";
-import useGoogleTranslate from "../../hooks/useGoogleTranslate";
 import useTokenContext from "../../hooks/useTokenContext";
 
 import styles from "./Header.module.css";
@@ -23,8 +22,6 @@ const Header = () => {
   const { token, resetToken } = useTokenContext();
 
   const [isShowMemberMenu, setIsShowMemberMenu] = useState(false);
-
-  useGoogleTranslate();
 
   const routeTo = ({ pathname }: { pathname: ValueOf<typeof PATH> }) => {
     navigate(pathname);
