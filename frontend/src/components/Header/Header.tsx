@@ -11,11 +11,11 @@ import MemberIcon from "../../assets/icon/member-icon.svg";
 
 import { fetchAgreement } from "../../api/agreements";
 import useGoogleTranslate from "../../hooks/useGoogleTranslate";
-import useLanguageSwitcher from "../../hooks/useLanguageSwitcher";
 import useTokenContext from "../../hooks/useTokenContext";
 
 import styles from "./Header.module.css";
 import LanguageSwitcher from "../LanguageSwitcher/LanguageSwitcher";
+import Spacing from "../@common/Spacing/Spacing";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -65,60 +65,65 @@ const Header = () => {
             </Link>
           </h1>
 
-          <LanguageSwitcher />
+          <div className={styles["menu-container"]}>
+            <div className={styles["link-container"]}>
+              {token ? (
+                <div className={styles["member-menu-container"]}>
+                  <label
+                    className={classNames(styles["checkbox-label"], {
+                      [styles.checked]: isShowMemberMenu,
+                      [styles.unchecked]: !isShowMemberMenu,
+                    })}
+                    aria-label="회원관리 툴팁"
+                  >
+                    <img src={MemberIcon} alt="회원" />
+                    <input
+                      type="checkbox"
+                      className={styles.checkbox}
+                      checked={isShowMemberMenu}
+                      onChange={onChange}
+                    />
+                  </label>
 
-          <div className={styles["link-container"]}>
-            {token ? (
-              <div className={styles["member-menu-container"]}>
-                <label
-                  className={classNames(styles["checkbox-label"], {
-                    [styles.checked]: isShowMemberMenu,
-                    [styles.unchecked]: !isShowMemberMenu,
-                  })}
-                  aria-label="회원관리 툴팁"
-                >
-                  <img src={MemberIcon} alt="회원" />
-                  <input
-                    type="checkbox"
-                    className={styles.checkbox}
-                    checked={isShowMemberMenu}
-                    onChange={onChange}
-                  />
-                </label>
-
-                {isShowMemberMenu && (
-                  <>
-                    <ul className={styles["member-menu-list"]}>
-                      <li className={styles["member-menu-listitem"]}>
-                        <button type="button" onClick={() => routeTo({ pathname: PATH.MY_PAGE })}>
-                          마이페이지
-                        </button>
-                      </li>
-                      <li className={styles["member-menu-listitem"]}>
-                        <button
-                          type="button"
-                          onClick={() => routeTo({ pathname: PATH.MY_APPLICATION })}
-                        >
-                          내 지원서
-                        </button>
-                      </li>
-                      <li className={styles["member-menu-listitem"]} onClick={onLogout}>
-                        로그아웃
-                      </li>
-                    </ul>
-                    <div className={styles.dimmed} onMouseDown={() => setIsShowMemberMenu(false)} />
-                  </>
-                )}
-              </div>
-            ) : (
-              <>
-                <Link to={PATH.LOGIN}>로그인</Link>
-                <div className={styles.bar} />
-                <Link to="#" onClick={goToSignUp}>
-                  가입하기
-                </Link>
-              </>
-            )}
+                  {isShowMemberMenu && (
+                    <>
+                      <ul className={styles["member-menu-list"]}>
+                        <li className={styles["member-menu-listitem"]}>
+                          <button type="button" onClick={() => routeTo({ pathname: PATH.MY_PAGE })}>
+                            마이페이지
+                          </button>
+                        </li>
+                        <li className={styles["member-menu-listitem"]}>
+                          <button
+                            type="button"
+                            onClick={() => routeTo({ pathname: PATH.MY_APPLICATION })}
+                          >
+                            내 지원서
+                          </button>
+                        </li>
+                        <li className={styles["member-menu-listitem"]} onClick={onLogout}>
+                          로그아웃
+                        </li>
+                      </ul>
+                      <div
+                        className={styles.dimmed}
+                        onMouseDown={() => setIsShowMemberMenu(false)}
+                      />
+                    </>
+                  )}
+                </div>
+              ) : (
+                <>
+                  <Link to={PATH.LOGIN}>로그인</Link>
+                  <div className={styles.bar} />
+                  <Link to="#" onClick={goToSignUp}>
+                    가입하기
+                  </Link>
+                </>
+              )}
+              <Spacing direction="horizontal" size={12} />
+              <LanguageSwitcher />
+            </div>
           </div>
         </div>
       </header>
