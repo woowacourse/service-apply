@@ -23,8 +23,6 @@ const Header = () => {
 
   const [isShowMemberMenu, setIsShowMemberMenu] = useState(false);
 
-  const { selectLanguage } = useLanguageSwitcher();
-
   useGoogleTranslate();
 
   const onChange: React.ChangeEventHandler<HTMLInputElement> = ({ target }) => {
@@ -66,18 +64,7 @@ const Header = () => {
             </Link>
           </h1>
 
-          <div className={styles["language-switcher"]}>
-            <div className={styles["google-translate-hidden"]} id="google_translate_element" />
-            <button className={styles.lang} onClick={() => selectLanguage("ko")} translate={"no"}>
-              🇰🇷 KO
-            </button>
-            <button className={styles.lang} onClick={() => selectLanguage("en")} translate={"no"}>
-              🇺🇸 EN
-            </button>
-            <button className={styles.lang} onClick={() => selectLanguage("de")} translate={"no"}>
-              🇩🇪 DE
-            </button>
-          </div>
+          <LanguageSwitcher />
 
           <div className={styles["link-container"]}>
             {token ? (
@@ -139,3 +126,22 @@ const Header = () => {
 };
 
 export default Header;
+
+function LanguageSwitcher() {
+  const { selectLanguage } = useLanguageSwitcher();
+
+  return (
+    <div className={styles["language-switcher"]}>
+      <div className={styles["google-translate-hidden"]} id="google_translate_element" />
+      <button className={styles.lang} onClick={() => selectLanguage("ko")} translate={"no"}>
+        🇰🇷 KO
+      </button>
+      <button className={styles.lang} onClick={() => selectLanguage("en")} translate={"no"}>
+        🇺🇸 EN
+      </button>
+      <button className={styles.lang} onClick={() => selectLanguage("de")} translate={"no"}>
+        🇩🇪 DE
+      </button>
+    </div>
+  );
+}
