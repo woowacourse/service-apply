@@ -1,10 +1,10 @@
-import classNames from "classnames";
 import useLanguageSwitcher from "../../hooks/useLanguageSwitcher";
 import styles from "./LanguageSwitcher.module.css";
 import { RiGlobalLine } from "react-icons/ri";
 import { IoTriangle } from "react-icons/io5";
 import { useState } from "react";
 import { SupportedLanguage } from "../../../types/domains/language";
+import ToggleButton from "../@common/ToggleButton/ToggleButton";
 
 const LanguageSwitcher = () => {
   const { selectLanguage } = useLanguageSwitcher();
@@ -17,24 +17,15 @@ const LanguageSwitcher = () => {
 
   return (
     <div className={styles["language-switcher-container"]}>
-      <label
-        className={classNames(styles["checkbox-label"], {
-          [styles.checked]: isShowLanguageSwitcher,
-          [styles.unchecked]: !isShowLanguageSwitcher,
-        })}
-        aria-label="언어 선택"
+      <ToggleButton
+        checked={isShowLanguageSwitcher}
+        onChange={(checked) => setIsShowLanguageSwitcher(checked)}
+        ariaLabel="언어 선택"
       >
         <div className={styles["language-icon-container"]}>
           <RiGlobalLine className={styles["language-icon"]} size={16} />
-          <IoTriangle size={9} />
         </div>
-        <input
-          type="checkbox"
-          className={styles.checkbox}
-          checked={isShowLanguageSwitcher}
-          onChange={() => setIsShowLanguageSwitcher(!isShowLanguageSwitcher)}
-        />
-      </label>
+      </ToggleButton>
       {isShowLanguageSwitcher && (
         <>
           <ul className={`${styles["language-list"]} notranslate`}>

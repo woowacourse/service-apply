@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import classNames from "classnames";
 
 import { ValueOf } from "../../../types/utility";
 
@@ -16,6 +15,7 @@ import useTokenContext from "../../hooks/useTokenContext";
 import styles from "./Header.module.css";
 import LanguageSwitcher from "../LanguageSwitcher/LanguageSwitcher";
 import Spacing from "../@common/Spacing/Spacing";
+import ToggleButton from "../@common/ToggleButton/ToggleButton";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -25,10 +25,6 @@ const Header = () => {
   const [isShowMemberMenu, setIsShowMemberMenu] = useState(false);
 
   useGoogleTranslate();
-
-  const onChange: React.ChangeEventHandler<HTMLInputElement> = ({ target }) => {
-    setIsShowMemberMenu(target.checked);
-  };
 
   const routeTo = ({ pathname }: { pathname: ValueOf<typeof PATH> }) => {
     navigate(pathname);
@@ -69,21 +65,13 @@ const Header = () => {
             <div className={styles["link-container"]}>
               {token ? (
                 <div className={styles["member-menu-container"]}>
-                  <label
-                    className={classNames(styles["checkbox-label"], {
-                      [styles.checked]: isShowMemberMenu,
-                      [styles.unchecked]: !isShowMemberMenu,
-                    })}
-                    aria-label="회원관리 툴팁"
+                  <ToggleButton
+                    checked={isShowMemberMenu}
+                    onChange={(checked) => setIsShowMemberMenu(checked)}
+                    ariaLabel="회원관리 툴팁"
                   >
                     <img src={MemberIcon} alt="회원" />
-                    <input
-                      type="checkbox"
-                      className={styles.checkbox}
-                      checked={isShowMemberMenu}
-                      onChange={onChange}
-                    />
-                  </label>
+                  </ToggleButton>
 
                   {isShowMemberMenu && (
                     <>
