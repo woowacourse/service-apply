@@ -29,6 +29,7 @@
   display: flex;
   align-items: center;
   gap: 4px;
+  cursor: pointer;
 }
 
 .language-list {
@@ -59,7 +60,9 @@
   user-select: none;
 }
 
-.language-listitem > button:hover {
+.language-listitem:hover,
+.language-listitem:hover .language-button,
+.language-listitem:hover .language-code {
   font-weight: bold;
 }
 
