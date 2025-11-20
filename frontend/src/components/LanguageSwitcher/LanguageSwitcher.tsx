@@ -1,7 +1,6 @@
 import useLanguageSwitcher from "../../hooks/useLanguageSwitcher";
 import styles from "./LanguageSwitcher.module.css";
 import { RiGlobalLine } from "react-icons/ri";
-import { IoTriangle } from "react-icons/io5";
 import { useState } from "react";
 import { SupportedLanguage } from "../../../types/domains/language";
 import ToggleButton from "../@common/ToggleButton/ToggleButton";
@@ -17,6 +16,7 @@ const LanguageSwitcher = () => {
 
   return (
     <div className={styles["language-switcher-container"]}>
+      <div className={styles["google-translate-hidden"]} id="google_translate_element" />
       <ToggleButton
         checked={isShowLanguageSwitcher}
         onChange={(checked) => setIsShowLanguageSwitcher(checked)}
@@ -29,35 +29,26 @@ const LanguageSwitcher = () => {
       {isShowLanguageSwitcher && (
         <>
           <ul className={`${styles["language-list"]} notranslate`}>
-            <li className={styles["language-listitem"]}>
-              <button
-                className={styles["language-button"]}
-                type="button"
-                onClick={() => handleClickLanguageItem("ko")}
-              >
-                <span className={styles["language-flag"]}>🇰🇷</span>
-                <span className={styles["language-code"]}>KR</span>
-              </button>
+            <li
+              className={styles["language-listitem"]}
+              onClick={() => handleClickLanguageItem("ko")}
+            >
+              <span className={styles["language-flag"]}>🇰🇷</span>
+              <span className={styles["language-code"]}>KR</span>
             </li>
-            <li className={styles["language-listitem"]}>
-              <button
-                className={styles["language-button"]}
-                type="button"
-                onClick={() => handleClickLanguageItem("en")}
-              >
-                <span className={styles["language-flag"]}>🇺🇸</span>
-                <span className={styles["language-code"]}>EN</span>
-              </button>
+            <li
+              className={styles["language-listitem"]}
+              onClick={() => handleClickLanguageItem("en")}
+            >
+              <span className={styles["language-flag"]}>🇺🇸</span>
+              <span className={styles["language-code"]}>EN</span>
             </li>
-            <li className={styles["language-listitem"]}>
-              <button
-                className={styles["language-button"]}
-                type="button"
-                onClick={() => handleClickLanguageItem("de")}
-              >
-                <span className={styles["language-flag"]}>🇩🇪</span>
-                <span className={styles["language-code"]}>DE</span>
-              </button>
+            <li
+              className={styles["language-listitem"]}
+              onClick={() => handleClickLanguageItem("de")}
+            >
+              <span className={styles["language-flag"]}>🇩🇪</span>
+              <span className={styles["language-code"]}>DE</span>
             </li>
           </ul>
           <div className={styles.dimmed} onMouseDown={() => setIsShowLanguageSwitcher(false)} />

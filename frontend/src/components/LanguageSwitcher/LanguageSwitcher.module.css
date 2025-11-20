@@ -42,17 +42,12 @@
   z-index: var(--tooltip-z-index);
 }
 
-.language-button {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
 .language-listitem {
   height: 3rem;
   display: flex;
   align-items: center;
   justify-content: start;
+  gap: 4px;
   padding-left: 1rem;
   border-bottom: 1px solid var(--gray-300);
   font-weight: 400;
