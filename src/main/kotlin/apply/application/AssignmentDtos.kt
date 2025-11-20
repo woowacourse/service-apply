@@ -7,7 +7,7 @@ import javax.validation.constraints.Size
 data class AssignmentRequest(
     val url: String,
 
-    @field:Size(max = 5000)
+    @field:Size(max = 10_000)
     @field:NotBlank
     val note: String
 )
