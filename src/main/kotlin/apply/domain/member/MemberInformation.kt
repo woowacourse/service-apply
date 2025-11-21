@@ -20,7 +20,7 @@ class MemberInformation(
     @Column(nullable = false)
     val email: String,
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false, length = 60)
     val name: String,
 
     @Column(nullable = false)
