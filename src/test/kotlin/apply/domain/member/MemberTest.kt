@@ -29,8 +29,8 @@ class MemberTest : StringSpec({
     }
 
     "회원이 휴대전화 번호를 수정한다" {
-        val member = createMember(phoneNumber = "010-0000-0000")
-        val newPhoneNumber = "010-1111-1111"
+        val member = createMember(phoneNumber = "+821012345678")
+        val newPhoneNumber = "+821099999999"
         member.changePhoneNumber(newPhoneNumber)
         member.information.phoneNumber shouldBe newPhoneNumber
     }
