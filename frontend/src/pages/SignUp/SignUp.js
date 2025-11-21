@@ -49,7 +49,7 @@ const SignUp = () => {
       name: form.name
         .trim()
         .replace(/\u001d/g, "")
-        .replace(/\s+/g, " ")
+        .replace(/\s+/g, " "),
     };
 
     try {
