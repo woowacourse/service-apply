@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { ERROR_MESSAGE } from "../constants/messages";
-import { formatHyphen, PHONE_NUMBER_HYPHEN_IDX } from "../utils/format/phoneNumber";
 import { isValidEmail } from "../utils/validation/email";
 import { isValidGithubUsername } from "../utils/validation/githubUsername";
 import { isValidName } from "../utils/validation/name";
@@ -125,8 +124,7 @@ const useSignUpForm = () => {
   const handleChangePhoneNumber = ({ nativeEvent: { data }, target: { value } }) => {
     if (isNaN(data)) return;
 
-    const [firstHyphenIdx, secondHyphenIdx] = PHONE_NUMBER_HYPHEN_IDX;
-    const result = formatHyphen(value, firstHyphenIdx, secondHyphenIdx).trim();
+    const result = value.trim();
 
     const errorMessage = isValidPhoneNumber(result) ? "" : ERROR_MESSAGE.VALIDATION.PHONE_NUMBER;
 

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { ERROR_MESSAGE } from "../constants/messages";
-import { formatHyphen, PHONE_NUMBER_HYPHEN_IDX } from "../utils/format/phoneNumber";
 import { isValidPhoneNumber } from "../utils/validation/phoneNumber";
 
 export const MY_PAGE_EDIT_FORM_NAME = {
@@ -47,8 +46,7 @@ const useMyPageEditForm = () => {
   const handleChangePhoneNumber = ({ nativeEvent: { data }, target: { value } }) => {
     if (isNaN(data)) return;
 
-    const [firstHyphenIdx, secondHyphenIdx] = PHONE_NUMBER_HYPHEN_IDX;
-    const result = formatHyphen(value, firstHyphenIdx, secondHyphenIdx).trim();
+    const result = value.trim();
 
     const errorMessage = isValidPhoneNumber(result) ? "" : ERROR_MESSAGE.VALIDATION.PHONE_NUMBER;
 

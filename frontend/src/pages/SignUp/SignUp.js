@@ -134,7 +134,7 @@ const SignUp = () => {
         />
         <MessageTextInput
           label="휴대전화 번호"
-          placeholder="연락 가능한 휴대전화 번호를 입력해 주세요."
+          placeholder="국제 형식으로 연락 가능한 휴대전화 번호를 입력해 주세요."
           type="tel"
           name={SIGN_UP_FORM_NAME.PHONE_NUMBER}
           value={form[SIGN_UP_FORM_NAME.PHONE_NUMBER]}
