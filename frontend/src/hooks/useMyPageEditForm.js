@@ -43,9 +43,7 @@ const useMyPageEditForm = () => {
     }));
   };
 
-  const handleChangePhoneNumber = ({ nativeEvent: { data }, target: { value } }) => {
-    if (isNaN(data)) return;
-
+  const handleChangePhoneNumber = ({ target: { value } }) => {
     const result = value.trim();
 
     const errorMessage = isValidPhoneNumber(result) ? "" : ERROR_MESSAGE.VALIDATION.PHONE_NUMBER;
