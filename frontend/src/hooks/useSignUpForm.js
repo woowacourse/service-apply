@@ -106,10 +106,12 @@ const useSignUpForm = () => {
   };
 
   const handleChangeName = ({ target }) => {
-    const errorMessage = isValidName(target.value) ? "" : ERROR_MESSAGE.VALIDATION.NAME;
+    const result = target.value.replace(/\s{2,}/, " ");
+
+    const errorMessage = isValidName(result) ? "" : ERROR_MESSAGE.VALIDATION.NAME;
 
     updateErrorMessage(SIGN_UP_FORM_NAME.NAME, errorMessage);
-    updateRequiredForm(SIGN_UP_FORM_NAME.NAME, target.value);
+    updateRequiredForm(SIGN_UP_FORM_NAME.NAME, result);
   };
 
   const handleChangeBirthday = (date) => {

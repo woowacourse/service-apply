@@ -43,10 +43,12 @@ const usePasswordFindForm = () => {
   };
 
   const handleChangeName = ({ target }) => {
-    const errorMessage = isValidName(target.value) ? "" : ERROR_MESSAGE.VALIDATION.NAME;
+    const result = target.value.replace(/\s{2,}/, " ");
+
+    const errorMessage = isValidName(result) ? "" : ERROR_MESSAGE.VALIDATION.NAME;
 
     updateErrorMessage(PASSWORD_FIND_FORM_NAME.NAME, errorMessage);
-    updateRequiredForm(PASSWORD_FIND_FORM_NAME.NAME, target.value);
+    updateRequiredForm(PASSWORD_FIND_FORM_NAME.NAME, result);
   };
 
   const handleChangeEmail = ({ target }) => {

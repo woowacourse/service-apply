@@ -20,8 +20,16 @@ const PasswordFind = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    const sanitizedForm = {
+      ...form,
+      name: form.name
+        .trim()
+        .replace(/\u001d/g, "")
+        .replace(/\s+/g, " ")
+    };
+
     try {
-      await fetchPasswordFind(form);
+      await fetchPasswordFind(sanitizedForm);
 
       navigate(
         {

@@ -41,12 +41,19 @@ const SignUp = () => {
 
     if (emailStatus !== EMAIL_STATUS.AUTHENTICATED) {
       alert(ERROR_MESSAGE.API.NOT_AUTHENTICATED);
-
       return;
     }
 
+    const sanitizedForm = {
+      ...form,
+      name: form.name
+        .trim()
+        .replace(/\u001d/g, "")
+        .replace(/\s+/g, " ")
+    };
+
     try {
-      await postRegister(form);
+      await postRegister(sanitizedForm);
       navigate(PATH.RECRUITS);
     } catch (error) {
       alert(ERROR_MESSAGE.API.JOIN_FAILURE);
