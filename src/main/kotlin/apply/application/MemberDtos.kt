@@ -72,7 +72,10 @@ data class RegisterMemberRequest(
     @field:Past
     val birthday: LocalDate,
 
-    @field:Pattern(regexp = "010-\\d{4}-\\d{4}", message = "올바른 형식의 휴대전화 번호여야 합니다")
+    @field:Pattern(
+        regexp = "^\\+[1-9]\\d{1,14}$",
+        message = "올바른 형식의 휴대전화 번호여야 합니다",
+    )
     val phoneNumber: String,
 
     @field:Pattern(

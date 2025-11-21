@@ -26,7 +26,7 @@ class MemberInformation(
     @Column(nullable = false)
     val birthday: LocalDate,
 
-    @Column(nullable = false, length = 13)
+    @Column(nullable = false, length = 16)
     var phoneNumber: String,
 
     @Column(nullable = false, length = 39)
