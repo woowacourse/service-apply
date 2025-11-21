@@ -34,21 +34,21 @@ const LanguageSwitcher = () => {
               onClick={() => handleClickLanguageItem("ko")}
             >
               <span className={styles["language-flag"]}>🇰🇷</span>
-              <span className={styles["language-code"]}>KR</span>
+              <span className={styles["language-name"]}>한국어</span>
             </li>
             <li
               className={styles["language-listitem"]}
               onClick={() => handleClickLanguageItem("en")}
             >
               <span className={styles["language-flag"]}>🇺🇸</span>
-              <span className={styles["language-code"]}>EN</span>
+              <span className={styles["language-name"]}>English</span>
             </li>
             <li
               className={styles["language-listitem"]}
               onClick={() => handleClickLanguageItem("de")}
             >
               <span className={styles["language-flag"]}>🇩🇪</span>
-              <span className={styles["language-code"]}>DE</span>
+              <span className={styles["language-name"]}>Deutsch</span>
             </li>
           </ul>
           <div className={styles.dimmed} onMouseDown={() => setIsShowLanguageSwitcher(false)} />

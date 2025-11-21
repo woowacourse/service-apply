@@ -57,7 +57,7 @@
 
 .language-listitem:hover,
 .language-listitem:hover .language-button,
-.language-listitem:hover .language-code {
+.language-listitem:hover .language-name {
   font-weight: bold;
 }
 
