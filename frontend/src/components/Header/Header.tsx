@@ -1,14 +1,20 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import classNames from "classnames";
 
-import useTokenContext from "../../hooks/useTokenContext";
-import styles from "./Header.module.css";
-import { PATH } from "../../constants/path";
 import { ValueOf } from "../../../types/utility";
-import MemberIcon from "../../assets/icon/member-icon.svg";
-import { fetchAgreement } from "../../api/agreements";
+
+import { PATH } from "../../constants/path";
 import { ERROR_MESSAGE } from "../../constants/messages";
+
+import MemberIcon from "../../assets/icon/member-icon.svg";
+
+import { fetchAgreement } from "../../api/agreements";
+import useTokenContext from "../../hooks/useTokenContext";
+
+import styles from "./Header.module.css";
+import LanguageSwitcher from "../LanguageSwitcher/LanguageSwitcher";
+import Spacing from "../@common/Spacing/Spacing";
+import ToggleButton from "../@common/ToggleButton/ToggleButton";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -16,10 +22,6 @@ const Header = () => {
   const { token, resetToken } = useTokenContext();
 
   const [isShowMemberMenu, setIsShowMemberMenu] = useState(false);
-
-  const onChange: React.ChangeEventHandler<HTMLInputElement> = ({ target }) => {
-    setIsShowMemberMenu(target.checked);
-  };
 
   const routeTo = ({ pathname }: { pathname: ValueOf<typeof PATH> }) => {
     navigate(pathname);
@@ -52,62 +54,61 @@ const Header = () => {
                 src="/assets/logo/logo_no_text_dark.png"
                 alt="우아한테크코스 로고"
               />
-              <span>지원하기</span>
+              <span>테크코스</span>
             </Link>
           </h1>
 
-          <div className={styles["link-container"]}>
-            {token ? (
-              <div className={styles["member-menu-container"]}>
-                <label
-                  className={classNames(styles["checkbox-label"], {
-                    [styles.checked]: isShowMemberMenu,
-                    [styles.unchecked]: !isShowMemberMenu,
-                  })}
-                  aria-label="회원관리 툴팁"
-                >
-                  <img src={MemberIcon} alt="회원" />
-                  <input
-                    type="checkbox"
-                    className={styles.checkbox}
+          <div className={styles["menu-container"]}>
+            <div className={styles["link-container"]}>
+              {token ? (
+                <div className={styles["member-menu-container"]}>
+                  <ToggleButton
                     checked={isShowMemberMenu}
-                    onChange={onChange}
-                  />
-                </label>
+                    onChange={(checked) => setIsShowMemberMenu(checked)}
+                    ariaLabel="회원관리 툴팁"
+                  >
+                    <img src={MemberIcon} alt="회원" />
+                  </ToggleButton>
 
-                {isShowMemberMenu && (
-                  <>
-                    <ul className={styles["member-menu-list"]}>
-                      <li className={styles["member-menu-listitem"]}>
-                        <button type="button" onClick={() => routeTo({ pathname: PATH.MY_PAGE })}>
-                          마이페이지
-                        </button>
-                      </li>
-                      <li className={styles["member-menu-listitem"]}>
-                        <button
-                          type="button"
-                          onClick={() => routeTo({ pathname: PATH.MY_APPLICATION })}
-                        >
-                          내 지원 현황
-                        </button>
-                      </li>
-                      <li className={styles["member-menu-listitem"]} onClick={onLogout}>
-                        로그아웃
-                      </li>
-                    </ul>
-                    <div className={styles.dimmed} onMouseDown={() => setIsShowMemberMenu(false)} />
-                  </>
-                )}
-              </div>
-            ) : (
-              <>
-                <Link to={PATH.LOGIN}>로그인</Link>
-                <div className={styles.bar} />
-                <Link to="#" onClick={goToSignUp}>
-                  회원가입
-                </Link>
-              </>
-            )}
+                  {isShowMemberMenu && (
+                    <>
+                      <ul className={styles["member-menu-list"]}>
+                        <li className={styles["member-menu-listitem"]}>
+                          <button type="button" onClick={() => routeTo({ pathname: PATH.MY_PAGE })}>
+                            마이페이지
+                          </button>
+                        </li>
+                        <li className={styles["member-menu-listitem"]}>
+                          <button
+                            type="button"
+                            onClick={() => routeTo({ pathname: PATH.MY_APPLICATION })}
+                          >
+                            내 지원서
+                          </button>
+                        </li>
+                        <li className={styles["member-menu-listitem"]} onClick={onLogout}>
+                          로그아웃
+                        </li>
+                      </ul>
+                      <div
+                        className={styles.dimmed}
+                        onMouseDown={() => setIsShowMemberMenu(false)}
+                      />
+                    </>
+                  )}
+                </div>
+              ) : (
+                <>
+                  <Link to={PATH.LOGIN}>로그인</Link>
+                  <div className={styles.bar} />
+                  <Link to="#" onClick={goToSignUp}>
+                    가입하기
+                  </Link>
+                </>
+              )}
+              <Spacing direction="horizontal" size={12} />
+              <LanguageSwitcher />
+            </div>
           </div>
         </div>
       </header>

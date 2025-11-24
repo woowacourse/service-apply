@@ -1,0 +1,33 @@
+.toggle-label {
+  cursor: pointer;
+  z-index: var(--tooltip-z-index);
+  display: flex;
+  align-items: center;
+}
+
+.toggle-label img {
+  cursor: pointer;
+}
+
+.toggle-label.unchecked::after {
+  content: "\25BE";
+  display: block;
+  font-size: 1.25rem;
+  margin-left: 0.375rem;
+  padding-bottom: 0.125rem;
+  transition: transform 0.5s ease;
+}
+
+.toggle-label.checked::after {
+  content: "\25BE";
+  display: block;
+  font-size: 1.25rem;
+  margin-left: 0.375rem;
+  padding-bottom: 0.125rem;
+  transform: rotateX(180deg);
+  transition: transform 0.5s ease;
+}
+
+.toggle-checkbox {
+  display: none;
+}

@@ -63,10 +63,10 @@ const SignUp = () => {
   }, [location.state]);
 
   return (
-    <Container title="회원가입" titleAlign={TITLE_ALIGN.LEFT} size={CONTAINER_SIZE.NARROW}>
+    <Container title="가입하기" titleAlign={TITLE_ALIGN.LEFT} size={CONTAINER_SIZE.NARROW}>
       <Form onSubmit={handleSubmit}>
         <SummaryCheckField
-          label="개인정보 수집 및 이용 동의"
+          label="[필수] 개인정보 수집 및 이용에 동의하시나요?"
           name={SIGN_UP_FORM_NAME.IS_TERM_AGREED}
           checked={form[SIGN_UP_FORM_NAME.IS_TERM_AGREED]}
           onChange={handleChanges[SIGN_UP_FORM_NAME.IS_TERM_AGREED]}

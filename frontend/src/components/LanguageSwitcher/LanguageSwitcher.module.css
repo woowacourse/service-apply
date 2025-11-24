@@ -1,0 +1,71 @@
+.language-switcher {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-left: auto;
+  margin-right: 1rem;
+}
+
+.google-translate-hidden {
+  display: none !important;
+}
+
+.lang {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 0.5rem;
+}
+
+.language-switcher-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem;
+  font-weight: bold;
+  margin-right: 1rem;
+}
+
+.language-icon-container {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.language-list {
+  position: absolute;
+  top: calc(100% + 0.25rem);
+  right: 0;
+  width: 7rem;
+  background-color: var(--white);
+  border: 1px solid var(--gray-300);
+  z-index: var(--tooltip-z-index);
+}
+
+.language-listitem {
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: 4px;
+  padding-left: 1rem;
+  border-bottom: 1px solid var(--gray-300);
+  font-weight: 400;
+  cursor: pointer;
+  user-select: none;
+}
+
+.language-listitem:hover,
+.language-listitem:hover .language-button,
+.language-listitem:hover .language-name {
+  font-weight: bold;
+}
+
+.dimmed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: var(--tooltip-dimmed-z-index);
+}

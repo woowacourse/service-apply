@@ -1,0 +1,13 @@
+.spacing {
+  flex-shrink: 0;
+}
+
+.vertical {
+  width: 100%;
+  height: var(--spacing-size);
+}
+
+.horizontal {
+  height: 100%;
+  width: var(--spacing-size);
+}

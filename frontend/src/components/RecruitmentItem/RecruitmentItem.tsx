@@ -51,7 +51,7 @@ const RecruitmentItem = ({
       <div className={styles.date}>
         <img src={CalendarIcon} alt="달력 아이콘" className={styles.icon} />
         <p>
-          {formattedStartDateTime} ~ {formattedEndDateTime}
+          {formattedStartDateTime} ~ {formattedEndDateTime} (UTC+9)
         </p>
       </div>
       {indicatorText && <StatusIndicator active={active} text={indicatorText} />}

@@ -17,33 +17,49 @@ export const ERROR_MESSAGE = {
     GITHUB_USERNAME:
       "GitHub 사용자 이름 정책에 따라 영문, 숫자, 하이픈 조합을 사용하여 최대 39자까지 가능합니다.",
     BIRTHDAY: "유효하지 않은 날짜입니다. 정확한 날짜를 입력해 주세요.",
-    BIRTHDAY_IS_NOT_OVER_14: "만 14세 이상만 회원가입이 가능합니다.",
+    BIRTHDAY_IS_NOT_OVER_14: "만 14세 이상만 회원 가입이 가능합니다.",
   },
   API: {
-    ALREADY_REGISTER: "이미 지원한 이력이 있습니다.",
-    FETCHING_MY_APPLICATIONS: "내 지원 정보를 불러올 수 없습니다.",
-    FETCHING_MY_APPLICATION: "내 지원서를 불러올 수 없습니다.",
-    JOIN_FAILURE: "회원가입에 실패했습니다. 잠시 후 다시 시도해 주세요.",
-    LOGIN_FAILURE: "아이디(E-mail) 또는 비밀번호를 확인해 주세요.",
-    EDIT_FAILURE: "변경에 실패했습니다. 잠시 후 다시 시도해 주세요.",
-    TOKEN_EXPIRED: "로그인 정보가 만료되었습니다. 다시 로그인해 주세요.",
-    FETCHING_MEMBER_INFO: "내 정보를 불러오는데 불러올 수 없습니다.",
-    NOT_AUTHENTICATED: "이메일 인증을 완료해 주세요.",
-    ALREADY_EXIST_EMAIL: "이미 가입된 이메일입니다.",
-    INVALID_AUTHENTICATION_CODE: "인증 코드가 일치하지 않습니다.",
-    SUBMIT_ASSIGNMENT: "과제를 제출할 수 없습니다.",
-    SUBMIT_APPLICATION: "입력된 정보가 올바르지 않습니다. 다시 확인해 주세요.",
-    FIND_PASSWORD: "입력된 정보가 올바르지 않습니다. 다시 확인해 주세요.",
-    EDIT_PASSWORD: "입력된 정보가 올바르지 않습니다. 다시 확인해 주세요.",
-    LOAD_APPLICATION_FORM: "지원서를 불러오는 데 실패했습니다. 잠시 후 다시 시도해 주세요.",
-    SAVE_APPLICATION_FORM: "지원서를 저장하는 데 실패했습니다. 잠시 후 다시 시도해 주세요.",
-    LOAD_AGREEMENT: "동의서를 불러오는 데 실패했습니다. 잠시 후 다시 시도해 주세요.",
+    ALREADY_REGISTER: "You have already applied.\n이미 지원한 이력이 있습니다.",
+    FETCHING_MY_APPLICATIONS:
+      "Failed to load your application information.\n지원 정보를 불러오지 못했습니다.",
+    FETCHING_MY_APPLICATION: "Failed to load your application form.\n지원서를 불러오지 못했습니다.",
+    JOIN_FAILURE:
+      "Failed to sign up. Please try again later.\n회원 가입에 실패했습니다. 잠시 후 다시 시도해 주세요.",
+    LOGIN_FAILURE: "Please check your email and password.\n이메일 또는 비밀번호를 확인해 주세요.",
+    EDIT_FAILURE:
+      "Failed to update. Please try again later.\n변경에 실패했습니다. 잠시 후 다시 시도해 주세요.",
+    TOKEN_EXPIRED:
+      "Please sign up or log in to securely manage your personal information.\n안전한 개인 정보 관리를 위해 로그인 또는 회원 가입을 해주세요.",
+    FETCHING_MEMBER_INFO: "Failed to load your information.\n내 정보를 불러오지 못했습니다.",
+    NOT_AUTHENTICATED: "Please complete your email verification.\n이메일 인증을 완료해 주세요.",
+    ALREADY_EXIST_EMAIL: "This email is already registered.\n이미 가입된 이메일입니다.",
+    INVALID_AUTHENTICATION_CODE:
+      "The verification code does not match.\n인증 코드가 일치하지 않습니다.",
+    SUBMIT_ASSIGNMENT: "Failed to submit the assignment.\n과제를 제출할 수 없습니다.",
+    SUBMIT_APPLICATION:
+      "The entered information is invalid. Please check again.\n" +
+      "입력한 정보가 올바르지 않습니다. 다시 확인해 주세요.",
+    FIND_PASSWORD:
+      "The entered information is invalid. Please check again.\n" +
+      "입력한 정보가 올바르지 않습니다. 다시 확인해 주세요.",
+    EDIT_PASSWORD:
+      "The entered information is invalid. Please check again.\n입력한 정보가 올바르지 않습니다. 다시 확인해 주세요.",
+    LOAD_APPLICATION_FORM:
+      "Failed to load the application form. Please try again later.\n" +
+      "지원서를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.",
+    SAVE_APPLICATION_FORM:
+      "Failed to save the application form. Please try again later.\n" +
+      "지원서를 저장하지 못했습니다. 잠시 후 다시 시도해 주세요.",
+    LOAD_AGREEMENT:
+      "Failed to load the agreement. Please try again later.\n" +
+      "동의서를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.",
     SUCCEED_TO_WITHDRAW: "회원탈퇴가 완료되었습니다. 메인으로 돌아갑니다.",
     FAILED_TO_WITHDRAW_OTHER_REASONS: "회원탈퇴에 실패했습니다. 잠시 후 다시 시도해 주세요.",
     FAILED_TO_WITHDRAW_BECAUSE_OF_PASSWORD: "입력된 정보가 올바르지 않습니다. 다시 확인해 주세요.",
   },
   ACCESS: {
-    REQUIRED_LOGIN: "로그인이 필요합니다.",
+    REQUIRED_LOGIN: "Login is required.\n로그인이 필요합니다.",
   },
   HOOKS: {
     CANNOT_FIND_FORM_CONTEXT: "FormContext가 존재하지 않습니다.",
@@ -56,17 +72,21 @@ export const ERROR_MESSAGE = {
 
 export const SUCCESS_MESSAGE = {
   API: {
-    CHANGE_PASSWORD: "비밀번호가 변경되었습니다. 다시 로그인해 주세요.",
-    SUBMIT_APPLICATION: "정상적으로 제출되었습니다.",
-    SUBMIT_ASSIGNMENT: "정상적으로 제출되었습니다.",
-    SAVE_APPLICATION: "정상적으로 저장되었습니다.",
-    EDIT_MY_PAGE: "정상적으로 변경되었습니다.",
+    CHANGE_PASSWORD:
+      "Your password has been changed. Please log in again.\n" +
+      "비밀번호가 변경되었습니다. 다시 로그인해 주세요.",
+    SUBMIT_APPLICATION: "Your application has been submitted.\n정상적으로 제출되었습니다.",
+    SUBMIT_ASSIGNMENT: "Your assignment has been submitted.\n정상적으로 제출되었습니다.",
+    SAVE_APPLICATION: "Your application has been saved.\n정상적으로 저장되었습니다.",
+    EDIT_MY_PAGE: "Your information has been updated.\n정상적으로 변경되었습니다.",
   },
 } as const;
 
 export const CONFIRM_MESSAGE = {
-  RESET_APPLICATION: "정말 초기화하시겠습니까?",
-  CANCEL_ASSIGNMENT_SUBMIT: "정말 취소하시겠습니까? 작성하신 내용이 저장되지 않습니다.",
+  RESET_APPLICATION: "Are you sure you want to reset?\n정말 초기화하시겠습니까?",
+  CANCEL_ASSIGNMENT_SUBMIT:
+    "Are you sure you want to cancel? Your progress will not be saved.\n" +
+    "정말 취소하시겠습니까? 작성하신 내용이 저장되지 않습니다.",
 } as const;
 
 export const PUBLIC_PULL_REQUEST_TOOLTIP_MESSAGE = [

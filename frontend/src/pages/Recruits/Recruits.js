@@ -69,14 +69,14 @@ const Recruits = () => {
       <div className={styles["program-introduce-box"]}>
         <h1 className={styles["program-name"]}>
           {programTabStatus.name === PROGRAM_TAB.ALL.name
-            ? `우아한형제들의 교육 프로그램과\n함께할 개발자를 찾고 있어요!`
+            ? `테크코스(Tech Course)의 교육 프로그램과\n함께 성장할 개발자를 찾고 있어요!`
             : programTabStatus.label}
         </h1>
         <p className={styles["program-description"]}>{programTabStatus.description}</p>
       </div>
 
       <div className={styles["recruitment-list-box"]}>
-        <h2 className={styles["recruitment-list-title"]}>지원하기</h2>
+        <h2 className={styles["recruitment-list-title"]}>모집 목록</h2>
         <div className={styles["program-tab-list"]}>
           {PROGRAM_TAB_LIST.map((programTabListItem) => (
             <TabItem
@@ -86,7 +86,7 @@ const Recruits = () => {
                 setProgramTabStatus(programTabListItem);
               }}
             >
-              {programTabListItem.label}
+              {programTabListItem.korean}({programTabListItem.english})
             </TabItem>
           ))}
         </div>

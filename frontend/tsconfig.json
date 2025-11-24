@@ -20,6 +20,6 @@
     "noEmit": true, // 출력을 내보내지 않습니다.
     "incremental": true // 이전 컴파일에서 디스크의 파일로 정보를 읽거나/기록하여 증분 컴파일을 활성화합니다. 사용시 tsc 컴파일 시간이 매우 빨라진다고 함.
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "types/**/*"],
   "exclude": ["node_modules"]
 }
