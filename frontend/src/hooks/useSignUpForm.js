@@ -6,6 +6,7 @@ import { isValidName } from "../utils/validation/name";
 import { isValidPassword } from "../utils/validation/password";
 import { isValidPhoneNumber } from "../utils/validation/phoneNumber";
 import { isAtLeast14YearsOld } from "../utils/validation/birthday";
+import { REGEX } from "../constants/regex";
 
 export const SIGN_UP_FORM_NAME = {
   IS_TERM_AGREED: "isTermAgreed",
@@ -106,7 +107,7 @@ const useSignUpForm = () => {
   };
 
   const handleChangeName = ({ target }) => {
-    const result = target.value.replace(/\s{2,}/, " ");
+    const result = target.value.replace(REGEX.MULTIPLE_SPACES, " ");
 
     const errorMessage = isValidName(result) ? "" : ERROR_MESSAGE.VALIDATION.NAME;
 
