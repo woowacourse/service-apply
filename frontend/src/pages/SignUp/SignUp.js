@@ -17,6 +17,7 @@ import { PATH } from "../../constants/path";
 import useSignUpForm, { SIGN_UP_FORM_NAME } from "../../hooks/useSignUpForm";
 import useTokenContext from "../../hooks/useTokenContext";
 import styles from "./SignUp.module.css";
+import { sanitizeString } from "../../utils/format/string";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -46,10 +47,7 @@ const SignUp = () => {
 
     const sanitizedForm = {
       ...form,
-      name: form.name
-        .trim()
-        .replace(/\u001d/g, "")
-        .replace(/\s+/g, " "),
+      name: sanitizeString(form.name),
     };
 
     try {

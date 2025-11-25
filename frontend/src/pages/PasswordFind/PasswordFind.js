@@ -11,6 +11,7 @@ import { ERROR_MESSAGE } from "../../constants/messages";
 import { PATH } from "../../constants/path";
 import usePasswordFindForm, { PASSWORD_FIND_FORM_NAME } from "../../hooks/usePasswordFindForm";
 import styles from "./PasswordFind.module.css";
+import { sanitizeString } from "../../utils/format/string";
 
 const PasswordFind = () => {
   const navigate = useNavigate();
@@ -22,10 +23,7 @@ const PasswordFind = () => {
 
     const sanitizedForm = {
       ...form,
-      name: form.name
-        .trim()
-        .replace(/\u001d/g, "")
-        .replace(/\s+/g, " "),
+      name: sanitizeString(form.name),
     };
 
     try {
