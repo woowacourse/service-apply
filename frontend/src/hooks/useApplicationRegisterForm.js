@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import * as Api from "../api";
 import { FORM } from "../constants/form";
-import { ERROR_MESSAGE } from "../constants/messages";
+import { CONFIRM_MESSAGE, ERROR_MESSAGE } from "../constants/messages";
 import { PATH, PARAM } from "../constants/path";
 import { formatDateTime } from "../utils/format/date";
 import { isValidUrl } from "../utils/validation/url";
@@ -122,6 +122,8 @@ const useApplicationRegisterForm = ({
   }, [status]);
 
   const reset = () => {
+    if (!window.confirm(CONFIRM_MESSAGE.RESET_APPLICATION)) return;
+
     setRequiredForm(requiredFormInitialValue);
     setForm(formInitialValue);
     setErrorMessage(errorMessageInitialValue);
