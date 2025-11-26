@@ -92,8 +92,8 @@ class MemberServiceTest : BehaviorSpec({
     }
 
     Given("특정 회원이 존재하고 변경할 정보(휴대전화 번호)가 있는 경우") {
-        val member = createMember(phoneNumber = "010-0000-0000")
-        val phoneNumber = "010-9999-9999"
+        val member = createMember(phoneNumber = "+821012345678")
+        val phoneNumber = "+821099999999"
 
         every { memberRepository.getOrThrow(any()) } returns member
 

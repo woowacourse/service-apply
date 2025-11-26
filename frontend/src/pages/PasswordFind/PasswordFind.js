@@ -11,6 +11,7 @@ import { ERROR_MESSAGE } from "../../constants/messages";
 import { PATH } from "../../constants/path";
 import usePasswordFindForm, { PASSWORD_FIND_FORM_NAME } from "../../hooks/usePasswordFindForm";
 import styles from "./PasswordFind.module.css";
+import { sanitizeString } from "../../utils/format/string";
 
 const PasswordFind = () => {
   const navigate = useNavigate();
@@ -20,8 +21,13 @@ const PasswordFind = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    const sanitizedForm = {
+      ...form,
+      name: sanitizeString(form.name),
+    };
+
     try {
-      await fetchPasswordFind(form);
+      await fetchPasswordFind(sanitizedForm);
 
       navigate(
         {

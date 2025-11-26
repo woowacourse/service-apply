@@ -34,7 +34,7 @@ private fun createRegisterMemberRequest(
     confirmPassword: String = PASSWORD,
     name: String = "회원",
     birthday: LocalDate = createLocalDate(1995, 2, 2),
-    phoneNumber: String = "010-0000-0000",
+    phoneNumber: String = "+821012345678",
     githubUsername: String = "jaeyeonling",
     authenticationCode: String = "3ea9fa6c",
 ): Map<String, Any> {
@@ -252,7 +252,7 @@ class MemberRestControllerTest : RestControllerTest() {
         every { memberService.editInformation(any(), any()) } just Runs
 
         mockMvc.patch("/api/members/information") {
-            jsonContent(EditInformationRequest("010-9999-9999"))
+            jsonContent(EditInformationRequest("+821012345678"))
             bearer("valid_token")
         }.andExpect {
             status { isNoContent() }

@@ -13,7 +13,7 @@ import java.time.LocalDate
 const val EMAIL: String = "test@email.com"
 private const val NAME: String = "지원자"
 private val BIRTHDAY: LocalDate = createLocalDate(1995, 2, 2)
-private const val PHONE_NUMBER: String = "010-0000-0000"
+private const val PHONE_NUMBER: String = "+821012345678"
 private const val GITHUB_USERNAME: String = "jaeyeonling"
 val PASSWORD: Password = Password("password")
 private val CONFIRM_PASSWORD: Password = Password("password")

@@ -1,11 +1,11 @@
 export const ERROR_MESSAGE = {
   VALIDATION: {
     EMAIL: "정확한 이메일 양식을 입력해 주세요.",
-    NAME: "정확한 한글 이름을 입력해 주세요.",
+    NAME: "한글 또는 영문을 입력해 주세요.",
     PASSWORD: "영문, 숫자, 특수문자 포함하여 8자에서 20자 이내로 입력해 주세요.",
     PASSWORD_CAPS_LOCK: "CapsLock이 켜져 있습니다.",
     CONFIRM_PASSWORD: "비밀번호를 확인해 주세요.",
-    PHONE_NUMBER: "정확한 휴대전화 번호를 입력해 주세요. ex) 010-1234-5678",
+    PHONE_NUMBER: "국제 형식의 휴대전화 번호를 입력해 주세요. (e.g. +821012345678)",
     REQUIRED: "필수 정보입니다.",
     URL: "http(s)를 포함한 정확한 URL을 입력해 주세요.",
     TIMEOUT_EMAIL_AUTHENTICATION_CODE:

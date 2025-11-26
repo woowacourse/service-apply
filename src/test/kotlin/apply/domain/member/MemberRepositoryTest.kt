@@ -37,7 +37,7 @@ class MemberRepositoryTest(
     }
 
     context("회원 수정") {
-        val base = memberRepository.save(createMember(password = PASSWORD, phoneNumber = "010-0000-0000"))
+        val base = memberRepository.save(createMember(password = PASSWORD, phoneNumber = "+821012345678"))
 
         expect("회원이 비밀번호를 초기화한다") {
             val member = memberRepository.getOrThrow(base.id)
@@ -58,10 +58,10 @@ class MemberRepositoryTest(
 
         expect("회원이 휴대전화 번호를 수정한다") {
             val member = memberRepository.getOrThrow(base.id)
-            member.changePhoneNumber("010-1234-5678")
+            member.changePhoneNumber("+821099999999")
             entityManager.flushAndClear()
             val actual = memberRepository.getOrThrow(member.id)
-            actual.information.phoneNumber shouldBe "010-1234-5678"
+            actual.information.phoneNumber shouldBe "+821099999999"
         }
     }
 

@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { ERROR_MESSAGE } from "../constants/messages";
-import { formatHyphen, PHONE_NUMBER_HYPHEN_IDX } from "../utils/format/phoneNumber";
 import { isValidEmail } from "../utils/validation/email";
 import { isValidGithubUsername } from "../utils/validation/githubUsername";
 import { isValidName } from "../utils/validation/name";
 import { isValidPassword } from "../utils/validation/password";
 import { isValidPhoneNumber } from "../utils/validation/phoneNumber";
 import { isAtLeast14YearsOld } from "../utils/validation/birthday";
+import { REGEX } from "../constants/regex";
 
 export const SIGN_UP_FORM_NAME = {
   IS_TERM_AGREED: "isTermAgreed",
@@ -107,10 +107,12 @@ const useSignUpForm = () => {
   };
 
   const handleChangeName = ({ target }) => {
-    const errorMessage = isValidName(target.value) ? "" : ERROR_MESSAGE.VALIDATION.NAME;
+    const result = target.value.replace(REGEX.MULTIPLE_SPACES, " ");
+
+    const errorMessage = isValidName(result) ? "" : ERROR_MESSAGE.VALIDATION.NAME;
 
     updateErrorMessage(SIGN_UP_FORM_NAME.NAME, errorMessage);
-    updateRequiredForm(SIGN_UP_FORM_NAME.NAME, target.value);
+    updateRequiredForm(SIGN_UP_FORM_NAME.NAME, result);
   };
 
   const handleChangeBirthday = (date) => {
@@ -122,11 +124,8 @@ const useSignUpForm = () => {
     updateRequiredForm(SIGN_UP_FORM_NAME.BIRTHDAY, date);
   };
 
-  const handleChangePhoneNumber = ({ nativeEvent: { data }, target: { value } }) => {
-    if (isNaN(data)) return;
-
-    const [firstHyphenIdx, secondHyphenIdx] = PHONE_NUMBER_HYPHEN_IDX;
-    const result = formatHyphen(value, firstHyphenIdx, secondHyphenIdx).trim();
+  const handleChangePhoneNumber = ({ target: { value } }) => {
+    const result = value.trim();
 
     const errorMessage = isValidPhoneNumber(result) ? "" : ERROR_MESSAGE.VALIDATION.PHONE_NUMBER;
 

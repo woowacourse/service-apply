@@ -66,13 +66,19 @@ data class RegisterMemberRequest(
     val password: Password,
     val confirmPassword: Password,
 
-    @field:Pattern(regexp = "[가-힣]{1,30}", message = "올바른 형식의 이름이어야 합니다")
+    @field:Pattern(
+        regexp = "[a-zA-Z가-힣'\\-\\s]{1,60}",
+        message = "올바른 형식의 이름이어야 합니다",
+    )
     val name: String,
 
     @field:Past
     val birthday: LocalDate,
 
-    @field:Pattern(regexp = "010-\\d{4}-\\d{4}", message = "올바른 형식의 휴대전화 번호여야 합니다")
+    @field:Pattern(
+        regexp = "^\\+[1-9]\\d{1,14}$",
+        message = "올바른 형식의 휴대전화 번호여야 합니다",
+    )
     val phoneNumber: String,
 
     @field:Pattern(
@@ -93,7 +99,10 @@ data class AuthenticateMemberRequest(
 )
 
 data class ResetPasswordRequest(
-    @field:Pattern(regexp = "[가-힣]{1,30}", message = "올바른 형식의 이름이어야 합니다")
+    @field:Pattern(
+        regexp = "[a-zA-Z가-힣'\\-\\s]{1,60}",
+        message = "올바른 형식의 이름이어야 합니다",
+    )
     val name: String,
 
     @field:Email
@@ -110,7 +119,10 @@ data class EditPasswordRequest(
 )
 
 data class EditInformationRequest(
-    @field:Pattern(regexp = "010-\\d{4}-\\d{4}", message = "올바른 형식의 휴대전화 번호여야 합니다")
+    @field:Pattern(
+        regexp = "^\\+[1-9]\\d{1,14}$",
+        message = "올바른 형식의 휴대전화 번호여야 합니다",
+    )
     val phoneNumber: String
 )
 

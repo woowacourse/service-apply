@@ -378,7 +378,7 @@ class DatabaseInitializer(
                 MemberInformation(
                     name = "홍길동1",
                     email = "a@email.com",
-                    phoneNumber = "010-0000-0000",
+                    phoneNumber = "+821012345678",
                     githubUsername = "applicant-a",
                     birthday = createLocalDate(2000, 4, 17),
                 ),
@@ -389,7 +389,7 @@ class DatabaseInitializer(
                 MemberInformation(
                     name = "홍길동2",
                     email = "b@email.com",
-                    phoneNumber = "010-0000-0000",
+                    phoneNumber = "+821012345678",
                     githubUsername = "applicant-b",
                     birthday = createLocalDate(2000, 5, 5),
                 ),
@@ -406,7 +406,7 @@ class DatabaseInitializer(
                 MemberInformation(
                     name = "홍길동4",
                     email = "d@email.com",
-                    phoneNumber = "010-0000-0000",
+                    phoneNumber = "+821012345678",
                     githubUsername = "applicant-d",
                     birthday = createLocalDate(2000, 1, 1),
                 ),
@@ -417,7 +417,7 @@ class DatabaseInitializer(
                 MemberInformation(
                     name = "홍길동5",
                     email = "e@email.com",
-                    phoneNumber = "010-0000-0000",
+                    phoneNumber = "+821012345678",
                     githubUsername = "applicant-e",
                     birthday = createLocalDate(2000, 1, 1),
                 ),

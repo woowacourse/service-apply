@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ERROR_MESSAGE } from "../constants/messages";
 import { isValidEmail } from "../utils/validation/email";
 import { isValidName } from "../utils/validation/name";
+import { REGEX } from "../constants/regex";
 
 export const PASSWORD_FIND_FORM_NAME = {
   NAME: "name",
@@ -43,10 +44,12 @@ const usePasswordFindForm = () => {
   };
 
   const handleChangeName = ({ target }) => {
-    const errorMessage = isValidName(target.value) ? "" : ERROR_MESSAGE.VALIDATION.NAME;
+    const result = target.value.replace(REGEX.MULTIPLE_SPACES, " ");
+
+    const errorMessage = isValidName(result) ? "" : ERROR_MESSAGE.VALIDATION.NAME;
 
     updateErrorMessage(PASSWORD_FIND_FORM_NAME.NAME, errorMessage);
-    updateRequiredForm(PASSWORD_FIND_FORM_NAME.NAME, target.value);
+    updateRequiredForm(PASSWORD_FIND_FORM_NAME.NAME, result);
   };
 
   const handleChangeEmail = ({ target }) => {

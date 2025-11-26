@@ -26,19 +26,12 @@ const TextInput = ({
     onChange(event);
   };
 
-  const handleWhiteSpace = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === " ") {
-      event.preventDefault();
-    }
-  };
-
   return (
     <input
       type={type}
       value={value}
       className={classNames(styles["text-input"], className)}
       readOnly={readOnly}
-      onKeyDown={handleWhiteSpace}
       onChange={handleChange}
       {...props}
     />

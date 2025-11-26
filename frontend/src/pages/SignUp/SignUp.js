@@ -17,6 +17,7 @@ import { PATH } from "../../constants/path";
 import useSignUpForm, { SIGN_UP_FORM_NAME } from "../../hooks/useSignUpForm";
 import useTokenContext from "../../hooks/useTokenContext";
 import styles from "./SignUp.module.css";
+import { sanitizeString } from "../../utils/format/string";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -41,12 +42,16 @@ const SignUp = () => {
 
     if (emailStatus !== EMAIL_STATUS.AUTHENTICATED) {
       alert(ERROR_MESSAGE.API.NOT_AUTHENTICATED);
-
       return;
     }
 
+    const sanitizedForm = {
+      ...form,
+      name: sanitizeString(form.name),
+    };
+
     try {
-      await postRegister(form);
+      await postRegister(sanitizedForm);
       navigate(PATH.RECRUITS);
     } catch (error) {
       alert(ERROR_MESSAGE.API.JOIN_FAILURE);
@@ -134,7 +139,7 @@ const SignUp = () => {
         />
         <MessageTextInput
           label="휴대전화 번호"
-          placeholder="연락 가능한 휴대전화 번호를 입력해 주세요."
+          placeholder="국제 형식으로 연락 가능한 휴대전화 번호를 입력해 주세요."
           type="tel"
           name={SIGN_UP_FORM_NAME.PHONE_NUMBER}
           value={form[SIGN_UP_FORM_NAME.PHONE_NUMBER]}
