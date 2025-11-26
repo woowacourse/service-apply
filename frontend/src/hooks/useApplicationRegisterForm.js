@@ -122,7 +122,9 @@ const useApplicationRegisterForm = ({
   }, [status]);
 
   const reset = () => {
-    if (!window.confirm(CONFIRM_MESSAGE.RESET_APPLICATION)) return;
+    if (!window.confirm(CONFIRM_MESSAGE.RESET_APPLICATION)) {
+      return;
+    }
 
     setRequiredForm(requiredFormInitialValue);
     setForm(formInitialValue);
