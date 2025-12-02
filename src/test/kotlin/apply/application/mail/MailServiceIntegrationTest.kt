@@ -55,7 +55,7 @@ class MailServiceIntegrationTest(
 
             Then("이메일 본문이 생성된다") {
                 actual shouldContain "Hello <span>홍길동</span>,"
-                actual shouldContain "안녕하세요. <span>홍길동</span>님."
+                actual shouldContain "안녕하세요, <span>홍길동</span>님."
                 actual shouldContain "Copyright <span>${LocalDate.now().year}</span>."
             }
         }
