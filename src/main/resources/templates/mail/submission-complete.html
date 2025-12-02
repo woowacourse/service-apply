@@ -68,7 +68,10 @@
                         padding-top: 48px;
                       "
                     >
-                      지원 완료
+                      Application Received<br />
+                      <span style="margin-top: 8px; display: block"
+                        >지원 완료</span
+                      >
                     </td>
                   </tr>
                   <tr style="color: #333333; padding: 0; font-size: 16px">
@@ -84,12 +87,26 @@
                         text-align: center;
                       "
                     >
-                      안녕하세요. <span th:text="${name}"></span>님.
+                      Hello <span th:text="${name}"></span>,<br /><br />
+                      Thank you for applying to
+                      <strong><span th:text="${recruit}"></span></strong>.<br />
+                      We have successfully received your application.<br /><br />
+                      We will review your application and notify you of the next
+                      steps by email.<br />
+                      Thank you again for your interest.
                       <br /><br />
-                      우아한테크코스 <span th:text="${recruit}"></span> 지원이
-                      완료되었습니다.<br />추후 진행 사항은 해당 이메일을 통해
-                      안내됩니다. <br /><br />
-                      감사합니다.
+                      <span
+                        style="display: block; margin-top: 24px; color: #666666"
+                      >
+                        안녕하세요,
+                        <span th:text="${name}"></span>님.<br /><br />
+                        <strong><span th:text="${recruit}"></span></strong>에
+                        지원해 주셔서 감사합니다.<br />
+                        지원서가 정상적으로 접수되었습니다.<br /><br />
+                        지원서 검토 후 이후 진행 절차를 이메일로 안내해 드릴
+                        예정입니다.<br />
+                        관심을 가져 주셔서 다시 한번 감사합니다.
+                      </span>
                     </td>
                   </tr>
                 </table>
@@ -169,7 +186,10 @@
                       id="copyright"
                       style="padding: 0; color: #666666; font-size: 12px"
                     >
-                      Copyright 2021. 우아한테크코스. All rights reserved.
+                      Copyright
+                      <span th:text="${#temporals.year(#temporals.createNow())}"
+                        >2025</span
+                      >. 테크코스. All rights reserved.
                     </td>
                   </tr>
                 </table>
