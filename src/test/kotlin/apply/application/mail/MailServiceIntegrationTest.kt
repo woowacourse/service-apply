@@ -49,6 +49,9 @@ class MailServiceIntegrationTest(
 
         When("템플릿 엔진으로 이메일을 렌더링하면") {
             val actual = templateEngine.process("mail/submission-complete", context)
+                .replace("\\s+".toRegex(), " ")
+                .replace("<(\\w+)\\s+>".toRegex(), "<$1>")
+                .replace("</(\\w+)\\s+>".toRegex(), "</$1>")
 
             Then("이메일 본문이 생성된다") {
                 actual shouldContain "Hello <span>홍길동</span>,"
